@@ -1,0 +1,172 @@
+"""Train the win-probability model using the true MATCHUP-adjusted, team-level
+ratings (offense vs opponent defense), with talent / returning production /
+Pythagorean priors blended by the L2 logistic on game outcomes (target B).
+
+Forward-looking + leakage-free; TEST_GAME_YEAR held out.
+Run:  ./venv/bin/python -m scripts.train
+"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+import numpy as np
+
+from config import (GAME_YEARS, STAT_YEARS, TALENT_YEARS, RETURNING_YEARS,
+                    PYTHAG_YEARS, TEST_GAME_YEAR, UNCERTAINTY_LAMBDA, OPP_ADJ_ALPHA,
+                    TALENT_BLEND)
+from src.data import load, pff
+from src import strength as S
+from src import projection as P
+from src import matchup as MU
+from src import oppadj as OA
+from src import model as M
+
+
+def blended_talent(cfbd_tal, pff_roster, w=TALENT_BLEND):
+    """talent[N] = w*PFF_roster[N] + (1-w)*CFBD[N], CFBD-filled where PFF missing."""
+    out = {}
+    for N, base in cfbd_tal.items():
+        r = pff_roster.get(N)
+        out[N] = base if r is None else w * r.reindex(base.index).fillna(base) + (1 - w) * base
+    return out
+
+
+def raw_returning():
+    """Raw returning-production fractions (not z-scored) for the uncertainty index."""
+    return {y: load.returning_production(y).set_index("team")["rp"]
+            for y in RETURNING_YEARS}
+
+
+def build_projection_frame(talent_blend=None, unc_lambda=None):
+    """Entering-PROJECTION_YEAR team frame (O/D/pythag/talent/returning, uncertainty
+    applied), with 2026 returning from the curated CSV and talent proxied from the
+    latest composite. Shared by scripts/rank.py and scripts/spreads.py.
+
+    talent_blend / unc_lambda override the config defaults — used by the
+    ROSTER-WEIGHTED variant (blend=0.7, lam=1.0), which leans harder on the 2026
+    two-deep PFF talent and regresses low-continuity teams fully toward it
+    (LOSO cost ~0.4% Brier, same accuracy; see README v2 notes)."""
+    import pandas as pd
+    from config import (PROJECTION_YEAR, PROJECTION_TALENT_FALLBACK_YEAR,
+                        PROJECTION_RETURNING_FALLBACK_YEAR, ROOT, UNCERTAINTY_LAMBDA,
+                        OPP_ADJ_ALPHA)
+    from src.projection import _z
+    if talent_blend is None:
+        talent_blend = TALENT_BLEND
+    if unc_lambda is None:
+        unc_lambda = UNCERTAINTY_LAMBDA
+
+    std, talent, ret, games, pyth = load_bundle()
+    ret_raw = raw_returning()
+
+    rp_csv = ROOT / "data" / f"returning_{PROJECTION_YEAR}.csv"
+    if PROJECTION_YEAR not in ret and rp_csv.exists():
+        df = pd.read_csv(rp_csv).set_index("team")["ret_prod"]
+        ret[PROJECTION_YEAR] = _z(df); ret_raw[PROJECTION_YEAR] = df
+        print(f"  [info] {PROJECTION_YEAR} returning production from {rp_csv.name} "
+              f"({len(df)} teams).")
+    elif PROJECTION_YEAR not in ret:
+        ret[PROJECTION_YEAR] = ret[PROJECTION_RETURNING_FALLBACK_YEAR]
+        ret_raw[PROJECTION_YEAR] = ret_raw[PROJECTION_RETURNING_FALLBACK_YEAR]
+        print(f"  [warn] {PROJECTION_YEAR} returning unavailable; using "
+              f"{PROJECTION_RETURNING_FALLBACK_YEAR} proxy.")
+
+    tal_csv = ROOT / "data" / f"talent_{PROJECTION_YEAR}.csv"
+    if PROJECTION_YEAR not in talent and tal_csv.exists():
+        td = pd.read_csv(tal_csv).set_index("team")["talent"]
+        talent[PROJECTION_YEAR] = _z(td)
+        print(f"  [info] {PROJECTION_YEAR} talent from {tal_csv.name} ({len(td)} teams).")
+    elif PROJECTION_YEAR not in talent:
+        talent[PROJECTION_YEAR] = talent[PROJECTION_TALENT_FALLBACK_YEAR]
+        print(f"  [warn] {PROJECTION_YEAR} talent unavailable; using "
+              f"{PROJECTION_TALENT_FALLBACK_YEAR} composite proxy (r~0.97 stable).")
+
+    # Blend in roster-aware PFF talent (historical + 2026 from the Ourlads two-deep).
+    pff_roster = pff.build_roster_talent()
+    try:
+        pff_roster[PROJECTION_YEAR] = pff.build_2026_roster_talent()[PROJECTION_YEAR]
+        print(f"  [info] {PROJECTION_YEAR} PFF roster talent from two-deep "
+              f"({len(pff_roster[PROJECTION_YEAR])} teams).")
+    except Exception as e:
+        print(f"  [warn] {PROJECTION_YEAR} PFF roster talent unavailable: {e}")
+    talent = blended_talent(talent, pff_roster, w=talent_blend)
+
+    # Service academies (Air Force, Navy) have no 247 recruiting composite and
+    # were silently dropped from the frame. Give any team with returning
+    # production but no talent a low-percentile composite (blended with its PFF
+    # roster talent when available) so it keeps a rating.
+    tal = talent[PROJECTION_YEAR]
+    missing = ret[PROJECTION_YEAR].index.difference(tal.index)
+    if len(missing):
+        pr = pff_roster.get(PROJECTION_YEAR)
+        floor = float(tal.quantile(0.10))
+        vals = {t: (talent_blend * float(pr[t]) + (1 - talent_blend) * floor
+                    if pr is not None and t in pr.index else floor)
+                for t in missing}
+        talent[PROJECTION_YEAR] = pd.concat([tal, pd.Series(vals)])
+        print(f"  [info] talent fallback applied for {sorted(missing)}")
+
+    od = OA.build_od_by_year(std, games, OPP_ADJ_ALPHA)
+    train_years = [g for g in GAME_YEARS if g != TEST_GAME_YEAR]
+    b_o, b_d = MU.fit_talent_od_slopes(train_years, std, talent, od_by_year=od)
+    unc = (unc_lambda, b_o, b_d, ret_raw[PROJECTION_YEAR])
+    return MU.team_frame(PROJECTION_YEAR, std, pyth, talent, ret,
+                         uncertainty=unc, od_by_year=od)
+
+
+def load_bundle():
+    """Load every per-year input dict the pipeline needs (all standardized)."""
+    std_by_year, talent_by_year = S.load_seasons(load, STAT_YEARS, TALENT_YEARS)
+    returning_by_year = {y: P._z(load.returning_production(y).set_index("team")["rp"])
+                         for y in RETURNING_YEARS}
+    games_by_year = {y: load.games(y) for y in set(GAME_YEARS) | set(PYTHAG_YEARS)}
+    pythag_by_year = P.build_pythag(games_by_year)
+    return std_by_year, talent_by_year, returning_by_year, games_by_year, pythag_by_year
+
+
+def main():
+    load.require_key()
+    print("Pulling stats, talent, returning production, games from CFBD ...")
+    std, cfbd_tal, ret, games, pyth = load_bundle()
+    ret_raw = raw_returning()
+    talent = blended_talent(cfbd_tal, pff.build_roster_talent())  # PFF roster + CFBD
+    od = OA.build_od_by_year(std, games, OPP_ADJ_ALPHA)   # SOS-adjusted O/D
+    train_years = [g for g in GAME_YEARS if g != TEST_GAME_YEAR]
+    b_o, b_d = MU.fit_talent_od_slopes(train_years, std, talent, od_by_year=od)
+
+    parts = MU.assemble(GAME_YEARS, std, pyth, talent, ret, games,
+                        lam=UNCERTAINTY_LAMBDA, b_o=b_o, b_d=b_d,
+                        ret_raw_by_year=ret_raw, od_by_year=od)
+    Xtr = np.vstack([parts[g][0] for g in train_years])
+    ytr = np.concatenate([parts[g][1] for g in train_years])
+    hftr = np.concatenate([parts[g][2] for g in train_years])
+    mgtr = np.concatenate([parts[g][3] for g in train_years])
+
+    print(f"Training on {train_years} ({len(ytr)} games), "
+          f"testing on {TEST_GAME_YEAR} ({len(parts[TEST_GAME_YEAR][1])} games) ...")
+    cfb_model, _ = M.train(Xtr, ytr, hftr, feature_names=MU.MATCHUP_COLS,
+                           margins=mgtr)
+    print(f"Chosen L2 C = {cfb_model.C}")
+
+    print("\n=== TRAIN (in-sample) ===")
+    _pm(M.evaluate(cfb_model, Xtr, ytr, hftr))
+    print("=== TEST (held-out season) ===")
+    _pm(M.evaluate(cfb_model, *parts[TEST_GAME_YEAR]))
+
+    print("\n=== Learned weights (logit scale) ===")
+    for name, w in zip(MU.MATCHUP_COLS, cfb_model.coef):
+        print(f"  {name:12} {w:+.3f}")
+    print(f"  {'home_field':12} {cfb_model.hfa_coef:+.3f}")
+
+    cfb_model.save()
+    print("\nSaved model -> artifacts/model.json")
+
+
+def _pm(m):
+    print(f"  games={m['n_games']}  accuracy={m['accuracy']}  "
+          f"Brier={m['brier']}  log_loss={m['log_loss']}")
+
+
+if __name__ == "__main__":
+    main()
