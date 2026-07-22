@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from pathlib import Path
 
 import requests
@@ -47,16 +48,18 @@ def _get(endpoint: str, params: dict, cache_name: str) -> list:
     if not key:
         raise RuntimeError("CFBD_API_KEY not set; cannot reach the API.")
 
-    resp = requests.get(
-        f"{BASE}{endpoint}",
-        params=params,
-        headers={"Authorization": f"Bearer {key}", "Accept": "application/json"},
-        timeout=30,
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    cache.write_text(json.dumps(data))
-    return data
+    headers = {"Authorization": f"Bearer {key}", "Accept": "application/json"}
+    for attempt in range(6):
+        resp = requests.get(f"{BASE}{endpoint}", params=params, headers=headers, timeout=30)
+        if resp.status_code == 429:                 # rate limited: back off and retry
+            wait = float(resp.headers.get("Retry-After", 2 ** attempt))
+            time.sleep(min(wait, 30))
+            continue
+        resp.raise_for_status()
+        data = resp.json()
+        cache.write_text(json.dumps(data))
+        return data
+    raise RuntimeError(f"CFBD rate-limited after retries: {endpoint} {params}")
 
 
 def advanced_season_stats(year: int) -> list:
@@ -99,3 +102,27 @@ def talent(year: int) -> list:
 
 def fbs_teams(year: int) -> list:
     return _get("/teams/fbs", {"year": year}, f"teams_{year}.json")
+
+
+# --- Player-level PPA (EPA) + volume, for the QB-value / WAR layer -------------
+
+def player_ppa_season(year: int) -> list:
+    """Per-player season PPA (EPA/play + total), all positions. `id` is stable
+    across seasons/teams (aging + transfer tracking)."""
+    return _get("/ppa/players/season", {"year": year, "excludeGarbageTime": "true"},
+                f"ppa_players_season_{year}.json")
+
+
+def player_ppa_games(year: int, week: int) -> list:
+    """Per-player, per-game PPA. Carries `opponent`, so it powers the opponent
+    adjustment. Scoped by week (the endpoint 400s without a team/week bound)."""
+    return _get("/ppa/players/games",
+                {"year": year, "week": week, "excludeGarbageTime": "true"},
+                f"ppa_players_games_{year}_wk{week}.json")
+
+
+def player_season_stats(year: int, category: str) -> list:
+    """Per-player season stats for a category (e.g. 'passing' -> ATT/COMPLETIONS/
+    YDS/TD/INT). Used for QB volume (dropback proxy)."""
+    return _get("/stats/player/season", {"year": year, "category": category},
+                f"player_stats_{category}_{year}.json")
