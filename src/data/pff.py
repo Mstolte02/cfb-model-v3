@@ -162,11 +162,16 @@ def build_roster_talent(weights=PFF_OPT_WEIGHTS, group_scores=None) -> dict:
     return out
 
 
-def build_2026_roster_talent(weights=PFF_OPT_WEIGHTS) -> dict:
+def build_2026_roster_talent(weights=PFF_OPT_WEIGHTS, qb_grades=None) -> dict:
     """{2026: Series(team -> standardized talent)} from the 2026 Ourlads two-deep
     (roster) x each player's 2025 PFF grade. Same construction as the historical
     roster talent, but the roster comes from the preseason two-deep (since 2026
-    hasn't been played). Players without a 2025 grade are skipped (freshmen)."""
+    hasn't been played). Players without a 2025 grade are skipped (freshmen).
+
+    qb_grades={normalized_name: grade}: opponent-adjusted QB WAR (rescaled to the
+    PFF grade scale) replacing the PFF grade for matched QBs — 'use WAR instead of
+    PFF at the one position CFBD can measure cleanly'. Non-QB positions keep PFF.
+    """
     g = load_player_grades()
     grades25 = g[g["season"] == 2025].groupby("pname", as_index=False)["grade"].max()
     td = pd.read_excel(TWODEEP_2026, sheet_name="Weighted Two Deep")
@@ -174,6 +179,10 @@ def build_2026_roster_talent(weights=PFF_OPT_WEIGHTS) -> dict:
         subset=["player_display", "broad_group"])
     td["pname"] = td["player_display"].map(_norm)
     td = td.merge(grades25.rename(columns={"grade": "prior_grade"}), on="pname", how="left")
+    if qb_grades:
+        qb = td["broad_group"] == "QB"
+        td.loc[qb, "prior_grade"] = td.loc[qb, "pname"].map(qb_grades).fillna(
+            td.loc[qb, "prior_grade"])
     td["dw"] = np.where(pd.to_numeric(td["depth"], errors="coerce") <= 1, 1.0, 0.45)
 
     scores = {}

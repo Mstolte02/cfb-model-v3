@@ -69,10 +69,21 @@ def team_raw_score(roster, weights=pff.PFF_OPT_WEIGHTS):
 
 
 def load_rosters():
-    """{team: [{name, group, depth, grade}]} from the 2026 two-deep x 2025 grades."""
+    """{team: [{name, group, depth, grade, source}]} from the 2026 two-deep. QBs
+    carry opponent-adjusted CFBD WAR (rescaled to the PFF grade scale); every other
+    position keeps its 2025 PFF grade. `source` is "EPA-WAR" or "PFF"."""
+    from src import qbwar
+    from config import ARTIFACTS
     g = pff.load_player_grades()
     grades25 = g[g["season"] == 2025].groupby("pname", as_index=False)["grade"].max()
     gmap = dict(zip(grades25["pname"], grades25["grade"]))
+    war = {}
+    qbv = ARTIFACTS / "qb_values.csv"
+    if qbv.exists():
+        try:
+            war = qbwar.war_qb_grades(qbv, 2025)
+        except Exception as e:
+            print(f"  [warn] QB WAR grades unavailable: {e}")
     td = pd.read_excel(pff.TWODEEP_2026, sheet_name="Weighted Two Deep")
     td = td[["team", "broad_group", "player_display", "depth"]].dropna(
         subset=["player_display", "broad_group"])
@@ -81,12 +92,17 @@ def load_rosters():
         players = []
         for _, r in tg.iterrows():
             pname = pff._norm(r["player_display"])
+            grp = str(r["broad_group"])
+            source = "PFF"
             grade = gmap.get(pname)
+            if grp == "QB" and pname in war:            # WAR replaces PFF at QB
+                grade = war[pname]; source = "EPA-WAR"
             players.append({
                 "name": str(r["player_display"]),
-                "group": str(r["broad_group"]),
+                "group": grp,
                 "depth": int(pd.to_numeric(r["depth"], errors="coerce") or 2),
                 "grade": None if grade is None or pd.isna(grade) else round(float(grade), 1),
+                "source": source,
             })
         rosters[str(team)] = players
     return rosters

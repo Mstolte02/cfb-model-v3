@@ -208,8 +208,12 @@ tbody tr:hover { background: var(--panel); }
 .rm-note { padding: 10px 18px; color: var(--muted); font-size: 12px; }
 .rm-body { overflow-y: auto; padding: 4px 18px; }
 .rm-grp { margin: 10px 0 4px; color: var(--accent); font-size: 11px; letter-spacing: 1px; }
-.rm-row { display: grid; grid-template-columns: 1fr 74px 92px 66px 26px; gap: 8px;
+.rm-row { display: grid; grid-template-columns: 1fr 66px 84px 56px 38px 22px; gap: 8px;
   align-items: center; padding: 3px 0; }
+.src-badge { font-size: 9px; font-weight: 700; letter-spacing: .5px; text-align: center;
+  padding: 2px 0; border-radius: 4px; }
+.src-badge.epa { background: rgba(63,185,80,.18); color: var(--green); }
+.src-badge.pff { background: var(--panel2); color: var(--muted); }
 .rm-row input, .rm-row select {
   background: var(--panel2); border: 1px solid var(--line); color: var(--text);
   padding: 5px 7px; border-radius: 6px; font-size: 13px; width: 100%;

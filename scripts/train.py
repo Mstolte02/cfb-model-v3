@@ -83,13 +83,25 @@ def build_projection_frame(talent_blend=None, unc_lambda=None):
               f"{PROJECTION_TALENT_FALLBACK_YEAR} composite proxy (r~0.97 stable).")
 
     # Blend in roster-aware PFF talent (historical + 2026 from the Ourlads two-deep).
+    # QBs use opponent-adjusted CFBD WAR (rescaled to PFF scale) instead of the PFF
+    # grade; all other positions keep PFF (CFBD can't value OL/coverage).
+    from src import qbwar
+    from config import ARTIFACTS as _ART
+    qb_grades = None
+    qbv = _ART / "qb_values.csv"
+    if qbv.exists():
+        try:
+            qb_grades = qbwar.war_qb_grades(qbv, 2025)
+            print(f"  [info] QB WAR grades for {len(qb_grades)} QBs (replacing PFF at QB).")
+        except Exception as e:
+            print(f"  [warn] QB WAR grades unavailable: {e}")
     pff_roster = pff.build_roster_talent()
     try:
-        pff_roster[PROJECTION_YEAR] = pff.build_2026_roster_talent()[PROJECTION_YEAR]
-        print(f"  [info] {PROJECTION_YEAR} PFF roster talent from two-deep "
+        pff_roster[PROJECTION_YEAR] = pff.build_2026_roster_talent(qb_grades=qb_grades)[PROJECTION_YEAR]
+        print(f"  [info] {PROJECTION_YEAR} roster talent from two-deep "
               f"({len(pff_roster[PROJECTION_YEAR])} teams).")
     except Exception as e:
-        print(f"  [warn] {PROJECTION_YEAR} PFF roster talent unavailable: {e}")
+        print(f"  [warn] {PROJECTION_YEAR} roster talent unavailable: {e}")
     talent = blended_talent(talent, pff_roster, w=talent_blend)
 
     # Service academies (Air Force, Navy) have no 247 recruiting composite and

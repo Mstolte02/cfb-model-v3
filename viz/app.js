@@ -632,6 +632,9 @@
     orig.forEach(p => gradeMap[p.name] = p.grade);
     const rows = rmRoster.map((p, i) => {
       const edited = gradeMap[p.name] !== undefined && gradeMap[p.name] !== p.grade;
+      const src = p.source === "EPA-WAR"
+        ? `<span class="src-badge epa" title="Opponent-adjusted CFBD EPA (WAR), rescaled to the grade scale">EPA</span>`
+        : `<span class="src-badge pff" title="2025 PFF grade">PFF</span>`;
       return `<div class="rm-row" data-idx="${i}">
         <input class="pname" value="${esc(p.name)}" data-k="name" placeholder="Player">
         <select data-k="group">${RM_GROUPS.map(g =>
@@ -641,6 +644,7 @@
           <option value="2" ${(+p.depth) !== 1 ? "selected" : ""}>Backup</option></select>
         <input class="grade ${edited ? "edited" : ""}" type="number" step="0.5" min="0" max="100"
           data-k="grade" value="${p.grade == null ? "" : p.grade}" placeholder="—">
+        ${src}
         <button class="rm-del" data-del="${i}" title="Remove">✕</button>
       </div>`;
     }).join("");
