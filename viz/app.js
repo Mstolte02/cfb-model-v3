@@ -1,102 +1,71 @@
-/* CFB Model v2 — 2026 visuals.
-   Tabs: Top 25 · Playoff Projection · Matchup Simulator · Ratings Lab (editor).
-   Two rating lenses: "" (balanced) and "_roster" (roster-weighted).
+/* CFB Model v3 — 2026 visuals.
+   Tabs: Ratings · Playoff Projection · Matchup Simulator · Team Breakdown.
+   One rating variant: talent is a 38/38/25 PFF / recruiting / WAR blend.
 
-   The trained model math is frozen (coefficients in model*.json). The Ratings Lab
-   lets you edit each team's 6 model INPUTS; power ratings, the matchup sim, and a
-   re-runnable playoff Monte Carlo all recompute from those edits, client-side. */
+   The trained model math is frozen (coefficients in model*.json) and is a verified
+   port of the Python model — win probability, margin and points agree with the
+   backend to 4 decimals. Every number on screen derives from those coefficients
+   plus the exported per-team feature vectors, so the bracket, the schedule rows and
+   the matchup simulator cannot disagree with each other. */
 (async function () {
-  const fetchJSON = u => fetch(u).then(r => r.json());
-  const [teams, schedule, ...sets] = await Promise.all([
+  // no-cache, not no-store: still uses the HTTP cache but revalidates first. The
+  // data files are rewritten every time the pipeline runs, and a stale copy shows
+  // wrong numbers with no visible error.
+  const fetchJSON = u => fetch(u, { cache: "no-cache" }).then(r => r.json());
+  const [teams, schedule, players, diag, ratings, playoff, model] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
-    ...["", "_roster"].flatMap(s =>
-      ["ratings", "playoff", "model"].map(f => fetchJSON(`data/${f}${s}.json`))),
+    fetchJSON("data/players.json").catch(() => ({})),
+    fetchJSON("data/diagnostics.json").catch(() => null),
+    fetchJSON("data/ratings.json"),
+    fetchJSON("data/playoff.json"),
+    fetchJSON("data/model.json"),
   ]);
-  const DATA = {
-    "": { ratings: sets[0], playoff: sets[1], model: sets[2] },
-    "_roster": { ratings: sets[3], playoff: sets[4], model: sets[5] },
-  };
-  let lens = "";
-  const cur = () => DATA[lens];
-  // Live sim results per lens (start with the backend 20k JSON; replaced on re-sim).
-  const simData = { "": DATA[""].playoff, "_roster": DATA["_roster"].playoff };
+  // One model, one set of numbers. The old lens toggle offered a second
+  // roster-weighted variant that leaned harder on the two-deep; it was a knowingly
+  // worse backtest kept as an alternative view, and it is gone. Talent is the
+  // 38/38/25 PFF / recruiting / WAR blend, which is the joint optimum of all 45
+  // three-way blends under leave-one-season-out.
+  const DATA = { ratings, playoff, model };
+  const cur = () => DATA;
 
-  /* ---------- team metadata helpers ---------- */
+  /* ---------- team metadata ---------- */
   const meta = teams;
-  const logoURL = t => meta[t] ? "logos/" + encodeURIComponent(meta[t].logo) : "";
+  const logoURL = t => (meta[t] && meta[t].logo) || "";
   const conf = t => (meta[t] && meta[t].conference) || "—";
+  const abbr = t => (meta[t] && meta[t].abbreviation) || t;
+  const pct = (x, d = 1) => (100 * x).toFixed(d) + "%";
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/"/g, "&quot;");
+
+  /* Brand colour, lightened until it reads as text on the dark panel. rgba() keeps
+     the true brand hue for washes and fills, where contrast isn't the constraint. */
+  const rawColor = t => (meta[t] && meta[t].color) || "#58a6ff";
   function color(t) {
-    let c = (meta[t] && meta[t].color) || "#58a6ff";
+    const c = rawColor(t);
     let [r, g, b] = [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16));
     if (isNaN(r)) return "#58a6ff";
-    while (0.299 * r + 0.587 * g + 0.114 * b < 90) {
-      r = Math.min(255, r + 40); g = Math.min(255, g + 40); b = Math.min(255, b + 40);
+    while (0.299 * r + 0.587 * g + 0.114 * b < 100) {
+      r = Math.min(255, r + 32); g = Math.min(255, g + 32); b = Math.min(255, b + 32);
     }
     return `rgb(${r},${g},${b})`;
   }
-  const pct = (x, d = 1) => (100 * x).toFixed(d) + "%";
-  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
-
-  /* ---------- editable inputs / overrides ---------- */
-  // FIELD index -> label. Vector order: [O, D, fp_margin, pythag, talent, returning]
-  const FIELDS = [
-    { i: 0, label: "Off", grp: "perf" }, { i: 1, label: "Def", grp: "perf" },
-    { i: 2, label: "FieldPos", grp: "perf" }, { i: 3, label: "Pythag", grp: "perf" },
-    { i: 4, label: "Talent", grp: "roster" }, { i: 5, label: "Returning", grp: "roster" },
-  ];
-  const LS_KEY = "cfb_overrides_v1";
-  let overrides = {};
-  try { overrides = JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch (e) {}
-  overrides[""] = overrides[""] || {};
-  overrides["_roster"] = overrides["_roster"] || {};
-  const saveOverrides = () => {
-    try { localStorage.setItem(LS_KEY, JSON.stringify(overrides)); } catch (e) {}
-  };
-
-  // Roster editing (only when the Python server is present). rosterEdits holds the
-  // user's edited depth charts per lens; the server turns them into frame vectors.
-  const RE_KEY = "cfb_roster_edits_v1";
-  let ROSTERS = null, apiAvailable = false;
-  let rosterEdits = {};
-  try { rosterEdits = JSON.parse(localStorage.getItem(RE_KEY)) || {}; } catch (e) {}
-  rosterEdits[""] = rosterEdits[""] || {};
-  rosterEdits["_roster"] = rosterEdits["_roster"] || {};
-  const saveRosterEdits = () => {
-    try { localStorage.setItem(RE_KEY, JSON.stringify(rosterEdits)); } catch (e) {}
-  };
-  const serverLens = () => (lens === "_roster" ? "roster" : "");
-  async function postRecompute() {
-    const edits = rosterEdits[lens];
-    const res = await fetch("/api/recompute", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ lens: serverLens(), edits }),
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    rosterVecs[lens] = Object.keys(edits).length ? data.teams : null;
+  function rgba(t, a) {
+    const c = rawColor(t);
+    const [r, g, b] = [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16));
+    return isNaN(r) ? `rgba(88,166,255,${a})` : `rgba(${r},${g},${b},${a})`;
   }
 
-  const names = () => Object.keys(cur().model.teams);      // all sim teams (138)
-  // Rankable teams = those the backend rated (have real 2025 priors, 136). The 2
-  // brand-new FBS teams exist only for the schedule/sim, not the power ranking.
+  const P4 = new Set(["ACC", "Big 12", "Big Ten", "SEC"]);
+  const G6 = new Set(["American Athletic", "Conference USA", "Mid-American",
+    "Mountain West", "Pac-12", "Sun Belt"]);
+
+  const vecOf = t => cur().model.teams[t];
   const rankNames = () => cur().ratings.teams.map(t => t.team);
+  const ratingRow = () => Object.fromEntries(cur().ratings.teams.map(t => [t.team, t]));
+  const simRow = () => Object.fromEntries((cur().playoff.teams || []).map(t => [t.team, t]));
 
-  // Roster layer: when the Python server re-derives inputs from edited depth
-  // charts, it returns a full frame that replaces the baseline vectors.
-  const rosterVecs = { "": null, "_roster": null };
-  const baseVec = t => (rosterVecs[lens] && rosterVecs[lens][t]) || cur().model.teams[t];
-  function effVec(t) {                    // baseline (+ roster layer) + direct field edits
-    const v = baseVec(t).slice();
-    const o = overrides[lens][t];
-    if (o) for (const k in o) v[+k] = o[k];
-    return v;
-  }
-  const isEdited = (t, i) => overrides[lens][t] && overrides[lens][t][i] !== undefined;
-  const teamEditCount = t => overrides[lens][t] ? Object.keys(overrides[lens][t]).length : 0;
-  const totalEdits = () => Object.values(overrides[lens]).reduce((s, o) => s + Object.keys(o).length, 0);
-
-  /* ---------- frozen win-prob math (verified equal to Python) ---------- */
+  /* ---------- frozen win-prob math ---------- */
   const sigmoid = z => 1 / (1 + Math.exp(-z));
   function erf(x) {
     const s = x < 0 ? -1 : 1; x = Math.abs(x);
@@ -107,8 +76,6 @@
   }
   const normCdf = x => 0.5 * (1 + erf(x / Math.SQRT2));
   const dot = (c, v) => c[0]*v[0]+c[1]*v[1]+c[2]*v[2]+c[3]*v[3]+c[4]*v[4]+c[5]*v[5];
-
-  // win prob for A over B given the 6-diff x and home flag for A (0/1)
   function winpFromDiff(x, homeA) {
     const M = cur().model, L = M.logistic, G = M.margin;
     const z = L.intercept + dot(L.coef, x) + homeA * L.hfa;
@@ -117,351 +84,15 @@
   }
   const diffVec = (a, b) => [a[0]-b[1], a[1]-b[0], a[2]-b[2], a[3]-b[3], a[4]-b[4], a[5]-b[5]];
 
-  /* ---------- live power ratings (neutral round-robin) ---------- */
-  let power = {}, rankOf = {};
-  function computePower() {
-    const ns = rankNames(), n = ns.length;
-    const vecs = ns.map(effVec);
-    const sum = new Float64Array(n);
-    for (let i = 0; i < n; i++) {
-      for (let j = i + 1; j < n; j++) {
-        const p = winpFromDiff(diffVec(vecs[i], vecs[j]), 0); // neutral
-        sum[i] += p; sum[j] += (1 - p);
-      }
-    }
-    power = {}; const arr = [];
-    for (let i = 0; i < n; i++) { power[ns[i]] = sum[i] / (n - 1); arr.push(ns[i]); }
-    arr.sort((a, b) => power[b] - power[a]);
-    rankOf = {}; arr.forEach((t, k) => rankOf[t] = k + 1);
-    return arr;
-  }
-
-  /* ---------- tabs + lens ---------- */
-  document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(x => x.classList.toggle("active", x === b));
-    document.querySelectorAll(".view").forEach(v =>
-      v.classList.toggle("active", v.id === "view-" + b.dataset.view));
-    // Re-render the view being shown so it reflects any Ratings Lab edits.
-    const view = b.dataset.view;
-    if (view === "top25") renderTop25();
-    else if (view === "playoff") renderPlayoff();
-    else if (view === "matchup") renderMatchup();
-  }));
-  document.querySelectorAll(".lens-opt").forEach(b => b.addEventListener("click", () => {
-    lens = b.dataset.lens;
-    document.querySelectorAll(".lens-opt").forEach(x => x.classList.toggle("active", x === b));
-    computePower();
-    renderAll();
-    renderLab();
-  }));
-
-  /* ---------- Top 25 ---------- */
-  function renderTop25() {
-    const all = document.getElementById("showAll").checked;
-    const order = Object.keys(power).sort((a, b) => power[b] - power[a]);
-    const list = all ? order : order.slice(0, 25);
-    const maxPower = power[order[0]];
-    const otherLens = lens === "" ? "_roster" : "";
-    const sim = Object.fromEntries((simData[lens].teams || []).map(t => [t.team, t]));
-    // rank under the other lens (baseline, no live edits) for the move arrows
-    const otherRank = Object.fromEntries(
-      (DATA[otherLens].ratings.teams).map(t => [t.team, t.rank]));
-    const rows = list.map(t => {
-      const v = effVec(t), pw = power[t], rk = rankOf[t];
-      const d = (otherRank[t] || rk) - rk;
-      const move = d === 0 ? "" :
-        `<span class="move ${d > 0 ? "up" : "down"}">${d > 0 ? "▲" : "▼"}${Math.abs(d)}</span>`;
-      const s = sim[t] || {};
-      return `
-      <tr class="${rk <= 4 ? "top4" : ""}">
-        <td class="rank">${rk}</td>
-        <td><div class="team-cell"><img src="${logoURL(t)}" alt="">
-          <div><div>${esc(t)} ${move}</div><div class="conf">${esc(conf(t))}</div></div>
-        </div></td>
-        <td><div class="bar-wrap"><div class="bar">
-            <i class="${rk <= 4 ? "gold" : ""}" style="width:${100 * pw / maxPower}%"></i>
-          </div><span class="pct">${(100 * pw).toFixed(1)}</span></div></td>
-        <td class="num"><span class="od-chip ${v[0] >= 0 ? "pos" : "neg"}">O ${v[0] >= 0 ? "+" : ""}${v[0].toFixed(2)}</span></td>
-        <td class="num"><span class="od-chip ${v[1] >= 0 ? "pos" : "neg"}">D ${v[1] >= 0 ? "+" : ""}${v[1].toFixed(2)}</span></td>
-        <td class="num">${s.avg_wins != null ? s.avg_wins.toFixed(1) + "–" + s.avg_losses.toFixed(1) : "—"}</td>
-        <td class="num">${s.playoff != null ? pct(s.playoff) : "—"}</td>
-      </tr>`;
-    }).join("");
-    document.getElementById("top25-table").innerHTML = `
-      <table><thead><tr>
-        <th></th><th>Team</th><th>Power</th><th class="num">Offense</th>
-        <th class="num">Defense</th><th class="num">Proj Record</th><th class="num">CFP&nbsp;%</th>
-      </tr></thead><tbody>${rows}</tbody></table>`;
-  }
-  document.getElementById("showAll").addEventListener("change", renderTop25);
-
-  /* ---------- Playoff render (from a sim-result object) ---------- */
-  function renderPlayoff() {
-    const playoff = simData[lens];
-    const custom = playoff.custom;
-    const lensNote = lens === "_roster"
-      ? "Lens: <b>roster-weighted</b> — 70% two-deep PFF talent, full continuity shrinkage."
-      : "Lens: <b>balanced</b> — the best-backtesting blend of 2025 results and 2026 roster signals.";
-    const editNote = totalEdits()
-      ? ` <b style="color:var(--accent)">${totalEdits()} custom input edit(s) active</b> — click “Re-simulate” to fold them into these odds.`
-      : "";
-    document.getElementById("playoff-meta").innerHTML =
-      `Monte Carlo over the full 2026 schedule — <b>${playoff.n_sims.toLocaleString()}
-       simulations</b>${custom ? " (your inputs)" : ""}. Rules: ${esc(playoff.rules)}.
-       Committee proxy calibrated on the final 2025 CFP ranking (&rho; = 0.92). ${lensNote}${editNote}`;
-
-    const P = playoff.teams, field = P.slice(0, 12), s = i => field[i];
-    const slot = (t, seedNo, prob) => `
-      <div class="slot"><span class="seed">${seedNo}</span>
-        <img src="${logoURL(t.team)}" alt=""> ${esc(meta[t.team]?.abbreviation || t.team)}
-        <span class="p">${prob != null ? pct(prob, 0) : ""}</span></div>`;
-    document.getElementById("bracket").innerHTML = `
-      <div class="round-label">First Round</div><div class="round-label">Quarterfinals</div>
-      <div class="round-label">Semifinals</div><div class="round-label">Championship</div>
-      <div class="round-col">
-        <div class="game-card">${slot(s(7), 8, s(7).playoff)}${slot(s(8), 9, s(8).playoff)}</div>
-        <div class="game-card">${slot(s(4), 5, s(4).playoff)}${slot(s(11), 12, s(11).playoff)}</div>
-        <div class="game-card">${slot(s(5), 6, s(5).playoff)}${slot(s(10), 11, s(10).playoff)}</div>
-        <div class="game-card">${slot(s(6), 7, s(6).playoff)}${slot(s(9), 10, s(9).playoff)}</div>
-      </div>
-      <div class="round-col">
-        <div class="game-card bye-card">${slot(s(0), 1, s(0).bye)}<span class="bye-tag">BYE · vs 8/9 winner</span></div>
-        <div class="game-card bye-card">${slot(s(3), 4, s(3).bye)}<span class="bye-tag">BYE · vs 5/12 winner</span></div>
-        <div class="game-card bye-card">${slot(s(2), 3, s(2).bye)}<span class="bye-tag">BYE · vs 6/11 winner</span></div>
-        <div class="game-card bye-card">${slot(s(1), 2, s(1).bye)}<span class="bye-tag">BYE · vs 7/10 winner</span></div>
-      </div>
-      <div class="round-col">
-        <div class="game-card"><span class="bye-tag">SEMIFINAL 1</span>
-          ${slot(s(0), 1, s(0).sf)}${slot(s(3), 4, s(3).sf)}</div>
-        <div class="game-card"><span class="bye-tag">SEMIFINAL 2</span>
-          ${slot(s(1), 2, s(1).sf)}${slot(s(2), 3, s(2).sf)}</div>
-      </div>
-      <div class="round-col">
-        <div class="game-card trophy-card"><div class="emoji">🏆</div>
-          ${slot(s(0), 1, s(0).champ)}${slot(s(1), 2, s(1).champ)}
-          <span class="bye-tag">title odds shown</span></div>
-      </div>`;
-
-    const maxCFP = Math.max(...P.map(t => t.playoff));
-    document.getElementById("playoff-table").innerHTML = `
-      <table><thead><tr>
-        <th></th><th>Team</th><th>Proj Record</th><th>Conf&nbsp;Champ</th>
-        <th>Make&nbsp;CFP</th><th class="num">Bye</th><th class="num">Semis</th>
-        <th class="num">Final</th><th class="num">Natty</th>
-      </tr></thead><tbody>${P.slice(0, 40).map((t, i) => `
-        <tr>
-          <td class="rank">${i + 1}</td>
-          <td><div class="team-cell"><img src="${logoURL(t.team)}" alt="">
-            <div><div>${esc(t.team)}</div><div class="conf">${esc(t.conference)}</div></div>
-          </div></td>
-          <td class="num">${t.avg_wins.toFixed(1)}–${t.avg_losses.toFixed(1)}</td>
-          <td><div class="bar-wrap"><div class="bar"><i class="green" style="width:${100 * t.conf_champ}%"></i></div>
-            <span class="pct">${pct(t.conf_champ)}</span></div></td>
-          <td><div class="bar-wrap"><div class="bar"><i style="width:${100 * t.playoff / maxCFP}%"></i></div>
-            <span class="pct">${pct(t.playoff)}</span></div></td>
-          <td class="num">${pct(t.bye)}</td>
-          <td class="num">${pct(t.sf)}</td>
-          <td class="num">${pct(t.final)}</td>
-          <td class="num"><b>${pct(t.champ)}</b></td>
-        </tr>`).join("")}</tbody></table>`;
-  }
-
-  /* ---------- Playoff Monte Carlo (JS port of scripts/simulate_playoff.py) ---------- */
-  const P4 = new Set(["ACC", "Big 12", "Big Ten", "SEC"]);
-  const G6 = new Set(["American Athletic", "Conference USA", "Mid-American",
-    "Mountain West", "Pac-12", "Sun Belt"]);
-  const CCG = new Set([...P4, ...G6]);
-  const W_WINPCT = 10, W_RATING = 1.0, W_SOS = 0.75, FCS_WIN_P = 0.95, FCS_OPP = -2.0;
-
-  function buildSimContext() {
-    const ns = names(), n = ns.length, idx = {};
-    ns.forEach((t, i) => idx[t] = i);
-    const vecs = ns.map(effVec);
-    // rating z = z-score of (O + D)/2
-    let rating = vecs.map(v => (v[0] + v[1]) / 2);
-    const rm = rating.reduce((a, b) => a + b, 0) / n;
-    const rsd = Math.sqrt(rating.reduce((a, b) => a + (b - rm) ** 2, 0) / n) || 1;
-    rating = rating.map(x => (x - rm) / rsd);
-    // pairwise neutral + home win-prob matrices (home-team perspective)
-    const Pn = new Float32Array(n * n), Ph = new Float32Array(n * n);
-    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
-      if (i === j) continue;
-      const x = diffVec(vecs[i], vecs[j]);
-      Pn[i * n + j] = winpFromDiff(x, 0);
-      Ph[i * n + j] = winpFromDiff(x, 1);
-    }
-    // schedule split
-    const gH = [], gA = [], gP = [], gConf = [];
-    const buyTeam = [];
-    const sosSum = new Float64Array(n), sosN = new Float64Array(n);
-    const fcsCount = new Float64Array(n);
-    for (const g of schedule) {
-      const hi = idx[g.h], ai = idx[g.a];
-      if (hi !== undefined && ai !== undefined) {
-        gH.push(hi); gA.push(ai);
-        gP.push(g.n ? Pn[hi * n + ai] : Ph[hi * n + ai]);
-        gConf.push(conf(g.h) === conf(g.a) ? 1 : 0);
-        sosSum[hi] += rating[ai]; sosN[hi]++;
-        sosSum[ai] += rating[hi]; sosN[ai]++;
-      } else if (hi !== undefined || ai !== undefined) {
-        const t = hi !== undefined ? hi : ai;
-        buyTeam.push(t); fcsCount[t]++;
-        sosSum[t] += FCS_OPP; sosN[t]++;
-      }
-    }
-    const sos = Array.from({ length: n }, (_, i) => sosSum[i] / Math.max(1, sosN[i]));
-    const sm = sos.reduce((a, b) => a + b, 0) / n;
-    const ssd = Math.sqrt(sos.reduce((a, b) => a + (b - sm) ** 2, 0) / n) || 1;
-    const sosZ = sos.map(x => (x - sm) / ssd);
-    const staticScore = Array.from({ length: n }, (_, i) => W_RATING * rating[i] + W_SOS * sosZ[i]);
-    // conference games count + members
-    const confGames = new Float64Array(n), baseGames = new Float64Array(n);
-    for (let k = 0; k < gH.length; k++) {
-      baseGames[gH[k]]++; baseGames[gA[k]]++;
-      if (gConf[k]) { confGames[gH[k]]++; confGames[gA[k]]++; }
-    }
-    for (const t of buyTeam) baseGames[t]++;
-    const confMembers = {};
-    ns.forEach((t, i) => { const c = conf(t); if (CCG.has(c)) (confMembers[c] = confMembers[c] || []).push(i); });
-    return { ns, n, idx, rating, Pn, gH, gA, gP, gConf, buyTeam, fcsCount,
-      staticScore, confGames, baseGames, confMembers };
-  }
-
-  function runSimChunk(ctx, nSims, acc) {
-    const { n, gH, gA, gP, gConf, buyTeam, fcsCount, staticScore,
-      confGames, baseGames, confMembers, Pn, rating } = ctx;
-    const confList = Object.entries(confMembers);
-    const g6pool = [];
-    ctx.ns.forEach((t, i) => { if (G6.has(conf(t))) g6pool.push(i); });
-    for (let s = 0; s < nSims; s++) {
-      const w = new Float64Array(n), cw = new Float64Array(n);
-      for (let k = 0; k < gH.length; k++) {
-        if (Math.random() < gP[k]) { w[gH[k]]++; if (gConf[k]) cw[gH[k]]++; }
-        else { w[gA[k]]++; if (gConf[k]) cw[gA[k]]++; }
-      }
-      for (const t of buyTeam) if (Math.random() < FCS_WIN_P) w[t]++;
-      const gp = Float64Array.from(baseGames);
-      const champs = {};
-      for (const [c, mem] of confList) {
-        let b1 = -1, b2 = -1, s1 = -Infinity, s2 = -Infinity;
-        for (const t of mem) {
-          const sc = cw[t] / Math.max(1, confGames[t]) + 1e-4 * rating[t];
-          if (sc > s1) { s2 = s1; b2 = b1; s1 = sc; b1 = t; }
-          else if (sc > s2) { s2 = sc; b2 = t; }
-        }
-        const p = Pn[b1 * n + b2];
-        const win = Math.random() < p ? b1 : b2;
-        champs[c] = win; w[win]++; gp[b1]++; gp[b2]++;
-        acc.confChamp[win]++;
-      }
-      const score = new Float64Array(n);
-      for (let t = 0; t < n; t++) score[t] = W_WINPCT * (w[t] / gp[t]) + staticScore[t];
-      // selection: 4 P4 champs + best-scoring G6 team, then fill by score
-      const field = new Set();
-      for (const c of P4) field.add(champs[c]);
-      let bestG6 = -1, bg = -Infinity;
-      for (const t of g6pool) if (score[t] > bg) { bg = score[t]; bestG6 = t; }
-      field.add(bestG6);
-      const order = Array.from({ length: n }, (_, i) => i).sort((a, b) => score[b] - score[a]);
-      for (const t of order) { if (field.size >= 12) break; field.add(t); }
-      const seeds = order.filter(t => field.has(t)); // score-sorted, length 12
-      for (let r = 0; r < 12; r++) { acc.playoff[seeds[r]]++; if (r < 4) acc.bye[seeds[r]]++; }
-      // bracket (straight seeding, fixed) — mirrors the Python
-      const playN = (a, b) => Math.random() < Pn[a * n + b] ? a : b;
-      // first round hosted by higher seed (home matrix)
-      const fr = (hi, lo) => Math.random() < ctx.homeP(hi, lo) ? hi : lo;
-      const a89 = fr(seeds[7], seeds[8]), a512 = fr(seeds[4], seeds[11]),
-        a611 = fr(seeds[5], seeds[10]), a710 = fr(seeds[6], seeds[9]);
-      const q1 = playN(seeds[0], a89), q2 = playN(seeds[3], a512),
-        q3 = playN(seeds[2], a611), q4 = playN(seeds[1], a710);
-      for (const t of [seeds[0], seeds[3], seeds[2], seeds[1], a89, a512, a611, a710]) acc.qf[t]++;
-      const sf1 = playN(q1, q2), sf2 = playN(q4, q3);
-      for (const t of [q1, q2, q3, q4]) acc.sf[t]++;
-      const champ = playN(sf1, sf2);
-      for (const t of [sf1, sf2]) acc.final[t]++;
-      acc.champ[champ]++;
-      for (let t = 0; t < n; t++) { acc.winTot[t] += w[t]; acc.gpTot[t] += gp[t]; }
-    }
-  }
-
-  async function simulatePlayoff(nSims, onProgress) {
-    const ctx = buildSimContext();
-    const n = ctx.n;
-    ctx.homeP = (hi, lo) => ctx.PhArr[hi * n + lo];
-    ctx.PhArr = (function () {                       // home matrix (rebuild once)
-      const vecs = ctx.ns.map(effVec), a = new Float32Array(n * n);
-      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) if (i !== j)
-        a[i * n + j] = winpFromDiff(diffVec(vecs[i], vecs[j]), 1);
-      return a;
-    })();
-    const acc = {};
-    for (const k of ["confChamp", "playoff", "bye", "qf", "sf", "final", "champ", "winTot", "gpTot"])
-      acc[k] = new Float64Array(n);
-    const batch = 1000;
-    for (let done = 0; done < nSims; done += batch) {
-      const b = Math.min(batch, nSims - done);
-      runSimChunk(ctx, b, acc);
-      if (onProgress) onProgress((done + b) / nSims);
-      // Yield via a macrotask (not rAF, which pauses in a backgrounded tab).
-      await new Promise(r => setTimeout(r, 0));
-    }
-    const P = cur().playoff; // reuse conference labels
-    const teams = [];
-    for (let i = 0; i < n; i++) {
-      if (!acc.playoff[i] && !acc.confChamp[i]) continue;
-      teams.push({
-        team: ctx.ns[i], conference: conf(ctx.ns[i]),
-        avg_wins: acc.winTot[i] / nSims, avg_losses: (acc.gpTot[i] - acc.winTot[i]) / nSims,
-        conf_champ: acc.confChamp[i] / nSims, playoff: acc.playoff[i] / nSims,
-        bye: acc.bye[i] / nSims, qf: acc.qf[i] / nSims, sf: acc.sf[i] / nSims,
-        final: acc.final[i] / nSims, champ: acc.champ[i] / nSims,
-      });
-    }
-    teams.sort((a, b) => (b.playoff - a.playoff) || (b.champ - a.champ));
-    return { n_sims: nSims, rules: P.rules, teams, custom: true };
-  }
-
-  document.getElementById("resim-btn").addEventListener("click", async () => {
-    const btn = document.getElementById("resim-btn");
-    const status = document.getElementById("resim-status");
-    const nSims = +document.getElementById("resim-n").value;
-    btn.disabled = true;
-    status.className = "resim-status";
-    const res = await simulatePlayoff(nSims, p => {
-      status.textContent = `Simulating… ${Math.round(100 * p)}%`;
-    });
-    simData[lens] = res;
-    renderPlayoff();
-    renderTop25();
-    status.className = "resim-status custom";
-    status.textContent = `Updated with your inputs (${nSims.toLocaleString()} sims).`;
-    btn.disabled = false;
-  });
-
-  /* ---------- Matchup simulator ---------- */
-  const allNames = rankNames().slice().sort();
-  const byConf = {};
-  allNames.forEach(t => (byConf[conf(t)] = byConf[conf(t)] || []).push(t));
-  function makePicker(el, initial) {
-    const sel = document.createElement("select");
-    sel.innerHTML = Object.keys(byConf).sort().map(c =>
-      `<optgroup label="${esc(c)}">` +
-      byConf[c].map(t => `<option value="${esc(t)}" ${t === initial ? "selected" : ""}>${esc(t)}</option>`).join("") +
-      `</optgroup>`).join("");
-    el.appendChild(sel);
-    return sel;
-  }
-  const selA = makePicker(document.getElementById("pickerA"), "Ohio State");
-  const selB = makePicker(document.getElementById("pickerB"), "Notre Dame");
-
+  /* One prediction routine for every view. venue is "A" | "B" | "N", A's perspective. */
   function predict(a, b, venue) {
-    const A = effVec(a), B = effVec(b), M = cur().model;
+    const A = vecOf(a), B = vecOf(b), M = cur().model;
+    if (!A || !B) return null;
     const homeA = venue === "A" ? 1 : 0, homeB = venue === "B" ? 1 : 0;
     let pA, marginA;
     if (homeB) {
       const xb = diffVec(B, A);
-      const pB = winpFromDiff(xb, 1);
-      pA = 1 - pB;
+      pA = 1 - winpFromDiff(xb, 1);
       marginA = -(M.margin.intercept + dot(M.margin.coef, xb) + M.margin.hfa);
     } else {
       const x = diffVec(A, B);
@@ -469,15 +100,282 @@
       marginA = M.margin.intercept + dot(M.margin.coef, x) + homeA * M.margin.hfa;
     }
     const Pt = M.points;
-    const ptsA = Pt.intercept + Pt.coef[0] * A[0] + Pt.coef[1] * B[1] + Pt.coef[2] * homeA;
-    const ptsB = Pt.intercept + Pt.coef[0] * B[0] + Pt.coef[1] * A[1] + Pt.coef[2] * homeB;
+    const ptsA = Pt.intercept + Pt.coef[0]*A[0] + Pt.coef[1]*B[1] + Pt.coef[2]*homeA;
+    const ptsB = Pt.intercept + Pt.coef[0]*B[0] + Pt.coef[1]*A[1] + Pt.coef[2]*homeB;
     const total = ptsA + ptsB;
-    return { pA, margin: marginA, total, scoreA: (total + marginA) / 2, scoreB: (total - marginA) / 2 };
+    return { pA, margin: marginA, total,
+             scoreA: (total + marginA) / 2, scoreB: (total - marginA) / 2 };
   }
+
+  /* Rounded display scores. Rounding each side independently can tie a game the
+     model does not think is a tie - a 0.4-point projected margin lands both sides
+     on the same integer - so the favourite takes the extra point. Football has no
+     ties, and a bracket that shows one reads as a bug. */
+  /* The winner is whoever the ensemble win probability favours, and the displayed
+     score has to agree with it. Those two can diverge on a near-coin-flip, because
+     pA blends the logistic with the margin model while the score comes from the
+     margin alone: a 51% favourite can carry a margin of -0.2. Left alone that put a
+     team in the championship game after losing its semifinal on the scoreboard. */
+  function displayScore(r, winnerIsA) {
+    let a = Math.max(0, Math.round(r.scoreA)), b = Math.max(0, Math.round(r.scoreB));
+    if (winnerIsA === undefined) winnerIsA = r.pA >= 0.5;
+    if (winnerIsA && a <= b) a = b + 1;
+    else if (!winnerIsA && b <= a) b = a + 1;
+    return [a, b];
+  }
+
+  /* A margin under half a point is a coin flip, and "−0.0" reads as a rendering
+     bug rather than a pick'em. */
+  function spreadLabel(margin) {
+    if (Math.abs(margin) < 0.5) return `<span class="pk">PK</span>`;
+    // en dash rather than the minus sign, which sets far too wide next to figures
+    const sign = margin >= 0 ? "–" : "+";
+    return `<span class="spread ${margin >= 0 ? "pos" : "neg"}"><span class="sgn">${sign}</span>${Math.abs(margin).toFixed(1)}</span>`;
+  }
+
+  /* Diverging bar for a z-scored input: the midline is FBS average. */
+  function zBar(v, tint, span = 2.2) {
+    const f = Math.max(-1, Math.min(1, v / span));
+    const w = Math.abs(f) * 50;
+    const left = f >= 0 ? 50 : 50 - w;
+    return `<div class="zbar"><span class="zmid"></span>
+      <i style="left:${left}%;width:${w}%;background:${tint}"></i></div>`;
+  }
+
+  /* ---------- tabs ---------- */
+  document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.toggle("active", x === b));
+    document.querySelectorAll(".view").forEach(v =>
+      v.classList.toggle("active", v.id === "view-" + b.dataset.view));
+    render(b.dataset.view);
+  }));
+
+  /* =======================================================================
+     RATINGS DASHBOARD
+     ======================================================================= */
+  const COLS = [
+    { k: "rank",       h: "#",            n: true },
+    { k: "team",       h: "Team",         n: false },
+    { k: "power",      h: "Power",        n: true },
+    { k: "record",     h: "Proj Record",  n: true, sort: r => r.avg_wins ?? -1,
+      fmt: r => r.avg_wins != null ? `${r.avg_wins.toFixed(1)}–${r.avg_losses.toFixed(1)}` : "—" },
+    { k: "O",          h: "Offense",      n: true },
+    { k: "D",          h: "Defense",      n: true },
+    { k: "talent",     h: "Talent",       n: true },
+    { k: "returning",  h: "Returning",    n: true },
+    { k: "sos",        h: "SOS",          n: true,
+      fmt: r => (r.sos >= 0 ? "+" : "") + r.sos.toFixed(2) },
+    { k: "conf_champ", h: "Conf %",       n: true, fmt: r => pct(r.conf_champ ?? 0, 0) },
+    { k: "playoff",    h: "CFP %",        n: true, fmt: r => pct(r.playoff ?? 0, 0) },
+    { k: "champ",      h: "Natty %",      n: true, fmt: r => pct(r.champ ?? 0, 1) },
+  ];
+  let sortKey = "power", sortDesc = true;
+
+  function dashRows() {
+    const q = document.getElementById("dash-search").value.trim().toLowerCase();
+    const c = document.getElementById("dash-conf").value;
+    const tier = document.getElementById("dash-tier").value;
+    let rows = cur().ratings.teams.slice();
+    if (q) rows = rows.filter(r => r.team.toLowerCase().includes(q) ||
+      ((meta[r.team] && meta[r.team].mascot) || "").toLowerCase().includes(q));
+    if (c) rows = rows.filter(r => r.conference === c);
+    if (tier === "p4") rows = rows.filter(r => P4.has(r.conference));
+    if (tier === "g6") rows = rows.filter(r => G6.has(r.conference));
+    const col = COLS.find(x => x.k === sortKey) || COLS[2];
+    const val = col.sort || (r => r[sortKey]);
+    rows.sort((a, b) => {
+      if (sortKey === "team") {
+        return sortDesc ? b.team.localeCompare(a.team) : a.team.localeCompare(b.team);
+      }
+      return sortDesc ? val(b) - val(a) : val(a) - val(b);
+    });
+    return rows;
+  }
+
+  function renderDash() {
+    const rows = dashRows();
+    const all = cur().ratings.teams;
+    const maxPower = Math.max(...all.map(r => r.power));
+    document.getElementById("dash-count").textContent =
+      `${rows.length} of ${all.length} teams`;
+
+    const head = COLS.map(c => {
+      const on = c.k === sortKey;
+      return `<th class="${c.n ? "num" : ""} sortable${on ? " sorted" : ""}"
+        data-k="${c.k}">${c.h}${on ? (sortDesc ? " ▾" : " ▴") : ""}</th>`;
+    }).join("");
+
+    const body = rows.map(r => {
+      const t = r.team, tint = color(t);
+      const cells = COLS.map(c => {
+        if (c.k === "team") return `<td><div class="team-cell">
+            <span class="team-stripe" style="background:${tint}"></span>
+            <img src="${logoURL(t)}" alt="" loading="lazy">
+            <div><button class="team-link" data-team="${esc(t)}">${esc(t)}</button>
+              <div class="conf">${esc(r.conference)}</div></div></div></td>`;
+        if (c.k === "rank") return `<td class="rank">${r.rank}</td>`;
+        if (c.k === "power") return `<td><div class="bar-wrap"><div class="bar">
+            <i style="width:${100 * r.power / maxPower}%;background:${tint}"></i>
+          </div><span class="pct">${(100 * r.power).toFixed(1)}</span></div></td>`;
+        if (["O", "D", "talent", "returning"].includes(c.k)) {
+          const v = r[c.k];
+          return `<td class="num"><div class="zcell">${zBar(v, tint)}
+            <span>${v >= 0 ? "+" : ""}${v.toFixed(2)}</span></div></td>`;
+        }
+        return `<td class="num">${c.fmt ? c.fmt(r) : r[c.k]}</td>`;
+      }).join("");
+      return `<tr class="${r.rank <= 4 ? "top4" : ""}">${cells}</tr>`;
+    }).join("");
+
+    document.getElementById("dash-table").innerHTML =
+      `<table class="dash"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+
+    document.querySelectorAll("#dash-table th.sortable").forEach(th =>
+      th.addEventListener("click", () => {
+        const k = th.dataset.k;
+        if (k === sortKey) sortDesc = !sortDesc;
+        else { sortKey = k; sortDesc = !(k === "rank" || k === "team"); }
+        renderDash();
+      }));
+    wireTeamLinks();
+  }
+  ["dash-search", "dash-conf", "dash-tier"].forEach(id =>
+    document.getElementById(id).addEventListener("input", renderDash));
+
+  function fillConfSelect() {
+    const keep = document.getElementById("dash-conf").value;
+    const cs = [...new Set(cur().ratings.teams.map(t => t.conference))].sort();
+    const sel = document.getElementById("dash-conf");
+    sel.innerHTML = `<option value="">All conferences</option>` +
+      cs.map(c => `<option value="${esc(c)}"${c === keep ? " selected" : ""}>${esc(c)}</option>`).join("");
+  }
+
+  /* =======================================================================
+     PLAYOFF
+     ======================================================================= */
+  function renderPlayoff() {
+    const playoff = cur().playoff;
+    document.getElementById("playoff-meta").innerHTML =
+      `Monte Carlo over the full 2026 schedule — <b>${playoff.n_sims.toLocaleString()}
+       simulations</b>. Rules: ${esc(playoff.rules)}. Committee ranking modelled on
+       every published CFP committee ranking since 2014 (${esc(playoff.committee_proxy || "")}).
+`;
+
+    const P = playoff.teams;
+    const byTeam = Object.fromEntries(P.map(t => [t.team, t]));
+    const br = playoff.bracket;
+
+    if (!br) {
+      document.getElementById("bracket").innerHTML =
+        `<p class="sub">No bracket in this export — re-run <code>scripts.simulate_playoff</code>.</p>`;
+    } else {
+      // Resolve forward: score each game, advance the projected winner into the
+      // slot it feeds. feeds maps a game index to the games that supply its teams.
+      const G = br.games.map(g => ({ ...g }));
+      const feeds = br.feeds || {};
+      for (let i = 0; i < G.length; i++) {
+        const g = G[i];
+        const src = feeds[String(i)];
+        if (src) {
+          const won = src.map(k => G[k].winner).filter(Boolean);
+          if (!g.top) g.top = won[0];
+          if (!g.bottom) g.bottom = won.length > 1 ? won[1] : (g.top !== won[0] ? won[0] : null);
+        }
+        if (!g.top || !g.bottom) continue;
+        const venue = g.site === g.top ? "A" : g.site === g.bottom ? "B" : "N";
+        const r = predict(g.top, g.bottom, venue);
+        if (!r) continue;
+        g.p = r.pA;
+        [g.sa, g.sb] = displayScore(r);
+        g.winner = r.pA >= 0.5 ? g.top : g.bottom;
+      }
+
+      const seedOf = {};
+      br.seeds.forEach((t, i) => { if (t) seedOf[t] = i + 1; });
+      const side = (t, won, score) => {
+        if (!t) return `<div class="slot empty"><span class="seed">–</span>
+          <span class="tbd">TBD</span></div>`;
+        return `<div class="slot ${won ? "won" : "lost"}"
+            style="--wash:${rgba(t, won ? .26 : .06)};--tint:${color(t)}">
+          <span class="seed">${seedOf[t] || ""}</span>
+          <img src="${logoURL(t)}" alt="" loading="lazy">
+          <button class="team-link" data-team="${esc(t)}">${esc(abbr(t))}</button>
+          <span class="gscore">${score != null ? score : ""}</span></div>`;
+      };
+      const card = g => `<div class="game-card">
+          ${side(g.top, g.winner && g.winner === g.top, g.sa)}
+          ${side(g.bottom, g.winner && g.winner === g.bottom, g.sb)}
+          <div class="gmeta">
+            <span class="bye-tag">${g.site ? "at " + esc(abbr(g.site)) : "neutral"}</span>
+            ${g.p != null ? `<span class="gwp">${pct(Math.max(g.p, 1 - g.p), 0)}</span>` : ""}
+          </div></div>`;
+
+      const champ = G[10] && G[10].winner;
+      document.getElementById("bracket").innerHTML = `
+        <div class="round-label">First Round</div><div class="round-label">Quarterfinals</div>
+        <div class="round-label">Semifinals</div><div class="round-label">Championship</div>
+        <div class="round-col">${G.slice(0, 4).map(card).join("")}</div>
+        <div class="round-col">${G.slice(4, 8).map(card).join("")}</div>
+        <div class="round-col">${G.slice(8, 10).map(card).join("")}</div>
+        <div class="round-col">${card(G[10])}
+          ${champ ? `<div class="trophy-card" style="--wash:${rgba(champ, .18)}">
+            <div class="emoji">🏆</div><img src="${logoURL(champ)}" alt="">
+            <div class="champ-name" style="color:${color(champ)}">${esc(champ)}</div>
+            <div class="bye-tag">projected champion ·
+              ${pct((byTeam[champ] || {}).champ || 0, 1)} title odds</div></div>` : ""}
+        </div>`;
+    }
+
+    const maxCFP = Math.max(...P.map(t => t.playoff));
+    document.getElementById("playoff-table").innerHTML = `
+      <table><thead><tr>
+        <th></th><th>Team</th><th class="num">Proj Record</th><th>Conf&nbsp;Champ</th>
+        <th>Make&nbsp;CFP</th><th class="num">Bye</th><th class="num">Semis</th>
+        <th class="num">Final</th><th class="num">Natty</th>
+      </tr></thead><tbody>${P.slice(0, 40).map((t, i) => `
+        <tr>
+          <td class="rank">${i + 1}</td>
+          <td><div class="team-cell">
+            <span class="team-stripe" style="background:${color(t.team)}"></span>
+            <img src="${logoURL(t.team)}" alt="" loading="lazy">
+            <div><button class="team-link" data-team="${esc(t.team)}">${esc(t.team)}</button>
+              <div class="conf">${esc(t.conference)}</div></div></div></td>
+          <td class="num">${t.avg_wins.toFixed(1)}–${t.avg_losses.toFixed(1)}</td>
+          <td><div class="bar-wrap"><div class="bar"><i class="green" style="width:${100 * t.conf_champ}%"></i></div>
+            <span class="pct">${pct(t.conf_champ)}</span></div></td>
+          <td><div class="bar-wrap"><div class="bar"><i style="width:${100 * t.playoff / maxCFP}%;background:${color(t.team)}"></i></div>
+            <span class="pct">${pct(t.playoff)}</span></div></td>
+          <td class="num">${pct(t.bye)}</td>
+          <td class="num">${pct(t.sf)}</td>
+          <td class="num">${pct(t.final)}</td>
+          <td class="num"><b>${pct(t.champ)}</b></td>
+        </tr>`).join("")}</tbody></table>`;
+    wireTeamLinks();
+  }
+
+  /* =======================================================================
+     MATCHUP SIMULATOR
+     ======================================================================= */
+  function makePicker(el, initial) {
+    const byConf = {};
+    rankNames().slice().sort().forEach(t => (byConf[conf(t)] = byConf[conf(t)] || []).push(t));
+    const sel = document.createElement("select");
+    sel.innerHTML = Object.keys(byConf).sort().map(c =>
+      `<optgroup label="${esc(c)}">` +
+      byConf[c].map(t => `<option value="${esc(t)}"${t === initial ? " selected" : ""}>${esc(t)}</option>`).join("") +
+      `</optgroup>`).join("");
+    el.innerHTML = "";
+    el.appendChild(sel);
+    return sel;
+  }
+  const selA = makePicker(document.getElementById("pickerA"), "Ohio State");
+  const selB = makePicker(document.getElementById("pickerB"), "Notre Dame");
+  const selT = makePicker(document.getElementById("pickerTeam"), "Ohio State");
+
   function renderMatchup() {
     const a = selA.value, b = selB.value;
-    document.getElementById("venueA-label").textContent = "At " + (meta[a]?.abbreviation || a);
-    document.getElementById("venueB-label").textContent = "At " + (meta[b]?.abbreviation || b);
+    document.getElementById("venueA-label").textContent = "At " + abbr(a);
+    document.getElementById("venueB-label").textContent = "At " + abbr(b);
     const venue = document.querySelector("input[name=venue]:checked").value;
     if (a === b) {
       document.getElementById("matchup-result").innerHTML =
@@ -495,7 +393,7 @@
           <div class="winp" style="color:${color(a)}">${pct(r.pA)}</div>
         </div>
         <div class="mid">
-          <div class="score">${Math.round(r.scoreA)} · ${Math.round(r.scoreB)}</div>
+          <div class="score">${displayScore(r)[0]} · ${displayScore(r)[1]}</div>
           <div>projected score</div><div class="venue-note">${esc(venueNote)}</div>
         </div>
         <div class="side">
@@ -509,217 +407,640 @@
         <div style="width:${100 * (1 - r.pA)}%;background:${color(b)}"></div>
       </div>
       <div class="stat-row">
-        <span><b>${esc(meta[fav]?.abbreviation || fav)} −${spread.toFixed(1)}</b> spread</span>
+        <span><b>${esc(abbr(fav))} −${spread.toFixed(1)}</b> spread</span>
         <span><b>${r.total.toFixed(1)}</b> total (O/U)</span>
-        <span><b>${Math.round(r.scoreA)}–${Math.round(r.scoreB)}</b> most likely score</span>
+        <span><b>${displayScore(r).join("–")}</b> most likely score</span>
       </div>`;
   }
   selA.addEventListener("change", renderMatchup);
   selB.addEventListener("change", renderMatchup);
-  document.querySelectorAll("input[name=venue]").forEach(x => x.addEventListener("change", renderMatchup));
+  document.querySelectorAll("input[name=venue]").forEach(x =>
+    x.addEventListener("change", renderMatchup));
 
-  /* ---------- Ratings Lab (editable inputs) ---------- */
-  let labOrder = null;                        // cached row order; null = by current rating
-  const rowRefs = {};                         // team -> {rankCell, powerCell, inputs[]}
-  function renderLab(reorder) {
-    const order = labOrder || Object.keys(power).sort((a, b) => power[b] - power[a]);
-    if (reorder) labOrder = order.slice();
-    const head = `<tr>
-      <th>#</th><th>Team</th>
-      <th class="grp">Off</th><th class="grp">Def</th><th class="grp">FieldPos</th><th class="grp">Pythag</th>
-      <th class="grp roster">Talent</th><th class="grp roster">Returning</th>
-      <th class="num">Power</th><th></th></tr>`;
-    const body = order.map(t => {
-      const v = effVec(t);
-      const cells = FIELDS.map(f => `<td><input class="lab-input ${f.grp}${isEdited(t, f.i) ? " edited" : ""}"
-        type="number" step="0.05" data-team="${esc(t)}" data-field="${f.i}"
-        value="${v[f.i].toFixed(2)}"></td>`).join("");
-      return `<tr data-team="${esc(t)}">
-        <td class="rank">${rankOf[t]}</td>
-        <td><div class="team-cell"><img src="${logoURL(t)}" alt="">
-          <div><div>${esc(t)}</div><div class="conf">${esc(conf(t))}</div></div></div></td>
-        ${cells}
-        <td class="power num">${(100 * power[t]).toFixed(1)}</td>
-        <td class="rowtools">${apiAvailable
-          ? `<button class="roster-btn ${rosterEdits[lens][t] ? "active" : ""}" data-roster="${esc(t)}" title="Edit ${esc(t)} roster">📋</button>`
-          : ""}<button class="row-reset ${teamEditCount(t) ? "active" : ""}" data-reset="${esc(t)}" title="Reset ${esc(t)}">↺</button></td>
-      </tr>`;
-    }).join("");
-    document.getElementById("lab-table").innerHTML =
-      `<table><thead>${head}</thead><tbody>${body}</tbody></table>`;
-    updateEditCount();
+  /* =======================================================================
+     TEAM BREAKDOWN
+     ======================================================================= */
+  const GROUP_ORDER = ["QB", "RB", "WR", "TE", "OL", "DT", "EDGE", "LB", "CB", "SAF"];
+  const OFF_GROUPS = new Set(["QB", "RB", "WR", "TE", "OL"]);
+  const FCS_WIN_P = 0.95;   // matches the simulation's buy-game assumption
+
+  /* ---- formation layout -------------------------------------------------
+     The two-deep already carries real positional labels - LT/LG/C/RG/RT, WR-X /
+     WR-Z / WR-SL, NB for the nickel - so each team's listed starters ARE its base
+     personnel. Nothing needs to be assumed: most teams come out in 11 personnel
+     and a four-man front with a nickel back, and the ones that don't lay out as
+     whatever they actually list. Coordinates are percentages of the field box,
+     offense driving up the screen and defense down it. */
+  // Both boxes read the same way: the line of scrimmage sits at y = 46, everything
+  // downfield is above it, everything behind the ball is below. Offence therefore
+  // fills the lower half and defence the upper half of its own box.
+  const LOS = 46;
+
+  /* Placement is driven by position GROUP and unit size, not by the alignment label.
+     Ourlads charts carry roughly eighty different labels - the edge rusher alone
+     appears as JACK, RUSH, BAN, BUCK, LEO, STUD, VIPER, WOLF, STING, JOKER, CAT, DOG
+     and SPEAR - so a lookup table keyed on the label leaves anything unrecognised
+     stacked at the centre of the field, which is what scattered the secondary. Each
+     level instead spreads symmetrically about the middle, so every unit is centred
+     and evenly spaced whatever its personnel and whatever the program calls it. */
+  const LEVELS = {
+    OL:   { y: 46, gap: 11.5 },
+    TE:   { y: 46, flank: "OL", out: 12 },  // outside the tackles, not inside them
+    WR:   { y: 44, wide: true },            // on the numbers, slot tucked inside
+    QB:   { y: 62, gap: 14 },
+    RB:   { y: 78, gap: 16 },
+    DT:   { y: 37, gap: 13 },
+    EDGE: { y: 35, flank: "DT", out: 14 },  // outside the interior line
+    LB:   { y: 24, gap: 17 },
+    CB:   { y: 30, wide: true },
+    SAF:  { y: 9,  gap: 26 },
+  };
+  const CENTER = 50;
+
+  /* n items spread symmetrically about `c`. One item lands exactly on centre. */
+  function spread(n, gap, c = CENTER) {
+    return Array.from({ length: n }, (_, i) => c + (i - (n - 1) / 2) * gap);
   }
-  function updateLabCells() {
-    // Update only rank + power cells (no re-render) so inputs keep focus.
-    document.querySelectorAll("#lab-table tbody tr").forEach(tr => {
-      const t = tr.dataset.team;
-      tr.querySelector(".rank").textContent = rankOf[t];
-      tr.querySelector(".power").textContent = (100 * power[t]).toFixed(1);
+  /* Wide groups (receivers, corners) work outside-in: the first two take the
+     boundaries, extras tuck inside as slots and nickels. */
+  function wideSpread(n) {
+    const outer = [7, 93], inner = [21, 79, 31, 69];
+    return Array.from({ length: n },
+      (_, i) => i < 2 ? outer[i] : (inner[i - 2] ?? CENTER));
+  }
+  /* Flanking groups line up outside whatever they play beyond. Side comes from the
+     label where there is one - a left end belongs on the left - and otherwise the
+     first flanker takes the strong side and the next goes opposite. */
+  function flankSpread(members, extent, out) {
+    const [lo, hi] = extent;
+    let nl = 0, nr = 0;
+    return members.map(p => {
+      const s = sideKey(p);
+      const left = s === -1 || (s !== 1 && nr > nl);
+      return left ? lo - out - (nl++) * out : hi + out + (nr++) * out;
     });
   }
-  function updateEditCount() {
-    const nT = Object.values(overrides[lens]).filter(o => Object.keys(o).length).length;
-    const el = document.getElementById("lab-editcount");
-    el.textContent = totalEdits() ? `${totalEdits()} edit(s) · ${nT} team(s)` : "";
+
+  /* Preserve the side a label implies so a left corner stays left and a slot or
+     nickel sorts to the end, where the inside positions are. */
+  function sideKey(p) {
+    const k = (p.p || "").toUpperCase();
+    if (/SL|SLOT|^NB|STAR|NICKEL|CASH|MONEY|HUSKY|SPUR/.test(k)) return 2;
+    if (/^L|^WLB|^WILL|-X$/.test(k)) return -1;
+    if (/^R|^SLB|^SAM|-Z$/.test(k)) return 1;
+    return 0;
   }
 
-  let labTimer = null;
-  document.getElementById("lab-table").addEventListener("input", e => {
-    const inp = e.target;
-    if (!inp.classList.contains("lab-input")) return;
-    const t = inp.dataset.team, i = +inp.dataset.field;
-    const val = parseFloat(inp.value);
-    const base = baseVec(t)[i];
-    overrides[lens][t] = overrides[lens][t] || {};
-    if (isNaN(val) || Math.abs(val - base) < 1e-9) { delete overrides[lens][t][i]; inp.classList.remove("edited"); }
-    else { overrides[lens][t][i] = val; inp.classList.add("edited"); }
-    if (!Object.keys(overrides[lens][t]).length) delete overrides[lens][t];
-    const rr = inp.closest("tr").querySelector(".row-reset");
-    rr.classList.toggle("active", teamEditCount(t) > 0);
-    saveOverrides();
-    clearTimeout(labTimer);
-    labTimer = setTimeout(() => {
-      computePower(); updateLabCells(); updateEditCount();
-    }, 120);
-  });
-  document.getElementById("lab-table").addEventListener("click", e => {
-    const ds = e.target.dataset || {};
-    if (ds.roster) { openRoster(ds.roster); return; }
-    if (!ds.reset) return;
-    delete overrides[lens][ds.reset]; saveOverrides();
-    computePower(); renderLab(); // full re-render to reset that row's input values
-  });
-  document.getElementById("lab-reset").addEventListener("click", () => {
-    if (!totalEdits()) return;
-    if (!confirm("Reset all input edits for this lens back to the model defaults?")) return;
-    overrides[lens] = {}; saveOverrides();
-    labOrder = null; computePower(); renderLab(); renderAll();
-  });
-  document.getElementById("lab-sort").addEventListener("click", () => { labOrder = null; renderLab(true); });
-  document.getElementById("lab-search").addEventListener("input", e => {
-    const q = e.target.value.toLowerCase();
-    document.querySelectorAll("#lab-table tbody tr").forEach(tr =>
-      tr.style.display = tr.dataset.team.toLowerCase().includes(q) ? "" : "none");
-  });
-
-  /* ---------- Roster editor modal ---------- */
-  const RM_GROUPS = ["QB", "RB", "WR", "TE", "OL", "DT", "EDGE", "LB", "CB", "SAF"];
-  const modal = document.getElementById("roster-modal");
-  let rmTeam = null, rmRoster = [];
-
-  const cloneRoster = t => JSON.parse(JSON.stringify(
-    (rosterEdits[lens][t] || ROSTERS[t] || [])));
-  const rosterEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-
-  function openRoster(team) {
-    if (!ROSTERS) return;
-    rmTeam = team;
-    rmRoster = cloneRoster(team);
-    // display order: by position group, starters first
-    rmRoster.sort((a, b) => (RM_GROUPS.indexOf(a.group) - RM_GROUPS.indexOf(b.group))
-      || ((a.depth || 2) - (b.depth || 2)) || a.name.localeCompare(b.name));
-    document.getElementById("rm-team").textContent = team;
-    document.getElementById("rm-sub").textContent =
-      `current talent ${effVec(team)[4].toFixed(2)} · rank #${rankOf[team]} · power ${(100 * power[team]).toFixed(1)}`;
-    document.getElementById("rm-status").textContent = "";
-    document.getElementById("rm-status").className = "rm-status";
-    renderModalBody();
-    modal.hidden = false;
+  function shortName(n) {
+    const parts = String(n).trim().split(/\s+/);
+    return parts.length < 2 ? n : `${parts[0][0]}. ${parts.slice(1).join(" ")}`;
   }
-  function renderModalBody() {
-    const orig = ROSTERS[rmTeam] || [];
-    const gradeMap = {};                          // original grade per name for "edited" mark
-    orig.forEach(p => gradeMap[p.name] = p.grade);
-    const rows = rmRoster.map((p, i) => {
-      const edited = gradeMap[p.name] !== undefined && gradeMap[p.name] !== p.grade;
-      const src = p.source === "EPA-WAR"
-        ? `<span class="src-badge epa" title="Opponent-adjusted CFBD EPA (WAR), rescaled to the grade scale">EPA</span>`
-        : `<span class="src-badge pff" title="2025 PFF grade">PFF</span>`;
-      return `<div class="rm-row" data-idx="${i}">
-        <input class="pname" value="${esc(p.name)}" data-k="name" placeholder="Player">
-        <select data-k="group">${RM_GROUPS.map(g =>
-          `<option ${g === p.group ? "selected" : ""}>${g}</option>`).join("")}</select>
-        <select data-k="depth">
-          <option value="1" ${(+p.depth) === 1 ? "selected" : ""}>Starter</option>
-          <option value="2" ${(+p.depth) !== 1 ? "selected" : ""}>Backup</option></select>
-        <input class="grade ${edited ? "edited" : ""}" type="number" step="0.5" min="0" max="100"
-          data-k="grade" value="${p.grade == null ? "" : p.grade}" placeholder="—">
-        ${src}
-        <button class="rm-del" data-del="${i}" title="Remove">✕</button>
+
+  function placeSide(players, tint, groups) {
+    const html = [];
+    const extent = {};                    // group -> [leftmost x, rightmost x]
+    for (const g of groups) {
+      const lvl = LEVELS[g];
+      const members = players.filter(p => p.g === g);
+      if (!members.length || !lvl) continue;
+      // left-ish labels first, slot/nickel last, so sides come out where expected
+      members.sort((a, b) => sideKey(a) - sideKey(b));
+      const xs = lvl.wide ? wideSpread(members.length)
+        : lvl.flank ? flankSpread(members, extent[lvl.flank] || [CENTER, CENTER],
+                                  lvl.out)
+        : spread(members.length, lvl.gap);
+      extent[g] = [Math.min(...xs), Math.max(...xs)];
+      members.forEach((p, i) => {
+        const x = Math.max(4, Math.min(96, xs[i]));
+        // a slot receiver or nickel sits a step off the line rather than on it
+        const inside = lvl.wide && i >= 2;
+        const y = lvl.y + (inside ? (g === "WR" ? 11 : -13) : 0);
+        const label = (p.p || p.g || "").toUpperCase().replace(/^WR-/, "").slice(0, 5);
+        html.push(`<div class="plr" style="left:${x}%;top:${y}%"
+            title="${esc(p.n)} — ${esc(p.p || p.g)} — ${p.w.toFixed(2)} wins added">
+          <div class="dot" style="background:${tint}">${esc(label)}</div>
+          <div class="nm">${esc(shortName(p.n))}${p.i
+            ? ` <span class="tag imp" title="No prior FBS snaps">·</span>` : ""}</div>
+          <div class="vl">${p.w >= 0 ? "+" : ""}${p.w.toFixed(2)}</div>
+        </div>`);
+      });
+    }
+    return html.join("");
+  }
+
+  function lineupHTML(team, roster, tint) {
+    const starters = roster.players.filter(p => p.d === 1);
+    if (starters.length < 8) {
+      return `<p class="sub">No depth chart available for this team.</p>`;
+    }
+    const off = starters.filter(p => OFF_GROUPS.has(p.g));
+    const def = starters.filter(p => !OFF_GROUPS.has(p.g));
+    const fmt = n => `${n} on the field`;
+    return `<div class="lineup-wrap">
+      <div class="field">
+        <div class="field-label">Offense · ${esc(personnelLabel(off))}</div>
+        <div class="los" style="top:${LOS}%"></div>
+        ${placeSide(off, tint, ["OL", "TE", "WR", "QB", "RB"])}
+        <div class="field-note">${fmt(off.length)}</div>
+      </div>
+      <div class="field">
+        <div class="field-label">Defense · ${esc(frontLabel(def))}</div>
+        <div class="los" style="top:${LOS}%"></div>
+        ${placeSide(def, tint, ["DT", "EDGE", "LB", "CB", "SAF"])}
+        <div class="field-note">${fmt(def.length)}</div>
+      </div>
+    </div>`;
+  }
+
+  /* Personnel grouping is named by the count of backs and tight ends, the way a
+     coach would say it: one back and one tight end is 11, one and two is 12. */
+  function personnelLabel(off) {
+    const rb = off.filter(p => p.g === "RB").length;
+    const te = off.filter(p => p.g === "TE").length;
+    return `${rb}${te} personnel`;
+  }
+  /* The reconciliation the raw WAR number never showed: replacement floor, what the
+     roster is worth, what the schedule is worth, and the projected record they add
+     up to. Keeping the schedule term visible is the point - it is why a good MAC
+     roster and a middling SEC roster can project the same number of wins. */
+  function winsLedger(roster, S, tint) {
+    if (roster.projWins == null) return "";
+    const rows = [
+      ["Replacement-level team", roster.replWins, "var(--muted)"],
+      ["Roster value above replacement", roster.winsTotal, tint],
+      ["Schedule &amp; context", roster.context, roster.context >= 0 ? "var(--green)" : "var(--red)"],
+    ];
+    const span = Math.max(...rows.map(r => Math.abs(r[1])), 1);
+    return `<div class="ledger">
+      ${rows.map(([label, v, c]) => `
+        <div class="gr-row">
+          <span class="gr-name" style="width:200px">${label}</span>
+          <div class="gr-bar"><i style="width:${100 * Math.abs(v) / span}%;
+            background:${c}"></i></div>
+          <span class="gr-val">${v >= 0 ? "+" : "−"}${Math.abs(v).toFixed(2)}</span>
+        </div>`).join("")}
+      <div class="gr-row ledger-total">
+        <span class="gr-name" style="width:200px"><b>Projected wins</b></span>
+        <div class="gr-bar"></div>
+        <span class="gr-val"><b>${roster.projWins.toFixed(2)}</b></span>
+      </div></div>`;
+  }
+
+  function frontLabel(def) {
+    const dl = def.filter(p => p.g === "DT" || p.g === "EDGE").length;
+    const lb = def.filter(p => p.g === "LB").length;
+    const db = def.filter(p => p.g === "CB" || p.g === "SAF").length;
+    const base = `${dl}-${lb}`;
+    return db >= 5 ? `${base} nickel` : base;
+  }
+
+  function teamSchedule(t) {
+    const out = [];
+    for (const g of schedule) {
+      if (g.h !== t && g.a !== t) continue;
+      const home = g.h === t, opp = home ? g.a : g.h;
+      const known = !!vecOf(opp);
+      const venue = g.n ? "N" : (home ? "A" : "B");
+      out.push({ opp, home, neutral: !!g.n, week: g.w, date: g.d, conf: g.c,
+                 known, r: known ? predict(t, opp, venue) : null });
+    }
+    out.sort((a, b) => (a.week || 0) - (b.week || 0));
+    return out;
+  }
+
+  function renderTeam() {
+    const t = selT.value;
+    const R = ratingRow()[t] || {};
+    const S = simRow()[t] || {};
+    const tint = color(t);
+    const dist = (cur().playoff.win_dist || {})[t];
+    const roster = players[t];
+    const sched = teamSchedule(t);
+
+    /* ---- win distribution ---- */
+    let distHTML = `<p class="sub">No simulated distribution for this team.</p>`;
+    if (dist) {
+      const total = dist.reduce((a, b) => a + b, 0) || 1;
+      let lo = dist.findIndex(c => c / total > 0.004);
+      let hi = dist.length - 1;
+      if (lo < 0) lo = 0;
+      while (hi > lo && dist[hi] / total <= 0.004) hi--;
+      const slice = dist.slice(lo, hi + 1);
+      const max = Math.max(...slice);
+      const mode = lo + slice.indexOf(max);
+      distHTML = `<div class="wd">${slice.map((c, i) => {
+        const w = lo + i, p = c / total;
+        return `<div class="wd-col" title="${w} wins — ${pct(p)} of simulations">
+          <span class="wd-val">${p >= 0.03 ? pct(p, 0) : ""}</span>
+          <div class="wd-bar" style="height:${Math.max(2, 100 * c / max)}%;
+            background:${w === mode ? tint : rgba(t, .35)}"></div>
+          <span class="wd-x">${w}</span></div>`;
+      }).join("")}</div>
+      <div class="wd-foot">Regular-season wins across
+        ${cur().playoff.n_sims.toLocaleString()} simulated seasons ·
+        most likely <b style="color:${tint}">${mode}</b> ·
+        mean <b>${(S.avg_wins ?? 0).toFixed(1)}</b></div>`;
+    }
+
+    /* ---- player contributions ---- */
+    let rosterHTML = `<p class="sub">No WAR projection available for this team.</p>`;
+    if (roster) {
+      const byGroup = roster.byGroup || {};
+      const gmax = Math.max(...Object.values(byGroup).map(Math.abs), 0.01);
+      const groupRows = GROUP_ORDER.filter(g => byGroup[g] != null).map(g => {
+        const v = byGroup[g], off = OFF_GROUPS.has(g);
+        return `<div class="gr-row">
+          <span class="gr-name ${off ? "off" : "def"}">${g}</span>
+          <div class="gr-bar"><i style="width:${100 * Math.abs(v) / gmax}%;
+            background:${off ? tint : rgba(t, .5)}"></i></div>
+          <span class="gr-val">${v.toFixed(2)}</span></div>`;
+      }).join("");
+
+      const offTot = Object.entries(byGroup)
+        .filter(([g]) => OFF_GROUPS.has(g)).reduce((s, [, v]) => s + v, 0);
+      const defTot = (roster.winsTotal ?? roster.total) - offTot;
+      rosterHTML = `
+        <div class="od-split">
+          <div class="od-chip2 off" style="--tint:${tint}">
+            <b>${offTot.toFixed(2)}</b><span>wins from offense</span></div>
+          <div class="od-chip2 def" style="--tint:${tint}">
+            <b>${defTot.toFixed(2)}</b><span>wins from defense</span></div>
+          <div class="od-chip2" style="--tint:${tint}">
+            <b>${(roster.winsTotal ?? roster.total).toFixed(2)}</b><span>wins above replacement</span></div>
+        </div>
+        ${lineupHTML(t, roster, tint)}
+        <h4 style="margin-top:22px">Wins by position group</h4>
+        <div class="gr">${groupRows}</div>`;
+    }
+
+    /* ---- model inputs ---- */
+    const inputs = [
+      ["Offense", R.O], ["Defense", R.D], ["Talent", R.talent],
+      ["Returning", R.returning], ["Pythagorean", R.pythag], ["Schedule (SOS)", R.sos],
+    ].filter(x => x[1] != null);
+    const inputHTML = inputs.map(([label, v]) => `
+      <div class="gr-row">
+        <span class="gr-name">${label}</span>
+        ${zBar(v, tint)}
+        <span class="gr-val">${v >= 0 ? "+" : ""}${v.toFixed(2)}</span>
+      </div>`).join("");
+
+    /* ---- schedule ---- */
+    const expWins = sched.reduce((s, g) => s + (g.r ? g.r.pA : FCS_WIN_P), 0);
+    const schedHTML = sched.map(g => {
+      const r = g.r;
+      const win = r ? r.pA >= 0.5 : true;
+      const loc = g.neutral ? "vs" : (g.home ? "vs" : "at");
+      return `<tr class="${win ? "w" : "l"}">
+        <td class="num small">${g.week ?? ""}</td>
+        <td class="num small">${g.date ? g.date.slice(5) : ""}</td>
+        <td class="loc">${loc}</td>
+        <td><div class="team-cell sm">
+          <img src="${logoURL(g.opp)}" alt="" loading="lazy">
+          ${g.known ? `<button class="team-link" data-team="${esc(g.opp)}">${esc(g.opp)}</button>`
+                    : `<span class="fcs">${esc(g.opp)}</span>`}
+          ${g.conf ? `<span class="tag conf-tag">conf</span>` : ""}</div></td>
+        <td class="num">${r ? displayScore(r).join("–") : "—"}</td>
+        <td class="num">${r ? spreadLabel(r.margin) : "—"}</td>
+        <td><div class="bar-wrap"><div class="bar">
+          <i style="width:${100 * (r ? r.pA : FCS_WIN_P)}%;background:${win ? tint : "var(--red)"}"></i>
+        </div><span class="pct">${r ? pct(r.pA, 0) : "95%"}</span></div></td>
+      </tr>`;
+    }).join("");
+
+    document.getElementById("team-body").innerHTML = `
+      <div class="team-hero" style="--wash:${rgba(t, .16)};--tint:${tint}">
+        <img class="hero-logo" src="${logoURL(t)}" alt="">
+        <div class="hero-id">
+          <div class="hero-name">${esc(t)}</div>
+          <div class="hero-sub">${esc((meta[t] && meta[t].mascot) || "")} · ${esc(conf(t))}</div>
+        </div>
+        <div class="hero-stats">
+          <div><b>#${R.rank ?? "—"}</b><span>power rank</span></div>
+          <div><b>${S.avg_wins != null ? S.avg_wins.toFixed(1) + "–" + S.avg_losses.toFixed(1) : "—"}</b><span>proj record</span></div>
+          <div><b>${pct(S.conf_champ ?? 0, 0)}</b><span>conf title</span></div>
+          <div><b>${pct(S.playoff ?? 0, 0)}</b><span>make CFP</span></div>
+          <div><b>${pct(S.champ ?? 0, 1)}</b><span>national title</span></div>
+        </div>
+      </div>
+
+      <div class="panel"><h3>Projected win distribution</h3>${distHTML}</div>
+      <div class="panel"><h3>Where the wins come from</h3>${rosterHTML}
+        ${roster ? winsLedger(roster, S, tint) : ""}
+        <div class="wd-foot">Projected starters from the 2026 two-deep, each carrying
+          the wins he adds over a replacement-level player. Raw WAR is compressed
+          &mdash; the rating underneath is a noisy estimate and a projection is a
+          conditional mean &mdash; so every player is scaled by one league-wide
+          factor (&times;1.64) that restores the historical spread without moving the
+          league average. <span class="tag imp">·</span> marks a player with no prior
+          FBS snaps.</div></div>
+      <div class="panel"><h3>Model inputs</h3>
+        <div class="gr wide">${inputHTML}</div>
+        <div class="wd-foot">Each input on the model's z-scale, where
+          <b>0 = FBS average</b> and higher is better (defense already flipped).</div>
+      </div>
+      <div class="panel"><h3>2026 schedule
+        <span class="hint">— projected score, spread and win probability for every game</span></h3>
+        <div class="mini-wrap"><table class="mini sched"><thead><tr>
+          <th class="num">Wk</th><th class="num">Date</th><th></th><th>Opponent</th>
+          <th class="num">Proj score</th><th class="num">Spread</th><th>Win prob</th>
+        </tr></thead><tbody>${schedHTML}</tbody></table></div>
+        <div class="wd-foot">Win probabilities across the slate sum to
+          <b style="color:${tint}">${expWins.toFixed(1)}</b> expected wins
+          (non-FBS opponents counted at 95%). The Monte Carlo mean of
+          <b>${(S.avg_wins ?? 0).toFixed(1)}</b> also includes a conference title game.</div>
+      </div>`;
+    wireTeamLinks();
+  }
+  selT.addEventListener("change", renderTeam);
+
+  /* Any team name anywhere jumps to that team's breakdown. */
+  function wireTeamLinks() {
+    document.querySelectorAll(".team-link").forEach(a =>
+      a.addEventListener("click", e => {
+        const t = e.currentTarget.dataset.team;
+        if (!vecOf(t)) return;
+        selT.value = t;
+        document.querySelectorAll(".tab").forEach(x =>
+          x.classList.toggle("active", x.dataset.view === "team"));
+        document.querySelectorAll(".view").forEach(v =>
+          v.classList.toggle("active", v.id === "view-team"));
+        renderTeam();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }));
+  }
+
+  /* =======================================================================
+     METHOD — what goes in, how much it overlaps, what came out
+     ======================================================================= */
+  const ACC = "var(--accent)", GRN = "var(--green)", RED = "var(--red)";
+
+  /* A correlation cell: sign by hue, magnitude by ink. Diagonal is muted so the
+     eye goes to the off-diagonal, which is the part that matters. */
+  function corrCell(v, self) {
+    if (v == null) return `<td class="cc"></td>`;
+    const a = Math.min(1, Math.abs(v));
+    const bg = self ? "transparent"
+      : v >= 0 ? `rgba(47,96,150,${(a * 0.75).toFixed(2)})`
+               : `rgba(168,50,38,${(a * 0.75).toFixed(2)})`;
+    const strong = !self && a >= 0.6;
+    return `<td class="cc${self ? " self" : ""}${strong ? " strong" : ""}"
+      style="background:${bg}">${v.toFixed(2)}</td>`;
+  }
+  function corrTable(names, corr, note) {
+    const head = `<tr><th></th>${names.map(n => `<th class="num">${esc(n)}</th>`).join("")}</tr>`;
+    const rows = names.map(a => `<tr><th class="rowh">${esc(a)}</th>${
+      names.map(b => corrCell(corr[a] ? corr[a][b] : null, a === b)).join("")}</tr>`).join("");
+    return `<div class="mini-wrap"><table class="corr">${head}${rows}</table></div>
+      ${note ? `<div class="wd-foot">${note}</div>` : ""}`;
+  }
+
+  /* Horizontal bar for a metric where lower is better (Brier). */
+  function metricBar(v, lo, hi, tint) {
+    const f = Math.max(0, Math.min(1, (hi - v) / (hi - lo || 1)));
+    return `<div class="gr-bar"><i style="width:${(f * 100).toFixed(1)}%;
+      background:${tint}"></i></div>`;
+  }
+
+  function renderMethod() {
+    const el = document.getElementById("method-body");
+    if (!diag) {
+      el.innerHTML = `<p class="sub">No diagnostics found — run
+        <code>scripts.export_diagnostics</code>.</p>`;
+      return;
+    }
+    const D = diag;
+
+    // ---- 1. sources -------------------------------------------------------
+    const srcRows = (D.sources || []).map(s => `
+      <tr>
+        <td><b>${esc(s.name)}</b><div class="conf">${esc(s.provider)}</div></td>
+        <td><span class="tag">${esc(s.feeds)}</span></td>
+        <td class="small" style="white-space:normal">${esc(s.detail)}</td>
+        <td class="num small">${esc(s.years)}</td>
+      </tr>`).join("");
+
+    // ---- 2. talent sources ------------------------------------------------
+    const ts = D.talent_sources || {};
+    const tsw = ts.weights || {};
+    const wRow = ["PFF", "CFBD", "WAR"].map(n => `
+      <div class="wsplit-seg" style="width:${((tsw[n] || 0) * 100).toFixed(1)}%;
+        background:${n === "WAR" ? ACC : n === "PFF" ? "var(--blue)" : GRN}">
+        <span>${esc(n)} ${Math.round((tsw[n] || 0) * 100)}%</span></div>`).join("");
+    const contrasts = ((D.talent_sweep || {}).contrasts) || [];
+    const cb = contrasts.map(c => c.brier);
+    const clo = Math.min(...cb, 0.204), chi = Math.max(...cb, 0.209);
+    const contrastRows = contrasts.map(c => `
+      <div class="gr-row">
+        <span class="gr-name" style="width:230px">${esc(c.label)}</span>
+        ${metricBar(c.brier, clo, chi, c.label.includes("best") ? ACC : "var(--line2)")}
+        <span class="gr-val">${c.brier.toFixed(4)}</span>
+      </div>`).join("");
+
+    // ---- 3. features ------------------------------------------------------
+    const F = D.features || {};
+    const fnames = F.names || [];
+    const vifRows = fnames.map(f => {
+      const v = (F.vif || {})[f];
+      const dropped = (F.dropped || []).includes(f);
+      return `<div class="gr-row">
+        <span class="gr-name ${dropped ? "" : "off"}" style="width:110px">${esc(f)}${
+          dropped ? ` <span class="tag">retired</span>` : ""}</span>
+        ${v == null ? `<div class="gr-bar"></div><span class="gr-val">—</span>`
+          : `<div class="gr-bar"><i style="width:${Math.min(100, v / 5 * 100)}%;
+               background:${v > 5 ? RED : "var(--blue)"}"></i></div>
+             <span class="gr-val">${v.toFixed(2)}</span>`}
       </div>`;
     }).join("");
-    document.getElementById("rm-body").innerHTML = rows ||
-      `<div class="rm-note">No players — add some, or reset.</div>`;
+
+    const co = D.coefficients || {};
+    const lg = co.logistic || {};
+    const cmax = Math.max(...Object.values(lg).map(Math.abs), 0.01);
+    const coefRows = fnames.map(f => {
+      const v = lg[f] ?? 0;
+      const dropped = (F.dropped || []).includes(f);
+      return `<div class="gr-row">
+        <span class="gr-name ${dropped ? "" : "off"}" style="width:110px">${esc(f)}</span>
+        ${zBar(v, dropped ? "var(--line2)" : ACC, cmax * 1.05)}
+        <span class="gr-val">${v >= 0 ? "+" : "−"}${Math.abs(v).toFixed(3)}</span>
+      </div>`;
+    }).join("") + `
+      <div class="gr-row">
+        <span class="gr-name off" style="width:110px">home field</span>
+        ${zBar(co.logistic_hfa ?? 0, GRN, cmax * 1.05)}
+        <span class="gr-val">+${(co.logistic_hfa ?? 0).toFixed(3)}</span>
+      </div>`;
+
+    // ---- 4. evaluation ----------------------------------------------------
+    const ev = D.evaluation || {};
+    const ps = ev.per_season || [];
+    const seasonRows = ps.map(s => `
+      <tr><td>${s.season}</td><td class="num small">${s.n.toLocaleString()}</td>
+        <td class="num">${s.brier.toFixed(4)}</td>
+        <td class="num">${s.log_loss.toFixed(4)}</td>
+        <td class="num">${(100 * s.accuracy).toFixed(1)}%</td></tr>`).join("");
+    const cal = ev.calibration || [];
+    const calBars = cal.map(c => {
+      const h = Math.max(2, c.actual * 100);
+      const ph = Math.max(2, c.pred * 100);
+      return `<div class="cal-col" title="predicted ${pct(c.pred)}, actual ${pct(c.actual)}, n=${c.n}">
+        <div class="cal-pair">
+          <div class="cal-bar pred" style="height:${ph}%"></div>
+          <div class="cal-bar act" style="height:${h}%"></div>
+        </div>
+        <span class="wd-x">${c.lo.toFixed(1)}</span></div>`;
+    }).join("");
+
+    // ---- 5. WAR internals -------------------------------------------------
+    const wf = D.war_facets || [];
+    const wsplit = D.war_source_split || {};
+    const topFacets = wf.slice(0, 10);
+    const fmaxw = Math.max(...topFacets.map(f => f.weight), 0.01);
+    const facetRows = topFacets.map(f => `
+      <div class="gr-row">
+        <span class="gr-name" style="width:130px">${esc(f.facet)}</span>
+        <div class="gr-bar"><i style="width:${100 * f.weight / fmaxw}%;
+          background:${f.source === "CFBD" ? GRN : "var(--blue)"}"></i></div>
+        <span class="gr-val">${(100 * f.weight).toFixed(1)}%</span>
+      </div>`).join("");
+
+    // ---- 6. decisions -----------------------------------------------------
+    const decRows = (D.decisions || []).map(d => `
+      <div class="dec">
+        <div class="dec-q">${esc(d.question)}</div>
+        <div class="dec-a">${esc(d.answer)}</div>
+        <div class="dec-e">${esc(d.evidence)}</div>
+      </div>`).join("");
+
+    el.innerHTML = `
+      <div class="panel"><h3>1 · What goes in</h3>
+        <div class="mini-wrap"><table class="mini"><thead><tr>
+          <th>Source</th><th>Feeds</th><th>What it is</th><th class="num">Years</th>
+        </tr></thead><tbody>${srcRows}</tbody></table></div>
+      </div>
+
+      <div class="panel"><h3>2 · The three talent signals, and how much they overlap</h3>
+        <p class="sub">WAR is built from PFF grades, so the obvious worry is that it
+          measures the same thing twice. It does overlap — but at
+          <b>r = ${((ts.corr || {}).PFF || {}).WAR?.toFixed(2) ?? "—"}</b>, not
+          near one. WAR weights by snaps, uses facet weights fitted to wins, adds
+          CFBD play value and subtracts a replacement level; the PFF signal is a
+          position-weighted grade average. They diverge enough to be worth carrying
+          separately.</p>
+        <div class="split">
+          <div><h4>Correlation between sources</h4>
+            ${corrTable(ts.names || [], ts.corr || {},
+              `Pooled over ${(ts.seasons_used || []).join(", ")}
+               (${ts.n || 0} team-seasons). 2021 is excluded: with no 2020 grades the
+               PFF signal falls back to recruiting entirely and correlates at exactly
+               1.00, which would overstate the overlap.`)}
+          </div>
+          <div><h4>Blend actually used</h4>
+            <div class="wsplit">${wRow}</div>
+            <div class="wd-foot">Chosen by grid-searching all 45 three-way blends
+              under leave-one-season-out, not assembled one at a time.</div>
+            <h4 style="margin-top:18px">What each combination is worth</h4>
+            ${contrastRows}
+            <div class="wd-foot">Brier, lower is better. Dropping PFF for WAR costs
+              more than dropping WAR for PFF — the two are complements, and PFF is
+              the stronger of the pair.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel"><h3>3 · Model features</h3>
+        <div class="split">
+          <div><h4>Correlation between feature differences</h4>
+            ${corrTable(fnames, F.corr || {},
+              "Computed on the matchup differences the model actually fits. Retired "
+              + "features are zeroed, so their row and column are blank.")}
+          </div>
+          <div><h4>Variance inflation</h4>
+            ${vifRows}
+            <div class="wd-foot">Above 5 is usually called a collinearity problem.
+              After retiring ${(F.dropped || []).map(esc).join(" and ")}, nothing is
+              close.</div>
+            <h4 style="margin-top:18px">What the model learned</h4>
+            ${coefRows}
+            <div class="wd-foot">Logistic coefficients on the z-scale. Retired
+              features sit at exactly zero by construction.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel"><h3>4 · Does it actually predict?</h3>
+        <div class="od-split">
+          <div class="od-chip2" style="--tint:${ACC}">
+            <b>${(ev.loso || {}).brier?.toFixed(4) ?? "—"}</b><span>Brier (LOSO)</span></div>
+          <div class="od-chip2" style="--tint:${ACC}">
+            <b>${((ev.loso || {}).accuracy * 100).toFixed(1)}%</b><span>accuracy</span></div>
+          <div class="od-chip2" style="--tint:var(--line2)">
+            <b>${(ev.baselines || {}).home_team_always?.toFixed(4) ?? "—"}</b>
+            <span>always pick home</span></div>
+          <div class="od-chip2" style="--tint:var(--line2)">
+            <b>${(ev.baselines || {}).coin_flip?.toFixed(4) ?? "—"}</b>
+            <span>coin flip</span></div>
+        </div>
+        <div class="split">
+          <div><h4>Held out one season at a time</h4>
+            <div class="mini-wrap"><table class="mini"><thead><tr>
+              <th>Season</th><th class="num">Games</th><th class="num">Brier</th>
+              <th class="num">Log loss</th><th class="num">Acc</th>
+            </tr></thead><tbody>${seasonRows}</tbody></table></div>
+            <div class="wd-foot">Each row is a season the model never saw during
+              training. Home teams win ${pct(ev.home_win_rate ?? 0)} of games.</div>
+          </div>
+          <div><h4>Calibration</h4>
+            <div class="cal">${calBars}</div>
+            <div class="cal-key">
+              <span><i style="background:var(--line2)"></i> predicted</span>
+              <span><i style="background:${ACC}"></i> actual</span>
+            </div>
+            <div class="wd-foot">Games bucketed by predicted win probability. The two
+              bars matching means a stated 70% really happens about 70% of the time.</div>
+          </div>
+        </div>
+      </div>
+
+      ${wf.length ? `<div class="panel"><h3>5 · Inside the WAR build</h3>
+        <p class="sub">WAR is its own model feeding one input here. Twenty facets are
+          weighted by random-forest importance against team wins, turned into Massey
+          ratings, then converted to wins above replacement.</p>
+        <div class="split">
+          <div><h4>Heaviest facets</h4>${facetRows}
+            <div class="wd-foot">
+              <span class="tag" style="background:rgba(47,96,150,.14);color:var(--blue)">PFF</span>
+              ${((wsplit.PFF ?? 0) * 100).toFixed(0)}% of total weight ·
+              <span class="tag" style="background:rgba(63,125,58,.16);color:var(--green)">CFBD</span>
+              ${((wsplit.CFBD ?? 0) * 100).toFixed(0)}%</div>
+          </div>
+          <div><h4>Why not CFBD alone</h4>
+            <p class="sub">CFBD has no player-level line data at all, and its defensive
+              numbers are counting stats with no snap denominator — a corner nobody
+              throws at is invisible. PFF covers what CFBD cannot; CFBD adds
+              outcome-anchored play value PFF grades do not have. Facets against
+              adjusted win percentage: PFF alone 0.826, CFBD alone 0.741,
+              both 0.845.</p>
+          </div>
+        </div>
+      </div>` : ""}
+
+      <div class="panel"><h3>${wf.length ? 6 : 5} · Questions asked, and what the data said</h3>
+        <div class="decs">${decRows}</div>
+      </div>`;
   }
-  document.getElementById("rm-body").addEventListener("input", e => {
-    const row = e.target.closest(".rm-row"); if (!row) return;
-    const i = +row.dataset.idx, k = e.target.dataset.k;
-    if (k === "grade") rmRoster[i].grade = e.target.value === "" ? null : parseFloat(e.target.value);
-    else if (k === "depth") rmRoster[i].depth = +e.target.value;
-    else rmRoster[i][k] = e.target.value;
-  });
-  document.getElementById("rm-body").addEventListener("click", e => {
-    const d = e.target.dataset.del; if (d === undefined) return;
-    rmRoster.splice(+d, 1); renderModalBody();
-  });
-  document.getElementById("rm-add").addEventListener("click", () => {
-    rmRoster.push({ name: "New Player", group: "QB", depth: 2, grade: 70 });
-    renderModalBody();
-    document.querySelector("#rm-body .rm-row:last-child .pname").focus();
-  });
-  document.getElementById("rm-reset").addEventListener("click", () => {
-    rmRoster = JSON.parse(JSON.stringify(ROSTERS[rmTeam] || []));
-    rmRoster.sort((a, b) => (RM_GROUPS.indexOf(a.group) - RM_GROUPS.indexOf(b.group))
-      || ((a.depth || 2) - (b.depth || 2)));
-    renderModalBody();
-  });
-  const closeModal = () => { modal.hidden = true; rmTeam = null; };
-  document.getElementById("rm-close").addEventListener("click", closeModal);
-  modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
-  document.getElementById("rm-apply").addEventListener("click", async () => {
-    const status = document.getElementById("rm-status");
-    if (rosterEqual(rmRoster, ROSTERS[rmTeam] || [])) delete rosterEdits[lens][rmTeam];
-    else rosterEdits[lens][rmTeam] = rmRoster;
-    saveRosterEdits();
-    status.className = "rm-status"; status.textContent = "Recomputing…";
-    try {
-      await postRecompute();
-      computePower(); labOrder = null; renderLab(); renderTop25();
-      // playoff/matchup re-render on tab open; nudge matchup if built
-      status.className = "rm-status done"; status.textContent = "Applied.";
-      setTimeout(closeModal, 350);
-    } catch (err) {
-      status.className = "rm-status"; status.textContent = "Failed: " + err.message;
-    }
-  });
 
   /* ---------- boot ---------- */
-  function renderAll() { renderTop25(); renderPlayoff(); renderMatchup(); }
-  async function boot() {
-    try {
-      const r = await fetch("/api/rosters");
-      if (r.ok) { ROSTERS = await r.json(); apiAvailable = true; }
-    } catch (e) { /* static server: roster editing off */ }
-    const hint = document.getElementById("roster-hint");
-    if (apiAvailable) {
-      hint.className = "roster-hint";
-      hint.innerHTML = "📋 <b>Roster editing is ON</b> — click the clipboard on any " +
-        "team to edit its 2026 depth chart and 2025 grades; talent re-derives on the backend.";
-      // re-apply any persisted roster edits (both lenses)
-      for (const L of ["", "_roster"]) {
-        if (Object.keys(rosterEdits[L]).length) {
-          const saved = lens; lens = L;
-          try { await postRecompute(); } catch (e) { console.warn("roster re-apply failed", e); }
-          lens = saved;
-        }
-      }
-    } else {
-      hint.className = "roster-hint off";
-      hint.innerHTML = "Player-level roster editing needs the local Python server " +
-        "(<code>./venv/bin/python -m scripts.serve</code>). Served statically now — the " +
-        "six inputs above are still directly editable.";
-    }
-    computePower(); renderAll(); renderLab();
+  function render(view) {
+    if (view === "dash") renderDash();
+    else if (view === "playoff") renderPlayoff();
+    else if (view === "matchup") renderMatchup();
+    else if (view === "team") renderTeam();
+    else if (view === "method") renderMethod();
   }
-  boot();
+  function renderAll() {
+    fillConfSelect();
+    renderDash(); renderPlayoff(); renderMatchup(); renderTeam(); renderMethod();
+  }
+  renderAll();
 })();

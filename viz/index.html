@@ -3,61 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CFB Model v2 — 2026 Projections</title>
+<title>CFB Model v3 — 2026 Projections</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header>
   <div class="brand">
     <span class="logo-dot"></span>
-    <h1>CFB MODEL <span class="v2">v2</span></h1>
+    <h1>CFB MODEL <span class="v2">v3</span></h1>
     <span class="season">2026 SEASON</span>
   </div>
   <nav>
-    <button class="tab active" data-view="top25">Top 25</button>
+    <button class="tab active" data-view="dash">Ratings</button>
     <button class="tab" data-view="playoff">Playoff Projection</button>
     <button class="tab" data-view="matchup">Matchup Simulator</button>
-    <button class="tab" data-view="lab">Ratings Lab</button>
+    <button class="tab" data-view="team">Team Breakdown</button>
+    <button class="tab" data-view="method">Method</button>
   </nav>
-  <div class="lens" title="Balanced: best backtest accuracy (leans on 2025 results). Roster-weighted: leans on the 2026 two-deep — low-continuity teams regress to their talent level.">
-    <span class="lens-label">LENS</span>
-    <button class="lens-opt active" data-lens="">Balanced</button>
-    <button class="lens-opt" data-lens="_roster">Roster-weighted</button>
+  <div class="blend" title="Talent is a 38/38/25 blend of PFF roster grades, CFBD recruiting and player WAR — the joint optimum of all 45 three-way blends under leave-one-season-out.">
+    <span class="blend-label">TALENT</span>
+    <span class="blend-val">38 PFF · 38 recruiting · 25 WAR</span>
   </div>
 </header>
 
 <main>
-  <!-- ============ TOP 25 ============ -->
-  <section id="view-top25" class="view active">
+  <!-- ============ RATINGS DASHBOARD ============ -->
+  <section id="view-dash" class="view active">
     <div class="view-head">
-      <h2>2026 Preseason Power Ratings</h2>
-      <p class="sub">Matchup-adjusted model: opponent-adjusted O/D composites +
-        roster-aware talent + returning production + Pythagorean priors.
-        <b>Power</b> = mean win probability against every other FBS team on a
-        neutral field.</p>
-      <label class="toggle"><input type="checkbox" id="showAll"> show all teams</label>
+      <h2>2026 Team Ratings</h2>
+      <p class="sub">Matchup-adjusted model: opponent-adjusted O/D composites, roster
+        talent (PFF grades + CFBD play value + player WAR), returning production and
+        Pythagorean priors. <b>Power</b> = mean win probability against every other
+        FBS team on a neutral field. Records and playoff odds come from a
+        20,000-season Monte Carlo over the <b>real 2026 schedule</b>.</p>
     </div>
-    <div id="top25-table"></div>
+    <div class="dash-toolbar">
+      <input type="search" id="dash-search" placeholder="Search teams…">
+      <select id="dash-conf"><option value="">All conferences</option></select>
+      <select id="dash-tier">
+        <option value="">All teams</option>
+        <option value="p4">Power 4 only</option>
+        <option value="g6">Group of 6 only</option>
+      </select>
+      <span class="spacer"></span>
+      <span id="dash-count" class="dash-count"></span>
+    </div>
+    <div id="dash-table"></div>
   </section>
 
   <!-- ============ PLAYOFF ============ -->
   <section id="view-playoff" class="view">
     <div class="view-head">
-      <h2>2026–27 College Football Playoff Odds</h2>
+      <h2>2026–27 College Football Playoff</h2>
       <p class="sub" id="playoff-meta"></p>
-      <div class="resim-bar">
-        <button id="resim-btn" class="lab-btn">Re-simulate with current inputs</button>
-        <select id="resim-n" class="resim-n">
-          <option value="4000">4,000 sims (fast)</option>
-          <option value="10000">10,000 sims</option>
-          <option value="20000">20,000 sims</option>
-        </select>
-        <span id="resim-status" class="resim-status"></span>
-      </div>
     </div>
-    <h3 class="bracket-title">Most Likely Field <span class="hint">(teams ordered by make-playoff %, straight seeding)</span></h3>
+    <h3 class="bracket-title">Projected Bracket
+      <span class="hint">— modal field and seeding; every game scored by the same
+        points model the matchup simulator uses</span></h3>
     <div id="bracket"></div>
-    <h3 class="bracket-title">Full Odds Table</h3>
+    <h3 class="bracket-title">Full Odds</h3>
     <div id="playoff-table"></div>
   </section>
 
@@ -83,64 +87,42 @@
     <div id="matchup-result"></div>
   </section>
 
-  <!-- ============ RATINGS LAB (editable inputs) ============ -->
-  <section id="view-lab" class="view">
+  <!-- ============ TEAM BREAKDOWN ============ -->
+  <section id="view-team" class="view">
     <div class="view-head">
-      <h2>Ratings Lab <span class="hint">— edit the inputs, watch the ratings move</span></h2>
-      <p class="sub">Every team's <b>six model inputs</b> are editable below. The
-        scoring math is frozen (the trained model); you're changing what goes into
-        it. Power &amp; rank recompute instantly; the Top 25 and Matchup Simulator
-        use your edits too. Values are on the model's z-scale where
-        <b>0 = FBS average</b> and higher is better (defense is already flipped).
-        Edits are saved in your browser, per lens.
-        <span id="roster-hint" class="roster-hint"></span></p>
-      <div class="lab-toolbar">
-        <input type="search" id="lab-search" placeholder="Filter teams…">
-        <button id="lab-sort" class="lab-btn">Sort by current rating</button>
-        <span class="lab-legend"><b>Perf 2025</b>: Off · Def · FieldPos · Pythag
-          &nbsp;|&nbsp; <b>Roster 2026</b>: Talent · Returning</span>
-        <span class="spacer"></span>
-        <span id="lab-editcount" class="lab-editcount"></span>
-        <button id="lab-reset" class="lab-btn danger">Reset all</button>
-      </div>
+      <h2>Team Breakdown</h2>
+      <p class="sub">Everything the model believes about one team: how its projected
+        record is distributed, which players are producing the wins, where it is
+        strong on each side of the ball, and what it does game by game.</p>
     </div>
-    <div id="lab-table"></div>
+    <div class="team-toolbar">
+      <div class="picker" id="pickerTeam"></div>
+    </div>
+    <div id="team-body"></div>
+  </section>
+
+  <!-- ============ METHOD ============ -->
+  <section id="view-method" class="view">
+    <div class="view-head">
+      <h2>How this model works</h2>
+      <p class="sub">Every input, how much each one overlaps with the others, what the
+        model learned from them, and how well it actually predicts. Nothing here is
+        hand-written — it is exported from the live model each time the pipeline runs.</p>
+    </div>
+    <div id="method-body"></div>
   </section>
 </main>
 
-<!-- ============ Roster editor modal (populated by app.js) ============ -->
-<div id="roster-modal" class="modal-overlay" hidden>
-  <div class="modal">
-    <div class="modal-head">
-      <div>
-        <h3 id="rm-team">Team</h3>
-        <div class="rm-sub" id="rm-sub"></div>
-      </div>
-      <button id="rm-close" class="lab-btn">✕</button>
-    </div>
-    <div class="rm-note">2026 two-deep. <b>QBs use opponent-adjusted CFBD EPA
-      (WAR)</b>, rescaled to the grade scale (<span class="src-badge epa">EPA</span>);
-      every other position keeps its 2025 <span class="src-badge pff">PFF</span>
-      grade (CFBD can't value OL/coverage). Edit a grade (0–100), promote/demote
-      depth, change position, or add/remove players — talent re-derives and the
-      whole model recomputes.</div>
-    <div id="rm-body" class="rm-body"></div>
-    <div class="modal-foot">
-      <button id="rm-add" class="lab-btn">+ Add player</button>
-      <button id="rm-reset" class="lab-btn danger">Reset this roster</button>
-      <span class="spacer"></span>
-      <span id="rm-status" class="rm-status"></span>
-      <button id="rm-apply" class="lab-btn primary">Apply &amp; recompute</button>
-    </div>
-  </div>
-</div>
-
 <footer>
-  Model: L2 logistic + ridge-margin ensemble · LOSO 2022-25 Brier 0.2044 ·
-  data: CollegeFootballData.com · CFP rules: 2026-27 format (4 P4 champs + top G6 + 7 at-large, straight seeding) ·
-  Ratings Lab edits recompute everything client-side; the trained model math is unchanged.
+  Model: L2 logistic + ridge-margin ensemble · LOSO 2022-25 Brier 0.2040 ·
+  talent = PFF roster grades + CFBD recruiting + 25% player WAR ·
+  data: CollegeFootballData.com, PFF · CFP rules: 2026-27 format
+  (4 P4 champs + top G6 + 7 at-large, straight seeding, top-4 byes).
 </footer>
 
-<script src="app.js"></script>
+<!-- The data files are fetched with cache: "no-cache", but the script tag itself is
+     not, so a stale app.js kept running against freshly regenerated JSON and failed
+     silently — the page rendered nothing and threw nothing visible. Bump on edit. -->
+<script src="app.js?v=4"></script>
 </body>
 </html>
