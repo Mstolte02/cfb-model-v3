@@ -13,10 +13,13 @@ import re
 import numpy as np
 import pandas as pd
 
-PFF_DIR = "/Users/markstolte/Downloads/pff_exports_2021_2025"
+PFF_DIR = "/Users/markstolte/Downloads/pff_exports"
 TWODEEP_2026 = ("/Users/markstolte/Downloads/"
                 "fbs_2026_two_deep_pfsn_full_position_weights.xlsx")
-YEARS = range(2021, 2026)
+# Exports now reach back to 2014. 2020 is skipped for the same reason the WAR
+# build skips it: conference-only COVID schedules make that season
+# incomparable to the others.
+YEARS = [y for y in range(2014, 2026) if y != 2020]
 
 # PFSN-derived weights (reference).
 POS_WEIGHTS = {"QB": .279, "CB": .223, "EDGE": .148, "DT": .116, "SAF": .089,

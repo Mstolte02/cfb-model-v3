@@ -78,6 +78,23 @@ def main(variant=""):
     playoff = {r["team"]: r for r in
                json.loads((VIZ / f"playoff{suffix}.json").read_text())["teams"]}
 
+    # Strength of schedule from the real 2026 slate: the mean rating of everyone a
+    # team actually plays, so the dashboard can separate a good record from a good
+    # team. Non-FBS opponents count at the same fixed rating the simulation uses.
+    from scripts.simulate_playoff import FCS_OPP_RATING
+    rate = ((comp["O"] + comp["D"]) / 2.0)
+    rate = (rate - rate.mean()) / rate.std()
+    sos_sum, sos_n = {t: 0.0 for t in comp.index}, {t: 0 for t in comp.index}
+    for g in json.load(open(ROOT / "data" / "raw" / "schedule_2026.json")):
+        h, a = g["homeTeam"], g["awayTeam"]
+        hin, ain = h in rate.index, a in rate.index
+        if hin and ain:
+            sos_sum[h] += rate[a]; sos_n[h] += 1
+            sos_sum[a] += rate[h]; sos_n[a] += 1
+        elif hin or ain:
+            t = h if hin else a
+            sos_sum[t] += FCS_OPP_RATING; sos_n[t] += 1
+
     ratings = []
     for t in power.index:
         po = playoff.get(t, {})
@@ -89,8 +106,14 @@ def main(variant=""):
             "vs_average": round(float(power.loc[t, "vs_average"]), 4),
             "O": round(float(comp.loc[t, "O"]), 3),
             "D": round(float(comp.loc[t, "D"]), 3),
+            "talent": round(float(comp.loc[t, "talent"]), 3),
+            "returning": round(float(comp.loc[t, "returning"]), 3),
+            "pythag": round(float(comp.loc[t, "pythag"]), 3),
+            "sos": round(float(sos_sum[t] / max(sos_n[t], 1)), 3),
+            "games": int(sos_n[t]),
             "avg_wins": po.get("avg_wins"),
             "avg_losses": po.get("avg_losses"),
+            "conf_champ": po.get("conf_champ", 0.0),
             "playoff": po.get("playoff", 0.0),
             "champ": po.get("champ", 0.0),
         })
@@ -123,18 +146,125 @@ def main(variant=""):
 
     # Schedule (lens-independent) powers the client-side playoff re-simulation.
     export_schedule()
+    export_players()
 
     print(f"exported {len(ratings)} rated teams, {len(export['teams'])} sim teams")
     print(f"-> {VIZ / f'ratings{suffix}.json'}\n-> {VIZ / f'model{suffix}.json'}")
 
 
 def export_schedule():
-    """viz/data/schedule.json: compact {h, a, n} records for every 2026 game."""
+    """viz/data/schedule.json: every 2026 game, with week and date for the team page.
+
+    The playoff re-simulation only needs {h, a, n}; the team page also wants to show
+    the slate in order, so week/date/conference-game ride along.
+    """
     raw = json.load(open(ROOT / "data" / "raw" / "schedule_2026.json"))
     games = [{"h": g["homeTeam"], "a": g["awayTeam"],
-              "n": 1 if g.get("neutralSite") else 0} for g in raw]
+              "n": 1 if g.get("neutralSite") else 0,
+              "w": g.get("week"), "d": (g.get("startDate") or "")[:10],
+              "c": 1 if g.get("conferenceGame") else 0,
+              "v": g.get("venue")} for g in raw]
     (VIZ / "schedule.json").write_text(json.dumps(games))
     print(f"-> {VIZ / 'schedule.json'} ({len(games)} games)")
+
+
+def export_players():
+    """viz/data/players.json: each team's 2026 two-deep with projected WAR.
+
+    This is the roster side of the team page - who the model thinks is producing the
+    wins. It comes straight from the WAR build's 2026 projection, the same numbers
+    that feed the talent input, so the page cannot show a roster that disagrees with
+    the rating it sits next to.
+    """
+    from src.data import war
+    p = war.player_contributions()
+    if p is None:
+        print("  [warn] no WAR projections found; players.json not written")
+        return
+    p = p[p.proj_war.notna()].copy()
+
+    def clean(v, cast=None):
+        """None for anything missing. Bare NaN is legal in Python's json output but
+        not in JSON, and the browser rejects the whole file over one of them."""
+        if v is None or (isinstance(v, float) and pd.isna(v)) or pd.isna(v):
+            return None
+        return cast(v) if cast else v
+
+    # "class" is a Python keyword, so DataFrame.itertuples renames that column to a
+    # positional _N and r.class is unreachable. Rename it before iterating.
+    p = p.rename(columns={"class": "cls"})
+
+    # ---- put the numbers on a wins scale -----------------------------------
+    # Raw WAR does not read as wins, for two compounding reasons. First it is
+    # attenuated even historically: regressing actual wins on summed team WAR gives a
+    # slope near 1.6, not 1.0, because the Massey rating underneath is a noisy
+    # estimate and OLS pulls the fitted spread inward. Second, a projection is a
+    # conditional mean, so the 2026 numbers compress further. The league mean is
+    # right; the spread is not. That is why the best roster in the country sums to
+    # under 6 rather than the ~9 a 11-win team should show.
+    #
+    # De-attenuation is applied as ONE league-wide factor around the league mean, not
+    # per team. Scaling each team to its own projected record was tried and rejected:
+    # it hands schedule strength to the players, and Toledo came out needing a x2.96
+    # multiplier because the MAC is weak, which says nothing about Toledo's roster.
+    #
+    # What is left over after de-attenuation - the gap between what the roster is
+    # worth and what the team is projected to win - is real, and is reported
+    # separately as a schedule and context term rather than buried in player numbers.
+    REPL_WIN_PCT = 0.15
+    DEATTENUATION = 1.64
+    sim_path = VIZ / "playoff.json"
+    proj_wins, proj_games = {}, {}
+    if sim_path.exists():
+        for r in json.loads(sim_path.read_text())["teams"]:
+            proj_wins[r["team"]] = r["avg_wins"]
+            proj_games[r["team"]] = r["avg_wins"] + r["avg_losses"]
+
+    team_raw = p.groupby("team").proj_war.sum()
+    league_mean = float(team_raw.mean())
+
+    out = {}
+    for team, g in p.groupby("team"):
+        g = g.sort_values("proj_war", ascending=False)
+        raw = float(g.proj_war.sum())
+        # roster value on a wins scale, schedule-neutral
+        roster_wins = league_mean + DEATTENUATION * (raw - league_mean)
+        scale = (roster_wins / raw) if raw > 0.1 else 1.0
+        g = g.assign(wins_added=g.proj_war * scale)
+
+        wins = proj_wins.get(team)
+        games = proj_games.get(team) or 12.0
+        repl = REPL_WIN_PCT * games
+        context = (wins - repl - roster_wins) if wins is not None else None
+        out[team] = {
+            "total": round(float(g.proj_war.sum()), 3),
+            "winsTotal": round(float(g.wins_added.sum()), 2),
+            "projWins": round(float(wins), 2) if wins is not None else None,
+            "replWins": round(repl, 2),
+            "context": round(float(context), 2) if context is not None else None,
+            "scale": round(float(scale), 3),
+            "byGroup": {k: round(float(v), 3) for k, v in
+                        g.groupby("broad_group").wins_added.sum().items()
+                        if isinstance(k, str)},
+            "players": [{
+                "n": clean(r.player, str) or "—",
+                "g": clean(r.broad_group, str) or "—",
+                "p": clean(getattr(r, "roster_position", None), str),
+                "d": clean(getattr(r, "depth", None), int),
+                "c": clean(getattr(r, "cls", None), str),
+                "w": round(float(r.wins_added), 3),
+                "raw": round(float(r.proj_war), 3),
+                "s": clean(r.stars, int),
+                "i": bool(r.imputed),
+                "sn": clean(r.snaps_2025, int),
+                "w25": clean(r.war_2025, lambda x: round(float(x), 3)),
+            } for r in g.itertuples()],
+        }
+    # allow_nan=False turns a stray NaN into a build failure instead of a file the
+    # browser silently refuses to parse
+    (VIZ / "players.json").write_text(json.dumps(out, allow_nan=False))
+    n = sum(len(v["players"]) for v in out.values())
+    print(f"-> {VIZ / 'players.json'} ({len(out)} teams, {n} players)")
 
 
 if __name__ == "__main__":

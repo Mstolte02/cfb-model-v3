@@ -61,6 +61,47 @@ OPP_ADJ_ALPHA = 1.0
 # either alone on LOSO (scripts/validate_roster_talent.py).
 TALENT_BLEND = 0.5  # weight on PFF roster-aware (1-w on CFBD)
 
+# --- v3: player WAR as a third talent axis -------------------------------------
+# talent = (1-WAR_BLEND) * (TALENT_BLEND mix of PFF/CFBD) + WAR_BLEND * WAR, where
+# WAR is the summed prior-year WAR of this year's roster from ~/Downloads/rb-win-model
+# (PFF grades + CFBD PPA -> Massey -> wins above replacement).
+#
+# WAR does NOT beat the PFF grade signal as a replacement - swapped in for it, LOSO
+# 2022-25 is a wash (Brier 0.2066 either way, scripts/validate_war_talent.py). It
+# earns its place only as an ADDITION, because it carries the CFBD play-value signal
+# and a depth weighting that falls out of snap counts rather than a fitted position
+# weight vector. Swept in scripts/sweep_war_talent.py:
+#
+#   WAR share   0.00     0.15     0.25     0.35     0.50     0.80
+#   Brier      .2048    .2042   .2040    .2041    .2046    .2059
+#
+# A smooth interior optimum at 0.25: Brier .2048 -> .2040, log-loss .5930 -> .5913,
+# accuracy 67.4% -> 67.6%. Comparable in size to the whole v2 accuracy upgrade.
+# Set to 0.0 to disable; the frame falls back cleanly if the WAR build is absent.
+WAR_BLEND = 0.25
+
+# --- v3.1: features retired after a collinearity audit --------------------------
+# scripts/feature_audit.py + scripts/feature_sets.py. The six inputs were checked for
+# redundancy three ways - correlation and VIF on the fitted design, leave-one-feature-
+# out LOSO, and forward selection - and two of them were not earning their place:
+#
+#   pythag      r = +0.61 with O and +0.63 with D, the highest VIF in the set (3.0).
+#               It is built from points scored and allowed, which is what the O and D
+#               composites already measure. Dropping it: Brier 0.2054 -> 0.2053,
+#               accuracy 0.676 -> 0.680.
+#   fp_margin   actively costs accuracy. Dropping it: Brier 0.2054 -> 0.2045, and
+#               forward selection adds it last and gets worse (0.2045 -> 0.2054).
+#
+# Dropping both: Brier 0.2047, four features, no VIF above ~1.9. The remaining four
+# are NOT redundant with each other, which was the other half of the question:
+# returning is nearly orthogonal to everything (max |r| 0.21) and talent is the single
+# most valuable feature in the set (dropping it costs +0.0040 Brier).
+#
+# pythag stays in src/projection.py, where it is a predictor of next season's O/D -
+# a different job from being a model feature.
+# Set to [] to restore the original six.
+DROPPED_FEATURES = ["fp_margin", "pythag"]
+
 # Team-level features pulled from CFBD /stats/season/advanced.
 # `higher_is_better=False` features get sign-flipped so larger == stronger.
 # These map to the doc's §1A inputs; PFF pressure% / explosive rush-pass splits
@@ -112,6 +153,12 @@ ENSEMBLE_W = 0.4
 # the way to their talent baseline). LOSO 2022-25: Brier 0.2053 vs 0.2044 for
 # the balanced default, same 67.7% accuracy — a small, known trade for a view
 # that isn't just an echo of last season's standings.
+# NO LONGER SHIPPED (v3.5). This was the "roster-weighted" lens - a second rating
+# variant that leaned 70% on two-deep talent with full continuity shrinkage. It was a
+# knowingly worse backtest (Brier .2053 against .2043) kept as an alternative view, and
+# the app now presents one set of numbers on the 38/38/25 talent blend instead. The
+# scripts still accept a `roster` argument if it is ever wanted back; nothing in the
+# shipped pipeline passes it.
 ROSTER_VARIANT = {"talent_blend": 0.7, "unc_lambda": 1.0}
 
 ARTIFACTS.mkdir(parents=True, exist_ok=True)

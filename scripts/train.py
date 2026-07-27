@@ -23,12 +23,40 @@ from src import oppadj as OA
 from src import model as M
 
 
-def blended_talent(cfbd_tal, pff_roster, w=TALENT_BLEND):
-    """talent[N] = w*PFF_roster[N] + (1-w)*CFBD[N], CFBD-filled where PFF missing."""
+def blended_talent(cfbd_tal, pff_roster, w=TALENT_BLEND, war_w=None):
+    """talent[N] = the PFF/CFBD blend, then WAR mixed in on top of it.
+
+    WAR is a third axis rather than a substitute: it is only worth carrying because
+    it adds to the PFF+CFBD mix, not because it beats either (see config.WAR_BLEND).
+    Any team the WAR build has no roster for falls back to the blend, exactly as a
+    team without PFF talent falls back to CFBD.
+    """
+    from config import WAR_BLEND
+    war_w = WAR_BLEND if war_w is None else war_w
+
     out = {}
     for N, base in cfbd_tal.items():
         r = pff_roster.get(N)
         out[N] = base if r is None else w * r.reindex(base.index).fillna(base) + (1 - w) * base
+
+    if war_w <= 0:
+        return out
+    try:
+        from src.data import war as warmod
+        if not warmod.available():
+            print("  [warn] WAR build not found; talent stays on PFF+CFBD only.")
+            return out
+        wt = warmod.talent_by_year({N: s.index for N, s in out.items()})
+        n = 0
+        for N, blend in out.items():
+            v = wt.get(N)
+            if v is None:
+                continue
+            out[N] = (1 - war_w) * blend + war_w * v.reindex(blend.index).fillna(blend)
+            n += 1
+        print(f"  [info] WAR talent blended at {war_w:.2f} for {n} seasons.")
+    except Exception as e:
+        print(f"  [warn] WAR talent unavailable ({e}); talent stays on PFF+CFBD only.")
     return out
 
 

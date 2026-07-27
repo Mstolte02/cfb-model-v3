@@ -1,4 +1,312 @@
-# CFB Predictive Model v2 (copy of ~/cfb-model with accuracy + viz upgrades)
+# CFB Predictive Model v3
+
+## v3.4 — WAR rebuilt on 11 seasons
+
+PFF exports were extended to 2014-2025 (`~/Downloads/pff_exports`, renamed from
+`pff_exports_2021_2025` — `src/data/pff.py` pointed at the old path and was crashing).
+The WAR build now spans **11 seasons instead of 5**.
+
+**2020 is excluded.** Conferences played in isolation that year, which leaves the
+Massey system barely connected between them, and teams played 8.4 games on average
+against a normal 11.9 — one played 3. Rating vs adjusted win pct by season:
+
+```
+.58 .79 .62 .65 .71 .72 | .22 | .72 .72 .71 .64 .64
+2014 ................ 2019 | 2020 | 2021 ............ 2025
+```
+
+Every season lands between .58 and .79 except 2020 at .22. Including it dragged the
+pooled figure from .67 to .48; excluding it restores .67 on 11 seasons.
+
+**What the extra history bought:**
+
+| | 5 seasons | 11 seasons |
+|---|---|---|
+| Massey rating vs win pct | 0.673 | 0.673 |
+| rating → **next** season | 0.421 | **0.436** |
+| team WAR → wins calibration | 0.751 | **0.782** |
+| v3 LOSO Brier | 0.2047 | **0.2043** |
+
+Same rating quality, better forward-looking behaviour, better win calibration, and a
+small but real gain in the win-probability model. The talent blend was re-swept on the
+rebuilt WAR and **38 / 38 / 25 is still the joint optimum**.
+
+**Older recruiting classes were the hidden gap.** Only 4% of 2015-18 training rows
+carried a star rating, against 72% for 2024, because the recruiting pull started at
+2019. Extended to 2011 (`build_recruiting.REC_YEARS`) — coverage is now 73-81% across
+every season.
+
+**The projection gains plateau.** Training the player projection on different windows,
+all scored on the same held-out 2025:
+
+| training window | r | MAE | r (no history) |
+|---|---|---|---|
+| 2022-24 only | 0.803 | 0.0584 | 0.741 |
+| 2018-19 + 2022-24 | 0.813 | 0.0577 | 0.731 |
+| 2017-19 + 2022-24 | 0.818 | 0.0575 | 0.761 |
+| all available (ships) | 0.817 | 0.0577 | 0.735 |
+
+More history helps (0.803 → ~0.817) and then flattens around six seasons. "All
+available" ships rather than the nominally-best window, deliberately: picking the
+window by its score on the same 2025 holdout being reported would be fitting a
+hyperparameter to the test set.
+
+**Extending the win-probability model's game years was tested and rejected.** CFBD has
+2015-19, but four of the ten O/D composite inputs come from TruMedia, which only exists
+for 2021-25 — older seasons would be six real features and four neutral-filled, so the
+model would fit one coefficient across two different definitions of the same variable.
+Measured rather than assumed (`scripts/extend_years.py`): Brier 0.2031 → 0.2034,
+accuracy .677 → .680. A wash, so `GAME_YEARS` stays 2021-25.
+
+---
+
+## v3.3 — talent weights jointly fitted, and a Method view
+
+**The talent weights were never jointly fitted — now they are.** PFF/CFBD came from a
+50/50 test and WAR was bolted on at 25% by a one-dimensional sweep holding that fixed.
+`scripts/talent_sweep.py` grid-searches all 45 three-way blends under LOSO. Result: the
+shipping **38 / 38 / 25** split is the joint optimum. The one-at-a-time process happened
+to land on the right answer.
+
+**WAR is not a duplicate of PFF, and cannot replace it.** The worry was reasonable —
+WAR is built from PFF grades — but they correlate at **r = 0.69**, not near one. WAR
+weights by snaps, uses facet weights fitted to wins, adds CFBD play value and subtracts
+a replacement level; the PFF signal is a position-weighted grade average.
+
+| talent blend | Brier |
+|---|---|
+| **all three (ships)** | **0.2047** |
+| PFF + CFBD, no WAR | 0.2054 |
+| PFF + WAR, no recruiting | 0.2057 |
+| **WAR + CFBD — WAR replaces PFF** | **0.2062** |
+| PFF alone | 0.2067 |
+| WAR alone | 0.2072 |
+| recruiting alone | 0.2088 |
+
+Dropping PFF for WAR costs more than dropping WAR for PFF. They are complements and
+PFF is the stronger of the pair. Caveat worth keeping in view: the whole surface spans
+0.0041 and 7 of 45 blends sit within 0.0005 of the best, so the *composition* (three
+sources beat two beat one) is the robust finding, not the exact weights.
+
+Note 2021 is excluded from the correlation: with no 2020 grades the PFF signal falls
+back to recruiting entirely and correlates at exactly 1.00, which would overstate the
+overlap.
+
+**New Method view** (`scripts/export_diagnostics.py` → `viz/data/diagnostics.json`).
+Six panels, all exported from the live model rather than hand-written:
+
+1. every data source, what it feeds, and what it actually is
+2. the three talent signals, their correlation matrix, and what each combination is worth
+3. feature correlations and VIFs, with retired features marked
+4. LOSO by season, baselines, and a calibration plot
+5. inside the WAR build — heaviest facets and the PFF/CFBD weight split
+6. every modelling question asked so far, the answer, and the number behind it
+
+---
+
+## v3.2 — live depth charts, feature audit, formation layout
+
+**Rosters now come from live Ourlads charts.** `scrape_ourlads.py` (in
+`~/Downloads/rb-win-model`) pulls all 136 FBS two-deeps — 7,578 slots, one request
+every 1.5s, cached to disk. It replaces the 27-June workbook export, which had
+already drifted. Roughly eighty distinct alignment labels are normalised onto the ten
+position groups; the edge rusher alone appears as JACK, RUSH, BAN, BUCK, LEO, STUD,
+VIPER, WOLF, STING, JOKER, CAT, DOG and SPEAR.
+
+**The six model inputs were audited for redundancy and two were retired.**
+`scripts/feature_audit.py` (correlation + VIF on the fitted design, leave-one-feature-
+out, forward selection) and `scripts/feature_sets.py` (head-to-head LOSO):
+
+| set | n | Brier | Acc |
+|---|---|---|---|
+| all six (was shipping) | 6 | 0.2054 | .676 |
+| **drop fp_margin** | 5 | **0.2045** | .674 |
+| drop pythag | 5 | 0.2053 | .680 |
+| **drop both (now ships)** | 4 | **0.2047** | .675 |
+| O/D only | 2 | 0.2116 | .660 |
+| talent only | 1 | 0.2154 | .653 |
+
+- **pythag was redundant**, as suspected: r = +0.61 with O and +0.63 with D, the
+  highest VIF in the set (3.0). It is built from points scored and allowed, which is
+  what the O/D composites already measure.
+- **fp_margin was actively costing accuracy** — forward selection adds it last and
+  gets *worse*.
+- **talent / returning / WAR are NOT redundant with each other.** Returning is
+  nearly orthogonal to everything (max |r| = 0.21) and talent is the single most
+  valuable feature in the set (dropping it costs +0.0040 Brier).
+
+Retired features are **zeroed, not removed** (`config.DROPPED_FEATURES`): a zero
+column differences to zero and fits a coefficient of exactly zero, so `model.json`,
+the JS port and the playoff simulator all keep the same six-wide shape and stay
+verifiably in sync. Held-out 2025 accuracy went .670 → **.680**.
+
+**WAR cannot carry the talent slot alone** — tested, and the answer is no:
+
+| talent source | all-six Brier | as the only feature |
+|---|---|---|
+| PFF+CFBD+WAR blend (ships) | 0.2054 | 0.2154 |
+| WAR only | 0.2082 | 0.2288 |
+
+A "WAR" lens would be a materially worse view than either lens that ships, so the
+toggle stays **Balanced / Roster-weighted**. WAR earns its place as 25% of the talent
+blend, not as a standalone signal.
+
+**Formation layout rebuilt.** Placement is now driven by position group and unit size
+rather than a lookup table keyed on the label — anything unrecognised used to stack at
+the centre of the field, which is what scattered the secondary. Each level spreads
+symmetrically about the middle, so every unit is centred whatever its personnel.
+Flanking positions (tight ends, edge rushers) line up outside the group they play
+beyond, with side taken from the label. Verified across schemes: Ohio State reads
+11 personnel / 4-2 nickel, Air Force 21 / 3-3 nickel, Navy 31 personnel / 3-4.
+
+---
+
+## v3.1 — committee model, bracket fixes, wins ledger, lineup view
+
+**Committee ranking fitted on its own history.** `scripts/fit_committee.py` pulls
+every published CFP committee ranking from 2014-2025 (295 ranked team-seasons) and
+fits the selection-day ordering from record, opponent-adjusted quality, SOS and power
+membership. Leave-one-season-out Spearman against the real final ranking:
+**0.885 → 0.908**. The fit reweights the proxy substantially — the committee cares
+far more about schedule and conference than about raw quality:
+
+| weight | old (hand-set) | fitted |
+|---|---|---|
+| win_pct | 10.00 | 10.00 |
+| rating_z | 1.00 | **0.22** |
+| sos_z | 0.75 | **0.71** |
+| power conference | — | **+1.05** |
+
+Notre Dame carries the power flag (CFP contract slot); including it moved LOSO
+Spearman 0.898 → 0.908.
+
+**Bracket: the G6 bid is now actually in the field.** The simulation was always
+correct — every simulated season sends four P4 champions and one Group of 6 team —
+but the *displayed* modal bracket took the twelve highest playoff probabilities, and
+because the G6 bid rotates across a dozen candidates no single one ever cleared the
+bar. The result was a bracket with no G6 representative and five SEC at-larges. The
+modal field is now built the way selection works: each power conference's most likely
+champion, then the most likely G6 bid, then at-larges.
+
+**Also fixed:** a team could reach the championship game after losing its semifinal
+on the scoreboard — the winner came from win probability while the score came from
+the margin model, and those diverge on coin flips. Both now derive from one source.
+
+**WAR now reads as wins.** Summed team WAR does not equal wins, for two compounding
+reasons: WAR is attenuated even historically (regressing actual wins on team WAR
+gives a slope near 1.6, not 1.0, because the Massey rating underneath is noisy and
+OLS pulls the fitted spread inward), and a projection is a conditional mean so it
+compresses further. The league mean is right; the spread is not. The team page now
+applies **one league-wide de-attenuation factor (×1.64)** around the league mean and
+shows a ledger that reconciles to the projected record:
+
+```
+Ohio State   1.88 replacement + 8.22 roster − 0.36 schedule = 9.73 projected wins
+Toledo       1.92 replacement + 2.01 roster + 6.03 schedule = 9.96 projected wins
+```
+
+Per-team scaling was tried and rejected: it hands schedule strength to the players,
+and Toledo needed a ×2.96 multiplier that said nothing about its roster.
+
+**Garbage time excluded from CFBD PPA.** Backups held 13.6% of all QB WAR, with a
+261-snap backup out-earning full-time starters. Re-pulling PPA with
+`excludeGarbageTime=true` takes that to 12.0%. It costs 0.006 of team-level CV
+(0.843 → 0.837), which is a real if small price; set `CFBD_GARBAGE=include` to revert.
+Empirical-Bayes shrinkage of z by snaps was also tried and **removed** — it made every
+measure worse and pushed the backup share *up* to 16.0%, because compressing z
+compresses the facet sigma with it. See the comment in `build_hybrid.py`.
+
+**Team page shows a lineup, not a leaderboard.** The two-deep already carries real
+positional labels (LT/LG/C/RG/RT, WR-X/Z/SL, NB), so each team's listed starters are
+its actual base personnel — no formation had to be assumed. Offence and defence render
+as field diagrams with the personnel grouping named from the roster itself
+("11 personnel", "4-2 nickel").
+
+**Restyled:** eggshell background, Georgia throughout, warm neutral palette so team
+colours carry the emphasis. Schedule spreads use an en dash with letter-spacing.
+
+**Roster freshness:** CFBD has no 2026 rosters yet (returns empty). Ourlads has 2026
+charts updated through late July against the 27-Jun two-deep xlsx; an LSU spot-check
+matched 5 of 6 skill starters, with the RB changed. Refreshing all 136 teams would
+mean scraping a commercial site, so it is left as a decision rather than done.
+
+---
+
+## What's new in v3 (July 2026) — player WAR + rebuilt web app
+
+**Player WAR joins the talent signal.** `~/Downloads/rb-win-model` builds wins above
+replacement per player (PFF grades + CFBD play value → Massey ratings → WAR). Two
+questions were tested separately, and the answers differ:
+
+| talent variant | Brier | log-loss | acc |
+|---|---|---|---|
+| CFBD recruiting only | 0.2083 | 0.6020 | .663 |
+| PFF roster-aware | 0.2066 | 0.5978 | .672 |
+| **WAR** (as a replacement) | 0.2066 | 0.5981 | .671 |
+| blend 50/50 PFF+CFBD (v2 default) | 0.2048 | 0.5930 | .674 |
+
+WAR does **not** beat the PFF grade signal — swapped in for it, LOSO 2022–25 is a
+wash (`scripts/validate_war_talent.py`). It earns its place only as an **addition**,
+because it carries the CFBD play-value signal and a depth weighting that falls out of
+snap counts rather than a fitted position-weight vector. Sweeping the WAR share on
+top of the shipping blend (`scripts/sweep_war_talent.py`):
+
+| WAR share | 0.00 | 0.15 | **0.25** | 0.35 | 0.50 | 0.80 |
+|---|---|---|---|---|---|---|
+| Brier | .2048 | .2042 | **.2040** | .2041 | .2046 | .2059 |
+
+A smooth interior optimum at 0.25 — Brier .2048 → **.2040**, log-loss .5930 → .5913,
+accuracy 67.4% → 67.6%. Comparable in size to the entire v2 accuracy upgrade. Set
+`config.WAR_BLEND = 0.0` to disable; the frame falls back cleanly if the WAR build is
+absent. Note the single held-out 2025 season is flat (.2039 vs .2038) — the 4-fold
+LOSO is the more reliable estimate.
+
+**Logos.** `scripts/prepare_logos.py` now downloads ESPN's **primary** 500px mark for
+every FBS team into `viz/logos/` (was `~/Downloads/cfb_alt_logos`, a mix of alternate
+and retired marks). All 138 teams verified to resolve to a valid PNG. `teams.json`
+also carries brand colours plus a contrast-checked foreground, which the app uses
+throughout.
+
+**Web app rebuilt** — four views:
+
+- **Ratings** (replaces Top 25): all 136 rated teams, sortable on every column,
+  filterable by search / conference / P4 / G6. Adds talent, returning, SOS and
+  conference-title odds. Records come from the 20k Monte Carlo over the real 2026
+  schedule.
+- **Playoff Projection**: now renders the **modal bracket** with a **projected score
+  for every game**, computed client-side from the same points model the matchup
+  simulator uses, with winners advancing through the fixed bracket. Format unchanged
+  and confirmed for 2026-27.
+- **Matchup Simulator**: unchanged.
+- **Team Breakdown** (replaces Ratings Lab): per-team win-distribution histogram from
+  the simulation, player WAR contributions (by position group and top contributors),
+  offense/defense split, model inputs on the z-scale, and a game-by-game schedule with
+  projected scores, spreads and win probabilities. Team names anywhere in the app link
+  here.
+
+**Removed:** the Ratings Lab input editor, the roster-editing modal, and the
+client-side playoff re-simulation that existed to fold Lab edits into the odds.
+`scripts/serve.py` and its `/api/rosters` endpoint are now unused — the app is fully
+static again (`python3 -m http.server 8642 -d viz`). Restore from git history if the
+editor is wanted back.
+
+**New/changed exports:** `players.json` (per-team two-deep WAR), `win_dist` and
+`bracket` in `playoff*.json`, week/date/venue on `schedule.json`, and talent /
+returning / pythag / SOS on `ratings*.json`.
+
+**Pipeline (run in order):**
+
+```bash
+./venv/bin/python -m scripts.train                       # retrain (WAR blended in)
+./venv/bin/python -m scripts.rank                        # 2026 power ratings
+./venv/bin/python -m scripts.simulate_playoff 20000      # CFP odds + bracket + win dists
+./venv/bin/python -m scripts.prepare_logos               # ESPN basic logos + teams.json
+./venv/bin/python -m scripts.export_viz                  # data for the web app
+./venv/bin/python -m scripts.export_diagnostics          # Method tab — must run last
+python3 -m http.server 8642 -d viz                       # http://localhost:8642
+```
+
+---
 
 ## What's new in v2 (July 2026)
 

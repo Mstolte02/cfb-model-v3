@@ -5,3 +5,4 @@ data/raw/
 artifacts/
 venv/
 .DS_Store
+.claude/

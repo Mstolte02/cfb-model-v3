@@ -109,6 +109,16 @@ def team_frame(N, std_by_year, pythag_by_year, talent_by_year, returning_by_year
         u = u_src.reindex(df.index).fillna(0.0).clip(lower=0, upper=1)
         df["O"] = (1 - lam * u) * df["O"] + lam * u * (b_o * df["talent"])
         df["D"] = (1 - lam * u) * df["D"] + lam * u * (b_d * df["talent"])
+
+    # Retired features are zeroed rather than removed. A column of zeros differences
+    # to zero and fits a coefficient of exactly zero, so the feature contributes
+    # nothing while every downstream consumer - the six-wide model.json, the JS port,
+    # the playoff simulator - keeps the same shape and stays verifiably in sync.
+    # See config.DROPPED_FEATURES for why these two went.
+    from config import DROPPED_FEATURES
+    for c in DROPPED_FEATURES:
+        if c in df.columns:
+            df[c] = 0.0
     return df.dropna()
 
 
