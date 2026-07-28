@@ -46,15 +46,16 @@ SOURCES = [
     {"name": "PFF player grades", "provider": "PFF",
      "feeds": "talent (part), WAR",
      "detail": "Player-season grades. Position-weighted over this year's roster "
-               "carrying last year's grades.", "years": "2021-2025"},
+               "carrying last year's grades.", "years": "2014-2025"},
     {"name": "CFBD player PPA", "provider": "CollegeFootballData",
      "feeds": "WAR (part)",
      "detail": "EPA per play by player, garbage time excluded. Covers QB/RB/WR/TE "
                "only - no line, no coverage.", "years": "2014-2025"},
     {"name": "Player WAR", "provider": "derived",
      "feeds": "talent (part)",
-     "detail": "PFF grades + CFBD play value -> facet weights -> Massey ratings -> "
-               "wins above replacement. Snap-weighted.", "years": "2021-2026"},
+     "detail": "PFF grades + CFBD play value -> facet weights fitted against the "
+               "FOLLOWING season -> Massey ratings -> wins above replacement.",
+     "years": "2014-2026"},
     {"name": "Ourlads two-deep", "provider": "Ourlads",
      "feeds": "2026 roster",
      "detail": "Live depth charts, all 136 FBS teams, used to know who is on the "
@@ -259,6 +260,24 @@ def main():
                    "single feature.",
          "evidence": "max |r| with anything = 0.21 for returning; dropping talent "
                      "costs +0.0040 Brier."},
+        {"question": "Why were corners worth more than edge rushers?",
+         "answer": "They were not - the facet weights were fitted against the same "
+                   "season's wins, which rewards facets contaminated by the result. "
+                   "Refitted against the FOLLOWING season by ridge.",
+         "evidence": "Coverage grade: same-season r .55, year-over-year stability "
+                     ".21. Pass rush: .38 and .57. After the fix, EDGE and CB are "
+                     "both 10.4% of league WAR (was 6.1% vs 15.8%)."},
+        {"question": "Is the projection just a copy of last season?",
+         "answer": "No. It is about as persistent as the sport itself is.",
+         "evidence": "Reality's season-to-season r = .502; the 2026 power rating "
+                     "against 2025 is .527. Teams move 29.9 rank places on average, "
+                     "74 of 136 by 20 or more."},
+        {"question": "Should the three talent sources be separate features?",
+         "answer": "Tested; blending is marginally better and simpler. They are too "
+                   "collinear for three coefficients to be stable.",
+         "evidence": "Blended .2039, separate columns .2046. Left free, the model "
+                     "wants PFF 28 / recruiting 36 / WAR 36 - more WAR than the "
+                     "blend gives it."},
         {"question": "Is pythag redundant with O and D?",
          "answer": "Yes - retired.",
          "evidence": "r = +0.61 with O, +0.63 with D, highest VIF (3.0); dropping it "

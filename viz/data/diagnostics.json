@@ -23,19 +23,19 @@
   "corr": {
    "O": {
     "O": 1.0,
-    "D": 0.295,
+    "D": 0.3,
     "fp_margin": 0.0,
     "pythag": 0.0,
-    "talent": 0.471,
-    "returning": -0.029
+    "talent": 0.498,
+    "returning": -0.03
    },
    "D": {
-    "O": 0.295,
+    "O": 0.3,
     "D": 1.0,
     "fp_margin": 0.0,
     "pythag": 0.0,
-    "talent": 0.474,
-    "returning": 0.004
+    "talent": 0.504,
+    "returning": 0.003
    },
    "fp_margin": {
     "O": 0.0,
@@ -54,29 +54,29 @@
     "returning": 0.0
    },
    "talent": {
-    "O": 0.471,
-    "D": 0.474,
+    "O": 0.498,
+    "D": 0.504,
     "fp_margin": 0.0,
     "pythag": 0.0,
     "talent": 1.0,
-    "returning": 0.19
+    "returning": 0.173
    },
    "returning": {
-    "O": -0.029,
-    "D": 0.004,
+    "O": -0.03,
+    "D": 0.003,
     "fp_margin": 0.0,
     "pythag": 0.0,
-    "talent": 0.19,
+    "talent": 0.173,
     "returning": 1.0
    }
   },
   "vif": {
-   "O": 1.32,
-   "D": 1.31,
+   "O": 1.36,
+   "D": 1.36,
    "fp_margin": null,
    "pythag": null,
-   "talent": 1.62,
-   "returning": 1.07
+   "talent": 1.73,
+   "returning": 1.06
   }
  },
  "talent_sources": {
@@ -96,16 +96,16 @@
    "PFF": {
     "PFF": 1.0,
     "CFBD": 0.539,
-    "WAR": 0.679
+    "WAR": 0.733
    },
    "CFBD": {
     "PFF": 0.539,
     "CFBD": 1.0,
-    "WAR": 0.609
+    "WAR": 0.643
    },
    "WAR": {
-    "PFF": 0.679,
-    "CFBD": 0.609,
+    "PFF": 0.733,
+    "CFBD": 0.643,
     "WAR": 1.0
    }
   },
@@ -118,27 +118,27 @@
    },
    {
     "season": 2022,
-    "PFF_WAR": 0.743,
+    "PFF_WAR": 0.785,
     "PFF_CFBD": 0.601,
-    "WAR_CFBD": 0.666
+    "WAR_CFBD": 0.663
    },
    {
     "season": 2023,
-    "PFF_WAR": 0.659,
+    "PFF_WAR": 0.719,
     "PFF_CFBD": 0.585,
-    "WAR_CFBD": 0.666
+    "WAR_CFBD": 0.68
    },
    {
     "season": 2024,
-    "PFF_WAR": 0.554,
+    "PFF_WAR": 0.621,
     "PFF_CFBD": 0.508,
-    "WAR_CFBD": 0.551
+    "WAR_CFBD": 0.612
    },
    {
     "season": 2025,
-    "PFF_WAR": 0.671,
+    "PFF_WAR": 0.731,
     "PFF_CFBD": 0.467,
-    "WAR_CFBD": 0.561
+    "WAR_CFBD": 0.664
    }
   ],
   "weights": {
@@ -149,67 +149,67 @@
  },
  "coefficients": {
   "logistic": {
-   "O": 0.4093,
-   "D": 0.3497,
+   "O": 0.3967,
+   "D": 0.336,
    "fp_margin": 0.0,
    "pythag": 0.0,
-   "talent": 0.4783,
-   "returning": 0.1728
+   "talent": 0.4915,
+   "returning": 0.1781
   },
-  "logistic_hfa": 0.2525,
+  "logistic_hfa": 0.2554,
   "margin": {
-   "O": 4.1024,
-   "D": 3.6382,
+   "O": 3.9262,
+   "D": 3.4468,
    "fp_margin": 0.0,
    "pythag": 0.0,
-   "talent": 5.6136,
-   "returning": 1.251
+   "talent": 5.8415,
+   "returning": 1.2919
   },
-  "margin_hfa": 2.5161,
-  "margin_sigma": 17.318,
+  "margin_hfa": 2.5596,
+  "margin_sigma": 17.288,
   "ensemble_w": 0.4
  },
  "evaluation": {
   "loso": {
-   "brier": 0.2043,
-   "log_loss": 0.5923,
-   "accuracy": 0.677
+   "brier": 0.2039,
+   "log_loss": 0.5912,
+   "accuracy": 0.6761
   },
   "per_season": [
    {
     "season": 2021,
     "n": 700,
-    "brier": 0.2089,
-    "log_loss": 0.6044,
-    "accuracy": 0.6757
+    "brier": 0.2094,
+    "log_loss": 0.6056,
+    "accuracy": 0.6686
    },
    {
     "season": 2022,
     "n": 724,
-    "brier": 0.204,
-    "log_loss": 0.5928,
-    "accuracy": 0.6727
+    "brier": 0.2033,
+    "log_loss": 0.5914,
+    "accuracy": 0.6713
    },
    {
     "season": 2023,
     "n": 729,
-    "brier": 0.1961,
-    "log_loss": 0.5719,
-    "accuracy": 0.6927
+    "brier": 0.1967,
+    "log_loss": 0.5731,
+    "accuracy": 0.6845
    },
    {
     "season": 2024,
     "n": 741,
-    "brier": 0.2071,
-    "log_loss": 0.5969,
-    "accuracy": 0.6761
+    "brier": 0.2063,
+    "log_loss": 0.5949,
+    "accuracy": 0.6788
    },
    {
     "season": 2025,
     "n": 719,
-    "brier": 0.2055,
-    "log_loss": 0.5953,
-    "accuracy": 0.6676
+    "brier": 0.2036,
+    "log_loss": 0.5908,
+    "accuracy": 0.6773
    }
   ],
   "baselines": {
@@ -220,241 +220,241 @@
    {
     "lo": 0.0,
     "hi": 0.1,
-    "pred": 0.074,
-    "actual": 0.05,
+    "pred": 0.0722,
+    "actual": 0.1,
     "n": 20
    },
    {
     "lo": 0.1,
     "hi": 0.2,
-    "pred": 0.1579,
-    "actual": 0.191,
-    "n": 89
+    "pred": 0.1563,
+    "actual": 0.1758,
+    "n": 91
    },
    {
     "lo": 0.2,
     "hi": 0.3,
-    "pred": 0.2544,
-    "actual": 0.25,
-    "n": 204
+    "pred": 0.2556,
+    "actual": 0.2511,
+    "n": 219
    },
    {
     "lo": 0.3,
     "hi": 0.4,
-    "pred": 0.3519,
-    "actual": 0.3563,
-    "n": 407
+    "pred": 0.352,
+    "actual": 0.3562,
+    "n": 379
    },
    {
     "lo": 0.4,
     "hi": 0.5,
-    "pred": 0.4535,
-    "actual": 0.4554,
-    "n": 527
+    "pred": 0.4526,
+    "actual": 0.46,
+    "n": 537
    },
    {
     "lo": 0.5,
     "hi": 0.6,
-    "pred": 0.5517,
-    "actual": 0.5753,
-    "n": 624
+    "pred": 0.5515,
+    "actual": 0.5831,
+    "n": 626
    },
    {
     "lo": 0.6,
     "hi": 0.7,
-    "pred": 0.6487,
-    "actual": 0.615,
-    "n": 639
+    "pred": 0.649,
+    "actual": 0.6022,
+    "n": 641
    },
    {
     "lo": 0.7,
     "hi": 0.8,
-    "pred": 0.748,
-    "actual": 0.7427,
-    "n": 517
+    "pred": 0.7488,
+    "actual": 0.7534,
+    "n": 515
    },
    {
     "lo": 0.8,
     "hi": 0.9,
-    "pred": 0.8454,
-    "actual": 0.8617,
-    "n": 405
+    "pred": 0.847,
+    "actual": 0.8525,
+    "n": 400
    },
    {
     "lo": 0.9,
     "hi": 1.0,
-    "pred": 0.9343,
-    "actual": 0.9282,
-    "n": 181
+    "pred": 0.9353,
+    "actual": 0.9297,
+    "n": 185
    }
   ],
   "home_win_rate": 0.5832
  },
  "war_facets": [
   {
-   "facet": "cov_db",
-   "weight": 0.2338,
-   "source": "PFF"
-  },
-  {
-   "facet": "cfbd_pass_qb",
-   "weight": 0.1799,
-   "source": "CFBD"
-  },
-  {
-   "facet": "pass_qb",
-   "weight": 0.1561,
-   "source": "PFF"
-  },
-  {
    "facet": "rdef_dl",
-   "weight": 0.053,
+   "weight": 0.1105,
+   "source": "PFF"
+  },
+  {
+   "facet": "cov_db",
+   "weight": 0.0939,
    "source": "PFF"
   },
   {
    "facet": "rdef_sec",
-   "weight": 0.0356,
+   "weight": 0.075,
    "source": "PFF"
   },
   {
-   "facet": "prsh_dl",
-   "weight": 0.029,
+   "facet": "pass_qb",
+   "weight": 0.0694,
    "source": "PFF"
   },
   {
-   "facet": "cfbd_recv_rb",
-   "weight": 0.0273,
+   "facet": "cfbd_pass_qb",
+   "weight": 0.0647,
    "source": "CFBD"
   },
   {
    "facet": "rblk_ol",
-   "weight": 0.0257,
+   "weight": 0.0593,
    "source": "PFF"
   },
   {
-   "facet": "cfbd_run_rb",
-   "weight": 0.0213,
-   "source": "CFBD"
+   "facet": "prsh_dl",
+   "weight": 0.0582,
+   "source": "PFF"
   },
   {
    "facet": "run_rb",
-   "weight": 0.0192,
+   "weight": 0.0497,
+   "source": "PFF"
+  },
+  {
+   "facet": "cfbd_recv_rb",
+   "weight": 0.0459,
+   "source": "CFBD"
+  },
+  {
+   "facet": "cfbd_recv_te",
+   "weight": 0.0446,
+   "source": "CFBD"
+  },
+  {
+   "facet": "recv_wr",
+   "weight": 0.0363,
    "source": "PFF"
   },
   {
    "facet": "cov_lb",
-   "weight": 0.018,
+   "weight": 0.0346,
    "source": "PFF"
-  },
-  {
-   "facet": "cfbd_havoc_dl",
-   "weight": 0.0172,
-   "source": "CFBD"
   },
   {
    "facet": "prsh_sec",
-   "weight": 0.0155,
-   "source": "PFF"
-  },
-  {
-   "facet": "rblk_skill",
-   "weight": 0.0149,
-   "source": "PFF"
-  },
-  {
-   "facet": "recv_wr",
-   "weight": 0.0146,
+   "weight": 0.0332,
    "source": "PFF"
   },
   {
    "facet": "cfbd_run_qb",
-   "weight": 0.0142,
+   "weight": 0.0321,
    "source": "CFBD"
   },
   {
-   "facet": "run_qb",
-   "weight": 0.0141,
-   "source": "PFF"
-  },
-  {
-   "facet": "pblk_ol",
-   "weight": 0.0111,
-   "source": "PFF"
-  },
-  {
-   "facet": "cfbd_tackle_db",
-   "weight": 0.0098,
-   "source": "CFBD"
-  },
-  {
-   "facet": "cfbd_havoc_lb",
-   "weight": 0.0094,
-   "source": "CFBD"
-  },
-  {
-   "facet": "recv_te",
-   "weight": 0.0078,
-   "source": "PFF"
-  },
-  {
-   "facet": "fumble",
-   "weight": 0.0075,
-   "source": "PFF"
-  },
-  {
-   "facet": "cfbd_recv_wr",
-   "weight": 0.0075,
-   "source": "CFBD"
-  },
-  {
-   "facet": "tackle",
-   "weight": 0.0075,
-   "source": "PFF"
-  },
-  {
-   "facet": "cfbd_recv_te",
-   "weight": 0.0068,
-   "source": "CFBD"
-  },
-  {
-   "facet": "pblk_skill",
-   "weight": 0.0068,
-   "source": "PFF"
-  },
-  {
-   "facet": "recv_rb",
-   "weight": 0.0066,
-   "source": "PFF"
-  },
-  {
-   "facet": "pen_off",
-   "weight": 0.0066,
+   "facet": "rblk_skill",
+   "weight": 0.0301,
    "source": "PFF"
   },
   {
    "facet": "cfbd_havoc_db",
-   "weight": 0.0066,
+   "weight": 0.0267,
    "source": "CFBD"
   },
   {
-   "facet": "pen_def",
-   "weight": 0.0057,
+   "facet": "cfbd_havoc_lb",
+   "weight": 0.0263,
+   "source": "CFBD"
+  },
+  {
+   "facet": "pblk_ol",
+   "weight": 0.0261,
    "source": "PFF"
   },
   {
-   "facet": "cfbd_tackle_lb",
-   "weight": 0.0055,
+   "facet": "pen_off",
+   "weight": 0.0211,
+   "source": "PFF"
+  },
+  {
+   "facet": "cfbd_run_rb",
+   "weight": 0.0182,
+   "source": "CFBD"
+  },
+  {
+   "facet": "run_qb",
+   "weight": 0.0142,
+   "source": "PFF"
+  },
+  {
+   "facet": "pen_def",
+   "weight": 0.014,
+   "source": "PFF"
+  },
+  {
+   "facet": "fumble",
+   "weight": 0.0103,
+   "source": "PFF"
+  },
+  {
+   "facet": "recv_te",
+   "weight": 0.0023,
+   "source": "PFF"
+  },
+  {
+   "facet": "cfbd_havoc_dl",
+   "weight": 0.0017,
+   "source": "CFBD"
+  },
+  {
+   "facet": "cfbd_recv_wr",
+   "weight": 0.0015,
    "source": "CFBD"
   },
   {
    "facet": "cfbd_cov_db",
-   "weight": 0.0054,
+   "weight": 0.0,
    "source": "CFBD"
+  },
+  {
+   "facet": "cfbd_tackle_lb",
+   "weight": 0.0,
+   "source": "CFBD"
+  },
+  {
+   "facet": "cfbd_tackle_db",
+   "weight": 0.0,
+   "source": "CFBD"
+  },
+  {
+   "facet": "pblk_skill",
+   "weight": 0.0,
+   "source": "PFF"
+  },
+  {
+   "facet": "recv_rb",
+   "weight": 0.0,
+   "source": "PFF"
+  },
+  {
+   "facet": "tackle",
+   "weight": 0.0,
+   "source": "PFF"
   }
  ],
  "war_source_split": {
-  "CFBD": 0.311,
-  "PFF": 0.689
+  "CFBD": 0.262,
+  "PFF": 0.738
  },
  "talent_sweep": {
   "best": {
@@ -949,7 +949,7 @@
    "provider": "PFF",
    "feeds": "talent (part), WAR",
    "detail": "Player-season grades. Position-weighted over this year's roster carrying last year's grades.",
-   "years": "2021-2025"
+   "years": "2014-2025"
   },
   {
    "name": "CFBD player PPA",
@@ -962,8 +962,8 @@
    "name": "Player WAR",
    "provider": "derived",
    "feeds": "talent (part)",
-   "detail": "PFF grades + CFBD play value -> facet weights -> Massey ratings -> wins above replacement. Snap-weighted.",
-   "years": "2021-2026"
+   "detail": "PFF grades + CFBD play value -> facet weights fitted against the FOLLOWING season -> Massey ratings -> wins above replacement.",
+   "years": "2014-2026"
   },
   {
    "name": "Ourlads two-deep",
@@ -1012,6 +1012,21 @@
    "question": "Are talent / returning / WAR the same thing?",
    "answer": "No - returning is nearly orthogonal; talent is the most valuable single feature.",
    "evidence": "max |r| with anything = 0.21 for returning; dropping talent costs +0.0040 Brier."
+  },
+  {
+   "question": "Why were corners worth more than edge rushers?",
+   "answer": "They were not - the facet weights were fitted against the same season's wins, which rewards facets contaminated by the result. Refitted against the FOLLOWING season by ridge.",
+   "evidence": "Coverage grade: same-season r .55, year-over-year stability .21. Pass rush: .38 and .57. After the fix, EDGE and CB are both 10.4% of league WAR (was 6.1% vs 15.8%)."
+  },
+  {
+   "question": "Is the projection just a copy of last season?",
+   "answer": "No. It is about as persistent as the sport itself is.",
+   "evidence": "Reality's season-to-season r = .502; the 2026 power rating against 2025 is .527. Teams move 29.9 rank places on average, 74 of 136 by 20 or more."
+  },
+  {
+   "question": "Should the three talent sources be separate features?",
+   "answer": "Tested; blending is marginally better and simpler. They are too collinear for three coefficients to be stable.",
+   "evidence": "Blended .2039, separate columns .2046. Left free, the model wants PFF 28 / recruiting 36 / WAR 36 - more WAR than the blend gives it."
   },
   {
    "question": "Is pythag redundant with O and D?",
