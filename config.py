@@ -75,10 +75,24 @@ TALENT_BLEND = 0.5  # weight on PFF roster-aware (1-w on CFBD)
 #   WAR share   0.00     0.15     0.25     0.35     0.50     0.80
 #   Brier      .2048    .2042   .2040    .2041    .2046    .2059
 #
-# A smooth interior optimum at 0.25: Brier .2048 -> .2040, log-loss .5930 -> .5913,
-# accuracy 67.4% -> 67.6%. Comparable in size to the whole v2 accuracy upgrade.
+# Re-derived after the facet reweighting changed what WAR measures
+# (scripts/roster_vs_results.py, a joint sweep of WAR share against the uncertainty
+# lambda that controls how far teams regress off last season's results):
+#
+#   WAR share   0.00     0.25     0.40     0.55     0.70     1.00
+#   Brier      .2050    .2039   .2038    .2041    .2046    .2059
+#
+# The optimum moved 0.25 -> 0.40 once WAR stopped being fitted to the season it was
+# describing. The accuracy difference between the two is .0001, which is nothing -
+# what changed is that the evidence now supports the higher share rather than merely
+# tolerating it. WAR alone is still clearly worse than the blend (.2059).
+#
+# The companion question - whether last season's results carry too much weight - is
+# NOT supported. Sweeping the uncertainty lambda at the best WAR share:
+# 0.00 -> .2040, 0.25 -> .2038, 0.50 -> .2038, 0.75 -> .2041, 1.00 -> .2049.
+# It already sits in the flat optimum; pushing further onto the roster costs accuracy.
 # Set to 0.0 to disable; the frame falls back cleanly if the WAR build is absent.
-WAR_BLEND = 0.25
+WAR_BLEND = 0.40
 
 # --- v3.1: features retired after a collinearity audit --------------------------
 # scripts/feature_audit.py + scripts/feature_sets.py. The six inputs were checked for

@@ -1,6 +1,6 @@
 /* CFB Model v3 — 2026 visuals.
    Tabs: Ratings · Playoff Projection · Matchup Simulator · Team Breakdown.
-   One rating variant: talent is a 38/38/25 PFF / recruiting / WAR blend.
+   One rating variant; the talent blend is read from diagnostics.json.
 
    The trained model math is frozen (coefficients in model*.json) and is a verified
    port of the Python model — win probability, margin and points agree with the
@@ -24,10 +24,25 @@
   // One model, one set of numbers. The old lens toggle offered a second
   // roster-weighted variant that leaned harder on the two-deep; it was a knowingly
   // worse backtest kept as an alternative view, and it is gone. Talent is the
-  // 38/38/25 PFF / recruiting / WAR blend, which is the joint optimum of all 45
-  // three-way blends under leave-one-season-out.
+  // a PFF / recruiting / WAR blend whose weights are swept jointly under
+  // leave-one-season-out and exported, not written in here.
   const DATA = { ratings, playoff, model };
   const cur = () => DATA;
+
+  // The blend was written into the markup once and then went stale the first time
+  // the weights were re-derived. Read it from the exported diagnostics instead, so
+  // the header cannot disagree with the model it is describing.
+  (function showBlend() {
+    const el = document.getElementById("blend-val");
+    const w = diag && diag.talent_sources && diag.talent_sources.weights;
+    if (!el) return;
+    if (!w) { el.textContent = "—"; return; }
+    const pc = x => Math.round(x * 100);
+    el.textContent = `${pc(w.PFF)} PFF · ${pc(w.CFBD)} recruiting · ${pc(w.WAR)} WAR`;
+    const chip = document.getElementById("blend-chip");
+    if (chip) chip.title = "Talent blend, re-derived by joint sweep under "
+      + "leave-one-season-out. Exported from the live model, not hand-written.";
+  })();
 
   /* ---------- team metadata ---------- */
   const meta = teams;

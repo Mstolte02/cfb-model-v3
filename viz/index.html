@@ -20,9 +20,9 @@
     <button class="tab" data-view="team">Team Breakdown</button>
     <button class="tab" data-view="method">Method</button>
   </nav>
-  <div class="blend" title="Talent is a 38/38/25 blend of PFF roster grades, CFBD recruiting and player WAR — the joint optimum of all 45 three-way blends under leave-one-season-out.">
+  <div class="blend" id="blend-chip">
     <span class="blend-label">TALENT</span>
-    <span class="blend-val">38 PFF · 38 recruiting · 25 WAR</span>
+    <span class="blend-val" id="blend-val">&nbsp;</span>
   </div>
 </header>
 
@@ -114,8 +114,8 @@
 </main>
 
 <footer>
-  Model: L2 logistic + ridge-margin ensemble · LOSO 2022-25 Brier 0.2040 ·
-  talent = PFF roster grades + CFBD recruiting + 25% player WAR ·
+  Model: L2 logistic + ridge-margin ensemble · LOSO 2021-25 Brier 0.2038 ·
+  talent = PFF roster grades + CFBD recruiting + player WAR ·
   data: CollegeFootballData.com, PFF · CFP rules: 2026-27 format
   (4 P4 champs + top G6 + 7 at-large, straight seeding, top-4 byes).
 </footer>
@@ -123,6 +123,6 @@
 <!-- The data files are fetched with cache: "no-cache", but the script tag itself is
      not, so a stale app.js kept running against freshly regenerated JSON and failed
      silently — the page rendered nothing and threw nothing visible. Bump on edit. -->
-<script src="app.js?v=4"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>
