@@ -543,14 +543,63 @@
     return html.join("");
   }
 
+  /* Trim a unit to eleven.
+
+     Ourlads lists the base package, but for 31 of 136 teams that comes to twelve
+     because the chart describes two packages at once. Texas is the clearest case:
+     three receivers AND a second tight end on offence, three linebackers AND a
+     nickel back on defence. Taking every depth-1 player therefore put twelve men on
+     the field.
+
+     Trimming is by a fixed convention rather than by value, so the same team always
+     produces the same lineup. Offence keeps 11 personnel - a back, a tight end and
+     three receivers - and defence keeps the nickel, because five defensive backs is
+     the modern base and the third linebacker is the situational one. Anyone trimmed
+     is still listed in the contributors table; only the field diagram is capped. */
+  // group -> [budget, base rank, rank once the budget is used up]. Budgets add to 11
+  // on each side. Ranking everyone and then taking the top eleven means a team that
+  // is short in one group back-fills from the next-cheapest surplus on its own - a
+  // three-man front ends up with an extra linebacker rather than ten men.
+  const ELEVEN = {
+    off: { QB: [1, 0, 30], OL: [5, 1, 34], RB: [1, 6, 33],
+           WR: [3, 7, 32], TE: [1, 10, 31] },
+    def: { DT: [2, 1, 34], EDGE: [2, 3, 34.5], LB: [2, 5, 30],
+           CB: [3, 7, 32], SAF: [2, 10, 33] },
+  };
+
+  function toEleven(players, isOffense) {
+    const budget = isOffense ? ELEVEN.off : ELEVEN.def;
+    const seen = {};
+    // Order within a group by projected value first, so the man who comes off is the
+    // least valuable one rather than whoever the chart happened to list last. Going
+    // by list order dropped Florida's middle linebacker and one of Florida Atlantic's
+    // outside receivers.
+    return players.slice()
+      .sort((a, b) => (b.w ?? 0) - (a.w ?? 0))
+      .map(p => {
+        const b = budget[p.g];
+        const n = (seen[p.g] = (seen[p.g] || 0) + 1);
+        if (!b) return { p, r: 60 + n };
+        const [cap, base, over] = b;
+        return { p, r: n <= cap ? base + (n - 1) : over + n * 0.01 };
+      })
+      .sort((a, b) => a.r - b.r)
+      .slice(0, 11)
+      .map(x => x.p);
+  }
+
   function lineupHTML(team, roster, tint) {
     const starters = roster.players.filter(p => p.d === 1);
     if (starters.length < 8) {
       return `<p class="sub">No depth chart available for this team.</p>`;
     }
-    const off = starters.filter(p => OFF_GROUPS.has(p.g));
-    const def = starters.filter(p => !OFF_GROUPS.has(p.g));
-    const fmt = n => `${n} on the field`;
+    const offAll = starters.filter(p => OFF_GROUPS.has(p.g));
+    const defAll = starters.filter(p => !OFF_GROUPS.has(p.g));
+    const off = toEleven(offAll, true);
+    const def = toEleven(defAll, false);
+    // Say so when a chart is short rather than drawing a gap and leaving it unexplained.
+    const fmt = n => n === 11 ? "11 on the field"
+      : `${n} on the field — the published chart lists only ${n}`;
     return `<div class="lineup-wrap">
       <div class="field">
         <div class="field-label">Offense · ${esc(personnelLabel(off))}</div>
