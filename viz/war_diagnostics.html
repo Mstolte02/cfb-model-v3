@@ -164,6 +164,11 @@ redundant feature set looks like from the inside: whatever you take out, its
 correlates absorb the job.</p></div>
 
 <h2>7 &middot; Football concepts, not features</h2>
+<div class="panel verdict warn"><b>These concepts were chosen by hand.</b>
+The fifteen groupings below are a dict written by a person, not a structure recovered
+from the data. Everything in this section is therefore <em>conditional on that
+grouping</em> &mdash; it says what follows if you accept these categories, not that the
+data endorses them. Section 8 tests the grouping itself.</div>
 <p>Asking whether one feature helps has no power when 86 features contain six views of
 every throw &mdash; the worst single removal cost 0.0006 RMSE. Removing a whole
 <em>concept</em> does have power, and it changes what the model looks like.</p>
@@ -186,6 +191,44 @@ make the product meaningless. Base with qualities alone:
 <div class='scroll'><table class=''><thead><tr><th>interaction</th><th>RMSE</th><th>ΔRMSE</th></tr></thead><tbody><tr><td>rushing x run_blocking</td><td>0.1647</td><td>-0.00005</td></tr><tr><td>pass_rush x run_defense</td><td>0.1647</td><td>-0.00003</td></tr><tr><td>passing x rushing</td><td>0.1647</td><td>-0.00002</td></tr><tr><td>coverage x tackling</td><td>0.1648</td><td>+0.00002</td></tr><tr><td>pass_rush x coverage</td><td>0.1648</td><td>+0.00003</td></tr><tr><td>run_defense x tackling</td><td>0.1648</td><td>+0.00003</td></tr><tr><td>passing x yac</td><td>0.1648</td><td>+0.00009</td></tr><tr><td>pass_protection x receiving</td><td>0.1648</td><td>+0.00009</td></tr><tr><td>passing x receiving</td><td>0.1648</td><td>+0.00011</td></tr><tr><td>passing x pass_protection</td><td>0.1650</td><td>+0.00030</td></tr></tbody></table></div></div>
 <div class="panel verdict warn"><b>Concept verdict.</b> Six concepts reach the same accuracy as the hand-built facets and 86 features barely improve on either. Nothing separates from the benchmark at 95%.</div>
 <div class='panel'><h3>Concept models vs the benchmark</h3><div class='scroll'><table class=''><thead><tr><th>variant</th><th>features</th><th>RMSE</th><th>mean ΔRMSE</th><th>95% low</th><th>95% high</th><th>better in</th></tr></thead><tbody><tr><td>six concepts, raw features</td><td>43</td><td>0.1638</td><td>-0.0015</td><td>-0.0033</td><td>+0.0002</td><td>94%</td></tr><tr><td>six concepts, one score each</td><td>6</td><td>0.1649</td><td>-0.0005</td><td>-0.0026</td><td>+0.0017</td><td>67%</td></tr><tr><td>all fifteen concepts</td><td>86</td><td>0.1635</td><td>-0.0019</td><td>-0.0039</td><td>+0.0001</td><td>97%</td></tr></tbody></table></div></div>
+
+<h2>8 &middot; Can the grouping be learned?</h2>
+
+<p>The grouping in section 7 was hand-written, so it has to be tested like any other
+assumption. Two data-driven alternatives &mdash; hierarchical clustering on
+1&nbsp;&minus;&nbsp;|r|, and varimax-rotated factor loadings &mdash; were swept over
+6 to 20 groups and scored against the hand version by adjusted Rand index
+(1.0 identical, 0.0 chance).</p>
+<div class="kpi">
+  <div><b>0.22</b><span>ARI, hand vs learned</span></div>
+  <div><b>0.37</b><span>best ARI in the whole sweep</span></div>
+  <div><b>36</b><span>features in the largest learned group</span></div>
+  <div><b>7</b><span>singleton groups</span></div>
+</div>
+<div class="panel"><h3>What the data actually groups together</h3>
+<p class="muted small">Cluster sizes: 36, 18, 11, 6, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1.
+The largest is <code>corr_9</code> &mdash;
+[WR, QB] receiving 12, passing 8, rushing 5, pass_protection 3, qb_pressure 2, yac 2, hands 2, run_blocking 1, ball_security 1.</p>
+<p>That single cluster holds essentially all of offense. The data's ontology of football
+is <b>offense, back seven, front</b> &mdash; three real groups, plus a tight end cluster
+and eleven fragments of two features or fewer. Partialling
+out a team-quality axis does not separate it; the blob grows to 44 features and starts
+mixing offense with defense. Every offensive metric correlates with every other one
+through plain team strength, so there is no modular structure left to recover.</p></div>
+<div class="grid2">
+  <div class="panel"><h3>Forward selection, learned groups</h3>
+  <div class='scroll'><table class=''><thead><tr><th>group</th><th>RMSE</th><th>gain</th><th>what it is</th></tr></thead><tbody><tr><td>corr_9</td><td>0.1727</td><td>+0.0200</td><td>[WR, QB] receiving 12, passing 8, rushing 5, pass_protection 3, qb_pressure 2, yac 2, hands 2, run_blocking 1, ball_security 1</td></tr><tr><td>corr_13</td><td>0.1651</td><td>+0.0075</td><td>[LB, CB] coverage 9, tackling 5, run_defense 3, pass_rush 1</td></tr><tr><td>corr_12</td><td>0.1636</td><td>+0.0016</td><td>[DI, ED] pass_rush 7, run_defense 3, tackling 1</td></tr><tr><td>corr_15</td><td>0.1632</td><td>+0.0004</td><td>[ED] pass_rush 1</td></tr></tbody></table></div></div>
+  <div class="panel"><h3>Forward selection, hand groups</h3>
+  <div class='scroll'><table class=''><thead><tr><th>concept</th><th>RMSE</th><th>gain</th></tr></thead><tbody><tr><td>passing</td><td>0.1774</td><td>+0.0152</td></tr><tr><td>run_defense</td><td>0.1688</td><td>+0.0086</td></tr><tr><td>rushing</td><td>0.1666</td><td>+0.0022</td></tr><tr><td>coverage</td><td>0.1652</td><td>+0.0014</td></tr><tr><td>run_blocking</td><td>0.1644</td><td>+0.0008</td></tr><tr><td>pass_rush</td><td>0.1638</td><td>+0.0006</td></tr></tbody></table></div></div>
+</div>
+<div class="panel verdict warn"><b>Consequence.</b> The two routes reach the same place,
+so nothing in section 7's <em>accuracy</em> depends on the grouping. Its
+<em>interpretation</em> does. In particular &ldquo;receiving adds nothing given
+passing&rdquo; is largely an artefact: the data puts receiving and passing in one
+cluster, so the honest statement is that offense is a single indivisible signal here.
+Concepts that are both interpretable and data-derived would need an external football
+taxonomy or player-level co-occurrence data &mdash; not this correlation matrix.</div>
+
 
 <p class="muted small" style="margin-top:26px">Generated by
 <code>make_diagnostics_report.py</code> from <code>collinearity.json</code>,
