@@ -76,6 +76,12 @@ code { background:#f2ecdd; padding:1px 5px; border-radius:3px; font-size:12.5px 
 </div>
 
 <h2>1 &middot; Model comparison</h2>
+<div class="panel verdict warn"><b>Historical.</b> This comparison was run when
+production used twenty hand-built facets. Production has since moved to the 98-feature
+candidate set with non-negative weights, so &ldquo;A current&rdquo; below is the
+<em>old</em> benchmark, not what ships today. The comparison is kept because it is the
+evidence that motivated the move; re-running it would compare the new model against
+itself.</div>
 <p>Every model predicts the same thing on the same season-blocked splits: next
 season's adjusted win percentage. Feature selection runs <em>inside</em> each fold,
 so no model sees its test season while choosing features.</p>
