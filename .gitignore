@@ -6,3 +6,6 @@ artifacts/
 venv/
 .DS_Store
 .claude/
+
+# Build output. The Pages workflow rebuilds it from viz/ on every push.
+dist/

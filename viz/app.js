@@ -668,6 +668,13 @@
   }
 
   function lineupHTML(team, roster, tint) {
+    // The published build ships team and position-group totals but no per-player
+    // rows, because those are derived from licensed PFF grades. Everything else on
+    // this page still works; only the field diagram needs individual players.
+    if (!roster.players) {
+      return `<p class="sub">Individual player projections are not included in this
+        build. The position-group figures below are the same numbers, summed.</p>`;
+    }
     const starters = roster.players.filter(p => p.d === 1);
     if (starters.length < 8) {
       return `<p class="sub">No depth chart available for this team.</p>`;
@@ -1033,13 +1040,16 @@
       <div class="panel"><h3>Projected win distribution</h3>${distHTML}</div>
       <div class="panel"><h3>Where the wins come from</h3>${rosterHTML}
         ${roster ? winsLedger(roster, S, tint) : ""}
-        <div class="wd-foot">Projected starters from the 2026 two-deep, each carrying
-          the wins he adds over a replacement-level player. Raw WAR is compressed
+        <div class="wd-foot">${roster && !roster.players ? "Position groups from" :
+          "Projected starters from"} the 2026 two-deep, each carrying
+          the wins ${roster && !roster.players ? "they add" : "he adds"} over a
+          replacement-level player. Raw WAR is compressed
           &mdash; the rating underneath is a noisy estimate and a projection is a
           conditional mean &mdash; so every player is scaled by one league-wide
           factor (&times;1.64) that restores the historical spread without moving the
-          league average. <span class="tag imp">·</span> marks a player with no prior
-          FBS snaps.</div></div>
+          league average.${roster && roster.players
+            ? ` <span class="tag imp">·</span> marks a player with no prior FBS snaps.`
+            : ""}</div></div>
       ${tossupHTML(t, tint, S.playoff)}
       <div class="panel"><h3>Model inputs</h3>
         <div class="gr wide">${inputHTML}</div>

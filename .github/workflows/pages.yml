@@ -1,0 +1,38 @@
+# Publish the site to GitHub Pages on every push to main.
+#
+# scripts/publish.py is stdlib-only, so this needs no pip install and no model
+# dependencies. It copies viz/ to dist/ and strips the per-player rows, which is the
+# whole reason the site is not served straight out of viz/ - see that script.
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it half-uploaded.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build dist/
+        run: python3 scripts/publish.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deploy
+        uses: actions/deploy-pages@v4
