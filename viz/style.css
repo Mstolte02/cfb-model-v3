@@ -324,3 +324,111 @@ tbody tr:hover td.cc { background: inherit; }
 .dec-q { font-weight: 700; font-size: 14px; margin-bottom: 5px; }
 .dec-a { font-size: 13.5px; margin-bottom: 6px; }
 .dec-e { font-size: 12px; color: var(--muted); font-family: var(--sans); }
+
+/* ---- win-distribution floor / ceiling -------------------------------------
+   The band is the middle 80% of simulated seasons. Columns outside it stay drawn
+   but recede, so the eye reads the plausible range without losing the tails. */
+.wd-col.in-band .wd-x { color: var(--text); font-weight: 700; }
+.wd-range { display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-top: 14px; padding: 9px 14px; border-radius: 9px;
+  background: var(--panel2); border: 1px solid var(--line); }
+.wr-end { font: 600 10px/1 var(--sans); letter-spacing: .09em; color: var(--muted);
+  display: flex; align-items: baseline; gap: 7px; }
+.wr-end b { font: 700 21px/1 Georgia, serif; color: var(--tint, var(--text));
+  letter-spacing: 0; }
+.wr-mid { font-size: 13px; color: var(--muted); text-align: center; }
+
+/* ---- position group vs the field -----------------------------------------
+   A dot plot anchored on the league median, not a bar from zero: the comparison
+   that matters is against other teams at the same position. */
+.dp { display: flex; flex-direction: column; gap: 2px; }
+.dp-row { display: flex; align-items: center; gap: 10px; padding: 4px 0;
+  border-bottom: 1px solid var(--line); }
+.dp-row:last-child { border-bottom: 0; }
+.dp-name { width: 46px; flex: none; font: 600 12px/1 var(--sans);
+  letter-spacing: .04em; color: var(--muted); }
+.dp-name.off { color: var(--text); }
+.dp-val { width: 44px; flex: none; text-align: right; font-size: 13px;
+  font-variant-numeric: tabular-nums; }
+.dp-track { flex: 1; position: relative; height: 18px; min-width: 120px; }
+.dp-track > i { position: absolute; display: block; }
+.dp-med { left: 50%; top: 1px; bottom: 1px; width: 1px; background: var(--line2); }
+.dp-span { top: 8px; height: 2px; opacity: .45; border-radius: 1px; }
+.dp-dot { top: 4px; width: 10px; height: 10px; margin-left: -5px;
+  border-radius: 50%; box-shadow: 0 0 0 2px var(--panel); }
+.dp-delta { width: 54px; flex: none; text-align: right; font-size: 12.5px;
+  font-variant-numeric: tabular-nums; }
+.dp-rank { width: 66px; flex: none; text-align: right; font-size: 13px;
+  font-variant-numeric: tabular-nums; }
+.dp-rank small { color: var(--muted); font-size: 11px; }
+
+/* ---- toss-up games -------------------------------------------------------- */
+.tu-wrap { display: grid; grid-template-columns: 1fr 210px; gap: 20px;
+  align-items: start; }
+.tu-cell { width: 1%; white-space: nowrap; }
+.tu-seg { display: inline-flex; border: 1px solid var(--line2); border-radius: 7px;
+  overflow: hidden; }
+.tu-seg button { font: 600 11px/1 var(--sans); padding: 5px 9px; border: 0;
+  background: var(--panel); color: var(--muted); cursor: pointer;
+  border-right: 1px solid var(--line); }
+.tu-seg button:last-child { border-right: 0; }
+.tu-seg button:hover { background: var(--panel2); }
+.tu-seg button.on { background: var(--line2); color: var(--text); }
+.tu-seg button.on.w { background: var(--green); color: #fff; }
+.tu-seg button.on.l { background: var(--red); color: #fff; }
+.tu-out { background: var(--panel2); border: 1px solid var(--line);
+  border-radius: 11px; padding: 16px 14px; text-align: center; }
+.tu-big { font: 700 38px/1 Georgia, serif; color: var(--tint, var(--text)); }
+.tu-lab { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+.tu-delta { margin-top: 9px; font: 600 12px/1 var(--sans); }
+.tu-sub { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+.tu-sub.dim { font-size: 11px; opacity: .8; }
+.tu-reset { margin-top: 12px; font: 600 11px/1 var(--sans); padding: 6px 12px;
+  border: 1px solid var(--line2); border-radius: 7px; background: var(--panel);
+  color: var(--muted); cursor: pointer; }
+.tu-reset:hover { color: var(--text); }
+@media (max-width: 760px) { .tu-wrap { grid-template-columns: 1fr; } }
+
+/* ---- how the field is chosen ---------------------------------------------- */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px; }
+.step { background: var(--panel); border: 1px solid var(--line2); border-radius: 11px;
+  padding: 16px 16px 18px; position: relative; }
+.step-n { display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%; background: var(--accent);
+  color: #fff; font: 700 12px/1 var(--sans); margin-bottom: 9px; }
+.step h4 { font-size: 15px; margin: 0 0 6px; text-transform: none; color: var(--text);
+  letter-spacing: 0; }
+.step p { font-size: 13.5px; color: var(--muted); }
+.step p b { color: var(--text); }
+
+.ccg-h { font: 600 11px/1 var(--sans); letter-spacing: .09em; text-transform: uppercase;
+  color: var(--muted); margin: 22px 0 10px; }
+.ccg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px; }
+.ccg-card { background: var(--panel); border: 1px solid var(--line2);
+  border-radius: 11px; padding: 13px 14px; }
+.ccg-card.wide { max-width: 620px; }
+.ccg-name { font-size: 14px; font-weight: 700; margin-bottom: 9px;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.ccg-tag { white-space: nowrap; }
+.ccg-tag { font: 600 9.5px/1 var(--sans); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--muted); font-weight: 600; }
+.ccg-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+.ccg-row img { width: 18px; height: 18px; object-fit: contain; flex: none; }
+.ccg-row .team-link { flex: none; width: 92px; text-align: left; font-size: 13px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ccg-row .bar { flex: 1; width: auto; }
+.ccg-row .pct { min-width: 38px; font-size: 12.5px; }
+
+/* ---- folded-away technical detail ----------------------------------------- */
+details.nerd { margin-top: 4px; }
+details.nerd > summary { cursor: pointer; font: 600 11px/1 var(--sans);
+  letter-spacing: .09em; text-transform: uppercase; color: var(--muted);
+  padding: 13px 16px; background: var(--panel); border: 1px solid var(--line2);
+  border-radius: 11px; list-style: none; }
+details.nerd > summary::-webkit-details-marker { display: none; }
+details.nerd > summary::before { content: "▸ "; color: var(--accent); }
+details.nerd[open] > summary::before { content: "▾ "; }
+details.nerd > summary:hover { color: var(--text); }
+details.nerd[open] > summary { margin-bottom: 14px; }

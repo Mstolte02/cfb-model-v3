@@ -29,20 +29,10 @@
   const DATA = { ratings, playoff, model };
   const cur = () => DATA;
 
-  // The blend was written into the markup once and then went stale the first time
-  // the weights were re-derived. Read it from the exported diagnostics instead, so
-  // the header cannot disagree with the model it is describing.
-  (function showBlend() {
-    const el = document.getElementById("blend-val");
-    const w = diag && diag.talent_sources && diag.talent_sources.weights;
-    if (!el) return;
-    if (!w) { el.textContent = "—"; return; }
-    const pc = x => Math.round(x * 100);
-    el.textContent = `${pc(w.PFF)} PFF · ${pc(w.CFBD)} recruiting · ${pc(w.WAR)} WAR`;
-    const chip = document.getElementById("blend-chip");
-    if (chip) chip.title = "Talent blend, re-derived by joint sweep under "
-      + "leave-one-season-out. Exported from the live model, not hand-written.";
-  })();
+  // The header used to carry a "TALENT 38/38/25" chip. It is gone: the blend is an
+  // internal weighting that means nothing to a reader who has not been told what the
+  // three sources are, and it sat in the corner of every page. The Method page
+  // explains it once, in words, where someone has actually asked.
 
   /* ---------- team metadata ---------- */
   const meta = teams;
@@ -341,6 +331,8 @@
         </div>`;
     }
 
+    renderSelection(P, byTeam);
+
     const maxCFP = Math.max(...P.map(t => t.playoff));
     document.getElementById("playoff-table").innerHTML = `
       <table><thead><tr>
@@ -366,6 +358,93 @@
           <td class="num"><b>${pct(t.champ)}</b></td>
         </tr>`).join("")}</tbody></table>`;
     wireTeamLinks();
+  }
+
+  const P4_CONFS = ["ACC", "Big 12", "Big Ten", "SEC"];
+  const G6_CONFS = ["American Athletic", "Conference USA", "Mid-American",
+                    "Mountain West", "Pac-12", "Sun Belt"];
+
+  /* How the twelve teams are chosen, and who is in line for the five automatic bids.
+     The bracket above shows an outcome; this shows the rule that produced it. Worth
+     spelling out because the 2026 format changed - the Group of 6 bid is no longer
+     tied to winning a conference - and because the ranking underneath is a fitted
+     model of the committee rather than the model's own opinion of who is best. */
+  function renderSelection(P, byTeam) {
+    const el = document.getElementById("playoff-explain");
+    const pl = cur().playoff;
+    const cw = pl.committee_weights;
+    if (el) el.innerHTML = `
+      <div class="steps">
+        <div class="step"><span class="step-n">1</span>
+          <h4>Play the season</h4>
+          <p>All ${schedule.length} scheduled games are simulated
+            ${pl.n_sims.toLocaleString()} times, then each conference stages a title
+            game between its top two finishers.</p></div>
+        <div class="step"><span class="step-n">2</span>
+          <h4>Rank the teams</h4>
+          <p>A stand-in for the selection committee sorts everyone. It is fitted to
+            every ranking the real committee has published since 2014, and what it
+            learned is that the committee cares most about <b>record</b>, then
+            <b>schedule strength</b>, and much less about how good a team looks.</p></div>
+        <div class="step"><span class="step-n">3</span>
+          <h4>Hand out 5 automatic bids</h4>
+          <p>The champions of the ACC, Big&nbsp;12, Big&nbsp;Ten and SEC are in no
+            matter where they are ranked, plus the highest-ranked team from the other
+            six conferences &mdash; <b>new for 2026</b>, that team no longer has to win
+            its league.</p></div>
+        <div class="step"><span class="step-n">4</span>
+          <h4>Fill the last 7 and seed</h4>
+          <p>The seven highest-ranked teams left over get at-large bids. Seeding is
+            straight down the ranking, 1 through 12: the top four sit out the first
+            round, and seeds 5&ndash;8 host it.</p></div>
+      </div>
+      <div class="wd-foot">The committee stand-in scores each team
+        <b>${cw ? cw.win_pct.toFixed(1) : "?"} &times; win&nbsp;pct
+        + ${cw ? cw.sos.toFixed(2) : "?"} &times; schedule strength
+        + ${cw ? cw.rating.toFixed(2) : "?"} &times; team rating</b>. Those weights are
+        fitted, not chosen &mdash; and the fact that record and schedule dwarf team
+        quality is what the historical rankings say, not an assumption. Leaving one
+        season out at a time, it reproduces the real final ranking at a rank
+        correlation of 0.91.</div>`;
+
+    const ccg = document.getElementById("playoff-ccg");
+    if (!ccg) return;
+    const block = (title, confs, auto) => `
+      <h4 class="ccg-h">${title}</h4>
+      <div class="ccg-grid">${confs.map(c => {
+        const pool = P.filter(t => t.conference === c)
+                      .sort((a, b) => b.conf_champ - a.conf_champ).slice(0, 4);
+        if (!pool.length) return "";
+        return `<div class="ccg-card">
+          <div class="ccg-name">${esc(c)}
+            <span class="ccg-tag">${auto ? "champion is in" : "no auto bid"}</span></div>
+          ${pool.map(t => `<div class="ccg-row">
+            <img src="${logoURL(t.team)}" alt="" loading="lazy">
+            <button class="team-link" data-team="${esc(t.team)}">${esc(abbr(t.team))}</button>
+            <div class="bar"><i style="width:${100 * t.conf_champ}%;
+              background:${color(t.team)}"></i></div>
+            <span class="pct">${pct(t.conf_champ, 0)}</span></div>`).join("")}
+        </div>`;
+      }).join("")}</div>`;
+
+    const g6all = P.filter(t => G6_CONFS.includes(t.conference))
+                   .sort((a, b) => (b.g6_bid || 0) - (a.g6_bid || 0));
+    const g6 = g6all.slice(0, 8);
+    // The bid rotates across a dozen candidates, so no one team is near 100% and a
+    // raw percentage scale leaves every bar a stub. Scale to the leader.
+    const g6max = Math.max(...g6.map(t => t.g6_bid || 0), 0.01);
+    ccg.innerHTML = block("Power 4 — champion is in automatically", P4_CONFS, true)
+      + block("Group of 6 — one bid, and it goes to the ranking, not the trophy",
+              G6_CONFS, false)
+      + `<h4 class="ccg-h">Who takes the Group of 6 bid</h4>
+         <div class="ccg-card wide">${g6.map(t => `<div class="ccg-row">
+           <img src="${logoURL(t.team)}" alt="" loading="lazy">
+           <button class="team-link" data-team="${esc(t.team)}">${esc(t.team)}</button>
+           <div class="bar"><i style="width:${100 * (t.g6_bid || 0) / g6max}%;
+             background:${color(t.team)}"></i></div>
+           <span class="pct">${pct(t.g6_bid || 0, 0)}</span></div>`).join("")}</div>
+         <div class="wd-foot">Share of simulated seasons in which this team is the
+           highest-ranked Group of 6 team, and therefore the one that goes.</div>`;
   }
 
   /* =======================================================================
@@ -672,6 +751,146 @@
     return out;
   }
 
+  /* League-wide distribution of each position group's win contribution, so a team's
+     number can be read against the field instead of only against its own other
+     groups. A bar chart of a team's own groups answers "where does this team get its
+     wins", which is not the question - QB is worth more than TE everywhere, so QB's
+     bar is longest for all 136 teams and the chart says nothing. Rank and distance
+     from the median do say something. */
+  const GROUP_LEAGUE = (function () {
+    const acc = {};
+    for (const t in players) {
+      const bg = players[t].byGroup || {};
+      for (const g in bg) (acc[g] = acc[g] || []).push({ t, v: bg[g] });
+    }
+    const out = {};
+    for (const g in acc) {
+      const arr = acc[g].slice().sort((a, b) => b.v - a.v);
+      const vals = arr.map(x => x.v).sort((a, b) => a - b);
+      const h = vals.length >> 1;
+      const rank = {};
+      arr.forEach((x, i) => { rank[x.t] = i + 1; });
+      out[g] = {
+        median: vals.length % 2 ? vals[h] : (vals[h - 1] + vals[h]) / 2,
+        lo: vals[0], hi: vals[vals.length - 1], n: arr.length, rank,
+      };
+    }
+    return out;
+  })();
+
+  const ord = n => n + (["th", "st", "nd", "rd"][(n % 100 - 20) % 10] ||
+                        ["th", "st", "nd", "rd"][n % 100] || "th");
+
+  /* One row per position group: value, a dot placed against the league median, the
+     gap to that median, and the rank out of every rated team. */
+  function groupRankHTML(t, byGroup, tint) {
+    return GROUP_ORDER.filter(g => byGroup[g] != null).map(g => {
+      const L = GROUP_LEAGUE[g], v = byGroup[g];
+      if (!L) return "";
+      const d = v - L.median;
+      const span = Math.max(L.hi - L.median, L.median - L.lo) || 1;
+      const x = Math.max(3, Math.min(97, 50 + 47 * d / span));
+      const good = d >= 0, c = good ? tint : "var(--red)";
+      const rk = L.rank[t];
+      return `<div class="dp-row" title="${g}: ${v.toFixed(2)} wins, league median ${L.median.toFixed(2)}">
+        <span class="dp-name ${OFF_GROUPS.has(g) ? "off" : "def"}">${g}</span>
+        <span class="dp-val">${v.toFixed(2)}</span>
+        <div class="dp-track"><i class="dp-med"></i>
+          <i class="dp-span" style="left:${Math.min(50, x)}%;
+             width:${Math.abs(x - 50)}%;background:${c}"></i>
+          <i class="dp-dot" style="left:${x}%;background:${c}"></i></div>
+        <span class="dp-delta ${good ? "pos" : "neg"}">${good ? "+" : "−"}${Math.abs(d).toFixed(2)}</span>
+        <span class="dp-rank">${rk != null ? ord(rk) : "—"}<small>/${L.n}</small></span>
+      </div>`;
+    }).join("");
+  }
+
+  /* ---- toss-up games ----------------------------------------------------
+     Which coin flips does this team actually have to win? The simulation already
+     knows: every cell below is the subset of the 20,000 seasons where the games came
+     out the way you set them, so the answer still obeys the bracket, the title games
+     and the committee proxy. Unset games are averaged over, not assumed. */
+  const tossState = {};
+
+  function tossupHTML(t, tint, baseCFP) {
+    const T = (cur().playoff.tossups || {})[t];
+    if (!T || !T.games.length) return "";
+    const k = T.games.length;
+    const st = tossState[t] || (tossState[t] = new Array(k).fill(null));
+    let n = 0, po = 0, wn = 0;
+    for (let key = 0; key < (1 << k); key++) {
+      let ok = true;
+      for (let b = 0; b < k; b++) {
+        const s = st[b];
+        if (s != null && ((key >> b) & 1) !== s) { ok = false; break; }
+      }
+      if (!ok) continue;
+      const c = T.n[key];
+      if (!c) continue;
+      n += c; po += T.playoff[key] * c; wn += T.wins[key] * c;
+    }
+    const cfp = n ? po / n : null, wins = n ? wn / n : null;
+    const set = st.filter(s => s != null).length;
+    const delta = cfp != null && baseCFP != null ? cfp - baseCFP : 0;
+
+    const rows = T.games.map((g, b) => `
+      <tr>
+        <td class="num small">${g.w ?? ""}</td>
+        <td class="loc">${g.home ? "vs" : "at"}</td>
+        <td><div class="team-cell sm"><img src="${logoURL(g.opp)}" alt="" loading="lazy">
+          <button class="team-link" data-team="${esc(g.opp)}">${esc(g.opp)}</button></div></td>
+        <td class="num">${pct(g.p, 0)}</td>
+        <td class="tu-cell">
+          <div class="tu-seg" data-team="${esc(t)}" data-i="${b}">
+            <button class="${st[b] === 1 ? "on w" : ""}" data-v="1">W</button>
+            <button class="${st[b] == null ? "on" : ""}" data-v="">?</button>
+            <button class="${st[b] === 0 ? "on l" : ""}" data-v="0">L</button>
+          </div></td>
+      </tr>`).join("");
+
+    return `
+      <div class="panel"><h3>Toss-up games
+        <span class="hint">— the ${k} game${k > 1 ? "s" : ""} on this schedule the model
+          calls closest to a coin flip</span></h3>
+        <div class="tu-wrap">
+          <div class="mini-wrap"><table class="mini"><thead><tr>
+            <th class="num">Wk</th><th></th><th>Opponent</th>
+            <th class="num">Win prob</th><th>Result</th>
+          </tr></thead><tbody>${rows}</tbody></table></div>
+          <div class="tu-out" style="--tint:${tint}">
+            <div class="tu-big">${cfp == null ? "—" : pct(cfp, 0)}</div>
+            <div class="tu-lab">chance to make the playoff</div>
+            <div class="tu-delta ${delta >= 0 ? "pos" : "neg"}">
+              ${set === 0 ? "season average" :
+                `${delta >= 0 ? "+" : "−"}${Math.abs(100 * delta).toFixed(0)} pts vs average`}</div>
+            <div class="tu-sub">${wins == null ? "" : wins.toFixed(1) + " projected wins"}</div>
+            <div class="tu-sub dim">${n.toLocaleString()} matching simulations</div>
+            <button class="tu-reset" data-team="${esc(t)}">Reset</button>
+          </div>
+        </div>
+        <div class="wd-foot">Set any of these to a win or a loss and everything on the
+          right is recomputed from the simulated seasons that actually broke that way
+          &mdash; so it still respects conference title games, the committee ranking and
+          the twelve-team format. Games left on <b>?</b> are averaged over.</div>
+      </div>`;
+  }
+
+  function wireTossups() {
+    document.querySelectorAll(".tu-seg button").forEach(b =>
+      b.addEventListener("click", e => {
+        const seg = e.currentTarget.parentElement;
+        const t = seg.dataset.team, i = +seg.dataset.i, v = e.currentTarget.dataset.v;
+        tossState[t][i] = v === "" ? null : +v;
+        renderTeam();
+      }));
+    document.querySelectorAll(".tu-reset").forEach(b =>
+      b.addEventListener("click", e => {
+        const t = e.currentTarget.dataset.team;
+        tossState[t] = tossState[t].map(() => null);
+        renderTeam();
+      }));
+  }
+
   function renderTeam() {
     const t = selT.value;
     const R = ratingRow()[t] || {};
@@ -692,33 +911,51 @@
       const slice = dist.slice(lo, hi + 1);
       const max = Math.max(...slice);
       const mode = lo + slice.indexOf(max);
+      // Floor and ceiling: the central 80% of simulated seasons. A single projected
+      // win total hides the thing people actually argue about, which is how far the
+      // season can swing before anyone should be surprised.
+      const q = f => {
+        let c = 0;
+        for (let w = 0; w < dist.length; w++) {
+          c += dist[w];
+          if (c / total >= f) return w;
+        }
+        return dist.length - 1;
+      };
+      const floorW = q(0.10), ceilW = q(0.90);
       distHTML = `<div class="wd">${slice.map((c, i) => {
         const w = lo + i, p = c / total;
-        return `<div class="wd-col" title="${w} wins — ${pct(p)} of simulations">
+        const inBand = w >= floorW && w <= ceilW;
+        return `<div class="wd-col${inBand ? " in-band" : ""}"
+          title="${w} wins — ${pct(p)} of simulations">
           <span class="wd-val">${p >= 0.03 ? pct(p, 0) : ""}</span>
           <div class="wd-bar" style="height:${Math.max(2, 100 * c / max)}%;
-            background:${w === mode ? tint : rgba(t, .35)}"></div>
+            background:${w === mode ? tint : (inBand ? rgba(t, .40) : rgba(t, .14))}"></div>
           <span class="wd-x">${w}</span></div>`;
       }).join("")}</div>
+      <div class="wd-range" style="--tint:${tint}">
+        <span class="wr-end">FLOOR<b>${floorW}</b></span>
+        <span class="wr-mid">most likely <b style="color:${tint}">${mode}</b> wins
+          &middot; mean ${(S.avg_wins ?? 0).toFixed(1)}</span>
+        <span class="wr-end">CEILING<b>${ceilW}</b></span>
+      </div>
       <div class="wd-foot">Regular-season wins across
-        ${cur().playoff.n_sims.toLocaleString()} simulated seasons ·
-        most likely <b style="color:${tint}">${mode}</b> ·
-        mean <b>${(S.avg_wins ?? 0).toFixed(1)}</b></div>`;
+        ${cur().playoff.n_sims.toLocaleString()} simulated seasons. Eight seasons in
+        ten land between <b>${floorW}</b> and <b>${ceilW}</b> wins &mdash; the shaded
+        columns. That spread comes from two things: games the model rates close, and
+        the fact that the roster projection itself can be wrong${
+          cur().playoff.talent_noise_sd
+            ? `, which is simulated by moving every team's talent by
+               ${cur().playoff.talent_noise_sd.toFixed(2)} of a standard deviation from
+               season to season`
+            : ""}.</div>`;
     }
 
     /* ---- player contributions ---- */
     let rosterHTML = `<p class="sub">No WAR projection available for this team.</p>`;
     if (roster) {
       const byGroup = roster.byGroup || {};
-      const gmax = Math.max(...Object.values(byGroup).map(Math.abs), 0.01);
-      const groupRows = GROUP_ORDER.filter(g => byGroup[g] != null).map(g => {
-        const v = byGroup[g], off = OFF_GROUPS.has(g);
-        return `<div class="gr-row">
-          <span class="gr-name ${off ? "off" : "def"}">${g}</span>
-          <div class="gr-bar"><i style="width:${100 * Math.abs(v) / gmax}%;
-            background:${off ? tint : rgba(t, .5)}"></i></div>
-          <span class="gr-val">${v.toFixed(2)}</span></div>`;
-      }).join("");
+      const groupRows = groupRankHTML(t, byGroup, tint);
 
       const offTot = Object.entries(byGroup)
         .filter(([g]) => OFF_GROUPS.has(g)).reduce((s, [, v]) => s + v, 0);
@@ -733,8 +970,13 @@
             <b>${(roster.winsTotal ?? roster.total).toFixed(2)}</b><span>wins above replacement</span></div>
         </div>
         ${lineupHTML(t, roster, tint)}
-        <h4 style="margin-top:22px">Wins by position group</h4>
-        <div class="gr">${groupRows}</div>`;
+        <h4 style="margin-top:22px">Every position group, against the rest of the country
+          <span class="hint">— wins added, distance from the median FBS team, and rank</span></h4>
+        <div class="dp">${groupRows}</div>
+        <div class="wd-foot">The dot sits where this group falls relative to the
+          <b>median FBS team</b> at the same position (the centre line). Quarterback
+          is worth more than tight end at every school, so what matters is not how
+          long a team's own bar is but how far it sits from everyone else's.</div>`;
     }
 
     /* ---- model inputs ---- */
@@ -798,6 +1040,7 @@
           factor (&times;1.64) that restores the historical spread without moving the
           league average. <span class="tag imp">·</span> marks a player with no prior
           FBS snaps.</div></div>
+      ${tossupHTML(t, tint, S.playoff)}
       <div class="panel"><h3>Model inputs</h3>
         <div class="gr wide">${inputHTML}</div>
         <div class="wd-foot">Each input on the model's z-scale, where
@@ -815,6 +1058,7 @@
           <b>${(S.avg_wins ?? 0).toFixed(1)}</b> also includes a conference title game.</div>
       </div>`;
     wireTeamLinks();
+    wireTossups();
   }
   selT.addEventListener("change", renderTeam);
 
@@ -976,14 +1220,95 @@
         <div class="dec-e">${esc(d.evidence)}</div>
       </div>`).join("");
 
+    // The page used to open with a correlation matrix. Most people who look at this
+    // want to know what it does and whether to believe it; the collinearity
+    // diagnostics answer neither. Plain walkthrough first, accuracy second, the
+    // technical detail folded away at the bottom for whoever wants it.
+    const acc = ((ev.loso || {}).accuracy || 0) * 100;
+    const tsw2 = (D.talent_sources || {}).weights || {};
+    const pcw = n => Math.round((tsw2[n] || 0) * 100);
+
     el.innerHTML = `
-      <div class="panel"><h3>1 · What goes in</h3>
+      <div class="steps">
+        <div class="step"><span class="step-n">1</span>
+          <h4>Rate every team</h4>
+          <p>Each team gets a handful of numbers: how good its offense and defense
+            have been against the schedule they faced, how much talent is on the
+            roster, how much of last year's production is coming back, and what its
+            scoring margin implied it deserved to win.</p></div>
+        <div class="step"><span class="step-n">2</span>
+          <h4>Turn ratings into a game</h4>
+          <p>For any two teams the model converts the gap between those numbers into a
+            win probability and a projected score. It was fitted on
+            ${(ev.per_season || []).reduce((s, r) => s + r.n, 0).toLocaleString()}
+            real games and it knows what home field is worth.</p></div>
+        <div class="step"><span class="step-n">3</span>
+          <h4>Play the season 20,000 times</h4>
+          <p>The real 2026 schedule is played out over and over, with conference title
+            games and the twelve-team playoff bracket, so nothing on this site can
+            break a rule the actual sport enforces.</p></div>
+        <div class="step"><span class="step-n">4</span>
+          <h4>Report the spread, not just the guess</h4>
+          <p>Because it is 20,000 seasons rather than one, every number here is a
+            range. A team's floor and ceiling are as much of the answer as its
+            projected record.</p></div>
+      </div>
+
+      <div class="panel"><h3>How accurate is it?</h3>
+        <p class="sub">Tested the honest way: the model is retrained with one season
+          completely removed, then asked to predict that season's games having never
+          seen them. Repeated for every season.</p>
+        <div class="od-split">
+          <div class="od-chip2" style="--tint:${ACC}">
+            <b>${acc.toFixed(1)}%</b><span>of games called correctly</span></div>
+          <div class="od-chip2" style="--tint:var(--line2)">
+            <b>${pct(ev.home_win_rate ?? 0, 0)}</b><span>always pick the home team</span></div>
+          <div class="od-chip2" style="--tint:${ACC}">
+            <b>${(ev.loso || {}).brier?.toFixed(3) ?? "—"}</b><span>Brier score</span></div>
+          <div class="od-chip2" style="--tint:var(--line2)">
+            <b>${(ev.baselines || {}).coin_flip?.toFixed(3) ?? "—"}</b>
+            <span>Brier, coin flip</span></div>
+        </div>
+        <div class="split">
+          <div><h4>Is a stated 70% really 70%?</h4>
+            <div class="cal">${calBars}</div>
+            <div class="cal-key">
+              <span><i style="background:var(--line2)"></i> what the model said</span>
+              <span><i style="background:${ACC}"></i> what happened</span>
+            </div>
+            <div class="wd-foot">Games grouped by the probability the model gave them.
+              The two bars matching is the thing that matters &mdash; it means the
+              percentages on this site can be taken at face value, not just the
+              favourites.</div>
+          </div>
+          <div><h4>In plain terms</h4>
+            <p class="sub">A <b>Brier score</b> is the average squared miss on a
+              probability, so lower is better and a coin flip scores
+              ${(ev.baselines || {}).coin_flip?.toFixed(3) ?? "0.250"}. Getting
+              ${acc.toFixed(0)}% of games right sounds modest, and it is: college
+              football is genuinely unpredictable, and any model claiming much more is
+              either overfitted or being tested on games it has already seen.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel"><h3>What goes in</h3>
         <div class="mini-wrap"><table class="mini"><thead><tr>
           <th>Source</th><th>Feeds</th><th>What it is</th><th class="num">Years</th>
         </tr></thead><tbody>${srcRows}</tbody></table></div>
+        <div class="wd-foot">"Talent" is three separate measures of the same roster
+          blended together &mdash; PFF's player grades (${pcw("PFF")}%), recruiting
+          rankings (${pcw("CFBD")}%), and a custom wins-above-replacement build
+          (${pcw("WAR")}%). The mix was chosen by testing every combination, not by
+          picking one.</div>
       </div>
 
-      <div class="panel"><h3>2 · The three talent signals, and how much they overlap</h3>
+      <div class="panel"><h3>Questions we asked, and what the data said</h3>
+        <div class="decs">${decRows}</div>
+      </div>
+
+      <details class="nerd"><summary>The technical version</summary>
+      <div class="panel"><h3>The three talent signals, and how much they overlap</h3>
         <p class="sub">WAR is built from PFF grades, so the obvious worry is that it
           measures the same thing twice. It does overlap — but at
           <b>r = ${((ts.corr || {}).PFF || {}).WAR?.toFixed(2) ?? "—"}</b>, not
@@ -1012,7 +1337,7 @@
         </div>
       </div>
 
-      <div class="panel"><h3>3 · Model features</h3>
+      <div class="panel"><h3>Model features</h3>
         <div class="split">
           <div><h4>Correlation between feature differences</h4>
             ${corrTable(fnames, F.corr || {},
@@ -1032,44 +1357,25 @@
         </div>
       </div>
 
-      <div class="panel"><h3>4 · Does it actually predict?</h3>
-        <div class="od-split">
-          <div class="od-chip2" style="--tint:${ACC}">
-            <b>${(ev.loso || {}).brier?.toFixed(4) ?? "—"}</b><span>Brier (LOSO)</span></div>
-          <div class="od-chip2" style="--tint:${ACC}">
-            <b>${((ev.loso || {}).accuracy * 100).toFixed(1)}%</b><span>accuracy</span></div>
-          <div class="od-chip2" style="--tint:var(--line2)">
-            <b>${(ev.baselines || {}).home_team_always?.toFixed(4) ?? "—"}</b>
-            <span>always pick home</span></div>
-          <div class="od-chip2" style="--tint:var(--line2)">
-            <b>${(ev.baselines || {}).coin_flip?.toFixed(4) ?? "—"}</b>
-            <span>coin flip</span></div>
-        </div>
-        <div class="split">
-          <div><h4>Held out one season at a time</h4>
-            <div class="mini-wrap"><table class="mini"><thead><tr>
-              <th>Season</th><th class="num">Games</th><th class="num">Brier</th>
-              <th class="num">Log loss</th><th class="num">Acc</th>
-            </tr></thead><tbody>${seasonRows}</tbody></table></div>
-            <div class="wd-foot">Each row is a season the model never saw during
-              training. Home teams win ${pct(ev.home_win_rate ?? 0)} of games.</div>
-          </div>
-          <div><h4>Calibration</h4>
-            <div class="cal">${calBars}</div>
-            <div class="cal-key">
-              <span><i style="background:var(--line2)"></i> predicted</span>
-              <span><i style="background:${ACC}"></i> actual</span>
-            </div>
-            <div class="wd-foot">Games bucketed by predicted win probability. The two
-              bars matching means a stated 70% really happens about 70% of the time.</div>
-          </div>
-        </div>
+      <div class="panel"><h3>Season by season</h3>
+        <div class="mini-wrap"><table class="mini"><thead><tr>
+          <th>Season</th><th class="num">Games</th><th class="num">Brier</th>
+          <th class="num">Log loss</th><th class="num">Acc</th>
+        </tr></thead><tbody>${seasonRows}</tbody></table></div>
+        <div class="wd-foot">Each row is a season the model never saw during
+          training. Home teams win ${pct(ev.home_win_rate ?? 0)} of games; always
+          picking them scores
+          ${(ev.baselines || {}).home_team_always?.toFixed(4) ?? "—"}.</div>
       </div>
 
-      ${wf.length ? `<div class="panel"><h3>5 · Inside the WAR build</h3>
-        <p class="sub">WAR is its own model feeding one input here. Twenty facets are
-          weighted by random-forest importance against team wins, turned into Massey
-          ratings, then converted to wins above replacement.</p>
+      ${wf.length ? `<div class="panel"><h3>Inside the WAR build</h3>
+        <p class="sub">WAR is its own model feeding one input here. ${wf.length ?
+          "Ninety-eight" : "Several dozen"} candidate skills — every PFF metric that
+          has a snap denominator, crossed with position group, plus CFBD play value —
+          are weighted by non-negative ridge fitted to the <i>following</i> season's
+          wins, turned into Massey ratings, then converted to wins above replacement.
+          Fitting to the next season rather than the same one matters: same-season
+          fits reward coverage grade, which is partly an effect of already winning.</p>
         <div class="split">
           <div><h4>Heaviest facets</h4>${facetRows}
             <div class="wd-foot">
@@ -1088,10 +1394,7 @@
           </div>
         </div>
       </div>` : ""}
-
-      <div class="panel"><h3>${wf.length ? 6 : 5} · Questions asked, and what the data said</h3>
-        <div class="decs">${decRows}</div>
-      </div>`;
+      </details>`;
   }
 
   /* ---------- boot ---------- */

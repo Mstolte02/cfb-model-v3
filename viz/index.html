@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CFB Model v3 — 2026 Projections</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 <header>
@@ -20,10 +20,6 @@
     <button class="tab" data-view="team">Team Breakdown</button>
     <button class="tab" data-view="method">Method</button>
   </nav>
-  <div class="blend" id="blend-chip">
-    <span class="blend-label">TALENT</span>
-    <span class="blend-val" id="blend-val">&nbsp;</span>
-  </div>
 </header>
 
 <main>
@@ -61,6 +57,12 @@
       <span class="hint">— modal field and seeding; every game scored by the same
         points model the matchup simulator uses</span></h3>
     <div id="bracket"></div>
+    <h3 class="bracket-title">How the field is chosen</h3>
+    <div id="playoff-explain"></div>
+    <h3 class="bracket-title">Conference title races
+      <span class="hint">— the four Power 4 champions are in no matter where they
+        finish, so these are auto bids</span></h3>
+    <div id="playoff-ccg"></div>
     <h3 class="bracket-title">Full Odds</h3>
     <div id="playoff-table"></div>
   </section>
@@ -105,24 +107,22 @@
   <section id="view-method" class="view">
     <div class="view-head">
       <h2>How this model works</h2>
-      <p class="sub">Every input, how much each one overlaps with the others, what the
-        model learned from them, and how well it actually predicts. Nothing here is
-        hand-written — it is exported from the live model each time the pipeline runs.</p>
+      <p class="sub">A plain-language walkthrough: what goes in, how the season gets
+        simulated, and how accurate it has actually been. Every number below is
+        exported from the live model, not typed in by hand.</p>
     </div>
     <div id="method-body"></div>
   </section>
 </main>
 
 <footer>
-  Model: L2 logistic + ridge-margin ensemble · LOSO 2021-25 Brier 0.2038 ·
-  talent = PFF roster grades + CFBD recruiting + player WAR ·
-  data: CollegeFootballData.com, PFF · CFP rules: 2026-27 format
+  Data: CollegeFootballData.com, PFF · CFP rules: 2026-27 format
   (4 P4 champs + top G6 + 7 at-large, straight seeding, top-4 byes).
 </footer>
 
 <!-- The data files are fetched with cache: "no-cache", but the script tag itself is
      not, so a stale app.js kept running against freshly regenerated JSON and failed
      silently — the page rendered nothing and threw nothing visible. Bump on edit. -->
-<script src="app.js?v=6"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>

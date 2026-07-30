@@ -16,6 +16,7 @@ projections_2026_v2.csv, which is what that model exists to produce.
 """
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 
@@ -108,3 +109,21 @@ def player_contributions(year: int = 2026) -> pd.DataFrame | None:
             "is_starter", "is_transfer", "proj_war", "imputed", "stars",
             "snaps_2025", "war_2025"]
     return p[[c for c in cols if c in p.columns]].copy()
+
+
+TALENT_NOISE = WAR_DIR / "talent_noise.json"
+
+
+def talent_noise_sd() -> float:
+    """How much extra noise the 2026 talent feature carries, in the z units the model
+    consumes. 0.0 when the WAR build has not measured it, so callers fall back to a
+    deterministic simulation rather than fail.
+
+    Deliberately a SCALAR. rb-win-model also emits a per-team uncertainty file, and it
+    should not be used: the team-to-team spread in it fails validation (correlation
+    with how far a team's talent estimate actually missed is +0.01). See
+    uncertainty.talent_noise() for the measurement.
+    """
+    if not TALENT_NOISE.exists():
+        return 0.0
+    return float(json.loads(TALENT_NOISE.read_text()).get("talent_noise_sd", 0.0))

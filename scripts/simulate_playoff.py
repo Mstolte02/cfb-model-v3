@@ -54,24 +54,92 @@ FCS_WIN_P = 0.95                         # FBS team over a non-FBS opponent
 FCS_OPP_RATING = -2.0                    # z-rating charged to SOS for FCS games
 
 
+FEATURE_ORDER = ("O", "D", "fp_margin", "pythag", "talent", "returning")
+TALENT_IX = FEATURE_ORDER.index("talent")
+
+
+def _talent_noise_sd():
+    """Extra sd carried by the 2026 talent feature. 0 disables the perturbation."""
+    from src.data import war
+    return war.talent_noise_sd()
+
+
+def _blend(model, z, m):
+    from scipy.stats import norm
+    return (model.ens_w / (1.0 + np.exp(-z))
+            + (1 - model.ens_w) * norm.cdf(m / model.margin_sigma))
+
+
 def pairwise_probs(model, comp):
-    """Vectorized win-prob + margin matrices for every ordered team pair."""
-    O, D, fp, py, tal, ret = (comp[c].values[:, None] for c in
-                              ("O", "D", "fp_margin", "pythag", "talent", "returning"))
+    """Vectorized win-prob + margin matrices for every ordered team pair.
+
+    Also returns the pre-link scores, because the simulation perturbs talent and needs
+    somewhere to add the shift that is still linear.
+    """
+    O, D, fp, py, tal, ret = (comp[c].values[:, None] for c in FEATURE_ORDER)
     X = np.stack([O - D.T, D - O.T, fp - fp.T, py - py.T,
                   tal - tal.T, ret - ret.T])                 # (6, n, n)
     z0 = model.intercept + np.tensordot(model.coef, X, axes=1)
     m0 = model.margin_intercept + np.tensordot(model.margin_coef, X, axes=1)
 
-    def blend(z, m):
-        p_lg = 1.0 / (1.0 + np.exp(-z))
-        from scipy.stats import norm
-        p_mg = norm.cdf(m / model.margin_sigma)
-        return model.ens_w * p_lg + (1 - model.ens_w) * p_mg
+    p_neutral = _blend(model, z0, m0)
+    p_home = _blend(model, z0 + model.hfa_coef, m0 + model.margin_hfa)
+    return p_neutral, p_home, m0, z0
 
-    p_neutral = blend(z0, m0)
-    p_home = blend(z0 + model.hfa_coef, m0 + model.margin_hfa)
-    return p_neutral, p_home, m0
+
+TOSSUP_LO, TOSSUP_HI = 0.45, 0.55
+MAX_TOSSUPS = 8                          # 2^8 = 256 cells, ~78 sims each at 20k
+
+
+def _tossup_table(fbs, idx, sched, gh, ga, gp, O, po_bits, wins, n_sims):
+    """Per team: playoff odds conditional on how its coin-flip games actually break.
+
+    The season average answers "how good is this team"; it does not answer "what does
+    this team have to do". A team at 40% to make the field with four true toss-ups is
+    a different proposition depending on whether it needs three of them or one, and
+    that is the question a fan actually has.
+
+    Answered by FILTERING the simulations rather than re-running them, so every cell
+    is internally consistent with the bracket, the conference title games and the
+    committee proxy - conditioning cannot break a rule the simulation enforces. Each
+    team's cell table is indexed by the bit pattern of its toss-up results, capped at
+    the 8 closest to a coin flip so the thinnest cell still holds ~78 sims.
+    """
+    close = np.where((gp >= TOSSUP_LO) & (gp <= TOSSUP_HI))[0]
+    meta = {}
+    for g in sched:                       # week/date, keyed by the unordered pairing
+        meta[frozenset((g["homeTeam"], g["awayTeam"]))] = g
+    out = {}
+    for t, i in idx.items():
+        mine = [j for j in close if gh[j] == i or ga[j] == i]
+        mine.sort(key=lambda j: abs(gp[j] - 0.5))
+        mine = mine[:MAX_TOSSUPS]
+        if not mine:
+            continue
+        games, key = [], np.zeros(n_sims, np.int32)
+        for b, j in enumerate(mine):
+            home = gh[j] == i
+            opp = fbs[ga[j]] if home else fbs[gh[j]]
+            won = O[:, j].astype(bool) if home else ~O[:, j].astype(bool)
+            key |= won.astype(np.int32) << b
+            g = meta.get(frozenset((fbs[gh[j]], fbs[ga[j]])), {})
+            games.append({"opp": opp, "home": bool(home),
+                          "p": round(float(gp[j] if home else 1 - gp[j]), 4),
+                          "w": g.get("week"), "d": (g.get("startDate") or "")[:10]})
+        cells = 1 << len(mine)
+        cnt = np.bincount(key, minlength=cells)
+        po = np.bincount(key, weights=po_bits[:, i], minlength=cells)
+        wn = np.bincount(key, weights=wins[:, i], minlength=cells)
+        out[t] = {"games": games,
+                  "n": [int(c) for c in cnt],
+                  "playoff": [round(float(p / c), 4) if c else None
+                              for p, c in zip(po, cnt)],
+                  "wins": [round(float(w / c), 2) if c else None
+                           for w, c in zip(wn, cnt)]}
+    thin = min((min(v["n"]) for v in out.values()), default=0)
+    print(f"  toss-up games ({TOSSUP_LO:.0%}-{TOSSUP_HI:.0%}): {len(close)} of "
+          f"{len(gp)}; {len(out)} teams have at least one, thinnest cell {thin} sims")
+    return out
 
 
 def main(n_sims=20000, seed=2026, variant=""):
@@ -100,19 +168,23 @@ def main(n_sims=20000, seed=2026, variant=""):
     rating = ((comp["O"] + comp["D"]) / 2.0).values
     rating = (rating - rating.mean()) / rating.std()
 
-    p_neutral, p_home, _ = pairwise_probs(model, comp)
+    p_neutral, p_home, m_pair, z_pair = pairwise_probs(model, comp)
 
     # ---- schedule ------------------------------------------------------------
     sched = json.load(open(ROOT / "data" / "raw" / "schedule_2026.json"))
     gh, ga, gp, gconf = [], [], [], []          # FBS-vs-FBS games
+    gz, gm = [], []                             # pre-link scores, for the talent shift
     fcs_count = np.zeros(n)                     # buy games vs non-FBS
     sos_sum, sos_n = np.zeros(n), np.zeros(n)
     for g in sched:
         h, a = g["homeTeam"], g["awayTeam"]
         hi, ai = idx.get(h), idx.get(a)
         if hi is not None and ai is not None:
+            neutral = bool(g.get("neutralSite"))
             gh.append(hi); ga.append(ai)
-            gp.append(p_neutral[hi, ai] if g.get("neutralSite") else p_home[hi, ai])
+            gp.append(p_neutral[hi, ai] if neutral else p_home[hi, ai])
+            gz.append(z_pair[hi, ai] + (0.0 if neutral else model.hfa_coef))
+            gm.append(m_pair[hi, ai] + (0.0 if neutral else model.margin_hfa))
             gconf.append(bool(g.get("conferenceGame")) and conf[h] == conf[a])
             sos_sum[hi] += rating[ai]; sos_n[hi] += 1
             sos_sum[ai] += rating[hi]; sos_n[ai] += 1
@@ -121,7 +193,7 @@ def main(n_sims=20000, seed=2026, variant=""):
             fcs_count[t] += 1
             sos_sum[t] += FCS_OPP_RATING; sos_n[t] += 1
     gh, ga = np.array(gh), np.array(ga)
-    gp = np.array(gp)
+    gp, gz, gm = np.array(gp), np.array(gz), np.array(gm)
     gconf = np.array(gconf)
     ng = len(gh)
     print(f"  schedule: {ng} FBS-vs-FBS games, {int(fcs_count.sum())} buy games")
@@ -145,8 +217,38 @@ def main(n_sims=20000, seed=2026, variant=""):
     conf_teams = {c: np.array([idx[t] for t in fbs if conf[t] == c])
                   for c in sorted(CCG_CONFS)}
 
-    # ---- simulate all regular-season games at once ---------------------------
-    O = (rng.random((n_sims, ng)) < gp).astype(np.float32)
+    # ---- roster uncertainty ---------------------------------------------------
+    # Two different things can make a season turn out differently, and only one of
+    # them was being simulated. Coin-flip games are one; the other is that the talent
+    # estimate itself may be wrong, and for 2026 it is built from PROJECTED player WAR
+    # rather than an observed prior season. rb-win-model/uncertainty.talent_noise()
+    # measures what that substitution costs by building 2025 talent both ways: the
+    # residual is 0.505 sd, which is what gets drawn here.
+    #
+    # ONE sd for every team, and that is a finding rather than a shortcut. The obvious
+    # per-team story - a roster full of unproven players should be less predictable -
+    # does not survive: correlation between a team's predicted uncertainty and how far
+    # its talent estimate actually missed in 2025 is +0.01. See that function's
+    # docstring. Drawing one delta per team per sim (not per game) is what makes this
+    # different from noise: a team that draws badly is worse all season, which is how
+    # a season actually goes wrong.
+    talent_sd = _talent_noise_sd()
+    if talent_sd > 0:
+        c_z = float(model.coef[TALENT_IX]) * talent_sd
+        c_m = float(model.margin_coef[TALENT_IX]) * talent_sd
+        from scipy.stats import norm
+        O = np.empty((n_sims, ng), np.float32)
+        for lo in range(0, n_sims, 4000):        # chunked: (sims x games) is large
+            hi_ = min(lo + 4000, n_sims)
+            d = rng.standard_normal((hi_ - lo, n))
+            dd = d[:, gh] - d[:, ga]
+            p = (model.ens_w / (1.0 + np.exp(-(gz + c_z * dd)))
+                 + (1 - model.ens_w) * norm.cdf((gm + c_m * dd) / model.margin_sigma))
+            O[lo:hi_] = rng.random((hi_ - lo, ng)) < p
+        print(f"  roster uncertainty: talent perturbed by {talent_sd:.3f} sd per team "
+              f"per sim (uniform - per-team spread did not validate)")
+    else:
+        O = (rng.random((n_sims, ng)) < gp).astype(np.float32)
     wins = O @ H + (1 - O) @ A
     cwins = O[:, gconf] @ Hc + (1 - O[:, gconf]) @ Ac
     fcs_w = rng.binomial(fcs_count.astype(int), FCS_WIN_P, size=(n_sims, n))
@@ -168,6 +270,10 @@ def main(n_sims=20000, seed=2026, variant=""):
     # page is where that difference is worth showing.
     MAX_W = 17
     win_hist = np.zeros((n, MAX_W + 1))
+
+    # Which sims did each team make the field in? Needed for the toss-up conditional
+    # below, which is a filter over sims rather than a summary of them.
+    po_bits = np.zeros((n_sims, n), bool)
 
     conf_list = list(conf_teams.items())
     for s in range(n_sims):
@@ -201,6 +307,7 @@ def main(n_sims=20000, seed=2026, variant=""):
             field.add(int(t))
         seeds = sorted(field, key=lambda t: -score[t])   # seeds[0] = 1-seed
 
+        po_bits[s, seeds] = True
         for rk, t in enumerate(seeds):
             stats["playoff"][t] += 1
             seed_counts[t, rk] += 1
@@ -234,6 +341,8 @@ def main(n_sims=20000, seed=2026, variant=""):
         win_tot += w
         loss_tot += gp_played - w
         win_hist[np.arange(n), np.clip(w.astype(int), 0, MAX_W)] += 1
+
+    tossups = _tossup_table(fbs, idx, sched, gh, ga, gp, O, po_bits, wins, n_sims)
 
     # ---- output ---------------------------------------------------------------
     power = pd.read_csv(ARTIFACTS / f"2026_power_ratings{suffix}.csv").set_index("team")
@@ -329,8 +438,12 @@ def main(n_sims=20000, seed=2026, variant=""):
             f"{W_WINPCT:.0f}*win_pct + {W_RATING:.2f}*rating_z + {W_SOS:.2f}*sos_z "
             f"+ {W_P4:.2f}*power_conf, fitted on all 12 seasons of published "
             "committee rankings (leave-one-season-out Spearman 0.908)"),
+        "committee_weights": {"win_pct": W_WINPCT, "rating": W_RATING,
+                              "sos": W_SOS, "power_conf": W_P4},
+        "talent_noise_sd": round(talent_sd, 4),
         "teams": out,
         "bracket": bracket,
+        "tossups": tossups,
         "win_dist": {t: [int(c) for c in win_hist[i]] for t, i in idx.items()
                      if win_hist[i].sum() > 0},
     }
