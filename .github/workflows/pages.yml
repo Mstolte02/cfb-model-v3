@@ -1,8 +1,9 @@
 # Publish the site to GitHub Pages on every push to main.
 #
 # scripts/publish.py is stdlib-only, so this needs no pip install and no model
-# dependencies. It copies viz/ to dist/ and strips the per-player rows, which is the
-# whole reason the site is not served straight out of viz/ - see that script.
+# dependencies. It copies viz/ to dist/ and drops the working-document diagnostics
+# report, which is why the site is not served straight out of viz/ - see that script.
+# It is run WITHOUT --no-players, so the roster rows ship and the roster editor works.
 name: Deploy site
 
 on:

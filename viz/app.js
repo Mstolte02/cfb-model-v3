@@ -65,10 +65,200 @@
   const G6 = new Set(["American Athletic", "Conference USA", "Mid-American",
     "Mountain West", "Pac-12", "Sun Belt"]);
 
-  const vecOf = t => cur().model.teams[t];
-  const rankNames = () => cur().ratings.teams.map(t => t.team);
-  const ratingRow = () => Object.fromEntries(cur().ratings.teams.map(t => [t.team, t]));
+  const baseVec = t => cur().model.teams[t];
+  const rankNames = () => liveRatings().map(t => t.team);
+  const ratingRow = () => Object.fromEntries(liveRatings().map(t => [t.team, t]));
   const simRow = () => Object.fromEntries((cur().playoff.teams || []).map(t => [t.team, t]));
+
+  /* ---------- what-if: edit a player's WAR, re-derive the ratings ----------
+     Talent is a retired feature with a coefficient of exactly zero, so an edit does
+     NOT reach a prediction through the talent slot. It reaches one through the shrink
+     in matchup.team_frame, which pulls a team toward its talent-implied rating:
+
+         O_adj = (1 - lam*u)*O + lam*u*(b_o*talent)
+
+     That is linear in talent, so a talent delta moves the exported vector by exactly
+     lam*u*b_o*dt — no need to reconstruct the pre-shrink O. WAR is one axis of talent
+     at config.WAR_BLEND, and it enters as a z-score taken across the teams the WAR
+     build covers. Editing one player therefore shifts the league mean and sd and moves
+     every other team a little too, which is not a rounding artefact: it is what the
+     model would do if that player really were that good.
+
+     What this CANNOT update is the playoff odds. Those come from a 20,000-season Monte
+     Carlo over the real schedule, run in Python. Re-running it here would be a
+     different simulation pretending to be the same one, so the odds are left showing
+     their unedited values and the UI says so rather than quietly implying otherwise. */
+  const WI = (function () {
+    const cfg = (model && model.whatif) || null;
+    const edits = new Map();                       // key: team + NUL + player -> new WAR
+    const KEY = "cfb-whatif-v1";
+    // NUL joins the key, not a space: "Ohio State" and "Julian Sayin" both contain
+    // spaces, so a space-joined key split into four pieces and named the wrong team.
+    const k = (t, p) => t + "\u0000" + p;
+
+    const rosterOf = t => (players[t] && players[t].players) || null;
+    // Base summed WAR per team. players.json carries `total` already, but it is
+    // rounded to 3dp for transport, so it is re-summed from the rows the page will
+    // actually edit - otherwise a scenario with no edits would not reproduce zero.
+    const baseWar = {};
+    for (const [t, r] of Object.entries(players)) {
+      const rs = r && r.players;
+      if (rs) baseWar[t] = rs.reduce((s, p) => s + (p.raw || 0), 0);
+      else if (r && r.total != null) baseWar[t] = r.total;
+    }
+
+    const popZ = obj => {                          // ddof=0, matching war.talent_by_year
+      const ts = Object.keys(obj), v = ts.map(t => obj[t]);
+      if (!v.length) return {};
+      const mu = v.reduce((a, b) => a + b, 0) / v.length;
+      const sd = Math.sqrt(v.reduce((a, b) => a + (b - mu) * (b - mu), 0) / v.length);
+      return Object.fromEntries(ts.map((t, i) => [t, sd ? (v[i] - mu) / sd : 0]));
+    };
+    const zBase = popZ(baseWar);
+
+    let delta = {};                                // team -> talent delta
+    let ver = 0;                                   // bumped on every change, for caches
+    function recompute() {
+      ver++;
+      delta = {};
+      if (!cfg || !edits.size) return;
+      const now = Object.assign({}, baseWar);
+      for (const [key, val] of edits) {
+        const [t, name] = key.split("\u0000");
+        const rs = rosterOf(t);
+        if (!rs || now[t] == null) continue;
+        const p = rs.find(x => x.n === name);
+        if (p) now[t] += val - (p.raw || 0);
+      }
+      const zNow = popZ(now);
+      for (const t of Object.keys(zNow)) delta[t] = cfg.warBlend * (zNow[t] - zBase[t]);
+    }
+
+    function vec(t) {
+      const v = baseVec(t);
+      if (!v || !cfg || !edits.size) return v;
+      const dt = delta[t];
+      if (!dt) return v;
+      const s = cfg.lam * (cfg.u[t] != null ? cfg.u[t] : 1);
+      const out = v.slice();
+      out[0] += s * cfg.bO * dt;
+      out[1] += s * cfg.bD * dt;
+      return out;
+    }
+
+    function save() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify([...edits]));
+      } catch (e) { /* private mode; the scenario just will not outlive the tab */ }
+    }
+    function load() {
+      try {
+        const raw = localStorage.getItem(KEY);
+        if (raw) for (const [key, v] of JSON.parse(raw)) edits.set(key, v);
+      } catch (e) { edits.clear(); }
+      recompute();
+    }
+
+    return {
+      enabled: () => !!cfg,
+      vec, count: () => edits.size, version: () => ver,
+      teamWar: t => {
+        let w = baseWar[t] || 0;
+        const rs = rosterOf(t);
+        if (rs) for (const p of rs) {
+          const e = edits.get(k(t, p.n));
+          if (e != null) w += e - (p.raw || 0);
+        }
+        return w;
+      },
+      baseTeamWar: t => baseWar[t] || 0,
+      talentDelta: t => delta[t] || 0,
+      get: (t, p) => edits.get(k(t, p)),
+      set(t, p, v) {
+        const rs = rosterOf(t), row = rs && rs.find(x => x.n === p);
+        if (!row) return;
+        if (v == null || !isFinite(v) || Math.abs(v - (row.raw || 0)) < 1e-9) {
+          edits.delete(k(t, p));
+        } else {
+          edits.set(k(t, p), v);
+        }
+        recompute(); save();
+      },
+      reset() { edits.clear(); recompute(); save(); },
+      editedTeams() {
+        const s = new Set();
+        for (const key of edits.keys()) s.add(key.split("\u0000")[0]);
+        return s;
+      },
+      init: load,
+    };
+  })();
+  WI.init();
+
+  const vecOf = t => WI.vec(t);
+
+  /* Power = mean neutral-site win probability against every other rated team. It is
+     recomputed here rather than read from ratings.json whenever a scenario is active,
+     because an edited team has to move in the table it is ranked in.
+
+     verifyPower() below is the guard that makes that safe: with no edits this routine
+     has to reproduce the exported column, and if it ever stops doing so the page is
+     showing a power rating the backend never computed. It logs loudly instead of
+     quietly disagreeing. */
+  let powerCache = null, powerVer = -1;
+  function livePower() {
+    if (powerVer === WI.version() && powerCache) return powerCache;
+    const names = cur().ratings.teams.map(r => r.team);
+    const V = names.map(vecOf);
+    const out = {};
+    for (let i = 0; i < names.length; i++) {
+      let s = 0;
+      for (let j = 0; j < names.length; j++) {
+        if (i !== j) s += winpFromDiff(diffVec(V[i], V[j]), 0);
+      }
+      out[names[i]] = s / (names.length - 1);
+    }
+    powerCache = out; powerVer = WI.version();
+    return out;
+  }
+
+  function verifyPower() {
+    const P = livePower();
+    let worst = 0, who = "";
+    for (const r of cur().ratings.teams) {
+      const d = Math.abs(P[r.team] - r.power);
+      if (d > worst) { worst = d; who = r.team; }
+    }
+    if (worst > 5e-4) {
+      console.warn(`[what-if] client power differs from ratings.json by ${worst.toFixed(5)} ` +
+                   `(worst: ${who}). Edits would move teams against a baseline the ` +
+                   `backend did not produce.`);
+    }
+    return worst;
+  }
+
+  /* Ratings rows with everything an edit touches re-derived when a scenario is active.
+     O, D and talent move as well as power and rank: the Model inputs panel reads them
+     from here, and a page that showed a team climbing the table while its offense and
+     talent sat unchanged would be contradicting itself on screen. */
+  function liveRatings() {
+    const rows = cur().ratings.teams;
+    if (!WI.enabled() || !WI.count()) return rows;
+    const P = livePower(), cfg = cur().model.whatif;
+    const out = rows.map(r => {
+      const dt = WI.talentDelta(r.team);
+      const s = cfg.lam * (cfg.u[r.team] != null ? cfg.u[r.team] : 1);
+      return Object.assign({}, r, {
+        power: P[r.team],
+        O: r.O != null ? r.O + s * cfg.bO * dt : r.O,
+        D: r.D != null ? r.D + s * cfg.bD * dt : r.D,
+        talent: r.talent != null ? r.talent + dt : r.talent,
+      });
+    });
+    const order = out.slice().sort((a, b) => b.power - a.power);
+    order.forEach((r, i) => { r.rank = i + 1; });
+    return out;
+  }
 
   /* ---------- frozen win-prob math ---------- */
   const sigmoid = z => 1 / (1 + Math.exp(-z));
@@ -180,7 +370,7 @@
     const q = document.getElementById("dash-search").value.trim().toLowerCase();
     const c = document.getElementById("dash-conf").value;
     const tier = document.getElementById("dash-tier").value;
-    let rows = cur().ratings.teams.slice();
+    let rows = liveRatings().slice();
     if (q) rows = rows.filter(r => r.team.toLowerCase().includes(q) ||
       ((meta[r.team] && meta[r.team].mascot) || "").toLowerCase().includes(q));
     if (c) rows = rows.filter(r => r.conference === c);
@@ -199,7 +389,7 @@
 
   function renderDash() {
     const rows = dashRows();
-    const all = cur().ratings.teams;
+    const all = liveRatings();
     const maxPower = Math.max(...all.map(r => r.power));
     document.getElementById("dash-count").textContent =
       `${rows.length} of ${all.length} teams`;
@@ -736,6 +926,83 @@
       </div></div>`;
   }
 
+  /* ---------- the roster editor ----------
+     Every player's projected WAR is an input. The panel shows what the edit does to
+     the three quantities between a player and a rating - the team's summed WAR, the
+     talent z it standardizes to, and the power rank that falls out - so the chain is
+     visible rather than asserted. */
+  const BASE_RANK = Object.fromEntries(ratings.teams.map(r => [r.team, r.rank]));
+
+  function whatIfPanel(t, tint) {
+    if (!WI.enabled()) return "";
+    const roster = players[t];
+    if (!roster || !roster.players) return "";
+
+    const base = WI.baseTeamWar(t), now = WI.teamWar(t);
+    const dt = WI.talentDelta(t);
+    const live = ratingRow()[t] || {};
+    const rankNow = live.rank, rankWas = BASE_RANK[t];
+    const moved = WI.count() > 0 && rankNow != null && rankNow !== rankWas;
+
+    const rows = roster.players.slice()
+      .sort((a, b) => (b.raw || 0) - (a.raw || 0))
+      .map(p => {
+        const cur = WI.get(t, p.n);
+        const val = cur != null ? cur : (p.raw || 0);
+        const edited = cur != null;
+        return `<tr class="${edited ? "wi-edited" : ""}">
+          <td><span class="wi-pos">${esc(p.g)}</span></td>
+          <td class="wi-name">${esc(p.n)}${p.i ? ` <span class="tag imp">·</span>` : ""}</td>
+          <td class="num wi-base">${(p.raw || 0).toFixed(3)}</td>
+          <td class="num"><input class="wi-in" type="number" step="0.05"
+            data-team="${esc(t)}" data-player="${esc(p.n)}"
+            value="${val.toFixed(3)}" aria-label="Projected WAR for ${esc(p.n)}"></td>
+        </tr>`;
+      }).join("");
+
+    const d = now - base;
+    const sign = v => (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(3);
+    return `<div class="panel wi-panel">
+      <h3>Build your own
+        <span class="hint">— change what you think a player is worth and watch it
+          reach the rating</span></h3>
+      <div class="wi-summary">
+        <div><b style="color:${tint}">${now.toFixed(2)}</b><span>team WAR${
+          WI.count() ? ` <i class="wi-was">was ${base.toFixed(2)}</i>` : ""}</span></div>
+        <div><b style="color:${dt >= 0 ? "var(--green)" : "var(--red)"}">${sign(dt)}</b>
+          <span>talent (model z)</span></div>
+        <div><b>${rankNow ?? "—"}</b><span>power rank${
+          moved ? ` <i class="wi-was">was ${rankWas}</i>` : ""}</span></div>
+        <div class="wi-actions">
+          <button id="wi-reset" class="wi-btn" ${WI.count() ? "" : "disabled"}>Reset${
+            WI.count() ? ` (${WI.count()})` : ""}</button>
+        </div>
+      </div>
+      <div class="mini-wrap wi-scroll"><table class="mini wi-table"><thead><tr>
+        <th></th><th>Player</th><th class="num">Model</th><th class="num">Yours</th>
+      </tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="wd-foot">WAR reaches a rating through the talent blend
+        (${Math.round(100 * model.whatif.warBlend)}% of talent) and the shrink that
+        pulls a team toward its talent-implied O and D — so an edit moves this team's
+        offense and defense, and, because talent is standardized across the league, it
+        nudges everyone else a little too. <b>Playoff odds do not update</b>: those come
+        from a 20,000-season Monte Carlo run in Python, and re-running a different
+        simulation here would be dishonest about what it is.</div>
+    </div>`;
+  }
+
+  function wireWhatIf() {
+    document.querySelectorAll(".wi-in").forEach(el => {
+      el.addEventListener("change", () => {
+        const v = parseFloat(el.value);
+        WI.set(el.dataset.team, el.dataset.player, isFinite(v) ? v : null);
+        renderAll();
+      });
+    });
+    const rb = document.getElementById("wi-reset");
+    if (rb) rb.addEventListener("click", () => { WI.reset(); renderAll(); });
+  }
+
   function frontLabel(def) {
     const dl = def.filter(p => p.g === "DT" || p.g === "EDGE").length;
     const lb = def.filter(p => p.g === "LB").length;
@@ -1055,6 +1322,7 @@
           league average.${roster && roster.players
             ? ` <span class="tag imp">·</span> marks a player with no prior FBS snaps.`
             : ""}</div></div>
+      ${whatIfPanel(t, tint)}
       ${tossupHTML(t, tint, S.playoff)}
       <div class="panel"><h3>Model inputs</h3>
         <div class="gr wide">${inputHTML}</div>
@@ -1074,6 +1342,7 @@
       </div>`;
     wireTeamLinks();
     wireTossups();
+    wireWhatIf();
   }
   selT.addEventListener("change", renderTeam);
 
@@ -1424,5 +1693,9 @@
     fillConfSelect();
     renderDash(); renderPlayoff(); renderMatchup(); renderTeam(); renderMethod();
   }
+  // Check the client-side power reproduces the exported column before anyone edits
+  // anything. A scenario is only meaningful as a difference from the published
+  // baseline, so if the baseline does not agree the whole panel is theatre.
+  if (WI.enabled()) verifyPower();
   renderAll();
 })();

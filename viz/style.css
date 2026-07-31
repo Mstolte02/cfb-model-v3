@@ -432,3 +432,35 @@ details.nerd > summary::before { content: "▸ "; color: var(--accent); }
 details.nerd[open] > summary::before { content: "▾ "; }
 details.nerd > summary:hover { color: var(--text); }
 details.nerd[open] > summary { margin-bottom: 14px; }
+
+/* ---- roster what-if ------------------------------------------------------- */
+.wi-summary { display: flex; gap: 26px; align-items: flex-start; flex-wrap: wrap;
+  padding-bottom: 14px; margin-bottom: 4px; border-bottom: 1px solid var(--line2); }
+.wi-summary > div { text-align: center; }
+.wi-summary b { display: block; font-size: 21px; font-variant-numeric: tabular-nums; }
+.wi-summary span { color: var(--muted); font-size: 10px; letter-spacing: .5px;
+  font-family: var(--sans); text-transform: uppercase; }
+.wi-was { font-style: normal; color: var(--muted); opacity: .75; }
+.wi-was::before { content: "· "; }
+.wi-actions { margin-left: auto; align-self: center; }
+.wi-btn { font: 600 11px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); background: none; border: 1px solid var(--line2);
+  border-radius: 8px; padding: 9px 14px; cursor: pointer; }
+.wi-btn:hover:not(:disabled) { color: var(--text); border-color: var(--muted); }
+.wi-btn:disabled { opacity: .4; cursor: default; }
+
+/* The table scrolls inside the panel: a two-deep is ~40 rows and the point of the
+   panel is the summary above it, which should not be pushed off screen. */
+.wi-scroll { max-height: 340px; overflow-y: auto; margin-top: 12px; }
+.wi-table { width: 100%; }
+.wi-table th { position: sticky; top: 0; background: var(--panel); z-index: 1; }
+.wi-pos { font: 600 9.5px/1 var(--sans); letter-spacing: .06em; color: var(--muted); }
+.wi-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 190px; }
+.wi-base { color: var(--muted); font-variant-numeric: tabular-nums; }
+.wi-in { width: 78px; text-align: right; font: inherit; font-variant-numeric: tabular-nums;
+  color: var(--text); background: var(--bg); border: 1px solid var(--line2);
+  border-radius: 6px; padding: 3px 6px; }
+.wi-in:focus { outline: none; border-color: var(--accent); }
+.wi-edited .wi-in { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.wi-edited .wi-name { font-weight: 600; }

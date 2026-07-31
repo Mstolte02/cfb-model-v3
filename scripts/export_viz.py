@@ -16,11 +16,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 import pandas as pd
 
-from config import ROOT, ARTIFACTS, GAME_YEARS, TEST_GAME_YEAR
+from config import ROOT, ARTIFACTS, GAME_YEARS, TEST_GAME_YEAR, PROJECTION_YEAR
 from src.model import CFBModel
 from src import matchup as MU
 from src import spread as SP
-from scripts.train import build_projection_frame, load_bundle
+from scripts.train import (build_projection_frame, load_bundle,
+                           projection_returning_raw)
 
 VIZ = ROOT / "viz" / "data"
 
@@ -55,6 +56,49 @@ def fit_points_model():
     resid = y - pm.predict(X)
     return {"coef": pm.coef_.tolist(), "intercept": float(pm.intercept_),
             "alpha": alpha, "resid_sd": float(np.std(resid))}
+
+
+def whatif_block(comp):
+    """What the page needs to re-derive O and D after someone edits a player's WAR.
+
+    Talent is a retired feature - its coefficient is exactly zero - so it does not
+    reach a prediction directly. It reaches one through the shrink in
+    matchup.team_frame, where a team with little returning production is pulled toward
+    its talent-implied rating:
+
+        O_adj = (1 - lam*u)*O + lam*u*(b_o*talent)
+
+    The useful thing about that line is that it is LINEAR in talent, so the page never
+    has to reconstruct the pre-shrink O. A talent delta moves the exported vector by
+
+        dO = lam*u*b_o*dt        dD = lam*u*b_d*dt
+
+    and that is exact, not an approximation. So the only per-team quantity that has to
+    ship is u; everything else is four scalars. Inverting the shrink to recover O would
+    have worked too and is what I tried first, but it divides by (1 - lam*u) and there
+    is no reason to introduce a division when the derivative is what is wanted.
+
+    WAR reaches talent through config.WAR_BLEND, and only that share of it moves:
+        talent = (1 - WAR_BLEND)*(PFF/CFBD blend) + WAR_BLEND*z(team WAR)
+    The z is taken within season over the teams the WAR build covers, with ddof=0, and
+    the page has to reproduce that exactly - editing one player shifts the league mean
+    and sd, so every other team's talent moves a little too. That is not a rounding
+    artefact, it is what the model would actually do.
+
+    u ships per team even though it is currently 1.0 for all of them: matchup.py holds
+    it flat while UNCERTAINTY_USE_RETURNING is False, which it is, and which it is for
+    a measured reason. Exporting the scalar it happens to equal today would turn that
+    config flag into a silent liar the moment anyone set it back to True.
+    """
+    from config import UNCERTAINTY_LAMBDA, WAR_BLEND
+    _, b_o, b_d, lam = build_projection_frame(return_params=True)
+    u = MU.uncertainty_u(projection_returning_raw())
+    u = u.reindex(comp.index).fillna(0.0).clip(lower=0, upper=1)
+    return {
+        "lam": float(lam if lam is not None else UNCERTAINTY_LAMBDA),
+        "bO": float(b_o), "bD": float(b_d), "warBlend": float(WAR_BLEND),
+        "u": {t: round(float(u[t]), 4) for t in comp.index},
+    }
 
 
 def main(variant=""):
@@ -149,6 +193,7 @@ def main(variant=""):
         "points": points,
         "teams": {t: [round(float(comp.loc[t, c]), 4) for c in FEATS]
                   for t in comp.index},
+        "whatif": whatif_block(comp),
     }
     (VIZ / f"model{suffix}.json").write_text(json.dumps(export, indent=1))
 

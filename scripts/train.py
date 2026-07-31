@@ -66,6 +66,28 @@ def raw_returning():
             for y in RETURNING_YEARS}
 
 
+def projection_returning_raw(ret_raw=None):
+    """Raw returning production entering PROJECTION_YEAR, curated CSV then proxy.
+
+    Pulled out of build_projection_frame because export_viz needs the same series to
+    build the per-team shrink u for the what-if block, and a second copy of this
+    fallback chain would be free to drift out of step with this one - which would
+    show the page a shrink the model never applied.
+    """
+    import pandas as pd
+    from config import PROJECTION_YEAR, PROJECTION_RETURNING_FALLBACK_YEAR, ROOT
+    rp_csv = ROOT / "data" / f"returning_{PROJECTION_YEAR}.csv"
+    if rp_csv.exists():
+        rp = pd.read_csv(rp_csv).set_index("team")["ret_prod"]
+        print(f"  [info] {PROJECTION_YEAR} returning production from {rp_csv.name} "
+              f"({len(rp)} teams).")
+        return rp
+    ret_raw = raw_returning() if ret_raw is None else ret_raw
+    print(f"  [warn] {PROJECTION_YEAR} returning unavailable; using "
+          f"{PROJECTION_RETURNING_FALLBACK_YEAR} proxy.")
+    return ret_raw[PROJECTION_RETURNING_FALLBACK_YEAR]
+
+
 def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=False):
     """Entering-PROJECTION_YEAR team frame (O/D/pythag/talent/returning, uncertainty
     applied), with 2026 returning from the curated CSV and talent proxied from the
@@ -88,17 +110,9 @@ def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=Fal
     std, talent, ret, games, pyth = load_bundle()
     ret_raw = raw_returning()
 
-    rp_csv = ROOT / "data" / f"returning_{PROJECTION_YEAR}.csv"
-    if PROJECTION_YEAR not in ret and rp_csv.exists():
-        df = pd.read_csv(rp_csv).set_index("team")["ret_prod"]
-        ret[PROJECTION_YEAR] = _z(df); ret_raw[PROJECTION_YEAR] = df
-        print(f"  [info] {PROJECTION_YEAR} returning production from {rp_csv.name} "
-              f"({len(df)} teams).")
-    elif PROJECTION_YEAR not in ret:
-        ret[PROJECTION_YEAR] = ret[PROJECTION_RETURNING_FALLBACK_YEAR]
-        ret_raw[PROJECTION_YEAR] = ret_raw[PROJECTION_RETURNING_FALLBACK_YEAR]
-        print(f"  [warn] {PROJECTION_YEAR} returning unavailable; using "
-              f"{PROJECTION_RETURNING_FALLBACK_YEAR} proxy.")
+    if PROJECTION_YEAR not in ret:
+        rp = projection_returning_raw(ret_raw)
+        ret[PROJECTION_YEAR], ret_raw[PROJECTION_YEAR] = _z(rp), rp
 
     tal_csv = ROOT / "data" / f"talent_{PROJECTION_YEAR}.csv"
     if PROJECTION_YEAR not in talent and tal_csv.exists():
