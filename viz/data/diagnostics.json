@@ -101,11 +101,11 @@
    "CFBD": {
     "PFF": 0.539,
     "CFBD": 1.0,
-    "WAR": 0.625
+    "WAR": 0.626
    },
    "WAR": {
     "PFF": 0.716,
-    "CFBD": 0.625,
+    "CFBD": 0.626,
     "WAR": 1.0
    }
   },
@@ -132,13 +132,13 @@
     "season": 2024,
     "PFF_WAR": 0.618,
     "PFF_CFBD": 0.508,
-    "WAR_CFBD": 0.575
+    "WAR_CFBD": 0.576
    },
    {
     "season": 2025,
-    "PFF_WAR": 0.697,
+    "PFF_WAR": 0.696,
     "PFF_CFBD": 0.467,
-    "WAR_CFBD": 0.619
+    "WAR_CFBD": 0.621
    }
   ],
   "weights": {
@@ -149,31 +149,31 @@
  },
  "coefficients": {
   "logistic": {
-   "O": 0.8768,
+   "O": 0.8767,
    "D": 0.692,
    "fp_margin": 0.0,
    "pythag": 0.0,
    "talent": 0.0,
-   "returning": 0.1315
+   "returning": 0.1316
   },
-  "logistic_hfa": 0.2638,
+  "logistic_hfa": 0.2635,
   "margin": {
-   "O": 9.2192,
-   "D": 7.8502,
+   "O": 9.2198,
+   "D": 7.8503,
    "fp_margin": 0.0,
    "pythag": 0.0,
    "talent": 0.0,
-   "returning": 0.9039
+   "returning": 0.9052
   },
-  "margin_hfa": 2.5682,
-  "margin_sigma": 17.354,
+  "margin_hfa": 2.563,
+  "margin_sigma": 17.355,
   "ensemble_w": 0.4
  },
  "evaluation": {
   "loso": {
    "brier": 0.2037,
    "log_loss": 0.591,
-   "accuracy": 0.676
+   "accuracy": 0.6752
   },
   "per_season": [
    {
@@ -187,28 +187,28 @@
     "season": 2022,
     "n": 724,
     "brier": 0.2027,
-    "log_loss": 0.5899,
-    "accuracy": 0.674
+    "log_loss": 0.59,
+    "accuracy": 0.6754
    },
    {
     "season": 2023,
     "n": 729,
     "brier": 0.1955,
     "log_loss": 0.571,
-    "accuracy": 0.6968
+    "accuracy": 0.6927
    },
    {
     "season": 2024,
     "n": 741,
     "brier": 0.2074,
-    "log_loss": 0.5979,
-    "accuracy": 0.6721
+    "log_loss": 0.598,
+    "accuracy": 0.6707
    },
    {
     "season": 2025,
     "n": 719,
-    "brier": 0.2008,
-    "log_loss": 0.584,
+    "brier": 0.2009,
+    "log_loss": 0.5841,
     "accuracy": 0.6773
    }
   ],
@@ -220,14 +220,14 @@
    {
     "lo": 0.0,
     "hi": 0.1,
-    "pred": 0.0741,
+    "pred": 0.0742,
     "actual": 0.1304,
     "n": 23
    },
    {
     "lo": 0.1,
     "hi": 0.2,
-    "pred": 0.153,
+    "pred": 0.1531,
     "actual": 0.1176,
     "n": 85
    },
@@ -235,57 +235,57 @@
     "lo": 0.2,
     "hi": 0.3,
     "pred": 0.256,
-    "actual": 0.251,
-    "n": 247
+    "actual": 0.252,
+    "n": 246
    },
    {
     "lo": 0.3,
     "hi": 0.4,
-    "pred": 0.3525,
-    "actual": 0.3743,
-    "n": 334
+    "pred": 0.3526,
+    "actual": 0.375,
+    "n": 336
    },
    {
     "lo": 0.4,
     "hi": 0.5,
-    "pred": 0.4545,
-    "actual": 0.4566,
-    "n": 541
+    "pred": 0.4544,
+    "actual": 0.4581,
+    "n": 537
    },
    {
     "lo": 0.5,
     "hi": 0.6,
-    "pred": 0.5518,
-    "actual": 0.5767,
-    "n": 652
+    "pred": 0.5516,
+    "actual": 0.5749,
+    "n": 654
    },
    {
     "lo": 0.6,
     "hi": 0.7,
-    "pred": 0.6502,
-    "actual": 0.5963,
-    "n": 644
+    "pred": 0.6501,
+    "actual": 0.596,
+    "n": 646
    },
    {
     "lo": 0.7,
     "hi": 0.8,
-    "pred": 0.7474,
+    "pred": 0.7476,
     "actual": 0.778,
     "n": 518
    },
    {
     "lo": 0.8,
     "hi": 0.9,
-    "pred": 0.8476,
+    "pred": 0.8478,
     "actual": 0.8351,
     "n": 370
    },
    {
     "lo": 0.9,
     "hi": 1.0,
-    "pred": 0.9332,
-    "actual": 0.9447,
-    "n": 199
+    "pred": 0.9333,
+    "actual": 0.9444,
+    "n": 198
    }
   ],
   "home_win_rate": 0.5832
@@ -298,7 +298,7 @@
   },
   {
    "facet": "DI_stops",
-   "weight": 0.0356,
+   "weight": 0.0357,
    "source": "PFF"
   },
   {
@@ -328,12 +328,12 @@
   },
   {
    "facet": "QB_run",
-   "weight": 0.0244,
+   "weight": 0.0245,
    "source": "PFF"
   },
   {
    "facet": "RB_run_block",
-   "weight": 0.0226,
+   "weight": 0.0227,
    "source": "PFF"
   },
   {
@@ -352,13 +352,13 @@
    "source": "PFF"
   },
   {
-   "facet": "cfbd_cov_db",
+   "facet": "cfbd_havoc_db",
    "weight": 0.019,
    "source": "CFBD"
   },
   {
-   "facet": "cfbd_havoc_db",
-   "weight": 0.0189,
+   "facet": "cfbd_cov_db",
+   "weight": 0.019,
    "source": "CFBD"
   },
   {
@@ -373,12 +373,12 @@
   },
   {
    "facet": "CB-S_run",
-   "weight": 0.0147,
+   "weight": 0.0148,
    "source": "PFF"
   },
   {
    "facet": "cfbd_havoc_dl",
-   "weight": 0.0139,
+   "weight": 0.0138,
    "source": "CFBD"
   },
   {
@@ -407,14 +407,14 @@
    "source": "PFF"
   },
   {
-   "facet": "cfbd_havoc_lb",
-   "weight": 0.0124,
-   "source": "CFBD"
-  },
-  {
    "facet": "QB_ypa",
    "weight": 0.0124,
    "source": "PFF"
+  },
+  {
+   "facet": "cfbd_havoc_lb",
+   "weight": 0.0122,
+   "source": "CFBD"
   },
   {
    "facet": "DI_total_pressures",
@@ -443,7 +443,7 @@
   },
   {
    "facet": "CB_catch_rate",
-   "weight": 0.0117,
+   "weight": 0.0116,
    "source": "PFF"
   },
   {
@@ -467,12 +467,12 @@
    "source": "PFF"
   },
   {
-   "facet": "CB_coverage",
+   "facet": "QB_positive_epa_pct",
    "weight": 0.0103,
    "source": "PFF"
   },
   {
-   "facet": "QB_positive_epa_pct",
+   "facet": "CB_coverage",
    "weight": 0.0103,
    "source": "PFF"
   },
@@ -482,12 +482,12 @@
    "source": "PFF"
   },
   {
-   "facet": "QB_btt_rate",
+   "facet": "OL_pass_block",
    "weight": 0.0099,
    "source": "PFF"
   },
   {
-   "facet": "OL_pass_block",
+   "facet": "QB_btt_rate",
    "weight": 0.0099,
    "source": "PFF"
   },
@@ -498,7 +498,7 @@
   },
   {
    "facet": "S_catch_rate",
-   "weight": 0.0092,
+   "weight": 0.0091,
    "source": "PFF"
   },
   {
@@ -523,7 +523,7 @@
   },
   {
    "facet": "cfbd_run_rb",
-   "weight": 0.0088,
+   "weight": 0.0087,
    "source": "CFBD"
   },
   {
@@ -538,7 +538,7 @@
   },
   {
    "facet": "QB-RB-TE-WR_offense_penalty",
-   "weight": 0.0085,
+   "weight": 0.0086,
    "source": "PFF"
   },
   {
@@ -563,7 +563,7 @@
   },
   {
    "facet": "LB_coverage",
-   "weight": 0.0079,
+   "weight": 0.0078,
    "source": "PFF"
   },
   {
@@ -588,12 +588,12 @@
   },
   {
    "facet": "S_coverage",
-   "weight": 0.0071,
+   "weight": 0.007,
    "source": "PFF"
   },
   {
    "facet": "CB_qb_rating_against",
-   "weight": 0.0071,
+   "weight": 0.007,
    "source": "PFF"
   },
   {
@@ -608,12 +608,12 @@
   },
   {
    "facet": "TE_positive_epa_pct",
-   "weight": 0.007,
+   "weight": 0.0069,
    "source": "PFF"
   },
   {
    "facet": "DI_sacks",
-   "weight": 0.0068,
+   "weight": 0.0069,
    "source": "PFF"
   },
   {
@@ -628,7 +628,7 @@
   },
   {
    "facet": "WR_touchdowns",
-   "weight": 0.0067,
+   "weight": 0.0066,
    "source": "PFF"
   },
   {
@@ -658,7 +658,7 @@
   },
   {
    "facet": "cfbd_recv_wr",
-   "weight": 0.0048,
+   "weight": 0.0049,
    "source": "CFBD"
   },
   {
@@ -693,7 +693,7 @@
   },
   {
    "facet": "TE_pass_block",
-   "weight": 0.0039,
+   "weight": 0.004,
    "source": "PFF"
   },
   {
@@ -713,7 +713,7 @@
   },
   {
    "facet": "cfbd_recv_te",
-   "weight": 0.0029,
+   "weight": 0.0028,
    "source": "CFBD"
   },
   {
@@ -723,7 +723,7 @@
   },
   {
    "facet": "WR_drop_rate",
-   "weight": 0.0005,
+   "weight": 0.0006,
    "source": "PFF"
   },
   {

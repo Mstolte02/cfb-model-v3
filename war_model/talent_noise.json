@@ -1,8 +1,8 @@
 {
- "talent_noise_sd": 0.497278813183821,
+ "talent_noise_sd": 0.5256991530088732,
  "n_teams": 136,
- "corr_proj_obs": 0.8675907917667697,
- "r_obs_wins": 0.49533042689578616,
- "r_proj_wins": 0.5536184428060814,
+ "corr_proj_obs": 0.8506705593387802,
+ "r_obs_wins": 0.4935721777250814,
+ "r_proj_wins": 0.5599987639864058,
  "per_team_spread_validated": false
 }

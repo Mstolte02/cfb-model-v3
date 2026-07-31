@@ -85,9 +85,43 @@ def unified_facets():
     pk = (p.dropna(subset=["grp"]).drop_duplicates(["season", "team", "key", "grp"])
            [["season", "team", "key", "grp", "uid"]].rename(columns={"uid": "pff_uid"}))
     c = c.merge(pk, on=["season", "team", "key", "grp"], how="left")
+
+    # SECOND PASS, because requiring the groups to agree was too strict and it split
+    # 3,260 player-seasons across two identities - one PFF row with the snaps and one
+    # synthetic cfbd: row with none. The two sources disagree about position far more
+    # often than they disagree about who the player is, and by far the commonest case
+    # (1,559 of those splits) is the edge rusher: PFF says ED, CFBD says LB. Colin
+    # Simmons and Dylan Stewart both existed twice, and the 2026 roster join then
+    # matched the empty half and called them players with no FBS history.
+    #
+    # So a mismatched pair may still merge when BOTH hold: the two groups are ones a
+    # single player can plausibly be labelled with, and there is exactly ONE PFF player
+    # of that name on that team that season. The uniqueness test is what keeps the
+    # Anthony Garcia case dead - two players, one name, one team, one season - and the
+    # adjacency list keeps it dead twice over, since QB and WR are not adjacent.
+    ADJACENT = {frozenset(x) for x in [
+        ("DL", "LB"),    # edge rusher: 3-4 outside backer or 4-3 end, same player
+        ("LB", "DB"),    # nickel, rover, hybrid safety
+        ("TE", "WR"),    # flex tight end split out wide
+        ("RB", "TE"),    # H-back and fullback
+        ("RB", "WR"),    # slot back
+    ]}
+    solo = p.dropna(subset=["grp"]).drop_duplicates(["season", "team", "key", "grp"])
+    n_named = solo.groupby(["season", "team", "key"]).uid.transform("size")
+    solo = (solo[n_named == 1][["season", "team", "key", "grp", "uid"]]
+            .rename(columns={"uid": "alt_uid", "grp": "alt_grp"}))
+    c = c.merge(solo, on=["season", "team", "key"], how="left")
+    adj = [frozenset((a, b)) in ADJACENT
+           for a, b in zip(c.grp.fillna(""), c.alt_grp.fillna(""))]
+    take = c.pff_uid.isna() & c.alt_uid.notna() & pd.Series(adj, index=c.index)
+    n_exact = int(c.pff_uid.notna().sum())
+    c.loc[take, "pff_uid"] = c.loc[take, "alt_uid"]
+    c = c.drop(columns=["alt_uid", "alt_grp"])
+
     c["uid"] = c.pff_uid.fillna("cfbd:" + c.player_id.astype(str))
     print(f"CFBD rows inheriting a PFF player id: {c.pff_uid.notna().mean()*100:.1f}% "
-          f"({int(c.pff_uid.notna().sum())} of {len(c)})")
+          f"({int(c.pff_uid.notna().sum())} of {len(c)})   "
+          f"exact group {n_exact}, adjacent group {int(take.sum())}")
 
     cols = ["season", "uid", "player", "position", "team", "facet", "snaps", "z", "value", "source"]
     out = pd.concat([p[cols], c[cols]], ignore_index=True)
@@ -125,6 +159,22 @@ def unified_facets():
     keep = set(zip(recs.season, recs.team))
     out = out[[(s, t) in keep for s, t in zip(out.season, out.team)]]
     return out.reset_index(drop=True)
+
+
+def snap_denominated_facets():
+    """Facets whose denominator is a real snap count rather than a rate denominator.
+
+    Detected from the denominator column name, so it stays correct if the catalogue is
+    regenerated with new measurements: PFF names true snap counts *_snap_counts_* and
+    pass__passing_snaps, while attempts / dropbacks / targets / routes / touches are
+    all subsets of a player's snaps.
+    """
+    is_snaps = lambda d: bool(d) and ("snap_counts" in d or d.endswith("passing_snaps"))
+    source = os.environ.get("WAR_FEATURES", "candidates").lower()
+    if source == "candidates" and os.path.exists(f"{HERE}/candidate_catalogue.json"):
+        cat = json.load(open(f"{HERE}/candidate_catalogue.json"))["catalogue"]
+        return {c["name"] for c in cat if is_snaps(c.get("denominator"))}
+    return {name for name, (_, snap_col, _, _) in FACETS.items() if is_snaps(snap_col)}
 
 
 def main():
@@ -372,9 +422,27 @@ def main():
     # play count on a different denominator - targets rather than routes, team plays
     # rather than individual snaps - so adding the two together would produce a number
     # that is not a snap count of anything.
-    pff_snaps = (fv[fv.source == "pff"].groupby(key, as_index=False).snaps.sum())
-    war = war.merge(pff_snaps, on=key, how="left")
-    war["snaps"] = war.snaps.fillna(0.0)
+    #
+    # AND THEY ARE A MAX, NOT A SUM. Summing was the obvious thing and it is wrong: the
+    # facet-level column is each facet's own DENOMINATOR, and a facet's denominator is
+    # whatever that measurement divides by - attempts, dropbacks, targets, routes,
+    # touches, or a snap count. A quarterback is covered by thirteen facets, so summing
+    # counted his season eight or nine times over and reported Julian Sayin with 4,454
+    # snaps in 2025 against a real 715. It scaled with how many facets happen to cover a
+    # position, which is a property of the catalogue and not of the player.
+    #
+    # The max over the facets that are denominated by an ACTUAL snap count is the
+    # player's snap count, because every other denominator is a subset of his snaps.
+    # 92% of player-seasons have at least one such facet; the rest fall back to the max
+    # over all of them, which is a floor rather than a fiction.
+    snapish = snap_denominated_facets()
+    pff = fv[fv.source == "pff"]
+    real = (pff[pff.facet.isin(snapish)].groupby(key, as_index=False).snaps.max())
+    anyv = (pff.groupby(key, as_index=False).snaps.max()
+               .rename(columns={"snaps": "snaps_any"}))
+    war = war.merge(real, on=key, how="left").merge(anyv, on=key, how="left")
+    war["snaps"] = war.snaps.fillna(war.snaps_any).fillna(0.0)
+    war = war.drop(columns=["snaps_any"])
     # the downstream stages key on player_id
     war = war.rename(columns={"uid": "player_id"})
 
