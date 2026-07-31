@@ -1,0 +1,20 @@
+{
+ "concept_weights": {
+  "run_defense": 0.14778,
+  "passing": 0.13904,
+  "rushing": 0.11007,
+  "run_blocking": 0.10873,
+  "pass_rush": 0.0795,
+  "receiving": 0.07865,
+  "qb_pressure": 0.0765,
+  "coverage": 0.07319,
+  "qb_rushing": 0.07218,
+  "discipline": 0.04845,
+  "pass_protection": 0.03277,
+  "yac": 0.02297,
+  "ball_security": 0.00809,
+  "hands": 0.00207,
+  "tackling": 1e-05
+ },
+ "lam": 100
+}

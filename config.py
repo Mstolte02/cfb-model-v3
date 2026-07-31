@@ -126,7 +126,7 @@ TALENT_BLEND = 0.5  # weight on PFF roster-aware (1-w on CFBD)
 
 # --- v3: player WAR as a third talent axis -------------------------------------
 # talent = (1-WAR_BLEND) * (TALENT_BLEND mix of PFF/CFBD) + WAR_BLEND * WAR, where
-# WAR is the summed prior-year WAR of this year's roster from ~/Downloads/rb-win-model
+# WAR is the summed prior-year WAR of this year's roster from war_model/
 # (PFF grades + CFBD PPA -> Massey -> wins above replacement).
 #
 # WAR does NOT beat the PFF grade signal as a replacement - swapped in for it, LOSO

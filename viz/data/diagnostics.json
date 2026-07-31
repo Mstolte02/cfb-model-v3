@@ -23,19 +23,19 @@
   "corr": {
    "O": {
     "O": 1.0,
-    "D": 0.773,
+    "D": 0.769,
     "fp_margin": 0.0,
     "pythag": 0.0,
     "talent": 0.0,
-    "returning": 0.114
+    "returning": 0.112
    },
    "D": {
-    "O": 0.773,
+    "O": 0.769,
     "D": 1.0,
     "fp_margin": 0.0,
     "pythag": 0.0,
     "talent": 0.0,
-    "returning": 0.133
+    "returning": 0.131
    },
    "fp_margin": {
     "O": 0.0,
@@ -62,8 +62,8 @@
     "returning": 0.0
    },
    "returning": {
-    "O": 0.114,
-    "D": 0.133,
+    "O": 0.112,
+    "D": 0.131,
     "fp_margin": 0.0,
     "pythag": 0.0,
     "talent": 0.0,
@@ -71,8 +71,8 @@
    }
   },
   "vif": {
-   "O": 2.48,
-   "D": 2.49,
+   "O": 2.45,
+   "D": 2.46,
    "fp_margin": null,
    "pythag": null,
    "talent": null,
@@ -96,16 +96,16 @@
    "PFF": {
     "PFF": 1.0,
     "CFBD": 0.539,
-    "WAR": 0.728
+    "WAR": 0.716
    },
    "CFBD": {
     "PFF": 0.539,
     "CFBD": 1.0,
-    "WAR": 0.643
+    "WAR": 0.625
    },
    "WAR": {
-    "PFF": 0.728,
-    "CFBD": 0.643,
+    "PFF": 0.716,
+    "CFBD": 0.625,
     "WAR": 1.0
    }
   },
@@ -118,27 +118,27 @@
    },
    {
     "season": 2022,
-    "PFF_WAR": 0.787,
+    "PFF_WAR": 0.771,
     "PFF_CFBD": 0.601,
-    "WAR_CFBD": 0.678
+    "WAR_CFBD": 0.665
    },
    {
     "season": 2023,
-    "PFF_WAR": 0.712,
+    "PFF_WAR": 0.699,
     "PFF_CFBD": 0.585,
-    "WAR_CFBD": 0.687
+    "WAR_CFBD": 0.669
    },
    {
     "season": 2024,
-    "PFF_WAR": 0.621,
+    "PFF_WAR": 0.618,
     "PFF_CFBD": 0.508,
-    "WAR_CFBD": 0.59
+    "WAR_CFBD": 0.575
    },
    {
     "season": 2025,
-    "PFF_WAR": 0.715,
+    "PFF_WAR": 0.697,
     "PFF_CFBD": 0.467,
-    "WAR_CFBD": 0.649
+    "WAR_CFBD": 0.619
    }
   ],
   "weights": {
@@ -149,67 +149,67 @@
  },
  "coefficients": {
   "logistic": {
-   "O": 0.8738,
-   "D": 0.6881,
+   "O": 0.8768,
+   "D": 0.692,
    "fp_margin": 0.0,
    "pythag": 0.0,
    "talent": 0.0,
-   "returning": 0.1287
+   "returning": 0.1315
   },
-  "logistic_hfa": 0.2636,
+  "logistic_hfa": 0.2638,
   "margin": {
-   "O": 9.2059,
-   "D": 7.7799,
+   "O": 9.2192,
+   "D": 7.8502,
    "fp_margin": 0.0,
    "pythag": 0.0,
    "talent": 0.0,
-   "returning": 0.8745
+   "returning": 0.9039
   },
-  "margin_hfa": 2.5854,
-  "margin_sigma": 17.328,
+  "margin_hfa": 2.5682,
+  "margin_sigma": 17.354,
   "ensemble_w": 0.4
  },
  "evaluation": {
   "loso": {
-   "brier": 0.2034,
-   "log_loss": 0.5901,
-   "accuracy": 0.678
+   "brier": 0.2037,
+   "log_loss": 0.591,
+   "accuracy": 0.676
   },
   "per_season": [
    {
     "season": 2021,
     "n": 700,
     "brier": 0.2121,
-    "log_loss": 0.6123,
+    "log_loss": 0.6121,
     "accuracy": 0.66
    },
    {
     "season": 2022,
     "n": 724,
-    "brier": 0.2008,
-    "log_loss": 0.5851,
-    "accuracy": 0.6796
+    "brier": 0.2027,
+    "log_loss": 0.5899,
+    "accuracy": 0.674
    },
    {
     "season": 2023,
     "n": 729,
-    "brier": 0.196,
-    "log_loss": 0.572,
+    "brier": 0.1955,
+    "log_loss": 0.571,
     "accuracy": 0.6968
    },
    {
     "season": 2024,
     "n": 741,
-    "brier": 0.2078,
-    "log_loss": 0.5983,
-    "accuracy": 0.6707
+    "brier": 0.2074,
+    "log_loss": 0.5979,
+    "accuracy": 0.6721
    },
    {
     "season": 2025,
     "n": 719,
-    "brier": 0.2001,
-    "log_loss": 0.5827,
-    "accuracy": 0.6829
+    "brier": 0.2008,
+    "log_loss": 0.584,
+    "accuracy": 0.6773
    }
   ],
   "baselines": {
@@ -220,554 +220,529 @@
    {
     "lo": 0.0,
     "hi": 0.1,
-    "pred": 0.0738,
-    "actual": 0.125,
-    "n": 24
+    "pred": 0.0741,
+    "actual": 0.1304,
+    "n": 23
    },
    {
     "lo": 0.1,
     "hi": 0.2,
-    "pred": 0.156,
-    "actual": 0.1222,
-    "n": 90
+    "pred": 0.153,
+    "actual": 0.1176,
+    "n": 85
    },
    {
     "lo": 0.2,
     "hi": 0.3,
-    "pred": 0.2553,
-    "actual": 0.2543,
-    "n": 232
+    "pred": 0.256,
+    "actual": 0.251,
+    "n": 247
    },
    {
     "lo": 0.3,
     "hi": 0.4,
-    "pred": 0.3542,
-    "actual": 0.3726,
-    "n": 365
+    "pred": 0.3525,
+    "actual": 0.3743,
+    "n": 334
    },
    {
     "lo": 0.4,
     "hi": 0.5,
-    "pred": 0.4543,
-    "actual": 0.4506,
-    "n": 506
+    "pred": 0.4545,
+    "actual": 0.4566,
+    "n": 541
    },
    {
     "lo": 0.5,
     "hi": 0.6,
-    "pred": 0.5516,
-    "actual": 0.5714,
-    "n": 672
+    "pred": 0.5518,
+    "actual": 0.5767,
+    "n": 652
    },
    {
     "lo": 0.6,
     "hi": 0.7,
     "pred": 0.6502,
-    "actual": 0.6073,
-    "n": 634
+    "actual": 0.5963,
+    "n": 644
    },
    {
     "lo": 0.7,
     "hi": 0.8,
-    "pred": 0.7481,
-    "actual": 0.767,
-    "n": 515
+    "pred": 0.7474,
+    "actual": 0.778,
+    "n": 518
    },
    {
     "lo": 0.8,
     "hi": 0.9,
-    "pred": 0.8484,
-    "actual": 0.8468,
-    "n": 385
+    "pred": 0.8476,
+    "actual": 0.8351,
+    "n": 370
    },
    {
     "lo": 0.9,
     "hi": 1.0,
-    "pred": 0.935,
-    "actual": 0.9474,
-    "n": 190
+    "pred": 0.9332,
+    "actual": 0.9447,
+    "n": 199
    }
   ],
   "home_win_rate": 0.5832
  },
  "war_facets": [
   {
-   "facet": "DI_run",
-   "weight": 0.0474,
-   "source": "PFF"
-  },
-  {
-   "facet": "ED_run",
-   "weight": 0.04,
-   "source": "PFF"
-  },
-  {
-   "facet": "CB_coverage",
-   "weight": 0.0383,
-   "source": "PFF"
-  },
-  {
-   "facet": "LB_run",
-   "weight": 0.0377,
-   "source": "PFF"
-  },
-  {
    "facet": "OL_run_block",
-   "weight": 0.0346,
-   "source": "PFF"
-  },
-  {
-   "facet": "CB-S_run",
-   "weight": 0.0282,
-   "source": "PFF"
-  },
-  {
-   "facet": "QB_twp_rate",
-   "weight": 0.0278,
-   "source": "PFF"
-  },
-  {
-   "facet": "cfbd_recv_te",
-   "weight": 0.027,
-   "source": "CFBD"
-  },
-  {
-   "facet": "WR_yards_after_catch",
-   "weight": 0.0253,
-   "source": "PFF"
-  },
-  {
-   "facet": "RB_run",
-   "weight": 0.0246,
-   "source": "PFF"
-  },
-  {
-   "facet": "RB_ypa",
-   "weight": 0.0243,
-   "source": "PFF"
-  },
-  {
-   "facet": "ED_total_pressures",
-   "weight": 0.0242,
-   "source": "PFF"
-  },
-  {
-   "facet": "ED_hurries",
-   "weight": 0.0216,
-   "source": "PFF"
-  },
-  {
-   "facet": "QB_positive_epa_pct",
-   "weight": 0.0216,
-   "source": "PFF"
-  },
-  {
-   "facet": "LB_pass_rush",
-   "weight": 0.0215,
-   "source": "PFF"
-  },
-  {
-   "facet": "CB_qb_rating_against",
-   "weight": 0.0212,
-   "source": "PFF"
-  },
-  {
-   "facet": "TE_run_block",
-   "weight": 0.0208,
-   "source": "PFF"
-  },
-  {
-   "facet": "S_coverage",
-   "weight": 0.0208,
-   "source": "PFF"
-  },
-  {
-   "facet": "S_yards",
-   "weight": 0.0204,
-   "source": "PFF"
-  },
-  {
-   "facet": "LB_coverage",
-   "weight": 0.0193,
-   "source": "PFF"
-  },
-  {
-   "facet": "TE_targeted_qb_rating",
-   "weight": 0.0184,
-   "source": "PFF"
-  },
-  {
-   "facet": "cfbd_recv_rb",
-   "weight": 0.0178,
-   "source": "CFBD"
-  },
-  {
-   "facet": "cfbd_run_qb",
-   "weight": 0.0178,
-   "source": "CFBD"
-  },
-  {
-   "facet": "QB_sack_pct",
-   "weight": 0.0176,
-   "source": "PFF"
-  },
-  {
-   "facet": "RB_run_block",
-   "weight": 0.0168,
-   "source": "PFF"
-  },
-  {
-   "facet": "CB_yards",
-   "weight": 0.0167,
-   "source": "PFF"
-  },
-  {
-   "facet": "QB_qb_rating",
-   "weight": 0.0165,
-   "source": "PFF"
-  },
-  {
-   "facet": "CB-S_interceptions",
-   "weight": 0.0157,
-   "source": "PFF"
-  },
-  {
-   "facet": "DI_pass_rush",
-   "weight": 0.0156,
-   "source": "PFF"
-  },
-  {
-   "facet": "ED_pass_rush",
-   "weight": 0.0154,
-   "source": "PFF"
-  },
-  {
-   "facet": "QB_accuracy_pct",
-   "weight": 0.0153,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_positive_epa_pct",
-   "weight": 0.0146,
-   "source": "PFF"
-  },
-  {
-   "facet": "QB_ypa",
-   "weight": 0.0145,
-   "source": "PFF"
-  },
-  {
-   "facet": "QB-RB-TE-WR_offense_penalty",
-   "weight": 0.0137,
-   "source": "PFF"
-  },
-  {
-   "facet": "DI-ED_defense_penalty",
-   "weight": 0.0132,
-   "source": "PFF"
-  },
-  {
-   "facet": "QB_completion_pct",
-   "weight": 0.0127,
-   "source": "PFF"
-  },
-  {
-   "facet": "OL_penalties",
-   "weight": 0.0123,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_yprr",
-   "weight": 0.0115,
-   "source": "PFF"
-  },
-  {
-   "facet": "cfbd_pass_qb",
-   "weight": 0.0101,
-   "source": "CFBD"
-  },
-  {
-   "facet": "OL_sacks_allowed",
-   "weight": 0.0101,
-   "source": "PFF"
-  },
-  {
-   "facet": "cfbd_run_rb",
-   "weight": 0.01,
-   "source": "CFBD"
-  },
-  {
-   "facet": "QB_run",
-   "weight": 0.0099,
-   "source": "PFF"
-  },
-  {
-   "facet": "cfbd_havoc_lb",
-   "weight": 0.0098,
-   "source": "CFBD"
-  },
-  {
-   "facet": "WR_targeted_qb_rating",
-   "weight": 0.0096,
-   "source": "PFF"
-  },
-  {
-   "facet": "QB_pressure_to_sack_rate",
-   "weight": 0.0095,
-   "source": "PFF"
-  },
-  {
-   "facet": "OL_pass_block",
-   "weight": 0.0089,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_yards_per_reception",
-   "weight": 0.0089,
-   "source": "PFF"
-  },
-  {
-   "facet": "QB_pass",
-   "weight": 0.0086,
-   "source": "PFF"
-  },
-  {
-   "facet": "ED_sacks",
-   "weight": 0.0081,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_offense",
-   "weight": 0.0077,
-   "source": "PFF"
-  },
-  {
-   "facet": "RB_yco_attempt",
-   "weight": 0.0063,
-   "source": "PFF"
-  },
-  {
-   "facet": "CB_yards_after_catch",
-   "weight": 0.0058,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_caught_pct",
-   "weight": 0.0057,
-   "source": "PFF"
-  },
-  {
-   "facet": "S_catch_rate",
-   "weight": 0.0054,
-   "source": "PFF"
-  },
-  {
-   "facet": "OL_pressures_allowed",
-   "weight": 0.0053,
-   "source": "PFF"
-  },
-  {
-   "facet": "cfbd_havoc_db",
-   "weight": 0.0051,
-   "source": "CFBD"
-  },
-  {
-   "facet": "RB_elusive_rating",
-   "weight": 0.0041,
-   "source": "PFF"
-  },
-  {
-   "facet": "RB_hands_fumble",
-   "weight": 0.0039,
-   "source": "PFF"
-  },
-  {
-   "facet": "DI-ED_tackle",
-   "weight": 0.0039,
-   "source": "PFF"
-  },
-  {
-   "facet": "TE_yprr",
-   "weight": 0.0037,
-   "source": "PFF"
-  },
-  {
-   "facet": "DI_sacks",
-   "weight": 0.0037,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_pass_route",
-   "weight": 0.0033,
-   "source": "PFF"
-  },
-  {
-   "facet": "DI_total_pressures",
-   "weight": 0.003,
-   "source": "PFF"
-  },
-  {
-   "facet": "CB-LB-S_defense_penalty",
-   "weight": 0.0022,
-   "source": "PFF"
-  },
-  {
-   "facet": "CB-S_pass_rush",
-   "weight": 0.0015,
-   "source": "PFF"
-  },
-  {
-   "facet": "QB_btt_rate",
-   "weight": 0.0014,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_avoided_tackles",
-   "weight": 0.001,
-   "source": "PFF"
-  },
-  {
-   "facet": "RB_yards_after_catch",
-   "weight": 0.0005,
-   "source": "PFF"
-  },
-  {
-   "facet": "LB_tackle",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "LB_tackles",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "ED_qb_rating_against",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "CB_catch_rate",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "CB-S_missed_tackle_rate",
-   "weight": 0.0,
+   "weight": 0.0431,
    "source": "PFF"
   },
   {
    "facet": "DI_stops",
-   "weight": 0.0,
+   "weight": 0.0356,
    "source": "PFF"
   },
   {
-   "facet": "CB_pass_break_ups",
-   "weight": 0.0,
+   "facet": "DI_run",
+   "weight": 0.0352,
    "source": "PFF"
   },
   {
-   "facet": "CB-S_tackle",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "LB_missed_tackle_rate",
-   "weight": 0.0,
+   "facet": "TE_run_block",
+   "weight": 0.0341,
    "source": "PFF"
   },
   {
    "facet": "LB_stops",
-   "weight": 0.0,
+   "weight": 0.0306,
    "source": "PFF"
   },
   {
-   "facet": "RB_pass_route",
-   "weight": 0.0,
+   "facet": "ED_run",
+   "weight": 0.0291,
    "source": "PFF"
   },
   {
-   "facet": "RB_breakaway_pct",
-   "weight": 0.0,
+   "facet": "LB_run",
+   "weight": 0.0284,
    "source": "PFF"
   },
   {
-   "facet": "QB_hands_fumble",
-   "weight": 0.0,
+   "facet": "QB_run",
+   "weight": 0.0244,
    "source": "PFF"
   },
   {
-   "facet": "TE_first_downs",
-   "weight": 0.0,
+   "facet": "RB_run_block",
+   "weight": 0.0226,
    "source": "PFF"
   },
   {
-   "facet": "TE_pass_route",
-   "weight": 0.0,
+   "facet": "DI-ED_defense_penalty",
+   "weight": 0.0211,
    "source": "PFF"
   },
   {
-   "facet": "TE_pass_block",
-   "weight": 0.0,
+   "facet": "OL_penalties",
+   "weight": 0.0203,
    "source": "PFF"
   },
   {
-   "facet": "TE_hands_drop",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_first_downs",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "TE_yards_after_catch",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "TE_positive_epa_pct",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_avg_depth_of_target",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_hands_drop",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_contested_catch_rate",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_drop_rate",
-   "weight": 0.0,
-   "source": "PFF"
-  },
-  {
-   "facet": "WR_touchdowns",
-   "weight": 0.0,
+   "facet": "QB_sack_pct",
+   "weight": 0.0198,
    "source": "PFF"
   },
   {
    "facet": "cfbd_cov_db",
-   "weight": 0.0,
+   "weight": 0.019,
    "source": "CFBD"
   },
   {
+   "facet": "cfbd_havoc_db",
+   "weight": 0.0189,
+   "source": "CFBD"
+  },
+  {
+   "facet": "QB_pressure_to_sack_rate",
+   "weight": 0.0172,
+   "source": "PFF"
+  },
+  {
+   "facet": "RB_elusive_rating",
+   "weight": 0.0159,
+   "source": "PFF"
+  },
+  {
+   "facet": "CB-S_run",
+   "weight": 0.0147,
+   "source": "PFF"
+  },
+  {
    "facet": "cfbd_havoc_dl",
-   "weight": 0.0,
+   "weight": 0.0139,
+   "source": "CFBD"
+  },
+  {
+   "facet": "cfbd_run_qb",
+   "weight": 0.0133,
+   "source": "CFBD"
+  },
+  {
+   "facet": "ED_pass_rush",
+   "weight": 0.0128,
+   "source": "PFF"
+  },
+  {
+   "facet": "ED_total_pressures",
+   "weight": 0.0125,
+   "source": "PFF"
+  },
+  {
+   "facet": "QB_accuracy_pct",
+   "weight": 0.0125,
+   "source": "PFF"
+  },
+  {
+   "facet": "QB_completion_pct",
+   "weight": 0.0124,
+   "source": "PFF"
+  },
+  {
+   "facet": "cfbd_havoc_lb",
+   "weight": 0.0124,
+   "source": "CFBD"
+  },
+  {
+   "facet": "QB_ypa",
+   "weight": 0.0124,
+   "source": "PFF"
+  },
+  {
+   "facet": "DI_total_pressures",
+   "weight": 0.0122,
+   "source": "PFF"
+  },
+  {
+   "facet": "RB_ypa",
+   "weight": 0.0121,
+   "source": "PFF"
+  },
+  {
+   "facet": "QB_qb_rating",
+   "weight": 0.0119,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_avg_depth_of_target",
+   "weight": 0.0118,
+   "source": "PFF"
+  },
+  {
+   "facet": "RB_run",
+   "weight": 0.0118,
+   "source": "PFF"
+  },
+  {
+   "facet": "CB_catch_rate",
+   "weight": 0.0117,
+   "source": "PFF"
+  },
+  {
+   "facet": "RB_yco_attempt",
+   "weight": 0.0115,
+   "source": "PFF"
+  },
+  {
+   "facet": "DI_pass_rush",
+   "weight": 0.0114,
+   "source": "PFF"
+  },
+  {
+   "facet": "RB_breakaway_pct",
+   "weight": 0.0109,
+   "source": "PFF"
+  },
+  {
+   "facet": "ED_hurries",
+   "weight": 0.0106,
+   "source": "PFF"
+  },
+  {
+   "facet": "CB_coverage",
+   "weight": 0.0103,
+   "source": "PFF"
+  },
+  {
+   "facet": "QB_positive_epa_pct",
+   "weight": 0.0103,
+   "source": "PFF"
+  },
+  {
+   "facet": "CB-LB-S_defense_penalty",
+   "weight": 0.0102,
+   "source": "PFF"
+  },
+  {
+   "facet": "QB_btt_rate",
+   "weight": 0.0099,
+   "source": "PFF"
+  },
+  {
+   "facet": "OL_pass_block",
+   "weight": 0.0099,
+   "source": "PFF"
+  },
+  {
+   "facet": "OL_pressures_allowed",
+   "weight": 0.0092,
+   "source": "PFF"
+  },
+  {
+   "facet": "S_catch_rate",
+   "weight": 0.0092,
+   "source": "PFF"
+  },
+  {
+   "facet": "QB_twp_rate",
+   "weight": 0.0089,
+   "source": "PFF"
+  },
+  {
+   "facet": "ED_sacks",
+   "weight": 0.0089,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_offense",
+   "weight": 0.0089,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_pass_route",
+   "weight": 0.0088,
+   "source": "PFF"
+  },
+  {
+   "facet": "cfbd_run_rb",
+   "weight": 0.0088,
+   "source": "CFBD"
+  },
+  {
+   "facet": "CB_yards_after_catch",
+   "weight": 0.0087,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_yprr",
+   "weight": 0.0086,
+   "source": "PFF"
+  },
+  {
+   "facet": "QB-RB-TE-WR_offense_penalty",
+   "weight": 0.0085,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_yards_per_reception",
+   "weight": 0.0085,
+   "source": "PFF"
+  },
+  {
+   "facet": "TE_yprr",
+   "weight": 0.0084,
+   "source": "PFF"
+  },
+  {
+   "facet": "QB_pass",
+   "weight": 0.0082,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_caught_pct",
+   "weight": 0.008,
+   "source": "PFF"
+  },
+  {
+   "facet": "LB_coverage",
+   "weight": 0.0079,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_yards_after_catch",
+   "weight": 0.0078,
+   "source": "PFF"
+  },
+  {
+   "facet": "TE_pass_route",
+   "weight": 0.0074,
+   "source": "PFF"
+  },
+  {
+   "facet": "cfbd_pass_qb",
+   "weight": 0.0074,
+   "source": "CFBD"
+  },
+  {
+   "facet": "TE_yards_after_catch",
+   "weight": 0.0072,
+   "source": "PFF"
+  },
+  {
+   "facet": "S_coverage",
+   "weight": 0.0071,
+   "source": "PFF"
+  },
+  {
+   "facet": "CB_qb_rating_against",
+   "weight": 0.0071,
+   "source": "PFF"
+  },
+  {
+   "facet": "CB_yards",
+   "weight": 0.007,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_avoided_tackles",
+   "weight": 0.007,
+   "source": "PFF"
+  },
+  {
+   "facet": "TE_positive_epa_pct",
+   "weight": 0.007,
+   "source": "PFF"
+  },
+  {
+   "facet": "DI_sacks",
+   "weight": 0.0068,
+   "source": "PFF"
+  },
+  {
+   "facet": "LB_pass_rush",
+   "weight": 0.0067,
+   "source": "PFF"
+  },
+  {
+   "facet": "S_yards",
+   "weight": 0.0067,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_touchdowns",
+   "weight": 0.0067,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_first_downs",
+   "weight": 0.0064,
+   "source": "PFF"
+  },
+  {
+   "facet": "CB-S_interceptions",
+   "weight": 0.0061,
+   "source": "PFF"
+  },
+  {
+   "facet": "TE_first_downs",
+   "weight": 0.0054,
+   "source": "PFF"
+  },
+  {
+   "facet": "CB-S_pass_rush",
+   "weight": 0.0054,
+   "source": "PFF"
+  },
+  {
+   "facet": "cfbd_recv_rb",
+   "weight": 0.005,
    "source": "CFBD"
   },
   {
    "facet": "cfbd_recv_wr",
+   "weight": 0.0048,
+   "source": "CFBD"
+  },
+  {
+   "facet": "RB_pass_route",
+   "weight": 0.0047,
+   "source": "PFF"
+  },
+  {
+   "facet": "TE_targeted_qb_rating",
+   "weight": 0.0047,
+   "source": "PFF"
+  },
+  {
+   "facet": "CB_pass_break_ups",
+   "weight": 0.0044,
+   "source": "PFF"
+  },
+  {
+   "facet": "RB_yards_after_catch",
+   "weight": 0.0043,
+   "source": "PFF"
+  },
+  {
+   "facet": "OL_sacks_allowed",
+   "weight": 0.0043,
+   "source": "PFF"
+  },
+  {
+   "facet": "ED_qb_rating_against",
+   "weight": 0.0042,
+   "source": "PFF"
+  },
+  {
+   "facet": "TE_pass_block",
+   "weight": 0.0039,
+   "source": "PFF"
+  },
+  {
+   "facet": "QB_hands_fumble",
+   "weight": 0.0034,
+   "source": "PFF"
+  },
+  {
+   "facet": "RB_hands_fumble",
+   "weight": 0.0033,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_targeted_qb_rating",
+   "weight": 0.0029,
+   "source": "PFF"
+  },
+  {
+   "facet": "cfbd_recv_te",
+   "weight": 0.0029,
+   "source": "CFBD"
+  },
+  {
+   "facet": "WR_positive_epa_pct",
+   "weight": 0.002,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_drop_rate",
+   "weight": 0.0005,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_hands_drop",
+   "weight": 0.0005,
+   "source": "PFF"
+  },
+  {
+   "facet": "TE_hands_drop",
+   "weight": 0.0004,
+   "source": "PFF"
+  },
+  {
+   "facet": "WR_contested_catch_rate",
+   "weight": 0.0004,
+   "source": "PFF"
+  },
+  {
+   "facet": "cfbd_tackle_lb",
    "weight": 0.0,
    "source": "CFBD"
   },
@@ -777,14 +752,39 @@
    "source": "CFBD"
   },
   {
-   "facet": "cfbd_tackle_lb",
+   "facet": "LB_tackles",
    "weight": 0.0,
-   "source": "CFBD"
+   "source": "PFF"
+  },
+  {
+   "facet": "LB_missed_tackle_rate",
+   "weight": 0.0,
+   "source": "PFF"
+  },
+  {
+   "facet": "LB_tackle",
+   "weight": 0.0,
+   "source": "PFF"
+  },
+  {
+   "facet": "CB-S_tackle",
+   "weight": 0.0,
+   "source": "PFF"
+  },
+  {
+   "facet": "CB-S_missed_tackle_rate",
+   "weight": 0.0,
+   "source": "PFF"
+  },
+  {
+   "facet": "DI-ED_tackle",
+   "weight": 0.0,
+   "source": "PFF"
   }
  ],
  "war_source_split": {
-  "CFBD": 0.098,
-  "PFF": 0.902
+  "CFBD": 0.106,
+  "PFF": 0.894
  },
  "talent_sweep": {
   "best": {

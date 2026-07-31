@@ -221,7 +221,7 @@ def main(n_sims=20000, seed=2026, variant=""):
     # Two different things can make a season turn out differently, and only one of
     # them was being simulated. Coin-flip games are one; the other is that the talent
     # estimate itself may be wrong, and for 2026 it is built from PROJECTED player WAR
-    # rather than an observed prior season. rb-win-model/uncertainty.talent_noise()
+    # rather than an observed prior season. war_model/uncertainty.talent_noise()
     # measures what that substitution costs by building 2025 talent both ways: the
     # residual is 0.505 sd, which is what gets drawn here.
     #

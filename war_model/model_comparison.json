@@ -1,0 +1,74 @@
+{
+ "rows": [
+  {
+   "model": "A current (hand-built facets)",
+   "features": 32.0,
+   "rmse": 0.16533,
+   "mae": 0.13378,
+   "r2": 0.2635,
+   "r": 0.51396,
+   "calib": 1.05226,
+   "seconds": 0.2,
+   "vs_benchmark": 0.0
+  },
+  {
+   "model": "B selected ridge",
+   "features": 34.55556,
+   "rmse": 0.16393,
+   "mae": 0.13247,
+   "r2": 0.27586,
+   "r": 0.52536,
+   "calib": 1.0232,
+   "seconds": 2.0,
+   "vs_benchmark": -0.00139
+  },
+  {
+   "model": "C PCA + ridge",
+   "features": 45.0,
+   "rmse": 0.16368,
+   "mae": 0.13203,
+   "r2": 0.2781,
+   "r": 0.52782,
+   "calib": 1.04392,
+   "seconds": 0.4,
+   "vs_benchmark": -0.00165
+  },
+  {
+   "model": "D interactions + ridge",
+   "features": 51.88889,
+   "rmse": 0.16509,
+   "mae": 0.13334,
+   "r2": 0.2656,
+   "r": 0.51544,
+   "calib": 0.98517,
+   "seconds": 4.1,
+   "vs_benchmark": -0.00024
+  },
+  {
+   "model": "E elastic net",
+   "features": 36.66667,
+   "rmse": 0.1652,
+   "mae": 0.13264,
+   "r2": 0.2646,
+   "r": 0.51445,
+   "calib": 1.01544,
+   "seconds": 3.0,
+   "vs_benchmark": -0.00012
+  },
+  {
+   "model": "F gradient boosting",
+   "features": 86.0,
+   "rmse": 0.17437,
+   "mae": 0.13962,
+   "r2": 0.1807,
+   "r": 0.44671,
+   "calib": 0.76516,
+   "seconds": 7.6,
+   "vs_benchmark": 0.00905
+  }
+ ],
+ "benchmark_rmse": 0.16532524481264466,
+ "n_candidates": 86,
+ "n_benchmark": 32,
+ "n_team_seasons": 1156
+}

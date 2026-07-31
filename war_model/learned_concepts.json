@@ -1,0 +1,657 @@
+{
+ "sweep": [
+  {
+   "k": 6,
+   "method": "correlation",
+   "ari_vs_hand": 0.21314,
+   "rmse_top6_groups": 0.16355,
+   "n_groups": 6
+  },
+  {
+   "k": 6,
+   "method": "factor",
+   "ari_vs_hand": 0.21056,
+   "rmse_top6_groups": 0.16355,
+   "n_groups": 6
+  },
+  {
+   "k": 8,
+   "method": "correlation",
+   "ari_vs_hand": 0.20595,
+   "rmse_top6_groups": 0.16335,
+   "n_groups": 8
+  },
+  {
+   "k": 8,
+   "method": "factor",
+   "ari_vs_hand": 0.24107,
+   "rmse_top6_groups": 0.16329,
+   "n_groups": 8
+  },
+  {
+   "k": 10,
+   "method": "correlation",
+   "ari_vs_hand": 0.21043,
+   "rmse_top6_groups": 0.16317,
+   "n_groups": 10
+  },
+  {
+   "k": 10,
+   "method": "factor",
+   "ari_vs_hand": 0.26523,
+   "rmse_top6_groups": 0.16343,
+   "n_groups": 10
+  },
+  {
+   "k": 12,
+   "method": "correlation",
+   "ari_vs_hand": 0.18681,
+   "rmse_top6_groups": 0.16319,
+   "n_groups": 12
+  },
+  {
+   "k": 12,
+   "method": "factor",
+   "ari_vs_hand": 0.28312,
+   "rmse_top6_groups": 0.16334,
+   "n_groups": 12
+  },
+  {
+   "k": 15,
+   "method": "correlation",
+   "ari_vs_hand": 0.22015,
+   "rmse_top6_groups": 0.16308,
+   "n_groups": 15
+  },
+  {
+   "k": 15,
+   "method": "factor",
+   "ari_vs_hand": 0.28077,
+   "rmse_top6_groups": 0.16363,
+   "n_groups": 14
+  },
+  {
+   "k": 20,
+   "method": "correlation",
+   "ari_vs_hand": 0.36679,
+   "rmse_top6_groups": 0.16383,
+   "n_groups": 20
+  },
+  {
+   "k": 20,
+   "method": "factor",
+   "ari_vs_hand": 0.30931,
+   "rmse_top6_groups": 0.16426,
+   "n_groups": 19
+  }
+ ],
+ "chosen": {
+  "method": "correlation",
+  "k": 15
+ },
+ "learned_groups": {
+  "corr_1": [
+   "CB-LB-S_defense_penalty",
+   "DI-ED_defense_penalty"
+  ],
+  "corr_13": [
+   "CB-S_interceptions",
+   "CB-S_missed_tackle_rate",
+   "CB-S_run",
+   "CB-S_tackle",
+   "CB_catch_rate",
+   "CB_coverage",
+   "CB_pass_break_ups",
+   "CB_qb_rating_against",
+   "CB_yards",
+   "CB_yards_after_catch",
+   "LB_coverage",
+   "LB_missed_tackle_rate",
+   "LB_pass_rush",
+   "LB_run",
+   "LB_stops",
+   "LB_tackle",
+   "LB_tackles",
+   "S_coverage"
+  ],
+  "corr_14": [
+   "CB-S_pass_rush"
+  ],
+  "corr_12": [
+   "DI-ED_tackle",
+   "DI_pass_rush",
+   "DI_run",
+   "DI_sacks",
+   "DI_stops",
+   "DI_total_pressures",
+   "ED_hurries",
+   "ED_pass_rush",
+   "ED_run",
+   "ED_sacks",
+   "ED_total_pressures"
+  ],
+  "corr_15": [
+   "ED_qb_rating_against"
+  ],
+  "corr_9": [
+   "OL_pass_block",
+   "OL_pressures_allowed",
+   "OL_run_block",
+   "OL_sacks_allowed",
+   "QB_accuracy_pct",
+   "QB_btt_rate",
+   "QB_completion_pct",
+   "QB_hands_fumble",
+   "QB_pass",
+   "QB_positive_epa_pct",
+   "QB_pressure_to_sack_rate",
+   "QB_qb_rating",
+   "QB_sack_pct",
+   "QB_twp_rate",
+   "QB_ypa",
+   "RB_breakaway_pct",
+   "RB_elusive_rating",
+   "RB_run",
+   "RB_yco_attempt",
+   "RB_ypa",
+   "TE_positive_epa_pct",
+   "WR_avg_depth_of_target",
+   "WR_avoided_tackles",
+   "WR_caught_pct",
+   "WR_contested_catch_rate",
+   "WR_drop_rate",
+   "WR_first_downs",
+   "WR_hands_drop",
+   "WR_offense",
+   "WR_pass_route",
+   "WR_positive_epa_pct",
+   "WR_targeted_qb_rating",
+   "WR_touchdowns",
+   "WR_yards_after_catch",
+   "WR_yards_per_reception",
+   "WR_yprr"
+  ],
+  "corr_2": [
+   "OL_penalties"
+  ],
+  "corr_3": [
+   "QB-RB-TE-WR_offense_penalty"
+  ],
+  "corr_4": [
+   "QB_run"
+  ],
+  "corr_10": [
+   "RB_hands_fumble"
+  ],
+  "corr_6": [
+   "RB_pass_route",
+   "RB_yards_after_catch"
+  ],
+  "corr_5": [
+   "RB_run_block"
+  ],
+  "corr_11": [
+   "S_catch_rate",
+   "S_yards"
+  ],
+  "corr_8": [
+   "TE_first_downs",
+   "TE_hands_drop",
+   "TE_pass_route",
+   "TE_targeted_qb_rating",
+   "TE_yards_after_catch",
+   "TE_yprr"
+  ],
+  "corr_7": [
+   "TE_pass_block",
+   "TE_run_block"
+  ]
+ },
+ "learned_labels": {
+  "corr_1": "[CB-LB-S, DI-ED] discipline 2",
+  "corr_13": "[LB, CB] coverage 9, tackling 5, run_defense 3, pass_rush 1",
+  "corr_14": "[CB-S] pass_rush 1",
+  "corr_12": "[DI, ED] pass_rush 7, run_defense 3, tackling 1",
+  "corr_15": "[ED] pass_rush 1",
+  "corr_9": "[WR, QB] receiving 12, passing 8, rushing 5, pass_protection 3, qb_pressure 2, yac 2, hands 2, run_blocking 1, ball_security 1",
+  "corr_2": "[OL] discipline 1",
+  "corr_3": "[QB-RB-TE-WR] discipline 1",
+  "corr_4": "[QB] qb_rushing 1",
+  "corr_10": "[RB] ball_security 1",
+  "corr_6": "[RB] receiving 1, yac 1",
+  "corr_5": "[RB] run_blocking 1",
+  "corr_11": "[S] coverage 2",
+  "corr_8": "[TE] receiving 4, hands 1, yac 1",
+  "corr_7": "[TE] pass_protection 1, run_blocking 1"
+ },
+ "learned_loco": [
+  {
+   "group": "corr_9",
+   "n": 36,
+   "rmse": 0.17194391305355886,
+   "delta": 0.008395070881871802,
+   "label": "[WR, QB] receiving 12, passing 8, rushing 5, pass_protection 3, qb_pressure 2, yac 2, hands 2, run_blocking 1, ball_security 1"
+  },
+  {
+   "group": "corr_13",
+   "n": 18,
+   "rmse": 0.1662339991302793,
+   "delta": 0.0026851569585922552,
+   "label": "[LB, CB] coverage 9, tackling 5, run_defense 3, pass_rush 1"
+  },
+  {
+   "group": "corr_12",
+   "n": 11,
+   "rmse": 0.16549647813089288,
+   "delta": 0.001947635959205829,
+   "label": "[DI, ED] pass_rush 7, run_defense 3, tackling 1"
+  },
+  {
+   "group": "corr_15",
+   "n": 1,
+   "rmse": 0.16392829053420965,
+   "delta": 0.0003794483625225997,
+   "label": "[ED] pass_rush 1"
+  },
+  {
+   "group": "corr_8",
+   "n": 6,
+   "rmse": 0.1636455663811134,
+   "delta": 9.672420942635762e-05,
+   "label": "[TE] receiving 4, hands 1, yac 1"
+  },
+  {
+   "group": "corr_7",
+   "n": 2,
+   "rmse": 0.16363534183053863,
+   "delta": 8.649965885157429e-05,
+   "label": "[TE] pass_protection 1, run_blocking 1"
+  },
+  {
+   "group": "corr_1",
+   "n": 2,
+   "rmse": 0.16359021874508128,
+   "delta": 4.137657339423062e-05,
+   "label": "[CB-LB-S, DI-ED] discipline 2"
+  },
+  {
+   "group": "corr_4",
+   "n": 1,
+   "rmse": 0.16358882376365216,
+   "delta": 3.998159196511031e-05,
+   "label": "[QB] qb_rushing 1"
+  },
+  {
+   "group": "corr_3",
+   "n": 1,
+   "rmse": 0.16358111430878694,
+   "delta": 3.2272137099886855e-05,
+   "label": "[QB-RB-TE-WR] discipline 1"
+  },
+  {
+   "group": "corr_5",
+   "n": 1,
+   "rmse": 0.16357714668973972,
+   "delta": 2.8304518052663097e-05,
+   "label": "[RB] run_blocking 1"
+  },
+  {
+   "group": "corr_10",
+   "n": 1,
+   "rmse": 0.16353703172559056,
+   "delta": -1.1810446096494065e-05,
+   "label": "[RB] ball_security 1"
+  },
+  {
+   "group": "corr_11",
+   "n": 2,
+   "rmse": 0.1635318310015918,
+   "delta": -1.7011170095254657e-05,
+   "label": "[S] coverage 2"
+  },
+  {
+   "group": "corr_14",
+   "n": 1,
+   "rmse": 0.16352285544789152,
+   "delta": -2.5986723795529132e-05,
+   "label": "[CB-S] pass_rush 1"
+  },
+  {
+   "group": "corr_2",
+   "n": 1,
+   "rmse": 0.1634992692402227,
+   "delta": -4.9572931464347825e-05,
+   "label": "[OL] discipline 1"
+  },
+  {
+   "group": "corr_6",
+   "n": 2,
+   "rmse": 0.16344499169109722,
+   "delta": -0.00010385048058983437,
+   "label": "[RB] receiving 1, yac 1"
+  }
+ ],
+ "learned_forward": [
+  {
+   "group": "corr_9",
+   "step": 1,
+   "rmse": 0.17267235340412967,
+   "gain": 0.019971001253043713,
+   "label": "[WR, QB] receiving 12, passing 8, rushing 5, pass_protection 3, qb_pressure 2, yac 2, hands 2, run_blocking 1, ball_security 1"
+  },
+  {
+   "group": "corr_13",
+   "step": 2,
+   "rmse": 0.16514296961842534,
+   "gain": 0.0075293837857043355,
+   "label": "[LB, CB] coverage 9, tackling 5, run_defense 3, pass_rush 1"
+  },
+  {
+   "group": "corr_12",
+   "step": 3,
+   "rmse": 0.16359123133792242,
+   "gain": 0.0015517382805029234,
+   "label": "[DI, ED] pass_rush 7, run_defense 3, tackling 1"
+  },
+  {
+   "group": "corr_15",
+   "step": 4,
+   "rmse": 0.16315727993630288,
+   "gain": 0.00043395140161953116,
+   "label": "[ED] pass_rush 1"
+  },
+  {
+   "group": "corr_3",
+   "step": 5,
+   "rmse": 0.16307837767864708,
+   "gain": 7.890225765580516e-05,
+   "label": "[QB-RB-TE-WR] discipline 1"
+  },
+  {
+   "group": "corr_5",
+   "step": 6,
+   "rmse": 0.16308371030067637,
+   "gain": -5.332622029285972e-06,
+   "label": "[RB] run_blocking 1"
+  },
+  {
+   "group": "corr_1",
+   "step": 7,
+   "rmse": 0.16310208877445034,
+   "gain": -1.8378473773977833e-05,
+   "label": "[CB-LB-S, DI-ED] discipline 2"
+  },
+  {
+   "group": "corr_8",
+   "step": 8,
+   "rmse": 0.1631178695507776,
+   "gain": -1.5780776327245505e-05,
+   "label": "[TE] receiving 4, hands 1, yac 1"
+  },
+  {
+   "group": "corr_7",
+   "step": 9,
+   "rmse": 0.16308875516553337,
+   "gain": 2.9114385244222163e-05,
+   "label": "[TE] pass_protection 1, run_blocking 1"
+  },
+  {
+   "group": "corr_4",
+   "step": 10,
+   "rmse": 0.16313141408799114,
+   "gain": -4.2658922457777804e-05,
+   "label": "[QB] qb_rushing 1"
+  },
+  {
+   "group": "corr_10",
+   "step": 11,
+   "rmse": 0.16320924672196432,
+   "gain": -7.783263397317941e-05,
+   "label": "[RB] ball_security 1"
+  },
+  {
+   "group": "corr_11",
+   "step": 12,
+   "rmse": 0.1632782139461447,
+   "gain": -6.896722418037182e-05,
+   "label": "[S] coverage 2"
+  },
+  {
+   "group": "corr_2",
+   "step": 13,
+   "rmse": 0.1633601336789023,
+   "gain": -8.191973275759046e-05,
+   "label": "[OL] discipline 1"
+  },
+  {
+   "group": "corr_14",
+   "step": 14,
+   "rmse": 0.16344499169109722,
+   "gain": -8.485801219493272e-05,
+   "label": "[CB-S] pass_rush 1"
+  },
+  {
+   "group": "corr_6",
+   "step": 15,
+   "rmse": 0.16354884217168705,
+   "gain": -0.00010385048058983437,
+   "label": "[RB] receiving 1, yac 1"
+  }
+ ],
+ "hand_loco": [
+  {
+   "group": "run_defense",
+   "n": 6,
+   "rmse": 0.16606376833316672,
+   "delta": 0.0025149261614796636,
+   "label": "[DI, LB] run_defense 6"
+  },
+  {
+   "group": "coverage",
+   "n": 11,
+   "rmse": 0.1648282381432088,
+   "delta": 0.0012793959715217407,
+   "label": "[CB, S] coverage 11"
+  },
+  {
+   "group": "run_blocking",
+   "n": 3,
+   "rmse": 0.16424120537521136,
+   "delta": 0.0006923632035243099,
+   "label": "[OL, TE] run_blocking 3"
+  },
+  {
+   "group": "rushing",
+   "n": 5,
+   "rmse": 0.16423009706266672,
+   "delta": 0.0006812548909796712,
+   "label": "[RB] rushing 5"
+  },
+  {
+   "group": "pass_rush",
+   "n": 10,
+   "rmse": 0.16415066790218968,
+   "delta": 0.0006018257305026309,
+   "label": "[ED, DI] pass_rush 10"
+  },
+  {
+   "group": "passing",
+   "n": 8,
+   "rmse": 0.16409768554589546,
+   "delta": 0.0005488433742084076,
+   "label": "[QB] passing 8"
+  },
+  {
+   "group": "yac",
+   "n": 4,
+   "rmse": 0.1639063946645315,
+   "delta": 0.0003575524928444429,
+   "label": "[WR, TE] yac 4"
+  },
+  {
+   "group": "receiving",
+   "n": 17,
+   "rmse": 0.16368445496679,
+   "delta": 0.0001356127951029351,
+   "label": "[WR, TE] receiving 17"
+  },
+  {
+   "group": "tackling",
+   "n": 6,
+   "rmse": 0.1635977712765363,
+   "delta": 4.892910484924351e-05,
+   "label": "[LB, CB-S] tackling 6"
+  },
+  {
+   "group": "qb_rushing",
+   "n": 1,
+   "rmse": 0.16358882376365216,
+   "delta": 3.998159196511031e-05,
+   "label": "[QB] qb_rushing 1"
+  },
+  {
+   "group": "qb_pressure",
+   "n": 2,
+   "rmse": 0.16355685575207,
+   "delta": 8.013580382937313e-06,
+   "label": "[QB] qb_pressure 2"
+  },
+  {
+   "group": "discipline",
+   "n": 4,
+   "rmse": 0.16353760282367766,
+   "delta": -1.12393480093953e-05,
+   "label": "[OL, DI-ED] discipline 4"
+  },
+  {
+   "group": "ball_security",
+   "n": 2,
+   "rmse": 0.16351098993776034,
+   "delta": -3.785223392671622e-05,
+   "label": "[QB, RB] ball_security 2"
+  },
+  {
+   "group": "hands",
+   "n": 3,
+   "rmse": 0.16348970331124232,
+   "delta": -5.91388604447296e-05,
+   "label": "[WR, TE] hands 3"
+  },
+  {
+   "group": "pass_protection",
+   "n": 4,
+   "rmse": 0.16342413774631492,
+   "delta": -0.00012470442537212967,
+   "label": "[OL, TE] pass_protection 4"
+  }
+ ],
+ "hand_forward": [
+  {
+   "group": "passing",
+   "step": 1,
+   "rmse": 0.17741347166568006,
+   "gain": 0.015229882991493332,
+   "label": "[QB] passing 8"
+  },
+  {
+   "group": "run_defense",
+   "step": 2,
+   "rmse": 0.16881955770501883,
+   "gain": 0.008593913960661226,
+   "label": "[DI, LB] run_defense 6"
+  },
+  {
+   "group": "rushing",
+   "step": 3,
+   "rmse": 0.16662747128887545,
+   "gain": 0.0021920864161433795,
+   "label": "[RB] rushing 5"
+  },
+  {
+   "group": "coverage",
+   "step": 4,
+   "rmse": 0.16523419366344533,
+   "gain": 0.0013932776254301227,
+   "label": "[CB, S] coverage 11"
+  },
+  {
+   "group": "run_blocking",
+   "step": 5,
+   "rmse": 0.16441450964786128,
+   "gain": 0.000819684015584049,
+   "label": "[OL, TE] run_blocking 3"
+  },
+  {
+   "group": "pass_rush",
+   "step": 6,
+   "rmse": 0.16378238403114262,
+   "gain": 0.0006321256167186595,
+   "label": "[ED, DI] pass_rush 10"
+  },
+  {
+   "group": "yac",
+   "step": 7,
+   "rmse": 0.1635534589966936,
+   "gain": 0.0002289250344490179,
+   "label": "[WR, TE] yac 4"
+  },
+  {
+   "group": "receiving",
+   "step": 8,
+   "rmse": 0.1632190072477639,
+   "gain": 0.0003344517489297094,
+   "label": "[WR, TE] receiving 17"
+  },
+  {
+   "group": "qb_pressure",
+   "step": 9,
+   "rmse": 0.1631398474957572,
+   "gain": 7.915975200670222e-05,
+   "label": "[QB] qb_pressure 2"
+  },
+  {
+   "group": "tackling",
+   "step": 10,
+   "rmse": 0.1631283047915656,
+   "gain": 1.1542704191597197e-05,
+   "label": "[LB, CB-S] tackling 6"
+  },
+  {
+   "group": "ball_security",
+   "step": 11,
+   "rmse": 0.16317704175160633,
+   "gain": -4.873696004073502e-05,
+   "label": "[QB, RB] ball_security 2"
+  },
+  {
+   "group": "qb_rushing",
+   "step": 12,
+   "rmse": 0.1632096900362574,
+   "gain": -3.264828465107672e-05,
+   "label": "[QB] qb_rushing 1"
+  },
+  {
+   "group": "discipline",
+   "step": 13,
+   "rmse": 0.16330090882536594,
+   "gain": -9.121878910853254e-05,
+   "label": "[OL, DI-ED] discipline 4"
+  },
+  {
+   "group": "hands",
+   "step": 14,
+   "rmse": 0.16342413774631492,
+   "gain": -0.00012322892094898674,
+   "label": "[WR, TE] hands 3"
+  },
+  {
+   "group": "pass_protection",
+   "step": 15,
+   "rmse": 0.16354884217168705,
+   "gain": -0.00012470442537212967,
+   "label": "[OL, TE] pass_protection 4"
+  }
+ ],
+ "ari_hand_vs_learned": 0.22014834880124257,
+ "all_features_rmse": 0.16354884217168705
+}

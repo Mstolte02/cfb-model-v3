@@ -1,4 +1,4 @@
-"""Team talent from the player WAR build in ~/Downloads/rb-win-model.
+"""Team talent from the player WAR build in war_model/.
 
 The existing PFF talent signal is a position-weighted average of last year's grades
 over this year's roster. WAR is the same idea carried further: it is already
@@ -23,11 +23,15 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-WAR_DIR = Path(os.environ.get("WAR_DIR", Path.home() / "Downloads" / "rb-win-model"))
+# The build used to live in ~/Downloads/rb-win-model and is now war_model/ in this
+# repo, so the two halves of the model version together. WAR_DIR still overrides, for
+# pointing at a build made somewhere else.
+_HERE = Path(__file__).resolve().parents[2]
+WAR_DIR = Path(os.environ.get("WAR_DIR", _HERE / "war_model"))
 PLAYER_WAR = WAR_DIR / "hybrid_player_war.csv"
 PROJECTIONS = WAR_DIR / "projections_2026_v2.csv"
 
-# rb-win-model already emits CFBD-style school names, but a handful of its own
+# the WAR build already emits CFBD-style school names, but a handful of its own
 # spellings differ from the CFBD FBS set the model indexes on.
 TEAM_FIX = {"Massachusetts": "Massachusetts", "Hawai'i": "Hawai'i",
             "San José State": "San José State", "Miami (OH)": "Miami (OH)"}
@@ -119,7 +123,7 @@ def talent_noise_sd() -> float:
     consumes. 0.0 when the WAR build has not measured it, so callers fall back to a
     deterministic simulation rather than fail.
 
-    Deliberately a SCALAR. rb-win-model also emits a per-team uncertainty file, and it
+    Deliberately a SCALAR. the WAR build also emits a per-team uncertainty file, and it
     should not be used: the team-to-team spread in it fails validation (correlation
     with how far a team's talent estimate actually missed is +0.01). See
     uncertainty.talent_noise() for the measurement.

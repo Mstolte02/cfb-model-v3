@@ -196,7 +196,7 @@ def main():
     }
 
     # ---- the WAR build behind the talent signal ----------------------------
-    wpath = Path.home() / "Downloads" / "rb-win-model" / "hybrid_facet_weights.csv"
+    wpath = ROOT / "war_model" / "hybrid_facet_weights.csv"
     if wpath.exists():
         w = pd.read_csv(wpath, index_col=0)["rf"].sort_values(ascending=False)
         out["war_facets"] = [{"facet": str(i), "weight": round(float(v), 4),

@@ -1,0 +1,49 @@
+{
+ "rmse": {
+  "benchmark (hand-built facets)": 0.16534090082318492,
+  "six concepts, raw features": 0.16378238403114262,
+  "six concepts, one score each": 0.1649032378163173,
+  "all fifteen concepts": 0.16354884217168705
+ },
+ "bootstrap": [
+  {
+   "variant": "six concepts, raw features",
+   "n_features": 43,
+   "rmse": 0.16378238403114262,
+   "mean_delta": -0.0015476266940671621,
+   "lo95": -0.0032526594126558927,
+   "hi95": 0.00022996864955641117,
+   "pct_better": 0.9375,
+   "significant": false
+  },
+  {
+   "variant": "six concepts, one score each",
+   "n_features": 6,
+   "rmse": 0.1649032378163173,
+   "mean_delta": -0.0004901501386452662,
+   "lo95": -0.002643853212143512,
+   "hi95": 0.001652838538315156,
+   "pct_better": 0.6675,
+   "significant": false
+  },
+  {
+   "variant": "all fifteen concepts",
+   "n_features": 86,
+   "rmse": 0.16354884217168705,
+   "mean_delta": -0.001884469132153505,
+   "lo95": -0.003912303349235478,
+   "hi95": 7.72707536992057e-05,
+   "pct_better": 0.9725,
+   "significant": false
+  }
+ ],
+ "six_concepts": [
+  "passing",
+  "run_defense",
+  "rushing",
+  "coverage",
+  "run_blocking",
+  "pass_rush"
+ ],
+ "n_boot": 400
+}

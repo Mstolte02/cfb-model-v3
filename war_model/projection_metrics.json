@@ -1,0 +1,19 @@
+{
+ "build": "hybrid",
+ "holdout_n": 6027,
+ "holdout_r": 0.721,
+ "holdout_mae": 0.0721,
+ "carry_r": 0.521,
+ "carry_mae": 0.0934,
+ "posmean_r": 0.438,
+ "nohist_n": 1755,
+ "nohist_r": 0.643,
+ "nohist_mae": 0.0511,
+ "nohist_base_mae": 0.0853,
+ "nohist_pred_mean": 0.0336,
+ "nohist_actual_mean": 0.0503,
+ "train_rows": 52910,
+ "never_played_rows": 3401,
+ "starter_density_train": 0.503,
+ "starter_density_serve": 0.505
+}

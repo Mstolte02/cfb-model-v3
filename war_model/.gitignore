@@ -1,0 +1,55 @@
+# What does NOT belong in the repo, and why.
+#
+# The rule: source and fitted parameters are committed; anything that is a cache of
+# somebody else's API, or a bulk intermediate the pipeline rebuilds from one, is not.
+# The whole build is 552 MB and 343 MB of that is cache.
+
+# --- API and scrape caches (regenerable, need a CFBD key) --------------------
+cfbd_cache/
+cfbd_cache_gt/
+ourlads_cache/
+
+# --- bulk intermediates ------------------------------------------------------
+# Every one of these is rebuilt by the stage above it, and each is 4-48 MB. The
+# per-facet frames are the worst: hybrid_player_war_by_facet.csv alone is 48 MB and
+# is just hybrid_player_war.csv before the facets are summed away.
+*.parquet
+*.npy
+hybrid_player_war_by_facet.csv
+player_war_by_facet.csv
+player_war_uncertainty.csv
+player_projection_uncertainty.csv
+horse_race_matrix.csv
+candidate_team_totals.csv
+candidate_team_z.csv
+
+# --- raw pulls ---------------------------------------------------------------
+roster_2025.json
+games_2025.json
+portal_2026.json
+rec_*.json
+report.json
+report_2026.json
+
+# --- generated reports (the site publishes its own) --------------------------
+war_2026.html
+war_diagnostics.html
+
+# --- environments ------------------------------------------------------------
+rbenv/
+__pycache__/
+.DS_Store
+
+# --- superseded by the hybrid build -----------------------------------------
+# build_war.py's PFF-only artifacts and the v1 projection. Nothing downstream reads
+# them - src/data/war.py takes hybrid_player_war.csv and projections_2026_v2.csv - and
+# they are 6.5 MB of player rows kept only as a record of a build that was replaced.
+player_war.csv
+projections_2026.csv
+rb_all.csv
+rb_career.csv
+rb_qualified.csv
+roster_2026_features.csv
+team_facet_totals.csv
+team_facet_z.csv
+team_ratings.csv

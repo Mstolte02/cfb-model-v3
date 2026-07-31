@@ -1,0 +1,1 @@
+{"groups": ["CB", "DT", "EDGE", "LB", "OL", "QB", "RB", "SAF", "TE", "WR"], "features": ["war_lag1", "war_lag2", "war_lag3", "snaps_lag1", "snaps_lag2", "rate_lag1", "prior_seasons", "class_num", "is_starter", "is_transfer", "stars", "rating", "team_rating", "team_massey", "group_code"]}

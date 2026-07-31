@@ -1,0 +1,1755 @@
+{
+ "stability": [
+  {
+   "feature": "DI_run",
+   "mean": 0.01247,
+   "sd": 0.00168,
+   "lo95": 0.00991,
+   "hi95": 0.0153,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 7.41253
+  },
+  {
+   "feature": "CB_coverage",
+   "mean": 0.01109,
+   "sd": 0.00185,
+   "lo95": 0.00793,
+   "hi95": 0.01435,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 5.99502
+  },
+  {
+   "feature": "LB_run",
+   "mean": 0.01095,
+   "sd": 0.00141,
+   "lo95": 0.00888,
+   "hi95": 0.01423,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 7.78707
+  },
+  {
+   "feature": "ED_run",
+   "mean": 0.01011,
+   "sd": 0.00122,
+   "lo95": 0.00776,
+   "hi95": 0.0119,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 8.28327
+  },
+  {
+   "feature": "OL_run_block",
+   "mean": 0.00962,
+   "sd": 0.00157,
+   "lo95": 0.00709,
+   "hi95": 0.01302,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 6.13031
+  },
+  {
+   "feature": "RB_ypa",
+   "mean": 0.00928,
+   "sd": 0.00136,
+   "lo95": 0.00709,
+   "hi95": 0.01174,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 6.8178
+  },
+  {
+   "feature": "QB_twp_rate",
+   "mean": 0.00805,
+   "sd": 0.00143,
+   "lo95": 0.00565,
+   "hi95": 0.01051,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 5.62021
+  },
+  {
+   "feature": "WR_yards_after_catch",
+   "mean": 0.008,
+   "sd": 0.00145,
+   "lo95": 0.00565,
+   "hi95": 0.01063,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 5.50233
+  },
+  {
+   "feature": "ED_qb_rating_against",
+   "mean": -0.00779,
+   "sd": 0.00119,
+   "lo95": -0.00983,
+   "hi95": -0.00566,
+   "pct_positive": 0.0,
+   "sign_stable": true,
+   "t_like": 6.55851
+  },
+  {
+   "feature": "CB-S_run",
+   "mean": 0.00769,
+   "sd": 0.00134,
+   "lo95": 0.00566,
+   "hi95": 0.01063,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 5.74933
+  },
+  {
+   "feature": "RB_run",
+   "mean": 0.00758,
+   "sd": 0.00143,
+   "lo95": 0.00552,
+   "hi95": 0.0112,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 5.29312
+  },
+  {
+   "feature": "QB_positive_epa_pct",
+   "mean": 0.00722,
+   "sd": 0.00093,
+   "lo95": 0.00538,
+   "hi95": 0.00867,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 7.7759
+  },
+  {
+   "feature": "LB_coverage",
+   "mean": 0.00681,
+   "sd": 0.00119,
+   "lo95": 0.00494,
+   "hi95": 0.00913,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 5.70445
+  },
+  {
+   "feature": "TE_targeted_qb_rating",
+   "mean": 0.00641,
+   "sd": 0.00148,
+   "lo95": 0.00373,
+   "hi95": 0.00911,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 4.31854
+  },
+  {
+   "feature": "TE_run_block",
+   "mean": 0.00611,
+   "sd": 0.0018,
+   "lo95": 0.00315,
+   "hi95": 0.00916,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 3.40411
+  },
+  {
+   "feature": "ED_total_pressures",
+   "mean": 0.00595,
+   "sd": 0.00085,
+   "lo95": 0.00453,
+   "hi95": 0.00744,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 7.01025
+  },
+  {
+   "feature": "LB_tackles",
+   "mean": -0.00577,
+   "sd": 0.00147,
+   "lo95": -0.00816,
+   "hi95": -0.00289,
+   "pct_positive": 0.0,
+   "sign_stable": true,
+   "t_like": 3.91972
+  },
+  {
+   "feature": "LB_pass_rush",
+   "mean": 0.00562,
+   "sd": 0.00109,
+   "lo95": 0.00381,
+   "hi95": 0.00757,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 5.15514
+  },
+  {
+   "feature": "S_coverage",
+   "mean": 0.00549,
+   "sd": 0.00149,
+   "lo95": 0.00267,
+   "hi95": 0.00821,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 3.69582
+  },
+  {
+   "feature": "QB_sack_pct",
+   "mean": 0.00538,
+   "sd": 0.00109,
+   "lo95": 0.00337,
+   "hi95": 0.00708,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 4.94573
+  },
+  {
+   "feature": "QB_qb_rating",
+   "mean": 0.00535,
+   "sd": 0.00082,
+   "lo95": 0.00404,
+   "hi95": 0.00683,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 6.54586
+  },
+  {
+   "feature": "CB_qb_rating_against",
+   "mean": 0.00532,
+   "sd": 0.00082,
+   "lo95": 0.00375,
+   "hi95": 0.00721,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 6.52604
+  },
+  {
+   "feature": "ED_hurries",
+   "mean": 0.00511,
+   "sd": 0.00105,
+   "lo95": 0.00329,
+   "hi95": 0.0071,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 4.8487
+  },
+  {
+   "feature": "WR_positive_epa_pct",
+   "mean": 0.00494,
+   "sd": 0.00107,
+   "lo95": 0.00302,
+   "hi95": 0.00682,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 4.60132
+  },
+  {
+   "feature": "QB_ypa",
+   "mean": 0.0049,
+   "sd": 0.00086,
+   "lo95": 0.00352,
+   "hi95": 0.00647,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 5.67648
+  },
+  {
+   "feature": "WR_contested_catch_rate",
+   "mean": -0.00465,
+   "sd": 0.00171,
+   "lo95": -0.00744,
+   "hi95": -0.00208,
+   "pct_positive": 0.0,
+   "sign_stable": true,
+   "t_like": 2.72252
+  },
+  {
+   "feature": "S_yards",
+   "mean": 0.00464,
+   "sd": 0.00142,
+   "lo95": 0.00222,
+   "hi95": 0.00732,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 3.2637
+  },
+  {
+   "feature": "TE_first_downs",
+   "mean": -0.00458,
+   "sd": 0.00134,
+   "lo95": -0.00706,
+   "hi95": -0.00255,
+   "pct_positive": 0.0,
+   "sign_stable": true,
+   "t_like": 3.43028
+  },
+  {
+   "feature": "RB_run_block",
+   "mean": 0.00438,
+   "sd": 0.00106,
+   "lo95": 0.00307,
+   "hi95": 0.00653,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 4.12641
+  },
+  {
+   "feature": "CB-S_interceptions",
+   "mean": 0.00431,
+   "sd": 0.00135,
+   "lo95": 0.00227,
+   "hi95": 0.0068,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 3.20541
+  },
+  {
+   "feature": "DI_pass_rush",
+   "mean": 0.00429,
+   "sd": 0.00121,
+   "lo95": 0.00227,
+   "hi95": 0.00629,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 3.53406
+  },
+  {
+   "feature": "WR_touchdowns",
+   "mean": -0.00425,
+   "sd": 0.00137,
+   "lo95": -0.00735,
+   "hi95": -0.00223,
+   "pct_positive": 0.0,
+   "sign_stable": true,
+   "t_like": 3.09132
+  },
+  {
+   "feature": "CB_pass_break_ups",
+   "mean": -0.00404,
+   "sd": 0.0015,
+   "lo95": -0.00666,
+   "hi95": -0.00145,
+   "pct_positive": 0.0,
+   "sign_stable": true,
+   "t_like": 2.69361
+  },
+  {
+   "feature": "QB_run",
+   "mean": 0.00403,
+   "sd": 0.00153,
+   "lo95": 0.00116,
+   "hi95": 0.00638,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 2.63762
+  },
+  {
+   "feature": "QB_completion_pct",
+   "mean": 0.00394,
+   "sd": 0.00083,
+   "lo95": 0.00256,
+   "hi95": 0.00511,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 4.72716
+  },
+  {
+   "feature": "TE_yards_after_catch",
+   "mean": -0.00385,
+   "sd": 0.00105,
+   "lo95": -0.00548,
+   "hi95": -0.00231,
+   "pct_positive": 0.0,
+   "sign_stable": true,
+   "t_like": 3.6531
+  },
+  {
+   "feature": "RB_breakaway_pct",
+   "mean": -0.00383,
+   "sd": 0.00173,
+   "lo95": -0.00704,
+   "hi95": -0.00114,
+   "pct_positive": 0.0,
+   "sign_stable": true,
+   "t_like": 2.20891
+  },
+  {
+   "feature": "WR_targeted_qb_rating",
+   "mean": 0.0038,
+   "sd": 0.0008,
+   "lo95": 0.00267,
+   "hi95": 0.00553,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 4.73911
+  },
+  {
+   "feature": "QB-RB-TE-WR_offense_penalty",
+   "mean": 0.00354,
+   "sd": 0.00161,
+   "lo95": 0.00037,
+   "hi95": 0.00619,
+   "pct_positive": 0.975,
+   "sign_stable": true,
+   "t_like": 2.20049
+  },
+  {
+   "feature": "QB_accuracy_pct",
+   "mean": 0.00346,
+   "sd": 0.0011,
+   "lo95": 0.00111,
+   "hi95": 0.00536,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 3.14758
+  },
+  {
+   "feature": "DI-ED_defense_penalty",
+   "mean": 0.0034,
+   "sd": 0.00159,
+   "lo95": 0.00087,
+   "hi95": 0.00676,
+   "pct_positive": 0.975,
+   "sign_stable": true,
+   "t_like": 2.14414
+  },
+  {
+   "feature": "ED_pass_rush",
+   "mean": 0.00325,
+   "sd": 0.00139,
+   "lo95": 0.00051,
+   "hi95": 0.00578,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 2.34308
+  },
+  {
+   "feature": "WR_offense",
+   "mean": 0.00325,
+   "sd": 0.00089,
+   "lo95": 0.00189,
+   "hi95": 0.00468,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 3.64606
+  },
+  {
+   "feature": "WR_first_downs",
+   "mean": -0.00317,
+   "sd": 0.00116,
+   "lo95": -0.0057,
+   "hi95": -0.00115,
+   "pct_positive": 0.0,
+   "sign_stable": true,
+   "t_like": 2.72851
+  },
+  {
+   "feature": "CB_yards",
+   "mean": 0.00316,
+   "sd": 0.00116,
+   "lo95": 0.0014,
+   "hi95": 0.00522,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 2.7222
+  },
+  {
+   "feature": "TE_yprr",
+   "mean": 0.0031,
+   "sd": 0.00098,
+   "lo95": 0.00124,
+   "hi95": 0.00468,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 3.17011
+  },
+  {
+   "feature": "WR_yprr",
+   "mean": 0.00295,
+   "sd": 0.00091,
+   "lo95": 0.00133,
+   "hi95": 0.0048,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 3.23444
+  },
+  {
+   "feature": "OL_penalties",
+   "mean": 0.0029,
+   "sd": 0.00125,
+   "lo95": 0.00099,
+   "hi95": 0.00502,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 2.31644
+  },
+  {
+   "feature": "LB_missed_tackle_rate",
+   "mean": -0.00289,
+   "sd": 0.00093,
+   "lo95": -0.00462,
+   "hi95": -0.00127,
+   "pct_positive": 0.0,
+   "sign_stable": true,
+   "t_like": 3.10771
+  },
+  {
+   "feature": "WR_yards_per_reception",
+   "mean": 0.00287,
+   "sd": 0.00106,
+   "lo95": 0.00122,
+   "hi95": 0.00487,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 2.70509
+  },
+  {
+   "feature": "CB-S_missed_tackle_rate",
+   "mean": -0.00269,
+   "sd": 0.00107,
+   "lo95": -0.00461,
+   "hi95": -0.00051,
+   "pct_positive": 0.0,
+   "sign_stable": true,
+   "t_like": 2.51265
+  },
+  {
+   "feature": "RB_yco_attempt",
+   "mean": 0.00254,
+   "sd": 0.0012,
+   "lo95": 0.00047,
+   "hi95": 0.00486,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 2.11849
+  },
+  {
+   "feature": "QB_pass",
+   "mean": 0.00251,
+   "sd": 0.00108,
+   "lo95": 0.00091,
+   "hi95": 0.00494,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 2.32706
+  },
+  {
+   "feature": "QB_pressure_to_sack_rate",
+   "mean": 0.0025,
+   "sd": 0.00114,
+   "lo95": 0.0005,
+   "hi95": 0.00525,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 2.19931
+  },
+  {
+   "feature": "OL_pass_block",
+   "mean": 0.00248,
+   "sd": 0.00117,
+   "lo95": 0.0008,
+   "hi95": 0.00486,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 2.11819
+  },
+  {
+   "feature": "OL_sacks_allowed",
+   "mean": 0.00228,
+   "sd": 0.00133,
+   "lo95": -0.00057,
+   "hi95": 0.0044,
+   "pct_positive": 0.95,
+   "sign_stable": true,
+   "t_like": 1.71208
+  },
+  {
+   "feature": "RB_hands_fumble",
+   "mean": 0.00218,
+   "sd": 0.00125,
+   "lo95": -0.00045,
+   "hi95": 0.00406,
+   "pct_positive": 0.925,
+   "sign_stable": false,
+   "t_like": 1.74411
+  },
+  {
+   "feature": "WR_caught_pct",
+   "mean": 0.00206,
+   "sd": 0.00089,
+   "lo95": 0.00027,
+   "hi95": 0.00321,
+   "pct_positive": 0.975,
+   "sign_stable": true,
+   "t_like": 2.30018
+  },
+  {
+   "feature": "QB_hands_fumble",
+   "mean": -0.00205,
+   "sd": 0.00131,
+   "lo95": -0.00469,
+   "hi95": 0.00024,
+   "pct_positive": 0.05,
+   "sign_stable": true,
+   "t_like": 1.56801
+  },
+  {
+   "feature": "WR_drop_rate",
+   "mean": -0.00201,
+   "sd": 0.00104,
+   "lo95": -0.00366,
+   "hi95": 1e-05,
+   "pct_positive": 0.025,
+   "sign_stable": true,
+   "t_like": 1.94234
+  },
+  {
+   "feature": "ED_sacks",
+   "mean": 0.00193,
+   "sd": 0.00113,
+   "lo95": -1e-05,
+   "hi95": 0.00384,
+   "pct_positive": 0.975,
+   "sign_stable": true,
+   "t_like": 1.70464
+  },
+  {
+   "feature": "WR_pass_route",
+   "mean": 0.00189,
+   "sd": 0.00097,
+   "lo95": 0.00015,
+   "hi95": 0.00357,
+   "pct_positive": 1.0,
+   "sign_stable": true,
+   "t_like": 1.938
+  },
+  {
+   "feature": "RB_elusive_rating",
+   "mean": 0.00178,
+   "sd": 0.00121,
+   "lo95": -0.00035,
+   "hi95": 0.00348,
+   "pct_positive": 0.925,
+   "sign_stable": false,
+   "t_like": 1.47286
+  },
+  {
+   "feature": "TE_pass_block",
+   "mean": -0.00178,
+   "sd": 0.00128,
+   "lo95": -0.00359,
+   "hi95": 0.00027,
+   "pct_positive": 0.1,
+   "sign_stable": false,
+   "t_like": 1.39419
+  },
+  {
+   "feature": "TE_positive_epa_pct",
+   "mean": -0.0017,
+   "sd": 0.00123,
+   "lo95": -0.00371,
+   "hi95": 6e-05,
+   "pct_positive": 0.05,
+   "sign_stable": true,
+   "t_like": 1.37854
+  },
+  {
+   "feature": "TE_hands_drop",
+   "mean": -0.00127,
+   "sd": 0.00133,
+   "lo95": -0.00363,
+   "hi95": 0.00097,
+   "pct_positive": 0.225,
+   "sign_stable": false,
+   "t_like": 0.95845
+  },
+  {
+   "feature": "RB_pass_route",
+   "mean": -0.00118,
+   "sd": 0.00122,
+   "lo95": -0.00377,
+   "hi95": 0.0006,
+   "pct_positive": 0.2,
+   "sign_stable": false,
+   "t_like": 0.96408
+  },
+  {
+   "feature": "WR_hands_drop",
+   "mean": -0.00112,
+   "sd": 0.00071,
+   "lo95": -0.00242,
+   "hi95": 0.00024,
+   "pct_positive": 0.05,
+   "sign_stable": true,
+   "t_like": 1.58645
+  },
+  {
+   "feature": "CB_yards_after_catch",
+   "mean": 0.00103,
+   "sd": 0.00122,
+   "lo95": -0.00117,
+   "hi95": 0.00297,
+   "pct_positive": 0.75,
+   "sign_stable": false,
+   "t_like": 0.85067
+  },
+  {
+   "feature": "TE_pass_route",
+   "mean": 0.00103,
+   "sd": 0.00097,
+   "lo95": -0.00042,
+   "hi95": 0.00286,
+   "pct_positive": 0.825,
+   "sign_stable": false,
+   "t_like": 1.06242
+  },
+  {
+   "feature": "S_catch_rate",
+   "mean": 0.00102,
+   "sd": 0.00136,
+   "lo95": -0.00191,
+   "hi95": 0.00366,
+   "pct_positive": 0.8,
+   "sign_stable": false,
+   "t_like": 0.74713
+  },
+  {
+   "feature": "LB_stops",
+   "mean": 0.00092,
+   "sd": 0.00117,
+   "lo95": -0.00142,
+   "hi95": 0.00279,
+   "pct_positive": 0.75,
+   "sign_stable": false,
+   "t_like": 0.7906
+  },
+  {
+   "feature": "OL_pressures_allowed",
+   "mean": 0.00086,
+   "sd": 0.00121,
+   "lo95": -0.00167,
+   "hi95": 0.0028,
+   "pct_positive": 0.775,
+   "sign_stable": false,
+   "t_like": 0.71566
+  },
+  {
+   "feature": "DI-ED_tackle",
+   "mean": 0.00075,
+   "sd": 0.00122,
+   "lo95": -0.00167,
+   "hi95": 0.0027,
+   "pct_positive": 0.7,
+   "sign_stable": false,
+   "t_like": 0.6177
+  },
+  {
+   "feature": "QB_btt_rate",
+   "mean": 0.00074,
+   "sd": 0.00109,
+   "lo95": -0.00155,
+   "hi95": 0.00281,
+   "pct_positive": 0.775,
+   "sign_stable": false,
+   "t_like": 0.68286
+  },
+  {
+   "feature": "DI_sacks",
+   "mean": 0.00074,
+   "sd": 0.0013,
+   "lo95": -0.00153,
+   "hi95": 0.00272,
+   "pct_positive": 0.675,
+   "sign_stable": false,
+   "t_like": 0.56762
+  },
+  {
+   "feature": "CB-LB-S_defense_penalty",
+   "mean": 0.00068,
+   "sd": 0.00128,
+   "lo95": -0.00269,
+   "hi95": 0.00225,
+   "pct_positive": 0.8,
+   "sign_stable": false,
+   "t_like": 0.52669
+  },
+  {
+   "feature": "RB_yards_after_catch",
+   "mean": 0.00059,
+   "sd": 0.00132,
+   "lo95": -0.00185,
+   "hi95": 0.00303,
+   "pct_positive": 0.65,
+   "sign_stable": false,
+   "t_like": 0.44475
+  },
+  {
+   "feature": "DI_stops",
+   "mean": -0.00055,
+   "sd": 0.00147,
+   "lo95": -0.00344,
+   "hi95": 0.00189,
+   "pct_positive": 0.375,
+   "sign_stable": false,
+   "t_like": 0.37418
+  },
+  {
+   "feature": "LB_tackle",
+   "mean": -0.00049,
+   "sd": 0.00104,
+   "lo95": -0.00231,
+   "hi95": 0.00125,
+   "pct_positive": 0.35,
+   "sign_stable": false,
+   "t_like": 0.47323
+  },
+  {
+   "feature": "WR_avoided_tackles",
+   "mean": 0.00047,
+   "sd": 0.00104,
+   "lo95": -0.0013,
+   "hi95": 0.00204,
+   "pct_positive": 0.7,
+   "sign_stable": false,
+   "t_like": 0.4464
+  },
+  {
+   "feature": "CB-S_pass_rush",
+   "mean": 0.00047,
+   "sd": 0.00152,
+   "lo95": -0.00284,
+   "hi95": 0.00313,
+   "pct_positive": 0.625,
+   "sign_stable": false,
+   "t_like": 0.30507
+  },
+  {
+   "feature": "CB-S_tackle",
+   "mean": 0.00043,
+   "sd": 0.00112,
+   "lo95": -0.00169,
+   "hi95": 0.0025,
+   "pct_positive": 0.65,
+   "sign_stable": false,
+   "t_like": 0.38645
+  },
+  {
+   "feature": "CB_catch_rate",
+   "mean": -0.00024,
+   "sd": 0.00127,
+   "lo95": -0.00292,
+   "hi95": 0.00197,
+   "pct_positive": 0.475,
+   "sign_stable": false,
+   "t_like": 0.1862
+  },
+  {
+   "feature": "DI_total_pressures",
+   "mean": 0.00013,
+   "sd": 0.00141,
+   "lo95": -0.00246,
+   "hi95": 0.00264,
+   "pct_positive": 0.525,
+   "sign_stable": false,
+   "t_like": 0.09051
+  },
+  {
+   "feature": "WR_avg_depth_of_target",
+   "mean": -2e-05,
+   "sd": 0.00105,
+   "lo95": -0.00222,
+   "hi95": 0.00141,
+   "pct_positive": 0.475,
+   "sign_stable": false,
+   "t_like": 0.02291
+  }
+ ],
+ "n_sign_flips": 23,
+ "importance": [
+  {
+   "feature": "DI_run",
+   "ridge": 0.03887,
+   "permutation": 0.07995,
+   "rank_ridge": 1.0,
+   "rank_perm": 1.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "CB_coverage",
+   "ridge": 0.03529,
+   "permutation": 0.06602,
+   "rank_ridge": 2.0,
+   "rank_perm": 2.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "LB_run",
+   "ridge": 0.03388,
+   "permutation": 0.06437,
+   "rank_ridge": 3.0,
+   "rank_perm": 3.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "ED_run",
+   "ridge": 0.03087,
+   "permutation": 0.05324,
+   "rank_ridge": 4.0,
+   "rank_perm": 5.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "OL_run_block",
+   "ridge": 0.02972,
+   "permutation": 0.0551,
+   "rank_ridge": 5.0,
+   "rank_perm": 4.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "RB_ypa",
+   "ridge": 0.02941,
+   "permutation": 0.0451,
+   "rank_ridge": 6.0,
+   "rank_perm": 6.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "WR_yards_after_catch",
+   "ridge": 0.02681,
+   "permutation": 0.03475,
+   "rank_ridge": 7.0,
+   "rank_perm": 9.0,
+   "rank_gap": 2.0
+  },
+  {
+   "feature": "QB_twp_rate",
+   "ridge": 0.02543,
+   "permutation": 0.03519,
+   "rank_ridge": 8.0,
+   "rank_perm": 8.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "ED_qb_rating_against",
+   "ridge": 0.0247,
+   "permutation": 0.03627,
+   "rank_ridge": 9.0,
+   "rank_perm": 7.0,
+   "rank_gap": 2.0
+  },
+  {
+   "feature": "CB-S_run",
+   "ridge": 0.02406,
+   "permutation": 0.02557,
+   "rank_ridge": 10.0,
+   "rank_perm": 13.0,
+   "rank_gap": 3.0
+  },
+  {
+   "feature": "RB_run",
+   "ridge": 0.02318,
+   "permutation": 0.03015,
+   "rank_ridge": 11.0,
+   "rank_perm": 10.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "QB_positive_epa_pct",
+   "ridge": 0.02275,
+   "permutation": 0.02686,
+   "rank_ridge": 12.0,
+   "rank_perm": 12.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "LB_coverage",
+   "ridge": 0.02137,
+   "permutation": 0.02702,
+   "rank_ridge": 13.0,
+   "rank_perm": 11.0,
+   "rank_gap": 2.0
+  },
+  {
+   "feature": "TE_targeted_qb_rating",
+   "ridge": 0.01971,
+   "permutation": 0.0227,
+   "rank_ridge": 14.0,
+   "rank_perm": 14.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "LB_tackles",
+   "ridge": 0.01909,
+   "permutation": 0.01885,
+   "rank_ridge": 15.0,
+   "rank_perm": 16.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "TE_run_block",
+   "ridge": 0.01852,
+   "permutation": 0.01958,
+   "rank_ridge": 16.0,
+   "rank_perm": 15.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "ED_total_pressures",
+   "ridge": 0.01823,
+   "permutation": 0.0188,
+   "rank_ridge": 17.0,
+   "rank_perm": 17.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "QB_sack_pct",
+   "ridge": 0.01711,
+   "permutation": 0.0149,
+   "rank_ridge": 18.0,
+   "rank_perm": 18.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "LB_pass_rush",
+   "ridge": 0.01682,
+   "permutation": 0.01428,
+   "rank_ridge": 19.0,
+   "rank_perm": 19.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "S_coverage",
+   "ridge": 0.01622,
+   "permutation": 0.01399,
+   "rank_ridge": 20.0,
+   "rank_perm": 21.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "QB_qb_rating",
+   "ridge": 0.0157,
+   "permutation": 0.01139,
+   "rank_ridge": 21.0,
+   "rank_perm": 29.0,
+   "rank_gap": 8.0
+  },
+  {
+   "feature": "CB_qb_rating_against",
+   "ridge": 0.01558,
+   "permutation": 0.01366,
+   "rank_ridge": 22.0,
+   "rank_perm": 23.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "ED_hurries",
+   "ridge": 0.01512,
+   "permutation": 0.01376,
+   "rank_ridge": 23.0,
+   "rank_perm": 22.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "WR_touchdowns",
+   "ridge": 0.01509,
+   "permutation": 0.01408,
+   "rank_ridge": 24.0,
+   "rank_perm": 20.0,
+   "rank_gap": 4.0
+  },
+  {
+   "feature": "TE_first_downs",
+   "ridge": 0.01467,
+   "permutation": 0.01214,
+   "rank_ridge": 25.0,
+   "rank_perm": 25.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "WR_contested_catch_rate",
+   "ridge": 0.01467,
+   "permutation": 0.0119,
+   "rank_ridge": 26.0,
+   "rank_perm": 26.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "WR_positive_epa_pct",
+   "ridge": 0.01454,
+   "permutation": 0.01044,
+   "rank_ridge": 27.0,
+   "rank_perm": 30.0,
+   "rank_gap": 3.0
+  },
+  {
+   "feature": "S_yards",
+   "ridge": 0.0145,
+   "permutation": 0.01221,
+   "rank_ridge": 28.0,
+   "rank_perm": 24.0,
+   "rank_gap": 4.0
+  },
+  {
+   "feature": "QB_ypa",
+   "ridge": 0.01445,
+   "permutation": 0.01,
+   "rank_ridge": 29.0,
+   "rank_perm": 31.0,
+   "rank_gap": 2.0
+  },
+  {
+   "feature": "CB_pass_break_ups",
+   "ridge": 0.01384,
+   "permutation": 0.01183,
+   "rank_ridge": 30.0,
+   "rank_perm": 27.0,
+   "rank_gap": 3.0
+  },
+  {
+   "feature": "RB_run_block",
+   "ridge": 0.01354,
+   "permutation": 0.00871,
+   "rank_ridge": 31.0,
+   "rank_perm": 34.0,
+   "rank_gap": 3.0
+  },
+  {
+   "feature": "RB_breakaway_pct",
+   "ridge": 0.01349,
+   "permutation": 0.0114,
+   "rank_ridge": 32.0,
+   "rank_perm": 28.0,
+   "rank_gap": 4.0
+  },
+  {
+   "feature": "DI_pass_rush",
+   "ridge": 0.01346,
+   "permutation": 0.0087,
+   "rank_ridge": 33.0,
+   "rank_perm": 35.0,
+   "rank_gap": 2.0
+  },
+  {
+   "feature": "CB-S_interceptions",
+   "ridge": 0.01277,
+   "permutation": 0.00939,
+   "rank_ridge": 34.0,
+   "rank_perm": 32.0,
+   "rank_gap": 2.0
+  },
+  {
+   "feature": "TE_yards_after_catch",
+   "ridge": 0.0124,
+   "permutation": 0.0084,
+   "rank_ridge": 35.0,
+   "rank_perm": 36.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "QB_run",
+   "ridge": 0.01229,
+   "permutation": 0.00666,
+   "rank_ridge": 36.0,
+   "rank_perm": 40.0,
+   "rank_gap": 4.0
+  },
+  {
+   "feature": "QB_completion_pct",
+   "ridge": 0.0121,
+   "permutation": 0.00695,
+   "rank_ridge": 37.0,
+   "rank_perm": 39.0,
+   "rank_gap": 2.0
+  },
+  {
+   "feature": "WR_targeted_qb_rating",
+   "ridge": 0.0114,
+   "permutation": 0.00478,
+   "rank_ridge": 38.0,
+   "rank_perm": 46.0,
+   "rank_gap": 8.0
+  },
+  {
+   "feature": "QB-RB-TE-WR_offense_penalty",
+   "ridge": 0.01086,
+   "permutation": 0.00886,
+   "rank_ridge": 39.0,
+   "rank_perm": 33.0,
+   "rank_gap": 6.0
+  },
+  {
+   "feature": "DI-ED_defense_penalty",
+   "ridge": 0.01083,
+   "permutation": 0.00831,
+   "rank_ridge": 40.0,
+   "rank_perm": 37.0,
+   "rank_gap": 3.0
+  },
+  {
+   "feature": "WR_first_downs",
+   "ridge": 0.01059,
+   "permutation": 0.00588,
+   "rank_ridge": 41.0,
+   "rank_perm": 43.0,
+   "rank_gap": 2.0
+  },
+  {
+   "feature": "WR_offense",
+   "ridge": 0.01023,
+   "permutation": 0.00652,
+   "rank_ridge": 42.0,
+   "rank_perm": 41.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "CB-S_missed_tackle_rate",
+   "ridge": 0.01013,
+   "permutation": 0.00724,
+   "rank_ridge": 43.0,
+   "rank_perm": 38.0,
+   "rank_gap": 5.0
+  },
+  {
+   "feature": "TE_yprr",
+   "ridge": 0.00978,
+   "permutation": 0.00477,
+   "rank_ridge": 44.0,
+   "rank_perm": 47.0,
+   "rank_gap": 3.0
+  },
+  {
+   "feature": "LB_missed_tackle_rate",
+   "ridge": 0.00975,
+   "permutation": 0.00604,
+   "rank_ridge": 45.0,
+   "rank_perm": 42.0,
+   "rank_gap": 3.0
+  },
+  {
+   "feature": "QB_accuracy_pct",
+   "ridge": 0.00962,
+   "permutation": 0.00363,
+   "rank_ridge": 46.0,
+   "rank_perm": 53.0,
+   "rank_gap": 7.0
+  },
+  {
+   "feature": "CB_yards",
+   "ridge": 0.00961,
+   "permutation": 0.00528,
+   "rank_ridge": 47.0,
+   "rank_perm": 44.0,
+   "rank_gap": 3.0
+  },
+  {
+   "feature": "OL_penalties",
+   "ridge": 0.0093,
+   "permutation": 0.00412,
+   "rank_ridge": 48.0,
+   "rank_perm": 48.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "ED_pass_rush",
+   "ridge": 0.00898,
+   "permutation": 0.00487,
+   "rank_ridge": 49.0,
+   "rank_perm": 45.0,
+   "rank_gap": 4.0
+  },
+  {
+   "feature": "WR_yards_per_reception",
+   "ridge": 0.00878,
+   "permutation": 0.00387,
+   "rank_ridge": 50.0,
+   "rank_perm": 52.0,
+   "rank_gap": 2.0
+  },
+  {
+   "feature": "WR_yprr",
+   "ridge": 0.00802,
+   "permutation": 0.00393,
+   "rank_ridge": 51.0,
+   "rank_perm": 51.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "QB_hands_fumble",
+   "ridge": 0.00734,
+   "permutation": 0.00257,
+   "rank_ridge": 52.0,
+   "rank_perm": 56.0,
+   "rank_gap": 4.0
+  },
+  {
+   "feature": "QB_pressure_to_sack_rate",
+   "ridge": 0.00723,
+   "permutation": 0.00197,
+   "rank_ridge": 53.0,
+   "rank_perm": 62.0,
+   "rank_gap": 9.0
+  },
+  {
+   "feature": "OL_pass_block",
+   "ridge": 0.0072,
+   "permutation": 0.00393,
+   "rank_ridge": 54.0,
+   "rank_perm": 50.0,
+   "rank_gap": 4.0
+  },
+  {
+   "feature": "RB_yco_attempt",
+   "ridge": 0.00709,
+   "permutation": 0.00268,
+   "rank_ridge": 55.0,
+   "rank_perm": 54.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "TE_positive_epa_pct",
+   "ridge": 0.00694,
+   "permutation": 0.00267,
+   "rank_ridge": 56.0,
+   "rank_perm": 55.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "RB_hands_fumble",
+   "ridge": 0.00684,
+   "permutation": 0.004,
+   "rank_ridge": 57.0,
+   "rank_perm": 49.0,
+   "rank_gap": 8.0
+  },
+  {
+   "feature": "WR_drop_rate",
+   "ridge": 0.00653,
+   "permutation": 0.00236,
+   "rank_ridge": 58.0,
+   "rank_perm": 57.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "QB_pass",
+   "ridge": 0.00633,
+   "permutation": 0.00216,
+   "rank_ridge": 59.0,
+   "rank_perm": 59.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "OL_sacks_allowed",
+   "ridge": 0.00616,
+   "permutation": 0.00199,
+   "rank_ridge": 60.0,
+   "rank_perm": 61.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "TE_pass_block",
+   "ridge": 0.00601,
+   "permutation": 0.00201,
+   "rank_ridge": 61.0,
+   "rank_perm": 60.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "WR_caught_pct",
+   "ridge": 0.00579,
+   "permutation": 0.00114,
+   "rank_ridge": 62.0,
+   "rank_perm": 64.0,
+   "rank_gap": 2.0
+  },
+  {
+   "feature": "WR_pass_route",
+   "ridge": 0.00559,
+   "permutation": 0.00222,
+   "rank_ridge": 63.0,
+   "rank_perm": 58.0,
+   "rank_gap": 5.0
+  },
+  {
+   "feature": "RB_elusive_rating",
+   "ridge": 0.00509,
+   "permutation": 0.00116,
+   "rank_ridge": 64.0,
+   "rank_perm": 63.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "ED_sacks",
+   "ridge": 0.0046,
+   "permutation": 0.00079,
+   "rank_ridge": 65.0,
+   "rank_perm": 65.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "RB_pass_route",
+   "ridge": 0.00435,
+   "permutation": 0.00026,
+   "rank_ridge": 66.0,
+   "rank_perm": 76.0,
+   "rank_gap": 10.0
+  },
+  {
+   "feature": "TE_hands_drop",
+   "ridge": 0.00384,
+   "permutation": 0.00044,
+   "rank_ridge": 67.0,
+   "rank_perm": 71.0,
+   "rank_gap": 4.0
+  },
+  {
+   "feature": "WR_hands_drop",
+   "ridge": 0.00341,
+   "permutation": 0.00065,
+   "rank_ridge": 68.0,
+   "rank_perm": 67.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "LB_stops",
+   "ridge": 0.00323,
+   "permutation": 0.00065,
+   "rank_ridge": 69.0,
+   "rank_perm": 66.0,
+   "rank_gap": 3.0
+  },
+  {
+   "feature": "CB_yards_after_catch",
+   "ridge": 0.00291,
+   "permutation": 0.00059,
+   "rank_ridge": 70.0,
+   "rank_perm": 69.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "TE_pass_route",
+   "ridge": 0.00275,
+   "permutation": 0.00044,
+   "rank_ridge": 71.0,
+   "rank_perm": 70.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "DI_stops",
+   "ridge": 0.00265,
+   "permutation": 0.00042,
+   "rank_ridge": 72.0,
+   "rank_perm": 72.0,
+   "rank_gap": 0.0
+  },
+  {
+   "feature": "S_catch_rate",
+   "ridge": 0.00257,
+   "permutation": 0.00029,
+   "rank_ridge": 73.0,
+   "rank_perm": 74.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "QB_btt_rate",
+   "ridge": 0.00212,
+   "permutation": 0.00041,
+   "rank_ridge": 74.0,
+   "rank_perm": 73.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "CB-LB-S_defense_penalty",
+   "ridge": 0.00198,
+   "permutation": 0.00065,
+   "rank_ridge": 75.0,
+   "rank_perm": 68.0,
+   "rank_gap": 7.0
+  },
+  {
+   "feature": "DI_sacks",
+   "ridge": 0.00179,
+   "permutation": 0.00013,
+   "rank_ridge": 76.0,
+   "rank_perm": 81.0,
+   "rank_gap": 5.0
+  },
+  {
+   "feature": "RB_yards_after_catch",
+   "ridge": 0.00177,
+   "permutation": 0.0,
+   "rank_ridge": 77.0,
+   "rank_perm": 85.5,
+   "rank_gap": 8.5
+  },
+  {
+   "feature": "LB_tackle",
+   "ridge": 0.0016,
+   "permutation": 0.00018,
+   "rank_ridge": 78.0,
+   "rank_perm": 77.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "CB_catch_rate",
+   "ridge": 0.00139,
+   "permutation": 0.00017,
+   "rank_ridge": 79.0,
+   "rank_perm": 78.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "OL_pressures_allowed",
+   "ridge": 0.00128,
+   "permutation": 0.00026,
+   "rank_ridge": 80.0,
+   "rank_perm": 75.0,
+   "rank_gap": 5.0
+  },
+  {
+   "feature": "CB-S_pass_rush",
+   "ridge": 0.00118,
+   "permutation": 5e-05,
+   "rank_ridge": 81.0,
+   "rank_perm": 83.0,
+   "rank_gap": 2.0
+  },
+  {
+   "feature": "DI-ED_tackle",
+   "ridge": 0.00111,
+   "permutation": 0.00013,
+   "rank_ridge": 82.0,
+   "rank_perm": 80.0,
+   "rank_gap": 2.0
+  },
+  {
+   "feature": "WR_avoided_tackles",
+   "ridge": 0.00095,
+   "permutation": 1e-05,
+   "rank_ridge": 83.0,
+   "rank_perm": 84.0,
+   "rank_gap": 1.0
+  },
+  {
+   "feature": "DI_total_pressures",
+   "ridge": 0.00094,
+   "permutation": 0.00017,
+   "rank_ridge": 84.0,
+   "rank_perm": 79.0,
+   "rank_gap": 5.0
+  },
+  {
+   "feature": "CB-S_tackle",
+   "ridge": 0.0009,
+   "permutation": 0.0,
+   "rank_ridge": 85.0,
+   "rank_perm": 85.5,
+   "rank_gap": 0.5
+  },
+  {
+   "feature": "WR_avg_depth_of_target",
+   "ridge": 0.0004,
+   "permutation": 5e-05,
+   "rank_ridge": 86.0,
+   "rank_perm": 82.0,
+   "rank_gap": 4.0
+  }
+ ],
+ "replacement": [
+  {
+   "replacement": 0.1,
+   "mean_war": 0.06065,
+   "total_war": 6774.55971,
+   "spearman_vs_15pct": 1.0,
+   "mean_rank_shift": 0.0,
+   "top50_overlap": 1.0
+  },
+  {
+   "replacement": 0.125,
+   "mean_war": 0.05686,
+   "total_war": 6351.17528,
+   "spearman_vs_15pct": 0.99643,
+   "mean_rank_shift": 107.18802,
+   "top50_overlap": 0.98182
+  },
+  {
+   "replacement": 0.15,
+   "mean_war": 0.05307,
+   "total_war": 5927.79086,
+   "spearman_vs_15pct": 0.98803,
+   "mean_rank_shift": 220.43753,
+   "top50_overlap": 0.96623
+  },
+  {
+   "replacement": 0.175,
+   "mean_war": 0.04928,
+   "total_war": 5504.40643,
+   "spearman_vs_15pct": 0.97658,
+   "mean_rank_shift": 334.52043,
+   "top50_overlap": 0.96104
+  },
+  {
+   "replacement": 0.2,
+   "mean_war": 0.04549,
+   "total_war": 5081.02201,
+   "spearman_vs_15pct": 0.96171,
+   "mean_rank_shift": 454.08931,
+   "top50_overlap": 0.95065
+  }
+ ],
+ "normalization": [
+  {
+   "scheme": "within season (ships)",
+   "rmse": 0.16392,
+   "r": 0.52543
+  },
+  {
+   "scheme": "rolling 3-season",
+   "rmse": 0.1638,
+   "r": 0.5265
+  },
+  {
+   "scheme": "global (all seasons)",
+   "rmse": 0.16388,
+   "r": 0.52607
+  }
+ ],
+ "leave_one_out": [
+  {
+   "dropped": "DI_run",
+   "rmse": 0.16411,
+   "delta_rmse": 0.00056,
+   "max_coef_drift": 0.00255,
+   "drifted_most": "DI_stops",
+   "mean_coef_drift": 0.00028
+  },
+  {
+   "dropped": "CB_coverage",
+   "rmse": 0.16411,
+   "delta_rmse": 0.00055,
+   "max_coef_drift": 0.00301,
+   "drifted_most": "CB_qb_rating_against",
+   "mean_coef_drift": 0.00025
+  },
+  {
+   "dropped": "OL_run_block",
+   "rmse": 0.16402,
+   "delta_rmse": 0.00046,
+   "max_coef_drift": 0.00198,
+   "drifted_most": "RB_ypa",
+   "mean_coef_drift": 0.00023
+  },
+  {
+   "dropped": "LB_run",
+   "rmse": 0.16401,
+   "delta_rmse": 0.00046,
+   "max_coef_drift": 0.00195,
+   "drifted_most": "LB_stops",
+   "mean_coef_drift": 0.00026
+  },
+  {
+   "dropped": "WR_yards_after_catch",
+   "rmse": 0.16397,
+   "delta_rmse": 0.00041,
+   "max_coef_drift": 0.00262,
+   "drifted_most": "WR_avoided_tackles",
+   "mean_coef_drift": 0.00045
+  },
+  {
+   "dropped": "ED_run",
+   "rmse": 0.1639,
+   "delta_rmse": 0.00035,
+   "max_coef_drift": 0.00147,
+   "drifted_most": "DI-ED_tackle",
+   "mean_coef_drift": 0.0002
+  },
+  {
+   "dropped": "ED_qb_rating_against",
+   "rmse": 0.1639,
+   "delta_rmse": 0.00035,
+   "max_coef_drift": 0.00081,
+   "drifted_most": "DI_pass_rush",
+   "mean_coef_drift": 0.00015
+  },
+  {
+   "dropped": "QB_twp_rate",
+   "rmse": 0.16381,
+   "delta_rmse": 0.00025,
+   "max_coef_drift": 0.00231,
+   "drifted_most": "QB_pass",
+   "mean_coef_drift": 0.00019
+  },
+  {
+   "dropped": "RB_ypa",
+   "rmse": 0.16381,
+   "delta_rmse": 0.00025,
+   "max_coef_drift": 0.00278,
+   "drifted_most": "RB_breakaway_pct",
+   "mean_coef_drift": 0.00022
+  },
+  {
+   "dropped": "CB-S_run",
+   "rmse": 0.16378,
+   "delta_rmse": 0.00022,
+   "max_coef_drift": 0.00162,
+   "drifted_most": "CB-S_tackle",
+   "mean_coef_drift": 0.00017
+  },
+  {
+   "dropped": "TE_targeted_qb_rating",
+   "rmse": 0.16376,
+   "delta_rmse": 0.0002,
+   "max_coef_drift": 0.00123,
+   "drifted_most": "TE_positive_epa_pct",
+   "mean_coef_drift": 0.00014
+  },
+  {
+   "dropped": "RB_run",
+   "rmse": 0.16371,
+   "delta_rmse": 0.00016,
+   "max_coef_drift": 0.00175,
+   "drifted_most": "RB_elusive_rating",
+   "mean_coef_drift": 0.00015
+  },
+  {
+   "dropped": "LB_coverage",
+   "rmse": 0.1637,
+   "delta_rmse": 0.00014,
+   "max_coef_drift": 0.00078,
+   "drifted_most": "LB_stops",
+   "mean_coef_drift": 0.00014
+  },
+  {
+   "dropped": "QB_positive_epa_pct",
+   "rmse": 0.16366,
+   "delta_rmse": 0.00011,
+   "max_coef_drift": 0.00184,
+   "drifted_most": "WR_positive_epa_pct",
+   "mean_coef_drift": 0.00015
+  },
+  {
+   "dropped": "LB_tackles",
+   "rmse": 0.1636,
+   "delta_rmse": 5e-05,
+   "max_coef_drift": 0.00341,
+   "drifted_most": "LB_stops",
+   "mean_coef_drift": 0.00013
+  }
+ ],
+ "lofo_base_rmse": 0.16355687727791418,
+ "bootstrap_margin": [
+  {
+   "model": "B",
+   "mean_delta_rmse": -0.00137,
+   "lo95": -0.00314,
+   "hi95": 0.0004,
+   "pct_better_than_A": 0.91
+  },
+  {
+   "model": "C",
+   "mean_delta_rmse": -0.00159,
+   "lo95": -0.00343,
+   "hi95": 0.00043,
+   "pct_better_than_A": 0.925
+  }
+ ],
+ "repeats": 8,
+ "folds": 5
+}
