@@ -238,9 +238,9 @@
   }
 
   /* Ratings rows with everything an edit touches re-derived when a scenario is active.
-     O, D and talent move as well as power and rank: the Model inputs panel reads them
-     from here, and a page that showed a team climbing the table while its offense and
-     talent sat unchanged would be contradicting itself on screen. */
+     O, D and talent move as well as power and rank: the ratings table reads all of
+     them from here, and a page that showed a team climbing while its offense and talent
+     sat unchanged would be contradicting itself on screen. */
   function liveRatings() {
     const rows = cur().ratings.teams;
     if (!WI.enabled() || !WI.count()) return rows;
@@ -775,6 +775,23 @@
     return 0;
   }
 
+  /* Left-to-right order where the position label actually implies one.
+     sideKey resolves only left / middle / right, which is enough for a secondary but
+     not for a line: LT and LG both scored -1, so which of them ended up outside came
+     down to the order the members happened to be in - and toEleven has already sorted
+     them by projected value by then. Ohio State's two-deep lists RG, RT, LG, C, LT and
+     rendered with the left guard outside the left tackle.
+     QT/QG/SG/ST are the strong-side/quick-side naming some charts use instead of
+     left/right; they occupy the same five slots in the same order. */
+  const LINE_ORDER = { LT: -2, QT: -2, LG: -1, QG: -1, C: 0, OC: 0,
+                       RG: 1, SG: 1, RT: 2, ST: 2 };
+  function orderKey(p) {
+    const k = (p.p || "").toUpperCase();
+    // x2 so the fallback shares a scale with the line ordinals and slot/nickel (2)
+    // still sorts last
+    return k in LINE_ORDER ? LINE_ORDER[k] : sideKey(p) * 2;
+  }
+
   function shortName(n) {
     const parts = String(n).trim().split(/\s+/);
     return parts.length < 2 ? n : `${parts[0][0]}. ${parts.slice(1).join(" ")}`;
@@ -788,7 +805,7 @@
       const members = players.filter(p => p.g === g);
       if (!members.length || !lvl) continue;
       // left-ish labels first, slot/nickel last, so sides come out where expected
-      members.sort((a, b) => sideKey(a) - sideKey(b));
+      members.sort((a, b) => orderKey(a) - orderKey(b));
       const xs = lvl.wide ? wideSpread(members.length)
         : lvl.flank ? flankSpread(members, extent[lvl.flank] || [CENTER, CENTER],
                                   lvl.out)
@@ -804,7 +821,7 @@
             title="${esc(p.n)} — ${esc(p.p || p.g)} — ${p.w.toFixed(2)} wins added">
           <div class="dot" style="background:${tint}">${esc(label)}</div>
           <div class="nm">${esc(shortName(p.n))}${p.i
-            ? ` <span class="tag imp" title="No prior FBS snaps">·</span>` : ""}</div>
+            ? ` <span class="tag unproven" title="No prior FBS snaps — this projection is a positional prior, not a measurement">?</span>` : ""}</div>
           <div class="vl">${p.w >= 0 ? "+" : ""}${p.w.toFixed(2)}</div>
         </div>`);
       });
@@ -903,34 +920,11 @@
      roster is worth, what the schedule is worth, and the projected record they add
      up to. Keeping the schedule term visible is the point - it is why a good MAC
      roster and a middling SEC roster can project the same number of wins. */
-  function winsLedger(roster, S, tint) {
-    if (roster.projWins == null) return "";
-    const rows = [
-      ["Replacement-level team", roster.replWins, "var(--muted)"],
-      ["Roster value above replacement", roster.winsTotal, tint],
-      ["Schedule &amp; context", roster.context, roster.context >= 0 ? "var(--green)" : "var(--red)"],
-    ];
-    const span = Math.max(...rows.map(r => Math.abs(r[1])), 1);
-    return `<div class="ledger">
-      ${rows.map(([label, v, c]) => `
-        <div class="gr-row">
-          <span class="gr-name" style="width:200px">${label}</span>
-          <div class="gr-bar"><i style="width:${100 * Math.abs(v) / span}%;
-            background:${c}"></i></div>
-          <span class="gr-val">${v >= 0 ? "+" : "−"}${Math.abs(v).toFixed(2)}</span>
-        </div>`).join("")}
-      <div class="gr-row ledger-total">
-        <span class="gr-name" style="width:200px"><b>Projected wins</b></span>
-        <div class="gr-bar"></div>
-        <span class="gr-val"><b>${roster.projWins.toFixed(2)}</b></span>
-      </div></div>`;
-  }
-
   /* ---------- the roster editor ----------
      Every player's projected WAR is an input. The panel shows what the edit does to
      the three quantities between a player and a rating - the team's summed WAR, the
      talent z it standardizes to, and the power rank that falls out - so the chain is
-     visible rather than asserted. */
+     visible rather than asserted. The Players tab is the same store, seen flat. */
   const BASE_RANK = Object.fromEntries(ratings.teams.map(r => [r.team, r.rank]));
 
   function whatIfPanel(t, tint) {
@@ -949,10 +943,10 @@
       .map(p => {
         const cur = WI.get(t, p.n);
         const val = cur != null ? cur : (p.raw || 0);
-        const edited = cur != null;
-        return `<tr class="${edited ? "wi-edited" : ""}">
-          <td><span class="wi-pos">${esc(p.g)}</span></td>
-          <td class="wi-name">${esc(p.n)}${p.i ? ` <span class="tag imp">·</span>` : ""}</td>
+        return `<tr class="${cur != null ? "wi-edited" : ""}">
+          <td><span class="wi-pos">${esc(p.p || p.g)}</span></td>
+          <td class="wi-name">${esc(p.n)}${p.i
+            ? ` <span class="tag unproven" title="No prior FBS snaps">?</span>` : ""}</td>
           <td class="num wi-base">${(p.raw || 0).toFixed(3)}</td>
           <td class="num"><input class="wi-in" type="number" step="0.05"
             data-team="${esc(t)}" data-player="${esc(p.n)}"
@@ -960,18 +954,17 @@
         </tr>`;
       }).join("");
 
-    const d = now - base;
-    const sign = v => (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(3);
+    const sign = v => (v >= 0 ? "+" : "\u2212") + Math.abs(v).toFixed(3);
     return `<div class="panel wi-panel">
       <h3>Build your own
-        <span class="hint">— change what you think a player is worth and watch it
+        <span class="hint">&mdash; change what you think a player is worth and watch it
           reach the rating</span></h3>
       <div class="wi-summary">
         <div><b style="color:${tint}">${now.toFixed(2)}</b><span>team WAR${
           WI.count() ? ` <i class="wi-was">was ${base.toFixed(2)}</i>` : ""}</span></div>
         <div><b style="color:${dt >= 0 ? "var(--green)" : "var(--red)"}">${sign(dt)}</b>
           <span>talent (model z)</span></div>
-        <div><b>${rankNow ?? "—"}</b><span>power rank${
+        <div><b>${rankNow ?? "\u2014"}</b><span>power rank${
           moved ? ` <i class="wi-was">was ${rankWas}</i>` : ""}</span></div>
         <div class="wi-actions">
           <button id="wi-reset" class="wi-btn" ${WI.count() ? "" : "disabled"}>Reset${
@@ -983,16 +976,16 @@
       </tr></thead><tbody>${rows}</tbody></table></div>
       <div class="wd-foot">WAR reaches a rating through the talent blend
         (${Math.round(100 * model.whatif.warBlend)}% of talent) and the shrink that
-        pulls a team toward its talent-implied O and D — so an edit moves this team's
-        offense and defense, and, because talent is standardized across the league, it
-        nudges everyone else a little too. <b>Playoff odds do not update</b>: those come
-        from a 20,000-season Monte Carlo run in Python, and re-running a different
-        simulation here would be dishonest about what it is.</div>
+        pulls a team toward its talent-implied O and D &mdash; so an edit moves this
+        team's offense and defense, and, because talent is standardized across the
+        league, it nudges everyone else a little too. <b>Playoff odds do not
+        update</b>: those come from a 20,000-season Monte Carlo run in Python, and
+        re-running a different simulation here would be dishonest about what it is.</div>
     </div>`;
   }
 
   function wireWhatIf() {
-    document.querySelectorAll(".wi-in").forEach(el => {
+    document.querySelectorAll(".wi-panel .wi-in").forEach(el => {
       el.addEventListener("change", () => {
         const v = parseFloat(el.value);
         WI.set(el.dataset.team, el.dataset.player, isFinite(v) ? v : null);
@@ -1253,23 +1246,6 @@
           long a team's own bar is but how far it sits from everyone else's.</div>`;
     }
 
-    /* ---- model inputs ---- */
-    // Pythagorean is gone: it was retired as a feature in v3.1 and has been
-    // exporting as a flat 0.00 for every team ever since, which read as a real
-    // measurement rather than a zeroed column. Talent stays — it is retired as a
-    // separate COEFFICIENT (it now sits inside O and D at 70%, see
-    // config.DROPPED_FEATURES) but it is still a real, varying number worth showing.
-    const inputs = [
-      ["Offense", R.O], ["Defense", R.D], ["Talent", R.talent],
-      ["Returning", R.returning], ["Schedule (SOS)", R.sos],
-    ].filter(x => x[1] != null);
-    const inputHTML = inputs.map(([label, v]) => `
-      <div class="gr-row">
-        <span class="gr-name">${label}</span>
-        ${zBar(v, tint)}
-        <span class="gr-val">${v >= 0 ? "+" : ""}${v.toFixed(2)}</span>
-      </div>`).join("");
-
     /* ---- schedule ---- */
     const expWins = sched.reduce((s, g) => s + (g.r ? g.r.pA : FCS_WIN_P), 0);
     const schedHTML = sched.map(g => {
@@ -1311,7 +1287,6 @@
 
       <div class="panel"><h3>Projected win distribution</h3>${distHTML}</div>
       <div class="panel"><h3>Where the wins come from</h3>${rosterHTML}
-        ${roster ? winsLedger(roster, S, tint) : ""}
         <div class="wd-foot">${roster && !roster.players ? "Position groups from" :
           "Projected starters from"} the 2026 two-deep, each carrying
           the wins ${roster && !roster.players ? "they add" : "he adds"} over a
@@ -1320,15 +1295,11 @@
           conditional mean &mdash; so every player is scaled by one league-wide
           factor (&times;1.64) that restores the historical spread without moving the
           league average.${roster && roster.players
-            ? ` <span class="tag imp">·</span> marks a player with no prior FBS snaps.`
+            ? ` <span class="tag unproven">?</span> marks a player with no prior FBS
+              snaps, whose projection is a positional prior rather than a measurement.`
             : ""}</div></div>
       ${whatIfPanel(t, tint)}
       ${tossupHTML(t, tint, S.playoff)}
-      <div class="panel"><h3>Model inputs</h3>
-        <div class="gr wide">${inputHTML}</div>
-        <div class="wd-foot">Each input on the model's z-scale, where
-          <b>0 = FBS average</b> and higher is better (defense already flipped).</div>
-      </div>
       <div class="panel"><h3>2026 schedule
         <span class="hint">— projected score, spread and win probability for every game</span></h3>
         <div class="mini-wrap"><table class="mini sched"><thead><tr>
@@ -1681,17 +1652,180 @@
       </details>`;
   }
 
+  /* ---------- players ----------
+     One flat table of every two-deep slot in FBS. The team page can only ever answer
+     "is this player worth more than the model says", one roster at a time; the
+     question people actually have is comparative - is this the best guard in the
+     conference, who are the ten most valuable corners - and that needs every player in
+     one sortable place. Editing here is the same store the team page writes to, so a
+     change made in either shows up in both and in the ratings. */
+  const ALL_PLAYERS = (function () {
+    const rows = [];
+    for (const [t, r] of Object.entries(players)) {
+      if (!r || !r.players) continue;
+      for (const p of r.players) rows.push({ t, conf: conf(t), ...p });
+    }
+    return rows;
+  })();
+
+  const PL_COLS = [
+    { k: "n",    h: "Player",   v: r => r.n },
+    { k: "t",    h: "Team",     v: r => r.t },
+    { k: "conf", h: "Conf",     v: r => r.conf },
+    { k: "p",    h: "Pos",      v: r => r.p || r.g },
+    { k: "c",    h: "Class",    v: r => r.c || "" },
+    { k: "d",    h: "Depth",    n: true, v: r => r.d ?? 9 },
+    { k: "sn",   h: "2025 snaps", n: true, v: r => r.sn ?? -1 },
+    { k: "w25",  h: "2025 WAR", n: true, v: r => r.w25 ?? -99 },
+    { k: "war",  h: "Proj WAR", n: true, v: r => plWar(r) },
+  ];
+  const plWar = r => { const e = WI.get(r.t, r.n); return e != null ? e : (r.raw || 0); };
+  let plSort = "war", plDesc = true;
+  const PL_LIMIT = 300;
+
+  function plFilled() {
+    const q = document.getElementById("pl-search").value.trim().toLowerCase();
+    const c = document.getElementById("pl-conf").value;
+    const g = document.getElementById("pl-group").value;
+    const sc = document.getElementById("pl-scope").value;
+    let rows = ALL_PLAYERS;
+    if (q) rows = rows.filter(r => r.n.toLowerCase().includes(q) ||
+                                   r.t.toLowerCase().includes(q));
+    if (c) rows = rows.filter(r => r.conf === c);
+    if (g) rows = rows.filter(r => r.g === g);
+    if (sc === "start") rows = rows.filter(r => r.d === 1);
+    else if (sc === "unproven") rows = rows.filter(r => r.i);
+    else if (sc === "edited") rows = rows.filter(r => WI.get(r.t, r.n) != null);
+    const col = PL_COLS.find(x => x.k === plSort) || PL_COLS[8];
+    const val = col.v;
+    return rows.slice().sort((a, b) => {
+      const x = val(a), y = val(b);
+      if (typeof x === "string") return plDesc ? y.localeCompare(x) : x.localeCompare(y);
+      return plDesc ? y - x : x - y;
+    });
+  }
+
+  function renderPlayers() {
+    const all = plFilled();
+    const rows = all.slice(0, PL_LIMIT);
+    document.getElementById("pl-count").textContent =
+      `${all.length > PL_LIMIT ? `top ${PL_LIMIT} of ` : ""}${all.length} slots` +
+      (WI.count() ? ` · ${WI.count()} edited` : "");
+    document.getElementById("pl-reset").disabled = !WI.count();
+
+    const head = PL_COLS.map(c => `<th class="${c.n ? "num" : ""} sortable${
+      c.k === plSort ? " sorted" : ""}" data-k="${c.k}">${c.h}${
+      c.k === plSort ? (plDesc ? " ▾" : " ▴") : ""}</th>`).join("");
+
+    const body = rows.map(r => {
+      const tint = color(r.t);
+      const edited = WI.get(r.t, r.n) != null;
+      return `<tr class="${edited ? "wi-edited" : ""}">
+        <td><div class="team-cell sm"><span class="team-stripe" style="background:${tint}"></span>
+          <span class="pl-name">${esc(r.n)}</span>${r.i
+            ? ` <span class="tag unproven" title="No prior FBS snaps — this projection is a positional prior, not a measurement">?</span>` : ""}</div></td>
+        <td><div class="team-cell sm"><img src="${logoURL(r.t)}" alt="" loading="lazy">
+          <button class="team-link" data-team="${esc(r.t)}">${esc(r.t)}</button></div></td>
+        <td class="pl-conf">${esc(r.conf)}</td>
+        <td><span class="wi-pos">${esc(r.p || r.g)}</span></td>
+        <td class="pl-conf">${esc(r.c || "—")}</td>
+        <td class="num">${r.d ?? "—"}</td>
+        <td class="num wi-base">${r.sn != null ? r.sn.toLocaleString() : "—"}</td>
+        <td class="num wi-base">${r.w25 != null ? r.w25.toFixed(3) : "—"}</td>
+        <td class="num"><input class="wi-in pl-in" type="number" step="0.05"
+          data-team="${esc(r.t)}" data-player="${esc(r.n)}"
+          value="${plWar(r).toFixed(3)}" aria-label="Projected WAR for ${esc(r.n)}"></td>
+      </tr>`;
+    }).join("");
+
+    document.getElementById("pl-table").innerHTML =
+      `<div class="mini-wrap pl-scroll"><table class="mini pl-table"><thead><tr>${head}</tr></thead>
+       <tbody>${body}</tbody></table></div>` +
+      (all.length > PL_LIMIT ? `<div class="wd-foot">Showing the top ${PL_LIMIT} by the
+        current sort. Narrow with the filters or the search box to see the rest.</div>` : "");
+    wirePlayers();
+  }
+
+  function wirePlayers() {
+    document.querySelectorAll("#pl-table th.sortable").forEach(th =>
+      th.addEventListener("click", () => {
+        const k = th.dataset.k;
+        if (k === plSort) plDesc = !plDesc;
+        else { plSort = k; plDesc = !(k === "n" || k === "t" || k === "conf" || k === "c"); }
+        renderPlayers();
+      }));
+    // The whole table is replaced on every edit, so the caret would jump to the top of
+    // the page and the row being worked on would scroll away. Keep both.
+    document.querySelectorAll("#pl-table .pl-in").forEach(el =>
+      el.addEventListener("change", () => {
+        // The table scrolls inside .pl-scroll, not with the page, so it is that
+        // container's scrollTop that has to survive the re-render - restoring
+        // window.scrollY alone left the row you just edited somewhere off screen.
+        const box = document.querySelector(".pl-scroll");
+        const y = window.scrollY, inner = box ? box.scrollTop : 0;
+        const key = el.dataset.team + "|" + el.dataset.player;
+        const v = parseFloat(el.value);
+        WI.set(el.dataset.team, el.dataset.player, isFinite(v) ? v : null);
+        renderAll();
+        window.scrollTo(0, y);
+        const box2 = document.querySelector(".pl-scroll");
+        if (box2) box2.scrollTop = inner;
+        const again = [...document.querySelectorAll("#pl-table .pl-in")]
+          .find(e => e.dataset.team + "|" + e.dataset.player === key);
+        // preventScroll: focus() scrolls its target into view by default, which undid
+        // the scroll restore above and threw the page thousands of pixels down the
+        // table - the row had usually moved on the re-sort, so it scrolled to wherever
+        // the edit sent it.
+        if (again) again.focus({ preventScroll: true });
+      }));
+    // wireTeamLinks() binds .team-link globally but only runs from renderTeam, by
+    // which point this table may not exist yet - so these are bound here, to the same
+    // effect: switch to the team tab and show that roster.
+    document.querySelectorAll("#pl-table .team-link").forEach(b =>
+      b.addEventListener("click", () => {
+        const t = b.dataset.team;
+        if (!vecOf(t)) return;
+        selT.value = t;
+        document.querySelectorAll(".tab").forEach(x =>
+          x.classList.toggle("active", x.dataset.view === "team"));
+        document.querySelectorAll(".view").forEach(v =>
+          v.classList.toggle("active", v.id === "view-team"));
+        renderTeam();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }));
+  }
+
+  function fillPlayerSelects() {
+    const cs = document.getElementById("pl-conf"), gs = document.getElementById("pl-group");
+    if (cs.options.length <= 1) {
+      [...new Set(ALL_PLAYERS.map(r => r.conf))].filter(Boolean).sort()
+        .forEach(c => cs.add(new Option(c, c)));
+    }
+    if (gs.options.length <= 1) {
+      [...new Set(ALL_PLAYERS.map(r => r.g))].filter(Boolean).sort()
+        .forEach(g => gs.add(new Option(g, g)));
+    }
+  }
+
+  ["pl-search", "pl-conf", "pl-group", "pl-scope"].forEach(id =>
+    document.getElementById(id).addEventListener("input", renderPlayers));
+  document.getElementById("pl-reset").addEventListener("click", () => {
+    WI.reset(); renderAll();
+  });
+
   /* ---------- boot ---------- */
   function render(view) {
     if (view === "dash") renderDash();
     else if (view === "playoff") renderPlayoff();
     else if (view === "matchup") renderMatchup();
     else if (view === "team") renderTeam();
+    else if (view === "players") renderPlayers();
     else if (view === "method") renderMethod();
   }
   function renderAll() {
-    fillConfSelect();
-    renderDash(); renderPlayoff(); renderMatchup(); renderTeam(); renderMethod();
+    fillConfSelect(); fillPlayerSelects();
+    renderDash(); renderPlayoff(); renderMatchup(); renderTeam();
+    renderPlayers(); renderMethod();
   }
   // Check the client-side power reproduces the exported column before anyone edits
   // anything. A scenario is only meaningful as a difference from the published

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CFB Model v3 — 2026 Projections</title>
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
 <header>
@@ -18,6 +18,7 @@
     <button class="tab" data-view="playoff">Playoff Projection</button>
     <button class="tab" data-view="matchup">Matchup Simulator</button>
     <button class="tab" data-view="team">Team Breakdown</button>
+    <button class="tab" data-view="players">Players</button>
     <button class="tab" data-view="method">Method</button>
   </nav>
 </header>
@@ -103,6 +104,32 @@
     <div id="team-body"></div>
   </section>
 
+  <!-- ============ PLAYERS ============ -->
+  <section id="view-players" class="view">
+    <div class="view-head">
+      <h2>Players</h2>
+      <p class="sub">Every projected two-deep slot in FBS, sortable and filterable
+        across teams, conferences and positions. <b>Proj WAR</b> is editable: change
+        what you think a player is worth and the ratings, power ranks and matchup
+        simulator all move with it.</p>
+    </div>
+    <div class="dash-toolbar">
+      <input type="search" id="pl-search" placeholder="Search players or teams…">
+      <select id="pl-conf"><option value="">All conferences</option></select>
+      <select id="pl-group"><option value="">All positions</option></select>
+      <select id="pl-scope">
+        <option value="">Starters &amp; backups</option>
+        <option value="start">Starters only</option>
+        <option value="unproven">No prior FBS snaps</option>
+        <option value="edited">Edited by me</option>
+      </select>
+      <span class="spacer"></span>
+      <button id="pl-reset" class="wi-btn">Reset edits</button>
+      <span id="pl-count" class="dash-count"></span>
+    </div>
+    <div id="pl-table"></div>
+  </section>
+
   <!-- ============ METHOD ============ -->
   <section id="view-method" class="view">
     <div class="view-head">
@@ -123,6 +150,6 @@
 <!-- The data files are fetched with cache: "no-cache", but the script tag itself is
      not, so a stale app.js kept running against freshly regenerated JSON and failed
      silently — the page rendered nothing and threw nothing visible. Bump on edit. -->
-<script src="app.js?v=10"></script>
+<script src="app.js?v=11"></script>
 </body>
 </html>

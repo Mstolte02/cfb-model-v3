@@ -88,6 +88,10 @@ tbody tr:hover { background: var(--panel2); }
 .tag { font-size: 10px; padding: 1px 5px; border-radius: 4px; background: var(--panel2);
   color: var(--muted); letter-spacing: .5px; vertical-align: middle; font-family: var(--sans); }
 .tag.imp { background: rgba(154,107,31,.18); color: var(--accent); }
+/* A bare middot read as a stray typographic mark rather than a flag. A question mark
+   in the same pill says "we do not know" without needing the tooltip first. */
+.tag.unproven { background: rgba(154,107,31,.18); color: var(--accent);
+  font-weight: 700; cursor: help; }
 .tag.stars { background: rgba(63,125,58,.16); color: var(--green); }
 .tag.conf-tag { background: rgba(47,96,150,.14); color: var(--blue); }
 
@@ -464,3 +468,26 @@ details.nerd[open] > summary { margin-bottom: 14px; }
 .wi-in:focus { outline: none; border-color: var(--accent); }
 .wi-edited .wi-in { border-color: var(--accent); color: var(--accent); font-weight: 600; }
 .wi-edited .wi-name { font-weight: 600; }
+
+/* ---- players page --------------------------------------------------------- */
+.pl-table { width: 100%; }
+/* The table gets its OWN scroll container rather than riding the page. .mini-wrap
+   sets overflow-x:auto, and any overflow on an ancestor makes that ancestor the
+   scroll box a sticky child sticks to - so the header stuck to a box that never
+   scrolls vertically and slid off the screen with everything else. Scrolling here
+   also means the filters stay put while 300 rows move under them. */
+.pl-scroll { max-height: calc(100vh - 230px); min-height: 320px; overflow: auto; }
+.pl-table th { position: sticky; top: 0; background: var(--bg); z-index: 1;
+  box-shadow: inset 0 -1px 0 var(--line2); }
+.pl-table td { vertical-align: middle; }
+.pl-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 180px; display: inline-block; }
+.pl-conf { color: var(--muted); font-size: 12.5px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
+.pl-in { width: 84px; }
+/* The row highlight has to survive on a table this dense, where an edited row can be
+   the only changed thing in 300. */
+.pl-table tr.wi-edited td { background: rgba(154,107,31,.07); }
+#pl-table { margin-top: 4px; }
+#pl-table .team-cell.sm .team-stripe { width: 3px; height: 15px; border-radius: 2px;
+  flex: none; }
