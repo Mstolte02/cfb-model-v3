@@ -987,9 +987,14 @@
     }
 
     /* ---- model inputs ---- */
+    // Pythagorean is gone: it was retired as a feature in v3.1 and has been
+    // exporting as a flat 0.00 for every team ever since, which read as a real
+    // measurement rather than a zeroed column. Talent stays — it is retired as a
+    // separate COEFFICIENT (it now sits inside O and D at 70%, see
+    // config.DROPPED_FEATURES) but it is still a real, varying number worth showing.
     const inputs = [
       ["Offense", R.O], ["Defense", R.D], ["Talent", R.talent],
-      ["Returning", R.returning], ["Pythagorean", R.pythag], ["Schedule (SOS)", R.sos],
+      ["Returning", R.returning], ["Schedule (SOS)", R.sos],
     ].filter(x => x[1] != null);
     const inputHTML = inputs.map(([label, v]) => `
       <div class="gr-row">

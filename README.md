@@ -1,5 +1,97 @@
 # CFB Predictive Model v3
 
+## v3.6 — the ratings stop believing last season
+
+The question was why a team like Wake Forest carries a **top-10 defence** off an
+average defensive roster, and whether strength of schedule was being applied. It was
+— fully — and that turned out not to be the problem.
+
+**Strength of schedule was already there, at full strength, and correctly tuned.**
+`src/oppadj.py` runs an SRS fixed point on the O/D composites at `alpha = 1.0`, and
+it does real work: the schedule term is **31% of the variance** in adjusted defence,
+and it swings teams a long way (Akron 33rd → 105th, Florida 81st → 26th). Mean
+adjustment by conference runs SEC +0.55 down to MAC −0.83. Two things were checked
+and both came back clean: `alpha = 1.0` was the *edge* of the old tuning grid, but
+extending past it shows a genuine interior optimum (Brier .2086 at 1.0, .2208 at
+1.25), and the 25-iteration loop never formally converges yet its *shape* does —
+25 vs 400 iterations correlates 1.00000.
+
+**The two example teams said opposite things, and neither was the guess.** Wake
+Forest played the 45th-toughest set of offences — dead average — and its defence was
+strong on all five components independently. Auburn played the **14th** toughest, and
+its adjusted defence is 11 places *higher* than its raw one. The adjustment was
+crediting a hard schedule, not failing to punish a soft one.
+
+**The real fault: every previous sweep scored this knob on the wrong target.**
+`loso3`, `roster_vs_results` and the rest all score on game outcomes, and that
+surface is flat — the whole lambda grid spans 0.0010 Brier, because a game's win
+probability is dominated by the talent coefficient and barely notices weight moving
+between the composites and the roster baseline. The complaint was never about win
+probability. New script `scripts/rating_vs_realized.py` scores the *rating*:
+each team's entering-season O/D against **what that unit actually produced** that
+season, both opponent-adjusted, slopes refit per fold. That target discriminates.
+
+| effective shrink toward the roster | defence r | offence r |
+|---|---|---|
+| 0.00 — pure prior season | 0.553 | 0.547 |
+| **0.11 — what shipped** | **0.569** | **0.568** |
+| 0.55 | 0.627 | 0.636 |
+| **0.70 — now ships** | **0.636** | **0.652** |
+| 1.00 — pure roster | 0.558 | 0.610 |
+
+**Returning production does not identify which teams regress.** At *matched* average
+shrinkage, weighting `u` by `(1 − returning production)` is **worse** than not
+weighting it at all (defence r 0.597 vs 0.615). The shrink is now flat, which means
+`UNCERTAINTY_LAMBDA` is the shrinkage rather than a multiplier on a mean-0.451 index
+— the old 0.25 was really **0.11**, about a sixth of the optimum. It costs the win
+model nothing (LOSO Brier 0.2035 either way) and all five seasons improve
+monotonically, each with its own optimum in [0.65, 0.85]. `WAR_BLEND = 0.40`
+independently re-confirmed as optimal on the new target.
+
+**Talent is retired as a separate coefficient.** At 0.70 shrink the composites are
+70% talent by construction, so a standalone talent column is nearly a second copy of
+them: r(off_edge, talent) = 0.87 and **VIF 7.6**, against the 3.0 that was enough to
+retire pythag in v3.1. The ridge did what it always does to a duplicated column — it
+flipped talent negative (+0.50 → −0.22) and tripled O/D to compensate. Dropping it
+costs nothing (Brier 0.2035 either way) and the weights come back clean. Talent has
+not left the model; it is *inside* O and D, still drives the shrink, and is still
+exported for display.
+
+**Two bugs surfaced on the way, one of them silent:**
+
+- `MU.assemble` built `u = 1 − returning_production`, but `build_projection_frame`,
+  `spreads.py` and `serve.py` passed returning production **straight through**. The
+  model trained on one definition and projected with its inverse — the 2026 ratings
+  regressed hardest exactly the teams that returned the most. `MU.uncertainty_u` is
+  now the single definition.
+- `simulate_playoff.py` scaled its roster-uncertainty draw by `model.coef[TALENT_IX]`.
+  With talent retired that is exactly zero, so the whole perturbation would have
+  become a **no-op while still printing that it ran**. It now propagates through the
+  O/D coefficients, which is where talent actually reaches the model.
+
+Held-out 2025: Brier **0.2009 → 0.1996**, log-loss 0.5846 → 0.5813, accuracy .689 →
+.686 (two games). What moved is the ratings, which was the point:
+
+| | defence rank before | after | talent |
+|---|---|---|---|
+| Wake Forest | 7th | **22nd** | +0.10 |
+| James Madison | 19th | **65th** | −0.95 |
+| Auburn | 6th | 8th | +1.47 |
+| Nebraska | 94th | **52nd** | +0.91 |
+| USC | 62nd | **26th** | +1.31 |
+
+**Two refinements to the adjustment were tested and rejected**
+(`scripts/per_stat_oppadj.py`). Adjusting *per stat* — three features are true pairs
+(havoc, red-zone TD, pressure) and can be corrected against their own counterpart
+rather than the whole opposing composite — moves Brier .2035 → .2031, inside the
+noise, and produces ratings correlating **.998** with the composite ones, moving
+teams 2 places on average. Splitting *home from away* is a large real effect (0.51
+team-sd on 13,726 team-games) that cancels within a season: everyone plays ~6 home
+and ~6 away, so the implied rating bias is 0.035 team-sd against the opponent
+adjustment's 0.559 — **16× smaller**. The composite correction is already saturated.
+
+---
+
 ## v3.4 — WAR rebuilt on 11 seasons
 
 PFF exports were extended to 2014-2025 (`~/Downloads/pff_exports`, renamed from

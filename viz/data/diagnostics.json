@@ -13,29 +13,29 @@
   "active": [
    "O",
    "D",
-   "talent",
    "returning"
   ],
   "dropped": [
    "fp_margin",
-   "pythag"
+   "pythag",
+   "talent"
   ],
   "corr": {
    "O": {
     "O": 1.0,
-    "D": 0.302,
+    "D": 0.773,
     "fp_margin": 0.0,
     "pythag": 0.0,
-    "talent": 0.498,
-    "returning": -0.026
+    "talent": 0.0,
+    "returning": 0.114
    },
    "D": {
-    "O": 0.302,
+    "O": 0.773,
     "D": 1.0,
     "fp_margin": 0.0,
     "pythag": 0.0,
-    "talent": 0.502,
-    "returning": 0.007
+    "talent": 0.0,
+    "returning": 0.133
    },
    "fp_margin": {
     "O": 0.0,
@@ -54,29 +54,29 @@
     "returning": 0.0
    },
    "talent": {
-    "O": 0.498,
-    "D": 0.502,
+    "O": 0.0,
+    "D": 0.0,
     "fp_margin": 0.0,
     "pythag": 0.0,
-    "talent": 1.0,
-    "returning": 0.21
+    "talent": 0.0,
+    "returning": 0.0
    },
    "returning": {
-    "O": -0.026,
-    "D": 0.007,
+    "O": 0.114,
+    "D": 0.133,
     "fp_margin": 0.0,
     "pythag": 0.0,
-    "talent": 0.21,
+    "talent": 0.0,
     "returning": 1.0
    }
   },
   "vif": {
-   "O": 1.37,
-   "D": 1.36,
+   "O": 2.48,
+   "D": 2.49,
    "fp_margin": null,
    "pythag": null,
-   "talent": 1.76,
-   "returning": 1.08
+   "talent": null,
+   "returning": 1.02
   }
  },
  "talent_sources": {
@@ -149,67 +149,67 @@
  },
  "coefficients": {
   "logistic": {
-   "O": 0.3906,
-   "D": 0.3291,
+   "O": 0.8738,
+   "D": 0.6881,
    "fp_margin": 0.0,
    "pythag": 0.0,
-   "talent": 0.4986,
-   "returning": 0.1595
+   "talent": 0.0,
+   "returning": 0.1287
   },
-  "logistic_hfa": 0.2486,
+  "logistic_hfa": 0.2636,
   "margin": {
-   "O": 3.9163,
-   "D": 3.4408,
+   "O": 9.2059,
+   "D": 7.7799,
    "fp_margin": 0.0,
    "pythag": 0.0,
-   "talent": 5.7014,
-   "returning": 1.1196
+   "talent": 0.0,
+   "returning": 0.8745
   },
-  "margin_hfa": 2.4428,
-  "margin_sigma": 17.284,
+  "margin_hfa": 2.5854,
+  "margin_sigma": 17.328,
   "ensemble_w": 0.4
  },
  "evaluation": {
   "loso": {
    "brier": 0.2034,
    "log_loss": 0.5901,
-   "accuracy": 0.6825
+   "accuracy": 0.678
   },
   "per_season": [
    {
     "season": 2021,
     "n": 700,
-    "brier": 0.2106,
-    "log_loss": 0.6087,
-    "accuracy": 0.6757
+    "brier": 0.2121,
+    "log_loss": 0.6123,
+    "accuracy": 0.66
    },
    {
     "season": 2022,
     "n": 724,
-    "brier": 0.2018,
-    "log_loss": 0.5877,
-    "accuracy": 0.6754
+    "brier": 0.2008,
+    "log_loss": 0.5851,
+    "accuracy": 0.6796
    },
    {
     "season": 2023,
     "n": 729,
-    "brier": 0.1957,
-    "log_loss": 0.571,
+    "brier": 0.196,
+    "log_loss": 0.572,
     "accuracy": 0.6968
    },
    {
     "season": 2024,
     "n": 741,
-    "brier": 0.2068,
-    "log_loss": 0.5959,
-    "accuracy": 0.6775
+    "brier": 0.2078,
+    "log_loss": 0.5983,
+    "accuracy": 0.6707
    },
    {
     "season": 2025,
     "n": 719,
-    "brier": 0.202,
-    "log_loss": 0.5872,
-    "accuracy": 0.6871
+    "brier": 0.2001,
+    "log_loss": 0.5827,
+    "accuracy": 0.6829
    }
   ],
   "baselines": {
@@ -220,72 +220,72 @@
    {
     "lo": 0.0,
     "hi": 0.1,
-    "pred": 0.0729,
+    "pred": 0.0738,
     "actual": 0.125,
     "n": 24
    },
    {
     "lo": 0.1,
     "hi": 0.2,
-    "pred": 0.1557,
-    "actual": 0.1474,
-    "n": 95
+    "pred": 0.156,
+    "actual": 0.1222,
+    "n": 90
    },
    {
     "lo": 0.2,
     "hi": 0.3,
-    "pred": 0.2562,
-    "actual": 0.25,
-    "n": 228
+    "pred": 0.2553,
+    "actual": 0.2543,
+    "n": 232
    },
    {
     "lo": 0.3,
     "hi": 0.4,
-    "pred": 0.3529,
-    "actual": 0.3687,
-    "n": 377
+    "pred": 0.3542,
+    "actual": 0.3726,
+    "n": 365
    },
    {
     "lo": 0.4,
     "hi": 0.5,
-    "pred": 0.4541,
-    "actual": 0.4417,
-    "n": 523
+    "pred": 0.4543,
+    "actual": 0.4506,
+    "n": 506
    },
    {
     "lo": 0.5,
     "hi": 0.6,
-    "pred": 0.5524,
-    "actual": 0.5884,
-    "n": 622
+    "pred": 0.5516,
+    "actual": 0.5714,
+    "n": 672
    },
    {
     "lo": 0.6,
     "hi": 0.7,
-    "pred": 0.6497,
-    "actual": 0.6082,
-    "n": 638
+    "pred": 0.6502,
+    "actual": 0.6073,
+    "n": 634
    },
    {
     "lo": 0.7,
     "hi": 0.8,
-    "pred": 0.7478,
-    "actual": 0.7621,
-    "n": 517
+    "pred": 0.7481,
+    "actual": 0.767,
+    "n": 515
    },
    {
     "lo": 0.8,
     "hi": 0.9,
-    "pred": 0.8479,
-    "actual": 0.838,
-    "n": 395
+    "pred": 0.8484,
+    "actual": 0.8468,
+    "n": 385
    },
    {
     "lo": 0.9,
     "hi": 1.0,
-    "pred": 0.9348,
-    "actual": 0.9485,
-    "n": 194
+    "pred": 0.935,
+    "actual": 0.9474,
+    "n": 190
    }
   ],
   "home_win_rate": 0.5832

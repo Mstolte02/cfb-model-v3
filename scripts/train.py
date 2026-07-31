@@ -66,7 +66,7 @@ def raw_returning():
             for y in RETURNING_YEARS}
 
 
-def build_projection_frame(talent_blend=None, unc_lambda=None):
+def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=False):
     """Entering-PROJECTION_YEAR team frame (O/D/pythag/talent/returning, uncertainty
     applied), with 2026 returning from the curated CSV and talent proxied from the
     latest composite. Shared by scripts/rank.py and scripts/spreads.py.
@@ -150,9 +150,13 @@ def build_projection_frame(talent_blend=None, unc_lambda=None):
     od = OA.build_od_by_year(std, games, OPP_ADJ_ALPHA)
     train_years = [g for g in GAME_YEARS if g != TEST_GAME_YEAR]
     b_o, b_d = MU.fit_talent_od_slopes(train_years, std, talent, od_by_year=od)
-    unc = (unc_lambda, b_o, b_d, ret_raw[PROJECTION_YEAR])
-    return MU.team_frame(PROJECTION_YEAR, std, pyth, talent, ret,
-                         uncertainty=unc, od_by_year=od)
+    unc = (unc_lambda, b_o, b_d, MU.uncertainty_u(ret_raw[PROJECTION_YEAR]))
+    frame = MU.team_frame(PROJECTION_YEAR, std, pyth, talent, ret,
+                          uncertainty=unc, od_by_year=od)
+    # return_params: the talent slopes and the shrinkage, for callers that need to
+    # know how talent reaches O and D. The playoff simulator does - talent is a
+    # retired column now, so perturbing it has to go through the O/D coefficients.
+    return (frame, b_o, b_d, unc_lambda) if return_params else frame
 
 
 def load_bundle():

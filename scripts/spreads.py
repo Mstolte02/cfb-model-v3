@@ -28,7 +28,8 @@ def build_frames(std, pyth, talent, ret, ret_raw, train_years):
     b_o, b_d = MU.fit_talent_od_slopes(train_years, std, talent)
     frames = {}
     for N in GAME_YEARS:
-        unc = (UNCERTAINTY_LAMBDA, b_o, b_d, ret_raw[N]) if N in ret_raw else None
+        unc = ((UNCERTAINTY_LAMBDA, b_o, b_d, MU.uncertainty_u(ret_raw[N]))
+               if N in ret_raw else None)
         f = MU.team_frame(N, std, pyth, talent, ret, uncertainty=unc)
         if f is not None:
             frames[N] = f

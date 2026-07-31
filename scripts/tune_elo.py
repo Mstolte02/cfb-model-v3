@@ -46,7 +46,7 @@ def team_hfa_z(games):
 def prepare(season, std, cfbd_tal, ret, games, pyth, ret_raw, talent, od):
     tr = [g for g in GAME_YEARS if g != season]
     b_o, b_d = MU.fit_talent_od_slopes(tr, std, talent, od_by_year=od)
-    u = (1.0 - ret_raw[season]).clip(0, 1) if season in ret_raw else None
+    u = MU.uncertainty_u(ret_raw[season]) if season in ret_raw else None
     unc = (UNCERTAINTY_LAMBDA, b_o, b_d, u) if u is not None else None
     fr = MU.team_frame(season, std, pyth, talent, ret, uncertainty=unc, od_by_year=od)
     parts = MU.assemble(tr, std, pyth, talent, ret, games, lam=UNCERTAINTY_LAMBDA,

@@ -44,6 +44,31 @@ def od_ratings(std_prev: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
     return O, D
 
 
+def uncertainty_u(ret_raw_year=None, index=None) -> pd.Series:
+    """The per-team shrink weight u in the §C regression toward the talent baseline.
+
+    ONE definition, so the frames the model trains on and the frame it projects with
+    cannot disagree. They used to: MU.assemble built u = 1 - returning_production
+    while scripts/train.build_projection_frame passed returning production straight
+    through, so the 2026 ratings shrank hardest exactly the teams that returned the
+    most - the opposite of the intent, and the opposite of the training data.
+
+    u is now FLAT by default (config.UNCERTAINTY_USE_RETURNING = False). Returning
+    production does not identify which teams regress: scored on whether the entering
+    rating survives the season that follows, at matched average shrinkage the
+    returning-weighted version is WORSE than a flat one (defence r 0.597 vs 0.615).
+    See scripts/rating_vs_realized.py and config.UNCERTAINTY_LAMBDA.
+    """
+    from config import UNCERTAINTY_USE_RETURNING
+    if UNCERTAINTY_USE_RETURNING and ret_raw_year is not None:
+        return (1.0 - ret_raw_year).clip(lower=0, upper=1)
+    idx = index if index is not None else (
+        ret_raw_year.index if ret_raw_year is not None else None)
+    if idx is None:
+        return None
+    return pd.Series(1.0, index=idx)
+
+
 def fit_talent_od_slopes(train_years, std_by_year, talent_by_year, od_by_year=None):
     """Slopes of the prior-year O/D composites on entering-year talent_z.
     Used as each team's talent-implied baseline for uncertainty shrinkage."""
@@ -114,12 +139,21 @@ def team_frame(N, std_by_year, pythag_by_year, talent_by_year, returning_by_year
     # to zero and fits a coefficient of exactly zero, so the feature contributes
     # nothing while every downstream consumer - the six-wide model.json, the JS port,
     # the playoff simulator - keeps the same shape and stays verifiably in sync.
-    # See config.DROPPED_FEATURES for why these two went.
+    # See config.DROPPED_FEATURES for why these three went.
+    #
+    # The pre-zeroed value is kept alongside as <name>_raw, because "not a separate
+    # coefficient" is not the same as "not worth knowing". Talent in particular is
+    # retired only as a duplicate of what is already inside O and D - it still drives
+    # the shrink above, the app still shows it, and the playoff simulator still needs
+    # the real number to perturb. Consumers of the model vector must select the six
+    # FEATURE columns by name; iterating the frame's columns would now pick these up.
     from config import DROPPED_FEATURES
+    df = df.dropna()
     for c in DROPPED_FEATURES:
         if c in df.columns:
+            df[f"{c}_raw"] = df[c]
             df[c] = 0.0
-    return df.dropna()
+    return df
 
 
 def build_year(N, frame, games_df):
@@ -159,7 +193,7 @@ def assemble(game_years, std_by_year, pythag_by_year, talent_by_year,
             if u_by_year is not None and N in u_by_year:
                 u = u_by_year[N]
             elif ret_raw_by_year and N in ret_raw_by_year:
-                u = (1.0 - ret_raw_by_year[N]).clip(lower=0, upper=1)
+                u = uncertainty_u(ret_raw_by_year[N])
             else:
                 u = None
             if u is not None:

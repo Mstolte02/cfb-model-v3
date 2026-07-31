@@ -51,7 +51,7 @@ def assemble_m(std, pyth, talent, ret, games, ret_raw, od, tr_years):
     b_o, b_d = MU.fit_talent_od_slopes(tr_years, std, talent, od_by_year=od)
     parts = {}
     for N in GAME_YEARS:
-        u = (1.0 - ret_raw[N]).clip(lower=0, upper=1) if N in ret_raw else None
+        u = MU.uncertainty_u(ret_raw[N]) if N in ret_raw else None
         unc = (UNCERTAINTY_LAMBDA, b_o, b_d, u) if u is not None else None
         frame = MU.team_frame(N, std, pyth, talent, ret, uncertainty=unc,
                               od_by_year=od)

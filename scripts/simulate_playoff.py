@@ -147,7 +147,7 @@ def main(n_sims=20000, seed=2026, variant=""):
     kw = ROSTER_VARIANT if variant == "roster" else {}
     suffix = "_roster" if variant == "roster" else ""
     rng = np.random.default_rng(seed)
-    frame = build_projection_frame(**kw)
+    frame, b_o, b_d, shrink = build_projection_frame(return_params=True, **kw)
     model = CFBModel.load()
 
     teams_meta = json.load(open(ROOT / "data" / "raw" / "teams_2026.json"))
@@ -234,16 +234,29 @@ def main(n_sims=20000, seed=2026, variant=""):
     # a season actually goes wrong.
     talent_sd = _talent_noise_sd()
     if talent_sd > 0:
-        c_z = float(model.coef[TALENT_IX]) * talent_sd
-        c_m = float(model.margin_coef[TALENT_IX]) * talent_sd
+        # Talent is a RETIRED column (config.DROPPED_FEATURES), so model.coef[TALENT_IX]
+        # is exactly zero and scaling the noise by it would silently turn this whole
+        # perturbation into a no-op while still printing that it ran. Talent now reaches
+        # the model through the shrink instead: a talent delta d moves O by
+        # shrink*b_o*d and D by shrink*b_d*d, and those land on off_edge and def_edge
+        # with opposite signs for the two teams -
+        #     off_edge = O_home - D_away,  def_edge = D_home - O_away
+        # so the home and away multipliers are NOT equal and are carried separately.
+        cO, cD = float(model.coef[0]), float(model.coef[1])
+        mO, mD = float(model.margin_coef[0]), float(model.margin_coef[1])
+        cz_h = shrink * (cO * b_o + cD * b_d) * talent_sd
+        cz_a = shrink * (cO * b_d + cD * b_o) * talent_sd
+        cm_h = shrink * (mO * b_o + mD * b_d) * talent_sd
+        cm_a = shrink * (mO * b_d + mD * b_o) * talent_sd
         from scipy.stats import norm
         O = np.empty((n_sims, ng), np.float32)
         for lo in range(0, n_sims, 4000):        # chunked: (sims x games) is large
             hi_ = min(lo + 4000, n_sims)
             d = rng.standard_normal((hi_ - lo, n))
-            dd = d[:, gh] - d[:, ga]
-            p = (model.ens_w / (1.0 + np.exp(-(gz + c_z * dd)))
-                 + (1 - model.ens_w) * norm.cdf((gm + c_m * dd) / model.margin_sigma))
+            dz = cz_h * d[:, gh] - cz_a * d[:, ga]
+            dm = cm_h * d[:, gh] - cm_a * d[:, ga]
+            p = (model.ens_w / (1.0 + np.exp(-(gz + dz)))
+                 + (1 - model.ens_w) * norm.cdf((gm + dm) / model.margin_sigma))
             O[lo:hi_] = rng.random((hi_ - lo, ng)) < p
         print(f"  roster uncertainty: talent perturbed by {talent_sd:.3f} sd per team "
               f"per sim (uniform - per-team spread did not validate)")

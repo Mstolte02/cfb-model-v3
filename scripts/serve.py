@@ -181,7 +181,7 @@ def recompute(lens, edits):
         talent = pd.concat([talent, pd.Series(vals)])
 
     b_o, b_d = STATE["slopes"][lens]
-    unc = (lam, b_o, b_d, STATE["ret_raw"][YEAR])
+    unc = (lam, b_o, b_d, MU.uncertainty_u(STATE["ret_raw"][YEAR]))
     frame = MU.team_frame(YEAR, STATE["std"], STATE["pyth"], {YEAR: talent},
                           STATE["ret"], uncertainty=unc, od_by_year=STATE["od"])
     cols = ["O", "D", "fp_margin", "pythag", "talent", "returning"]

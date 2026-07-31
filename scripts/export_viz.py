@@ -42,7 +42,7 @@ def fit_points_model():
 
     Xs, ys = [], []
     for N in GAME_YEARS:
-        u = (1.0 - ret_raw[N]).clip(lower=0, upper=1) if N in ret_raw else None
+        u = MU.uncertainty_u(ret_raw[N]) if N in ret_raw else None
         unc = (UNCERTAINTY_LAMBDA, b_o, b_d, u) if u is not None else None
         frame = MU.team_frame(N, std, pyth, talent, ret, uncertainty=unc,
                               od_by_year=od)
@@ -106,9 +106,12 @@ def main(variant=""):
             "vs_average": round(float(power.loc[t, "vs_average"]), 4),
             "O": round(float(comp.loc[t, "O"]), 3),
             "D": round(float(comp.loc[t, "D"]), 3),
-            "talent": round(float(comp.loc[t, "talent"]), 3),
+            # Retired features read from the *_raw copies: the model column is zero
+            # by design, and exporting that zero would have shown every team an
+            # identical talent of 0.00 (which is what "pythag": 0.0 has been doing
+            # since v3.1 - it is retired, so it is no longer exported at all).
+            "talent": round(float(comp.loc[t, "talent_raw"]), 3),
             "returning": round(float(comp.loc[t, "returning"]), 3),
-            "pythag": round(float(comp.loc[t, "pythag"]), 3),
             "sos": round(float(sos_sum[t] / max(sos_n[t], 1)), 3),
             "games": int(sos_n[t]),
             "avg_wins": po.get("avg_wins"),
@@ -131,8 +134,12 @@ def main(variant=""):
         print("Fitting points model for projected scores ...")
         points = fit_points_model()
 
+    # Select by name: the frame now carries *_raw companions for retired features,
+    # and iterating comp.loc[t] would silently widen the vector past the six the
+    # coefficients are indexed against.
+    FEATS = ["O", "D", "fp_margin", "pythag", "talent", "returning"]
     export = {
-        "features": ["O", "D", "fp_margin", "pythag", "talent", "returning"],
+        "features": FEATS,
         "logistic": {"coef": model.coef.tolist(), "hfa": model.hfa_coef,
                      "intercept": model.intercept},
         "margin": {"coef": model.margin_coef.tolist(), "hfa": model.margin_hfa,
@@ -140,7 +147,8 @@ def main(variant=""):
                    "sigma": model.margin_sigma},
         "ens_w": model.ens_w,
         "points": points,
-        "teams": {t: [round(float(v), 4) for v in comp.loc[t]] for t in comp.index},
+        "teams": {t: [round(float(comp.loc[t, c]), 4) for c in FEATS]
+                  for t in comp.index},
     }
     (VIZ / f"model{suffix}.json").write_text(json.dumps(export, indent=1))
 

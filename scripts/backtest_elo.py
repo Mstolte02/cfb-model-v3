@@ -28,7 +28,7 @@ def backtest_season(TEST, std, cfbd_tal, ret, games, pyth, ret_raw, talent, od):
     b_o, b_d = MU.fit_talent_od_slopes(tr, std, talent, od_by_year=od)
 
     def frame(N):
-        u = (1.0 - ret_raw[N]).clip(0, 1) if N in ret_raw else None
+        u = MU.uncertainty_u(ret_raw[N]) if N in ret_raw else None
         unc = (UNCERTAINTY_LAMBDA, b_o, b_d, u) if u is not None else None
         return MU.team_frame(N, std, pyth, talent, ret, uncertainty=unc, od_by_year=od)
 

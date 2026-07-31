@@ -54,7 +54,7 @@ def build(std, talent, ret_raw, pyth, ret, games, od, slope_years):
     for N in GAME_YEARS:
         if (N - 1) not in std and (N - 1) not in od:
             continue
-        u = (1.0 - ret_raw[N]).clip(0, 1) if N in ret_raw else None
+        u = MU.uncertainty_u(ret_raw[N]) if N in ret_raw else None
         unc = (UNCERTAINTY_LAMBDA, b_o, b_d, u) if u is not None else None
         fr = MU.team_frame(N, std, pyth, talent, ret, uncertainty=unc, od_by_year=od)
         if fr is not None:
@@ -165,7 +165,7 @@ def main():
     fr_all = {}
     b_o, b_d = MU.fit_talent_od_slopes(GAME_YEARS, std, talent, od_by_year=od)
     for N in GAME_YEARS:
-        u = (1.0 - ret_raw[N]).clip(0, 1) if N in ret_raw else None
+        u = MU.uncertainty_u(ret_raw[N]) if N in ret_raw else None
         unc = (UNCERTAINTY_LAMBDA, b_o, b_d, u) if u is not None else None
         f = MU.team_frame(N, std, pyth, talent, ret, uncertainty=unc, od_by_year=od)
         if f is not None:

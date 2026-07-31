@@ -44,15 +44,78 @@ PYTHAG_EXP = 2.37
 # Years we need game scores for, to compute Pythagorean (prior-season) inputs.
 PYTHAG_YEARS = [2020, 2021, 2022, 2023, 2024, 2025]
 
-# --- Per-team uncertainty index (doc §C) -------------------------------------
-# Shrink a team's prior-year O/D toward its talent baseline by lam * (1 - returning
-# production). Low-continuity teams (new QB / churn) regress harder. Best on LOSO
-# at 1.0 (scripts/loso3.py): Brier -0.25%, log-loss -1.0%, accuracy +0.5pp.
-UNCERTAINTY_LAMBDA = 0.25  # near-neutral with the leaner feature set (was 1.0)
+# --- Regression of the O/D composites toward the roster baseline (doc §C) -----
+# O_adj = (1 - lam*u)*O + lam*u*(b_o * talent_z), and likewise for D. lam = 0 trusts
+# last season completely; lam = 1 sends a team all the way to its roster baseline.
+#
+# u USED TO BE (1 - returning production) - shrink the low-continuity teams harder.
+# It is now FLAT (see UNCERTAINTY_USE_RETURNING), so lam IS the shrinkage.
+#
+# Both changes came out of scripts/rating_vs_realized.py, which scores the thing
+# being complained about rather than a proxy for it. Every previous sweep of this
+# knob (loso3, roster_vs_results) scored it on game outcomes, and that surface is
+# FLAT - the whole lambda grid spans 0.0010 Brier, because a game's win probability
+# is dominated by the talent coefficient and barely notices weight moving between
+# the O/D composites and the roster baseline underneath them.
+#
+# The complaint was never about win probability. It was that a team can carry a
+# top-10 DEFENCE RATING off one strong season while its roster says average. So
+# score the rating: correlate each team's ENTERING-season O/D against what that unit
+# actually PRODUCED that season, both opponent-adjusted. That target discriminates.
+#
+#   effective shrink   0.00    0.11*    0.35    0.55    0.65    0.70    0.75    0.90
+#   defence r         .5531   .5688    .6010   .6270   .6346   .6356   .6339   .6054
+#   offence r         .5473   .5682    .6044   .6361   .6478   .6515   .6532   .6402
+#   * what shipped before: lam 0.25 x mean u 0.451
+#
+# 0.70 is defence's optimum by correlation and offence's by RMSE, and sits within
+# 0.002 r of both sides' peaks - the two sides were checked separately and do not
+# want different values, so splitting them would be fitting noise. Stable: all five
+# seasons improve monotonically off zero and each season's own optimum is in
+# [0.65, 0.85].
+#
+# It costs the win model nothing: LOSO Brier 0.2036 at lam 0.65-0.75 against 0.2034
+# before, inside the noise this surface has always had. Only lam = 1.0 breaks it
+# (0.2112), where O/D collapse onto pure talent and go collinear with the talent
+# feature - so 0.70 is a genuine interior optimum on BOTH targets, not a corner.
+UNCERTAINTY_LAMBDA = 0.70
+
+# Returning production does not identify which teams regress. At MATCHED average
+# shrinkage, weighting u by (1 - returning production) is worse than not weighting it
+# at all - defence r 0.597 against 0.615 - so the variation it adds is noise. Set
+# True to restore the old behaviour; src/matchup.uncertainty_u is the one definition.
+UNCERTAINTY_USE_RETURNING = False
 
 # --- Opponent (strength-of-schedule) adjustment (doc §4.4 / "Adj_" stats) -----
-# Iterative SRS on the O/D composites. Best on LOSO at full strength (-0.9% Brier,
-# best log-loss). 0 = raw composites. See scripts/loso_oppadj.py.
+# Iterative SRS on the O/D composites. 0 = raw composites. See scripts/loso_oppadj.py.
+#
+# 1.0 was the EDGE of the tuning grid, which is not evidence that it is the optimum.
+# Extended past it (solving the fixed point exactly, since alpha = 1 is where the
+# iteration's singularity sits and alpha > 1 is otherwise ill-defined):
+#
+#   alpha    0.00   0.50   0.75   1.00   1.25   1.50   2.00   3.00
+#   Brier   .2118  .2106  .2096  .2086  .2208  .2248  .2202  .2257
+#
+# A genuine interior optimum - it falls off a cliff past 1.0, not a plateau. The
+# 25-iteration loop also never formally converges (the mean drifts ~0.006/iteration
+# along the constant vector forever) but the SHAPE does, and the final
+# re-standardization removes the drift: 25 vs 400 iterations correlates 1.00000 with
+# a max rank difference of 2. Left alone.
+#
+# TWO REFINEMENTS WERE TESTED AND REJECTED (scripts/per_stat_oppadj.py):
+#
+#   per-stat instead of per-composite. Three features are true pairs (havoc, red-zone
+#   TD, pressure) and could be adjusted against their own counterpart rather than
+#   against the whole opposing composite. Implemented in oppadj.adjust_per_stat and
+#   measured: Brier .2035 -> .2031, inside the noise, and the ratings it produces
+#   correlate .998-.999 with the composite ones, moving teams 2 places on average.
+#   The composite correction already captures it. Kept as code, not shipped.
+#
+#   splitting home from away. The home effect is real and large - 0.51 team-sd on
+#   13,726 team-games - but a season rating only inherits it insofar as teams differ
+#   in home-game share, and they barely do (mean .524, sd .069). Implied bias sd is
+#   0.035 team-sd against the opponent adjustment's 0.559, i.e. 16x smaller, and
+#   correcting for it moves teams 1 place. It cancels within a season.
 OPP_ADJ_ALPHA = 1.0
 
 # --- Talent signal: blend roster-aware PFF talent with CFBD recruiting ---------
@@ -113,8 +176,26 @@ WAR_BLEND = 0.40
 #
 # pythag stays in src/projection.py, where it is a predictor of next season's O/D -
 # a different job from being a model feature.
+#
+# talent joined them when UNCERTAINTY_LAMBDA went to 0.70. At that shrinkage the O/D
+# composites are 70% talent BY CONSTRUCTION, so a standalone talent column is close
+# to a second copy of them: r(off_edge, talent) = 0.87 and VIF = 7.6, against the 3.0
+# that was enough to retire pythag. The ridge responds the way it always does to a
+# duplicated column - it flips talent NEGATIVE (+0.50 -> -0.22) and roughly triples
+# O/D to compensate. Predictions are indifferent (LOSO Brier 0.2035 with or without
+# it) but the fitted weights stop meaning anything, and the app would have shown a
+# negative talent weight for a model that leans on talent harder than ever.
+#
+#   k     r(O,talent)  VIF   talent coef      Brier keeping it / dropping it
+#   0.11     0.50      1.7      +0.59              0.2035
+#   0.55     0.76      3.9      +0.20              0.2037 / 0.2033
+#   0.70     0.87      7.6      -0.22              0.2035 / 0.2035
+#
+# Talent has NOT left the model - it is inside O and D at 70%, which is why dropping
+# the column costs nothing. It is still exported for display and still drives the
+# shrink; only the redundant second coefficient is gone.
 # Set to [] to restore the original six.
-DROPPED_FEATURES = ["fp_margin", "pythag"]
+DROPPED_FEATURES = ["fp_margin", "pythag", "talent"]
 
 # Team-level features pulled from CFBD /stats/season/advanced.
 # `higher_is_better=False` features get sign-flipped so larger == stronger.

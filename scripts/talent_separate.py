@@ -54,7 +54,7 @@ def assemble_with(talent, std, ret, games, pyth, ret_raw, od, extra=None):
     out = {}
     for N, tup in parts.items():
         X, y, hf = tup[0], tup[1], tup[2]
-        u = (1.0 - ret_raw[N]).clip(lower=0, upper=1) if N in ret_raw else None
+        u = MU.uncertainty_u(ret_raw[N]) if N in ret_raw else None
         unc = (UNCERTAINTY_LAMBDA, b_o, b_d, u) if u is not None else None
         frame = MU.team_frame(N, std, pyth, talent, ret, uncertainty=unc, od_by_year=od)
         teams = set(frame.index)
