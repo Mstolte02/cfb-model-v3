@@ -920,82 +920,6 @@
      roster is worth, what the schedule is worth, and the projected record they add
      up to. Keeping the schedule term visible is the point - it is why a good MAC
      roster and a middling SEC roster can project the same number of wins. */
-  /* ---------- the roster editor ----------
-     Every player's projected WAR is an input. The panel shows what the edit does to
-     the three quantities between a player and a rating - the team's summed WAR, the
-     talent z it standardizes to, and the power rank that falls out - so the chain is
-     visible rather than asserted. The Players tab is the same store, seen flat. */
-  const BASE_RANK = Object.fromEntries(ratings.teams.map(r => [r.team, r.rank]));
-
-  function whatIfPanel(t, tint) {
-    if (!WI.enabled()) return "";
-    const roster = players[t];
-    if (!roster || !roster.players) return "";
-
-    const base = WI.baseTeamWar(t), now = WI.teamWar(t);
-    const dt = WI.talentDelta(t);
-    const live = ratingRow()[t] || {};
-    const rankNow = live.rank, rankWas = BASE_RANK[t];
-    const moved = WI.count() > 0 && rankNow != null && rankNow !== rankWas;
-
-    const rows = roster.players.slice()
-      .sort((a, b) => (b.raw || 0) - (a.raw || 0))
-      .map(p => {
-        const cur = WI.get(t, p.n);
-        const val = cur != null ? cur : (p.raw || 0);
-        return `<tr class="${cur != null ? "wi-edited" : ""}">
-          <td><span class="wi-pos">${esc(p.p || p.g)}</span></td>
-          <td class="wi-name">${esc(p.n)}${p.i
-            ? ` <span class="tag unproven" title="No prior FBS snaps">?</span>` : ""}</td>
-          <td class="num wi-base">${(p.raw || 0).toFixed(3)}</td>
-          <td class="num"><input class="wi-in" type="number" step="0.05"
-            data-team="${esc(t)}" data-player="${esc(p.n)}"
-            value="${val.toFixed(3)}" aria-label="Projected WAR for ${esc(p.n)}"></td>
-        </tr>`;
-      }).join("");
-
-    const sign = v => (v >= 0 ? "+" : "\u2212") + Math.abs(v).toFixed(3);
-    return `<div class="panel wi-panel">
-      <h3>Build your own
-        <span class="hint">&mdash; change what you think a player is worth and watch it
-          reach the rating</span></h3>
-      <div class="wi-summary">
-        <div><b style="color:${tint}">${now.toFixed(2)}</b><span>team WAR${
-          WI.count() ? ` <i class="wi-was">was ${base.toFixed(2)}</i>` : ""}</span></div>
-        <div><b style="color:${dt >= 0 ? "var(--green)" : "var(--red)"}">${sign(dt)}</b>
-          <span>talent (model z)</span></div>
-        <div><b>${rankNow ?? "\u2014"}</b><span>power rank${
-          moved ? ` <i class="wi-was">was ${rankWas}</i>` : ""}</span></div>
-        <div class="wi-actions">
-          <button id="wi-reset" class="wi-btn" ${WI.count() ? "" : "disabled"}>Reset${
-            WI.count() ? ` (${WI.count()})` : ""}</button>
-        </div>
-      </div>
-      <div class="mini-wrap wi-scroll"><table class="mini wi-table"><thead><tr>
-        <th></th><th>Player</th><th class="num">Model</th><th class="num">Yours</th>
-      </tr></thead><tbody>${rows}</tbody></table></div>
-      <div class="wd-foot">WAR reaches a rating through the talent blend
-        (${Math.round(100 * model.whatif.warBlend)}% of talent) and the shrink that
-        pulls a team toward its talent-implied O and D &mdash; so an edit moves this
-        team's offense and defense, and, because talent is standardized across the
-        league, it nudges everyone else a little too. <b>Playoff odds do not
-        update</b>: those come from a 20,000-season Monte Carlo run in Python, and
-        re-running a different simulation here would be dishonest about what it is.</div>
-    </div>`;
-  }
-
-  function wireWhatIf() {
-    document.querySelectorAll(".wi-panel .wi-in").forEach(el => {
-      el.addEventListener("change", () => {
-        const v = parseFloat(el.value);
-        WI.set(el.dataset.team, el.dataset.player, isFinite(v) ? v : null);
-        renderAll();
-      });
-    });
-    const rb = document.getElementById("wi-reset");
-    if (rb) rb.addEventListener("click", () => { WI.reset(); renderAll(); });
-  }
-
   function frontLabel(def) {
     const dl = def.filter(p => p.g === "DT" || p.g === "EDGE").length;
     const lb = def.filter(p => p.g === "LB").length;
@@ -1298,7 +1222,6 @@
             ? ` <span class="tag unproven">?</span> marks a player with no prior FBS
               snaps, whose projection is a positional prior rather than a measurement.`
             : ""}</div></div>
-      ${whatIfPanel(t, tint)}
       ${tossupHTML(t, tint, S.playoff)}
       <div class="panel"><h3>2026 schedule
         <span class="hint">— projected score, spread and win probability for every game</span></h3>
@@ -1313,7 +1236,6 @@
       </div>`;
     wireTeamLinks();
     wireTossups();
-    wireWhatIf();
   }
   selT.addEventListener("change", renderTeam);
 

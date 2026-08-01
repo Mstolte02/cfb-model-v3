@@ -77,38 +77,61 @@ TEAM_ALIAS = {
     "USF": "South Florida",
 }
 
-# concept -> (EA attributes that measure it, groups that play it).
-# The attributes are averaged after standardizing, so a concept measured by eight
-# attributes is not thereby worth more than one measured by two - that is what the
-# inherited concept weight decides.
-CONCEPTS = {
-    "passing":         (["throwPower", "throwAccuracyShort", "throwAccuracyMid",
-                         "throwAccuracyDeep", "throwOnTheRun", "playAction",
-                         "awareness"], ["QB"]),
-    "qb_pressure":     (["throwUnderPressure", "breakSack"], ["QB"]),
-    "qb_rushing":      (["speed", "acceleration", "breakTackle", "bCVision"], ["QB"]),
-    "rushing":         (["carrying", "breakTackle", "trucking", "spinMove", "jukeMove",
-                         "stiffArm", "bCVision", "speed"], ["RB"]),
-    "receiving":       (["catching", "shortRouteRunning", "mediumRouteRunning",
-                         "deepRouteRunning"], ["WR", "TE", "RB"]),
-    "yac":             (["breakTackle", "jukeMove", "spinMove", "stiffArm", "speed"],
-                        ["WR", "TE", "RB"]),
-    "hands":           (["catching", "catchInTraffic", "spectacularCatch"],
-                        ["WR", "TE"]),
-    "pass_protection": (["passBlock", "passBlockPower", "passBlockFinesse"],
-                        ["OL", "TE"]),
-    "run_blocking":    (["runBlock", "runBlockPower", "runBlockFinesse",
-                         "impactBlocking", "leadBlock"], ["OL", "TE", "RB"]),
-    "pass_rush":       (["powerMoves", "finesseMoves", "blockShedding", "strength"],
-                        ["DT", "EDGE", "LB"]),
-    "run_defense":     (["blockShedding", "tackle", "playRecognition", "pursuit",
-                         "strength"], ["DT", "EDGE", "LB", "CB", "SAF"]),
-    "coverage":        (["manCoverage", "zoneCoverage", "press", "playRecognition"],
-                        ["CB", "SAF", "LB"]),
-    "tackling":        (["tackle", "hitPower", "pursuit"],
-                        ["DT", "EDGE", "LB", "CB", "SAF"]),
-    "ball_security":   (["carrying"], ["QB", "RB"]),
+# The EA attributes that measure each football CONCEPT. Concept is the right level
+# for the measurement question - what does coverage look like in EA's vocabulary - and
+# the wrong level for the WEIGHTING question, which is why the facets below exist.
+CONCEPT_ATTRS = {
+    "passing":         ["throwPower", "throwAccuracyShort", "throwAccuracyMid",
+                        "throwAccuracyDeep", "throwOnTheRun", "playAction", "awareness"],
+    "qb_pressure":     ["throwUnderPressure", "breakSack"],
+    "qb_rushing":      ["speed", "acceleration", "breakTackle", "bCVision"],
+    "rushing":         ["carrying", "breakTackle", "trucking", "spinMove", "jukeMove",
+                        "stiffArm", "bCVision", "speed"],
+    "receiving":       ["catching", "shortRouteRunning", "mediumRouteRunning",
+                        "deepRouteRunning"],
+    "yac":             ["breakTackle", "jukeMove", "spinMove", "stiffArm", "speed"],
+    "hands":           ["catching", "catchInTraffic", "spectacularCatch"],
+    "pass_protection": ["passBlock", "passBlockPower", "passBlockFinesse"],
+    "run_blocking":    ["runBlock", "runBlockPower", "runBlockFinesse",
+                        "impactBlocking", "leadBlock"],
+    "pass_rush":       ["powerMoves", "finesseMoves", "blockShedding", "strength"],
+    "run_defense":     ["blockShedding", "tackle", "playRecognition", "pursuit",
+                        "strength"],
+    "coverage":        ["manCoverage", "zoneCoverage", "press", "playRecognition"],
+    "tackling":        ["tackle", "hitPower", "pursuit"],
+    "ball_security":   ["carrying"],
 }
+
+# EVERY PFF FACET IS SCOPED TO POSITIONS, AND THAT SCOPE CARRIES THE FIT'S OPINION
+# ABOUT POSITIONAL VALUE. The first version of this build collapsed to concepts, so
+# run_defense - one 17.4% weight - was shared across DT, EDGE, LB, CB and SAF in
+# proportion to snap volume rather than by what the fit actually learned. The result
+# drifted badly against the PFF build: linebackers +4.1 points of league WAR share,
+# safeties +4.0, interior line -5.0, tight ends -4.2.
+#
+# The fit does not have one run_defense weight. It has DI_run at 3.5%, ED_run at 2.9%,
+# LB_run at 2.8% and CB-S_run separately, and those differences are the answer to
+# "which position's run defence matters most". So each PFF facet is rebuilt here with
+# its own scope and its own fitted weight, and only the MEASUREMENT comes from EA.
+FACET_GROUPS = {
+    "QB": ["QB"], "RB": ["RB"], "WR": ["WR"], "TE": ["TE"], "OL": ["OL"],
+    "DI": ["DT"], "ED": ["EDGE"], "LB": ["LB"], "CB": ["CB"], "S": ["SAF"],
+    "CB-S": ["CB", "SAF"], "DI-ED": ["DT", "EDGE"], "CB-LB-S": ["CB", "LB", "SAF"],
+    "QB-RB-TE-WR": ["QB", "RB", "TE", "WR"],
+    "cfbd_pass_qb": ["QB"], "cfbd_run_qb": ["QB"], "cfbd_run_rb": ["RB"],
+    "cfbd_recv_wr": ["WR"], "cfbd_recv_te": ["TE"], "cfbd_recv_rb": ["RB"],
+    "cfbd_havoc_dl": ["DT"], "cfbd_havoc_lb": ["LB"],
+    "cfbd_havoc_db": ["CB", "SAF"], "cfbd_cov_db": ["CB", "SAF"],
+    "cfbd_tackle_lb": ["LB"], "cfbd_tackle_db": ["CB", "SAF"],
+}
+
+
+def facet_scope(name):
+    """(groups, prefix) for a PFF facet name. cfbd_ facets are their own prefix."""
+    if name.startswith("cfbd_"):
+        return FACET_GROUPS.get(name), name
+    pre = name.split("_")[0]
+    return FACET_GROUPS.get(pre), pre
 
 
 def inherited_weights():
@@ -121,10 +144,30 @@ def inherited_weights():
     fw = pd.read_csv(f"{WAR_DIR}/hybrid_facet_weights.csv", index_col=0)["rf"]
     cmap = pd.Series(tlw.concept_map(list(fw.index))).reindex(fw.index)
     w = fw.groupby(cmap).sum()
-    keep = w.reindex(CONCEPTS.keys()).fillna(0.0)
+    keep = w.reindex(CONCEPT_ATTRS.keys()).fillna(0.0)
     dropped = float(w.sum() - keep.sum())
     out = keep / keep.sum()
     return out, dropped
+
+
+def facet_weights():
+    """Per-FACET fitted weights, scoped to positions, with the facets EA cannot
+    measure dropped and their share redistributed over the rest."""
+    fw = pd.read_csv(f"{WAR_DIR}/hybrid_facet_weights.csv", index_col=0)["rf"]
+    cmap = tlw.concept_map(list(fw.index))
+    rows = []
+    for name, wt in fw.items():
+        concept = cmap.get(name)
+        attrs = CONCEPT_ATTRS.get(concept)
+        groups, pre = facet_scope(name)
+        if not attrs or not groups or wt <= 0:
+            continue                       # discipline, or a facet at exactly zero
+        rows.append({"facet": name, "concept": concept, "prefix": pre,
+                     "groups": groups, "attrs": attrs, "w": float(wt)})
+    d = pd.DataFrame(rows)
+    dropped = float(fw.sum() - d.w.sum())
+    d["w"] = d.w / d.w.sum()
+    return d, dropped
 
 
 def volume_table():
@@ -156,49 +199,61 @@ def load_ea():
     return ea
 
 
-def concept_values(ea):
-    """Per player per concept: a snap-weighted z of the averaged attributes, times
-    volume - the same value = z * snaps shape the PFF facets use."""
+def facet_values(ea, fw):
+    """Per player per FACET: a snap-weighted z of the averaged attributes, times
+    volume - the value = z * snaps shape the PFF facets use.
+
+    Scoped exactly as the PFF facet is. DI_run standardizes interior linemen against
+    interior linemen; LB_run standardizes linebackers against linebackers; they are
+    separate columns carrying separate fitted weights, which is the whole point.
+    """
     rows = []
-    for name, (attrs, groups) in CONCEPTS.items():
-        have = [a for a in attrs if a in ea.columns]
-        if not have:
+    for r in fw.itertuples():
+        have = [a for a in r.attrs if a in ea.columns]
+        d = ea[ea.group.isin(r.groups)]
+        if not have or d.empty:
             continue
-        d = ea[ea.group.isin(groups)].copy()
-        if d.empty:
-            continue
-        # standardize each attribute within its position group, then average: an
-        # 85 speed means something different at guard than at corner
+        d = d.copy()
+        # standardize each attribute within position group before averaging: an 85
+        # strength means something different at guard than at corner
         parts = []
         for a in have:
             g = d.groupby("group")[a]
-            parts.append(((d[a] - g.transform("mean")) / g.transform("std").replace(0, 1)))
+            parts.append((d[a] - g.transform("mean")) / g.transform("std").replace(0, 1))
         d["score"] = np.mean(parts, axis=0)
         w_ = d.snaps.to_numpy(float)
         mu = np.average(d.score, weights=w_)
         sd = np.sqrt(np.average((d.score - mu) ** 2, weights=w_)) or 1.0
         d["z"] = (d.score - mu) / sd
-        d["concept"] = name
+        d["facet"] = r.facet
+        d["concept"] = r.concept
         d["value"] = d.z * d.snaps
         rows.append(d[["id", "player", "team", "position", "group", "key", "overall",
-                       "rank", "snaps", "concept", "z", "value"]])
+                       "rank", "snaps", "facet", "concept", "z", "value"]])
     return pd.concat(rows, ignore_index=True)
 
 
 def main():
-    w, dropped = inherited_weights()
-    print(f"inherited concept weights (discipline {dropped*100:.1f}% redistributed):")
-    for c, v in w.sort_values(ascending=False).items():
-        print(f"  {c:<18}{v*100:5.2f}%")
+    fw, dropped = facet_weights()
+    w = fw.set_index("facet").w
+    byc = fw.groupby("concept").w.sum().sort_values(ascending=False)
+    print(f"inherited FACET weights: {len(fw)} facets, "
+          f"{dropped*100:.1f}% (unmeasurable by EA) redistributed")
+    print("  rolled up by concept:")
+    for c, v in byc.items():
+        print(f"    {c:<18}{v*100:5.2f}%")
+    print("  rolled up by position scope:")
+    for pre, v in fw.groupby("prefix").w.sum().sort_values(ascending=False).items():
+        print(f"    {pre:<18}{v*100:5.2f}%")
 
     ea = load_ea()
     print(f"\nEA players used: {len(ea)} over {ea.team.nunique()} teams")
 
-    cv = concept_values(ea)
-    print(f"player-concept rows: {len(cv)}")
+    cv = facet_values(ea, fw)
+    print(f"player-facet rows: {len(cv)}")
 
-    tot = (cv.groupby(["team", "concept"], as_index=False).value.sum()
-             .pivot(index="team", columns="concept", values="value")
+    tot = (cv.groupby(["team", "facet"], as_index=False).value.sum()
+             .pivot(index="team", columns="facet", values="value")
              .reindex(columns=w.index).fillna(0.0))
     sigma = tot.std(ddof=0)
     Z = (tot - tot.mean()) / sigma.replace(0, 1)
@@ -231,16 +286,16 @@ def main():
     c_t = pd.Series({t: Minv[i, i] for i, t in enumerate(teams)})
 
     cv = cv[cv.team.isin(teams)].copy()
-    cv["w"] = cv.concept.map(w)
-    cv["sigma"] = cv.concept.map(sigma)
+    cv["w"] = cv.facet.map(w)
+    cv["sigma"] = cv.facet.map(sigma)
     cv["c_t"] = cv.team.map(c_t)
     cv["games"] = cv.team.map(games)
     cv["waa"] = cv.games * slope * cv.c_t * cv.w * cv.value / cv.sigma
 
     pool = float(((0.5 - REPL_WIN_PCT) * games).sum())
-    league = cv.groupby("concept").snaps.sum()
+    league = cv.groupby("facet").snaps.sum()
     per_snap = {c: pool * w[c] / league[c] for c in league.index if league[c] > 0}
-    cv["repl"] = cv.concept.map(per_snap).fillna(0.0) * cv.snaps
+    cv["repl"] = cv.facet.map(per_snap).fillna(0.0) * cv.snaps
     cv["war"] = cv.waa + cv.repl
 
     key = ["id", "player", "team", "position", "group", "overall", "key"]
