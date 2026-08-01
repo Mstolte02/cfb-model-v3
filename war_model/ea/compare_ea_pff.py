@@ -93,6 +93,66 @@ def group_sheet(pl):
          "share_pff", "share_ea"]]
 
 
+def validation_sheet():
+    """The one real out-of-sample test available, and it is team-level.
+
+    collegefootball.gg published CFB 26's per-team ratings on 2025-07-06, before that
+    game's launch week and before a snap of the 2025 season. That is a clean entering-
+    2025 EA signal, and 2025 has been played - so for once both sides can be scored on
+    the same outcome with no leakage on either.
+
+    It tests EA's ratings, not the full EA WAR pipeline: these are EA's own team
+    aggregates rather than the player-level build. A properly constructed EA WAR could
+    in principle extract more than EA's own summary does.
+    """
+    import numpy as np
+    ea = pd.read_csv(f"{HERE}/cfb26_team.csv")
+    ea["team"] = ea.team.replace({"Appalachian State": "App State",
+                                  "San Jose State": "San José State",
+                                  "FIU": "Florida International", "Hawaii": "Hawai'i"})
+    ea = ea.set_index("team")
+    recs = pd.read_csv(f"{WAR_DIR}/records.csv")
+    y = recs[recs.season == 2025].set_index("team").adj_win_pct
+
+    sys.path.insert(0, os.path.dirname(WAR_DIR))
+    from scripts.train import load_bundle, blended_talent
+    from src.data import pff
+    std, cfbd_tal, ret, games, pyth = load_bundle()
+    ours = blended_talent(cfbd_tal, pff.build_roster_talent())[2025]
+
+    idx = ea.index.intersection(y.index).intersection(ours.index)
+    z = lambda s: (s - s.mean()) / s.std()
+    w = y.reindex(idx)
+    rows = [
+        ("n teams", len(idx)),
+        ("EA CFB26 overall -> 2025 adj win pct", round(float(ea.ovr.reindex(idx).corr(w)), 3)),
+        ("EA CFB26 offense+defense -> same",
+         round(float(((z(ea.off.reindex(idx)) + z(ea["def"].reindex(idx))) / 2).corr(w)), 3)),
+        ("EA CFB26 prestige -> same", round(float(ea.prestige.reindex(idx).corr(w)), 3)),
+        ("OUR talent (PFF+CFBD+WAR) -> same", round(float(ours.reindex(idx).corr(w)), 3)),
+    ]
+    d = pd.DataFrame({"ea": z(ea.ovr.reindex(idx)), "ours": z(ours.reindex(idx)),
+                      "y": w}).dropna()
+    X = np.column_stack([np.ones(len(d)), d.ours])
+    b = np.linalg.lstsq(X, d.y, rcond=None)[0]
+    res = d.y - X @ b
+    X2 = np.column_stack([np.ones(len(d)), d.ours, d.ea])
+    b2 = np.linalg.lstsq(X2, d.y, rcond=None)[0]
+    rows += [
+        ("", ""),
+        ("EA vs the residual after our talent", round(float(d.ea.corr(res)), 3)),
+        ("R2, our talent alone", round(float(1 - res.var() / d.y.var()), 3)),
+        ("R2, our talent + EA", round(float(1 - (d.y - X2 @ b2).var() / d.y.var()), 3)),
+        ("", ""),
+        ("VERDICT", "EA is the weaker signal on its own (.42 vs .51) and adds "
+                    "essentially nothing on top of what we already have (+.004 R2, "
+                    "residual correlation -.03)."),
+        ("CAVEAT", "Team-level only. These are EA's own aggregates, not a player-level "
+                   "EA WAR, which could extract more from the same ratings."),
+    ]
+    return pd.DataFrame(rows, columns=["test", "value"])
+
+
 def readme(team, pl):
     cov = pl.ea_war.notna().mean()
     imp = pl[pl.imputed]
@@ -188,8 +248,11 @@ def main():
         pl.dropna(subset=["ea_war"]).war_diff.abs().sort_values(ascending=False).index)
     imputed = pl[pl.imputed].sort_values("ea_war", ascending=False)
 
+    val = validation_sheet()
+
     with pd.ExcelWriter(OUT, engine="openpyxl") as xl:
         info.to_excel(xl, sheet_name="Read me", index=False)
+        val.to_excel(xl, sheet_name="2025 validation", index=False)
         team.to_excel(xl, sheet_name="Teams", index=False)
         team.reindex(team.rank_move.abs().sort_values(ascending=False).index
                      ).to_excel(xl, sheet_name="Teams by disagreement", index=False)
@@ -212,6 +275,12 @@ def main():
             style(xl.sheets[nm], d, money_cols=["pff_war", "ea_war", "war_diff", "war_2025"],
                   diff_cols=["war_diff"],
                   width_overrides={"player": 24, "team": 20, "conference": 20})
+        style(xl.sheets["2025 validation"], val,
+              width_overrides={"test": 42, "value": 100})
+        for r in range(2, len(val) + 2):
+            xl.sheets["2025 validation"].cell(row=r, column=1).font = Font(bold=True)
+            xl.sheets["2025 validation"].cell(row=r, column=2).alignment = Alignment(
+                wrap_text=True, vertical="top")
         style(xl.sheets["By position group"], grp,
               money_cols=["corr", "pff_mean", "ea_mean", "mean_diff", "share_pff", "share_ea"],
               diff_cols=["mean_diff"])
