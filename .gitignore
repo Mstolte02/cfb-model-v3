@@ -9,3 +9,7 @@ venv/
 
 # Build output. The Pages workflow rebuilds it from viz/ on every push.
 dist/
+
+# Excel lock files, created whenever a workbook in war_model/ea is open.
+# One got swept into a commit by git add -A and had to be removed again.
+~$*
