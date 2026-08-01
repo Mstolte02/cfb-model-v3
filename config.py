@@ -157,6 +157,26 @@ TALENT_BLEND = 0.5  # weight on PFF roster-aware (1-w on CFBD)
 # Set to 0.0 to disable; the frame falls back cleanly if the WAR build is absent.
 WAR_BLEND = 0.40
 
+# --- EA ratings for lightly-played players --------------------------------------
+# Below this many prior-season snaps the 2026 projection takes EA College Football's
+# RANKING of the player instead of its own, quantile-mapped onto our WAR distribution
+# within his position group so only the ordering changes and the wins scale stays ours.
+# 0 disables it and the model reads projections_2026_v2.csv as before.
+#
+# The case for it: on the 2025 holdout our projection correlates .634 with what a
+# no-prior-snap player actually did against .805 for a 600+ snap one, and EA is most
+# different exactly there - agreeing .526 on no-history players against .903 on
+# established starters. EA also rates 86% of the players under this threshold, where we
+# are otherwise imputing from a positional prior.
+#
+# THE CASE AGAINST IT, WHICH IS NOT SETTLED. Nothing measured shows EA is more ACCURATE
+# in the tail, only that it is different and not merely restating recruiting (19% of its
+# view of a no-history player). The one accuracy test that exists - EA's CFB 26 team
+# ratings against 2025 results - had EA behind, .42 against our .51. Settling it needs
+# CFB 26 launch player ratings, which are behind a robots.txt that disallows this
+# crawler. See war_model/ea/gap_analysis.py.
+EA_BLEND_SNAPS = 300
+
 # --- v3.1: features retired after a collinearity audit --------------------------
 # scripts/feature_audit.py + scripts/feature_sets.py. The six inputs were checked for
 # redundancy three ways - correlation and VIF on the fitted design, leave-one-feature-

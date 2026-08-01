@@ -29,7 +29,25 @@ import pandas as pd
 _HERE = Path(__file__).resolve().parents[2]
 WAR_DIR = Path(os.environ.get("WAR_DIR", _HERE / "war_model"))
 PLAYER_WAR = WAR_DIR / "hybrid_player_war.csv"
-PROJECTIONS = WAR_DIR / "projections_2026_v2.csv"
+
+def _projection_file():
+    """projections_2026_blended.csv when EA is switched on for lightly-played players,
+    otherwise the plain projection. Missing blend file falls back rather than failing,
+    so a fresh clone that has never run war_model/ea/blend_projection.py still works."""
+    try:
+        from config import EA_BLEND_SNAPS
+    except Exception:
+        EA_BLEND_SNAPS = 0
+    if EA_BLEND_SNAPS:
+        blended = WAR_DIR / "projections_2026_blended.csv"
+        if blended.exists():
+            return blended
+        print(f"  [warn] EA_BLEND_SNAPS={EA_BLEND_SNAPS} but {blended.name} is absent; "
+              f"using the unblended projection.")
+    return WAR_DIR / "projections_2026_v2.csv"
+
+
+PROJECTIONS = _projection_file()
 
 # the WAR build already emits CFBD-style school names, but a handful of its own
 # spellings differ from the CFBD FBS set the model indexes on.
