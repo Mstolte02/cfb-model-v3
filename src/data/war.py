@@ -38,6 +38,12 @@ def _projection_file():
         from config import EA_BLEND_SNAPS
     except Exception:
         EA_BLEND_SNAPS = 0
+    # depth_correction.py is the last stage and supersedes the blend: it fixes
+    # is_starter against prior snaps and strips the injury-driven share the projection
+    # hands a backup, neither of which the blend touches.
+    final = WAR_DIR / "projections_2026_final.csv"
+    if final.exists():
+        return final
     if EA_BLEND_SNAPS:
         blended = WAR_DIR / "projections_2026_blended.csv"
         if blended.exists():
