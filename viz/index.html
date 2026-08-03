@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CFB Model v3 — 2026 Projections</title>
-<link rel="stylesheet" href="style.css?v=14">
+<link rel="stylesheet" href="style.css?v=23">
 </head>
 <body>
 <header>
@@ -16,8 +16,10 @@
   <nav>
     <button class="tab active" data-view="dash">Season Odds</button>
     <button class="tab" data-view="playoff">Playoff Projection</button>
+    <button class="tab" data-view="scenario">Scenario Builder</button>
     <button class="tab" data-view="matchup">Matchup Simulator</button>
     <button class="tab" data-view="team">Team Breakdown</button>
+    <button class="tab" data-view="ratings">Team Ratings</button>
     <button class="tab" data-view="players">Players</button>
     <button class="tab" data-view="method">Method</button>
     <button class="tab" data-view="testing">Testing</button>
@@ -72,6 +74,36 @@
     <div id="playoff-resumes"></div>
   </section>
 
+  <!-- ============ SCENARIO BUILDER ============ -->
+  <section id="view-scenario" class="view">
+    <div class="view-head">
+      <h2>Scenario Builder</h2>
+      <p class="sub">Play one season by hand. Click a team to make it the winner of
+        any game on the 2026 schedule &mdash; everything you leave alone stays on the
+        model&rsquo;s favourite &mdash; and the conference champions, the committee
+        ranking, the twelve-team field and the bracket all rebuild underneath you.
+        The selection rules and the fitted committee weights are the same ones the
+        Monte Carlo uses, so this is that machinery run on a season you chose instead
+        of one it drew. It is <b>an outcome, not odds</b>; your picks stay in this
+        browser and change nothing else on the site.</p>
+    </div>
+    <div class="dash-toolbar">
+      <input type="search" id="sc-search" placeholder="Search teams…">
+      <select id="sc-conf"><option value="">All conferences</option></select>
+      <select id="sc-week"><option value="">All weeks</option></select>
+      <select id="sc-scope">
+        <option value="">All games</option>
+        <option value="close">Toss-ups only</option>
+        <option value="conf">Conference games</option>
+        <option value="picked">Games I picked</option>
+      </select>
+      <span class="spacer"></span>
+      <button id="sc-reset" class="wi-btn">Reset picks</button>
+      <span id="sc-count" class="dash-count"></span>
+    </div>
+    <div id="sc-body"></div>
+  </section>
+
   <!-- ============ MATCHUP ============ -->
   <section id="view-matchup" class="view">
     <div class="view-head">
@@ -108,12 +140,43 @@
     <div id="team-body"></div>
   </section>
 
+  <!-- ============ TEAM RATINGS BY INPUT ============ -->
+  <section id="view-ratings" class="view">
+    <div class="view-head">
+      <h2>Team Ratings by Input</h2>
+      <p class="sub">The Season Odds page ranks teams by what the model concludes;
+        this ranks them by what it is built from. Sort on any column to ask a
+        narrower question &mdash; best quarterback room, best offensive line, best
+        defense, hardest schedule &mdash; against all 136 FBS teams. The rank on the
+        left is always the team&rsquo;s place in the whole country on the sorted
+        column, so filtering to one conference tells you where its teams stand in
+        FBS rather than renumbering them.</p>
+    </div>
+    <div class="dash-toolbar">
+      <select id="tr-set">
+        <option value="war">Roster WAR by position</option>
+        <option value="inputs">Model inputs</option>
+      </select>
+      <input type="search" id="tr-search" placeholder="Search teams…">
+      <select id="tr-conf"><option value="">All conferences</option></select>
+      <select id="tr-tier">
+        <option value="">All teams</option>
+        <option value="p4">Power 4 only</option>
+        <option value="g6">Group of 6 only</option>
+      </select>
+      <span class="spacer"></span>
+      <span id="tr-count" class="dash-count"></span>
+    </div>
+    <div id="tr-table"></div>
+  </section>
+
   <!-- ============ PLAYERS ============ -->
   <section id="view-players" class="view">
     <div class="view-head">
       <h2>Players</h2>
       <p class="sub">Every projected two-deep slot in FBS, sortable and filterable
-        across teams, conferences and positions. <b>Proj WAR</b> is editable: change
+        across teams, conferences and positions, with each player&rsquo;s rank in FBS
+        and at his own position. <b>Proj WAR</b> is editable: change
         what you think a player is worth and the ratings, power ranks and matchup
         simulator all move with it. These are wins above replacement
         directly &mdash; summed over a roster they reproduce the team&rsquo;s actual
@@ -176,6 +239,6 @@
 <!-- The data files are fetched with cache: "no-cache", but the script tag itself is
      not, so a stale app.js kept running against freshly regenerated JSON and failed
      silently — the page rendered nothing and threw nothing visible. Bump on edit. -->
-<script src="app.js?v=18"></script>
+<script src="app.js?v=25"></script>
 </body>
 </html>

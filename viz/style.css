@@ -36,7 +36,10 @@ header {
 h1 { font-size: 21px; letter-spacing: 1px; }
 h1 .v2 { color: var(--accent); }
 .season { color: var(--muted); font-size: 11px; letter-spacing: 2px; font-family: var(--sans); }
-nav { display: flex; gap: 6px; }
+/* Wraps. The tab strip is past 900px wide now, and body sets overflow-x:hidden, so a
+   non-wrapping nav does not scroll off screen on a narrow window - it is simply
+   clipped, and the tabs past the cut become unreachable. */
+nav { display: flex; gap: 6px; flex-wrap: wrap; }
 .tab {
   background: none; border: 1px solid var(--line2); color: var(--muted);
   padding: 8px 18px; border-radius: 8px; font-size: 14px; cursor: pointer;
@@ -100,11 +103,18 @@ tbody tr:hover { background: var(--panel2); }
 @media (prefers-color-scheme: dark) { .tag.out { color: #ff7b72; } }
 .tag.conf-tag { background: rgba(47,96,150,.14); color: var(--blue); }
 
-.bar-wrap { display: inline-flex; align-items: center; gap: 8px; }
-.bar { height: 8px; border-radius: 4px; background: var(--panel2); width: 110px; overflow: hidden; }
-.bar > i { display: block; height: 100%; border-radius: 4px; background: var(--blue); }
+/* The fill used to be a 110px track sitting to the LEFT of the figure, so every one
+   of these cells was a small number attached to a large chart, and the chart won.
+   Now the number leads and the fill is a hairline underneath it, sized to the
+   number's own box: enough to rank a column at a glance, not enough to outrank the
+   figure it is annotating. The wide-track version survives where the bar IS the
+   content - the conference-race and bubble strips - see .ccg-row .bar below. */
+.bar-wrap { display: inline-flex; flex-direction: column; align-items: stretch;
+  gap: 3px; min-width: 46px; }
+.bar { height: 3px; border-radius: 2px; background: var(--panel2); overflow: hidden; }
+.bar > i { display: block; height: 100%; border-radius: 2px; background: var(--blue); }
 .bar > i.green { background: var(--green); }
-.pct { font-variant-numeric: tabular-nums; min-width: 46px; text-align: right; }
+.pct { font-variant-numeric: tabular-nums; text-align: right; line-height: 1.25; }
 
 .zcell { display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; }
 .zcell span { font-variant-numeric: tabular-nums; min-width: 44px; text-align: right; }
@@ -422,6 +432,22 @@ tbody tr:hover td.cc { background: inherit; }
 .step p { font-size: 13.5px; color: var(--muted); }
 .step p b { color: var(--text); }
 
+/* The measured version of step 2's claim: one labelled row per committee term. The
+   value sits outside the track rather than inside it, because the smallest terms are
+   a few pixels wide and a label inside them would be unreadable exactly where it is
+   most needed. */
+.cw-chart { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+.cw-head { font: 600 10px/1.4 var(--sans); letter-spacing: .07em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px; }
+.cw-head .hint { font-size: 10px; letter-spacing: .02em; text-transform: none; }
+.cw-row { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+.cw-lab { flex: none; width: 74px; font-size: 11.5px; color: var(--muted); }
+.cw-track { flex: 1; height: 6px; border-radius: 3px; background: var(--panel2);
+  overflow: hidden; }
+.cw-track > i { display: block; height: 100%; border-radius: 3px; }
+.cw-val { flex: none; min-width: 34px; text-align: right; font-size: 11.5px;
+  font-variant-numeric: tabular-nums; font-weight: 700; }
+
 .ccg-h { font: 600 11px/1 var(--sans); letter-spacing: .09em; text-transform: uppercase;
   color: var(--muted); margin: 22px 0 10px; }
 .ccg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -438,7 +464,10 @@ tbody tr:hover td.cc { background: inherit; }
 .ccg-row img { width: 18px; height: 18px; object-fit: contain; flex: none; }
 .ccg-row .team-link { flex: none; width: 92px; text-align: left; font-size: 13px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ccg-row .bar { flex: 1; width: auto; }
+/* Here the bar is the content, not an accent on a figure, so it keeps the full
+   track the table cells gave up. */
+.ccg-row .bar { flex: 1; width: auto; height: 8px; border-radius: 4px; }
+.ccg-row .bar > i { border-radius: 4px; }
 .ccg-row .pct { min-width: 38px; font-size: 12.5px; }
 
 /* ---- resume cards: how each of the twelve got in -------------------------- */
@@ -466,6 +495,15 @@ tbody tr:hover td.cc { background: inherit; }
 .res-bar { display: flex; height: 9px; border-radius: 5px; overflow: hidden;
   background: var(--line2); }
 .res-bar i { display: block; height: 100%; }
+/* Data labels for that bar: the five terms as ranking points, in bar order and bar
+   colour, then the score they sum to. They are not inside the segments because the
+   record term takes ~80% of the width and the other four are too narrow to hold a
+   figure - the reader would get one label and four slivers. */
+.res-nums { display: flex; align-items: baseline; gap: 7px; margin-top: 6px;
+  font: 700 11px/1 var(--sans); font-variant-numeric: tabular-nums; }
+.res-nums b { margin-left: auto; font-size: 12.5px; color: var(--text);
+  padding-left: 7px; border-left: 1px solid var(--line2); }
+.res-legend.sub-note { margin: -8px 0 14px; font-size: 11.5px; }
 .res-rec { display: flex; justify-content: space-between; gap: 10px; margin-top: 9px;
   color: var(--muted); font-size: 11.5px; }
 .res-rec b { color: var(--text); font-variant-numeric: tabular-nums; }
@@ -497,7 +535,6 @@ details.nerd[open] > summary { margin-bottom: 14px; }
 /* The table scrolls inside the panel: a two-deep is ~40 rows and the point of the
    panel is the summary above it, which should not be pushed off screen. */
 .wi-pos { font: 600 9.5px/1 var(--sans); letter-spacing: .06em; color: var(--muted); }
-.wi-base { color: var(--muted); font-variant-numeric: tabular-nums; }
 .wi-in { width: 78px; text-align: right; font: inherit; font-variant-numeric: tabular-nums;
   color: var(--text); background: var(--bg); border: 1px solid var(--line2);
   border-radius: 6px; padding: 3px 6px; }
@@ -521,12 +558,118 @@ details.nerd[open] > summary { margin-bottom: 14px; }
 .pl-conf { color: var(--muted); font-size: 12.5px; white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis; max-width: 150px; }
 .pl-in { width: 84px; }
+/* "4 of 263 QB". The denominator is what makes the rank mean anything - 4th of 263
+   quarterbacks and 4th of 1,272 offensive linemen are different claims - so it rides
+   with the figure rather than living in the column header, where it could only ever
+   name one position group. */
+.pl-prk { white-space: nowrap; }
+.pl-prk .pl-of { color: var(--muted); font-size: 11px; margin-left: 5px;
+  font-family: var(--sans); }
 /* The row highlight has to survive on a table this dense, where an edited row can be
    the only changed thing in 300. */
 .pl-table tr.wi-edited td { background: rgba(154,107,31,.07); }
 #pl-table { margin-top: 4px; }
 #pl-table .team-cell.sm .team-stripe { width: 3px; height: 15px; border-radius: 2px;
   flex: none; }
+
+/* ---- scenario builder ------------------------------------------------------ */
+/* Two halves that have to be visible together: the field/bracket you are producing,
+   and the games producing it. On a wide screen they sit side by side and the output
+   sticks while the schedule scrolls past it - flipping a game you cannot see the
+   consequence of is the one thing this page must not do. */
+.sc-out { display: grid; grid-template-columns: minmax(300px, 380px) 1fr; gap: 14px;
+  align-items: start; margin-bottom: 8px; }
+.sc-field, .sc-bracket { position: sticky; top: 84px; }
+.sc-bracket #sc-bracket-grid { display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 10px; }
+/* Same 980px breakpoint the playoff bracket uses, and for the same reason: four
+   rounds side by side stop fitting well before a phone. Sticky also has to go - a
+   stuck panel in a single column is a panel covering the thing underneath it. */
+@media (max-width: 980px) {
+  .sc-out { grid-template-columns: 1fr; }
+  .sc-field, .sc-bracket { position: static; }
+  .sc-bracket #sc-bracket-grid { grid-template-columns: 1fr; }
+}
+.sc-seed { display: flex; align-items: center; gap: 8px; padding: 4px 0;
+  border-bottom: 1px solid var(--line); }
+.sc-seed:last-of-type { border-bottom: 0; }
+.sc-seed img { width: 20px; height: 20px; object-fit: contain; flex: none; }
+.sc-seed-n { flex: none; width: 20px; text-align: right; font: 700 12px/1 var(--sans);
+  color: var(--muted); }
+.sc-seed-n.bye { color: var(--accent); }
+.sc-seed-id { flex: 1; min-width: 0; }
+.sc-seed-id .team-link { font-size: 13.5px; }
+.sc-seed-id .conf { color: var(--muted); font-size: 10.5px; }
+.sc-rec, .sc-score { font-variant-numeric: tabular-nums; font-size: 12.5px; flex: none; }
+.sc-score { min-width: 42px; text-align: right; font-weight: 700; }
+.sc-bubble, .sc-diff { font-size: 12px; color: var(--muted); margin-top: 10px; }
+.sc-diff { border-top: 1px solid var(--line); padding-top: 8px; }
+
+/* One row per game: week, date, the two teams as toggles, and the venue word between
+   them. The chips carry the model's probability so the cost of an upset is visible at
+   the moment of picking it, not two scrolls away. */
+.sc-games { display: grid; gap: 4px; margin-bottom: 10px; }
+.sc-game { display: flex; align-items: center; gap: 8px; padding: 4px 8px;
+  border: 1px solid transparent; border-radius: 9px; }
+.sc-game:hover { background: var(--panel); }
+.sc-game.has-pick { border-color: var(--accent); background: rgba(154,107,31,.06); }
+.sc-wk { flex: none; width: 46px; font: 600 10px/1 var(--sans); letter-spacing: .05em;
+  text-transform: uppercase; color: var(--muted); }
+.sc-date { flex: none; width: 42px; font-size: 11.5px; color: var(--muted);
+  font-variant-numeric: tabular-nums; }
+.sc-at { flex: none; width: 20px; text-align: center; font-size: 11px;
+  color: var(--muted); }
+/* min-width:0 on both the chip and the name inside it: a flex item will not shrink
+   below its own min-content by default, so without these the logo + abbreviation +
+   percentage set a floor that pushed the whole row past the viewport on a phone.
+   .sc-abbr already truncates; this is what lets it. */
+.sc-chip { display: inline-flex; align-items: center; gap: 6px; flex: 1; min-width: 0;
+  max-width: 230px; background: var(--wash); border: 1px solid var(--line2);
+  border-radius: 8px; padding: 4px 9px; cursor: pointer; font: inherit;
+  color: var(--muted); text-align: left; transition: border-color .12s, color .12s; }
+.sc-chip:hover { border-color: var(--tint); color: var(--text); }
+.sc-chip.on { border-color: var(--tint); color: var(--text); font-weight: 700; }
+.sc-chip.picked { box-shadow: inset 0 0 0 1px var(--accent); }
+.sc-chip img { width: 18px; height: 18px; object-fit: contain; flex: none; }
+.sc-abbr { flex: 1; min-width: 0; font-size: 13px; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap; }
+.sc-p { font-size: 11.5px; font-variant-numeric: tabular-nums; color: var(--muted);
+  flex: none; }
+.sc-undo { flex: none; width: 46px; background: none; border: 0; cursor: pointer;
+  font: 600 10px/1 var(--sans); letter-spacing: .05em; text-transform: uppercase;
+  color: var(--accent); }
+.sc-undo-sp { flex: none; width: 46px; }
+.sc-ccg-list { margin-bottom: 4px; }
+.sc-ccg-name { width: 130px; text-transform: none; font-size: 12px; letter-spacing: 0; }
+/* On a phone the conference name is the widest fixed column and the undo placeholder
+   is holding a column that no longer needs reserving - the rows below it have wrapped
+   anyway, so alignment is not being kept. */
+@media (max-width: 640px) {
+  .sc-game { flex-wrap: wrap; padding: 6px 8px; }
+  .sc-wk, .sc-date { width: auto; }
+  .sc-ccg-name { width: 100%; }
+  .sc-undo-sp { display: none; }
+}
+
+/* ---- team ratings by input ------------------------------------------------ */
+/* Thirteen numeric columns in the WAR set, so everything here is about keeping a wide
+   table readable: the offence/defence tint is what lets the eye find the half of the
+   line it wants without reading the header row again. */
+.tr-scroll { max-height: calc(100vh - 250px); overflow: auto; }
+.tr-table th { position: sticky; top: 0; background: var(--bg); z-index: 1;
+  box-shadow: inset 0 -1px 0 var(--line2); }
+.tr-table td, .tr-table th { padding: 6px 9px; }
+.tr-table .team-cell .conf { font-size: 11px; }
+.tr-table td.num { font-variant-numeric: tabular-nums; }
+.tr-table .tr-off { color: var(--text); }
+.tr-table td.tr-def { color: var(--muted); }
+.tr-table th.tr-def { color: var(--muted); }
+.tr-table .tr-sum { font-weight: 700; }
+.tr-table td.sorted { background: rgba(154,107,31,.07); }
+.tr-table th.sorted { color: var(--accent); }
+/* The mini-bar cell is the widest thing in its column; without a floor the column
+   width jumps every time the sort moves to a shorter set of figures. */
+.tr-table td.sorted .bar-wrap { min-width: 52px; }
 
 /* ---- testing: rating calculator ------------------------------------------- */
 /* Five stacked stages, each one step of the derivation. The stage number is the

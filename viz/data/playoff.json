@@ -15626,5 +15626,26 @@
    0
   ]
  },
- "variant": "balanced"
+ "variant": "balanced",
+ "provisional_weights": {
+  "win_pct": 10.3397,
+  "rating": 0.2262,
+  "sos": 0.7362,
+  "power_conf": 1.0864
+ },
+ "p4_confs": [
+  "ACC",
+  "Big 12",
+  "Big Ten",
+  "SEC"
+ ],
+ "g6_confs": [
+  "American Athletic",
+  "Conference USA",
+  "Mid-American",
+  "Mountain West",
+  "Pac-12",
+  "Sun Belt"
+ ],
+ "fcs_opp_rating": -2.0
 }

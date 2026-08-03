@@ -557,7 +557,17 @@ def main(n_sims=20000, seed=2026, variant=""):
             f"{_cmj.get('loso_spearman_fitted', 0.913) if _cm.exists() else 0.913})"),
         "committee_weights": {"win_pct": W_WINPCT, "rating": W_RATING,
                               "sos": W_SOS, "power_conf": W_P4, "h2h": W_H2H},
+        # The h2h-free fit as well, because head-to-head is only defined against a
+        # provisional order and the app's scenario builder has to produce the same
+        # order this run did. Without these it would have to reuse the weights above,
+        # which is a different (if close) ranking and therefore a different answer to
+        # "which meetings were close enough to count".
+        "provisional_weights": {"win_pct": W0_WINPCT, "rating": W0_RATING,
+                                "sos": W0_SOS, "power_conf": W0_P4},
         "h2h_within": H2H_WITHIN,
+        # Everything else the client needs to replay selection on a hand-picked season.
+        "p4_confs": sorted(P4), "g6_confs": sorted(G6),
+        "fcs_opp_rating": FCS_OPP_RATING,
         "talent_noise_sd": round(talent_sd, 4),
         "teams": out,
         "bracket": bracket,

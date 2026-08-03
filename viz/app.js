@@ -470,9 +470,12 @@
             <div><button class="team-link" data-team="${esc(t)}">${esc(t)}</button>
               <div class="conf">${esc(r.conference)}</div></div></div></td>`;
         if (c.k === "rank") return `<td class="rank">${r.rank}</td>`;
-        if (c.k === "power") return `<td><div class="bar-wrap"><div class="bar">
-            <i style="width:${100 * r.power / maxPower}%;background:${tint}"></i>
-          </div><span class="pct">${(100 * r.power).toFixed(1)}</span></div></td>`;
+        // Number first, fill second: .bar-wrap stacks them, so the source order is
+        // what puts the mini-bar UNDER the figure rather than over it.
+        if (c.k === "power") return `<td class="num"><div class="bar-wrap">
+            <span class="pct">${(100 * r.power).toFixed(1)}</span>
+            <div class="bar"><i style="width:${100 * r.power / maxPower}%;background:${tint}"></i></div>
+          </div></td>`;
         if (c.bar) {
           const v = r[c.k] || 0;
           // Conference titles are a share of one trophy and read naturally against
@@ -480,9 +483,10 @@
           const green = c.bar === "green";
           const w = green ? 100 * v : 100 * v / maxCFP;
           const style = `width:${w}%${green ? "" : `;background:${tint}`}`;
-          return `<td><div class="bar-wrap"><div class="bar">
-              <i class="${green ? "green" : ""}" style="${style}"></i>
-            </div><span class="pct">${c.fmt(r)}</span></div></td>`;
+          return `<td class="num"><div class="bar-wrap">
+              <span class="pct">${c.fmt(r)}</span>
+              <div class="bar"><i class="${green ? "green" : ""}" style="${style}"></i></div>
+            </div></td>`;
         }
         return `<td class="num">${c.fmt ? c.fmt(r) : r[c.k]}</td>`;
       }).join("");
@@ -515,6 +519,88 @@
   /* =======================================================================
      PLAYOFF
      ======================================================================= */
+  /* The 2026 bracket is a fixed shape: seeds 5-12 play the first round at the higher
+     seed, 1-4 wait, and every later slot is fed by earlier ones. Building it from a
+     seed list rather than reading it out of the export is what lets the scenario
+     builder draw a bracket for a field the simulation never produced. `feeds` says
+     which earlier games supply each open slot, and matches the map simulate_playoff
+     exports for the modal bracket - the two have to agree or the same twelve teams
+     would meet in a different order on two tabs. */
+  const BRACKET_FEEDS = { 4: [0], 5: [1], 6: [2], 7: [3], 8: [4, 5], 9: [7, 6], 10: [8, 9] };
+  function bracketFromSeeds(seeds) {
+    const s = i => seeds[i] || null;
+    const gm = (round, top, bottom, site) => ({ round, top, bottom, site: site || null });
+    return {
+      seeds,
+      feeds: BRACKET_FEEDS,
+      games: [
+        gm("R1", s(7), s(8), s(7)), gm("R1", s(4), s(11), s(4)),
+        gm("R1", s(5), s(10), s(5)), gm("R1", s(6), s(9), s(6)),
+        gm("QF", s(0), null), gm("QF", s(3), null),
+        gm("QF", s(2), null), gm("QF", s(1), null),
+        gm("SF", null, null), gm("SF", null, null), gm("F", null, null),
+      ],
+    };
+  }
+
+  /* Resolve forward: score each game, advance the projected winner into the slot it
+     feeds. Returns a copy - the caller's game list is not mutated. */
+  function resolveBracket(games, feeds) {
+    const G = games.map(g => ({ ...g }));
+    for (let i = 0; i < G.length; i++) {
+      const g = G[i];
+      const src = (feeds || {})[String(i)] || (feeds || {})[i];
+      if (src) {
+        const won = src.map(k => G[k].winner).filter(Boolean);
+        if (!g.top) g.top = won[0];
+        if (!g.bottom) g.bottom = won.length > 1 ? won[1] : (g.top !== won[0] ? won[0] : null);
+      }
+      if (!g.top || !g.bottom) continue;
+      const venue = g.site === g.top ? "A" : g.site === g.bottom ? "B" : "N";
+      const r = predict(g.top, g.bottom, venue);
+      if (!r) continue;
+      g.p = r.pA;
+      [g.sa, g.sb] = displayScore(r);
+      g.winner = r.pA >= 0.5 ? g.top : g.bottom;
+    }
+    return G;
+  }
+
+  function bracketHTML(G, seeds, trophyNote) {
+    const seedOf = {};
+    (seeds || []).forEach((t, i) => { if (t) seedOf[t] = i + 1; });
+    const side = (t, won, score) => {
+      if (!t) return `<div class="slot empty"><span class="seed">–</span>
+        <span class="tbd">TBD</span></div>`;
+      return `<div class="slot ${won ? "won" : "lost"}"
+          style="--wash:${rgba(t, won ? .26 : .06)};--tint:${color(t)}">
+        <span class="seed">${seedOf[t] || ""}</span>
+        <img src="${logoURL(t)}" alt="" loading="lazy">
+        <button class="team-link" data-team="${esc(t)}">${esc(abbr(t))}</button>
+        <span class="gscore">${score != null ? score : ""}</span></div>`;
+    };
+    const card = g => `<div class="game-card">
+        ${side(g.top, g.winner && g.winner === g.top, g.sa)}
+        ${side(g.bottom, g.winner && g.winner === g.bottom, g.sb)}
+        <div class="gmeta">
+          <span class="bye-tag">${g.site ? "at " + esc(abbr(g.site)) : "neutral"}</span>
+          ${g.p != null ? `<span class="gwp">${pct(Math.max(g.p, 1 - g.p), 0)}</span>` : ""}
+        </div></div>`;
+    const champ = G[10] && G[10].winner;
+    return `
+      <div class="round-label">First Round</div><div class="round-label">Quarterfinals</div>
+      <div class="round-label">Semifinals</div><div class="round-label">Championship</div>
+      <div class="round-col">${G.slice(0, 4).map(card).join("")}</div>
+      <div class="round-col">${G.slice(4, 8).map(card).join("")}</div>
+      <div class="round-col">${G.slice(8, 10).map(card).join("")}</div>
+      <div class="round-col">${card(G[10])}
+        ${champ ? `<div class="trophy-card" style="--wash:${rgba(champ, .18)}">
+          <div class="emoji">🏆</div><img src="${logoURL(champ)}" alt="">
+          <div class="champ-name" style="color:${color(champ)}">${esc(champ)}</div>
+          <div class="bye-tag">${trophyNote(champ)}</div></div>` : ""}
+      </div>`;
+  }
+
   function renderPlayoff() {
     const playoff = cur().playoff;
     document.getElementById("playoff-meta").innerHTML =
@@ -531,64 +617,12 @@
       document.getElementById("bracket").innerHTML =
         `<p class="sub">No bracket in this export — re-run <code>scripts.simulate_playoff</code>.</p>`;
     } else {
-      // Resolve forward: score each game, advance the projected winner into the
-      // slot it feeds. feeds maps a game index to the games that supply its teams.
-      const G = br.games.map(g => ({ ...g }));
-      const feeds = br.feeds || {};
-      for (let i = 0; i < G.length; i++) {
-        const g = G[i];
-        const src = feeds[String(i)];
-        if (src) {
-          const won = src.map(k => G[k].winner).filter(Boolean);
-          if (!g.top) g.top = won[0];
-          if (!g.bottom) g.bottom = won.length > 1 ? won[1] : (g.top !== won[0] ? won[0] : null);
-        }
-        if (!g.top || !g.bottom) continue;
-        const venue = g.site === g.top ? "A" : g.site === g.bottom ? "B" : "N";
-        const r = predict(g.top, g.bottom, venue);
-        if (!r) continue;
-        g.p = r.pA;
-        [g.sa, g.sb] = displayScore(r);
-        g.winner = r.pA >= 0.5 ? g.top : g.bottom;
-      }
-
-      const seedOf = {};
-      br.seeds.forEach((t, i) => { if (t) seedOf[t] = i + 1; });
-      const side = (t, won, score) => {
-        if (!t) return `<div class="slot empty"><span class="seed">–</span>
-          <span class="tbd">TBD</span></div>`;
-        return `<div class="slot ${won ? "won" : "lost"}"
-            style="--wash:${rgba(t, won ? .26 : .06)};--tint:${color(t)}">
-          <span class="seed">${seedOf[t] || ""}</span>
-          <img src="${logoURL(t)}" alt="" loading="lazy">
-          <button class="team-link" data-team="${esc(t)}">${esc(abbr(t))}</button>
-          <span class="gscore">${score != null ? score : ""}</span></div>`;
-      };
-      const card = g => `<div class="game-card">
-          ${side(g.top, g.winner && g.winner === g.top, g.sa)}
-          ${side(g.bottom, g.winner && g.winner === g.bottom, g.sb)}
-          <div class="gmeta">
-            <span class="bye-tag">${g.site ? "at " + esc(abbr(g.site)) : "neutral"}</span>
-            ${g.p != null ? `<span class="gwp">${pct(Math.max(g.p, 1 - g.p), 0)}</span>` : ""}
-          </div></div>`;
-
-      const champ = G[10] && G[10].winner;
-      document.getElementById("bracket").innerHTML = `
-        <div class="round-label">First Round</div><div class="round-label">Quarterfinals</div>
-        <div class="round-label">Semifinals</div><div class="round-label">Championship</div>
-        <div class="round-col">${G.slice(0, 4).map(card).join("")}</div>
-        <div class="round-col">${G.slice(4, 8).map(card).join("")}</div>
-        <div class="round-col">${G.slice(8, 10).map(card).join("")}</div>
-        <div class="round-col">${card(G[10])}
-          ${champ ? `<div class="trophy-card" style="--wash:${rgba(champ, .18)}">
-            <div class="emoji">🏆</div><img src="${logoURL(champ)}" alt="">
-            <div class="champ-name" style="color:${color(champ)}">${esc(champ)}</div>
-            <div class="bye-tag">projected champion ·
-              ${pct((byTeam[champ] || {}).champ || 0, 1)} title odds</div></div>` : ""}
-        </div>`;
+      const G = resolveBracket(br.games, br.feeds);
+      document.getElementById("bracket").innerHTML = bracketHTML(G, br.seeds,
+        champ => `projected champion · ${pct((byTeam[champ] || {}).champ || 0, 1)} title odds`);
     }
 
-    renderSelection(P, byTeam);
+    renderSelection(P, byTeam, br);
     renderResumes(P, byTeam, br);
     wireTeamLinks();
   }
@@ -602,18 +636,42 @@
 
      Every number here is conditioned on the sims where the team was SELECTED, so it
      describes the average successful season rather than the average season. */
+  /* [key, label, fill, ink]. Two colours per term, not one: the fill is chosen to be
+     told apart from its neighbours in a 9px bar, and at 11px on a tinted card wash
+     those same hues are too pale to read as text. The ink is the same hue darkened
+     until it carries on the lightest card. */
   const PART_META = [
-    ["win_pct", "Record",   "#3fb950"],
-    ["sos",     "Schedule", "#58a6ff"],
-    ["p4",      "League",   "#a371f7"],
-    ["rating",  "Quality",  "#d29922"],
-    ["h2h",     "Head&#8209;to&#8209;head", "#f778ba"],
+    ["win_pct", "Record",   "#3fb950", "#2f7a2c"],
+    ["sos",     "Schedule", "#58a6ff", "#2f6096"],
+    ["p4",      "League",   "#a371f7", "#6f3fc4"],
+    ["rating",  "Quality",  "#d29922", "#8a6113"],
+    ["h2h",     "Head&#8209;to&#8209;head", "#f778ba", "#b83a76"],
   ];
+  /* Negative terms are clamped away rather than drawn: a stacked bar cannot render a
+     negative slice without lying about the widths around it. Head-to-head is the only
+     term that goes negative, and a team that made the field on a losing head-to-head
+     record is showing that in the number below the bar, which is not clamped. */
+  const partsSum = p => PART_META.reduce((s, [k]) => s + Math.max(0, p[k] || 0), 0);
+
+  /* The bar alone said which term was biggest; it never said by how much, and the
+     committee score it adds up to - the whole basis of the ranking - was nowhere on
+     the page. These are the labels: one figure per term, in that term's colour, and
+     the total they sum to. */
+  function partsLabels(p) {
+    const nums = PART_META.map(([k, lab, , ink]) => {
+      const v = p[k] || 0;
+      return `<span style="color:${ink}" title="${lab.replace(/&#8209;/g, "-")}">${
+        v.toFixed(2)}</span>`;
+    }).join("");
+    return `<div class="res-nums">${nums}
+      <b title="Committee score — the sum of the five terms">${
+        PART_META.reduce((s, [k]) => s + (p[k] || 0), 0).toFixed(2)}</b></div>`;
+  }
 
   function resumeCard(t, seed) {
     const p = t.score_parts;
     if (!p) return "";
-    const total = PART_META.reduce((s, [k]) => s + Math.max(0, p[k] || 0), 0) || 1;
+    const total = partsSum(p) || 1;
     const bar = PART_META.map(([k, , c]) => {
       const v = Math.max(0, p[k] || 0);
       return v <= 0 ? "" :
@@ -639,6 +697,7 @@
       </div>
       <div class="res-route">In as <b>${topLabel}</b> ${pct(topShare, 0)} of the time</div>
       <div class="res-bar">${bar}</div>
+      ${partsLabels(p)}
       <div class="res-rec">
         <span>Gets in at <b>${t.wins_in != null ? t.wins_in.toFixed(1) : "—"}</b> wins</span>
         <span>Misses at <b>${t.wins_out != null ? t.wins_out.toFixed(1) : "—"}</b></span>
@@ -675,6 +734,9 @@
     el.innerHTML = `
       <div class="res-legend">Each bar splits that team's committee score into the
         terms that produced it: ${legend}</div>
+      <div class="res-legend sub-note">The row of figures under each bar is those
+        same terms as ranking points, in the same order and colours, and the bold
+        figure on the right is the committee score they sum to.</div>
       <div class="res-grid">${cards}</div>
       <div class="bubble-wrap">
         <div class="ccg-card"><div class="ccg-name">Last team in</div>${strip(li, "last_in", liMax)}</div>
@@ -685,6 +747,429 @@
         sums to 100%: every season has exactly one of each.</div>`;
   }
 
+  /* =======================================================================
+     SCENARIO BUILDER — pick the games, get the bracket
+     =======================================================================
+     The Playoff tab answers "how often does this happen", averaged over 20,000
+     seasons. This answers the other question people actually ask, which no average
+     can: if THESE games go THIS way, who is in? So it plays exactly one season.
+
+     What it is not: odds. Every unpicked game is resolved to the model's favourite,
+     which is a season in which no favourite ever loses - not a likely season, just
+     the reference one to deviate from. Nothing here feeds the percentages anywhere
+     else on the site, and nothing here is a re-run of the Monte Carlo.
+
+     What it IS is the same selection procedure the simulation runs, ported: the same
+     committee weights, the same conference-title rule, the same automatic bids, the
+     same straight seeding. See scripts/simulate_playoff.py, the per-sim loop.
+
+     The port was checked against that Python by replaying the no-picks season on both
+     sides: all twelve seeds, every record, every committee score to two decimals and
+     the first team out agree. Anything that changes the arithmetic below should be
+     re-checked the same way, because a selection rule that quietly disagrees with the
+     simulation would put a different bracket on two tabs of the same site. */
+  const SC_STATE = (function () {
+    const KEY = "cfb-scenario-v1";
+    const games = new Map();      // game key -> winning team
+    const titles = new Map();     // conference -> champion
+    let ver = 0;
+    function save() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(
+          { games: [...games], titles: [...titles] }));
+      } catch (e) { /* private mode; the scenario just will not outlive the tab */ }
+    }
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) {
+        const j = JSON.parse(raw);
+        for (const [k, v] of j.games || []) games.set(k, v);
+        for (const [k, v] of j.titles || []) titles.set(k, v);
+      }
+    } catch (e) { games.clear(); titles.clear(); }
+    return {
+      version: () => ver,
+      count: () => games.size + titles.size,
+      game: k => games.get(k),
+      title: c => titles.get(c),
+      setGame(k, team) { team == null ? games.delete(k) : games.set(k, team); ver++; save(); },
+      setTitle(c, team) { team == null ? titles.delete(c) : titles.set(c, team); ver++; save(); },
+      reset() { games.clear(); titles.clear(); ver++; save(); },
+    };
+  })();
+
+  /* Home, away and date. The array index would be shorter but it is only stable until
+     the schedule is re-exported, and these picks are kept in localStorage across runs.
+     The separator is a pipe rather than the NUL this file uses elsewhere because this
+     key makes a round trip through an HTML data- attribute, and the HTML parser
+     rewrites NUL to U+FFFD - the key read back off the element then matched nothing
+     and every pick was silently ignored. No team name or ISO date contains a pipe. */
+  const scKey = g => `${g.h}|${g.a}|${g.d || g.w}`;
+
+  const scPopZ = obj => {                     // ddof=0, as the simulation's .std()
+    const ts = Object.keys(obj), v = ts.map(t => obj[t]);
+    const mu = v.reduce((a, b) => a + b, 0) / (v.length || 1);
+    const sd = Math.sqrt(v.reduce((a, b) => a + (b - mu) * (b - mu), 0) / (v.length || 1));
+    return Object.fromEntries(ts.map((t, i) => [t, sd ? (v[i] - mu) / sd : 0]));
+  };
+
+  /* The model's favourite for one scheduled game, and the probability behind it.
+     Non-FBS opponents have no rating, so the buy game resolves to the FBS team at the
+     same 95% the simulation charges it. */
+  function scGamePredict(g) {
+    const kh = !!vecOf(g.h), ka = !!vecOf(g.a);
+    if (kh && ka) {
+      const r = predict(g.h, g.a, g.n ? "N" : "A");
+      if (!r) return null;
+      return { fav: r.pA >= 0.5 ? g.h : g.a, pHome: r.pA, both: true };
+    }
+    if (!kh && !ka) return null;
+    return { fav: kh ? g.h : g.a, pHome: kh ? FCS_WIN_P : 1 - FCS_WIN_P, both: false };
+  }
+
+  let scCache = null, scCacheVer = "";
+  function scenario() {
+    const stamp = SC_STATE.version() + "|" + WI.version();
+    if (scCacheVer === stamp && scCache) return scCache;
+
+    const pl = cur().playoff;
+    const CW = pl.committee_weights || {};
+    // Head-to-head is only defined against a provisional order, and that order comes
+    // from the same model fitted WITHOUT the h2h column. Older exports predate that
+    // field; falling back to the scoring weights gives a very close but not identical
+    // provisional ranking, so the fallback is flagged rather than hidden.
+    const PW = pl.provisional_weights || null;
+    const P0 = PW || CW;
+    const WITHIN = pl.h2h_within || 15;
+    const FCS_R = pl.fcs_opp_rating != null ? pl.fcs_opp_rating : -2.0;
+    const P4C = new Set(pl.p4_confs || [...P4]);
+    const G6C = new Set(pl.g6_confs || [...G6]);
+
+    /* The universe is every team the model carries a vector for, NOT the 136 rows in
+       ratings.json. Those two sets differ by the FBS newcomers, who get a
+       5th-percentile fallback row in the frame and so are absent from the power
+       ratings but very much present on the schedule. Ranking over the smaller set
+       charged their opponents the non-FBS schedule penalty and shifted both z-scores,
+       which moved every committee score by about 0.01 against the Python. Same set,
+       same numbers. */
+    const names = Object.keys(cur().model.teams).filter(t => vecOf(t));
+    const fbs = new Set(names);
+
+    // rating: z-score of (O + D)/2, exactly as the simulation builds it. Read off the
+    // model vectors rather than ratings.json so an edited roster moves it here too.
+    const rating = scPopZ(Object.fromEntries(
+      names.map(t => { const v = vecOf(t); return [t, (v[0] + v[1]) / 2]; })));
+
+    const wins = {}, losses = {}, played = {}, cWins = {}, cGames = {};
+    const sosSum = {}, sosN = {};
+    for (const t of names) {
+      wins[t] = losses[t] = played[t] = cWins[t] = cGames[t] = 0;
+      sosSum[t] = sosN[t] = 0;
+    }
+
+    // meetings[] feeds head-to-head; it collects conference title games too, because
+    // the simulation counts those as meetings.
+    const meetings = [];
+    const played_games = [];
+    for (const g of schedule) {
+      const kh = fbs.has(g.h), ka = fbs.has(g.a);
+      if (kh && ka) {
+        sosSum[g.h] += rating[g.a]; sosN[g.h]++;
+        sosSum[g.a] += rating[g.h]; sosN[g.a]++;
+      } else if (kh || ka) {
+        const t = kh ? g.h : g.a;
+        sosSum[t] += FCS_R; sosN[t]++;
+      }
+      const P = scGamePredict(g);
+      if (!P) continue;
+      const key = scKey(g);
+      const picked = SC_STATE.game(key);
+      const winner = picked || P.fav;
+      const loser = winner === g.h ? g.a : g.h;
+      played_games.push({ g, key, pred: P, winner, picked: picked || null });
+      if (kh && ka) {
+        wins[winner]++; losses[loser]++; played[g.h]++; played[g.a]++;
+        meetings.push([winner, loser]);
+        if (g.c && conf(g.h) === conf(g.a)) {
+          cGames[g.h]++; cGames[g.a]++;
+          cWins[winner]++;
+        }
+      } else {
+        const t = kh ? g.h : g.a;
+        played[t]++;
+        if (winner === t) wins[t]++; else losses[t]++;
+      }
+    }
+    const sos = {};
+    for (const t of names) sos[t] = sosSum[t] / Math.max(sosN[t], 1);
+    const sosZ = scPopZ(sos);
+
+    // --- conference title games: top two by conference win pct, rating as tiebreak
+    const champs = {}, titleGames = [];
+    for (const c of [...P4C, ...G6C].sort()) {
+      const members = names.filter(t => conf(t) === c);
+      if (members.length < 2) continue;
+      const seedVal = t => (cGames[t] ? cWins[t] / cGames[t] : 0) + 1e-4 * rating[t];
+      const [t1, t2] = members.slice().sort((a, b) => seedVal(b) - seedVal(a));
+      const r = predict(t1, t2, "N");
+      const fav = !r || r.pA >= 0.5 ? t1 : t2;
+      const picked = SC_STATE.title(c);
+      const winner = picked === t1 || picked === t2 ? picked : fav;
+      const loser = winner === t1 ? t2 : t1;
+      champs[c] = winner;
+      wins[winner]++; played[t1]++; played[t2]++;
+      losses[loser]++;
+      meetings.push([winner, loser]);
+      titleGames.push({ conf: c, t1, t2, winner, fav,
+                        pTop: r ? r.pA : 0.5, picked: picked || null });
+    }
+
+    const wpct = {};
+    for (const t of names) wpct[t] = played[t] ? wins[t] / played[t] : 0;
+    // Notre Dame carries the power flag despite being independent — it has a CFP
+    // contract slot. Matches scripts/fit_committee.POWER_INDEPENDENTS.
+    const isP4 = t => (P4C.has(conf(t)) || t === "Notre Dame") ? 1 : 0;
+
+    const score0 = {};
+    for (const t of names) {
+      score0[t] = P0.win_pct * wpct[t] + P0.rating * rating[t] +
+                  P0.sos * sosZ[t] + (P0.power_conf || 0) * isP4(t);
+    }
+    const rank0 = {};
+    names.slice().sort((a, b) => score0[b] - score0[a])
+         .forEach((t, i) => { rank0[t] = i; });
+
+    const h2h = {};
+    for (const t of names) h2h[t] = 0;
+    if (CW.h2h) {
+      for (const [w, l] of meetings) {
+        if (Math.abs(rank0[w] - rank0[l]) <= WITHIN) { h2h[w]++; h2h[l]--; }
+      }
+    }
+
+    const parts = {}, score = {};
+    for (const t of names) {
+      parts[t] = {
+        win_pct: CW.win_pct * wpct[t],
+        rating: CW.rating * rating[t],
+        sos: CW.sos * sosZ[t],
+        p4: (CW.power_conf || 0) * isP4(t),
+        h2h: (CW.h2h || 0) * h2h[t],
+      };
+      score[t] = parts[t].win_pct + parts[t].rating + parts[t].sos +
+                 parts[t].p4 + parts[t].h2h;
+    }
+
+    // --- selection: 4 P4 champions + best G6 + at-larges, straight seeding
+    const autos = [...P4C].sort().map(c => champs[c]).filter(Boolean);
+    const g6pool = names.filter(t => G6C.has(conf(t)));
+    const g6bid = g6pool.length
+      ? g6pool.reduce((best, t) => score[t] > score[best] ? t : best, g6pool[0])
+      : null;
+    if (g6bid) autos.push(g6bid);
+    const field = new Set(autos);
+    const order = names.slice().sort((a, b) => score[b] - score[a]);
+    for (const t of order) {
+      if (field.size >= 12) break;
+      field.add(t);
+    }
+    const seeds = [...field].sort((a, b) => score[b] - score[a]).slice(0, 12);
+    const bubble = order.find(t => !field.has(t)) || null;
+
+    const route = {};
+    for (const t of seeds) {
+      const c = Object.keys(champs).find(k => champs[k] === t && P4C.has(k));
+      route[t] = c ? `${c} champion` : (t === g6bid ? "Group of 6 bid" : "at-large");
+    }
+
+    const br = bracketFromSeeds(seeds);
+    scCache = {
+      names, wins, losses, played, cWins, cGames, wpct, rating, sosZ, h2h,
+      score, parts, champs, titleGames, seeds, bubble, route, g6bid,
+      games: played_games, bracket: br, resolved: resolveBracket(br.games, br.feeds),
+      provisional: !!PW,
+    };
+    scCacheVer = stamp;
+    return scCache;
+  }
+
+  /* ---------- scenario rendering ---------- */
+  const SC_LIMIT = 250;
+  function scFilteredGames(S) {
+    const q = document.getElementById("sc-search").value.trim().toLowerCase();
+    const c = document.getElementById("sc-conf").value;
+    const wk = document.getElementById("sc-week").value;
+    const sc = document.getElementById("sc-scope").value;
+    let rows = S.games;
+    if (q) rows = rows.filter(r => r.g.h.toLowerCase().includes(q) ||
+                                   r.g.a.toLowerCase().includes(q));
+    if (c) rows = rows.filter(r => conf(r.g.h) === c || conf(r.g.a) === c);
+    if (wk) rows = rows.filter(r => String(r.g.w) === wk);
+    if (sc === "picked") rows = rows.filter(r => r.picked);
+    else if (sc === "close") rows = rows.filter(r =>
+      r.pred.both && Math.abs(r.pred.pHome - 0.5) <= 0.10);
+    else if (sc === "conf") rows = rows.filter(r =>
+      r.g.c && conf(r.g.h) === conf(r.g.a));
+    return rows;
+  }
+
+  function scChip(team, p, on, picked, key, side) {
+    const tint = color(team);
+    return `<button class="sc-chip${on ? " on" : ""}${picked ? " picked" : ""}"
+      style="--tint:${tint};--wash:${rgba(team, on ? .22 : .05)}"
+      data-key="${esc(key)}" data-team="${esc(team)}" data-side="${side}"
+      title="${esc(team)} — model gives ${pct(p, 0)}">
+      <img src="${logoURL(team)}" alt="" loading="lazy">
+      <span class="sc-abbr">${esc(abbr(team))}</span>
+      <span class="sc-p">${pct(p, 0)}</span></button>`;
+  }
+
+  function renderScenario() {
+    const host = document.getElementById("sc-body");
+    if (!host) return;
+    const S = scenario();
+
+    document.getElementById("sc-reset").disabled = !SC_STATE.count();
+    const base = new Set((cur().playoff.bracket || {}).seeds || []);
+    const added = S.seeds.filter(t => !base.has(t));
+    const dropped = [...base].filter(t => !S.seeds.includes(t));
+
+    const rows = scFilteredGames(S);
+    const shown = rows.slice(0, SC_LIMIT);
+    document.getElementById("sc-count").textContent =
+      `${rows.length > SC_LIMIT ? `first ${SC_LIMIT} of ` : ""}${rows.length} games` +
+      (SC_STATE.count() ? ` · ${SC_STATE.count()} picked` : "");
+
+    const gameRows = shown.map(r => {
+      const { g, key, pred } = r;
+      const pickedH = r.picked === g.h, pickedA = r.picked === g.a;
+      return `<div class="sc-game${r.picked ? " has-pick" : ""}">
+        <span class="sc-wk">Wk ${g.w}</span>
+        <span class="sc-date">${g.d ? g.d.slice(5) : ""}</span>
+        ${scChip(g.a, 1 - pred.pHome, r.winner === g.a, pickedA, key, "a")}
+        <span class="sc-at">${g.n ? "vs" : "at"}</span>
+        ${scChip(g.h, pred.pHome, r.winner === g.h, pickedH, key, "h")}
+        ${r.picked ? `<button class="sc-undo" data-key="${esc(key)}"
+          title="Back to the model's pick">undo</button>` : `<span class="sc-undo-sp"></span>`}
+      </div>`;
+    }).join("");
+
+    const titleRows = S.titleGames.map(t => `<div class="sc-game sc-ccg${
+      t.picked ? " has-pick" : ""}">
+        <span class="sc-wk sc-ccg-name">${esc(t.conf)}</span>
+        ${scChip(t.t1, t.pTop, t.winner === t.t1, t.picked === t.t1, "ccg:" + t.conf, "1")}
+        <span class="sc-at">vs</span>
+        ${scChip(t.t2, 1 - t.pTop, t.winner === t.t2, t.picked === t.t2, "ccg:" + t.conf, "2")}
+        ${t.picked ? `<button class="sc-undo" data-key="ccg:${esc(t.conf)}"
+          title="Back to the model's pick">undo</button>` : `<span class="sc-undo-sp"></span>`}
+      </div>`).join("");
+
+    const seedRows = S.seeds.map((t, i) => `<div class="sc-seed">
+        <span class="sc-seed-n${i < 4 ? " bye" : ""}">${i + 1}</span>
+        <img src="${logoURL(t)}" alt="" loading="lazy">
+        <div class="sc-seed-id">
+          <button class="team-link" data-team="${esc(t)}">${esc(t)}</button>
+          <div class="conf">${esc(S.route[t])}</div>
+        </div>
+        <span class="sc-rec">${S.wins[t]}–${S.losses[t]}</span>
+        <span class="sc-score" title="Committee score">${S.score[t].toFixed(2)}</span>
+        ${added.includes(t) ? `<span class="tag stars">NEW</span>` : ""}
+      </div>`).join("");
+
+    const diff = (!added.length && !dropped.length)
+      ? `Same twelve as the projected field.`
+      : `${added.length ? `<b>In:</b> ${added.map(esc).join(", ")}. ` : ""}${
+          dropped.length ? `<b>Out:</b> ${dropped.map(esc).join(", ")}.` : ""}`;
+
+    host.innerHTML = `
+      <div class="sc-out">
+        <div class="panel sc-field">
+          <h3>The field <span class="hint">— committee order, straight seeding</span></h3>
+          ${seedRows}
+          <div class="sc-bubble">First team out: ${S.bubble
+            ? `<b>${esc(S.bubble)}</b> (${S.wins[S.bubble]}–${S.losses[S.bubble]},
+               ${S.score[S.bubble].toFixed(2)})` : "—"}</div>
+          <div class="sc-diff">${diff}</div>
+        </div>
+        <div class="panel sc-bracket">
+          <h3>The bracket</h3>
+          <div id="sc-bracket-grid">${bracketHTML(S.resolved, S.seeds,
+            () => "wins this scenario")}</div>
+        </div>
+      </div>
+
+      <h3 class="bracket-title">Conference title games
+        <span class="hint">— the top two in each league by conference record; pick the
+          winner and the four Power 4 champions change with it</span></h3>
+      <div class="sc-games sc-ccg-list">${titleRows}</div>
+
+      <h3 class="bracket-title">The schedule
+        <span class="hint">— click a team to make it the winner; everything unpicked
+          stays on the model's favourite</span></h3>
+      <div class="sc-games">${gameRows || `<div class="wd-foot">No games match
+        these filters.</div>`}</div>
+      ${rows.length > SC_LIMIT ? `<div class="wd-foot">Showing the first ${SC_LIMIT}
+        games in schedule order. Narrow with the filters above to reach the rest &mdash;
+        picks you have already made are kept whether or not they are on screen.</div>` : ""}
+      <div class="wd-foot">One season, not twenty thousand: every game you have not
+        picked is resolved to the model's favourite, so this is the chalk season with
+        your results substituted in, and the seeds above are an outcome rather than a
+        probability. Selection follows the real rule &mdash; four Power&nbsp;4
+        champions, the highest-ranked Group of 6 team, seven at-large, straight
+        seeding &mdash; and ranks teams with the same fitted committee weights the
+        simulation uses.${S.provisional ? "" : ` <b>Note:</b> this export predates the
+        head-to-head provisional weights, so near-ties may break slightly differently
+        from the Playoff tab.`}</div>`;
+
+    host.querySelectorAll(".sc-chip").forEach(b =>
+      b.addEventListener("click", () => {
+        const key = b.dataset.key, team = b.dataset.team;
+        if (key.startsWith("ccg:")) {
+          const c = key.slice(4);
+          SC_STATE.setTitle(c, SC_STATE.title(c) === team ? null : team);
+        } else {
+          SC_STATE.setGame(key, SC_STATE.game(key) === team ? null : team);
+        }
+        scRerender();
+      }));
+    host.querySelectorAll(".sc-undo").forEach(b =>
+      b.addEventListener("click", () => {
+        const key = b.dataset.key;
+        if (key.startsWith("ccg:")) SC_STATE.setTitle(key.slice(4), null);
+        else SC_STATE.setGame(key, null);
+        scRerender();
+      }));
+    wireTeamLinks();
+  }
+
+  // The list can be 250 rows tall, and re-rendering it drops the page wherever the
+  // browser feels like. Hold the scroll position across a pick.
+  function scRerender() {
+    const y = window.scrollY;
+    renderScenario();
+    window.scrollTo(0, y);
+  }
+
+  function fillScenarioSelects() {
+    const cs = document.getElementById("sc-conf");
+    if (cs && cs.options.length <= 1) {
+      [...new Set(cur().ratings.teams.map(t => t.conference))].sort()
+        .forEach(c => cs.add(new Option(c, c)));
+    }
+    const ws = document.getElementById("sc-week");
+    if (ws && ws.options.length <= 1) {
+      [...new Set(schedule.map(g => g.w))].filter(w => w != null)
+        .sort((a, b) => a - b).forEach(w => ws.add(new Option("Week " + w, w)));
+    }
+  }
+
+  ["sc-search", "sc-conf", "sc-week", "sc-scope"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("input", renderScenario);
+  });
+  const scReset = document.getElementById("sc-reset");
+  if (scReset) scReset.addEventListener("click", () => { SC_STATE.reset(); renderScenario(); });
+
   const P4_CONFS = ["ACC", "Big 12", "Big Ten", "SEC"];
   const G6_CONFS = ["American Athletic", "Conference USA", "Mid-American",
                     "Mountain West", "Pac-12", "Sun Belt"];
@@ -694,10 +1179,41 @@
      spelling out because the 2026 format changed - the Group of 6 bid is no longer
      tied to winning a conference - and because the ranking underneath is a fitted
      model of the committee rather than the model's own opinion of who is best. */
-  function renderSelection(P, byTeam) {
+  function renderSelection(P, byTeam, br) {
     const el = document.getElementById("playoff-explain");
     const pl = cur().playoff;
     const cw = pl.committee_weights;
+
+    /* Step 2 asserted an ordering - record, then schedule, then quality - and asked to
+       be taken on faith. This is that claim as a measurement: the average selected
+       team's committee score, term by term, over the twelve in the bracket above. The
+       raw fitted weights cannot be compared to each other (win pct is a fraction, the
+       other inputs are z-scores and flags), so what is charted is the CONTRIBUTION each
+       term actually makes, which is the thing the sentence is about. Same colours as
+       the résumé cards below, so a reader can carry the key down the page. */
+    const fieldTeams = ((br && br.seeds) || []).map(t => byTeam[t])
+      .filter(t => t && t.score_parts);
+    let weightsHTML = "";
+    if (fieldTeams.length) {
+      const avg = {};
+      for (const [k] of PART_META) {
+        avg[k] = fieldTeams.reduce((s, t) => s + (t.score_parts[k] || 0), 0) /
+                 fieldTeams.length;
+      }
+      const span = Math.max(...PART_META.map(([k]) => Math.abs(avg[k]))) || 1;
+      const rows = PART_META.map(([k, lab, c, ink]) => `<div class="cw-row">
+          <span class="cw-lab">${lab}</span>
+          <div class="cw-track"><i style="width:${100 * Math.abs(avg[k]) / span}%;
+            background:${c}"></i></div>
+          <span class="cw-val" style="color:${ink}">${avg[k].toFixed(2)}</span>
+        </div>`).join("");
+      weightsHTML = `<div class="cw-chart">
+        <div class="cw-head">What the ranking is actually made of
+          <span class="hint">— average ranking points per term across the twelve teams
+            in the projected field</span></div>
+        ${rows}</div>`;
+    }
+
     if (el) el.innerHTML = `
       <div class="steps">
         <div class="step"><span class="step-n">1</span>
@@ -712,7 +1228,8 @@
             learned is that the committee cares most about <b>record</b>, then
             <b>schedule strength</b>, and much less about how good a team looks. It
             also breaks near-ties on <b>head-to-head</b>: beating a team ranked close
-            to you counts, and losing to one costs.</p></div>
+            to you counts, and losing to one costs.</p>
+          ${weightsHTML}</div>
         <div class="step"><span class="step-n">3</span>
           <h4>Hand out 5 automatic bids</h4>
           <p>The champions of the ACC, Big&nbsp;12, Big&nbsp;Ten and SEC are in no
@@ -1342,9 +1859,10 @@
           ${g.conf ? `<span class="tag conf-tag">conf</span>` : ""}</div></td>
         <td class="num">${r ? displayScore(r).join("–") : "—"}</td>
         <td class="num">${r ? spreadLabel(r.margin) : "—"}</td>
-        <td><div class="bar-wrap"><div class="bar">
-          <i style="width:${100 * (r ? r.pA : FCS_WIN_P)}%;background:${win ? tint : "var(--red)"}"></i>
-        </div><span class="pct">${r ? pct(r.pA, 0) : "95%"}</span></div></td>
+        <td class="num"><div class="bar-wrap">
+          <span class="pct">${r ? pct(r.pA, 0) : "95%"}</span>
+          <div class="bar"><i style="width:${100 * (r ? r.pA : FCS_WIN_P)}%;background:${win ? tint : "var(--red)"}"></i></div>
+        </div></td>
       </tr>`;
     }).join("");
 
@@ -1382,7 +1900,7 @@
         <span class="hint">— projected score, spread and win probability for every game</span></h3>
         <div class="mini-wrap"><table class="mini sched"><thead><tr>
           <th class="num">Wk</th><th class="num">Date</th><th></th><th>Opponent</th>
-          <th class="num">Proj score</th><th class="num">Spread</th><th>Win prob</th>
+          <th class="num">Proj score</th><th class="num">Spread</th><th class="num">Win prob</th>
         </tr></thead><tbody>${schedHTML}</tbody></table></div>
         <div class="wd-foot">Win probabilities across the slate sum to
           <b style="color:${tint}">${expWins.toFixed(1)}</b> expected wins
@@ -1745,18 +2263,46 @@
     return rows;
   })();
 
+  const plWar = r => { const e = WI.get(r.t, r.n); return e != null ? e : (r.raw || 0); };
+  const plKey = r => r.t + "\u0000" + r.n;
+
+  /* Depth, 2025 snaps and 2025 WAR are gone from this table. They are inputs to the
+     projection rather than the projection, and four numeric columns meant the one
+     column that is editable - and that everything else on the page moves with - was
+     the last thing the eye reached. What replaces them answers the question the
+     filters were being used to fake: where does this player sit, in FBS and at his
+     own position.
+
+     Both ranks are over EVERY projected slot, not the filtered view, and they are
+     recomputed whenever an edit lands - a scenario that makes a backup the best
+     quarterback in the country has to say so. */
+  let plRankCache = null, plRankVer = -1;
+  function plRanks() {
+    if (plRankVer === WI.version() && plRankCache) return plRankCache;
+    const overall = new Map(), pos = new Map(), groupN = {};
+    ALL_PLAYERS.slice().sort((a, b) => plWar(b) - plWar(a)).forEach((r, i) => {
+      overall.set(plKey(r), i + 1);
+      const g = r.g || "—";
+      groupN[g] = (groupN[g] || 0) + 1;
+      pos.set(plKey(r), groupN[g]);
+    });
+    plRankCache = { overall, pos, groupN };
+    plRankVer = WI.version();
+    return plRankCache;
+  }
+
   const PL_COLS = [
+    { k: "rk",   h: "#",        n: true, v: r => plRanks().overall.get(plKey(r)) },
     { k: "n",    h: "Player",   v: r => r.n },
     { k: "t",    h: "Team",     v: r => r.t },
     { k: "conf", h: "Conf",     v: r => r.conf },
     { k: "p",    h: "Pos",      v: r => r.p || r.g },
     { k: "c",    h: "Class",    v: r => r.c || "" },
-    { k: "d",    h: "Depth",    n: true, v: r => r.d ?? 9 },
-    { k: "sn",   h: "2025 snaps", n: true, v: r => r.sn ?? -1 },
-    { k: "w25",  h: "2025 WAR", n: true, v: r => r.w25 ?? -99 },
+    { k: "prk",  h: "Pos rank", n: true, v: r => plRanks().pos.get(plKey(r)) },
     { k: "war",  h: "Proj WAR", n: true, v: r => plWar(r) },
   ];
-  const plWar = r => { const e = WI.get(r.t, r.n); return e != null ? e : (r.raw || 0); };
+  // Ranks sort smallest-first; every other numeric column sorts largest-first.
+  const PL_ASC = new Set(["n", "t", "conf", "c", "rk", "prk"]);
   // The team page and this table used to disagree - the same player read 1.604 here
   // and 2.11 there - because the team page showed WAR after a display-time rescale
   // that this table did not apply. That rescale is gone (it was covering an attenuated
@@ -1779,7 +2325,8 @@
     else if (sc === "out") rows = rows.filter(r => r.out);
     else if (sc === "unproven") rows = rows.filter(r => r.i);
     else if (sc === "edited") rows = rows.filter(r => WI.get(r.t, r.n) != null);
-    const col = PL_COLS.find(x => x.k === plSort) || PL_COLS[8];
+    const col = PL_COLS.find(x => x.k === plSort) ||
+                PL_COLS.find(x => x.k === "war");
     const val = col.v;
     return rows.slice().sort((a, b) => {
       const x = val(a), y = val(b);
@@ -1800,10 +2347,13 @@
       c.k === plSort ? " sorted" : ""}" data-k="${c.k}">${c.h}${
       c.k === plSort ? (plDesc ? " ▾" : " ▴") : ""}</th>`).join("");
 
+    const RK = plRanks();
     const body = rows.map(r => {
       const tint = color(r.t);
       const edited = WI.get(r.t, r.n) != null;
+      const grp = r.g || "—";
       return `<tr class="${edited ? "wi-edited" : ""}">
+        <td class="rank num">${RK.overall.get(plKey(r))}</td>
         <td><div class="team-cell sm"><span class="team-stripe" style="background:${tint}"></span>
           <span class="pl-name">${esc(r.n)}</span>${r.i
             ? ` <span class="tag unproven" title="No prior FBS snaps — this projection is a positional prior, not a measurement">?</span>` : ""}${r.out
@@ -1813,9 +2363,8 @@
         <td class="pl-conf">${esc(r.conf)}</td>
         <td><span class="wi-pos">${esc(r.p || r.g)}</span></td>
         <td class="pl-conf">${esc(r.c || "—")}</td>
-        <td class="num">${r.d ?? "—"}</td>
-        <td class="num wi-base">${r.sn != null ? r.sn.toLocaleString() : "—"}</td>
-        <td class="num wi-base">${r.w25 != null ? r.w25.toFixed(3) : "—"}</td>
+        <td class="num pl-prk">${RK.pos.get(plKey(r))}<span class="pl-of">of ${
+          (RK.groupN[grp] || 0).toLocaleString()} ${esc(grp)}</span></td>
         <td class="num"><input class="wi-in pl-in" type="number" step="0.05"
           data-team="${esc(r.t)}" data-player="${esc(r.n)}"
           value="${plWar(r).toFixed(3)}" aria-label="Projected WAR for ${esc(r.n)}"></td>
@@ -1835,7 +2384,7 @@
       th.addEventListener("click", () => {
         const k = th.dataset.k;
         if (k === plSort) plDesc = !plDesc;
-        else { plSort = k; plDesc = !(k === "n" || k === "t" || k === "conf" || k === "c"); }
+        else { plSort = k; plDesc = !PL_ASC.has(k); }
         renderPlayers();
       }));
     // The whole table is replaced on every edit, so the caret would jump to the top of
@@ -1895,6 +2444,188 @@
     document.getElementById(id).addEventListener("input", renderPlayers));
   document.getElementById("pl-reset").addEventListener("click", () => {
     WI.reset(); renderAll();
+  });
+
+  /* =======================================================================
+     TEAM RATINGS BY INPUT
+     =======================================================================
+     The Season Odds table ranks teams by the one number the model produces. This
+     ranks them by the numbers it is BUILT from, which is a different and often more
+     useful question: who has the best quarterback room, the best offensive line, the
+     toughest schedule. The team page answers all of that for one team at a time and
+     could never answer "who is best", because that comparison does not exist on a
+     page about a single team.
+
+     Two column sets, because they are two different kinds of number and averaging
+     them into one table would invite adding a z-score to a win. Roster WAR is in
+     wins; the model inputs are the standardised features the coefficients multiply. */
+  const TR_OFF = GROUP_ORDER.filter(g => OFF_GROUPS.has(g));
+  const TR_DEF = GROUP_ORDER.filter(g => !OFF_GROUPS.has(g));
+
+  /* Per-team WAR by position group, summed live from the same rows the Players tab
+     edits - NOT from players.json's `byGroup`, which is the unedited baseline and
+     would have this table disagreeing with every other surface the moment anyone
+     changed a projection. */
+  let trWarCache = null, trWarVer = -1;
+  function trGroupWar() {
+    if (trWarVer === WI.version() && trWarCache) return trWarCache;
+    const out = {};
+    for (const r of ALL_PLAYERS) {
+      const o = out[r.t] || (out[r.t] = {});
+      const g = r.g || "—";
+      o[g] = (o[g] || 0) + plWar(r);
+    }
+    // GROUP_ORDER partitions the two-deep exactly, so off + def is the whole roster
+    // and matches the total the team page shows.
+    for (const t in out) {
+      const o = out[t];
+      o.__off = TR_OFF.reduce((s, g) => s + (o[g] || 0), 0);
+      o.__def = TR_DEF.reduce((s, g) => s + (o[g] || 0), 0);
+      o.__all = o.__off + o.__def;
+    }
+    trWarCache = out; trWarVer = WI.version();
+    return trWarCache;
+  }
+
+  const TR_SETS = {
+    war: {
+      label: "Roster WAR by position",
+      note: `Projected wins above replacement contributed by each position group,
+        summed over that group's slots in the 2026 two-deep. These are the same
+        per-player figures the <b>Players</b> tab lists and edits, so an edit there
+        re-ranks this table.`,
+      fmt: v => v.toFixed(2),
+      cols: () => [
+        ...GROUP_ORDER.map(g => ({ k: g, h: g,
+          cls: OFF_GROUPS.has(g) ? "tr-off" : "tr-def" })),
+        { k: "__off", h: "Offense", cls: "tr-off tr-sum" },
+        { k: "__def", h: "Defense", cls: "tr-def tr-sum" },
+        { k: "__all", h: "Total",   cls: "tr-sum" },
+      ],
+      val: (t, k) => (trGroupWar()[t] || {})[k] ?? 0,
+      has: t => !!trGroupWar()[t],
+    },
+    inputs: {
+      label: "Model inputs",
+      note: `The standardised features the trained coefficients actually multiply.
+        <b>Power</b> is the output &mdash; mean neutral-site win probability against
+        the rest of FBS &mdash; and the five underneath are what produce it. Schedule
+        strength is the mean rating of everyone on the slate, so a high number is a
+        hard season, not a good team.`,
+      fmt: (v, k) => k === "power" ? (100 * v).toFixed(1) : v.toFixed(2),
+      cols: () => [
+        { k: "power",     h: "Power",     cls: "tr-sum" },
+        { k: "O",         h: "Offense",   cls: "tr-off" },
+        { k: "D",         h: "Defense",   cls: "tr-def" },
+        { k: "talent",    h: "Talent" },
+        { k: "returning", h: "Returning" },
+        { k: "sos",       h: "Schedule" },
+      ],
+      val: (t, k) => { const r = trRow()[t]; return r && r[k] != null ? r[k] : 0; },
+      has: t => !!trRow()[t],
+    },
+  };
+  const trRow = () => ratingRow();
+  let trSet = "war", trSort = "__all", trDesc = true;
+
+  function trRows() {
+    const S = TR_SETS[trSet];
+    const q = document.getElementById("tr-search").value.trim().toLowerCase();
+    const c = document.getElementById("tr-conf").value;
+    const tier = document.getElementById("tr-tier").value;
+    let rows = liveRatings().filter(r => S.has(r.team));
+    if (q) rows = rows.filter(r => r.team.toLowerCase().includes(q) ||
+      ((meta[r.team] && meta[r.team].mascot) || "").toLowerCase().includes(q));
+    if (c) rows = rows.filter(r => r.conference === c);
+    if (tier === "p4") rows = rows.filter(r => P4.has(r.conference));
+    if (tier === "g6") rows = rows.filter(r => G6.has(r.conference));
+    return rows;
+  }
+
+  function renderRatings() {
+    const host = document.getElementById("tr-table");
+    if (!host) return;
+    const S = TR_SETS[trSet];
+    const cols = S.cols();
+    if (!cols.some(c => c.k === trSort)) trSort = cols[cols.length - 1].k;
+
+    // Ranked over every team in the set, not the filtered view: filtering to one
+    // conference should tell you where its teams sit in FBS, not renumber them 1-16.
+    const all = liveRatings().filter(r => S.has(r.team));
+    const rank = {};
+    all.slice().sort((a, b) => S.val(b.team, trSort) - S.val(a.team, trSort))
+       .forEach((r, i) => { rank[r.team] = i + 1; });
+
+    // The sorted column is the only one that gets a fill. Thirteen bars in one row
+    // would be a heat map nobody asked for; one bar says "this is the column you are
+    // ranking by" and stays legible.
+    const vals = all.map(r => S.val(r.team, trSort));
+    const lo = Math.min(...vals), hi = Math.max(...vals);
+    const span = (hi - lo) || 1;
+
+    const rows = trRows().slice()
+      .sort((a, b) => trDesc ? S.val(b.team, trSort) - S.val(a.team, trSort)
+                             : S.val(a.team, trSort) - S.val(b.team, trSort));
+    document.getElementById("tr-count").textContent =
+      `${rows.length} of ${all.length} teams`;
+
+    const head = `<th class="num">#</th><th>Team</th>` + cols.map(c =>
+      `<th class="num sortable ${c.cls || ""}${c.k === trSort ? " sorted" : ""}"
+        data-k="${c.k}">${c.h}${c.k === trSort ? (trDesc ? " ▾" : " ▴") : ""}</th>`).join("");
+
+    const body = rows.map(r => {
+      const t = r.team, tint = color(t);
+      const cells = cols.map(c => {
+        const v = S.val(t, c.k);
+        const fig = S.fmt(v, c.k);
+        if (c.k !== trSort) {
+          return `<td class="num ${c.cls || ""}">${fig}</td>`;
+        }
+        return `<td class="num ${c.cls || ""} sorted"><div class="bar-wrap">
+          <span class="pct">${fig}</span>
+          <div class="bar"><i style="width:${100 * (v - lo) / span}%;
+            background:${tint}"></i></div></div></td>`;
+      }).join("");
+      return `<tr><td class="rank num">${rank[t]}</td>
+        <td><div class="team-cell sm">
+          <span class="team-stripe" style="background:${tint}"></span>
+          <img src="${logoURL(t)}" alt="" loading="lazy">
+          <div><button class="team-link" data-team="${esc(t)}">${esc(t)}</button>
+            <div class="conf">${esc(r.conference)}</div></div></div></td>${cells}</tr>`;
+    }).join("");
+
+    host.innerHTML =
+      `<div class="mini-wrap tr-scroll"><table class="mini tr-table">
+         <thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>
+       <div class="wd-foot">${S.note}</div>`;
+
+    host.querySelectorAll("th.sortable").forEach(th =>
+      th.addEventListener("click", () => {
+        const k = th.dataset.k;
+        if (k === trSort) trDesc = !trDesc;
+        else { trSort = k; trDesc = true; }
+        renderRatings();
+      }));
+    wireTeamLinks();
+  }
+
+  function fillRatingSelects() {
+    const sel = document.getElementById("tr-conf");
+    if (!sel || sel.options.length > 1) return;
+    [...new Set(cur().ratings.teams.map(t => t.conference))].sort()
+      .forEach(c => sel.add(new Option(c, c)));
+  }
+
+  ["tr-search", "tr-conf", "tr-tier"].forEach(id =>
+    document.getElementById(id).addEventListener("input", renderRatings));
+  document.getElementById("tr-set").addEventListener("change", e => {
+    trSet = e.target.value;
+    // Each set has its own natural default: total roster wins, or the power rating
+    // the other five inputs feed. Carrying a sort key across sets is impossible
+    // anyway - they share no column names.
+    trSort = trSet === "war" ? "__all" : "power";
+    trDesc = true;
+    renderRatings();
   });
 
   /* =======================================================================
@@ -2146,14 +2877,17 @@
     else if (view === "playoff") renderPlayoff();
     else if (view === "matchup") renderMatchup();
     else if (view === "team") renderTeam();
+    else if (view === "scenario") renderScenario();
+    else if (view === "ratings") renderRatings();
     else if (view === "players") renderPlayers();
     else if (view === "method") renderMethod();
     else if (view === "testing") renderCalc();
   }
   function renderAll() {
-    fillConfSelect(); fillPlayerSelects(); fillCalcSelect();
-    renderDash(); renderPlayoff(); renderMatchup(); renderTeam();
-    renderPlayers(); renderMethod(); renderCalc();
+    fillConfSelect(); fillPlayerSelects(); fillRatingSelects(); fillCalcSelect();
+    fillScenarioSelects();
+    renderDash(); renderPlayoff(); renderScenario(); renderMatchup(); renderTeam();
+    renderRatings(); renderPlayers(); renderMethod(); renderCalc();
   }
   function fillCalcSelect() {
     const sel = document.getElementById("calc-team");
