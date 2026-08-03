@@ -254,20 +254,28 @@ def main(variant=""):
         "derivation": derivation_block(comp),
     }
 
-    # Realistic scorelines and the key-number probabilities, from scripts/score_shape.py.
-    # Only the display half of that work ships: the empirical margin distribution did NOT
-    # beat the normal on win probability (see config.SCORE_SHAPE), so `logistic`,
-    # `margin` and `ens_w` above are untouched and the app still computes p from them.
+    # Key-number probabilities from scripts/score_shape.py. Only the margin PMF ships,
+    # and only for display: the empirical margin distribution did NOT beat the normal on
+    # win probability (see config.SCORE_SHAPE), so `logistic`, `margin` and `ens_w` above
+    # are untouched and the app still computes p from them.
+    #
+    # `score_table` is deliberately NOT exported any more. It fed a display that snapped
+    # each projected score to the nearest real scoreline from 2021-25, which is a better
+    # guess at the scoreline and a worse one at everything beside it: snapping moves the
+    # implied margin off the model's own spread, so the score and the spread printed next
+    # to it disagreed about the same game. The app rounds each side instead, and the table
+    # is 15KB of payload with nothing reading it. It is still in artifacts/score_shape.json
+    # if the display is ever wanted back.
     from config import SCORE_SHAPE
     shape_path = ARTIFACTS / "score_shape.json"
     if SCORE_SHAPE and shape_path.exists():
-        export["shape"] = json.loads(shape_path.read_text())
-        n_pairs = len(export["shape"]["score_table"]["pairs"])
-        print(f"Score shape: {n_pairs} scorelines + margin PMF "
-              f"({export['shape']['n_games']} games)")
+        shape = json.loads(shape_path.read_text())
+        export["shape"] = {k: v for k, v in shape.items() if k != "score_table"}
+        print(f"Score shape: margin PMF only ({shape['n_games']} games); "
+              f"score_table withheld (unused by the app)")
     elif SCORE_SHAPE:
-        print("  [warn] score_shape.json absent; the app will round scores as before. "
-              "Run ./venv/bin/python -m scripts.score_shape")
+        print("  [warn] score_shape.json absent; the matchup page will omit the "
+              "key-number row. Run ./venv/bin/python -m scripts.score_shape")
     (VIZ / f"model{suffix}.json").write_text(json.dumps(export, indent=1))
 
     # Schedule (lens-independent) powers the client-side playoff re-simulation.

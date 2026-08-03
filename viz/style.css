@@ -111,18 +111,18 @@ tbody tr:hover { background: var(--panel2); }
    content - the conference-race and bubble strips - see .ccg-row .bar below. */
 .bar-wrap { display: inline-flex; flex-direction: column; align-items: stretch;
   gap: 3px; min-width: 46px; }
-.bar { height: 3px; border-radius: 2px; background: var(--panel2); overflow: hidden; }
+/* The track is outlined, not just tinted. --panel2 against --bg is a two-step
+   difference in warmth and nothing else, so an empty track was nearly invisible and
+   a 94% bar was indistinguishable from a full one - the reader could see the fill but
+   not what it was a fraction OF. The --line2 rule draws the full extent, so how close
+   a bar is to filled is now readable without comparing it to its neighbours.
+   box-sizing is border-box globally, so the border eats into the 6px rather than
+   adding to it. */
+.bar { height: 6px; border-radius: 3px; background: var(--panel2);
+  border: 1px solid var(--line2); overflow: hidden; }
 .bar > i { display: block; height: 100%; border-radius: 2px; background: var(--blue); }
 .bar > i.green { background: var(--green); }
 .pct { font-variant-numeric: tabular-nums; text-align: right; line-height: 1.25; }
-
-.zcell { display: inline-flex; align-items: center; gap: 8px; justify-content: flex-end; }
-.zcell span { font-variant-numeric: tabular-nums; min-width: 44px; text-align: right; }
-.zbar { position: relative; width: 74px; height: 8px; border-radius: 4px;
-  background: var(--panel2); overflow: hidden; flex: none; }
-.zbar > i { position: absolute; top: 0; height: 100%; border-radius: 2px; }
-.zbar .zmid { position: absolute; left: 50%; top: 0; width: 1px; height: 100%;
-  background: var(--line2); z-index: 1; }
 
 /* ---------- ratings dashboard ---------- */
 .dash-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
@@ -318,43 +318,6 @@ footer { max-width: 1280px; margin: 0 auto; padding: 20px; color: var(--muted);
 .field .los { position: absolute; left: 0; right: 0; height: 2px;
   background: rgba(0,0,0,.16); }
 
-/* ---------- method / diagnostics ---------- */
-table.corr { width: auto; border-collapse: separate; border-spacing: 2px; }
-table.corr th { padding: 4px 5px; font-size: 9px; }
-table.corr th.rowh { text-align: right; text-transform: none; font-size: 11px;
-  letter-spacing: 0; color: var(--text); }
-td.cc { text-align: center; font-variant-numeric: tabular-nums; font-size: 11.5px;
-  padding: 5px 6px; border: 0; border-radius: 4px; min-width: 44px;
-  background: var(--panel2); }
-td.cc.self { color: var(--muted); background: transparent; }
-td.cc.strong { font-weight: 700; color: #fff; }
-tbody tr:hover td.cc { background: inherit; }
-
-.wsplit { display: flex; height: 30px; border-radius: 7px; overflow: hidden;
-  border: 1px solid var(--line2); }
-.wsplit-seg { display: flex; align-items: center; justify-content: center;
-  font-size: 11px; color: #fff; font-family: var(--sans); font-weight: 700; }
-
-.cal { display: flex; align-items: flex-end; gap: 5px; height: 150px; }
-.cal-col { flex: 1; display: flex; flex-direction: column; align-items: center;
-  justify-content: flex-end; height: 100%; }
-.cal-pair { display: flex; align-items: flex-end; gap: 2px; width: 100%; height: 100%; }
-.cal-bar { flex: 1; border-radius: 3px 3px 0 0; }
-.cal-bar.pred { background: var(--line2); }
-.cal-bar.act { background: var(--accent); }
-.cal-key { display: flex; gap: 16px; margin-top: 8px; font-size: 11px;
-  color: var(--muted); font-family: var(--sans); }
-.cal-key i { display: inline-block; width: 10px; height: 10px; border-radius: 2px;
-  margin-right: 4px; vertical-align: middle; }
-
-.decs { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 14px; }
-.dec { background: var(--panel2); border-radius: 10px; padding: 12px 14px;
-  border-left: 3px solid var(--accent); }
-.dec-q { font-weight: 700; font-size: 14px; margin-bottom: 5px; }
-.dec-a { font-size: 13.5px; margin-bottom: 6px; }
-.dec-e { font-size: 12px; color: var(--muted); font-family: var(--sans); }
-
 /* ---- win-distribution floor / ceiling -------------------------------------
    The band is the middle 80% of simulated seasons. Columns outside it stay drawn
    but recede, so the eye reads the plausible range without losing the tails. */
@@ -443,6 +406,7 @@ tbody tr:hover td.cc { background: inherit; }
 .cw-row { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
 .cw-lab { flex: none; width: 74px; font-size: 11.5px; color: var(--muted); }
 .cw-track { flex: 1; height: 6px; border-radius: 3px; background: var(--panel2);
+  border: 1px solid var(--line2);
   overflow: hidden; }
 .cw-track > i { display: block; height: 100%; border-radius: 3px; }
 .cw-val { flex: none; min-width: 34px; text-align: right; font-size: 11.5px;
@@ -466,7 +430,7 @@ tbody tr:hover td.cc { background: inherit; }
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* Here the bar is the content, not an accent on a figure, so it keeps the full
    track the table cells gave up. */
-.ccg-row .bar { flex: 1; width: auto; height: 8px; border-radius: 4px; }
+.ccg-row .bar { flex: 1; width: auto; height: 10px; border-radius: 5px; }
 .ccg-row .bar > i { border-radius: 4px; }
 .ccg-row .pct { min-width: 38px; font-size: 12.5px; }
 
@@ -573,6 +537,35 @@ details.nerd[open] > summary { margin-bottom: 14px; }
   flex: none; }
 
 /* ---- scenario builder ------------------------------------------------------ */
+/* Segmented control for the two modes. It sits first in the toolbar because it is the
+   only control that changes what the page IS rather than what it filters. */
+.seg { display: inline-flex; border: 1px solid var(--line2); border-radius: 8px;
+  overflow: hidden; flex: none; }
+.seg-btn { background: none; border: 0; border-right: 1px solid var(--line2);
+  color: var(--muted); padding: 8px 14px; font: inherit; font-size: 13.5px;
+  cursor: pointer; white-space: nowrap; transition: background .12s, color .12s; }
+.seg-btn:last-child { border-right: 0; }
+.seg-btn:hover { color: var(--text); background: var(--panel); }
+.seg-btn.active { background: var(--text); color: var(--bg); font-weight: 700; }
+.sc-filters { display: contents; }
+#sc-toolbar.sc-showing-playoff .sc-filters { display: none; }
+
+/* The consequence of a pick, kept on screen while you are picking. Without it the
+   toggle would hide every effect of the thing the page is for. */
+.sc-summary { display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 10px 14px; margin-bottom: 4px; background: var(--panel);
+  border: 1px solid var(--line2); border-radius: 10px; }
+.sc-sum-champ { display: inline-flex; align-items: center; gap: 7px; flex: none; }
+.sc-sum-champ img { width: 22px; height: 22px; object-fit: contain; }
+.sc-sum-champ span { color: var(--muted); font-size: 13px; }
+.sc-sum-diff { flex: 1; min-width: 180px; color: var(--muted); font-size: 12.5px; }
+.sc-goto { background: none; border: 1px solid var(--line2); border-radius: 8px;
+  color: var(--accent); padding: 6px 12px; font: inherit; font-size: 13px;
+  cursor: pointer; flex: none; white-space: nowrap; }
+.sc-goto:hover { border-color: var(--accent); background: var(--bg); }
+.sc-back-row { display: flex; align-items: center; gap: 12px; margin: 14px 0 4px;
+  flex-wrap: wrap; }
+
 /* Two halves that have to be visible together: the field/bracket you are producing,
    and the games producing it. On a wide screen they sit side by side and the output
    sticks while the schedule scrolls past it - flipping a game you cannot see the
@@ -670,62 +663,3 @@ details.nerd[open] > summary { margin-bottom: 14px; }
 /* The mini-bar cell is the widest thing in its column; without a floor the column
    width jumps every time the sort moves to a shorter set of figures. */
 .tr-table td.sorted .bar-wrap { min-width: 52px; }
-
-/* ---- testing: rating calculator ------------------------------------------- */
-/* Five stacked stages, each one step of the derivation. The stage number is the
-   only strong visual anchor - the numbers themselves have to stay quiet enough that
-   an edited input is the loudest thing on the page. */
-.calc-warn { padding: 18px; background: var(--panel); border: 1px solid var(--line2);
-  border-radius: 10px; color: var(--muted); }
-.calc-bad { color: var(--red); font-weight: 600; }
-
-.calc-head { display: flex; align-items: center; gap: 14px; padding: 14px 18px;
-  background: var(--panel); border: 1px solid var(--line); border-left-width: 4px;
-  border-radius: 10px; margin-bottom: 14px; }
-.calc-logo { width: 40px; height: 40px; object-fit: contain; flex: none; }
-.calc-team { font-size: 20px; font-weight: 600; }
-.calc-sub { color: var(--muted); font-size: 13px; }
-.calc-out-big { margin-left: auto; text-align: right; min-width: 104px; }
-.calc-k { font: 600 10.5px/1 var(--sans); letter-spacing: .09em; color: var(--muted); }
-.calc-v { font-size: 24px; font-variant-numeric: tabular-nums; margin-top: 3px; }
-.calc-delta { font: 600 12px/1 var(--sans); margin-top: 2px; }
-.calc-delta.up { color: var(--green); }
-.calc-delta.dn { color: var(--red); }
-
-.calc-stage { background: var(--panel); border: 1px solid var(--line);
-  border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; }
-.calc-stage h3 { font-size: 16px; display: flex; align-items: center; gap: 10px;
-  margin-bottom: 6px; }
-.calc-n { display: inline-flex; align-items: center; justify-content: center;
-  width: 22px; height: 22px; border-radius: 50%; background: var(--panel2);
-  color: var(--muted); font: 600 12px/1 var(--sans); flex: none; }
-.calc-p { color: var(--muted); font-size: 14px; margin-bottom: 10px; max-width: 78ch; }
-
-.calc-row { display: flex; align-items: baseline; gap: 12px; padding: 6px 0;
-  border-top: 1px solid var(--line); }
-.calc-lab { flex: 1; min-width: 0; }
-.calc-help { display: block; color: var(--muted); font-size: 12.5px; }
-.calc-was { width: 84px; color: var(--muted); font-size: 12.5px;
-  font-variant-numeric: tabular-nums; }
-.calc-in { width: 96px; text-align: right; font: inherit; flex: none;
-  font-variant-numeric: tabular-nums; color: var(--text); background: var(--bg);
-  border: 1px solid var(--line2); border-radius: 6px; padding: 4px 7px; }
-.calc-in:focus { outline: none; border-color: var(--accent); }
-.calc-row.edited .calc-in { border-color: var(--accent); color: var(--accent);
-  font-weight: 600; }
-
-/* The equation lines are the payoff of each stage, so they read as output rather
-   than as another row of inputs. */
-.calc-eq { margin-top: 9px; padding: 8px 11px; background: var(--bg);
-  border-radius: 7px; font-size: 14px; font-variant-numeric: tabular-nums;
-  color: var(--muted); overflow-x: auto; }
-.calc-eq b { color: var(--text); font-size: 15px; }
-
-.calc-tbl { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 14px; }
-.calc-tbl th { text-align: left; font: 600 10.5px/1 var(--sans); letter-spacing: .07em;
-  color: var(--muted); padding: 5px 8px; border-bottom: 1px solid var(--line2); }
-.calc-tbl td { padding: 5px 8px; border-bottom: 1px solid var(--line); }
-.calc-tbl .n { text-align: right; font-variant-numeric: tabular-nums; }
-.calc-tbl tr.calc-zero td { color: var(--muted); }
-.calc-note { color: var(--muted); font-size: 12.5px; }
-#calc-team { min-width: 200px; }

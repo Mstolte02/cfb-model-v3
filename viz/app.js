@@ -1,6 +1,6 @@
 /* CFB Model v3 — 2026 visuals.
-   Tabs: Ratings · Playoff Projection · Matchup Simulator · Team Breakdown.
-   One rating variant; the talent blend is read from diagnostics.json.
+   Tabs: Season Odds · Playoff Projection · Scenario Builder · Matchup Simulator ·
+   Team Breakdown · Team Ratings · Players.
 
    The trained model math is frozen (coefficients in model*.json) and is a verified
    port of the Python model — win probability, margin and points agree with the
@@ -12,11 +12,13 @@
   // data files are rewritten every time the pipeline runs, and a stale copy shows
   // wrong numbers with no visible error.
   const fetchJSON = u => fetch(u, { cache: "no-cache" }).then(r => r.json());
-  const [teams, schedule, players, diag, ratings, playoff, model] = await Promise.all([
+  // diagnostics.json is no longer fetched: the Method page was the only reader, and
+  // pulling 25KB on every load to render nothing is a cost with no page behind it.
+  // scripts/export_diagnostics.py still writes the file.
+  const [teams, schedule, players, ratings, playoff, model] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
-    fetchJSON("data/diagnostics.json").catch(() => null),
     fetchJSON("data/ratings.json"),
     fetchJSON("data/playoff.json"),
     fetchJSON("data/model.json"),
@@ -302,47 +304,26 @@
              scoreA: (total + marginA) / 2, scoreB: (total - marginA) / 2 };
   }
 
-  /* ---------- realistic scorelines ----------
-     Football scores are built out of 7s, 3s, 6s and 8s, so the reachable scorelines
-     are not evenly spread and neither are the margins between them. Rounding each
-     side of the implied score independently ignores that and produces 28-24 for a
-     game that would far more often finish 27-24.
+  /* ---------- displayed scoreline ----------
+     Each side of the projected score, rounded. This used to snap to the nearest
+     REAL scoreline from 2021-25, on the argument that football scores are built out
+     of 7s and 3s so 27-24 is likelier than the 28-24 that rounding gives. That was
+     true about the scoreline and wrong about everything next to it: snapping moves
+     the implied margin off the model's own spread, so the projected score and the
+     spread printed beside it disagreed about the same game. The spread is the
+     number people read, so the scoreline defers to it.
 
-     `shape.score_table` is every real final score from 2021-25 with how often it
-     happened; the pick is the most common one near the projected total and margin.
-     Out of sample that is exactly right about the margin twice as often as rounding
-     and exactly right about the score four times as often, at the same mean error
-     per side (config.SCORE_SHAPE). Absent the table, the old rounding still runs. */
+     The winner still has to agree with the win probability. Those two can diverge on
+     a near-coin-flip, because pA blends the logistic with the margin model while the
+     score comes from the margin alone: a 51% favourite can carry a margin of -0.2.
+     Left alone that put a team in the championship game after losing its semifinal on
+     the scoreboard. Football has no ties either, so a level game gives the favourite
+     the extra point. */
   const SHAPE = cur().model.shape || null;
-  function pickScore(total, margin) {
-    if (!SHAPE) return null;
-    const T = SHAPE.score_table, ht = T.h_total, hm = T.h_margin;
-    let best = null, bestW = -1;
-    for (const [a, b, n] of T.pairs) {
-      const dt = (a + b - total) / ht, dm = (a - b - margin) / hm;
-      const w = n * Math.exp(-0.5 * (dt * dt + dm * dm));
-      if (w > bestW) { bestW = w; best = [a, b]; }
-    }
-    return best;
-  }
-
-  /* The winner is whoever the ensemble win probability favours, and the displayed
-     score has to agree with it. Those two can diverge on a near-coin-flip, because
-     pA blends the logistic with the margin model while the score comes from the
-     margin alone: a 51% favourite can carry a margin of -0.2. Left alone that put a
-     team in the championship game after losing its semifinal on the scoreboard.
-     Football has no ties either, so a game the table would call level gives the
-     favourite the extra point. */
   function displayScore(r, winnerIsA) {
     if (winnerIsA === undefined) winnerIsA = r.pA >= 0.5;
-    const picked = pickScore(r.total, r.margin);
-    let a, b;
-    if (picked) {
-      [a, b] = picked;
-    } else {
-      a = Math.max(0, Math.round(r.scoreA));
-      b = Math.max(0, Math.round(r.scoreB));
-    }
+    let a = Math.max(0, Math.round(r.scoreA));
+    let b = Math.max(0, Math.round(r.scoreB));
     if (winnerIsA && a <= b) a = b + 1;
     else if (!winnerIsA && b <= a) b = a + 1;
     return [a, b];
@@ -376,15 +357,6 @@
     // en dash rather than the minus sign, which sets far too wide next to figures
     const sign = margin >= 0 ? "–" : "+";
     return `<span class="spread ${margin >= 0 ? "pos" : "neg"}"><span class="sgn">${sign}</span>${Math.abs(margin).toFixed(1)}</span>`;
-  }
-
-  /* Diverging bar for a z-scored input: the midline is FBS average. */
-  function zBar(v, tint, span = 2.2) {
-    const f = Math.max(-1, Math.min(1, v / span));
-    const w = Math.abs(f) * 50;
-    const left = f >= 0 ? 50 : 50 - w;
-    return `<div class="zbar"><span class="zmid"></span>
-      <i style="left:${left}%;width:${w}%;background:${tint}"></i></div>`;
   }
 
   /* ---------- tabs ---------- */
@@ -995,6 +967,7 @@
 
   /* ---------- scenario rendering ---------- */
   const SC_LIMIT = 250;
+  let scMode = "pick";                 // "pick" | "playoff"
   function scFilteredGames(S) {
     const q = document.getElementById("sc-search").value.trim().toLowerCase();
     const c = document.getElementById("sc-conf").value;
@@ -1036,9 +1009,9 @@
 
     const rows = scFilteredGames(S);
     const shown = rows.slice(0, SC_LIMIT);
-    document.getElementById("sc-count").textContent =
-      `${rows.length > SC_LIMIT ? `first ${SC_LIMIT} of ` : ""}${rows.length} games` +
-      (SC_STATE.count() ? ` · ${SC_STATE.count()} picked` : "");
+    const picked = SC_STATE.count() ? `${SC_STATE.count()} picked` : "nothing picked";
+    document.getElementById("sc-count").textContent = scMode === "playoff" ? picked
+      : `${rows.length > SC_LIMIT ? `first ${SC_LIMIT} of ` : ""}${rows.length} games · ${picked}`;
 
     const gameRows = shown.map(r => {
       const { g, key, pred } = r;
@@ -1080,8 +1053,25 @@
       ? `Same twelve as the projected field.`
       : `${added.length ? `<b>In:</b> ${added.map(esc).join(", ")}. ` : ""}${
           dropped.length ? `<b>Out:</b> ${dropped.map(esc).join(", ")}.` : ""}`;
+    const champ = S.resolved[10] && S.resolved[10].winner;
 
-    host.innerHTML = `
+    /* Two modes rather than one long page. Picking games and reading the bracket are
+       different activities: the schedule wants a tall scrolling list, the bracket
+       wants width, and putting them side by side gave the bracket a quarter of the
+       screen while the list you were actually working in sat below the fold.
+
+       The cost of splitting them is that a pick stops being visibly consequential, so
+       pick mode keeps a one-line readout of what the picks have produced - champion,
+       and what changed about the field - with the way through to the full bracket. */
+    const summary = `<div class="sc-summary">
+      <span class="sc-sum-champ">${champ
+        ? `<img src="${logoURL(champ)}" alt="" loading="lazy"><b>${esc(champ)}</b>
+           <span>wins it</span>` : "—"}</span>
+      <span class="sc-sum-diff">${diff}</span>
+      <button class="sc-goto" data-mode="playoff">See the playoff &rarr;</button>
+    </div>`;
+
+    const playoffHTML = `
       <div class="sc-out">
         <div class="panel sc-field">
           <h3>The field <span class="hint">— committee order, straight seeding</span></h3>
@@ -1097,7 +1087,14 @@
             () => "wins this scenario")}</div>
         </div>
       </div>
+      <div class="sc-back-row">
+        <button class="sc-goto" data-mode="pick">&larr; Back to the games</button>
+        ${SC_STATE.count() ? "" : `<span class="hint">Nothing picked yet &mdash; this
+          is the season in which every favourite wins.</span>`}
+      </div>`;
 
+    const pickHTML = `
+      ${summary}
       <h3 class="bracket-title">Conference title games
         <span class="hint">— the top two in each league by conference record; pick the
           winner and the four Power 4 champions change with it</span></h3>
@@ -1110,10 +1107,12 @@
         these filters.</div>`}</div>
       ${rows.length > SC_LIMIT ? `<div class="wd-foot">Showing the first ${SC_LIMIT}
         games in schedule order. Narrow with the filters above to reach the rest &mdash;
-        picks you have already made are kept whether or not they are on screen.</div>` : ""}
+        picks you have already made are kept whether or not they are on screen.</div>` : ""}`;
+
+    host.innerHTML = (scMode === "playoff" ? playoffHTML : pickHTML) + `
       <div class="wd-foot">One season, not twenty thousand: every game you have not
         picked is resolved to the model's favourite, so this is the chalk season with
-        your results substituted in, and the seeds above are an outcome rather than a
+        your results substituted in, and the field is an outcome rather than a
         probability. Selection follows the real rule &mdash; four Power&nbsp;4
         champions, the highest-ranked Group of 6 team, seven at-large, straight
         seeding &mdash; and ranks teams with the same fitted committee weights the
@@ -1121,6 +1120,8 @@
         head-to-head provisional weights, so near-ties may break slightly differently
         from the Playoff tab.`}</div>`;
 
+    host.querySelectorAll(".sc-goto").forEach(b =>
+      b.addEventListener("click", () => scSetMode(b.dataset.mode)));
     host.querySelectorAll(".sc-chip").forEach(b =>
       b.addEventListener("click", () => {
         const key = b.dataset.key, team = b.dataset.team;
@@ -1149,6 +1150,22 @@
     renderScenario();
     window.scrollTo(0, y);
   }
+
+  /* Which half of the tab is showing. Switching goes back to the top rather than
+     holding scroll: the two modes are different lengths, and keeping a schedule-list
+     scroll position on a one-screen bracket lands the reader past the end of it. */
+  function scSetMode(mode) {
+    scMode = mode === "playoff" ? "playoff" : "pick";
+    document.querySelectorAll("#sc-mode .seg-btn").forEach(b =>
+      b.classList.toggle("active", b.dataset.mode === scMode));
+    // The filters only drive the schedule list, so they go with it.
+    const bar = document.getElementById("sc-toolbar");
+    if (bar) bar.classList.toggle("sc-showing-playoff", scMode === "playoff");
+    renderScenario();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  document.querySelectorAll("#sc-mode .seg-btn").forEach(b =>
+    b.addEventListener("click", () => scSetMode(b.dataset.mode)));
 
   function fillScenarioSelects() {
     const cs = document.getElementById("sc-conf");
@@ -1323,11 +1340,11 @@
     const r = predict(a, b, venue);
     const fav = r.margin >= 0 ? a : b, spread = Math.abs(r.margin);
     const venueNote = venue === "N" ? "Neutral field" : "At " + (venue === "A" ? a : b);
+    const [sa, sb] = displayScore(r);
     // The margins that actually happen, from the fitted distribution rather than the
     // normal the win model uses - it puts .044 on a 3-point game against a real .106.
-    // Once, not once per use: displayScore now scans the whole scoreline table, and
-    // the three places below that show the projected score all want the same pair.
-    const [sa, sb] = displayScore(r);
+    // This is a statement about the spread, not a rounding of it, which is why it
+    // survives the scoreline snapping that used to sit above it.
     const KEYS = [3, 7, 10, 14];
     const keyP = KEYS.map(k => [k, keyNumberP(r.margin, k)]);
     const keyRow = keyP[0][1] == null ? "" : `
@@ -1359,7 +1376,7 @@
       <div class="stat-row">
         <span><b>${esc(abbr(fav))} −${spread.toFixed(1)}</b> spread</span>
         <span><b>${r.total.toFixed(1)}</b> total (O/U)</span>
-        <span><b>${sa}–${sb}</b> most likely score</span>
+        <span><b>${sa}–${sb}</b> projected score</span>
       </div>
       ${keyRow}`;
   }
@@ -1928,325 +1945,6 @@
       }));
   }
 
-  /* =======================================================================
-     METHOD — what goes in, how much it overlaps, what came out
-     ======================================================================= */
-  const ACC = "var(--accent)", GRN = "var(--green)", RED = "var(--red)";
-
-  /* A correlation cell: sign by hue, magnitude by ink. Diagonal is muted so the
-     eye goes to the off-diagonal, which is the part that matters. */
-  function corrCell(v, self) {
-    if (v == null) return `<td class="cc"></td>`;
-    const a = Math.min(1, Math.abs(v));
-    const bg = self ? "transparent"
-      : v >= 0 ? `rgba(47,96,150,${(a * 0.75).toFixed(2)})`
-               : `rgba(168,50,38,${(a * 0.75).toFixed(2)})`;
-    const strong = !self && a >= 0.6;
-    return `<td class="cc${self ? " self" : ""}${strong ? " strong" : ""}"
-      style="background:${bg}">${v.toFixed(2)}</td>`;
-  }
-  function corrTable(names, corr, note) {
-    const head = `<tr><th></th>${names.map(n => `<th class="num">${esc(n)}</th>`).join("")}</tr>`;
-    const rows = names.map(a => `<tr><th class="rowh">${esc(a)}</th>${
-      names.map(b => corrCell(corr[a] ? corr[a][b] : null, a === b)).join("")}</tr>`).join("");
-    return `<div class="mini-wrap"><table class="corr">${head}${rows}</table></div>
-      ${note ? `<div class="wd-foot">${note}</div>` : ""}`;
-  }
-
-  /* Horizontal bar for a metric where lower is better (Brier). */
-  function metricBar(v, lo, hi, tint) {
-    const f = Math.max(0, Math.min(1, (hi - v) / (hi - lo || 1)));
-    return `<div class="gr-bar"><i style="width:${(f * 100).toFixed(1)}%;
-      background:${tint}"></i></div>`;
-  }
-
-  function renderMethod() {
-    const el = document.getElementById("method-body");
-    if (!diag) {
-      el.innerHTML = `<p class="sub">No diagnostics found — run
-        <code>scripts.export_diagnostics</code>.</p>`;
-      return;
-    }
-    const D = diag;
-
-    // ---- 1. sources -------------------------------------------------------
-    const srcRows = (D.sources || []).map(s => `
-      <tr>
-        <td><b>${esc(s.name)}</b><div class="conf">${esc(s.provider)}</div></td>
-        <td><span class="tag">${esc(s.feeds)}</span></td>
-        <td class="small" style="white-space:normal">${esc(s.detail)}</td>
-        <td class="num small">${esc(s.years)}</td>
-      </tr>`).join("");
-
-    // ---- 2. talent sources ------------------------------------------------
-    const ts = D.talent_sources || {};
-    const tsw = ts.weights || {};
-    const wRow = ["PFF", "CFBD", "WAR"].map(n => `
-      <div class="wsplit-seg" style="width:${((tsw[n] || 0) * 100).toFixed(1)}%;
-        background:${n === "WAR" ? ACC : n === "PFF" ? "var(--blue)" : GRN}">
-        <span>${esc(n)} ${Math.round((tsw[n] || 0) * 100)}%</span></div>`).join("");
-    const contrasts = ((D.talent_sweep || {}).contrasts) || [];
-    const cb = contrasts.map(c => c.brier);
-    const clo = Math.min(...cb, 0.204), chi = Math.max(...cb, 0.209);
-    const contrastRows = contrasts.map(c => `
-      <div class="gr-row">
-        <span class="gr-name" style="width:230px">${esc(c.label)}</span>
-        ${metricBar(c.brier, clo, chi, c.label.includes("best") ? ACC : "var(--line2)")}
-        <span class="gr-val">${c.brier.toFixed(4)}</span>
-      </div>`).join("");
-
-    // ---- 3. features ------------------------------------------------------
-    const F = D.features || {};
-    const fnames = F.names || [];
-    const vifRows = fnames.map(f => {
-      const v = (F.vif || {})[f];
-      const dropped = (F.dropped || []).includes(f);
-      return `<div class="gr-row">
-        <span class="gr-name ${dropped ? "" : "off"}" style="width:110px">${esc(f)}${
-          dropped ? ` <span class="tag">retired</span>` : ""}</span>
-        ${v == null ? `<div class="gr-bar"></div><span class="gr-val">—</span>`
-          : `<div class="gr-bar"><i style="width:${Math.min(100, v / 5 * 100)}%;
-               background:${v > 5 ? RED : "var(--blue)"}"></i></div>
-             <span class="gr-val">${v.toFixed(2)}</span>`}
-      </div>`;
-    }).join("");
-
-    const co = D.coefficients || {};
-    const lg = co.logistic || {};
-    const cmax = Math.max(...Object.values(lg).map(Math.abs), 0.01);
-    const coefRows = fnames.map(f => {
-      const v = lg[f] ?? 0;
-      const dropped = (F.dropped || []).includes(f);
-      return `<div class="gr-row">
-        <span class="gr-name ${dropped ? "" : "off"}" style="width:110px">${esc(f)}</span>
-        ${zBar(v, dropped ? "var(--line2)" : ACC, cmax * 1.05)}
-        <span class="gr-val">${v >= 0 ? "+" : "−"}${Math.abs(v).toFixed(3)}</span>
-      </div>`;
-    }).join("") + `
-      <div class="gr-row">
-        <span class="gr-name off" style="width:110px">home field</span>
-        ${zBar(co.logistic_hfa ?? 0, GRN, cmax * 1.05)}
-        <span class="gr-val">+${(co.logistic_hfa ?? 0).toFixed(3)}</span>
-      </div>`;
-
-    // ---- 4. evaluation ----------------------------------------------------
-    const ev = D.evaluation || {};
-    const ps = ev.per_season || [];
-    const seasonRows = ps.map(s => `
-      <tr><td>${s.season}</td><td class="num small">${s.n.toLocaleString()}</td>
-        <td class="num">${s.brier.toFixed(4)}</td>
-        <td class="num">${s.log_loss.toFixed(4)}</td>
-        <td class="num">${(100 * s.accuracy).toFixed(1)}%</td></tr>`).join("");
-    const cal = ev.calibration || [];
-    const calBars = cal.map(c => {
-      const h = Math.max(2, c.actual * 100);
-      const ph = Math.max(2, c.pred * 100);
-      return `<div class="cal-col" title="predicted ${pct(c.pred)}, actual ${pct(c.actual)}, n=${c.n}">
-        <div class="cal-pair">
-          <div class="cal-bar pred" style="height:${ph}%"></div>
-          <div class="cal-bar act" style="height:${h}%"></div>
-        </div>
-        <span class="wd-x">${c.lo.toFixed(1)}</span></div>`;
-    }).join("");
-
-    // ---- 5. WAR internals -------------------------------------------------
-    const wf = D.war_facets || [];
-    const wsplit = D.war_source_split || {};
-    const topFacets = wf.slice(0, 10);
-    const fmaxw = Math.max(...topFacets.map(f => f.weight), 0.01);
-    const facetRows = topFacets.map(f => `
-      <div class="gr-row">
-        <span class="gr-name" style="width:130px">${esc(f.facet)}</span>
-        <div class="gr-bar"><i style="width:${100 * f.weight / fmaxw}%;
-          background:${f.source === "CFBD" ? GRN : "var(--blue)"}"></i></div>
-        <span class="gr-val">${(100 * f.weight).toFixed(1)}%</span>
-      </div>`).join("");
-
-    // ---- 6. decisions -----------------------------------------------------
-    const decRows = (D.decisions || []).map(d => `
-      <div class="dec">
-        <div class="dec-q">${esc(d.question)}</div>
-        <div class="dec-a">${esc(d.answer)}</div>
-        <div class="dec-e">${esc(d.evidence)}</div>
-      </div>`).join("");
-
-    // The page used to open with a correlation matrix. Most people who look at this
-    // want to know what it does and whether to believe it; the collinearity
-    // diagnostics answer neither. Plain walkthrough first, accuracy second, the
-    // technical detail folded away at the bottom for whoever wants it.
-    const acc = ((ev.loso || {}).accuracy || 0) * 100;
-    const tsw2 = (D.talent_sources || {}).weights || {};
-    const pcw = n => Math.round((tsw2[n] || 0) * 100);
-
-    el.innerHTML = `
-      <div class="steps">
-        <div class="step"><span class="step-n">1</span>
-          <h4>Rate every team</h4>
-          <p>Each team gets a handful of numbers: how good its offense and defense
-            have been against the schedule they faced, how much talent is on the
-            roster, how much of last year's production is coming back, and what its
-            scoring margin implied it deserved to win.</p></div>
-        <div class="step"><span class="step-n">2</span>
-          <h4>Turn ratings into a game</h4>
-          <p>For any two teams the model converts the gap between those numbers into a
-            win probability and a projected score. It was fitted on
-            ${(ev.per_season || []).reduce((s, r) => s + r.n, 0).toLocaleString()}
-            real games and it knows what home field is worth.</p></div>
-        <div class="step"><span class="step-n">3</span>
-          <h4>Play the season 20,000 times</h4>
-          <p>The real 2026 schedule is played out over and over, with conference title
-            games and the twelve-team playoff bracket, so nothing on this site can
-            break a rule the actual sport enforces.</p></div>
-        <div class="step"><span class="step-n">4</span>
-          <h4>Report the spread, not just the guess</h4>
-          <p>Because it is 20,000 seasons rather than one, every number here is a
-            range. A team's floor and ceiling are as much of the answer as its
-            projected record.</p></div>
-      </div>
-
-      <div class="panel"><h3>How accurate is it?</h3>
-        <p class="sub">Tested the honest way: the model is retrained with one season
-          completely removed, then asked to predict that season's games having never
-          seen them. Repeated for every season.</p>
-        <div class="od-split">
-          <div class="od-chip2" style="--tint:${ACC}">
-            <b>${acc.toFixed(1)}%</b><span>of games called correctly</span></div>
-          <div class="od-chip2" style="--tint:var(--line2)">
-            <b>${pct(ev.home_win_rate ?? 0, 0)}</b><span>always pick the home team</span></div>
-          <div class="od-chip2" style="--tint:${ACC}">
-            <b>${(ev.loso || {}).brier?.toFixed(3) ?? "—"}</b><span>Brier score</span></div>
-          <div class="od-chip2" style="--tint:var(--line2)">
-            <b>${(ev.baselines || {}).coin_flip?.toFixed(3) ?? "—"}</b>
-            <span>Brier, coin flip</span></div>
-        </div>
-        <div class="split">
-          <div><h4>Is a stated 70% really 70%?</h4>
-            <div class="cal">${calBars}</div>
-            <div class="cal-key">
-              <span><i style="background:var(--line2)"></i> what the model said</span>
-              <span><i style="background:${ACC}"></i> what happened</span>
-            </div>
-            <div class="wd-foot">Games grouped by the probability the model gave them.
-              The two bars matching is the thing that matters &mdash; it means the
-              percentages on this site can be taken at face value, not just the
-              favourites.</div>
-          </div>
-          <div><h4>In plain terms</h4>
-            <p class="sub">A <b>Brier score</b> is the average squared miss on a
-              probability, so lower is better and a coin flip scores
-              ${(ev.baselines || {}).coin_flip?.toFixed(3) ?? "0.250"}. Getting
-              ${acc.toFixed(0)}% of games right sounds modest, and it is: college
-              football is genuinely unpredictable, and any model claiming much more is
-              either overfitted or being tested on games it has already seen.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel"><h3>What goes in</h3>
-        <div class="mini-wrap"><table class="mini"><thead><tr>
-          <th>Source</th><th>Feeds</th><th>What it is</th><th class="num">Years</th>
-        </tr></thead><tbody>${srcRows}</tbody></table></div>
-        <div class="wd-foot">"Talent" is three separate measures of the same roster
-          blended together &mdash; PFF's player grades (${pcw("PFF")}%), recruiting
-          rankings (${pcw("CFBD")}%), and a custom wins-above-replacement build
-          (${pcw("WAR")}%). The mix was chosen by testing every combination, not by
-          picking one.</div>
-      </div>
-
-      <div class="panel"><h3>Questions we asked, and what the data said</h3>
-        <div class="decs">${decRows}</div>
-      </div>
-
-      <details class="nerd"><summary>The technical version</summary>
-      <div class="panel"><h3>The three talent signals, and how much they overlap</h3>
-        <p class="sub">WAR is built from PFF grades, so the obvious worry is that it
-          measures the same thing twice. It does overlap — but at
-          <b>r = ${((ts.corr || {}).PFF || {}).WAR?.toFixed(2) ?? "—"}</b>, not
-          near one. WAR weights by snaps, uses facet weights fitted to wins, adds
-          CFBD play value and subtracts a replacement level; the PFF signal is a
-          position-weighted grade average. They diverge enough to be worth carrying
-          separately.</p>
-        <div class="split">
-          <div><h4>Correlation between sources</h4>
-            ${corrTable(ts.names || [], ts.corr || {},
-              `Pooled over ${(ts.seasons_used || []).join(", ")}
-               (${ts.n || 0} team-seasons). 2021 is excluded: with no 2020 grades the
-               PFF signal falls back to recruiting entirely and correlates at exactly
-               1.00, which would overstate the overlap.`)}
-          </div>
-          <div><h4>Blend actually used</h4>
-            <div class="wsplit">${wRow}</div>
-            <div class="wd-foot">Chosen by grid-searching all 45 three-way blends
-              under leave-one-season-out, not assembled one at a time.</div>
-            <h4 style="margin-top:18px">What each combination is worth</h4>
-            ${contrastRows}
-            <div class="wd-foot">Brier, lower is better. Dropping PFF for WAR costs
-              more than dropping WAR for PFF — the two are complements, and PFF is
-              the stronger of the pair.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel"><h3>Model features</h3>
-        <div class="split">
-          <div><h4>Correlation between feature differences</h4>
-            ${corrTable(fnames, F.corr || {},
-              "Computed on the matchup differences the model actually fits. Retired "
-              + "features are zeroed, so their row and column are blank.")}
-          </div>
-          <div><h4>Variance inflation</h4>
-            ${vifRows}
-            <div class="wd-foot">Above 5 is usually called a collinearity problem.
-              After retiring ${(F.dropped || []).map(esc).join(" and ")}, nothing is
-              close.</div>
-            <h4 style="margin-top:18px">What the model learned</h4>
-            ${coefRows}
-            <div class="wd-foot">Logistic coefficients on the z-scale. Retired
-              features sit at exactly zero by construction.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel"><h3>Season by season</h3>
-        <div class="mini-wrap"><table class="mini"><thead><tr>
-          <th>Season</th><th class="num">Games</th><th class="num">Brier</th>
-          <th class="num">Log loss</th><th class="num">Acc</th>
-        </tr></thead><tbody>${seasonRows}</tbody></table></div>
-        <div class="wd-foot">Each row is a season the model never saw during
-          training. Home teams win ${pct(ev.home_win_rate ?? 0)} of games; always
-          picking them scores
-          ${(ev.baselines || {}).home_team_always?.toFixed(4) ?? "—"}.</div>
-      </div>
-
-      ${wf.length ? `<div class="panel"><h3>Inside the WAR build</h3>
-        <p class="sub">WAR is its own model feeding one input here. ${wf.length ?
-          "Ninety-eight" : "Several dozen"} candidate skills — every PFF metric that
-          has a snap denominator, crossed with position group, plus CFBD play value —
-          are weighted by non-negative ridge fitted to the <i>following</i> season's
-          wins, turned into Massey ratings, then converted to wins above replacement.
-          Fitting to the next season rather than the same one matters: same-season
-          fits reward coverage grade, which is partly an effect of already winning.</p>
-        <div class="split">
-          <div><h4>Heaviest facets</h4>${facetRows}
-            <div class="wd-foot">
-              <span class="tag" style="background:rgba(47,96,150,.14);color:var(--blue)">PFF</span>
-              ${((wsplit.PFF ?? 0) * 100).toFixed(0)}% of total weight ·
-              <span class="tag" style="background:rgba(63,125,58,.16);color:var(--green)">CFBD</span>
-              ${((wsplit.CFBD ?? 0) * 100).toFixed(0)}%</div>
-          </div>
-          <div><h4>Why not CFBD alone</h4>
-            <p class="sub">CFBD has no player-level line data at all, and its defensive
-              numbers are counting stats with no snap denominator — a corner nobody
-              throws at is invisible. PFF covers what CFBD cannot; CFBD adds
-              outcome-anchored play value PFF grades do not have. Facets against
-              adjusted win percentage: PFF alone 0.826, CFBD alone 0.741,
-              both 0.845.</p>
-          </div>
-        </div>
-      </div>` : ""}
-      </details>`;
-  }
-
   /* ---------- players ----------
      One flat table of every two-deep slot in FBS. The team page can only ever answer
      "is this player worth more than the model says", one roster at a time; the
@@ -2628,248 +2326,6 @@
     renderRatings();
   });
 
-  /* =======================================================================
-     TESTING — RATING CALCULATOR
-     =======================================================================
-     Walks one team from its roster's projected WAR to its power rating, showing
-     every intermediate, with each INPUT editable so the reader can see what moves
-     what. The numbers come from model.json's `derivation` block, which
-     scripts/export_viz.py fills straight out of build_projection_frame - the same
-     call scripts/rank.py makes - so the page cannot drift from the model by
-     reimplementing a step slightly differently.
-
-     The one thing this page exists to make legible: TALENT HAS A COEFFICIENT OF
-     EXACTLY ZERO and still moves the rating. It does it through the uncertainty
-     shrink in stage 3, not through its own slot in stage 4, and every attempt to
-     explain that in prose on the Method tab has been less convincing than showing
-     the two lines next to each other.
-
-     calcVerify() is the same guard livePower() has: with no edits the chain below
-     has to reproduce the exported O, D and power, and it says so on screen rather
-     than quietly disagreeing. */
-  const DER = cur().model.derivation || null;
-
-  /* label, key, and what the number IS - the help text is the point of the tab */
-  const CALC_INPUTS = [
-    ["warZ", "Team WAR (z)", "Sum of projected WAR over the two-deep, standardized across FBS."],
-    ["cfbdTalent", "Recruiting composite (z)", "247/CFBD team talent composite for 2026."],
-    ["pffRoster", "Two-deep talent (z)", "Position-weighted PFF grades over the 2026 Ourlads chart."],
-    ["Oraw", "Offense, pre-shrink", "2025 opponent-adjusted offensive composite."],
-    ["Draw", "Defense, pre-shrink", "2025 opponent-adjusted defensive composite, sign-flipped so higher is better."],
-    ["u", "Shrink weight u", "How far this team is pulled toward its talent baseline. Flat at 1.0 while UNCERTAINTY_USE_RETURNING is off."],
-    ["returning", "Returning production", "Standardized returning production for 2026."],
-  ];
-  let calcTeam = "Ohio State";
-  const calcEdits = {};
-
-  const calcBase = t => ({
-    warZ: DER.warZ[t], cfbdTalent: DER.cfbdTalent[t], pffRoster: DER.pffRoster[t],
-    Oraw: DER.Oraw[t], Draw: DER.Draw[t], u: DER.u[t],
-    returning: (baseVec(t) || [])[5],
-  });
-  function calcInputs(t) {
-    const b = calcBase(t), e = calcEdits[t] || {}, out = {};
-    for (const k in b) out[k] = (e[k] === undefined) ? b[k] : e[k];
-    return out;
-  }
-  /* The forward chain. Mirrors train.blended_talent + matchup.team_frame, including
-     both fallbacks: a team with no two-deep talent keeps the recruiting composite
-     alone, and one the WAR build has no roster for keeps the blend. */
-  const calcIsFallback = t => (DER.fallbackTeams || []).indexOf(t) >= 0;
-  function calcDerive(t, inp) {
-    const tb = DER.talentBlend, wb = DER.warBlend;
-    let blend, talent;
-    if (calcIsFallback(t)) {
-      /* Service academies: no recruiting composite, so they never enter the
-         three-source blend. talent = tb*roster + (1-tb)*floor, and the WAR term
-         does not apply to them at all. */
-      blend = DER.talentFloor;
-      talent = inp.pffRoster == null ? blend
-        : tb * inp.pffRoster + (1 - tb) * blend;
-    } else {
-      blend = inp.pffRoster == null ? inp.cfbdTalent
-        : tb * inp.pffRoster + (1 - tb) * inp.cfbdTalent;
-      talent = inp.warZ == null ? blend : (1 - wb) * blend + wb * inp.warZ;
-    }
-    const s = DER.lam * (inp.u == null ? 1 : inp.u);
-    const O = (1 - s) * inp.Oraw + s * DER.bO * talent;
-    const D = (1 - s) * inp.Draw + s * DER.bD * talent;
-    const b = baseVec(t) || [0, 0, 0, 0, 0, 0];
-    return { blend, talent, s, O, D, vec: [O, D, b[2], b[3], talent, inp.returning] };
-  }
-  function calcPower(t, vec) {
-    let s = 0, n = 0;
-    for (const r of cur().ratings.teams) {
-      if (r.team === t) continue;
-      const V = vecOf(r.team);
-      if (!V) continue;
-      s += winpFromDiff(diffVec(vec, V), 0); n++;
-    }
-    return n ? s / n : 0;
-  }
-  const calcRank = (t, p) => 1 + cur().ratings.teams
-    .filter(r => r.team !== t && livePower()[r.team] > p).length;
-
-  /* With no edits the chain has to land on the exported numbers. */
-  function calcVerify(t) {
-    const d = calcDerive(t, calcBase(t));
-    const b = baseVec(t) || [0, 0];
-    const row = ratingRow()[t] || {};
-    return Math.max(Math.abs(d.O - b[0]), Math.abs(d.D - b[1]),
-      row.power != null ? Math.abs(calcPower(t, d.vec) - row.power) : 0);
-  }
-
-  const num = (x, d = 3) => (x == null || isNaN(x)) ? "—" : (x >= 0 ? "+" : "") + x.toFixed(d);
-  const calcField = (k, v) =>
-    `<input class="calc-in" type="number" step="0.01" data-k="${k}" value="${v == null ? "" : (+v).toFixed(3)}">`;
-
-  function renderCalc() {
-    const host = document.getElementById("calc-body");
-    if (!DER) {
-      host.innerHTML = `<div class="calc-warn">model.json has no <code>derivation</code>
-        block. Re-run <code>python -m scripts.export_viz</code>.</div>`;
-      document.getElementById("calc-drift").textContent = "";
-      return;
-    }
-    const t = calcTeam, inp = calcInputs(t), d = calcDerive(t, inp);
-    const base = calcDerive(t, calcBase(t));
-    const M = cur().model, L = M.logistic;
-    const power = calcPower(t, d.vec), power0 = calcPower(t, base.vec);
-    const rank = calcRank(t, power), rank0 = (ratingRow()[t] || {}).rank;
-    const edited = Object.keys(calcEdits[t] || {}).length > 0;
-    const tint = color(t);
-    const wars = (players[t] || {}).total;
-    const fb = calcIsFallback(t);
-
-    const drift = calcVerify(t);
-    document.getElementById("calc-drift").innerHTML = drift > 5e-4
-      ? `<span class="calc-bad">chain differs from the export by ${drift.toFixed(5)}</span>`
-      : `reproduces the exported rating (max diff ${drift.toExponential(1)})`;
-
-    const inputRow = ([k, label, help]) => `
-      <div class="calc-row${(calcEdits[t] || {})[k] !== undefined ? " edited" : ""}">
-        <div class="calc-lab">${label}<span class="calc-help">${help}</span></div>
-        ${calcField(k, inp[k])}
-        <div class="calc-was">${(calcEdits[t] || {})[k] !== undefined
-          ? "was " + num(calcBase(t)[k]) : ""}</div>
-      </div>`;
-
-    const featRows = M.features.map((f, i) => {
-      const v = d.vec[i], c = L.coef[i], zero = Math.abs(c) < 1e-12;
-      return `<tr class="${zero ? "calc-zero" : ""}">
-        <td>${f}</td><td class="n">${num(v)}</td><td class="n">${num(c, 4)}</td>
-        <td class="n">${zero ? "—" : num(v * c, 4)}</td>
-        <td class="calc-note">${zero
-          ? (f === "talent"
-            ? "retired — reaches the rating through stage 3, not here"
-            : "retired — coefficient driven to zero in training")
-          : ""}</td></tr>`;
-    }).join("");
-
-    host.innerHTML = `
-      <div class="calc-head" style="border-color:${tint}">
-        <img src="${logoURL(t)}" alt="" class="calc-logo">
-        <div>
-          <div class="calc-team">${esc(t)}</div>
-          <div class="calc-sub">${esc(conf(t))}</div>
-        </div>
-        <div class="calc-out-big">
-          <div class="calc-k">POWER</div>
-          <div class="calc-v" style="color:${tint}">${power.toFixed(4)}</div>
-          ${edited ? `<div class="calc-delta ${power >= power0 ? "up" : "dn"}">
-            ${power >= power0 ? "▲" : "▼"} ${Math.abs(power - power0).toFixed(4)}</div>` : ""}
-        </div>
-        <div class="calc-out-big">
-          <div class="calc-k">RANK</div>
-          <div class="calc-v">#${rank}</div>
-          ${edited && rank0 ? `<div class="calc-delta ${rank <= rank0 ? "up" : "dn"}">
-            ${rank <= rank0 ? "▲" : "▼"} ${Math.abs(rank - rank0)}</div>` : ""}
-        </div>
-      </div>
-
-      <div class="calc-stage">
-        <h3><span class="calc-n">1</span> Roster WAR</h3>
-        <p class="calc-p">Every projected two-deep slot, summed. These are wins above a
-          replacement-level roster; the Players tab has the per-player rows.
-          ${wars != null ? `This team&rsquo;s two-deep totals <b>${wars.toFixed(2)}</b> WAR.` : ""}
-          ${fb ? `<b>This team takes the fallback path below, which has no WAR term
-            &mdash; editing this input will not move anything.</b>`
-          : "Standardizing that across FBS gives the input below."}</p>
-        ${inputRow(CALC_INPUTS[0])}
-      </div>
-
-      <div class="calc-stage">
-        <h3><span class="calc-n">2</span> Talent</h3>
-        ${fb ? `
-        <p class="calc-p">${esc(t)} has <b>no 247/CFBD recruiting composite</b>, so it
-          never enters the normal three-source blend. Instead its two-deep talent is
-          mixed with a floor set at the 10th percentile of the league&rsquo;s blended
-          talent, and the WAR term does not apply.</p>
-        ${inputRow(CALC_INPUTS[2])}
-        <div class="calc-eq">floor = 10th percentile of blended talent
-          <b>= ${num(DER.talentFloor)}</b></div>
-        <div class="calc-eq">talent = ${DER.talentBlend} × two-deep + ${(1 - DER.talentBlend).toFixed(2)} × floor
-          <b>= ${num(d.talent)}</b></div>`
-      : `
-        <p class="calc-p">Three sources, mixed in two steps. Weights are
-          <code>TALENT_BLEND</code> and <code>WAR_BLEND</code> from config.</p>
-        ${inputRow(CALC_INPUTS[1])}
-        ${inputRow(CALC_INPUTS[2])}
-        <div class="calc-eq">blend = ${DER.talentBlend} × two-deep + ${(1 - DER.talentBlend).toFixed(2)} × recruiting
-          <b>= ${num(d.blend)}</b></div>
-        <div class="calc-eq">talent = ${(1 - DER.warBlend).toFixed(2)} × blend + ${DER.warBlend} × WAR
-          <b>= ${num(d.talent)}</b></div>`}
-      </div>
-
-      <div class="calc-stage">
-        <h3><span class="calc-n">3</span> Uncertainty shrink</h3>
-        <p class="calc-p">Last season&rsquo;s opponent-adjusted composites, pulled toward
-          what this team&rsquo;s talent implies. <b>This is the only path talent has to a
-          prediction</b> — its own coefficient in stage 4 is zero.</p>
-        ${inputRow(CALC_INPUTS[3])}
-        ${inputRow(CALC_INPUTS[4])}
-        ${inputRow(CALC_INPUTS[5])}
-        <div class="calc-eq">O = (1 − ${DER.lam}·u)·O<sub>raw</sub> + ${DER.lam}·u·${DER.bO.toFixed(4)}·talent
-          <b>= ${num(d.O)}</b></div>
-        <div class="calc-eq">D = (1 − ${DER.lam}·u)·D<sub>raw</sub> + ${DER.lam}·u·${DER.bD.toFixed(4)}·talent
-          <b>= ${num(d.D)}</b></div>
-      </div>
-
-      <div class="calc-stage">
-        <h3><span class="calc-n">4</span> Model features</h3>
-        <p class="calc-p">The six-vector the trained logistic sees, and what each is
-          worth. Greyed rows carry a coefficient of exactly zero.</p>
-        ${inputRow(CALC_INPUTS[6])}
-        <table class="calc-tbl">
-          <thead><tr><th>feature</th><th class="n">value</th><th class="n">coef</th>
-            <th class="n">value × coef</th><th></th></tr></thead>
-          <tbody>${featRows}</tbody>
-        </table>
-        <div class="calc-eq">intercept ${num(L.intercept, 4)} · home-field ${num(L.hfa, 4)}
-          (applied per matchup, not to the rating)</div>
-      </div>
-
-      <div class="calc-stage">
-        <h3><span class="calc-n">5</span> Power rating</h3>
-        <p class="calc-p">Mean win probability against every other rated team on a
-          neutral field, blending the logistic and the margin model at
-          <code>ens_w = ${M.ens_w}</code>. That average is the number the dashboard
-          ranks on.</p>
-        <div class="calc-eq">power = mean p(win) over ${cur().ratings.teams.length - 1} opponents
-          <b>= ${power.toFixed(4)}</b>${edited ? ` &nbsp;(was ${power0.toFixed(4)})` : ""}</div>
-      </div>`;
-
-    host.querySelectorAll(".calc-in").forEach(el => {
-      el.addEventListener("change", () => {
-        const k = el.dataset.k, raw = el.value.trim();
-        calcEdits[t] = calcEdits[t] || {};
-        if (raw === "") delete calcEdits[t][k];
-        else calcEdits[t][k] = parseFloat(raw);
-        if (!Object.keys(calcEdits[t]).length) delete calcEdits[t];
-        renderCalc();
-      });
-    });
-  }
 
   /* ---------- boot ---------- */
   function render(view) {
@@ -2880,30 +2336,12 @@
     else if (view === "scenario") renderScenario();
     else if (view === "ratings") renderRatings();
     else if (view === "players") renderPlayers();
-    else if (view === "method") renderMethod();
-    else if (view === "testing") renderCalc();
   }
   function renderAll() {
-    fillConfSelect(); fillPlayerSelects(); fillRatingSelects(); fillCalcSelect();
+    fillConfSelect(); fillPlayerSelects(); fillRatingSelects();
     fillScenarioSelects();
     renderDash(); renderPlayoff(); renderScenario(); renderMatchup(); renderTeam();
-    renderRatings(); renderPlayers(); renderMethod(); renderCalc();
-  }
-  function fillCalcSelect() {
-    const sel = document.getElementById("calc-team");
-    if (!sel || sel.options.length) return;
-    const byConf = {};
-    cur().ratings.teams.map(r => r.team).slice().sort()
-      .forEach(t => (byConf[conf(t)] = byConf[conf(t)] || []).push(t));
-    sel.innerHTML = Object.keys(byConf).sort().map(c =>
-      `<optgroup label="${esc(c)}">` + byConf[c].map(t =>
-        `<option value="${esc(t)}"${t === calcTeam ? " selected" : ""}>${esc(t)}</option>`
-      ).join("") + `</optgroup>`).join("");
-    sel.addEventListener("change", () => { calcTeam = sel.value; renderCalc(); });
-    document.getElementById("calc-reset").addEventListener("click", () => {
-      delete calcEdits[calcTeam];
-      renderCalc();
-    });
+    renderRatings(); renderPlayers();
   }
   // Check the client-side power reproduces the exported column before anyone edits
   // anything. A scenario is only meaningful as a difference from the published

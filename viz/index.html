@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CFB Model v3 — 2026 Projections</title>
-<link rel="stylesheet" href="style.css?v=23">
+<link rel="stylesheet" href="style.css?v=24">
 </head>
 <body>
 <header>
@@ -21,8 +21,6 @@
     <button class="tab" data-view="team">Team Breakdown</button>
     <button class="tab" data-view="ratings">Team Ratings</button>
     <button class="tab" data-view="players">Players</button>
-    <button class="tab" data-view="method">Method</button>
-    <button class="tab" data-view="testing">Testing</button>
   </nav>
 </header>
 
@@ -87,16 +85,22 @@
         of one it drew. It is <b>an outcome, not odds</b>; your picks stay in this
         browser and change nothing else on the site.</p>
     </div>
-    <div class="dash-toolbar">
-      <input type="search" id="sc-search" placeholder="Search teams…">
-      <select id="sc-conf"><option value="">All conferences</option></select>
-      <select id="sc-week"><option value="">All weeks</option></select>
-      <select id="sc-scope">
-        <option value="">All games</option>
-        <option value="close">Toss-ups only</option>
-        <option value="conf">Conference games</option>
-        <option value="picked">Games I picked</option>
-      </select>
+    <div class="dash-toolbar" id="sc-toolbar">
+      <div class="seg" id="sc-mode">
+        <button class="seg-btn active" data-mode="pick">Pick the games</button>
+        <button class="seg-btn" data-mode="playoff">See the playoff</button>
+      </div>
+      <span class="sc-filters">
+        <input type="search" id="sc-search" placeholder="Search teams…">
+        <select id="sc-conf"><option value="">All conferences</option></select>
+        <select id="sc-week"><option value="">All weeks</option></select>
+        <select id="sc-scope">
+          <option value="">All games</option>
+          <option value="close">Toss-ups only</option>
+          <option value="conf">Conference games</option>
+          <option value="picked">Games I picked</option>
+        </select>
+      </span>
       <span class="spacer"></span>
       <button id="sc-reset" class="wi-btn">Reset picks</button>
       <span id="sc-count" class="dash-count"></span>
@@ -199,36 +203,6 @@
     </div>
     <div id="pl-table"></div>
   </section>
-
-  <!-- ============ METHOD ============ -->
-  <section id="view-method" class="view">
-    <div class="view-head">
-      <h2>How this model works</h2>
-      <p class="sub">A plain-language walkthrough: what goes in, how the season gets
-        simulated, and how accurate it has actually been. Every number below is
-        exported from the live model, not typed in by hand.</p>
-    </div>
-    <div id="method-body"></div>
-  </section>
-
-  <!-- ============ TESTING / RATING CALCULATOR ============ -->
-  <section id="view-testing" class="view">
-    <div class="view-head">
-      <h2>Rating Calculator</h2>
-      <p class="sub">Every step between a roster&rsquo;s projected WAR and the power
-        rating on the dashboard, for one team at a time. Each <b>input</b> is
-        editable &mdash; change one and every stage below it recomputes, including
-        the team&rsquo;s rank against the other 135. Nothing here is saved; this is a
-        scratchpad for asking why a team sits where it does.</p>
-    </div>
-    <div class="dash-toolbar">
-      <select id="calc-team"></select>
-      <span class="spacer"></span>
-      <span id="calc-drift" class="dash-count"></span>
-      <button id="calc-reset" class="wi-btn">Reset inputs</button>
-    </div>
-    <div id="calc-body"></div>
-  </section>
 </main>
 
 <footer>
@@ -239,6 +213,6 @@
 <!-- The data files are fetched with cache: "no-cache", but the script tag itself is
      not, so a stale app.js kept running against freshly regenerated JSON and failed
      silently — the page rendered nothing and threw nothing visible. Bump on edit. -->
-<script src="app.js?v=25"></script>
+<script src="app.js?v=26"></script>
 </body>
 </html>
