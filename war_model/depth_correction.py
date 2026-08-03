@@ -111,6 +111,11 @@ def apply_availability(d, path=AVAILABILITY):
     if "pinned_starter" not in d.columns:
         d["pinned_starter"] = False
     d["pinned_starter"] = d.pinned_starter.fillna(False).astype(bool)
+    # project_2026_v2 writes is_starter as 0/1, and assigning False into an int64
+    # column raises rather than coercing. This used to be cast by whoever happened to
+    # run before us; casting it here instead means the flag columns are the same dtype
+    # no matter which stage hands us the frame.
+    d["is_starter"] = d.is_starter.fillna(False).astype(bool)
     d["available"] = True
     for _, r in ov.iterrows():
         m = (d.team == r.team) & (d.player == r.player)
@@ -259,6 +264,18 @@ def fix_depth(d):
     return d, swaps
 
 
+def _backup_share(d, group, rooms):
+    """Backup share of a group's WAR, over a FIXED set of team rooms.
+
+    The room set is passed in rather than derived, so the before and after figures
+    describe the same teams. Deriving it from war_source would silently compare all
+    134 QB rooms before the map against the 119 named ones after it.
+    """
+    g = d[(d.broad_group == group) & d.team.isin(rooms)]
+    tot = g.proj_war.sum()
+    return float(g[~g.is_starter].proj_war.sum() / tot) if tot else 0.0
+
+
 def reweight(d, target):
     """Move share from backups to starters until the backup share matches the
     no-injury target, holding each room's total fixed."""
@@ -375,6 +392,48 @@ def main():
 
     print(f"\nleague total WAR: {d.proj_war_raw.sum():.1f} -> {d.proj_war.sum():.1f} "
           f"(room totals are held fixed)")
+
+    # ---- the quarterback sheet, last of all ---------------------------------
+    # Applied here rather than in blend_projection because the reweight above scales
+    # each team's starter by a team-specific factor (1.00 to 1.63), which re-sorted
+    # the ordering the sheet had just imposed. Whatever runs last wins, and the sheet
+    # should win. See blend_projection.apply_qb_map.
+    sys.path.insert(0, f"{HERE}/ea")
+    from blend_projection import apply_qb_map, load_qb_sheet  # noqa: E402
+    sheet = load_qb_sheet()
+    named_rooms = {t for _, t in sheet}
+    qb_before = d[d.broad_group == "QB"].proj_war.sum()
+    bk_before = _backup_share(d, "QB", named_rooms)
+    d_pre = d
+    d, n_qb, n_named = apply_qb_map(d)
+    qb_after = d[d.broad_group == "QB"].proj_war.sum()
+
+    # a permutation within the QB group, so the group total cannot move
+    assert abs(qb_before - qb_after) < 1e-6, (
+        f"QB group total moved by {abs(qb_before - qb_after):.6f}; the map is not a "
+        f"permutation")
+
+    named = d[d.war_source == "QB-avg"]
+    rk = named.qb_z.rank(ascending=False)
+    rho = named.qb_z.corr(named.proj_war, method="spearman")
+    moved = int((named.proj_war.rank(ascending=False) - rk).abs().max())
+    print(f"  QB group total {qb_before:.3f} -> {qb_after:.3f} (permutation, as required)")
+    print(f"  Spearman vs the sheet's Average: {rho:.4f}   largest rank move: {moved}")
+    # The AGGREGATE backup share over the named rooms cannot move - the map permutes
+    # starter values among exactly those rooms, so their sum is invariant and the
+    # backups are untouched. What moves is each room INDIVIDUALLY, and that is the
+    # real cost of running the map last, so it is the number reported.
+    per = [_backup_share(d, "QB", {t}) for t in sorted(named_rooms)]
+    per_before = [_backup_share(d_pre, "QB", {t}) for t in sorted(named_rooms)]
+    tgt = target["QB"]
+    mad_b = float(np.mean([abs(x - tgt) for x in per_before]))
+    mad_a = float(np.mean([abs(x - tgt) for x in per]))
+    print(f"  backup share of the {len(named_rooms)} named QB rooms, aggregate: "
+          f"{bk_before*100:.2f}% -> {_backup_share(d, 'QB', named_rooms)*100:.2f}% "
+          f"(invariant under a permutation, as expected)")
+    print(f"  per-room mean |share - {tgt*100:.2f}% target|: {mad_b*100:.2f}pp -> "
+          f"{mad_a*100:.2f}pp  (this is what running the map last costs)")
+
     d.to_csv(args.out, index=False)
     print(f"-> {args.out}")
 

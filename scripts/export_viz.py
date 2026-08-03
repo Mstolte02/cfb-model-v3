@@ -101,6 +101,56 @@ def whatif_block(comp):
     }
 
 
+def derivation_block(comp):
+    """Every intermediate between a roster's WAR and a team's power rating.
+
+    This is what the Testing tab's calculator renders. It is a strict superset of
+    `whatif` - the four scalars there are the derivative of one step in here - and it
+    exists because "show me how this team got its rating" needs the steps, not just
+    the sensitivity.
+
+    The chain, in the order the page walks it:
+
+      team WAR      sum of projected WAR over the two-deep      (players.json)
+      warZ          standardized within season, ddof=0
+      talent        (1-tb)*cfbd + tb*pffRoster, then (1-wb)*that + wb*warZ
+      O, D          opponent-adjusted prior-season composites, then shrunk toward
+                    the talent-implied baseline:  O = (1-lam*u)*Oraw + lam*u*bO*talent
+      features      [O, D, fp_margin, pythag, talent, returning]
+      power         mean win probability against every other team, neutral field
+
+    Only O and D reach a prediction directly - fp_margin, pythag and talent all carry
+    a coefficient of exactly zero, which is why the page draws them greyed. Talent
+    still moves the rating, but through the shrink above rather than through its own
+    coefficient, and that is the single most confusing thing about this model to
+    anyone reading it off the page. Showing both facts in one place is most of why
+    the tab is here.
+    """
+    from config import WAR_BLEND
+    _, parts = build_projection_frame(return_parts=True)
+
+    def ser(s):
+        if s is None:
+            return {}
+        s = s.reindex(comp.index)
+        return {t: round(float(v), 4) for t, v in s.items() if pd.notna(v)}
+
+    return {
+        "talentBlend": float(parts["talent_blend"]), "warBlend": float(WAR_BLEND),
+        "lam": float(parts["lam"]), "bO": float(parts["b_o"]),
+        "bD": float(parts["b_d"]),
+        "cfbdTalent": ser(parts["cfbd_talent"]),
+        "pffRoster": ser(parts["pff_roster"]),
+        "warZ": ser(parts["war_z"]),
+        "talent": ser(parts["talent"]),
+        "Oraw": ser(parts["O_raw"]), "Draw": ser(parts["D_raw"]),
+        "u": ser(parts["u"]),
+        "talentFloor": (None if parts["talent_floor"] is None
+                        else round(float(parts["talent_floor"]), 4)),
+        "fallbackTeams": list(parts["fallback_teams"]),
+    }
+
+
 def main(variant=""):
     from config import ROSTER_VARIANT
     kw = ROSTER_VARIANT if variant == "roster" else {}
@@ -201,6 +251,7 @@ def main(variant=""):
         "teams": {t: [round(float(comp.loc[t, c]), 4) for c in FEATS]
                   for t in comp.index},
         "whatif": whatif_block(comp),
+        "derivation": derivation_block(comp),
     }
 
     # Realistic scorelines and the key-number probabilities, from scripts/score_shape.py.

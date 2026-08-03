@@ -16,6 +16,34 @@ cannot construct are left to the PFF set; build_hybrid.py does the joining.
 
 Facet value follows the PFF convention exactly: a snap-weighted z-score of a rate
 metric, times a volume term, so the average snap contributes zero.
+
+THE DEFENSIVE DENOMINATOR IS PFF'S INDIVIDUAL SNAP COUNT, NOT TEAM PLAYS, and that
+is the one place this module borrows from the other source. CFBD publishes no
+individual snap counts on defense, so these rates used to divide by the team's
+defensive plays - every defender on the roster carrying the same ~870 - and the
+result was a facet that measured PLAYING TIME rather than quality. Correlation of
+the facet z against the player's real snap count, before:
+
+    tackle_lb .917   tackle_db .877   havoc_lb .786   havoc_db .777
+    havoc_dl  .741   cov_db    .713        vs PFF's own LB_tackle at .134
+
+A rotational defender was charged three quarters of a standard deviation of negative
+value for not being on the field, and the two purest playing-time proxies were being
+driven to exactly zero weight by the fit. It also cost these facets their share of
+the replacement pool: build_hybrid withheld per-snap credit from them, because paying
+it per a team denominator hands a 1-100 snap defender 67% of what a 600-snap starter
+collects. That was 6.4% of total facet weight sitting outside the pool.
+
+PFF's defense export carries snap_counts_defense per player, so the denominator
+exists - it just lives in the other source. Joining it makes these true per-snap
+rates, which fixes both problems at once and lets build_hybrid pay them normally.
+
+The join is (season, CFBD team, normalized name), and it is required rather than
+imputed: a player PFF never graded on defense has NO snap count, and inventing one
+would be inventing the denominator. Those rows are dropped (~11.6%, and they already
+contribute nothing to any PFF facet, so this makes their treatment consistent rather
+than inconsistent). Team totals are standardized within season downstream, so the
+season-to-season variation in coverage washes out there.
 """
 import json, os
 import numpy as np
@@ -40,14 +68,14 @@ CFBD_FACETS = {
     "recv_wr":  ("ppa_all",   "plays_recv", ("WR",)),
     "recv_te":  ("ppa_all",   "plays_recv", ("TE",)),
     "recv_rb":  ("ppa_all",   "plays_recv", ("RB", "FB")),
-    # defense: rate = disruption per team play, volume = team plays faced.
-    # Crude, and knowingly so - see the module docstring.
-    "havoc_dl": ("havoc_rate", "team_def_plays", ("DL", "DE", "DT", "EDGE")),
-    "havoc_lb": ("havoc_rate", "team_def_plays", ("LB",)),
-    "havoc_db": ("havoc_rate", "team_def_plays", ("DB", "CB", "S")),
-    "tackle_lb": ("tackle_rate", "team_def_plays", ("LB",)),
-    "tackle_db": ("tackle_rate", "team_def_plays", ("DB", "CB", "S")),
-    "cov_db":   ("pd_rate",    "team_def_plays", ("DB", "CB", "S")),
+    # defense: rate = disruption per the player's OWN snap, volume = those snaps,
+    # with the snap count borrowed from PFF. See the module docstring.
+    "havoc_dl": ("havoc_rate", "def_snaps", ("DL", "DE", "DT", "EDGE")),
+    "havoc_lb": ("havoc_rate", "def_snaps", ("LB",)),
+    "havoc_db": ("havoc_rate", "def_snaps", ("DB", "CB", "S")),
+    "tackle_lb": ("tackle_rate", "def_snaps", ("LB",)),
+    "tackle_db": ("tackle_rate", "def_snaps", ("DB", "CB", "S")),
+    "cov_db":   ("pd_rate",    "def_snaps", ("DB", "CB", "S")),
 }
 
 DEF_POS = ("DL", "DE", "DT", "EDGE", "LB", "DB", "CB", "S")
@@ -97,14 +125,46 @@ def load_stats(years, categories):
     return wide.rename(columns={"playerId": "player_id"})
 
 
-def load_defense(years, team_plays):
-    """Per-player defensive rates, denominated by the team's defensive snaps.
+def pff_def_snaps(years):
+    """{(season, CFBD team, normalized name): defensive snaps} from the PFF export.
 
-    CFBD gives no individual snap counts on defense, so every rate here shares the
-    team denominator. That makes the rates comparable across players on the same
-    team but understates a rotational player's per-snap quality - a known and
-    unavoidable weakness of this source.
+    Restricted to keys that identify exactly ONE PFF player. A repeated name on the
+    same team in the same season cannot be resolved from the CFBD side - the two
+    sources' position labels disagree far too often to break the tie with - so an
+    ambiguous key yields no snap count and the row is dropped like any other miss.
+    Only 16 of 53,442 PFF defensive player-seasons are ambiguous this way.
     """
+    from facets import PFF_DIR
+    from build_roster_2026 import norm_name
+    team_map = json.load(open(f"{HERE}/team_map.json"))
+    frames = []
+    for y in years:
+        p = f"{PFF_DIR}/defense_{y}.csv"
+        if not os.path.exists(p):
+            continue
+        d = pd.read_csv(p)
+        d["season"] = y
+        d["team"] = d.team_name.map(team_map)
+        d["key"] = d.player.map(norm_name)
+        frames.append(d[["season", "team", "key", "snap_counts_defense"]])
+    if not frames:
+        return {}
+    pf = pd.concat(frames, ignore_index=True)
+    pf = pf[pf.team.notna() & (pf.snap_counts_defense > 0)]
+    n = pf.groupby(["season", "team", "key"]).size()
+    pf = pf[[n.get(k, 0) == 1 for k in zip(pf.season, pf.team, pf.key)]]
+    return dict(zip(zip(pf.season, pf.team, pf.key),
+                    pf.snap_counts_defense.astype(float)))
+
+
+def load_defense(years, team_plays):
+    """Per-player defensive rates, denominated by the player's own PFF snap count.
+
+    team_plays is still taken and still reported, because it is what tells us how
+    much of a team's defense a player was actually on the field for - but it is no
+    longer the denominator. See the module docstring for why that changed.
+    """
+    from build_roster_2026 import norm_name
     d = load_stats(years, ["defensive"])
     d = d[d.position.isin(DEF_POS)].copy()
     for c in ("TOT", "SOLO", "TFL", "SACKS", "PD", "QB HUR"):
@@ -113,10 +173,25 @@ def load_defense(years, team_plays):
         d[c] = d[c].fillna(0.0)
     d["team_def_plays"] = [team_plays.get((s, t), np.nan)
                            for s, t in zip(d.season, d.team)]
+
+    snaps = pff_def_snaps(years)
+    d["key"] = d.player.map(norm_name)
+    d["def_snaps"] = [snaps.get((s, t, k), np.nan)
+                      for s, t, k in zip(d.season, d.team, d.key)]
+    # scoped to FBS for the report, because facet_values() drops everyone else
+    # anyway and counting FCS misses here would overstate what is actually lost
+    fbs = fbs_teams()
+    scope = d[d.team.isin(fbs)] if fbs is not None else d
+    kept = scope.def_snaps > 0
+    print(f"  FBS defensive rows with a PFF snap count: {int(kept.sum())} of "
+          f"{len(scope)} ({kept.mean()*100:.1f}%); the rest have no denominator "
+          f"and are dropped")
+    d = d[d.def_snaps > 0].copy()
+
     d["havoc"] = d["TFL"] + d["SACKS"] + d["QB HUR"] + d["PD"]
-    d["havoc_rate"] = d.havoc / d.team_def_plays
-    d["tackle_rate"] = d["TOT"] / d.team_def_plays
-    d["pd_rate"] = d["PD"] / d.team_def_plays
+    d["havoc_rate"] = d.havoc / d.def_snaps
+    d["tackle_rate"] = d["TOT"] / d.def_snaps
+    d["pd_rate"] = d["PD"] / d.def_snaps
     return d
 
 
@@ -148,9 +223,24 @@ def fbs_teams():
 # not routes, so a five-target season can post a huge per-play average on one long
 # touchdown; without shrinkage those players dominate the facet. k is the number of
 # league-average plays mixed in, i.e. the volume at which a player gets half weight.
+#
+# The defensive facets need this now and did not before. Under the old team
+# denominator every player divided by the same ~870, so a 12-snap defender simply
+# scored near zero; dividing by his OWN 12 snaps instead lets one tackle-for-loss
+# post a rate no starter can touch. k = 200 follows the same convention the offensive
+# facets use - half weight at roughly the median volume, which for defensive snaps is
+# 227 - and sits in the flat part of the reliability curve.
+#
+# NOT chosen by maximizing year-over-year rho, which keeps climbing all the way to
+# k = 400 and beyond. That is an artefact: heavier shrinkage makes z more a function
+# of snap count, and snap count is stable year to year, so rho measures the shrinkage
+# as much as the player. Between k = 150 and k = 400 rho moves .503 -> .511 on
+# havoc_dl while |r(snaps, z)| moves the wrong way throughout.
 SHRINK_K = {
     "pass_qb": 60, "run_qb": 25, "run_rb": 40, "recv_wr": 25, "recv_te": 20,
     "recv_rb": 20,
+    "havoc_dl": 200, "havoc_lb": 200, "havoc_db": 200,
+    "tackle_lb": 200, "tackle_db": 200, "cov_db": 200,
 }
 
 

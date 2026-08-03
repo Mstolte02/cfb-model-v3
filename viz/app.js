@@ -1897,6 +1897,249 @@
     WI.reset(); renderAll();
   });
 
+  /* =======================================================================
+     TESTING — RATING CALCULATOR
+     =======================================================================
+     Walks one team from its roster's projected WAR to its power rating, showing
+     every intermediate, with each INPUT editable so the reader can see what moves
+     what. The numbers come from model.json's `derivation` block, which
+     scripts/export_viz.py fills straight out of build_projection_frame - the same
+     call scripts/rank.py makes - so the page cannot drift from the model by
+     reimplementing a step slightly differently.
+
+     The one thing this page exists to make legible: TALENT HAS A COEFFICIENT OF
+     EXACTLY ZERO and still moves the rating. It does it through the uncertainty
+     shrink in stage 3, not through its own slot in stage 4, and every attempt to
+     explain that in prose on the Method tab has been less convincing than showing
+     the two lines next to each other.
+
+     calcVerify() is the same guard livePower() has: with no edits the chain below
+     has to reproduce the exported O, D and power, and it says so on screen rather
+     than quietly disagreeing. */
+  const DER = cur().model.derivation || null;
+
+  /* label, key, and what the number IS - the help text is the point of the tab */
+  const CALC_INPUTS = [
+    ["warZ", "Team WAR (z)", "Sum of projected WAR over the two-deep, standardized across FBS."],
+    ["cfbdTalent", "Recruiting composite (z)", "247/CFBD team talent composite for 2026."],
+    ["pffRoster", "Two-deep talent (z)", "Position-weighted PFF grades over the 2026 Ourlads chart."],
+    ["Oraw", "Offense, pre-shrink", "2025 opponent-adjusted offensive composite."],
+    ["Draw", "Defense, pre-shrink", "2025 opponent-adjusted defensive composite, sign-flipped so higher is better."],
+    ["u", "Shrink weight u", "How far this team is pulled toward its talent baseline. Flat at 1.0 while UNCERTAINTY_USE_RETURNING is off."],
+    ["returning", "Returning production", "Standardized returning production for 2026."],
+  ];
+  let calcTeam = "Ohio State";
+  const calcEdits = {};
+
+  const calcBase = t => ({
+    warZ: DER.warZ[t], cfbdTalent: DER.cfbdTalent[t], pffRoster: DER.pffRoster[t],
+    Oraw: DER.Oraw[t], Draw: DER.Draw[t], u: DER.u[t],
+    returning: (baseVec(t) || [])[5],
+  });
+  function calcInputs(t) {
+    const b = calcBase(t), e = calcEdits[t] || {}, out = {};
+    for (const k in b) out[k] = (e[k] === undefined) ? b[k] : e[k];
+    return out;
+  }
+  /* The forward chain. Mirrors train.blended_talent + matchup.team_frame, including
+     both fallbacks: a team with no two-deep talent keeps the recruiting composite
+     alone, and one the WAR build has no roster for keeps the blend. */
+  const calcIsFallback = t => (DER.fallbackTeams || []).indexOf(t) >= 0;
+  function calcDerive(t, inp) {
+    const tb = DER.talentBlend, wb = DER.warBlend;
+    let blend, talent;
+    if (calcIsFallback(t)) {
+      /* Service academies: no recruiting composite, so they never enter the
+         three-source blend. talent = tb*roster + (1-tb)*floor, and the WAR term
+         does not apply to them at all. */
+      blend = DER.talentFloor;
+      talent = inp.pffRoster == null ? blend
+        : tb * inp.pffRoster + (1 - tb) * blend;
+    } else {
+      blend = inp.pffRoster == null ? inp.cfbdTalent
+        : tb * inp.pffRoster + (1 - tb) * inp.cfbdTalent;
+      talent = inp.warZ == null ? blend : (1 - wb) * blend + wb * inp.warZ;
+    }
+    const s = DER.lam * (inp.u == null ? 1 : inp.u);
+    const O = (1 - s) * inp.Oraw + s * DER.bO * talent;
+    const D = (1 - s) * inp.Draw + s * DER.bD * talent;
+    const b = baseVec(t) || [0, 0, 0, 0, 0, 0];
+    return { blend, talent, s, O, D, vec: [O, D, b[2], b[3], talent, inp.returning] };
+  }
+  function calcPower(t, vec) {
+    let s = 0, n = 0;
+    for (const r of cur().ratings.teams) {
+      if (r.team === t) continue;
+      const V = vecOf(r.team);
+      if (!V) continue;
+      s += winpFromDiff(diffVec(vec, V), 0); n++;
+    }
+    return n ? s / n : 0;
+  }
+  const calcRank = (t, p) => 1 + cur().ratings.teams
+    .filter(r => r.team !== t && livePower()[r.team] > p).length;
+
+  /* With no edits the chain has to land on the exported numbers. */
+  function calcVerify(t) {
+    const d = calcDerive(t, calcBase(t));
+    const b = baseVec(t) || [0, 0];
+    const row = ratingRow()[t] || {};
+    return Math.max(Math.abs(d.O - b[0]), Math.abs(d.D - b[1]),
+      row.power != null ? Math.abs(calcPower(t, d.vec) - row.power) : 0);
+  }
+
+  const num = (x, d = 3) => (x == null || isNaN(x)) ? "—" : (x >= 0 ? "+" : "") + x.toFixed(d);
+  const calcField = (k, v) =>
+    `<input class="calc-in" type="number" step="0.01" data-k="${k}" value="${v == null ? "" : (+v).toFixed(3)}">`;
+
+  function renderCalc() {
+    const host = document.getElementById("calc-body");
+    if (!DER) {
+      host.innerHTML = `<div class="calc-warn">model.json has no <code>derivation</code>
+        block. Re-run <code>python -m scripts.export_viz</code>.</div>`;
+      document.getElementById("calc-drift").textContent = "";
+      return;
+    }
+    const t = calcTeam, inp = calcInputs(t), d = calcDerive(t, inp);
+    const base = calcDerive(t, calcBase(t));
+    const M = cur().model, L = M.logistic;
+    const power = calcPower(t, d.vec), power0 = calcPower(t, base.vec);
+    const rank = calcRank(t, power), rank0 = (ratingRow()[t] || {}).rank;
+    const edited = Object.keys(calcEdits[t] || {}).length > 0;
+    const tint = color(t);
+    const wars = (players[t] || {}).total;
+    const fb = calcIsFallback(t);
+
+    const drift = calcVerify(t);
+    document.getElementById("calc-drift").innerHTML = drift > 5e-4
+      ? `<span class="calc-bad">chain differs from the export by ${drift.toFixed(5)}</span>`
+      : `reproduces the exported rating (max diff ${drift.toExponential(1)})`;
+
+    const inputRow = ([k, label, help]) => `
+      <div class="calc-row${(calcEdits[t] || {})[k] !== undefined ? " edited" : ""}">
+        <div class="calc-lab">${label}<span class="calc-help">${help}</span></div>
+        ${calcField(k, inp[k])}
+        <div class="calc-was">${(calcEdits[t] || {})[k] !== undefined
+          ? "was " + num(calcBase(t)[k]) : ""}</div>
+      </div>`;
+
+    const featRows = M.features.map((f, i) => {
+      const v = d.vec[i], c = L.coef[i], zero = Math.abs(c) < 1e-12;
+      return `<tr class="${zero ? "calc-zero" : ""}">
+        <td>${f}</td><td class="n">${num(v)}</td><td class="n">${num(c, 4)}</td>
+        <td class="n">${zero ? "—" : num(v * c, 4)}</td>
+        <td class="calc-note">${zero
+          ? (f === "talent"
+            ? "retired — reaches the rating through stage 3, not here"
+            : "retired — coefficient driven to zero in training")
+          : ""}</td></tr>`;
+    }).join("");
+
+    host.innerHTML = `
+      <div class="calc-head" style="border-color:${tint}">
+        <img src="${logoURL(t)}" alt="" class="calc-logo">
+        <div>
+          <div class="calc-team">${esc(t)}</div>
+          <div class="calc-sub">${esc(conf(t))}</div>
+        </div>
+        <div class="calc-out-big">
+          <div class="calc-k">POWER</div>
+          <div class="calc-v" style="color:${tint}">${power.toFixed(4)}</div>
+          ${edited ? `<div class="calc-delta ${power >= power0 ? "up" : "dn"}">
+            ${power >= power0 ? "▲" : "▼"} ${Math.abs(power - power0).toFixed(4)}</div>` : ""}
+        </div>
+        <div class="calc-out-big">
+          <div class="calc-k">RANK</div>
+          <div class="calc-v">#${rank}</div>
+          ${edited && rank0 ? `<div class="calc-delta ${rank <= rank0 ? "up" : "dn"}">
+            ${rank <= rank0 ? "▲" : "▼"} ${Math.abs(rank - rank0)}</div>` : ""}
+        </div>
+      </div>
+
+      <div class="calc-stage">
+        <h3><span class="calc-n">1</span> Roster WAR</h3>
+        <p class="calc-p">Every projected two-deep slot, summed. These are wins above a
+          replacement-level roster; the Players tab has the per-player rows.
+          ${wars != null ? `This team&rsquo;s two-deep totals <b>${wars.toFixed(2)}</b> WAR.` : ""}
+          ${fb ? `<b>This team takes the fallback path below, which has no WAR term
+            &mdash; editing this input will not move anything.</b>`
+          : "Standardizing that across FBS gives the input below."}</p>
+        ${inputRow(CALC_INPUTS[0])}
+      </div>
+
+      <div class="calc-stage">
+        <h3><span class="calc-n">2</span> Talent</h3>
+        ${fb ? `
+        <p class="calc-p">${esc(t)} has <b>no 247/CFBD recruiting composite</b>, so it
+          never enters the normal three-source blend. Instead its two-deep talent is
+          mixed with a floor set at the 10th percentile of the league&rsquo;s blended
+          talent, and the WAR term does not apply.</p>
+        ${inputRow(CALC_INPUTS[2])}
+        <div class="calc-eq">floor = 10th percentile of blended talent
+          <b>= ${num(DER.talentFloor)}</b></div>
+        <div class="calc-eq">talent = ${DER.talentBlend} × two-deep + ${(1 - DER.talentBlend).toFixed(2)} × floor
+          <b>= ${num(d.talent)}</b></div>`
+      : `
+        <p class="calc-p">Three sources, mixed in two steps. Weights are
+          <code>TALENT_BLEND</code> and <code>WAR_BLEND</code> from config.</p>
+        ${inputRow(CALC_INPUTS[1])}
+        ${inputRow(CALC_INPUTS[2])}
+        <div class="calc-eq">blend = ${DER.talentBlend} × two-deep + ${(1 - DER.talentBlend).toFixed(2)} × recruiting
+          <b>= ${num(d.blend)}</b></div>
+        <div class="calc-eq">talent = ${(1 - DER.warBlend).toFixed(2)} × blend + ${DER.warBlend} × WAR
+          <b>= ${num(d.talent)}</b></div>`}
+      </div>
+
+      <div class="calc-stage">
+        <h3><span class="calc-n">3</span> Uncertainty shrink</h3>
+        <p class="calc-p">Last season&rsquo;s opponent-adjusted composites, pulled toward
+          what this team&rsquo;s talent implies. <b>This is the only path talent has to a
+          prediction</b> — its own coefficient in stage 4 is zero.</p>
+        ${inputRow(CALC_INPUTS[3])}
+        ${inputRow(CALC_INPUTS[4])}
+        ${inputRow(CALC_INPUTS[5])}
+        <div class="calc-eq">O = (1 − ${DER.lam}·u)·O<sub>raw</sub> + ${DER.lam}·u·${DER.bO.toFixed(4)}·talent
+          <b>= ${num(d.O)}</b></div>
+        <div class="calc-eq">D = (1 − ${DER.lam}·u)·D<sub>raw</sub> + ${DER.lam}·u·${DER.bD.toFixed(4)}·talent
+          <b>= ${num(d.D)}</b></div>
+      </div>
+
+      <div class="calc-stage">
+        <h3><span class="calc-n">4</span> Model features</h3>
+        <p class="calc-p">The six-vector the trained logistic sees, and what each is
+          worth. Greyed rows carry a coefficient of exactly zero.</p>
+        ${inputRow(CALC_INPUTS[6])}
+        <table class="calc-tbl">
+          <thead><tr><th>feature</th><th class="n">value</th><th class="n">coef</th>
+            <th class="n">value × coef</th><th></th></tr></thead>
+          <tbody>${featRows}</tbody>
+        </table>
+        <div class="calc-eq">intercept ${num(L.intercept, 4)} · home-field ${num(L.hfa, 4)}
+          (applied per matchup, not to the rating)</div>
+      </div>
+
+      <div class="calc-stage">
+        <h3><span class="calc-n">5</span> Power rating</h3>
+        <p class="calc-p">Mean win probability against every other rated team on a
+          neutral field, blending the logistic and the margin model at
+          <code>ens_w = ${M.ens_w}</code>. That average is the number the dashboard
+          ranks on.</p>
+        <div class="calc-eq">power = mean p(win) over ${cur().ratings.teams.length - 1} opponents
+          <b>= ${power.toFixed(4)}</b>${edited ? ` &nbsp;(was ${power0.toFixed(4)})` : ""}</div>
+      </div>`;
+
+    host.querySelectorAll(".calc-in").forEach(el => {
+      el.addEventListener("change", () => {
+        const k = el.dataset.k, raw = el.value.trim();
+        calcEdits[t] = calcEdits[t] || {};
+        if (raw === "") delete calcEdits[t][k];
+        else calcEdits[t][k] = parseFloat(raw);
+        if (!Object.keys(calcEdits[t]).length) delete calcEdits[t];
+        renderCalc();
+      });
+    });
+  }
+
   /* ---------- boot ---------- */
   function render(view) {
     if (view === "dash") renderDash();
@@ -1905,11 +2148,28 @@
     else if (view === "team") renderTeam();
     else if (view === "players") renderPlayers();
     else if (view === "method") renderMethod();
+    else if (view === "testing") renderCalc();
   }
   function renderAll() {
-    fillConfSelect(); fillPlayerSelects();
+    fillConfSelect(); fillPlayerSelects(); fillCalcSelect();
     renderDash(); renderPlayoff(); renderMatchup(); renderTeam();
-    renderPlayers(); renderMethod();
+    renderPlayers(); renderMethod(); renderCalc();
+  }
+  function fillCalcSelect() {
+    const sel = document.getElementById("calc-team");
+    if (!sel || sel.options.length) return;
+    const byConf = {};
+    cur().ratings.teams.map(r => r.team).slice().sort()
+      .forEach(t => (byConf[conf(t)] = byConf[conf(t)] || []).push(t));
+    sel.innerHTML = Object.keys(byConf).sort().map(c =>
+      `<optgroup label="${esc(c)}">` + byConf[c].map(t =>
+        `<option value="${esc(t)}"${t === calcTeam ? " selected" : ""}>${esc(t)}</option>`
+      ).join("") + `</optgroup>`).join("");
+    sel.addEventListener("change", () => { calcTeam = sel.value; renderCalc(); });
+    document.getElementById("calc-reset").addEventListener("click", () => {
+      delete calcEdits[calcTeam];
+      renderCalc();
+    });
   }
   // Check the client-side power reproduces the exported column before anyone edits
   // anything. A scenario is only meaningful as a difference from the published

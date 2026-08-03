@@ -177,29 +177,36 @@ def snap_denominated_facets():
     return {name for name, (_, snap_col, _, _) in FACETS.items() if is_snaps(snap_col)}
 
 
-def deattenuate(ratings, fv, recs, slope):
+def deattenuate(fv, recs):
     """Factor k such that k*WAA + replacement regresses on actual wins above
     replacement with slope 1 - i.e. the factor that puts WAR into units of wins.
 
     Solved rather than fitted in one pass: regressing the residual on WAA is itself an
     OLS on a noisy predictor and lands at 0.955, so the root of "slope of the whole
     identity equals 1" is taken directly.
+
+    SOLVED ON THIS BUILD'S OWN waa/repl_credit, WHICH IS WHY IT TAKES fv AND NOT A
+    FILE. It used to read the previous hybrid_player_war.csv, and that made it a
+    fixed-point iteration that silently no-ops on every run after the first: the
+    prior build has ALREADY been de-attenuated, so calibrating against it finds a
+    converged system and returns exactly k = 1.0000. The correction then never gets
+    applied to the new numbers, and summed team WAR goes back to regressing on actual
+    wins above replacement at 1.308 - the precise bug the de-attenuation exists to
+    fix, reintroduced by re-running the build. It survived because k = 1.0000 looks
+    like a healthy answer rather than a skipped step.
+
+    waa is linear in the slope, so calibrating in place is exact: scale waa by k and
+    the identity holds by construction, with no dependence on run history.
     """
     from scipy.optimize import brentq
-    prev = pd.read_csv(f"{HERE}/hybrid_player_war.csv") if os.path.exists(
-        f"{HERE}/hybrid_player_war.csv") else None
-    if prev is None:
-        print("  [warn] no prior build to calibrate against; slope left attenuated.")
-        return 1.0
-    t = prev.groupby(["season", "team"], as_index=False).agg(
-        war=("war", "sum"), waa=("waa", "sum"))
-    t["repl"] = t.war - t.waa
+    t = fv.groupby(["season", "team"], as_index=False).agg(
+        waa=("waa", "sum"), repl=("repl_credit", "sum"))
     d = t.merge(recs[["season", "team", "adj_wins", "fbs_games"]],
                 on=["season", "team"])
     d["actual"] = d.adj_wins - REPL_WIN_PCT * d.fbs_games
     f = lambda k: np.polyfit(k * d.waa + d.repl, d.actual, 1)[0] - 1.0
     try:
-        k = float(brentq(f, 0.5, 5.0))
+        k = float(brentq(f, 0.1, 10.0))
     except ValueError:
         print("  [warn] could not bracket the de-attenuation root; leaving slope as is.")
         return 1.0
@@ -402,11 +409,10 @@ def main():
     # 5,985.7 against 5,985.7 actual wins above replacement, 0.0% out. Only the spread
     # was short. So the correction is one number solved for here, not applied later:
     # the factor that makes summed team WAR regress on actual wins above replacement
-    # with a slope of exactly 1. It comes out at 1.41, and afterwards the identity
-    # holds at 1.0000 * WAR - 0.0023 with the correlation slightly BETTER than before
-    # (.834 against .816). No display rescale is needed anywhere.
-    slope *= deattenuate(out, fv, recs, slope)
-    print(f"de-attenuated slope = {slope:.4f}")
+    # with a slope of exactly 1. No display rescale is needed anywhere.
+    #
+    # The solve itself happens further down, once waa and repl_credit exist, because
+    # it calibrates against THIS build rather than the last one. See deattenuate().
 
     nxt = out[["season", "team", "massey", "adj_win_pct"]].copy()
     nxt["season"] -= 1
@@ -429,19 +435,21 @@ def main():
     fv["waa"] = fv.games * slope * fv.c_t * fv.f_contrib
 
     # Replacement credit is payment for OCCUPYING A SNAP, so it can only be paid
-    # through facets where the volume column is the player's own playing time. On the
-    # CFBD defensive facets it is not: CFBD publishes no individual snap counts on
-    # defense, so cfbd_facets.py denominates them by team defensive plays, and every
-    # defender on the roster carries the same volume - 922 of them at Alabama in 2025,
-    # for the fourteenth defensive back as much as for the starting corner. Paying
-    # replacement credit per that snap column hands a 1-100 snap defender 67% of what
-    # a 600+ snap defender collects, where playing time says it should be nearer 10%.
+    # through facets where the volume column is the player's own playing time.
     #
-    # The value term survives this and is left alone: z is production per team play,
-    # so z * team_plays is total production above average, which is what it should be.
-    # Only the per-snap credit is incoherent, so only it is withheld. The pool is
-    # renormalized over the paying facets, which keeps league WAR summing to wins above
-    # replacement instead of quietly losing their share of it.
+    # THIS SET IS NOW EMPTY, and the guard is kept rather than deleted. It used to
+    # catch the six CFBD defensive facets, which denominated by team defensive plays
+    # because CFBD publishes no individual snap counts on defense - every defender on
+    # the roster carrying the same ~870, so paying per that column handed a 1-100 snap
+    # defender 67% of what a 600-snap starter collects. Withholding their credit cost
+    # them 6.4% of total facet weight's worth of the pool.
+    #
+    # cfbd_facets.py now borrows PFF's snap_counts_defense for that denominator, so
+    # those facets are genuine per-snap rates and pay like everything else. The guard
+    # stays because it reads the volume column out of CFBD_FACETS rather than naming
+    # facets: reintroduce a team-denominated measurement and it excludes itself again.
+    # The pool is renormalized over whatever is left paying, so league WAR keeps
+    # summing to wins above replacement either way.
     # Renormalizing per season rather than once also closes a leak that predates this:
     # a facet with no snaps in a season used to forfeit its share of that season's
     # pool instead of passing it on, so 2014 and 2015 - which have no CFBD data at all
@@ -466,7 +474,27 @@ def main():
     per_snap = pd.DataFrame(pool_rows).set_index(["season", "facet"]).per_snap
     fv["repl_credit"] = [per_snap.get((s, f), 0.0)
                          for s, f in zip(fv.season, fv.facet)] * fv.snaps
+
+    # ---- de-attenuation, on this build's own numbers ------------------------
+    k = deattenuate(fv, recs)
+    fv["waa"] *= k
+    slope *= k
+    print(f"de-attenuated slope = {slope:.4f}")
     fv["war"] = fv.waa + fv.repl_credit
+
+    # The whole point of the correction, asserted rather than eyeballed: summed team
+    # WAR has to regress on actual wins above replacement with slope 1, or WAR is not
+    # in units of wins and every number the site shows is on a private scale.
+    _t = fv.groupby(["season", "team"], as_index=False).agg(war=("war", "sum"))
+    _d = _t.merge(recs[["season", "team", "adj_wins", "fbs_games"]],
+                  on=["season", "team"])
+    _actual = _d.adj_wins - REPL_WIN_PCT * _d.fbs_games
+    _s, _i = np.polyfit(_d.war, _actual, 1)
+    print(f"  identity check: actual = {_s:.4f} * WAR {_i:+.4f}   "
+          f"r = {_d.war.corr(_actual):.4f}")
+    assert abs(_s - 1.0) < 1e-3, (
+        f"summed team WAR regresses on wins above replacement at {_s:.4f}, not 1.0; "
+        f"WAR is not in units of wins")
 
     key = ["season", "uid", "player", "position", "team"]
     war = fv.groupby(key, as_index=False).agg(

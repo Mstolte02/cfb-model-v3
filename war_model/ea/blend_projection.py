@@ -98,6 +98,53 @@ def load_qb_sheet():
     return dict(zip(zip(q.key, q.cfbd_team), q[QB_COL].astype(float)))
 
 
+def apply_qb_map(d, verbose=True):
+    """Rule 2, as a step that can be run on its own frame at its own point.
+
+    IT RUNS LAST, AFTER depth_correction's reweight, and that ordering is the whole
+    reason it lives in a function instead of inside main(). The reweight scales each
+    team's starting quarterback by (room_total - room_total*backup_target)/starter_total,
+    which is a TEAM-SPECIFIC multiplier - 1.00 to 1.63, median 1.027, driven entirely
+    by how much WAR that room's backups happened to carry. Running it after this map
+    re-sorted the quarterbacks the sheet had just ordered: Spearman against the sheet
+    fell from 0.9999 to 0.9885 and the largest single move was 20 places, with Dante
+    Moore jumping two men on a x1.144 and CJ Bailey climbing eight on a x1.187.
+
+    So the map goes last and is the final word on who is where. The cost is that the
+    reweight's backup share no longer lands exactly on target for the named rooms -
+    permuting starters across teams changes each room's total - and main() reports how
+    far it drifts. That is the right way round: the backup share is a correction for
+    injuries we are not projecting, and being a few tenths of a point off it matters
+    much less than the starting quarterbacks being in the wrong order.
+
+    Returns (frame, n_matched, n_named).
+    """
+    d = d.copy()
+    if "key" not in d.columns:
+        d["key"] = d.player.map(norm_name)
+    qb_z = load_qb_sheet()
+    d["qb_z"] = [qb_z.get((k, t)) for k, t in zip(d.key, d.team)]
+
+    new = d.proj_war.copy()
+    source = d.war_source.copy() if "war_source" in d.columns else pd.Series(
+        "PFF", index=d.index)
+    qb = (d.broad_group == "QB") & d.qb_z.notna()
+    apply_map(d, qb, "qb_z", "QB-avg", new, source)
+    d["proj_war"] = new
+    d["war_source"] = source
+
+    if verbose:
+        n = int(qb.sum())
+        print(f"\nquarterback sheet applied AFTER the reweight: {n} of {len(qb_z)} "
+              f"named starters matched")
+        if n < len(qb_z):
+            hit = set(zip(d.loc[qb, "key"], d.loc[qb, "team"]))
+            for k, t in sorted(set(qb_z) - hit):
+                print(f"  [miss] {k} ({t}) is not in our two-deep; that team's QB "
+                      f"stays as projected")
+    return d, int(qb.sum()), len(qb_z)
+
+
 def apply_map(d, mask, src_col, label, new, source):
     """Quantile-map `src_col` onto our own proj_war for the masked rows, by group.
 
@@ -131,9 +178,6 @@ def main():
     d["prior_snaps"] = d.snaps_2025.fillna(0.0)
     d["proj_war_pff"] = d.proj_war
 
-    qb_z = load_qb_sheet()
-    d["qb_z"] = [qb_z.get((k, t)) for k, t in zip(d.key, d.team)]
-
     new = d.proj_war.copy()
     source = pd.Series("PFF", index=d.index)
 
@@ -141,36 +185,28 @@ def main():
     full_ea = d.broad_group.isin(FULL_EA_GROUPS) & d.ea_war.notna()
     n_full = apply_map(d, full_ea, "ea_war", "EA-full", new, source)
 
-    # --- rule 2: the quarterback sheet, for the starters it names ------------------
-    qb = (d.broad_group == "QB") & d.qb_z.notna()
-    n_qb = apply_map(d, qb, "qb_z", "QB-avg", new, source)
-
-    # The sheet says two things, and only using one of them is what broke Syracuse.
-    # It rates the quarterback AND it names him as the starter, and the second half is
-    # information our two-deep does not have: depth_correction's fix_depth had promoted
-    # Amari Odom over Steve Angeli on 2025 snaps, so the room was flagged starter-Odom,
-    # and the reweight then moved 95% of the room's WAR to him - a listed backup came
-    # out as the best quarterback in FBS at 1.83, above Julian Sayin.
+    # --- rule 2 IS NOT HERE ANY MORE ----------------------------------------------
+    # The quarterback sheet is applied by apply_qb_map(), which depth_correction calls
+    # after its reweight, because the reweight's team-specific multiplier was undoing
+    # the ordering this map imposes. See apply_qb_map's docstring.
     #
-    # So the sheet pins the starter too. `pinned_starter` survives into the projection
-    # and depth_correction honours it ahead of its own snap-based opinion, because a
-    # published depth chart for THIS season beats an inference from last season's usage.
-    # Only rooms the sheet actually speaks to: a team whose quarterback it does not
-    # name keeps whatever the two-deep said.
-    d["pinned_starter"] = qb
-    # the source carries is_starter as 0/1; depth_correction reads it as a flag either
-    # way, but assigning bools into an int column raises rather than coercing
-    d["is_starter"] = d.is_starter.astype(bool)
-    named_rooms = (d.broad_group == "QB") & d.team.isin(d.loc[qb, "team"].unique())
-    d.loc[named_rooms, "is_starter"] = qb.loc[named_rooms]
-    n_pin = int(qb.sum())
+    # The OTHER half of what the sheet says - who starts - still happens well before
+    # this file, in depth_correction.pin_starters(), which writes is_starter onto
+    # roster_2026.csv BEFORE project_2026_v2 runs. That timing is not negotiable:
+    # is_starter is an input FEATURE of the projection, so a roster carrying the wrong
+    # starter gets the wrong man projected as one. Syracuse is the worked example -
+    # Odom was flagged starter on 2025 snaps and came out the best quarterback in FBS
+    # at 1.83, above Julian Sayin. Nothing about moving the VALUE map to the end
+    # touches that; the pin is already on the frame when this file opens it.
+    qb_slots = d.broad_group == "QB"
 
     # --- rule 3: the old snap-threshold blend, on whatever is left ----------------
     # A row claimed above is excluded, not re-mapped: rule 3 acting on a subset of an
-    # already-permuted group would reshuffle values rule 1 or 2 had just placed.
-    claimed = full_ea | qb
-    low = ((d.prior_snaps < args.threshold) & d.ea_war.notna() & ~claimed
-           & ~d.broad_group.isin(FULL_EA_GROUPS) & (d.broad_group != "QB"))
+    # already-permuted group would reshuffle values rule 1 just placed. Quarterbacks
+    # are excluded outright - rule 2 will claim them at the end of the pipeline, and
+    # letting EA reorder them here would be overwritten anyway.
+    low = ((d.prior_snaps < args.threshold) & d.ea_war.notna() & ~full_ea
+           & ~d.broad_group.isin(FULL_EA_GROUPS) & ~qb_slots)
     n_low_ea = apply_map(d, low, "ea_war", "EA", new, source)
 
     d["proj_war"] = new
@@ -178,21 +214,15 @@ def main():
 
     # ---- what happened -----------------------------------------------------------
     n_qb_slots = int((d.broad_group == "QB").sum())
-    n_qb_named = len(qb_z)
+    n_qb_named = len(load_qb_sheet())
     print(f"rule 1  EA outright for {', '.join(FULL_EA_GROUPS)}:")
     for g in FULL_EA_GROUPS:
         tot = int((d.broad_group == g).sum())
         got = int((full_ea & (d.broad_group == g)).sum())
         print(f"          {g:<4}{got:>5} of {tot:<5} slots EA-ranked "
               f"({tot - got} have no EA rating, kept PFF)")
-    print(f"rule 2  quarterback sheet: {n_qb} of {n_qb_named} named starters matched "
-          f"into {n_qb_slots} QB slots ({n_pin} pinned as their team's starter)")
-    if n_qb < n_qb_named:
-        named = set(qb_z)
-        hit = set(zip(d.loc[qb, "key"], d.loc[qb, "team"]))
-        for k, t in sorted(named - hit):
-            print(f"          [miss] {k} ({t}) is not in our two-deep; that team's "
-                  f"QB stays PFF")
+    print(f"rule 2  quarterback sheet: deferred to depth_correction, which applies it "
+          f"after the reweight ({n_qb_named} named starters, {n_qb_slots} QB slots)")
     print(f"rule 3  EA under {args.threshold} snaps elsewhere: {n_low_ea} slots")
     print(f"        untouched (PFF): {int((source == 'PFF').sum())} of {len(d)}")
 

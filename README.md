@@ -1,5 +1,88 @@
 # CFB Predictive Model v3
 
+## v3.8 — a denominator, an ordering, and a calculator
+
+Three changes, one of which turned up a bug that had silently undone an earlier fix.
+
+**The CFBD defensive facets were measuring playing time.** CFBD publishes no
+individual snap counts on defense, so `cfbd_facets.py` denominated havoc, tackle and
+pass-defensed rates by the team's defensive plays — every defender on the roster
+carrying the same ~870. That makes the facet a proxy for how much a man played:
+
+| facet | r(own snaps, z) before | after | weight |
+|---|---|---|---|
+| `cfbd_tackle_lb` | **0.917** | −0.165 | 0.01% |
+| `cfbd_tackle_db` | **0.877** | −0.236 | 0.01% |
+| `cfbd_havoc_lb` | 0.786 | 0.037 | 0.94% |
+| `cfbd_havoc_db` | 0.777 | 0.038 | 1.23% |
+| `cfbd_havoc_dl` | 0.741 | 0.145 | 1.31% |
+| `cfbd_cov_db` | 0.713 | 0.053 | 1.54% |
+| *PFF `LB_tackle`, individual-snap denominator* | *0.134* | | |
+
+A rotational defender was charged ~0.75 SD of negative value for not being on the
+field, and the two purest playing-time proxies had already been driven to zero weight
+by the fit. It also cost those facets their share of the replacement pool — 6.4% of
+total facet weight — because `build_hybrid` withheld per-snap credit from any facet
+whose volume column is not the player's own playing time.
+
+PFF's defense export has `snap_counts_defense`, so the denominator existed, just in
+the other source. Joining it on `(season, team, normalized name)` covers **87.7%** of
+FBS defensive rows; the rest have no snap count and are dropped rather than imputed,
+since inventing the denominator is worse than not having the row. Shrinkage (k = 200,
+half weight at roughly the median snap count) is now needed and applied, because
+dividing by a man's own 12 snaps lets one tackle-for-loss post a rate no starter can
+reach. **All 98 facets now pay replacement credit**, up from 92.
+
+Forward r **.500 → .519**, Massey vs adjusted win pct **.698 → .710**, and the
+WAR-equals-wins identity fits slightly better at **r .8344 → .8481**.
+
+**`deattenuate()` was a fixed point that no-ops on every run after the first.** It
+calibrated against the *previous* build's `hybrid_player_war.csv` — which had already
+been de-attenuated — so it found a converged system and returned exactly `k = 1.0000`.
+The correction then never reached the new numbers and summed team WAR went back to
+regressing on actual wins above replacement at **1.308**: the precise bug the
+de-attenuation exists to fix, reintroduced by rebuilding. It survived because
+`k = 1.0000` reads as a healthy answer rather than a skipped step. It now solves
+against the build in hand (waa is linear in the slope, so calibrating in place is
+exact), and `build_hybrid` **asserts** the identity rather than printing it.
+
+**The quarterback sheet now has the last word.** `depth_correction`'s reweight scales
+each team's starter by a team-specific factor — 1.00 to 1.63, median 1.027, set
+entirely by how much WAR that room's backups carried — and running it *after* the
+quantile map re-sorted the quarterbacks the map had just ordered. Rule 2 moved out of
+`blend_projection.main` into `apply_qb_map()`, which `depth_correction` calls last:
+
+| | Spearman vs the sheet | largest rank move |
+|---|---|---|
+| map before reweight (was) | 0.9885 | 20 places |
+| **map after reweight (now)** | **0.9999** | **1** |
+
+The residual is the three-way tie at `Average` = 1.02; every remaining mismatch is a
+tie broken arbitrarily. The cost is that a room's backup share no longer lands exactly
+on the no-injury target — per-room mean deviation **0.59pp → 1.38pp** — which is the
+right trade, since being a third of a point off an injury correction matters less than
+the starting quarterbacks being in the wrong order. The *aggregate* share cannot move
+at all; the map is a permutation over exactly those rooms.
+
+**A Testing tab with a rating calculator.** One team at a time, every intermediate
+between its roster's projected WAR and its power rating: team WAR → z → the
+three-source talent blend → the uncertainty shrink into O and D → the six model
+features and their coefficients → the mean neutral win probability that is the power
+rating. Every input is editable and everything below it recomputes, including the
+team's rank against the other 135.
+
+The numbers come from a `derivation` block in `model.json` that `export_viz` fills
+straight out of `build_projection_frame` — the same call `scripts/rank.py` makes —
+rather than recomputing the steps, which would work right up until one copy changed
+and the other did not. The page carries the same guard `livePower()` has: with no
+edits the chain has to reproduce the exported O, D and power, and it says so on
+screen. It does, for all 136 teams, worst case 6.9e-5.
+
+Mostly it exists to make one thing legible: **talent has a coefficient of exactly zero
+and still moves the rating**, through the shrink rather than through its own slot. The
+service academies get their own branch, since with no recruiting composite they never
+enter the three-source blend at all.
+
 ## v3.7 — head-to-head, realistic scorelines, and a résumé for the field
 
 Five changes. Two of them are player-source decisions taken deliberately; three were

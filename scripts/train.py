@@ -88,10 +88,19 @@ def projection_returning_raw(ret_raw=None):
     return ret_raw[PROJECTION_RETURNING_FALLBACK_YEAR]
 
 
-def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=False):
+def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=False,
+                           return_parts=False):
     """Entering-PROJECTION_YEAR team frame (O/D/pythag/talent/returning, uncertainty
     applied), with 2026 returning from the curated CSV and talent proxied from the
     latest composite. Shared by scripts/rank.py and scripts/spreads.py.
+
+    return_parts hands back every INTERMEDIATE the frame was assembled from - the
+    CFBD composite before the PFF roster is blended in, the roster talent itself, the
+    WAR z, and the opponent-adjusted O/D before the uncertainty shrink. The testing
+    tab's calculator shows the derivation from a roster's WAR to a power rating, and
+    it has to show the numbers the model actually used. Recomputing them in export_viz
+    from the same inputs would work right up until one of these steps changed and the
+    other copy did not, so the parts come out of the function that does the work.
 
     talent_blend / unc_lambda override the config defaults — used by the
     ROSTER-WEIGHTED variant (blend=0.7, lam=1.0), which leans harder on the 2026
@@ -144,6 +153,9 @@ def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=Fal
               f"({len(pff_roster[PROJECTION_YEAR])} teams).")
     except Exception as e:
         print(f"  [warn] {PROJECTION_YEAR} roster talent unavailable: {e}")
+    # captured before the blend overwrites it - this is the CFBD recruiting composite
+    # on its own, which is one of the three things that make up talent
+    cfbd_only = talent[PROJECTION_YEAR].copy()
     talent = blended_talent(talent, pff_roster, w=talent_blend)
 
     # Service academies (Air Force, Navy) have no 247 recruiting composite and
@@ -152,6 +164,7 @@ def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=Fal
     # roster talent when available) so it keeps a rating.
     tal = talent[PROJECTION_YEAR]
     missing = ret[PROJECTION_YEAR].index.difference(tal.index)
+    talent_floor, fallback_teams = None, []
     if len(missing):
         pr = pff_roster.get(PROJECTION_YEAR)
         floor = float(tal.quantile(0.10))
@@ -159,6 +172,7 @@ def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=Fal
                     if pr is not None and t in pr.index else floor)
                 for t in missing}
         talent[PROJECTION_YEAR] = pd.concat([tal, pd.Series(vals)])
+        talent_floor, fallback_teams = floor, sorted(missing)
         print(f"  [info] talent fallback applied for {sorted(missing)}")
 
     od = OA.build_od_by_year(std, games, OPP_ADJ_ALPHA)
@@ -167,6 +181,32 @@ def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=Fal
     unc = (unc_lambda, b_o, b_d, MU.uncertainty_u(ret_raw[PROJECTION_YEAR]))
     frame = MU.team_frame(PROJECTION_YEAR, std, pyth, talent, ret,
                           uncertainty=unc, od_by_year=od)
+    if return_parts:
+        prior = PROJECTION_YEAR - 1
+        war_z = None
+        try:
+            from src.data import war as warmod
+            if warmod.available():
+                war_z = warmod.talent_by_year(
+                    {PROJECTION_YEAR: cfbd_only.index}).get(PROJECTION_YEAR)
+        except Exception as e:
+            print(f"  [warn] WAR z unavailable for the derivation export: {e}")
+        parts = {
+            "cfbd_talent": cfbd_only,
+            "pff_roster": pff_roster.get(PROJECTION_YEAR),
+            "war_z": war_z,
+            "talent": talent[PROJECTION_YEAR],
+            "O_raw": od[prior]["O"], "D_raw": od[prior]["D"],
+            "u": unc[3], "b_o": b_o, "b_d": b_d, "lam": unc_lambda,
+            "talent_blend": talent_blend,
+            # The service-academy path. These teams have no recruiting composite, so
+            # they never reach blended_talent at all: their talent is
+            # talent_blend*roster + (1-talent_blend)*floor, with NO WAR term. A
+            # calculator that showed them going through the normal three-source blend
+            # would be showing a derivation the model did not perform.
+            "talent_floor": talent_floor, "fallback_teams": fallback_teams,
+        }
+        return frame, parts
     # return_params: the talent slopes and the shrinkage, for callers that need to
     # know how talent reaches O and D. The playoff simulator does - talent is a
     # retired column now, so perturbing it has to go through the O/D coefficients.
