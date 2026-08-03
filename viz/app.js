@@ -1032,7 +1032,12 @@
       return `<p class="sub">Individual player projections are not included in this
         build. The position-group figures below are the same numbers, summed.</p>`;
     }
-    const starters = roster.players.filter(p => p.d === 1);
+    // `st` is the model's starter flag, which is NOT the same as being listed first:
+    // the quarterback sheet, the injury file and the position-slot repair all move it
+    // off the listed first-teamer. Falling back to depth keeps an older players.json
+    // rendering rather than showing an empty field.
+    const hasFlag = roster.players.some(p => p.st !== undefined);
+    const starters = roster.players.filter(p => hasFlag ? p.st : p.d === 1);
     if (starters.length < 8) {
       return `<p class="sub">No depth chart available for this team.</p>`;
     }
@@ -1770,7 +1775,8 @@
                                    r.t.toLowerCase().includes(q));
     if (c) rows = rows.filter(r => r.conf === c);
     if (g) rows = rows.filter(r => r.g === g);
-    if (sc === "start") rows = rows.filter(r => r.d === 1);
+    if (sc === "start") rows = rows.filter(r => r.st !== undefined ? r.st : r.d === 1);
+    else if (sc === "out") rows = rows.filter(r => r.out);
     else if (sc === "unproven") rows = rows.filter(r => r.i);
     else if (sc === "edited") rows = rows.filter(r => WI.get(r.t, r.n) != null);
     const col = PL_COLS.find(x => x.k === plSort) || PL_COLS[8];
@@ -1800,7 +1806,8 @@
       return `<tr class="${edited ? "wi-edited" : ""}">
         <td><div class="team-cell sm"><span class="team-stripe" style="background:${tint}"></span>
           <span class="pl-name">${esc(r.n)}</span>${r.i
-            ? ` <span class="tag unproven" title="No prior FBS snaps — this projection is a positional prior, not a measurement">?</span>` : ""}</div></td>
+            ? ` <span class="tag unproven" title="No prior FBS snaps — this projection is a positional prior, not a measurement">?</span>` : ""}${r.out
+            ? ` <span class="tag out" title="Out for the season — his snaps go to whoever replaces him, so his WAR is zero by construction">OUT</span>` : ""}</div></td>
         <td><div class="team-cell sm"><img src="${logoURL(r.t)}" alt="" loading="lazy">
           <button class="team-link" data-team="${esc(r.t)}">${esc(r.t)}</button></div></td>
         <td class="pl-conf">${esc(r.conf)}</td>

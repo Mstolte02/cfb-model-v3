@@ -133,8 +133,12 @@ def player_contributions(year: int = 2026) -> pd.DataFrame | None:
         return None
     p = pd.read_csv(PROJECTIONS)
     p["team"] = p.team.replace(TEAM_FIX)
+    # `available` is whitelisted alongside is_starter because the two answer different
+    # questions on the team page: is_starter says he is in the lineup, available says
+    # whether he is playing at all. A man who is out has proj_war 0 by construction, and
+    # without the flag the page shows a listed first-teamer at 0.000 with no explanation.
     cols = ["team", "player", "broad_group", "roster_position", "depth", "class",
-            "is_starter", "is_transfer", "proj_war", "imputed", "stars",
+            "is_starter", "available", "is_transfer", "proj_war", "imputed", "stars",
             "snaps_2025", "war_2025"]
     return p[[c for c in cols if c in p.columns]].copy()
 

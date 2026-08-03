@@ -93,6 +93,11 @@ tbody tr:hover { background: var(--panel2); }
 .tag.unproven { background: rgba(154,107,31,.18); color: var(--accent);
   font-weight: 700; cursor: help; }
 .tag.stars { background: rgba(63,125,58,.16); color: var(--green); }
+/* Out for the season. Red rather than muted: a zero WAR next to a listed first-teamer
+   otherwise reads as a broken projection instead of a deliberate one. */
+.tag.out { background: rgba(190,52,52,.18); color: #be3434; font-weight: 700;
+  cursor: help; }
+@media (prefers-color-scheme: dark) { .tag.out { color: #ff7b72; } }
 .tag.conf-tag { background: rgba(47,96,150,.14); color: var(--blue); }
 
 .bar-wrap { display: inline-flex; align-items: center; gap: 8px; }

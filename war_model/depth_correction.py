@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import sys
 
 import numpy as np
 import pandas as pd
@@ -84,16 +85,159 @@ def healthy_backup_share(seasons_csv=f"{HERE}/hybrid_player_war.csv"):
     return pd.Series(out)
 
 
-def fix_depth(d):
-    """Swap a listed backup with a listed starter he clearly outplayed."""
+AVAILABILITY = f"{HERE}/availability_2026.csv"
+
+
+def apply_availability(d, path=AVAILABILITY):
+    """Curated overrides for things no model can infer: injuries, and named starters.
+
+    A two-deep scraped in July does not know that a player tore something in August,
+    and no amount of reasoning over last season's snaps will discover it. This is the
+    one place where a human statement about who is playing enters the pipeline.
+
+      out      - unavailable for the season. Removed from the room entirely: his WAR
+                 goes to zero and the snaps he would have taken are redistributed to
+                 whoever is left, which is what actually happens.
+      starter  - starts at his listed position, whatever the depth chart says.
+
+    Returns (frame, notes). Absent file is not an error; most weeks there is nothing
+    to override.
+    """
+    notes = []
+    if not os.path.exists(path):
+        return d, notes
+    ov = pd.read_csv(path)
+    d = d.copy()
+    if "pinned_starter" not in d.columns:
+        d["pinned_starter"] = False
+    d["pinned_starter"] = d.pinned_starter.fillna(False).astype(bool)
+    d["available"] = True
+    for _, r in ov.iterrows():
+        m = (d.team == r.team) & (d.player == r.player)
+        if not m.any():
+            notes.append(f"[warn] {r.player} ({r.team}) is not in the two-deep; ignored")
+            continue
+        if r.status == "out":
+            d.loc[m, ["available", "is_starter", "pinned_starter"]] = False
+            if "proj_war" in d.columns:      # absent on the roster frame
+                d.loc[m, "proj_war"] = 0.0
+            notes.append(f"OUT      {r.team:<16}{r.player:<22}{r.note}")
+        elif r.status == "starter":
+            d.loc[m, ["is_starter", "pinned_starter"]] = True
+            notes.append(f"STARTER  {r.team:<16}{r.player:<22}{r.note}")
+        else:
+            notes.append(f"[warn] unknown status {r.status!r} for {r.player}; ignored")
+    return d, notes
+
+
+def pin_starters(d):
+    """Apply every external statement about WHO STARTS to a roster frame.
+
+    Runs on roster_2026.csv, BEFORE project_2026_v2, and that timing is the whole
+    point: is_starter is an input FEATURE of the projection, so a roster carrying the
+    wrong starter gets the wrong man projected as one, and no amount of relabelling
+    afterwards fixes the value he was given. Syracuse is the worked example - Odom was
+    flagged the starter, so he was projected as one at 0.97 and Angeli as a backup at
+    0.10, and correcting the flag downstream merely handed Odom's starter-sized value
+    to Angeli through the reweight.
+
+    Two sources, same idea: the quarterback sheet names each team's starter, and
+    availability_2026.csv records injuries and manual starter calls.
+    """
+    sys.path.insert(0, f"{HERE}/ea")
+    from blend_projection import load_qb_sheet  # noqa: E402
     d = d.copy()
     d["is_starter"] = d.is_starter.astype(bool)
+    d["pinned_starter"] = False
+
+    qb_z = load_qb_sheet()
+    named = pd.Series([(k, t) in qb_z for k, t in zip(d.key, d.team)], index=d.index)
+    named &= d.broad_group == "QB"
+    rooms = (d.broad_group == "QB") & d.team.isin(d.loc[named, "team"].unique())
+    d.loc[rooms, "is_starter"] = named.loc[rooms]
+    d.loc[named, "pinned_starter"] = True
+
+    d, notes = apply_availability(d)
+    return d, int(named.sum()), notes
+
+
+def enforce_slots(d, value_col="proj_war"):
+    """Each listed position starts exactly as many players as the two-deep says.
+
+    fix_depth swaps within a POSITION GROUP, so on the offensive line it can promote a
+    backup centre over a starting right guard - and then the room fields two centres
+    and nobody at right guard. Seven OL rooms were in that state, Notre Dame among
+    them. A backup centre outplaying a guard is not evidence that he plays guard.
+
+    The expected count comes from the two-deep itself: however many depth-1 players a
+    team lists at a position is how many start there. That keeps the genuinely
+    multi-starter labels intact - a team listing two players at DT still starts two -
+    without hard-coding a formation anywhere.
+
+    THIS ONLY REPAIRS THE COUNT. A position already starting the right number of
+    players is left completely alone, even if a backup there projects higher - that
+    judgement belongs to fix_depth, which makes it against REALIZED snaps and production
+    behind deliberate thresholds. Re-picking every starter here by projected WAR instead
+    silently overrode those thresholds and rewrote 461 slots league-wide; restricted to
+    genuine breakage it touches a couple of dozen.
+
+    When a slot does have to be filled, the order is: pinned first, then whoever is
+    already flagged (so a repair disturbs as little as possible), then the shallower
+    depth, then projected value.
+    """
+    d = d.copy()
+    if "available" not in d.columns:
+        d["available"] = True
+    if "pinned_starter" not in d.columns:
+        d["pinned_starter"] = False
+    d["is_starter"] = d.is_starter.astype(bool)
+    fixed = []
+    # materialized up front: the loop writes back into `d`, and iterating a live
+    # groupby while mutating the frame it was built from is asking for trouble
+    for (t, pos), room in list(d.groupby(["team", "roster_position"])):
+        n_slots = int((room.depth == 1).sum())
+        if n_slots == 0:
+            continue
+        before = set(room.index[room.is_starter & room.available])
+        if len(before) == n_slots:
+            continue                     # the count is right; not our business
+        pool = room[room.available]
+        order = pool.sort_values(["pinned_starter", "is_starter", "depth", value_col],
+                                 ascending=[False, False, True, False])
+        chosen = set(order.index[:n_slots])
+        if chosen == set(room.index[room.is_starter]):
+            continue
+        d.loc[room.index, "is_starter"] = False
+        d.loc[list(chosen), "is_starter"] = True
+        out = [d.at[i, "player"] for i in before - chosen]
+        into = [d.at[i, "player"] for i in chosen - before]
+        fixed.append((t, pos, into, out))
+    return d, fixed
+
+
+def fix_depth(d):
+    """Swap a listed backup with a listed starter he clearly outplayed.
+
+    Two classes of player are off limits, and both are cases where someone knows
+    something this function does not. A PINNED starter - named by the quarterback sheet
+    or the availability file - cannot be demoted: those are statements about who starts
+    THIS season, and last season's snap counts do not get to overrule them. Syracuse is
+    why: Amari Odom out-snapped Steve Angeli in 2025, so this promoted him, and the
+    reweight then handed him 95% of the room to finish as the best quarterback in FBS.
+    An UNAVAILABLE player cannot be promoted, for the obvious reason.
+    """
+    d = d.copy()
+    d["is_starter"] = d.is_starter.astype(bool)
+    for c, default in (("pinned_starter", False), ("available", True)):
+        if c not in d.columns:
+            d[c] = default
+        d[c] = d[c].fillna(default).astype(bool)
     d["sn"] = d.snaps_2025.fillna(0.0)
     d["w25"] = d.war_2025.fillna(0.0)
     swaps = []
-    for (t, g), unit in d.groupby(["team", "broad_group"]):
-        st = unit[unit.is_starter]
-        bk = unit[~unit.is_starter]
+    for (t, g), unit in list(d.groupby(["team", "broad_group"])):
+        st = unit[unit.is_starter & ~unit.pinned_starter]
+        bk = unit[~unit.is_starter & unit.available]
         if st.empty or bk.empty:
             continue
         # repeatedly promote the best backup over the weakest starter while the gap holds
@@ -155,14 +299,31 @@ def main():
 
     if args.roster:
         r = pd.read_csv(f"{HERE}/roster_2026.csv")
+        r, n_pin, notes = pin_starters(r)
+        print(f"quarterbacks pinned from the sheet: {n_pin}")
+        print(f"availability overrides: {len(notes)}")
+        for n in notes:
+            print(f"  {n}")
+
         r, swaps = fix_depth(r)
-        print(f"depth-chart swaps on the roster: {len(swaps)}")
+        print(f"\ndepth-chart swaps on the roster: {len(swaps)}")
         for t, g, up, down in swaps[:10]:
             print(f"  {t:<16}{g:<5} {up}  over  {down}")
         if len(swaps) > 10:
             print(f"  ... and {len(swaps)-10} more")
+
+        # war_2025 rather than proj_war: the roster frame has no projection yet, which
+        # is the entire reason this pass runs before project_2026_v2.
+        r, fixed = enforce_slots(r, value_col="war_2025")
+        print(f"\nposition slots repaired: {len(fixed)}")
+        for t, pos, into, out in fixed[:10]:
+            print(f"  {t:<16}{pos:<5} in: {', '.join(into) or '-':<24}"
+                  f"out: {', '.join(out) or '-'}")
+        if len(fixed) > 10:
+            print(f"  ... and {len(fixed)-10} more")
+
         r.drop(columns=["sn", "w25"]).to_csv(f"{HERE}/roster_2026.csv", index=False)
-        print(f"-> roster_2026.csv (re-run project_2026_v2.py now)")
+        print(f"\n-> roster_2026.csv (re-run project_2026_v2.py now)")
         return
 
     src = args.src if os.path.exists(args.src) else f"{HERE}/projections_2026_v2.csv"
@@ -174,12 +335,32 @@ def main():
     for g, v in target.sort_values().items():
         print(f"  {g:<6}{v*100:5.1f}%")
 
+    # Order matters, and getting it wrong is silent. Availability first, so nobody who
+    # is out can be promoted and nothing downstream picks him. Then fix_depth, which now
+    # sees the pins and the injuries and will not overrule either - run the other way
+    # round it re-swapped a pinned quarterback straight back out. Then slot repair, to
+    # fill whatever the first two left open. Reweight runs last of all, because it moves
+    # a room's WAR toward whoever is flagged as starting, so every correction to that
+    # flag has to be settled before it.
+    d, notes = apply_availability(d)
+    print(f"\navailability overrides: {len(notes)}")
+    for n in notes:
+        print(f"  {n}")
+
     d, swaps = fix_depth(d)
     print(f"\ndepth-chart swaps: {len(swaps)}")
     for t, g, up, down in swaps[:8]:
         print(f"  {t:<16}{g:<5} {up}  over  {down}")
     if len(swaps) > 8:
         print(f"  ... and {len(swaps)-8} more")
+
+    d, fixed = enforce_slots(d)
+    print(f"\nposition slots repaired: {len(fixed)}")
+    for t, pos, into, out in fixed[:10]:
+        print(f"  {t:<16}{pos:<5} in: {', '.join(into) or '-':<24}"
+              f"out: {', '.join(out) or '-'}")
+    if len(fixed) > 10:
+        print(f"  ... and {len(fixed)-10} more")
 
     before = d.groupby("broad_group").apply(
         lambda x: x[~x.is_starter].proj_war.sum() / x.proj_war.sum(),

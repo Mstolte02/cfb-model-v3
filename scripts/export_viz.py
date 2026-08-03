@@ -335,6 +335,13 @@ def export_players():
                 "g": clean(r.broad_group, str) or "—",
                 "p": clean(getattr(r, "roster_position", None), str),
                 "d": clean(getattr(r, "depth", None), int),
+                # Who actually starts, which is no longer the same as depth == 1. The
+                # quarterback sheet, the availability file and the slot repair all move
+                # the starter flag off the listed first-teamer, and the app was drawing
+                # its lineup off depth - so Notre Dame's line still showed an injured
+                # Charles Jagusah at right guard instead of Sullivan Absher.
+                "st": bool(getattr(r, "is_starter", False)),
+                "out": not bool(getattr(r, "available", True)),
                 "c": clean(getattr(r, "cls", None), str),
                 "w": round(float(r.wins_added), 3),
                 "raw": round(float(r.proj_war), 3),

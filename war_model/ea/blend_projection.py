@@ -145,6 +145,26 @@ def main():
     qb = (d.broad_group == "QB") & d.qb_z.notna()
     n_qb = apply_map(d, qb, "qb_z", "QB-avg", new, source)
 
+    # The sheet says two things, and only using one of them is what broke Syracuse.
+    # It rates the quarterback AND it names him as the starter, and the second half is
+    # information our two-deep does not have: depth_correction's fix_depth had promoted
+    # Amari Odom over Steve Angeli on 2025 snaps, so the room was flagged starter-Odom,
+    # and the reweight then moved 95% of the room's WAR to him - a listed backup came
+    # out as the best quarterback in FBS at 1.83, above Julian Sayin.
+    #
+    # So the sheet pins the starter too. `pinned_starter` survives into the projection
+    # and depth_correction honours it ahead of its own snap-based opinion, because a
+    # published depth chart for THIS season beats an inference from last season's usage.
+    # Only rooms the sheet actually speaks to: a team whose quarterback it does not
+    # name keeps whatever the two-deep said.
+    d["pinned_starter"] = qb
+    # the source carries is_starter as 0/1; depth_correction reads it as a flag either
+    # way, but assigning bools into an int column raises rather than coercing
+    d["is_starter"] = d.is_starter.astype(bool)
+    named_rooms = (d.broad_group == "QB") & d.team.isin(d.loc[qb, "team"].unique())
+    d.loc[named_rooms, "is_starter"] = qb.loc[named_rooms]
+    n_pin = int(qb.sum())
+
     # --- rule 3: the old snap-threshold blend, on whatever is left ----------------
     # A row claimed above is excluded, not re-mapped: rule 3 acting on a subset of an
     # already-permuted group would reshuffle values rule 1 or 2 had just placed.
@@ -166,7 +186,7 @@ def main():
         print(f"          {g:<4}{got:>5} of {tot:<5} slots EA-ranked "
               f"({tot - got} have no EA rating, kept PFF)")
     print(f"rule 2  quarterback sheet: {n_qb} of {n_qb_named} named starters matched "
-          f"into {n_qb_slots} QB slots")
+          f"into {n_qb_slots} QB slots ({n_pin} pinned as their team's starter)")
     if n_qb < n_qb_named:
         named = set(qb_z)
         hit = set(zip(d.loc[qb, "key"], d.loc[qb, "team"]))

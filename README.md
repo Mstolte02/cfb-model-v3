@@ -18,6 +18,34 @@ match into the two-deep, and the league's 616.6 total WAR does not move at all �
 shifts are transfers between rosters, not new wins. The other groups keep the previous
 EA-under-300-snaps rule.
 
+**Who starts is now stated, not only inferred.** The quarterback sheet says two things
+— how good the starter is *and that he is the starter* — and using only the first put a
+listed backup at the top of FBS: Syracuse's Amari Odom out-snapped Steve Angeli in 2025,
+so `fix_depth` flagged him the starter, the projection gave him a starter's value
+because `is_starter` is an input **feature**, and the reweight handed him 95% of the
+room at **1.83 WAR, above Julian Sayin**. The sheet now pins the starter, and the pin is
+applied to `roster_2026.csv` *before* `project_2026_v2.py` — relabelling afterwards only
+moves the mislabelled man's value onto the right man.
+
+`war_model/availability_2026.csv` is the companion for what no model can infer:
+
+| status | meaning |
+|---|---|
+| `out` | unavailable for the season — WAR zeroed, snaps redistributed to whoever is left |
+| `starter` | starts at his listed position regardless of the depth chart |
+
+Both feed a new slot-repair pass: each `(team, roster_position)` starts exactly as many
+players as the two-deep lists at depth 1. `fix_depth` swaps within a position *group*, so
+it could promote a backup centre over a starting right guard — seven OL rooms were
+fielding two centres and no right guard, Notre Dame among them. Repair only fixes the
+*count*; a position already starting the right number is left alone, because re-picking
+by projected WAR would silently override `fix_depth`'s thresholded judgement (it rewrote
+461 slots before that restriction).
+
+Run order matters and is enforced in `depth_correction.main`: availability → `fix_depth`
+(which now refuses to demote a pinned starter or promote an unavailable one) → slot
+repair → reweight.
+
 **Head-to-head joins the committee model; two other candidates did not.** All three
 were tested in `scripts/fit_committee.py` against 12 seasons of published rankings,
 with the gate being the jackknife — does the gain survive deleting any one season —
