@@ -160,8 +160,15 @@ def main(variant=""):
             "games": int(sos_n[t]),
             "avg_wins": po.get("avg_wins"),
             "avg_losses": po.get("avg_losses"),
+            # The dashboard IS the odds table now, so it needs the full run of rounds
+            # rather than the three headline numbers it used to show alongside the
+            # O/D/talent columns. Teams the simulation never selected are absent from
+            # playoff.json entirely and legitimately read 0.
             "conf_champ": po.get("conf_champ", 0.0),
             "playoff": po.get("playoff", 0.0),
+            "bye": po.get("bye", 0.0),
+            "sf": po.get("sf", 0.0),
+            "final": po.get("final", 0.0),
             "champ": po.get("champ", 0.0),
         })
     (VIZ / f"ratings{suffix}.json").write_text(json.dumps(
@@ -195,6 +202,21 @@ def main(variant=""):
                   for t in comp.index},
         "whatif": whatif_block(comp),
     }
+
+    # Realistic scorelines and the key-number probabilities, from scripts/score_shape.py.
+    # Only the display half of that work ships: the empirical margin distribution did NOT
+    # beat the normal on win probability (see config.SCORE_SHAPE), so `logistic`,
+    # `margin` and `ens_w` above are untouched and the app still computes p from them.
+    from config import SCORE_SHAPE
+    shape_path = ARTIFACTS / "score_shape.json"
+    if SCORE_SHAPE and shape_path.exists():
+        export["shape"] = json.loads(shape_path.read_text())
+        n_pairs = len(export["shape"]["score_table"]["pairs"])
+        print(f"Score shape: {n_pairs} scorelines + margin PMF "
+              f"({export['shape']['n_games']} games)")
+    elif SCORE_SHAPE:
+        print("  [warn] score_shape.json absent; the app will round scores as before. "
+              "Run ./venv/bin/python -m scripts.score_shape")
     (VIZ / f"model{suffix}.json").write_text(json.dumps(export, indent=1))
 
     # Schedule (lens-independent) powers the client-side playoff re-simulation.

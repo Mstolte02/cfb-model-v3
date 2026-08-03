@@ -1237,9 +1237,24 @@
  "committee": {
   "weights": {
    "win_pct": 10.0,
-   "rating_z": 0.2188,
-   "sos_z": 0.712,
-   "p4": 1.0507
+   "rating_z": 0.2366,
+   "sos_z": 0.7056,
+   "p4": 1.1184,
+   "h2h": 0.0561
+  },
+  "features": [
+   "win_pct",
+   "rating_z",
+   "sos_z",
+   "p4",
+   "h2h"
+  ],
+  "h2h_within": 15,
+  "provisional_weights": {
+   "win_pct": 10.3397,
+   "rating_z": 0.2262,
+   "sos_z": 0.7362,
+   "p4": 1.0864
   },
   "seasons": [
    2014,
@@ -1256,7 +1271,8 @@
    2025
   ],
   "n": 295,
-  "loso_spearman_fitted": 0.9084,
+  "loso_spearman_fitted": 0.9126,
+  "loso_spearman_base": 0.9084,
   "loso_spearman_previous": 0.885
  },
  "sources": [

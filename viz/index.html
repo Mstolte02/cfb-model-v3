@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CFB Model v3 — 2026 Projections</title>
-<link rel="stylesheet" href="style.css?v=11">
+<link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
 <header>
@@ -14,7 +14,7 @@
     <span class="season">2026 SEASON</span>
   </div>
   <nav>
-    <button class="tab active" data-view="dash">Ratings</button>
+    <button class="tab active" data-view="dash">Season Odds</button>
     <button class="tab" data-view="playoff">Playoff Projection</button>
     <button class="tab" data-view="matchup">Matchup Simulator</button>
     <button class="tab" data-view="team">Team Breakdown</button>
@@ -27,12 +27,13 @@
   <!-- ============ RATINGS DASHBOARD ============ -->
   <section id="view-dash" class="view active">
     <div class="view-head">
-      <h2>2026 Team Ratings</h2>
-      <p class="sub">Matchup-adjusted model: opponent-adjusted O/D composites, roster
-        talent (PFF grades + CFBD play value + player WAR), returning production and
-        Pythagorean priors. <b>Power</b> = mean win probability against every other
-        FBS team on a neutral field. Records and playoff odds come from a
-        20,000-season Monte Carlo over the <b>real 2026 schedule</b>.</p>
+      <h2>2026 Season Odds</h2>
+      <p class="sub">Every FBS team's chance of winning its conference, making the
+        playoff and going all the way, from a 20,000-season Monte Carlo over the
+        <b>real 2026 schedule</b>. <b>Power</b> = mean win probability against every
+        other FBS team on a neutral field. The ratings underneath &mdash; offense,
+        defense, talent, schedule strength &mdash; are on each team's
+        <b>Team Breakdown</b> page.</p>
     </div>
     <div class="dash-toolbar">
       <input type="search" id="dash-search" placeholder="Search teams…">
@@ -64,8 +65,10 @@
       <span class="hint">— the four Power 4 champions are in no matter where they
         finish, so these are auto bids</span></h3>
     <div id="playoff-ccg"></div>
-    <h3 class="bracket-title">Full Odds</h3>
-    <div id="playoff-table"></div>
+    <h3 class="bracket-title">How each of the twelve got in
+      <span class="hint">— the route, the record it took, and what the committee
+        stand-in was actually rewarding</span></h3>
+    <div id="playoff-resumes"></div>
   </section>
 
   <!-- ============ MATCHUP ============ -->
@@ -152,6 +155,6 @@
 <!-- The data files are fetched with cache: "no-cache", but the script tag itself is
      not, so a stale app.js kept running against freshly regenerated JSON and failed
      silently — the page rendered nothing and threw nothing visible. Bump on edit. -->
-<script src="app.js?v=14"></script>
+<script src="app.js?v=15"></script>
 </body>
 </html>

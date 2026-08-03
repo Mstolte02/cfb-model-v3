@@ -11,8 +11,10 @@ Rules implemented (2026-27 format, confirmed via CFP/NCAA announcements):
     fixed bracket (no reseeding), QF/SF/title at neutral sites.
 
 Committee ranking proxy: weights fitted by scripts/fit_committee.py on every
-published committee ranking from 2014 to 2025 (leave-one-season-out Spearman 0.908
-against the real final ranking, against 0.885 for the old hand-set weights).
+published committee ranking from 2014 to 2025 (leave-one-season-out Spearman 0.913
+against the real final ranking, against 0.885 for the old hand-set weights). Record,
+schedule strength, power-conference membership and net head-to-head against nearby
+teams; a preseason-poll anchor and a loss-timing term were tested and rejected there.
 
 Run: ./venv/bin/python -m scripts.simulate_playoff [n_sims]
 """
@@ -41,14 +43,33 @@ CCG_CONFS = P4 | G6                      # every conference stages a title game
 # committee leans on schedule strength and power-conference membership far more than
 # on raw team quality (rating weight 1.00 -> 0.22, SOS 0.75 -> 0.71, plus a +1.05
 # bump simply for playing in a power league).
-W_WINPCT, W_RATING, W_SOS, W_P4 = 10.0, 1.0, 0.75, 0.0
+#
+# HEAD-TO-HEAD is the fifth term, worth a further 0.908 -> 0.913. It is a tiebreaker,
+# so it is only defined relative to a ranking: a team scores +1 for each win and -1 for
+# each loss against a team within H2H_WITHIN places of it. That ranking is the
+# committee score with head-to-head switched off, which is why a second set of weights
+# (W0_*) is carried - they are the same model fitted without the h2h column, and they
+# exist to produce the provisional order that decides which meetings count.
+W_WINPCT, W_RATING, W_SOS, W_P4, W_H2H = 10.0, 1.0, 0.75, 0.0, 0.0
+W0_WINPCT, W0_RATING, W0_SOS, W0_P4 = W_WINPCT, W_RATING, W_SOS, W_P4
+H2H_WITHIN = 15
 _cm = ARTIFACTS / "committee_model.json"
 if _cm.exists():
-    _w = json.loads(_cm.read_text())["weights"]
+    _cmj = json.loads(_cm.read_text())
+    _w = _cmj["weights"]
     W_WINPCT = _w.get("win_pct", W_WINPCT)
     W_RATING = _w.get("rating_z", W_RATING)
     W_SOS = _w.get("sos_z", W_SOS)
     W_P4 = _w.get("p4", 0.0)
+    W_H2H = _w.get("h2h", 0.0)
+    H2H_WITHIN = _cmj.get("h2h_within") or H2H_WITHIN
+    # absent when h2h did not survive selection, in which case the provisional pass is
+    # never used and these values are inert
+    _p = _cmj.get("provisional_weights") or _w
+    W0_WINPCT = _p.get("win_pct", W_WINPCT)
+    W0_RATING = _p.get("rating_z", W_RATING)
+    W0_SOS = _p.get("sos_z", W_SOS)
+    W0_P4 = _p.get("p4", 0.0)
 
 FCS_WIN_P = 0.95                         # FBS team over a non-FBS opponent
 FCS_OPP_RATING = -2.0                    # z-rating charged to SOS for FCS games
@@ -207,6 +228,8 @@ def main(n_sims=20000, seed=2026, variant=""):
     is_p4 = np.array([1.0 if (conf[t] in P4 or t == "Notre Dame") else 0.0
                       for t in fbs])
     static_score = W_RATING * rating + W_SOS * sos_z + W_P4 * is_p4
+    # the same three terms under the h2h-free fit, for the provisional ranking
+    static_score0 = W0_RATING * rating + W0_SOS * sos_z + W0_P4 * is_p4
 
     # Incidence matrices for vectorized win totals.
     H = np.zeros((ng, n), np.float32); H[np.arange(ng), gh] = 1
@@ -288,11 +311,27 @@ def main(n_sims=20000, seed=2026, variant=""):
     # below, which is a filter over sims rather than a summary of them.
     po_bits = np.zeros((n_sims, n), bool)
 
+    # ---- how each team got in, accumulated over the sims it got in ----------------
+    # The odds say a team makes the field 62% of the time; they do not say whether it
+    # got there by winning its league or by being ranked 9th with two losses, and that
+    # is the question the playoff page is being asked. Everything here is summed over
+    # the sims where the team was SELECTED, so dividing by its playoff count gives the
+    # average successful season rather than the average season.
+    bid_p4 = np.zeros(n)          # in as one of the four power champions
+    bid_g6 = np.zeros(n)          # in as the Group of 6 bid
+    bid_at = np.zeros(n)          # in on ranking alone
+    parts = {k: np.zeros(n) for k in ("win_pct", "rating", "sos", "p4", "h2h")}
+    wins_in = np.zeros(n)         # record when selected ...
+    wins_out = np.zeros(n)        # ... and when not
+    last_in = np.zeros(n)         # the 12th team taken
+    first_out = np.zeros(n)       # the best team left behind
+
     conf_list = list(conf_teams.items())
     for s in range(n_sims):
         w = wins[s].copy()
         gp_played = base_games.copy()
         champs = {}
+        ccg_win, ccg_lose = [], []
         for ci, (c, members) in enumerate(conf_list):
             sub = cpct[s, members] + 1e-4 * rating[members]
             top2 = members[np.argsort(-sub)[:2]]
@@ -300,9 +339,30 @@ def main(n_sims=20000, seed=2026, variant=""):
             p = p_neutral[t1, t2]
             winner, loser = (t1, t2) if ccg_rand[s, ci] < p else (t2, t1)
             champs[c] = winner
+            ccg_win.append(winner); ccg_lose.append(loser)
             w[winner] += 1
             gp_played[t1] += 1; gp_played[t2] += 1
-        score = W_WINPCT * (w / gp_played) + static_score
+
+        wpct = w / gp_played
+
+        # --- head-to-head, which needs a provisional order to be defined against ---
+        # Vectorized rather than looped over games: at 20k sims a per-game Python loop
+        # here would be ~14M iterations. The winner/loser index arrays come straight
+        # off the outcome bits, the proximity test is one comparison over them, and the
+        # net record is a pair of bincounts.
+        if W_H2H:
+            score0 = W0_WINPCT * wpct + static_score0
+            rank0 = np.argsort(np.argsort(-score0))
+            won_h = O[s].astype(bool)
+            win_i = np.concatenate([np.where(won_h, gh, ga), ccg_win])
+            lose_i = np.concatenate([np.where(won_h, ga, gh), ccg_lose])
+            close = np.abs(rank0[win_i] - rank0[lose_i]) <= H2H_WITHIN
+            h2h = (np.bincount(win_i[close], minlength=n)
+                   - np.bincount(lose_i[close], minlength=n)).astype(float)
+        else:
+            h2h = np.zeros(n)
+
+        score = W_WINPCT * wpct + static_score + W_H2H * h2h
 
         for t in champs.values():
             stats["conf_champ"][t] += 1
@@ -314,11 +374,37 @@ def main(n_sims=20000, seed=2026, variant=""):
         stats["g6_bid"][g6_bid] += 1
         autos.append(g6_bid)
         field = set(autos)
-        for t in np.argsort(-score):
+        order = np.argsort(-score)
+        for t in order:
             if len(field) >= 12:
                 break
             field.add(int(t))
         seeds = sorted(field, key=lambda t: -score[t])   # seeds[0] = 1-seed
+
+        # The best team NOT taken. It cannot be read off the selection loop above: that
+        # loop walks every team in score order including the automatic qualifiers, so
+        # the team it happens to stop on is often one already in the field.
+        bubble = next((int(t) for t in order if int(t) not in field), None)
+
+        for c in P4:
+            bid_p4[champs[c]] += 1
+        bid_g6[g6_bid] += 1                      # G6 pool and P4 champions are disjoint
+        for t in field:
+            if t not in autos:
+                bid_at[t] += 1
+        last_in[seeds[-1]] += 1
+        if bubble is not None:
+            first_out[bubble] += 1
+
+        f = np.array(sorted(field))
+        parts["win_pct"][f] += W_WINPCT * wpct[f]
+        parts["rating"][f] += W_RATING * rating[f]
+        parts["sos"][f] += W_SOS * sos_z[f]
+        parts["p4"][f] += W_P4 * is_p4[f]
+        parts["h2h"][f] += W_H2H * h2h[f]
+        wins_in[f] += w[f]
+        out_mask = np.ones(n, bool); out_mask[f] = False
+        wins_out[out_mask] += w[out_mask]
 
         po_bits[s, seeds] = True
         for rk, t in enumerate(seeds):
@@ -363,7 +449,9 @@ def main(n_sims=20000, seed=2026, variant=""):
     for t, i in idx.items():
         if stats["playoff"][i] == 0 and stats["conf_champ"][i] == 0:
             continue
-        out.append({
+        made = stats["playoff"][i]
+        missed = n_sims - made
+        row = {
             "team": t,
             "conference": conf[t],
             "power_rank": int(power.loc[t, "rank"]) if t in power.index else None,
@@ -379,7 +467,22 @@ def main(n_sims=20000, seed=2026, variant=""):
             "champ": round(float(stats["champ"][i] / n_sims), 4),
             "g6_bid": round(float(stats["g6_bid"][i] / n_sims), 4),
             "seeds": [round(float(c / n_sims), 4) for c in seed_counts[i]],
-        })
+            # how it got in, as a share of the sims it got in
+            "bid": {"p4": round(float(bid_p4[i] / made), 4) if made else None,
+                    "g6": round(float(bid_g6[i] / made), 4) if made else None,
+                    "at_large": round(float(bid_at[i] / made), 4) if made else None},
+            # the average selected season, and the average one that fell short
+            "wins_in": round(float(wins_in[i] / made), 2) if made else None,
+            "wins_out": round(float(wins_out[i] / missed), 2) if missed else None,
+            "last_in": round(float(last_in[i] / n_sims), 4),
+            "first_out": round(float(first_out[i] / n_sims), 4),
+        }
+        # The committee score it was selected on, split into the terms that produced
+        # it. These sum to the score, so the bar reads as an accounting of the ranking
+        # rather than a set of unrelated indicators.
+        row["score_parts"] = ({k: round(float(v[i] / made), 3) for k, v in parts.items()}
+                              if made else None)
+        out.append(row)
     out.sort(key=lambda r: (-r["playoff"], -r["champ"]))
 
     # ---- modal bracket -------------------------------------------------------
@@ -449,10 +552,12 @@ def main(n_sims=20000, seed=2026, variant=""):
                   "at higher seed; fixed bracket"),
         "committee_proxy": (
             f"{W_WINPCT:.0f}*win_pct + {W_RATING:.2f}*rating_z + {W_SOS:.2f}*sos_z "
-            f"+ {W_P4:.2f}*power_conf, fitted on all 12 seasons of published "
-            "committee rankings (leave-one-season-out Spearman 0.908)"),
+            f"+ {W_P4:.2f}*power_conf + {W_H2H:.3f}*head_to_head, fitted on all 12 "
+            "seasons of published committee rankings (leave-one-season-out Spearman "
+            f"{_cmj.get('loso_spearman_fitted', 0.913) if _cm.exists() else 0.913})"),
         "committee_weights": {"win_pct": W_WINPCT, "rating": W_RATING,
-                              "sos": W_SOS, "power_conf": W_P4},
+                              "sos": W_SOS, "power_conf": W_P4, "h2h": W_H2H},
+        "h2h_within": H2H_WITHIN,
         "talent_noise_sd": round(talent_sd, 4),
         "teams": out,
         "bracket": bracket,

@@ -302,21 +302,71 @@
              scoreA: (total + marginA) / 2, scoreB: (total - marginA) / 2 };
   }
 
-  /* Rounded display scores. Rounding each side independently can tie a game the
-     model does not think is a tie - a 0.4-point projected margin lands both sides
-     on the same integer - so the favourite takes the extra point. Football has no
-     ties, and a bracket that shows one reads as a bug. */
+  /* ---------- realistic scorelines ----------
+     Football scores are built out of 7s, 3s, 6s and 8s, so the reachable scorelines
+     are not evenly spread and neither are the margins between them. Rounding each
+     side of the implied score independently ignores that and produces 28-24 for a
+     game that would far more often finish 27-24.
+
+     `shape.score_table` is every real final score from 2021-25 with how often it
+     happened; the pick is the most common one near the projected total and margin.
+     Out of sample that is exactly right about the margin twice as often as rounding
+     and exactly right about the score four times as often, at the same mean error
+     per side (config.SCORE_SHAPE). Absent the table, the old rounding still runs. */
+  const SHAPE = cur().model.shape || null;
+  function pickScore(total, margin) {
+    if (!SHAPE) return null;
+    const T = SHAPE.score_table, ht = T.h_total, hm = T.h_margin;
+    let best = null, bestW = -1;
+    for (const [a, b, n] of T.pairs) {
+      const dt = (a + b - total) / ht, dm = (a - b - margin) / hm;
+      const w = n * Math.exp(-0.5 * (dt * dt + dm * dm));
+      if (w > bestW) { bestW = w; best = [a, b]; }
+    }
+    return best;
+  }
+
   /* The winner is whoever the ensemble win probability favours, and the displayed
      score has to agree with it. Those two can diverge on a near-coin-flip, because
      pA blends the logistic with the margin model while the score comes from the
      margin alone: a 51% favourite can carry a margin of -0.2. Left alone that put a
-     team in the championship game after losing its semifinal on the scoreboard. */
+     team in the championship game after losing its semifinal on the scoreboard.
+     Football has no ties either, so a game the table would call level gives the
+     favourite the extra point. */
   function displayScore(r, winnerIsA) {
-    let a = Math.max(0, Math.round(r.scoreA)), b = Math.max(0, Math.round(r.scoreB));
     if (winnerIsA === undefined) winnerIsA = r.pA >= 0.5;
+    const picked = pickScore(r.total, r.margin);
+    let a, b;
+    if (picked) {
+      [a, b] = picked;
+    } else {
+      a = Math.max(0, Math.round(r.scoreA));
+      b = Math.max(0, Math.round(r.scoreB));
+    }
     if (winnerIsA && a <= b) a = b + 1;
     else if (!winnerIsA && b <= a) b = a + 1;
     return [a, b];
+  }
+
+  /* P(|margin| = k) from the fitted distribution of actual margins given the
+     predicted one. The normal the win model uses puts .044 on a 3-point margin when
+     the real figure is .106, so this is the only honest source for a key number. */
+  function marginPMF(margin) {
+    if (!SHAPE) return null;
+    const P = SHAPE.margin_pmf;
+    const i = Math.max(0, Math.min(P.rows.length - 1,
+      Math.round((margin - P.pred_lo) / P.pred_step)));
+    return P.rows[i];
+  }
+  function keyNumberP(margin, k) {
+    const row = marginPMF(margin);
+    if (!row) return null;
+    const P = SHAPE.margin_pmf;
+    let s = 0;
+    for (let j = 0; j < row.length; j++) {
+      if (Math.abs(P.margin_lo + j) === k) s += row[j];
+    }
+    return s;
   }
 
   /* A margin under half a point is a coin flip, and "−0.0" reads as a rendering
@@ -348,21 +398,29 @@
   /* =======================================================================
      RATINGS DASHBOARD
      ======================================================================= */
+  /* This page used to show Offense, Defense, Talent, Returning and SOS. All five are
+     on the Team Breakdown page in more detail than a table cell can carry, and having
+     them here meant the odds - the thing the model exists to produce - were buried on
+     a second tab behind the bracket. So the columns are the odds now, and the ratings
+     that produce them stay one click away.
+
+     Power survives because it is what the ranking is built on and because it is the
+     one column that moves when a Proj WAR is edited on the Players tab; drop it and
+     that whole feedback loop becomes invisible. */
   const COLS = [
     { k: "rank",       h: "#",            n: true },
     { k: "team",       h: "Team",         n: false },
     { k: "power",      h: "Power",        n: true },
     { k: "record",     h: "Proj Record",  n: true, sort: r => r.avg_wins ?? -1,
       fmt: r => r.avg_wins != null ? `${r.avg_wins.toFixed(1)}–${r.avg_losses.toFixed(1)}` : "—" },
-    { k: "O",          h: "Offense",      n: true },
-    { k: "D",          h: "Defense",      n: true },
-    { k: "talent",     h: "Talent",       n: true },
-    { k: "returning",  h: "Returning",    n: true },
-    { k: "sos",        h: "SOS",          n: true,
-      fmt: r => (r.sos >= 0 ? "+" : "") + r.sos.toFixed(2) },
-    { k: "conf_champ", h: "Conf %",       n: true, fmt: r => pct(r.conf_champ ?? 0, 0) },
-    { k: "playoff",    h: "CFP %",        n: true, fmt: r => pct(r.playoff ?? 0, 0) },
-    { k: "champ",      h: "Natty %",      n: true, fmt: r => pct(r.champ ?? 0, 1) },
+    { k: "conf_champ", h: "Conf Champ",   n: true, bar: "green",
+      fmt: r => pct(r.conf_champ ?? 0, 0) },
+    { k: "playoff",    h: "Make CFP",     n: true, bar: "tint",
+      fmt: r => pct(r.playoff ?? 0, 0) },
+    { k: "bye",        h: "Bye",          n: true, fmt: r => pct(r.bye ?? 0, 0) },
+    { k: "sf",         h: "Semis",        n: true, fmt: r => pct(r.sf ?? 0, 0) },
+    { k: "final",      h: "Final",        n: true, fmt: r => pct(r.final ?? 0, 0) },
+    { k: "champ",      h: "Natty",        n: true, fmt: r => pct(r.champ ?? 0, 1) },
   ];
   let sortKey = "power", sortDesc = true;
 
@@ -391,6 +449,9 @@
     const rows = dashRows();
     const all = liveRatings();
     const maxPower = Math.max(...all.map(r => r.power));
+    // Playoff odds are scaled to the leader rather than to 100%, because nobody is
+    // near certain and a raw percentage scale leaves every bar a stub.
+    const maxCFP = Math.max(...all.map(r => r.playoff || 0), 0.01);
     document.getElementById("dash-count").textContent =
       `${rows.length} of ${all.length} teams`;
 
@@ -412,10 +473,16 @@
         if (c.k === "power") return `<td><div class="bar-wrap"><div class="bar">
             <i style="width:${100 * r.power / maxPower}%;background:${tint}"></i>
           </div><span class="pct">${(100 * r.power).toFixed(1)}</span></div></td>`;
-        if (["O", "D", "talent", "returning"].includes(c.k)) {
-          const v = r[c.k];
-          return `<td class="num"><div class="zcell">${zBar(v, tint)}
-            <span>${v >= 0 ? "+" : ""}${v.toFixed(2)}</span></div></td>`;
+        if (c.bar) {
+          const v = r[c.k] || 0;
+          // Conference titles are a share of one trophy and read naturally against
+          // 100%; playoff odds are scaled to the leader instead (see maxCFP above).
+          const green = c.bar === "green";
+          const w = green ? 100 * v : 100 * v / maxCFP;
+          const style = `width:${w}%${green ? "" : `;background:${tint}`}`;
+          return `<td><div class="bar-wrap"><div class="bar">
+              <i class="${green ? "green" : ""}" style="${style}"></i>
+            </div><span class="pct">${c.fmt(r)}</span></div></td>`;
         }
         return `<td class="num">${c.fmt ? c.fmt(r) : r[c.k]}</td>`;
       }).join("");
@@ -522,32 +589,100 @@
     }
 
     renderSelection(P, byTeam);
-
-    const maxCFP = Math.max(...P.map(t => t.playoff));
-    document.getElementById("playoff-table").innerHTML = `
-      <table><thead><tr>
-        <th></th><th>Team</th><th class="num">Proj Record</th><th>Conf&nbsp;Champ</th>
-        <th>Make&nbsp;CFP</th><th class="num">Bye</th><th class="num">Semis</th>
-        <th class="num">Final</th><th class="num">Natty</th>
-      </tr></thead><tbody>${P.slice(0, 40).map((t, i) => `
-        <tr>
-          <td class="rank">${i + 1}</td>
-          <td><div class="team-cell">
-            <span class="team-stripe" style="background:${color(t.team)}"></span>
-            <img src="${logoURL(t.team)}" alt="" loading="lazy">
-            <div><button class="team-link" data-team="${esc(t.team)}">${esc(t.team)}</button>
-              <div class="conf">${esc(t.conference)}</div></div></div></td>
-          <td class="num">${t.avg_wins.toFixed(1)}–${t.avg_losses.toFixed(1)}</td>
-          <td><div class="bar-wrap"><div class="bar"><i class="green" style="width:${100 * t.conf_champ}%"></i></div>
-            <span class="pct">${pct(t.conf_champ)}</span></div></td>
-          <td><div class="bar-wrap"><div class="bar"><i style="width:${100 * t.playoff / maxCFP}%;background:${color(t.team)}"></i></div>
-            <span class="pct">${pct(t.playoff)}</span></div></td>
-          <td class="num">${pct(t.bye)}</td>
-          <td class="num">${pct(t.sf)}</td>
-          <td class="num">${pct(t.final)}</td>
-          <td class="num"><b>${pct(t.champ)}</b></td>
-        </tr>`).join("")}</tbody></table>`;
+    renderResumes(P, byTeam, br);
     wireTeamLinks();
+  }
+
+  /* ---------- how each team in the bracket got there ----------
+     The odds table said a team makes the field 62% of the time. It never said whether
+     that team gets in by winning its league or by finishing 9th with two losses, what
+     record it needs, or which part of its résumé the committee stand-in is actually
+     rewarding. All of that is in the simulation already - it is what the ranking is
+     computed FROM - and this shows it.
+
+     Every number here is conditioned on the sims where the team was SELECTED, so it
+     describes the average successful season rather than the average season. */
+  const PART_META = [
+    ["win_pct", "Record",   "#3fb950"],
+    ["sos",     "Schedule", "#58a6ff"],
+    ["p4",      "League",   "#a371f7"],
+    ["rating",  "Quality",  "#d29922"],
+    ["h2h",     "Head&#8209;to&#8209;head", "#f778ba"],
+  ];
+
+  function resumeCard(t, seed) {
+    const p = t.score_parts;
+    if (!p) return "";
+    const total = PART_META.reduce((s, [k]) => s + Math.max(0, p[k] || 0), 0) || 1;
+    const bar = PART_META.map(([k, , c]) => {
+      const v = Math.max(0, p[k] || 0);
+      return v <= 0 ? "" :
+        `<i style="width:${100 * v / total}%;background:${c}" title="${k}"></i>`;
+    }).join("");
+    const bid = t.bid || {};
+    // A team's route in is whichever of the three it most often takes. Shown as the
+    // dominant one plus its share, because "83% as an at-large" says more than three
+    // percentages the reader has to rank themselves.
+    const routes = [["p4", "Power&nbsp;4 champion"], ["g6", "Group&nbsp;of&nbsp;6 bid"],
+                    ["at_large", "at&#8209;large"]]
+      .map(([k, lab]) => [bid[k] || 0, lab]).sort((a, b) => b[0] - a[0]);
+    const [topShare, topLabel] = routes[0];
+    return `<div class="res-card" style="--tint:${color(t.team)};--wash:${rgba(t.team, .10)}">
+      <div class="res-head">
+        <span class="res-seed">${seed}</span>
+        <img src="${logoURL(t.team)}" alt="" loading="lazy">
+        <div class="res-name">
+          <button class="team-link" data-team="${esc(t.team)}">${esc(t.team)}</button>
+          <div class="conf">${esc(t.conference)}</div>
+        </div>
+        <div class="res-odds"><b>${pct(t.playoff, 0)}</b><span>to make it</span></div>
+      </div>
+      <div class="res-route">In as <b>${topLabel}</b> ${pct(topShare, 0)} of the time</div>
+      <div class="res-bar">${bar}</div>
+      <div class="res-rec">
+        <span>Gets in at <b>${t.wins_in != null ? t.wins_in.toFixed(1) : "—"}</b> wins</span>
+        <span>Misses at <b>${t.wins_out != null ? t.wins_out.toFixed(1) : "—"}</b></span>
+      </div>
+    </div>`;
+  }
+
+  function renderResumes(P, byTeam, br) {
+    const el = document.getElementById("playoff-resumes");
+    if (!el) return;
+    const seeds = (br && br.seeds) || [];
+    const cards = seeds.map((t, i) => (byTeam[t] ? resumeCard(byTeam[t], i + 1) : ""))
+                       .join("");
+
+    const legend = PART_META.map(([, lab, c]) =>
+      `<span class="res-key"><i style="background:${c}"></i>${lab}</span>`).join("");
+
+    // The bubble. Exactly one team is the last one in and exactly one is the first one
+    // out in every simulated season, so these two columns each sum to 100% across the
+    // league and are directly comparable.
+    const li = P.filter(t => (t.last_in || 0) > 0)
+                .sort((a, b) => b.last_in - a.last_in).slice(0, 6);
+    const fo = P.filter(t => (t.first_out || 0) > 0)
+                .sort((a, b) => b.first_out - a.first_out).slice(0, 6);
+    const strip = (list, key, max) => list.map(t => `<div class="ccg-row">
+        <img src="${logoURL(t.team)}" alt="" loading="lazy">
+        <button class="team-link" data-team="${esc(t.team)}">${esc(abbr(t.team))}</button>
+        <div class="bar"><i style="width:${100 * (t[key] || 0) / max}%;
+          background:${color(t.team)}"></i></div>
+        <span class="pct">${pct(t[key] || 0, 0)}</span></div>`).join("");
+    const liMax = Math.max(...li.map(t => t.last_in), 0.01);
+    const foMax = Math.max(...fo.map(t => t.first_out), 0.01);
+
+    el.innerHTML = `
+      <div class="res-legend">Each bar splits that team's committee score into the
+        terms that produced it: ${legend}</div>
+      <div class="res-grid">${cards}</div>
+      <div class="bubble-wrap">
+        <div class="ccg-card"><div class="ccg-name">Last team in</div>${strip(li, "last_in", liMax)}</div>
+        <div class="ccg-card"><div class="ccg-name">First team out</div>${strip(fo, "first_out", foMax)}</div>
+      </div>
+      <div class="wd-foot">The twelfth seed and the best team left behind, as a share
+        of all ${cur().playoff.n_sims.toLocaleString()} simulated seasons. Each column
+        sums to 100%: every season has exactly one of each.</div>`;
   }
 
   const P4_CONFS = ["ACC", "Big 12", "Big Ten", "SEC"];
@@ -575,7 +710,9 @@
           <p>A stand-in for the selection committee sorts everyone. It is fitted to
             every ranking the real committee has published since 2014, and what it
             learned is that the committee cares most about <b>record</b>, then
-            <b>schedule strength</b>, and much less about how good a team looks.</p></div>
+            <b>schedule strength</b>, and much less about how good a team looks. It
+            also breaks near-ties on <b>head-to-head</b>: beating a team ranked close
+            to you counts, and losing to one costs.</p></div>
         <div class="step"><span class="step-n">3</span>
           <h4>Hand out 5 automatic bids</h4>
           <p>The champions of the ACC, Big&nbsp;12, Big&nbsp;Ten and SEC are in no
@@ -669,6 +806,18 @@
     const r = predict(a, b, venue);
     const fav = r.margin >= 0 ? a : b, spread = Math.abs(r.margin);
     const venueNote = venue === "N" ? "Neutral field" : "At " + (venue === "A" ? a : b);
+    // The margins that actually happen, from the fitted distribution rather than the
+    // normal the win model uses - it puts .044 on a 3-point game against a real .106.
+    // Once, not once per use: displayScore now scans the whole scoreline table, and
+    // the three places below that show the projected score all want the same pair.
+    const [sa, sb] = displayScore(r);
+    const KEYS = [3, 7, 10, 14];
+    const keyP = KEYS.map(k => [k, keyNumberP(r.margin, k)]);
+    const keyRow = keyP[0][1] == null ? "" : `
+      <div class="keynums">
+        <span class="kn-label">Chance the game is decided by exactly</span>
+        ${keyP.map(([k, p]) => `<span class="kn"><b>${k}</b>${pct(p, 1)}</span>`).join("")}
+      </div>`;
     document.getElementById("matchup-result").innerHTML = `
       <div class="face-off">
         <div class="side">
@@ -677,7 +826,7 @@
           <div class="winp" style="color:${color(a)}">${pct(r.pA)}</div>
         </div>
         <div class="mid">
-          <div class="score">${displayScore(r)[0]} · ${displayScore(r)[1]}</div>
+          <div class="score">${sa} · ${sb}</div>
           <div>projected score</div><div class="venue-note">${esc(venueNote)}</div>
         </div>
         <div class="side">
@@ -693,8 +842,9 @@
       <div class="stat-row">
         <span><b>${esc(abbr(fav))} −${spread.toFixed(1)}</b> spread</span>
         <span><b>${r.total.toFixed(1)}</b> total (O/U)</span>
-        <span><b>${displayScore(r).join("–")}</b> most likely score</span>
-      </div>`;
+        <span><b>${sa}–${sb}</b> most likely score</span>
+      </div>
+      ${keyRow}`;
   }
   selA.addEventListener("change", renderMatchup);
   selB.addEventListener("change", renderMatchup);

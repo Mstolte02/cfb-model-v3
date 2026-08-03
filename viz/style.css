@@ -189,6 +189,17 @@ table.dash td { padding: 6px 10px; }
   color: var(--muted); font-size: 13px; }
 .stat-row b { color: var(--text); font-size: 17px; display: block; text-align: center; }
 
+/* Key numbers: 3 and 7 are far more likely than the points either side of them, and
+   the row exists to show that shape rather than to be read value by value. */
+.keynums { display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap; gap: 10px 18px; margin-top: 18px; padding-top: 16px;
+  border-top: 1px solid var(--line2); }
+.kn-label { color: var(--muted); font-size: 12px; text-transform: uppercase;
+  letter-spacing: .06em; }
+.kn { color: var(--muted); font-size: 12px; display: flex; align-items: baseline;
+  gap: 6px; }
+.kn b { color: var(--text); font-size: 16px; font-variant-numeric: tabular-nums; }
+
 /* ---------- team breakdown ---------- */
 .team-toolbar { max-width: 420px; margin-bottom: 18px; }
 .team-hero { display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
@@ -424,6 +435,37 @@ tbody tr:hover td.cc { background: inherit; }
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ccg-row .bar { flex: 1; width: auto; }
 .ccg-row .pct { min-width: 38px; font-size: 12.5px; }
+
+/* ---- resume cards: how each of the twelve got in -------------------------- */
+.res-legend { color: var(--muted); font-size: 12.5px; margin-bottom: 14px;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px 14px; }
+.res-key { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.res-key i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.res-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
+  gap: 12px; }
+.res-card { background: var(--wash); border: 1px solid var(--line2);
+  border-left: 4px solid var(--tint); border-radius: 11px; padding: 13px 14px; }
+.res-head { display: flex; align-items: center; gap: 9px; }
+.res-head img { width: 26px; height: 26px; object-fit: contain; flex: none; }
+.res-seed { font: 700 12px/1 var(--sans); color: var(--muted); min-width: 18px; }
+.res-name { min-width: 0; flex: 1; }
+.res-name .team-link { font-size: 14px; font-weight: 700; text-align: left;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.res-odds { text-align: right; flex: none; }
+.res-odds b { display: block; font-size: 16px; font-variant-numeric: tabular-nums; }
+.res-odds span { color: var(--muted); font-size: 10.5px; }
+.res-route { color: var(--muted); font-size: 12px; margin: 10px 0 7px; }
+.res-route b { color: var(--text); }
+/* One stacked bar per team, normalised to its own score, so the SHAPE is the
+   comparison across cards rather than the width. */
+.res-bar { display: flex; height: 9px; border-radius: 5px; overflow: hidden;
+  background: var(--line2); }
+.res-bar i { display: block; height: 100%; }
+.res-rec { display: flex; justify-content: space-between; gap: 10px; margin-top: 9px;
+  color: var(--muted); font-size: 11.5px; }
+.res-rec b { color: var(--text); font-variant-numeric: tabular-nums; }
+.bubble-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px; margin-top: 18px; }
 
 /* ---- folded-away technical detail ----------------------------------------- */
 details.nerd { margin-top: 4px; }

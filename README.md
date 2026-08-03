@@ -1,5 +1,65 @@
 # CFB Predictive Model v3
 
+## v3.7 — head-to-head, realistic scorelines, and a résumé for the field
+
+Five changes. Two of them are player-source decisions taken deliberately; three were
+put through a backtest, and one of those came back mostly negative and shipped only in
+part. That split is the point of the section.
+
+**Quarterbacks and three position groups change source.** OL, WR and DT now take EA's
+ranking of every player rather than only the unproven ones, and the starting quarterback
+takes the `Average` column of `war_model/ea/qbs_2026.xlsx` — a composite of five
+independent opinions (PFSN, PFF, EPA, an execs poll, EA). Both are spliced in by
+**quantile map within position group**, which is what keeps them on our wins scale: the
+mapping is a permutation of the `proj_war` values already in that group, so every
+group's total is identical to the last decimal (largest drift 2.8e-14) and only who is
+where changes. 2,198 slots move on EA's ranking, 119 of 124 named starting quarterbacks
+match into the two-deep, and the league's 616.6 total WAR does not move at all — team
+shifts are transfers between rosters, not new wins. The other groups keep the previous
+EA-under-300-snaps rule.
+
+**Head-to-head joins the committee model; two other candidates did not.** All three
+were tested in `scripts/fit_committee.py` against 12 seasons of published rankings,
+with the gate being the jackknife — does the gain survive deleting any one season —
+rather than a t-test, which at n=12 rejects everything.
+
+| candidate | LOSO Spearman | vs base | verdict |
+|---|---|---|---|
+| base (`win% + rating + SOS + P4`) | 0.9084 | — | |
+| **+ head-to-head** (within 15 places) | **0.9126** | +0.0042 | **kept** — the only one still positive with any season deleted (worst 11/12 +0.0020) |
+| + preseason AP poll | 0.9083 | −0.0001 | dropped — its apparent +0.0057 alongside h2h is **2020 and nothing else**; delete that season and it turns negative |
+| + loss timing | 0.9075 | −0.0008 | dropped — negative alone and in every subset without the preseason term |
+
+The preseason result is worth stating plainly because it is the opposite of the
+intuition: 2020 is the season with 563 games and teams playing between four and eleven
+of them, where record and schedule stop meaning the same thing and *any* stable prior
+helps. That is a fact about 2020, not evidence the committee anchors on the preseason
+poll. Both rejected features are still computed and re-scored on every run, so the
+finding is reproducible rather than remembered.
+
+**Scores come in 3s and 7s, and the model now says so — for display, not for win
+probability.** `scripts/score_shape.py` fits the actual distribution of the margin given
+the predicted one, non-parametrically. The normal the win model uses puts **.038** on a
+3-point margin when the real figure is **.106**, and — being smooth and unimodal — it
+necessarily ranks a 4-point margin *above* a 3-point one when 3 is nearly three times as
+common. The fitted distribution puts .106 on 3. Fixing that does *not* improve win
+probability — LOSO Brier .2036 → .2038, better in 2
+of 5 seasons — and on reflection it cannot, because a win probability only cares which
+side of zero the margin lands on and the normal already gets that right. So the win
+model is **unchanged**. What did ship is the display: the projected score is now the
+most likely real scoreline near the predicted total and margin, which is exactly right
+about the margin twice as often (.0257 → .0518) and about the score four times as often
+(.0014 → .0064) at the same mean error per side, plus a key-number row in the matchup
+simulator.
+
+**The Ratings tab is now the odds table**, and offense/defense/talent/SOS live only on
+Team Breakdown, where there is room to show them properly. **The Playoff tab uses the
+space** for a résumé card per bracket team: the route in (power champion, Group of 6
+bid, or at-large, with the share), the record it took to get in against the record that
+missed, and a stacked bar splitting its committee score into the terms that produced it
+— all conditioned on the simulations where that team was actually selected. Plus a
+bubble strip of the most common last-team-in and first-team-out.
+
 ## v3.6 — the ratings stop believing last season
 
 The question was why a team like Wake Forest carries a **top-10 defence** off an
@@ -431,8 +491,10 @@ FBS-vs-FBS games on the real 2026 schedule + CCGs, then applies the confirmed
 **2026-27 CFP format**: 12 teams; auto-bids for ACC/Big 12/Big Ten/SEC champs
 (any ranking) + the highest-ranked Group of 6 team (champ or not); 7 at-large;
 straight seeding, top-4 byes, first round at the higher seed, fixed bracket.
-The committee ranking is proxied by `10·win% + 1.0·rating_z + 0.75·SOS_z`,
-weights fit against the final 2025 CFP ranking (Spearman ρ = 0.923).
+The committee ranking is proxied by
+`10·win% + 0.24·rating_z + 0.71·SOS_z + 1.12·power_conf + 0.056·head_to_head`,
+weights fit by `scripts/fit_committee.py` against every published committee ranking
+from 2014-2025 (leave-one-season-out Spearman ρ = 0.913).
 
 **Roster-weighted lens (July 2026):** a second rating variant that leans on the
 2026 roster instead of 2025 results — 70% two-deep PFF talent (vs 50%) and full
