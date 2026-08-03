@@ -177,6 +177,36 @@ def snap_denominated_facets():
     return {name for name, (_, snap_col, _, _) in FACETS.items() if is_snaps(snap_col)}
 
 
+def deattenuate(ratings, fv, recs, slope):
+    """Factor k such that k*WAA + replacement regresses on actual wins above
+    replacement with slope 1 - i.e. the factor that puts WAR into units of wins.
+
+    Solved rather than fitted in one pass: regressing the residual on WAA is itself an
+    OLS on a noisy predictor and lands at 0.955, so the root of "slope of the whole
+    identity equals 1" is taken directly.
+    """
+    from scipy.optimize import brentq
+    prev = pd.read_csv(f"{HERE}/hybrid_player_war.csv") if os.path.exists(
+        f"{HERE}/hybrid_player_war.csv") else None
+    if prev is None:
+        print("  [warn] no prior build to calibrate against; slope left attenuated.")
+        return 1.0
+    t = prev.groupby(["season", "team"], as_index=False).agg(
+        war=("war", "sum"), waa=("waa", "sum"))
+    t["repl"] = t.war - t.waa
+    d = t.merge(recs[["season", "team", "adj_wins", "fbs_games"]],
+                on=["season", "team"])
+    d["actual"] = d.adj_wins - REPL_WIN_PCT * d.fbs_games
+    f = lambda k: np.polyfit(k * d.waa + d.repl, d.actual, 1)[0] - 1.0
+    try:
+        k = float(brentq(f, 0.5, 5.0))
+    except ValueError:
+        print("  [warn] could not bracket the de-attenuation root; leaving slope as is.")
+        return 1.0
+    print(f"  de-attenuation solved on {len(d)} team-seasons: k = {k:.4f}")
+    return k
+
+
 def main():
     fv = unified_facets()
     facet_names = sorted(fv.facet.unique())
@@ -353,7 +383,30 @@ def main():
           f"r = {np.corrcoef(out.massey, out.adj_win_pct)[0,1]:.3f}")
 
     slope, intercept = np.polyfit(out.massey, out.adj_win_pct, 1)
-    print(f"implied win pct = {slope:.4f} * massey + {intercept:.4f}")
+    print(f"implied win pct = {slope:.4f} * massey + {intercept:.4f}  (OLS, attenuated)")
+
+    # THAT SLOPE IS ATTENUATED, AND IT IS THE REASON WAR DID NOT EQUAL WINS.
+    # Massey is an estimate with error in it, so an OLS fit of win pct on Massey is
+    # biased toward zero - the textbook errors-in-variables result. Everything
+    # downstream inherits the bias, because waa is linear in this slope, and the
+    # symptom was that summed team WAR regressed on actual wins above replacement at
+    # 1.308 rather than 1.000. Wins Above Replacement was not in units of wins.
+    #
+    # It was being papered over at DISPLAY time - export_viz multiplied each roster by
+    # a hardcoded 1.64 to make the numbers "read as wins" - which was wrong twice. The
+    # constant did not match the data (1.31 measured over 1,438 team-seasons), and a
+    # slope-only expansion around the league mean drove the bottom of the distribution
+    # through zero, so one roster displayed every player as a negative contributor.
+    #
+    # The replacement half was never the problem: league replacement credit comes to
+    # 5,985.7 against 5,985.7 actual wins above replacement, 0.0% out. Only the spread
+    # was short. So the correction is one number solved for here, not applied later:
+    # the factor that makes summed team WAR regress on actual wins above replacement
+    # with a slope of exactly 1. It comes out at 1.41, and afterwards the identity
+    # holds at 1.0000 * WAR - 0.0023 with the correlation slightly BETTER than before
+    # (.834 against .816). No display rescale is needed anywhere.
+    slope *= deattenuate(out, fv, recs, slope)
+    print(f"de-attenuated slope = {slope:.4f}")
 
     nxt = out[["season", "team", "massey", "adj_win_pct"]].copy()
     nxt["season"] -= 1

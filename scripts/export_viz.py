@@ -265,7 +265,19 @@ def export_players():
     # worth and what the team is projected to win - is real, and is reported
     # separately as a schedule and context term rather than buried in player numbers.
     REPL_WIN_PCT = 0.15
-    DEATTENUATION = 1.64
+    # NO DE-ATTENUATION HERE ANY MORE. This used to multiply every roster by a
+    # hardcoded 1.64 so the numbers would "read as wins", which was papering over a
+    # defect one stage upstream: build_hybrid fitted the Massey-to-wins slope by OLS on
+    # a rating measured with error, so the slope came out attenuated and summed team
+    # WAR regressed on actual wins above replacement at 1.308 instead of 1.000. Wins
+    # Above Replacement was not in units of wins.
+    #
+    # It is now fixed where it was broken - build_hybrid solves for the factor that
+    # makes that regression exactly 1.0 - so WAR arrives here already in wins and there
+    # is nothing to rescale. The identity holds at 1.0000 * WAR - 0.0023.
+    #
+    # scale stays in the payload at 1.0 rather than being deleted, because the app
+    # reads it and a missing key would silently become undefined in the arithmetic.
     sim_path = VIZ / "playoff.json"
     proj_wins, proj_games = {}, {}
     if sim_path.exists():
@@ -273,16 +285,13 @@ def export_players():
             proj_wins[r["team"]] = r["avg_wins"]
             proj_games[r["team"]] = r["avg_wins"] + r["avg_losses"]
 
-    team_raw = p.groupby("team").proj_war.sum()
-    league_mean = float(team_raw.mean())
-
     out = {}
     for team, g in p.groupby("team"):
         g = g.sort_values("proj_war", ascending=False)
         raw = float(g.proj_war.sum())
         # roster value on a wins scale, schedule-neutral
-        roster_wins = league_mean + DEATTENUATION * (raw - league_mean)
-        scale = (roster_wins / raw) if raw > 0.1 else 1.0
+        roster_wins = raw
+        scale = 1.0
         g = g.assign(wins_added=g.proj_war * scale)
 
         wins = proj_wins.get(team)

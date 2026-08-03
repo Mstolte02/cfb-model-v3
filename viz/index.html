@@ -111,7 +111,9 @@
       <p class="sub">Every projected two-deep slot in FBS, sortable and filterable
         across teams, conferences and positions. <b>Proj WAR</b> is editable: change
         what you think a player is worth and the ratings, power ranks and matchup
-        simulator all move with it.</p>
+        simulator all move with it. These are wins above replacement
+        directly &mdash; summed over a roster they reproduce the team&rsquo;s actual
+        wins above a replacement-level team, so the team page shows the same figures.</p>
     </div>
     <div class="dash-toolbar">
       <input type="search" id="pl-search" placeholder="Search players or teams…">
@@ -150,6 +152,6 @@
 <!-- The data files are fetched with cache: "no-cache", but the script tag itself is
      not, so a stale app.js kept running against freshly regenerated JSON and failed
      silently — the page rendered nothing and threw nothing visible. Bump on edit. -->
-<script src="app.js?v=12"></script>
+<script src="app.js?v=14"></script>
 </body>
 </html>

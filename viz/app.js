@@ -1602,6 +1602,11 @@
     { k: "war",  h: "Proj WAR", n: true, v: r => plWar(r) },
   ];
   const plWar = r => { const e = WI.get(r.t, r.n); return e != null ? e : (r.raw || 0); };
+  // The team page and this table used to disagree - the same player read 1.604 here
+  // and 2.11 there - because the team page showed WAR after a display-time rescale
+  // that this table did not apply. That rescale is gone (it was covering an attenuated
+  // slope in build_hybrid, now fixed at source), so both surfaces show the same number
+  // and there is nothing left to reconcile.
   let plSort = "war", plDesc = true;
   const PL_LIMIT = 300;
 
