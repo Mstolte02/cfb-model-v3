@@ -23,8 +23,19 @@ ones:
 The fix is to make both sides the same object: a two-deep. For every historical
 team-position group we take the K players who actually occupied those slots, where K
 is that group's slot count on the 2026 two-deep, and fill any short group from the
-CFBD roster at zero WAR. Starter flags use the same per-group count on both sides,
-and class comes from the CFBD roster in both.
+CFBD roster at zero WAR. Class comes from the CFBD roster in both.
+
+AND THAT FIXED THE WRONG HALF OF DEFECT 1. Matching the DENSITY of the starter flag
+left its MEANING different on the two sides: in training it still came from
+snap_rank, which is the player's rank by snaps in the season being predicted, and at
+serve time it was still somebody's opinion in August. The model learned what a
+realised workhorse is worth and applied it to a listed one.
+
+Measured on an otherwise identical model and the same 2025 holdout, the flag was
+worth 0.064 of correlation - r = .617 without it against .681 with it. That 10% was
+not accuracy; it was the model being told part of the answer. is_starter is gone and
+`prior_rank` - rank within the team-position group by LAST season's snaps, computed
+by the same expression on both sides - replaces it.
 """
 import json, os, sys
 import numpy as np
@@ -49,9 +60,28 @@ CFBD_TO_GROUP = {
     "LB": "LB", "CB": "CB", "DB": "CB", "S": "SAF",
 }
 
+# is_starter USED TO BE IN HERE AND IT WAS A LEAK.
+#
+# In training it was computed from snap_rank - the player's rank by snaps IN THE
+# SEASON BEING PREDICTED. In serving it was depth == 1 on the preseason two-deep.
+# The v1 note below records the density mismatch being fixed by giving both sides
+# the same per-group count, and that fixed the wrong half of the problem: the flag
+# still meant "finished the season as one of this group's busiest players" in
+# training and "somebody listed him first in August" at serve time. The model
+# learned the former, which is worth a great deal, and applied it to the latter,
+# which is worth much less - so every listed starter was handed the value of a
+# realised one, and the reported holdout r was measuring a task nobody can perform.
+#
+# `prior_rank` replaces it and is strictly ex ante: the player's rank within his
+# team-position group by LAST season's snaps, computed identically on both sides.
+# Listed two-deep depth is deliberately NOT a feature even though it exists at serve
+# time, because it does not exist historically, and a column that means different
+# things on the two sides of the model is the defect being removed.
 FEATURES = ["war_lag1", "war_lag2", "war_lag3", "snaps_lag1", "snaps_lag2",
-            "rate_lag1", "share_lag1", "prior_seasons", "class_num", "is_starter",
+            "rate_lag1", "share_lag1", "prior_rank", "prior_seasons", "class_num",
             "is_transfer", "stars", "rating", "team_rating", "team_massey", "group_code"]
+
+MAX_RANK = 8.0   # beyond this a player is a name on the list, not a rotation slot
 
 
 # ------------------------------------------------------------------ slot counts
@@ -138,35 +168,68 @@ def build_history(war):
                      as_index=False).agg(war=("war", "sum"), snaps=("snaps", "sum"))
 
 
+def _unique_by_key(frame, cols):
+    """Name-keyed lookup that REFUSES an ambiguous key instead of picking one.
+
+    The lag merges here were `drop_duplicates("key")` followed by a merge on the
+    normalized name across all of FBS - so two players sharing a name silently handed
+    one of them the other's WAR history, on a key with no team and no position in it.
+    """
+    n = frame.groupby("key").player_id.transform("nunique")
+    ok = frame[n == 1].drop_duplicates("key")
+    return ok[cols], int((n > 1).sum())
+
+
 def make_training(pop, w, ratings, rec, rosters, S, seasons):
     """One row per slot per target season, with features known before the season."""
     w = w.copy()
     w["key"] = w.player.map(norm_name)
     # team-group snap share, the ex-ante role signal that replaces leaked rank
     w["share"] = w.snaps / w.groupby(["season", "team", "group"]).snaps.transform("sum")
-    hist = w[["season", "key", "war", "snaps", "share"]]
 
-    rows = []
+    rows, refused = [], 0
     for t1 in seasons:
         cur = pop[pop.season == t1].copy()
         for lag in (1, 2, 3):
-            p = hist[hist.season == t1 - lag].drop(columns="season").rename(columns={
-                "war": f"war_lag{lag}", "snaps": f"snaps_lag{lag}", "share": f"share_lag{lag}"})
-            p = p.drop_duplicates("key")
-            cur = cur.merge(p, on="key", how="left")
+            h = w[w.season == t1 - lag]
+            ren = {"war": f"war_lag{lag}", "snaps": f"snaps_lag{lag}",
+                   "share": f"share_lag{lag}"}
+            # PLAYER_ID FIRST. Most of the population carries one, and where it does
+            # the join is exact; only the roster-filled slots (a man on the roster who
+            # took no snap, so he has no PFF row this season) need the name.
+            byid = h[["player_id", "war", "snaps", "share"]].rename(columns=ren)
+            byid = byid[byid.player_id.notna()].drop_duplicates("player_id")
+            cur = cur.merge(byid, on="player_id", how="left")
+
+            need = cur[list(ren.values())[0]].isna()
+            if need.any():
+                cols = ["key", "war", "snaps", "share"]
+                uniq, amb = _unique_by_key(h, cols)
+                refused += amb
+                uniq = uniq.rename(columns=ren)
+                m = cur.loc[need, ["key"]].merge(uniq, on="key", how="left")
+                m.index = cur.index[need]
+                for c in ren.values():
+                    cur.loc[need, c] = m[c]
+
         cur["prior_seasons"] = sum(cur[f"snaps_lag{l}"].notna() & (cur[f"snaps_lag{l}"] > 0)
                                    for l in (1, 2, 3)).astype(float)
         cur["rate_lag1"] = cur.war_lag1 / cur.snaps_lag1.replace(0, np.nan)
-        prev = w[w.season == t1 - 1][["key", "team"]].drop_duplicates("key").rename(
-            columns={"team": "prev_team"})
-        cur = cur.merge(prev, on="key", how="left")
+        prev, amb = _unique_by_key(w[w.season == t1 - 1], ["key", "team"])
+        refused += amb
+        cur = cur.merge(prev.rename(columns={"team": "prev_team"}), on="key", how="left")
         cur["is_transfer"] = ((cur.prev_team.notna()) & (cur.prev_team != cur.team)).astype(int)
         cur["target_season"] = t1
         rows.append(cur)
     tr = pd.concat(rows, ignore_index=True)
+    print(f"  ambiguous name keys refused rather than guessed: {refused}")
 
-    # starter flag with the SAME per-group density the 2026 two-deep uses
-    tr["is_starter"] = (tr.snap_rank <= tr.group.map(S).fillna(1)).astype(int)
+    # EX-ANTE role: rank within the team-position group by LAST season's snaps.
+    # Computed the same way on both sides of the model; see FEATURES.
+    tr["prior_rank"] = (tr.groupby(["target_season", "team", "group"])
+                          .snaps_lag1.rank(ascending=False, method="first",
+                                           na_option="bottom")
+                          .clip(upper=MAX_RANK))
 
     # real class from the CFBD roster, the same variable served in 2026
     cls = rosters[["season", "team", "key", "class_num"]].drop_duplicates(
@@ -218,8 +281,7 @@ def main():
     tr["group_code"] = tr.group.map(gcode)
     tr["share_lag1"] = tr.share_lag1.fillna(0.0)
     print(f"\ntraining rows: {len(tr)}")
-    print(f"  starter density now  train {tr.is_starter.mean():.3f} vs "
-          f"serve {ros26.is_starter.mean():.3f}")
+    print(f"  mean prior_rank      train {tr.prior_rank.mean():.2f}")
 
     # ---- holdout ---------------------------------------------------------
     trn, tst = tr[tr.target_season < 2025], tr[tr.target_season == 2025]
@@ -259,8 +321,8 @@ def main():
         "nohist_actual_mean": round(float(noh.war.mean()), 4),
         "train_rows": int(len(tr)),
         "never_played_rows": int((~pop.played).sum()),
-        "starter_density_train": round(float(tr.is_starter.mean()), 3),
-        "starter_density_serve": round(float(ros26.is_starter.mean()), 3),
+        "features": FEATURES,
+        "ex_ante_only": True,
     }
     json.dump(metrics, open(f"{HERE}/projection_metrics.json", "w"), indent=1)
 
@@ -281,7 +343,12 @@ def main():
         columns={"share": "share_lag1"}), on="key", how="left")
     r["share_lag1"] = r.share_lag1.fillna(0.0)
     r["class_num"] = r["class"].map(CLASS_NUM)
-    r["is_starter"] = r.is_starter.astype(int)
+    # the SAME ex-ante rank the training side computes: last season's snaps, ranked
+    # within the team-position group. Not the two-deep's listed depth - see FEATURES.
+    r["prior_rank"] = (r.groupby(["team", "broad_group"])
+                        .snaps_lag1.rank(ascending=False, method="first",
+                                         na_option="bottom")
+                        .clip(upper=MAX_RANK))
     r["is_transfer"] = r.is_transfer.astype(int)
     r["group_code"] = r.broad_group.map(gcode)
     r["team_massey"] = r.team.map(ratings[ratings.season == 2025].set_index("team").massey)

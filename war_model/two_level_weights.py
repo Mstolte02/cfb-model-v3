@@ -322,21 +322,59 @@ def _nnls_ridge(X, y, lam):
     return nnls(A, b)[0]
 
 
-def fit_concept_weights(S, y, lam=None, n_boot=200, seed=0):
-    """Non-negative ridge of next-season win pct on the concept scores, bagged.
+def fit_concept_weights(S, y, lam=None, n_boot=200, seed=0, clusters=None,
+                        demean_by=None):
+    """Non-negative ridge of the target on the block scores, bagged, plus its spread.
 
-    Bagging matters even here. NNLS still zeroes a concept it is unsure about in any
+    Bagging matters even here. NNLS still zeroes a block it is unsure about in any
     single fit; averaging over resamples returns its expected weight instead, which is
     the honest summary of what the data supports.
+
+    THE RESAMPLE IS OVER TEAMS, NOT TEAM-SEASONS. Eleven seasons of Alabama are not
+    eleven independent observations of how much quarterback play is worth - the roster,
+    the coaching and the recruiting base persist, so the residuals within a team are
+    correlated and an i.i.d. row bootstrap understates every standard error by roughly
+    the square root of the cluster size. Resampling whole teams and taking all of their
+    seasons gives an interval that accounts for it.
+
+    `demean_by` additionally removes each team's own mean before fitting, which
+    identifies the weights from WITHIN-team variation only - the same block weights
+    asked of a much harder question, and the comparison says how much of the fit is
+    "good programmes are good at everything".
     """
     X, yv = S.to_numpy(float), np.asarray(y, float)
+    if demean_by is not None:
+        g = pd.Series(demean_by)
+        X = X - pd.DataFrame(X).groupby(g.to_numpy()).transform("mean").to_numpy()
+        yv = yv - pd.Series(yv).groupby(g.to_numpy()).transform("mean").to_numpy()
     if lam is None:
         lam = tune_lambda(X, yv)
+
     rng = np.random.default_rng(seed)
-    W = np.mean([_nnls_ridge(X[i], yv[i], lam)
-                 for i in (rng.integers(0, len(X), len(X)) for _ in range(n_boot))],
-                axis=0)
-    return pd.Series(W, index=S.columns), lam
+    if clusters is None:
+        draws = (rng.integers(0, len(X), len(X)) for _ in range(n_boot))
+    else:
+        cl = np.asarray(clusters)
+        uniq = np.unique(cl)
+        idx_by = {u: np.flatnonzero(cl == u) for u in uniq}
+        def draws_gen():
+            for _ in range(n_boot):
+                pick = rng.integers(0, len(uniq), len(uniq))
+                yield np.concatenate([idx_by[uniq[p]] for p in pick])
+        draws = draws_gen()
+
+    fits = np.array([_nnls_ridge(X[i], yv[i], lam) for i in draws])
+    # each resample is renormalized before summarising, or the band would mix
+    # differences in scale with differences in allocation
+    tot = fits.sum(axis=1, keepdims=True)
+    share = np.divide(fits, np.where(tot > 0, tot, 1.0))
+    band = pd.DataFrame({
+        "mean": share.mean(axis=0),
+        "p05": np.quantile(share, 0.05, axis=0),
+        "p95": np.quantile(share, 0.95, axis=0),
+        "p_zero": (fits == 0).mean(axis=0),
+    }, index=S.columns)
+    return pd.Series(fits.mean(axis=0), index=S.columns), lam, band
 
 
 def tune_lambda(X, y, grid=(1, 3, 10, 30, 100, 300, 1000), folds=5, seed=0):
@@ -426,8 +464,21 @@ def build(Z, y, rel, facets=None, n_boot=200, lam=None, seed=0, extra_concepts=N
                       for name, k in g.groupby(g)})
     gsd = G.std(ddof=0).replace(0.0, 1.0)
 
-    W, lam = fit_concept_weights(G / gsd, y, lam=lam, n_boot=n_boot, seed=seed)  # level 1
+    # cluster the bootstrap on the team, which the index carries
+    teams = (Z.index.get_level_values("team").to_numpy()
+             if "team" in (Z.index.names or []) else None)
+    W, lam, band = fit_concept_weights(G / gsd, y, lam=lam, n_boot=n_boot, seed=seed,
+                                       clusters=teams)                    # level 1
     W = W / W.sum() if W.sum() else W
+
+    # The same fit asked of within-team variation only. If a block's weight survives
+    # having every programme's own mean removed, it is not just "good teams are good
+    # at everything"; if it collapses, the between-team fit was carrying it.
+    within_team = None
+    if teams is not None:
+        Ww, _, _ = fit_concept_weights(G / gsd, y, lam=lam, n_boot=25, seed=seed,
+                                       clusters=teams, demean_by=teams)
+        within_team = (Ww / Ww.sum()) if Ww.sum() else Ww
 
     # compose the three linear maps back down onto the facets
     cw = pd.Series({c: W[gmap[c]] * share[c] / gsd[gmap[c]] for c in S.columns})
@@ -435,6 +486,9 @@ def build(Z, y, rel, facets=None, n_boot=200, lam=None, seed=0, extra_concepts=N
     w = v * c.map(cw) / c.map(sd)
     w = w / w.sum()
     return w, {"group_weights": W.sort_values(ascending=False),
+               "group_band": band,
+               "within_team": within_team,
+               "n_teams": int(len(set(teams))) if teams is not None else 0,
                "concept_weights": (cw * c.map(sd).groupby(c).first()).pipe(
                    lambda s: s / s.sum()).sort_values(ascending=False),
                "groups": {k: v2 for k, v2 in gmap.items() if v2 != k},

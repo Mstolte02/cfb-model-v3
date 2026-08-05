@@ -278,7 +278,24 @@ def _backup_share(d, group, rooms):
 
 def reweight(d, target):
     """Move share from backups to starters until the backup share matches the
-    no-injury target, holding each room's total fixed."""
+    no-injury target, holding each room's total fixed.
+
+    THIS STEP GOT MORE IMPORTANT, NOT LESS, WHEN THE PROJECTION STOPPED LEAKING.
+    The expectation was the opposite - that a projection which no longer over-trusts
+    a listed starter would need no correction - and the direction is worth writing
+    down, because it is the reverse.
+
+    is_starter used to be an input feature carrying the value of a REALISED workhorse
+    (see project_2026_v2), so listed starters came out inflated and backups came out
+    small. Removing it leaves the model distinguishing a starter from a backup only
+    by last season's snaps, which for two true freshmen in the same room is no
+    distinction at all - so the raw backup share rose to 29-41% by group against
+    historical no-injury shares of 5-36%.
+
+    That is the honest position. The depth structure now enters ONCE, explicitly,
+    through a target measured off completed seasons, instead of implicitly through a
+    feature that knew the answer.
+    """
     d = d.copy()
     d["proj_war_raw"] = d.proj_war
     for (t, g), unit in d.groupby(["team", "broad_group"]):

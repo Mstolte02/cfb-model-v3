@@ -432,8 +432,17 @@ def main():
                           extra_concepts=composite_concepts, pos=fpos, vol=fvol)
         print(f"two-level: {tl['n_concepts']} concepts in {tl['n_groups']} groups, "
               f"lam={tl['lam']}   collinear and grouped: {tl['groups'] or 'none'}")
+        band, wt = tl["group_band"], tl["within_team"]
+        print(f"    block weights, with a 5-95% band from resampling the "
+              f"{tl['n_teams']} TEAMS (not the 1,438 team-seasons):")
+        print(f"    {'block':<22}{'weight':>8}{'5-95%':>16}{'zeroed':>8}"
+              f"{'within-team':>13}")
         for g, v in tl["group_weights"].items():
-            print(f"    {g:<20} {v*100:5.1f}%")
+            b = band.loc[g]
+            wv = f"{wt[g]*100:11.1f}%" if wt is not None else " " * 12
+            print(f"    {g:<22}{v*100:7.1f}%{b.p05*100:8.1f}-{b.p95*100:<7.1f}"
+                  f"{b.p_zero*100:6.0f}%{wv}")
+        tl["group_band"].assign(within_team=wt).to_csv(f"{HERE}/block_weight_band.csv")
     elif mode == "nonneg":
         # NNLS on [X; sqrt(lam) I] is the ridge normal equations with a non-negativity
         # constraint. lam from the season-blocked sweep in the notes above.
