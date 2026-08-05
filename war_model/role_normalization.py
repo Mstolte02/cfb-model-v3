@@ -33,40 +33,14 @@ import pandas as pd
 from scipy.optimize import nnls
 from sklearn.metrics import mean_squared_error
 
-from candidates import CATALOGUE, MIN_DENOM, LOWER_IS_BETTER, build_catalogue, \
-    group_of, load_players
+# add_tiers/TIER_BY/MAX_TIER moved into candidates.py when `partial` was promoted
+# from experiment to shipped default. They live where the facet values are built so
+# that this comparison and the build cannot disagree about what a tier is.
+from candidates import CATALOGUE, MIN_DENOM, LOWER_IS_BETTER, MAX_TIER, TIER_BY, \
+    add_tiers, build_catalogue, group_of, load_players
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEAM_MAP = json.load(open(f"{HERE}/team_map.json"))
-MAX_TIER = 5
-
-# What ranks the depth chart for each group. Opportunity, not quality - targets for a
-# receiver, carries for a back, snaps for everyone whose job has no touch count.
-TIER_BY = {
-    "WR": "recv__targets", "TE": "recv__targets", "RB": "rush__attempts",
-    "QB": "pass__dropbacks", "OL": "blk__snap_counts_offense",
-    "DI": "def__snap_counts_defense", "ED": "def__snap_counts_defense",
-    "LB": "def__snap_counts_defense", "CB": "def__snap_counts_coverage",
-    "S": "def__snap_counts_coverage",
-}
-
-
-def add_tiers(players):
-    """Depth-chart tier per player within his team, season and position group."""
-    p = players.copy()
-    from candidates import GROUPS
-    inv = {pos: g for g, members in GROUPS.items() for pos in members}
-    p["grp"] = p.position.map(inv)
-    p["tier"] = np.nan
-    for g, col in TIER_BY.items():
-        if col not in p.columns:
-            continue
-        m = p.grp == g
-        v = pd.to_numeric(p.loc[m, col], errors="coerce").fillna(0)
-        p.loc[m, "tier"] = (v.groupby([p.loc[m, "season"], p.loc[m, "team_name"]])
-                             .rank(ascending=False, method="first").clip(upper=MAX_TIER))
-    p["tier"] = p.tier.fillna(1).astype(int)
-    return p
 
 
 def facet_frame(players, scheme):

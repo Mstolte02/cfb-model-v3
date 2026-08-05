@@ -222,11 +222,45 @@ def main():
     recs = pd.read_csv(f"{HERE}/records.csv")
     sched = pd.read_csv(f"{HERE}/schedule.csv")
 
-    tot = (fv.groupby(["season", "team", "facet"], as_index=False)["value"].sum()
-             .pivot(index=["season", "team"], columns="facet", values="value")
-             .reindex(columns=facet_names).fillna(0.0))
-    Z = tot.groupby(level="season").transform(
-        lambda c: (c - c.mean()) / c.std(ddof=0)).fillna(0.0)
+    def team_totals(frame, names):
+        t = (frame.groupby(["season", "team", "facet"], as_index=False)["value"].sum()
+                  .pivot(index=["season", "team"], columns="facet", values="value")
+                  .reindex(columns=names).fillna(0.0))
+        z = t.groupby(level="season").transform(
+            lambda c: (c - c.mean()) / c.std(ddof=0)).fillna(0.0)
+        return t, z
+
+    tot, Z = team_totals(fv, facet_names)
+
+    # ---- collapse the near-duplicate clusters -------------------------------
+    # WAR_CONSOLIDATE=0 keeps all 98 features. The default merges the clusters that
+    # are one ability measured several ways; see consolidate.py for why this is safe
+    # to do at the player level and what it costs.
+    if os.environ.get("WAR_CONSOLIDATE", "1") != "0":
+        import consolidate as cons
+        _yj = (Z.join(recs.set_index(["season", "team"]), how="inner")
+                .adj_win_pct.to_numpy(float))
+        _Zj = Z.join(recs.set_index(["season", "team"]), how="inner")[facet_names]
+        kappa_before = cons.condition_number(_Zj)
+        cl = cons.find_clusters(_Zj, _yj)
+        sigma_pre = tot.groupby(level="season").std(ddof=0)
+        fv, rep = cons.apply(fv, sigma_pre, cl)
+        facet_names = sorted(fv.facet.unique())
+        tot, Z = team_totals(fv, facet_names)
+        kappa_after = cons.condition_number(
+            Z.join(recs.set_index(["season", "team"]), how="inner")[facet_names])
+        print(f"consolidated {len(rep)} near-duplicate clusters: "
+              f"{len(rep) and sum(v['n'] for v in rep.values())} facets -> {len(rep)}   "
+              f"features {len(_Zj.columns)} -> {len(facet_names)}   "
+              f"kappa {kappa_before:.1f} -> {kappa_after:.1f}")
+        for name, v in rep.items():
+            print(f"    {name:<14} {v['n']}  pc1 {v['pc1_explained']*100:.0f}%  "
+                  f"r {v['r_pc1']:.3f} vs {v['r_full']:.3f} all-members   "
+                  f"{', '.join(v['members'])}")
+        json.dump(rep, open(f"{HERE}/consolidated_facets.json", "w"), indent=1)
+        composite_concepts = {k: v["concept"] for k, v in rep.items()}
+    else:
+        composite_concepts = {}
 
     df = Z.join(recs.set_index(["season", "team"]), how="inner")
     X = df[facet_names].to_numpy(float)
@@ -301,6 +335,47 @@ def main():
     #
     # WAR_WEIGHTS: twolevel (default) | nonneg | next_season_ridge | same_season_rf | pca
     mode = os.environ.get("WAR_WEIGHTS", "twolevel")
+
+    # ---- WHAT THE WEIGHTS ARE FITTED AGAINST -------------------------------
+    # WAR_TARGET: next_season (default) | contemporaneous
+    #
+    # THE CONTEMPORANEOUS TARGET WAS BUILT, TESTED AND REJECTED. The argument for it
+    # is good and it is worth stating properly, because the machinery is still here
+    # and someone will want to try it again.
+    #
+    # Fitting on next season is how score-state contamination gets dodged: a defence
+    # that is ahead forces obvious passing downs, PFF rewards the coverage that
+    # follows, and a same-season fit loads onto that. The cost is that only what
+    # PERSISTS can predict next year's wins, so the fitted value of a job becomes
+    # value x persistence and a job that decides games without repeating is charged
+    # for its own volatility.
+    #
+    # So the contamination was attacked at source instead. score_state.py builds each
+    # team's real in-game score-state profile from quarter-by-quarter line scores,
+    # isolates the part of it the team's own production does not explain (score state
+    # is downstream of ability, so controlling on it raw is a bad control), and
+    # projects that unearned component out of every facet before the fit sees it.
+    #
+    # It did what it was supposed to do at the concept level - pass protection 2.7% ->
+    # 5.1%, tackling 0.0% -> 4.4%, and passing and receiving stopped being collinear
+    # enough to need merging into one group. And it was still worse. On the transfer
+    # test, which asks whether the resulting WAR measures the player or his
+    # circumstances, over the same 4,509 moves:
+    #
+    #                                  transfer r   same-team r   QB      TE     OL
+    #   before any of this work            .4137        .5611    17.4%   8.1%   8.5%
+    #   contemporaneous + score state      .4487        .5613    14.3%  11.2%   6.1%
+    #   next season (shipped)              .4967        .5872    17.4%   7.8%   8.7%
+    #
+    # The same-season fit also inverted tight ends and the offensive line - 11.2%
+    # against 6.1% - which no account of positional value supports. The projection is
+    # conservative by construction (it removes 2.6% of facet variance; anything more
+    # aggressive is the bad control it was designed to avoid), and what it leaves
+    # behind is evidently still enough to distort the fit.
+    #
+    # The recommendation was to make this the default. The evidence says otherwise, so
+    # it is not, and the switch is kept so the finding can be reproduced rather than
+    # taken on trust.
     nxt = recs[["season", "team", "adj_win_pct"]].copy()
     nxt["season"] -= 1
     fwd = (df.reset_index()
@@ -308,6 +383,28 @@ def main():
                     on=["season", "team"], how="inner"))
     Xf = fwd[facet_names].to_numpy(float)
     yf = fwd.next_win_pct.to_numpy(float)
+
+    target = os.environ.get("WAR_TARGET", "next_season")
+    if target == "contemporaneous":
+        import score_state as ss
+        prof = ss.team_profile(YEARS).set_index(["season", "team"])
+        # an equally-weighted facet total as the "how well did they actually play"
+        # control: weight-free by construction, so it cannot make this circular
+        production = Z.mean(axis=1)
+        st = ss.unearned(prof.reindex(Z.index).reset_index(), production)
+        st = st.set_index(["season", "team"])
+        Zc = ss.project_out(Z, st)
+        dfc = Zc.join(recs.set_index(["season", "team"]), how="inner")
+        Xt = dfc[facet_names].to_numpy(float)
+        yt = dfc.adj_win_pct.to_numpy(float)
+        fit_index = dfc.index
+        kept = float(np.mean([np.var(Zc[c]) / max(np.var(Z[c]), 1e-12)
+                              for c in facet_names]))
+        print(f"target: contemporaneous adjusted wins, unearned score state projected "
+              f"out ({len(dfc)} team-seasons; {kept*100:.1f}% of facet variance kept)")
+    else:
+        Xt, yt, fit_index = Xf, yf, fwd.set_index(["season", "team"]).index
+        print(f"target: next season's adjusted wins ({len(fwd)} team-seasons)")
 
     if mode == "same_season_rf":
         m = RandomForestRegressor(n_estimators=800, min_samples_leaf=3,
@@ -329,8 +426,10 @@ def main():
         # and snaps only and does not depend on the weights at all.
         import two_level_weights as tlw
         rel = tlw.load_reliability(fv, rebuild=True)
-        w, tl = tlw.build(fwd.set_index(["season", "team"])[facet_names], yf, rel,
-                          facets=facet_names)
+        fpos, fvol = tlw.facet_positions(fv)
+        w, tl = tlw.build(pd.DataFrame(Xt, index=fit_index, columns=facet_names),
+                          yt, rel, facets=facet_names,
+                          extra_concepts=composite_concepts, pos=fpos, vol=fvol)
         print(f"two-level: {tl['n_concepts']} concepts in {tl['n_groups']} groups, "
               f"lam={tl['lam']}   collinear and grouped: {tl['groups'] or 'none'}")
         for g, v in tl["group_weights"].items():

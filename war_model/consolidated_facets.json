@@ -1,0 +1,108 @@
+{
+ "QBWRcfbd_core": {
+  "members": [
+   "QB_pass",
+   "QB_positive_epa_pct",
+   "QB_qb_rating",
+   "QB_ypa",
+   "WR_positive_epa_pct",
+   "WR_targeted_qb_rating",
+   "cfbd_pass_qb"
+  ],
+  "n": 7,
+  "concept": "passing",
+  "pc1_explained": 0.8165273403537436,
+  "r_pc1": 0.6394238261446015,
+  "r_full": 0.6504356441116974
+ },
+ "ED_core": {
+  "members": [
+   "ED_hurries",
+   "ED_pass_rush",
+   "ED_total_pressures"
+  ],
+  "n": 3,
+  "concept": "pass_rush",
+  "pc1_explained": 0.8658279083611984,
+  "r_pc1": 0.39715551253550635,
+  "r_full": 0.40818840689253044
+ },
+ "QBWR_core": {
+  "members": [
+   "QB_accuracy_pct",
+   "QB_completion_pct",
+   "WR_caught_pct"
+  ],
+  "n": 3,
+  "concept": "passing",
+  "pc1_explained": 0.9193988049770215,
+  "r_pc1": 0.43157285246855837,
+  "r_full": 0.4365360360345245
+ },
+ "CBS_core": {
+  "members": [
+   "CB-S_missed_tackle_rate",
+   "CB-S_tackle"
+  ],
+  "n": 2,
+  "concept": "tackling",
+  "pc1_explained": 0.9754510224793811,
+  "r_pc1": 0.27059366367461113,
+  "r_full": 0.2784585352638341
+ },
+ "CB_core": {
+  "members": [
+   "CB_yards",
+   "CB_yards_after_catch"
+  ],
+  "n": 2,
+  "concept": "coverage",
+  "pc1_explained": 0.8739378012262731,
+  "r_pc1": 0.02295948778772206,
+  "r_full": 0.024480620664881683
+ },
+ "DI_core": {
+  "members": [
+   "DI_sacks",
+   "DI_total_pressures"
+  ],
+  "n": 2,
+  "concept": "pass_rush",
+  "pc1_explained": 0.8601847651747974,
+  "r_pc1": 0.3294538625630222,
+  "r_full": 0.3345098984407492
+ },
+ "RB_core": {
+  "members": [
+   "RB_elusive_rating",
+   "RB_yco_attempt"
+  ],
+  "n": 2,
+  "concept": "rushing",
+  "pc1_explained": 0.9214105447889244,
+  "r_pc1": 0.27154029325212886,
+  "r_full": 0.28035185424666564
+ },
+ "TE_core": {
+  "members": [
+   "TE_pass_route",
+   "TE_yprr"
+  ],
+  "n": 2,
+  "concept": "receiving",
+  "pc1_explained": 0.9460999275753802,
+  "r_pc1": 0.22581003921012255,
+  "r_full": 0.22938263016359592
+ },
+ "cfbd_core": {
+  "members": [
+   "cfbd_cov_db",
+   "cfbd_havoc_db"
+  ],
+  "n": 2,
+  "concept": "coverage",
+  "pc1_explained": 0.8701429683107824,
+  "r_pc1": 0.34132449504787166,
+  "r_full": 0.3502171682523838
+ }
+}

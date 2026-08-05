@@ -100,7 +100,7 @@ def load_reliability(fv=None, path=None, rebuild=False):
         return pd.read_csv(path).set_index("facet")
     if fv is None:
         return pd.read_csv(f"{HERE}/facet_reliability.csv").set_index("facet")
-    rel = player_specific_rho(fv)
+    rel = player_specific_rho(fv).join(player_validity(fv), rsuffix="_v")
     rel.to_csv(path)
     return rel
 
@@ -161,25 +161,145 @@ def player_specific_rho(fv, key=None):
     return pd.DataFrame(rows).set_index("facet")
 
 
-def concept_map(facets):
+def player_validity(fv, key=None, min_pairs=MIN_PAIRS):
+    """How much of a facet is the PLAYER, measured by taking the player somewhere else.
+
+    Repeatability answers "does this number repeat", and a number can repeat perfectly
+    while measuring nothing about the player. A receiver's targeted QB rating repeats
+    because his quarterback is still there. Team continuity, scheme, role and the
+    coordinator all repeat year to year, so a facet that is mostly circumstance scores
+    well on rho and then carries that weight into an attribution of individual value.
+
+    So the criterion here is transfers. Residualise a player's z on his TEAM (the
+    leave-one-out mean of his teammates on that facet, so he is never a control for
+    himself) and on his ROLE (his snap rank inside his own team-facet group), then
+    correlate what is left with the same quantity for the same player NEXT SEASON AT A
+    DIFFERENT TEAM. Everything shared with the old team is gone from both sides of that
+    correlation; what survives travelled with the man.
+
+    Thin facets are shrunk toward the median rather than trusted or discarded: 68 of 82
+    facets clear 60 moves, the median has 127, and the survivors of a hard cut would be
+    a biased set (facets that measure positions with high transfer rates).
+    """
+    key = key or ("player_id" if "player_id" in fv.columns else "uid")
+    rows = []
+    for f, g in fv.groupby("facet"):
+        g = g[g.snaps >= g.snaps.quantile(0.4)]
+        if g.empty:
+            continue
+        n = g.groupby(["season", "team"]).z.transform("size")
+        tot = g.groupby(["season", "team"]).z.transform("sum")
+        g = g.assign(loo=np.where(n > 1, (tot - g.z) / (n - 1), 0.0),
+                     rank=g.groupby(["season", "team"]).snaps.rank(
+                         ascending=False, method="first").clip(upper=5))
+
+        # residualise on team and role together
+        A = np.column_stack([np.ones(len(g)), g.loo.to_numpy(float)]
+                            + [(g["rank"].to_numpy() == r).astype(float)
+                               for r in (2, 3, 4, 5)])
+        yv = g.z.to_numpy(float)
+        beta, *_ = np.linalg.lstsq(A, yv, rcond=None)
+        g = g.assign(resid=yv - A @ beta)
+
+        nxt = g[["season", key, "resid", "team"]].copy()
+        nxt["season"] -= 1
+        j = g.merge(nxt.rename(columns={"resid": "r1", "team": "team1"}),
+                    on=["season", key])
+        mv = j[j.team != j.team1]
+        if len(mv) >= 3 and mv.resid.std() > 0 and mv.r1.std() > 0:
+            v = float(np.corrcoef(mv.resid, mv.r1)[0, 1])
+        else:
+            v, mv = np.nan, mv
+        rows.append({"facet": f, "validity_raw": v, "n_moves": len(mv),
+                     "n_pairs": len(j)})
+
+    d = pd.DataFrame(rows).set_index("facet")
+    prior = float(np.nanmedian(d.validity_raw))
+    # shrink toward the median with weight min_pairs, so a facet measured on 3 moves
+    # contributes almost nothing of its own and one measured on 700 is taken at face
+    n = d.n_moves.to_numpy(float)
+    raw = d.validity_raw.fillna(prior).clip(lower=0.0).to_numpy(float)
+    d["validity"] = np.clip((n * raw + min_pairs * prior) / (n + min_pairs),
+                            RHO_FLOOR, RHO_CEIL)
+    return d
+
+
+def concept_map(facets, extra=None):
     """{facet: concept}. Anything unclaimed becomes its own concept rather than being
-    dropped, so a new candidate cannot silently fall out of the model."""
+    dropped, so a new candidate cannot silently fall out of the model.
+
+    `extra` carries the composites consolidate.py builds, each inheriting the concept
+    of the member it loads on hardest - otherwise a merged cluster leaves its own block
+    and the block's printed weight stops meaning what it says.
+    """
     m = {f: c for c, members in CONCEPTS.items() for f in members}
     m.update(CFBD_CONCEPT)
+    m.update({k: v for k, v in (extra or {}).items() if v})
     return {f: m.get(f, f"_solo_{f}") for f in facets}
 
 
-def within_weights(facets, rel, cmap):
-    """Reliability shares within each concept, summing to 1 per concept.
+def facet_positions(fv, key="snaps"):
+    """{facet: dominant position group} and {facet: league snaps}, measured.
 
-    rho is the year-over-year correlation of a player's z on that facet (uncertainty.py),
-    already floored at 0.02, so no facet can be weighted out entirely and none can
-    divide by zero.
+    Read off the frame rather than parsed out of the name, so a composite from
+    consolidate.py and a cfbd_ facet are classified the same way as everything else.
     """
-    rho = rel.rho.reindex(facets).fillna(rel.rho.median())
-    v = pd.Series(rho.to_numpy(), index=facets, dtype=float)
+    from build_hybrid import POS_GROUP
+    d = fv.assign(_g=fv.position.map(POS_GROUP).fillna(fv.position))
+    vol = d.groupby(["facet", "_g"])[key].sum()
+    dom = vol.groupby("facet").idxmax().map(lambda t: t[1])
+    return dom.to_dict(), vol.groupby("facet").sum().to_dict()
+
+
+def split_by_position(cmap, pos):
+    """Refine {facet: concept} into {facet: concept:position group}.
+
+    WHY A CONCEPT MAY NOT SPAN POSITIONS. `receiving` used to hold TE_core, WR_yprr,
+    RB_pass_route and six more, and whatever rule divided that concept was thereby
+    deciding what a tight end is worth against a receiver. No rule available at this
+    level can answer that:
+
+      by validity   tight ends win the receiving concept outright - TE_core scores
+                    .384 against .10-.25 for every receiver facet, plausibly for real,
+                    since a receiver's yards per route depends on his quarterback and
+                    a tight end's blocking does not. That put tight ends at 12.6% of
+                    all WAR and 16 of the top 50 players in the country.
+      by snaps      receivers run three times the routes, so they take almost all of
+                    it and tight ends collapse to 2.6%. It is also double-counting:
+                    value is already z TIMES SNAPS, so volume is in the number before
+                    any weight is applied.
+
+    Both are heuristics standing in for a question the WINS FIT CAN ACTUALLY ANSWER,
+    which is the whole principle of this module - between blocks, fit; inside a block,
+    don't. So the block is (job x position group), and positional value comes from the
+    level-1 regression against wins where it belongs. That is ~30 columns rather than
+    15, still an order of magnitude better conditioned than the 82 raw facets, and
+    group_map re-merges any pair the fit genuinely cannot separate.
+    """
+    n_pos = {}
+    for f, c in cmap.items():
+        n_pos.setdefault(c, set()).add(pos.get(f, "?"))
+    return {f: (f"{c}:{pos.get(f, '?')}" if len(n_pos[c]) > 1 else c)
+            for f, c in cmap.items()}
+
+
+def within_weights(facets, rel, cmap):
+    """Validity shares within each concept, summing to 1 per concept.
+
+    By the time this runs a concept is one job done by one position group, so its
+    members really are rival measurements of the same thing and validity is the right
+    question to ask of them. See split_by_position() for what happens when it is not.
+
+    The column is `validity` where player_validity() has supplied one and `rho`
+    otherwise; WAR_WITHIN=rho forces the old behaviour. Both are floored at 0.02, so
+    no facet can be weighted out entirely and none can divide by zero.
+    """
+    col = ("validity" if (os.environ.get("WAR_WITHIN", "validity") == "validity"
+                          and "validity" in rel.columns) else "rho")
+    s = rel[col].reindex(facets)
+    v = pd.Series(s.fillna(s.median()).to_numpy(), index=facets, dtype=float)
     return v.groupby(pd.Series(cmap, dtype=object).reindex(facets)).transform(
-        lambda s: s / s.sum())
+        lambda x: x / x.sum() if x.sum() else 1.0 / len(x))
 
 
 def concept_scores(Z, v, cmap):
@@ -281,16 +401,20 @@ def group_shares(S, y, gmap):
     return uni.groupby(g).transform(lambda s: s / s.sum() if s.sum() else 1.0 / len(s))
 
 
-def build(Z, y, rel, facets=None, n_boot=200, lam=None, seed=0):
+def build(Z, y, rel, facets=None, n_boot=200, lam=None, seed=0, extra_concepts=None,
+          pos=None, vol=None):
     """Per-facet weights, summing to 1, in the shape build_hybrid already writes.
 
     Z    within-season standardized team facet totals
     y    next-season adjusted win pct, aligned to Z's rows
     rel  facet_reliability.csv, indexed by facet
+    extra_concepts  {composite facet: concept} from consolidate.py
     """
     facets = list(facets or Z.columns)
     y = np.asarray(y, float)
-    cmap = concept_map(facets)
+    cmap = concept_map(facets, extra_concepts)
+    if pos:
+        cmap = split_by_position(cmap, pos)
     v = within_weights(facets, rel, cmap)                       # level 3
     assert not v.isna().any(), "a facet has no reliability and would fall out silently"
     S, sd = concept_scores(Z[facets], v, cmap)

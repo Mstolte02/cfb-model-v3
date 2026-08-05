@@ -235,21 +235,80 @@ def load_players():
     return out
 
 
-def facet_values(players, catalogue=None, verbose=True):
+MAX_TIER = 5
+
+# What ranks the depth chart for each group. Opportunity, not quality - targets for a
+# receiver, carries for a back, snaps for everyone whose job has no touch count.
+TIER_BY = {
+    "WR": "recv__targets", "TE": "recv__targets", "RB": "rush__attempts",
+    "QB": "pass__dropbacks", "OL": "blk__snap_counts_offense",
+    "DI": "def__snap_counts_defense", "ED": "def__snap_counts_defense",
+    "LB": "def__snap_counts_defense", "CB": "def__snap_counts_coverage",
+    "S": "def__snap_counts_coverage",
+}
+
+
+def add_tiers(players):
+    """Depth-chart tier per player within his team, season and position group."""
+    p = players.copy()
+    inv = {pos: g for g, members in GROUPS.items() for pos in members}
+    p["grp"] = p.position.map(inv)
+    p["tier"] = np.nan
+    for g, col in TIER_BY.items():
+        if col not in p.columns:
+            continue
+        m = p.grp == g
+        v = pd.to_numeric(p.loc[m, col], errors="coerce").fillna(0)
+        p.loc[m, "tier"] = (v.groupby([p.loc[m, "season"], p.loc[m, "team_name"]])
+                             .rank(ascending=False, method="first").clip(upper=MAX_TIER))
+    p["tier"] = p.tier.fillna(1).astype(int)
+    return p
+
+
+def facet_values(players, catalogue=None, verbose=True, scheme=None):
     """Player-level value rows, in the same schema build_massey.facet_values emits.
 
     value = snap-weighted z of the metric, times the denominator. Identical grammar to
     the hand-built facets, so everything downstream - the Massey solve, the closed-form
     WAA, the replacement pool - works unchanged on a learned feature set.
+
+    ROLE NORMALIZATION, WAR_ROLE_NORM = partial (default) | pooled | tier.
+
+    `pooled` - z against every player at the position - is what shipped, and it charges
+    a receiver for his depth-chart slot. WR1 route grade averages 73.9 against WR5's
+    58.7, and 88% of WR5s sit below the pooled mean against 20% of WR1s. Some of that
+    gap is selection (better receivers earn more targets) and some is role (a fifth
+    receiver runs the routes a fifth receiver runs), and no amount of looking at grades
+    separates them - so role_normalization.py asked which predicts next season's wins
+    better, and the pooled scheme lost:
+
+        pooled   .164267        tier   .163891        partial   .163915
+
+    That result has been sitting in role_normalization.json unshipped. `partial` is
+    what ships now rather than `tier`, and the fourth decimal place is not the reason -
+    the two are indistinguishable on this test. They differ in what they ASSUME. `tier`
+    re-standardizes inside each tier, which says the spread among fifth receivers is as
+    meaningful as the spread among first ones; `partial` subtracts the tier mean and
+    keeps the pooled scale, which removes the role bias that was demonstrated without
+    also asserting the thing that was not.
+
+    Moves QB from 18.6% of total weight to ~15.4% and WR from 9.7% to ~10.9%.
     """
+    scheme = scheme or os.environ.get("WAR_ROLE_NORM", "partial").lower()
+    if scheme not in ("pooled", "tier", "partial"):
+        raise ValueError(f"WAR_ROLE_NORM={scheme!r}; expected pooled, tier or partial")
+    if scheme != "pooled" and "tier" not in players.columns:
+        players = add_tiers(players)
     catalogue = catalogue or build_catalogue()
     rows, skipped = [], []
     for name, metric, denom, positions, kind in catalogue:
         if metric not in players.columns or denom not in players.columns:
             skipped.append((name, "missing column"))
             continue
-        d = players[players.position.isin(positions)][
-            ["season", "player_id", "player", "position", "team_name"]].copy()
+        cols = ["season", "player_id", "player", "position", "team_name"]
+        if scheme != "pooled":
+            cols = cols + ["tier"]
+        d = players[players.position.isin(positions)][cols].copy()
         d["metric"] = pd.to_numeric(players.loc[d.index, metric], errors="coerce")
         d["snaps"] = pd.to_numeric(players.loc[d.index, denom], errors="coerce")
         d = d[(d.snaps >= MIN_DENOM[kind]) & d.metric.notna()]
@@ -265,7 +324,23 @@ def facet_values(players, catalogue=None, verbose=True):
             sd = np.sqrt(np.average((x - mu) ** 2, weights=wt))
             if sd == 0 or not np.isfinite(sd):
                 continue
-            z = np.clip((x - mu) / sd, -6, 6)     # a z of 40 is a data error, not a season
+            if scheme == "pooled":
+                z = (x - mu) / sd
+            elif scheme == "partial":
+                # pooled scale, league-wide tier mean removed
+                tier_mu = (pd.Series(x).groupby(g.tier.to_numpy())
+                             .transform("mean").to_numpy())
+                z = (x - tier_mu) / sd
+            else:  # tier: standardize inside each tier, pooled where a tier is thin
+                z = np.zeros_like(x)
+                tiers = g.tier.to_numpy()
+                for t in np.unique(tiers):
+                    m = tiers == t
+                    m2 = m if m.sum() >= 30 else np.ones_like(m, bool)
+                    tmu = np.average(x[m2], weights=wt[m2])
+                    tsd = np.sqrt(np.average((x[m2] - tmu) ** 2, weights=wt[m2]))
+                    z[m] = (x[m] - tmu) / tsd if tsd else 0.0
+            z = np.clip(z, -6, 6)     # a z of 40 is a data error, not a season
             rows.append(pd.DataFrame({
                 "season": season, "player_id": g.player_id.to_numpy(),
                 "player": g.player.to_numpy(), "position": g.position.to_numpy(),
