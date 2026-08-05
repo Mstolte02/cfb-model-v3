@@ -79,7 +79,7 @@ against .245 validity, which is aDOT correctly identified as a property of the
 offence rather than the receiver; tackling is promoted, being a skill that travels.
 
 Everything above is measured on that transfer test, over 4,509 player-seasons that
-moved: **.4137 → .4967**.
+moved: **.4137 → .4984**.
 
 ### Block weights come with a band
 
@@ -131,13 +131,14 @@ compares the counts below against the live files and complains when they drift.
 | Massey rating vs adjusted win pct | r = .705 |
 | de-attenuation k | 0.954 |
 | player-seasons / total WAR | 89,893 / 6,070 |
-| projection holdout, 2025, ex-ante features only | r = .617 |
-| transfer validity of player WAR | .497 |
+| projection holdout, 2025, ex-ante features only | r = .621 |
+| transfer validity of player WAR | .498 |
 
 The projection's holdout r was published as .631 and is not the same number: that one
 was measured with `is_starter` in the feature set, which was computed from the
 outcome season in training and from a preseason depth chart at serve time. It was
-worth .064 of correlation on an otherwise identical model.
+worth .064 of correlation on an otherwise identical model, measured with
+both feature sets on one build.
 
 ## What is not in git
 

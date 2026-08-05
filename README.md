@@ -23,8 +23,8 @@ five outer folds, which is the data declining to pin that knob down at all.
 **The projection was told who started.** `is_starter` was computed from realised snap
 rank in training and read off a preseason depth chart at serve time. Matching the two
 sides' *density* had fixed the wrong half. Worth **.064 of correlation** on an
-otherwise identical model — r .617 without it against .681 with — so the published
-.631 was measuring a task nobody can perform. Replaced by `prior_rank`, which is last
+otherwise identical model — r .617 without it against .681 with, both feature sets
+scored on one build — so the published .631 was measuring a task nobody can perform. Replaced by `prior_rank`, which is last
 season's snaps on both sides.
 
 **The schedule adjustment never reached the players.** WAA was `games × slope × c_t ×
@@ -54,8 +54,8 @@ well as WAR does.
 **The intervals were decorative.** ±0.41 team wins, never scored against an outcome.
 Measurement noise is now separated from real year-to-year change, residual sd scales
 with the level of the prediction, and a team-level common shock enters the total as
-(n·sd)² rather than n·sd². **±1.70**, and out-of-sample the nominal 68% band covers
-86.9% — conservative rather than calibrated, recorded in `interval_coverage.json`
+(n·sd)² rather than n·sd². **±1.65**, and out-of-sample the nominal 68% band covers
+88.3% — conservative rather than calibrated, recorded in `interval_coverage.json`
 rather than tuned away.
 
 **Rejected on the evidence: re-targeting the weights to contemporaneous wins.** Built
@@ -63,9 +63,9 @@ in full — `war_model/score_state.py` reconstructs each team's in-game score-st
 profile from quarter-by-quarter line scores and projects out the part its own
 production does not explain. It moved the concept weights exactly as predicted (pass
 protection 2.7% → 5.1%, tackling 0.0% → 4.4%) and was still worse on the transfer
-test (.4487 against .4967), and it inverted tight ends and the offensive line. Kept
-behind `WAR_TARGET=contemporaneous` so the result can be reproduced rather than
-trusted.
+test (.4487 against .4967, the two targets scored on one build), and it inverted
+tight ends and the offensive line. Kept behind `WAR_TARGET=contemporaneous` so the
+result can be reproduced rather than trusted.
 
 Also: merges key on `player_id` (the PFF loader never read the column, and was
 deleting one of two real players on 743 keys); position groups are snap-weighted over
@@ -77,7 +77,7 @@ and `staleness_check.py` compares artifact *contents*, which immediately found t
 README claiming 98 facets and a stale ×1.64 rescale in `viz/app.js`.
 
 Transfer validity of player WAR, the measure most of this was scored on, goes
-**.4137 → .4967**.
+**.4137 → .4984**.
 
 ## v3.8 — a denominator, an ordering, and a calculator
 
