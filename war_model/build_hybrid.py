@@ -713,16 +713,50 @@ def main():
     # player's snap count, because every other denominator is a subset of his snaps.
     # 92% of player-seasons have at least one such facet; the rest fall back to the max
     # over all of them, which is a floor rather than a fiction.
+    #
+    # AND A PLAYER WITH NO PFF ROW AT ALL FALLS BACK TO HIS CFBD VOLUME. Reporting
+    # PFF-only snaps left 5,368 player-seasons - 6% of the file - carrying a WAR and
+    # a snap count of exactly zero, every one of them a synthetic cfbd: identity that
+    # PFF never graded. They are worth 3.0 WAR between them, so the aggregate never
+    # noticed, but a row saying a man was worth something in no plays is wrong on the
+    # page and it is wrong in every per-snap rate computed downstream. The CFBD volume
+    # is a different denominator and a worse one, which is why it is a LAST resort and
+    # why snaps_source records that it was used.
     snapish = snap_denominated_facets()
     pff = fv[fv.source == "pff"]
     real = (pff[pff.facet.isin(snapish)].groupby(key, as_index=False).snaps.max())
     anyv = (pff.groupby(key, as_index=False).snaps.max()
                .rename(columns={"snaps": "snaps_any"}))
-    war = war.merge(real, on=key, how="left").merge(anyv, on=key, how="left")
-    war["snaps"] = war.snaps.fillna(war.snaps_any).fillna(0.0)
-    war = war.drop(columns=["snaps_any"])
+    cfbd_v = (fv[fv.source == "cfbd"].groupby(key, as_index=False).snaps.max()
+                .rename(columns={"snaps": "snaps_cfbd"}))
+    war = (war.merge(real, on=key, how="left")
+              .merge(anyv, on=key, how="left")
+              .merge(cfbd_v, on=key, how="left"))
+    war["snaps_source"] = np.select(
+        [war.snaps.notna(), war.snaps_any.notna(), war.snaps_cfbd.notna()],
+        ["pff_snap_count", "pff_denominator", "cfbd_volume"], default="none")
+    war["snaps"] = war.snaps.fillna(war.snaps_any).fillna(war.snaps_cfbd).fillna(0.0)
+    war = war.drop(columns=["snaps_any", "snaps_cfbd"])
     # the downstream stages key on player_id
     war = war.rename(columns={"uid": "player_id"})
+
+    _bad = war[(war.snaps <= 0) & (war.war.abs() > 1e-9)]
+    print(f"  snap source: " + ", ".join(
+        f"{k} {v}" for k, v in war.snaps_source.value_counts().items()))
+    print(f"  rows with WAR but no volume anywhere: {len(_bad)} "
+          f"({_bad.war.sum():.2f} WAR)")
+    assert len(_bad) == 0, (
+        f"{len(_bad)} player-seasons carry WAR with a zero snap count; every WAR row "
+        f"must rest on some measured volume")
+
+    # The PFF and CFBD identities that never merged: same name, team and season, two
+    # ids. They are LEFT SPLIT deliberately - the commonest pair is QB/WR, which is
+    # the Anthony Garcia case unified_facets refuses on purpose - but they are counted
+    # here rather than left to be discovered.
+    _nm = war.player.str.lower().str.strip()
+    _sp = war.groupby([war.season, war.team, _nm]).player_id.transform("nunique")
+    print(f"  unmerged split identities (left split on purpose): "
+          f"{int((_sp > 1).sum())} rows")
 
     # per-facet WAR, in the same shape build_war writes, so the analysis stages that
     # decompose a player's value can read either build

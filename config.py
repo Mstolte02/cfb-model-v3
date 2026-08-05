@@ -138,6 +138,30 @@ UNCERTAINTY_USE_RETURNING = False
 # re-standardization removes the drift: 25 vs 400 iterations correlates 1.00000 with
 # a max rank difference of 2. Left alone.
 #
+# THE ABOVE WAS MEASURING THE SOLVER. That drift is not a cosmetic nuisance: the
+# update is a power iteration on a row-stochastic operator whose spectral radius is
+# exactly alpha, so alpha = 1.0 sits ON the singularity and everything above it
+# diverges geometrically. The re-standardization at the end hid the divergence and
+# turned it into a "cliff", and no sweep run that way could have found an optimum
+# above 1.0 whether or not one existed.
+#
+# oppadj.solve_srs now solves (I - alpha*P*M*P) x = P x0 directly, on the complement
+# of the constant vector - the one direction that cannot matter, since adding a
+# number to every rating changes nothing and the caller z-scores the result. Re-swept
+# on the exact solution:
+#
+#   alpha    0.00   0.60   0.70   0.75   0.85   0.90   1.00   1.25   1.50
+#   Brier   .2121  .2095  .2090  .2088  .2085  .2085  .2135  .2215  .2422
+#
+# The optimum is a broad plateau from about 0.75 to 0.90 and 1.00 IS NOW WORSE THAN
+# ANY OF IT - .2135 against .2085 - because the exact solve at alpha = 1 is the
+# near-singular system the iteration was papering over. Shipping 0.85: on the flat
+# part, with margin from the singularity rather than sitting on it.
+#
+# This value is still selected on the same LOSO it is reported against, which is
+# what scripts/nested_cv.py exists to correct - see the note there for the honest
+# forward number.
+#
 # TWO REFINEMENTS WERE TESTED AND REJECTED (scripts/per_stat_oppadj.py):
 #
 #   per-stat instead of per-composite. Three features are true pairs (havoc, red-zone
@@ -152,7 +176,7 @@ UNCERTAINTY_USE_RETURNING = False
 #   in home-game share, and they barely do (mean .524, sd .069). Implied bias sd is
 #   0.035 team-sd against the opponent adjustment's 0.559, i.e. 16x smaller, and
 #   correcting for it moves teams 1 place. It cancels within a season.
-OPP_ADJ_ALPHA = 1.0
+OPP_ADJ_ALPHA = 0.85
 
 # --- Talent signal: blend roster-aware PFF talent with CFBD recruiting ---------
 # PFF roster-aware talent (this year's roster x last year's grades) is the strongest

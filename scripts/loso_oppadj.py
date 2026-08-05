@@ -2,6 +2,7 @@
 help? Sweeps the adjustment strength alpha (0 = raw, the current model).
 Run: ./venv/bin/python -m scripts.loso_oppadj
 """
+import os
 import sys
 from pathlib import Path
 
@@ -24,7 +25,13 @@ def main():
     ret_raw = raw_returning()
     folds = [y for y in GAME_YEARS if (y - 1) in std]
 
-    alphas = [0.0, 0.25, 0.5, 0.75, 1.0]
+    # The grid used to stop at 1.0 because the 25-round substitution loop diverged
+    # above it, so the reported "cliff past 1.0" was the solver rather than football.
+    # oppadj now solves the system exactly on the complement of the constants, which
+    # makes alpha > 1 a well-posed question for the first time.
+    alphas = [float(a) for a in
+              os.environ.get("OPP_ALPHA_GRID",
+                             "0,0.25,0.5,0.75,1.0,1.25,1.5,2.0,3.0").split(",")]
     od_cache = {a: (None if a == 0 else OA.build_od_by_year(std, games, a)) for a in alphas}
 
     agg = {a: {"brier": [], "log_loss": [], "accuracy": []} for a in alphas}
