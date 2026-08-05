@@ -17,6 +17,8 @@ scoped to the one position where it's cleanly identified.
 """
 from __future__ import annotations
 
+import os
+
 import numpy as np
 import pandas as pd
 from scipy import sparse
@@ -186,6 +188,50 @@ def build_team_qb_feature(value_csv, seasons) -> dict:
         s = s.fillna(s.mean())                       # new starters -> neutral prior
         out[N] = (s - s.mean()) / (s.std(ddof=0) or 1.0)
     return out
+
+
+def build_qb_grades(grade_season: int = 2025, source=None) -> dict:
+    """{normalized name: grade} for the QB talent override, from ONE source.
+
+    There were three QB valuations in this repo doing overlapping jobs: this module's
+    CFBD-only opponent-adjusted value in artifacts/qb_values.csv, the WAR build's own
+    QB WAR, and the external quarterback sheet in war_model/ea/qbs_2026.xlsx. The
+    third is a different question - who starts - and stays where it is. The first two
+    were the same question answered twice, and they disagreed.
+
+    The WAR build wins. It is built from PFF grades AND CFBD play value rather than
+    CFBD alone, it is denominated in wins, and since the schedule term started
+    reaching individual players it is opponent-adjusted in the same solve that
+    adjusts everything else - which is the property qb_values.csv existed to supply.
+    Keeping a second, weaker estimate of the same quantity beside it only raises the
+    question of which one a given number came from.
+
+    The swap costs nothing measurable, which is the point - this is a clarification,
+    not a change. LOSO over 2021-25 is Brier .2026 and accuracy .6787 from EITHER
+    source, identical to four decimal places. Two files were disagreeing about
+    quarterbacks in a way that never reached the output, which is the worst kind of
+    duplication: invisible until someone traces a number and cannot say where it came
+    from.
+
+    QB_GRADES=cfbd restores the old source.
+    """
+    source = source or os.environ.get("QB_GRADES", "war")
+    if source == "cfbd":
+        from config import ARTIFACTS
+        return war_qb_grades(ARTIFACTS / "qb_values.csv", grade_season)
+
+    from src.data import pff, war as warmod
+    w = pd.read_csv(warmod.PLAYER_WAR)
+    q = w[(w.season == grade_season) & (w.position == "QB")]
+    q = q.groupby("player", as_index=False).war.sum()
+    sd = float(q.war.std(ddof=0) or 1.0)
+    z = (q.war - q.war.mean()) / sd
+
+    g = pff.load_player_grades()
+    qbg = g[(g["season"] == grade_season) & (g["group"] == "QB")]["grade"]
+    mu, gsd = float(qbg.mean()), float(qbg.std(ddof=0) or 10.0)
+    return {pff._norm(n): float(np.clip(mu + gsd * zz, 0, 100))
+            for n, zz in zip(q.player, z) if np.isfinite(zz)}
 
 
 def war_qb_grades(value_csv, grade_season: int = 2025) -> dict:

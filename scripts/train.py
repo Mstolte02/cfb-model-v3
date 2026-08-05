@@ -144,17 +144,12 @@ def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=Fal
     # grade; all other positions keep PFF (CFBD can't value OL/coverage).
     from src import qbwar
     from config import ARTIFACTS as _ART
-    # qb_values.csv is genuinely optional - it is an OVERRIDE of the PFF grade at one
-    # position, and its absence leaves the QB on the same footing as every other
-    # position rather than leaving him out. A failure to PARSE it is different, and no
-    # longer swallowed: that means the file exists and we misread it.
-    qb_grades = None
-    qbv = _ART / "qb_values.csv"
-    if qbv.exists():
-        qb_grades = qbwar.war_qb_grades(qbv, 2025)
-        print(f"  [info] QB WAR grades for {len(qb_grades)} QBs (replacing PFF at QB).")
-    else:
-        print(f"  [info] {qbv.name} absent; QB keeps its PFF grade like every other group.")
+    # The QB talent override now comes from the WAR build rather than the parallel
+    # CFBD-only regression in artifacts/qb_values.csv - one valuation of one thing.
+    # See qbwar.build_qb_grades; QB_GRADES=cfbd restores the old source.
+    qb_grades = qbwar.build_qb_grades(2025)
+    print(f"  [info] QB grades for {len(qb_grades)} QBs from the WAR build "
+          f"(replacing PFF at QB).")
 
     # The projection year's roster talent is NOT optional. Without it PROJECTION_YEAR
     # silently kept whatever build_roster_talent() happened to leave in the dict -

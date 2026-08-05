@@ -61,15 +61,23 @@ ROOT = os.path.dirname(HERE)
 # A number that appears in prose is a COPY, and copies rot. Each entry says where a
 # number is published, how to find it in the text, and what it is supposed to equal.
 # `live` is called with a dict of loaded artifacts and returns the truth.
+#
+# CHECKED NUMBERS ARE TAGGED, not guessed at. The first attempt matched any "<n>
+# facets" in the prose and immediately flagged a sentence describing what the OLD flat
+# fit did to 98 facets - which is true, historical, and exactly the kind of false
+# positive that gets a checker switched off. So a number that is meant to track an
+# artifact says so, in a marker the reader does not see:
+#
+#     ...consolidated to 82<!--live:n_facets--> facets...
+#
+# A claim with no marker is prose about the past and is left alone; a marker whose
+# value has drifted is a real defect, every time.
 CLAIMS = [
-    ("../README.md", r"(\d+)\s+facets?\b",
-     lambda a: a["n_facets"], 0,
-     "facet count in the README"),
-    ("README.md", r"(\d+)\s+facets?\b",
-     lambda a: a["n_facets"], 0,
+    ("../README.md", r"(\d+)<!--live:n_facets-->", lambda a: a["n_facets"], 0,
+     "facet count in the root README"),
+    ("README.md", r"(\d+)<!--live:n_facets-->", lambda a: a["n_facets"], 0,
      "facet count in war_model/README.md"),
-    ("../viz/app.js", r"(?:&times;|x|×)\s*(\d\.\d+)",
-     lambda a: None, None,
+    ("../viz/app.js", r"(?:&times;|×)\s*(\d\.\d+)", lambda a: None, None,
      "a hardcoded WAR rescale in the app. build_hybrid solves the de-attenuation "
      "internally now, so ANY such factor in the viz is stale by construction"),
 ]

@@ -1,5 +1,84 @@
 # CFB Predictive Model v3
 
+## v3.9 — an audit, worked through
+
+An external review of the whole model. Most of it was right, one recommendation was
+wrong and is documented as such, and one of the fixes turned up a leak worth 10% of
+the flagship accuracy figure.
+
+**The headline accuracy was measured on the split its knobs were chosen on.** At
+least a dozen were: the opponent-adjustment strength, the uncertainty lambda, two
+talent blends, the ensemble weight, the shrinkage lambda, the Pythagorean exponent,
+the dropped-feature list. `scripts/nested_cv.py` puts the tuning inside a held-out
+season and scores each season once.
+
+| | Brier |
+|---|---|
+| LOSO at the tuned config *(what was reported)* | .2026 |
+| **nested, honest forward estimate** | **.2079** |
+
++2.6% selection optimism. `talent_blend` takes all three of its grid values across the
+five outer folds, which is the data declining to pin that knob down at all.
+
+**The projection was told who started.** `is_starter` was computed from realised snap
+rank in training and read off a preseason depth chart at serve time. Matching the two
+sides' *density* had fixed the wrong half. Worth **.064 of correlation** on an
+otherwise identical model — r .617 without it against .681 with — so the published
+.631 was measuring a task nobody can perform. Replaced by `prior_rank`, which is last
+season's snaps on both sides.
+
+**The schedule adjustment never reached the players.** WAA was `games × slope × c_t ×
+f_contrib`, the exact marginal effect of a player on his own team's rating but not an
+allocation of it — the rest, which is *who you played*, is 29.0% of the variance of
+the ratings and correlated **−0.0013** with what the players were paid. Allocating it
+in proportion to |f_contrib| makes the sum exact. Conference USA falls 1.31 team wins
+in 2025 and the Big Ten rises 0.91.
+
+**The opponent adjustment was sitting on a singularity.** The SRS fixed point was 25
+rounds of substitution — a power iteration on an operator whose spectral radius is
+exactly `alpha` — so the shipped `alpha = 1.0` never converged and the "interior
+optimum" recorded below was the solver, not football. Solved directly on the
+complement of the constants and re-swept, **1.00 is worse than the whole plateau it
+used to sit on top of**: .2135 against .2085 at 0.85, which now ships.
+
+**Nothing had ever been checked against an outside opinion.** Every validation was
+internal, and all of them are satisfied by a number that faithfully reproduces PFF's
+grades times a snap count — which is the one hypothesis they cannot rule out, since
+those are the inputs. `war_model/external_validation.py` scores against EA's CFB 27
+ratings, beside raw playing time and beside the partial correlation holding playing
+time fixed. Within position group the 2026 projection reaches r .69–.83 against
+snaps' .42–.73 (partial .51–.65); historical WAR is a weaker story, and at corner,
+linebacker, safety, receiver and on the line raw playing time matches EA about as
+well as WAR does.
+
+**The intervals were decorative.** ±0.41 team wins, never scored against an outcome.
+Measurement noise is now separated from real year-to-year change, residual sd scales
+with the level of the prediction, and a team-level common shock enters the total as
+(n·sd)² rather than n·sd². **±1.70**, and out-of-sample the nominal 68% band covers
+86.9% — conservative rather than calibrated, recorded in `interval_coverage.json`
+rather than tuned away.
+
+**Rejected on the evidence: re-targeting the weights to contemporaneous wins.** Built
+in full — `war_model/score_state.py` reconstructs each team's in-game score-state
+profile from quarter-by-quarter line scores and projects out the part its own
+production does not explain. It moved the concept weights exactly as predicted (pass
+protection 2.7% → 5.1%, tackling 0.0% → 4.4%) and was still worse on the transfer
+test (.4487 against .4967), and it inverted tight ends and the offensive line. Kept
+behind `WAR_TARGET=contemporaneous` so the result can be reproduced rather than
+trusted.
+
+Also: merges key on `player_id` (the PFF loader never read the column, and was
+deleting one of two real players on 743 keys); position groups are snap-weighted over
+every contributor instead of `[1.0, 0.45]` over the top two by *games*; the 98 facets
+are consolidated to 82<!--live:n_facets-->; blocks are (job × position group) so positional value comes
+from the fit; within a block, weight splits by transfer **validity** rather than
+repeatability; there is one 2026 roster and one QB valuation instead of two and three;
+and `staleness_check.py` compares artifact *contents*, which immediately found this
+README claiming 98 facets and a stale ×1.64 rescale in `viz/app.js`.
+
+Transfer validity of player WAR, the measure most of this was scored on, goes
+**.4137 → .4967**.
+
 ## v3.8 — a denominator, an ordering, and a calculator
 
 Three changes, one of which turned up a bug that had silently undone an earlier fix.
@@ -31,7 +110,8 @@ FBS defensive rows; the rest have no snap count and are dropped rather than impu
 since inventing the denominator is worse than not having the row. Shrinkage (k = 200,
 half weight at roughly the median snap count) is now needed and applied, because
 dividing by a man's own 12 snaps lets one tackle-for-loss post a rate no starter can
-reach. **All 98 facets now pay replacement credit**, up from 92.
+reach. **Every facet now pays replacement credit**, up from 92 of 98. (v3.9
+consolidates the near-duplicates, so the live count is 82; see above.)
 
 Forward r **.500 → .519**, Massey vs adjusted win pct **.698 → .710**, and the
 WAR-equals-wins identity fits slightly better at **r .8344 → .8481**.
@@ -186,6 +266,11 @@ and both came back clean: `alpha = 1.0` was the *edge* of the old tuning grid, b
 extending past it shows a genuine interior optimum (Brier .2086 at 1.0, .2208 at
 1.25), and the 25-iteration loop never formally converges yet its *shape* does —
 25 vs 400 iterations correlates 1.00000.
+
+> **Superseded in v3.9.** Both of those conclusions were measuring the solver. The
+> iteration's spectral radius is exactly `alpha`, so 1.0 is the divergence boundary
+> and the "interior optimum" was the re-standardization hiding it. On an exact solve
+> the optimum is a plateau at 0.75–0.90 and 1.0 is worse than all of it.
 
 **The two example teams said opposite things, and neither was the guess.** Wake
 Forest played the 45th-toughest set of offences — dead average — and its defence was

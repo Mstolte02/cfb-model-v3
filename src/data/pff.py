@@ -326,6 +326,33 @@ def _join_prior_grade(td: pd.DataFrame, g25: pd.DataFrame) -> pd.DataFrame:
     return td.drop(columns="group")
 
 
+def load_2026_roster() -> pd.DataFrame:
+    """[team, broad_group, pname, depth] - THE 2026 roster, singular.
+
+    There were two. The WAR build scraped the Ourlads two-deep into
+    war_model/roster_2026.csv (136 teams, 5,770 slots) and this module read the PFSN
+    workbook's "Weighted Two Deep" sheet (138 teams, 5,662 slots), and they disagreed
+    about roughly 900 players and two teams' worth of naming. So the projected WAR of
+    a roster and the PFF talent of "the same" roster were computed over different
+    rosters, and the model blended the two as though they described one team.
+
+    The Ourlads scrape wins because it is the one the rest of the pipeline already
+    depends on - build_roster_2026 attaches player ids and WAR history to it, and
+    depth_correction pins starters on it - so it is the copy that is maintained. It
+    also carries CFBD school names already, which is the vocabulary the model indexes
+    on. The workbook stays a raw input to war_model, not a second roster.
+    """
+    from src.data import war as warmod
+    p = warmod.WAR_DIR / "roster_2026.csv"
+    require(p, "the 2026 roster (war_model/build_roster_2026.py writes it)", "WAR_DIR")
+    d = pd.read_csv(p)
+    d = d[["team", "broad_group", "player", "depth"]].dropna(
+        subset=["player", "broad_group"])
+    d["pname"] = d.player.map(_norm)
+    d["depth"] = pd.to_numeric(d.depth, errors="coerce").fillna(2)
+    return d
+
+
 def build_2026_roster_talent(weights=PFF_OPT_WEIGHTS, qb_grades=None) -> dict:
     """{2026: Series(team -> standardized talent)} from the 2026 Ourlads two-deep
     (roster) x each player's 2025 PFF grade. Same construction as the historical
@@ -338,13 +365,7 @@ def build_2026_roster_talent(weights=PFF_OPT_WEIGHTS, qb_grades=None) -> dict:
     """
     g = load_player_grades()
     g25 = g[g.season == 2025]
-
-    td = pd.read_excel(require(TWODEEP_2026, "the 2026 two-deep workbook",
-                               "CFB_TWODEEP_2026"), sheet_name="Weighted Two Deep")
-    td = td[["team", "broad_group", "player_display", "depth"]].dropna(
-        subset=["player_display", "broad_group"])
-    td["pname"] = td["player_display"].map(_norm)
-    td["depth"] = pd.to_numeric(td.depth, errors="coerce").fillna(2)
+    td = load_2026_roster()
 
     td = _join_prior_grade(td, g25)
     if qb_grades:

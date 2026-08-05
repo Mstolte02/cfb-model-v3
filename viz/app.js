@@ -1904,11 +1904,9 @@
         <div class="wd-foot">${roster && !roster.players ? "Position groups from" :
           "Projected starters from"} the 2026 two-deep, each carrying
           the wins ${roster && !roster.players ? "they add" : "he adds"} over a
-          replacement-level player. Raw WAR is compressed
-          &mdash; the rating underneath is a noisy estimate and a projection is a
-          conditional mean &mdash; so every player is scaled by one league-wide
-          factor (&times;1.64) that restores the historical spread without moving the
-          league average.${roster && roster.players
+          replacement-level player, against an average schedule. No rescaling is
+          applied here: the build solves for the factor that puts summed team WAR in
+          units of wins and applies it at source.${roster && roster.players
             ? ` <span class="tag unproven">?</span> marks a player with no prior FBS
               snaps, whose projection is a positional prior rather than a measurement.`
             : ""}</div></div>
