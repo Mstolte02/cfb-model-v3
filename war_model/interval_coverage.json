@@ -1,0 +1,11 @@
+{
+ "nominal_68_actual": 0.8686131386861314,
+ "nominal_95_actual": 0.9781021897810219,
+ "mean_team_sd": 1.6134423687915893,
+ "mean_team_sd_independent": 1.4815497944453615,
+ "team_shock_sd_per_player": 0.01404512371187032,
+ "level_exponent": 0.6139734267239505,
+ "fitted_on": 2024,
+ "scored_on": 2025,
+ "n_teams": 137
+}

@@ -162,17 +162,26 @@ def apply(fv, sigma, clusters):
     norm = {c["name"]: float(np.linalg.norm(list(c["loadings"].values())))
             for c in clusters}
     hit["_z"] = hit.L * hit.z / hit.composite.map(norm)
+    # HOW MUCH THIS ROW'S VALUE MOVES WHEN ITS z MOVES. For an ordinary facet that is
+    # just `snaps`, because value = z * snaps, and uncertainty.py assumed exactly that
+    # everywhere. It is NOT true of a composite - value here is a sigma-weighted
+    # combination of its members - and taking snaps for it inflated the propagated
+    # error by more than an order of magnitude. Carried explicitly so the assumption
+    # cannot be made silently again.
+    hit["_d"] = (hit.L * hit.snaps / hit.sig.replace(0.0, np.nan)).abs()
 
     key = [c for c in ("season", "uid", "player_id", "player", "position", "team",
                        "source") if c in hit.columns]
     comp = hit.groupby(key + ["composite"], as_index=False).agg(
-        value=("_v", "sum"), z=("_z", "sum"),
+        value=("_v", "sum"), z=("_z", "sum"), dvdz=("_d", "sum"),
         # the composite occupies whichever of its members' denominators is the real
         # playing time; every other member's is a subset of it, exactly as
         # build_hybrid argues when it takes a max to report a player's snaps
         snaps=("snaps", "max"))
     comp = comp.rename(columns={"composite": "facet"})
 
+    rest = rest.copy()
+    rest["dvdz"] = rest.snaps
     out = pd.concat([rest, comp], ignore_index=True)
     report = {c["name"]: {"members": c["members"], "n": len(c["members"]),
                           "concept": c["concept"],

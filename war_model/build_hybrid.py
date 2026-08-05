@@ -537,6 +537,10 @@ def main():
 
     fv["sigma"] = [sigma.loc[s, f] for s, f in zip(fv.season, fv.facet)]
     fv["w"] = fv.facet.map(w)
+    # d(value)/d(z), which is `snaps` for an ordinary facet and is not for a composite;
+    # uncertainty.py propagates through it rather than assuming. See consolidate.apply.
+    if "dvdz" not in fv.columns:
+        fv["dvdz"] = fv.snaps
     fv["f_contrib"] = fv.w * fv.value / fv.sigma
     fv["c_t"] = [sens[s][t] for s, t in zip(fv.season, fv.team)]
     fv["games"] = [games[s][t] for s, t in zip(fv.season, fv.team)]
