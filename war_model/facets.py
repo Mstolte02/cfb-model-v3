@@ -62,4 +62,6 @@ POS_GROUP = {
 # dragged the pooled figure from .67 to .48.
 EXCLUDE_SEASONS = {2020}
 YEARS = [y for y in range(2014, 2026) if y not in EXCLUDE_SEASONS]
-PFF_DIR = "/Users/markstolte/Downloads/pff_exports"
+from paths import PFF_DIR, require  # noqa: E402  (single definition, see paths.py)
+
+require(PFF_DIR, "the PFF exports", "PFF_DIR")

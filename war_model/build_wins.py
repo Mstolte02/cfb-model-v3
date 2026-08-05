@@ -2,9 +2,11 @@
 import csv, os, re, json
 from collections import defaultdict
 
-GAMES = "/Users/markstolte/Downloads/CFB_Data/data/games.csv"
+from paths import GAMES_CSV, PFF_DIR, require
+
+GAMES = str(require(GAMES_CSV, "the CFB games table", "CFB_GAMES_CSV"))
 GAMES_2025 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "games_2025.json")
-PFF = "/Users/markstolte/Downloads/pff_exports"
+PFF = str(require(PFF_DIR, "the PFF exports", "PFF_DIR"))
 OUT = os.path.dirname(os.path.abspath(__file__))
 from facets import YEARS   # 2014-2025 less the COVID season; see facets.py
 

@@ -432,7 +432,82 @@ def main():
     fv["f_contrib"] = fv.w * fv.value / fv.sigma
     fv["c_t"] = [sens[s][t] for s, t in zip(fv.season, fv.team)]
     fv["games"] = [games[s][t] for s, t in zip(fv.season, fv.team)]
-    fv["waa"] = fv.games * slope * fv.c_t * fv.f_contrib
+
+    # ---- THE SCHEDULE HAS TO REACH THE PLAYERS ------------------------------
+    # waa used to be games * slope * c_t * f_contrib, full stop. That is the exact
+    # MARGINAL effect of the player on his own team's rating, and as a derivative it
+    # is right - but it is not an ALLOCATION, and the difference was the whole
+    # schedule adjustment.
+    #
+    # The rating is linear in the league's facet vector, massey = B f, so
+    #     massey_t = c_t * f_t   +   sum over OTHER teams of B[t,s] * f_s
+    # and only the first term was ever handed out. The second term is the schedule:
+    # who you played. It is 29.0% of the variance of the ratings, and the correlation
+    # between a team's summed player WAA and its own schedule term was -0.0013. A
+    # team's players were being paid for raw production against nobody in particular.
+    #
+    # That is what put six G5 quarterbacks in the 2025 top twelve. A +2 sigma passing
+    # season is worth the same f_contrib whether it was thrown at Alabama or at UMass,
+    # because the z-score is taken against the whole league; the Massey solve corrected
+    # for it at the team level and the correction then stopped there.
+    #
+    # THE OBVIOUS FIX IS THE WRONG SHAPE. Rescaling each player by rating_t / f_t makes
+    # the sum come out, but f is mean-centered, so that ratio is one near-zero quantity
+    # over another: it runs from -4661 to +450 over the 1,438 team-seasons and has the
+    # wrong sign for 18.9% of them, which would flip every player on those teams from
+    # positive to negative. Multiplicative allocation is unusable here.
+    #
+    # So it is allocated ADDITIVELY, in proportion to |f_contrib|. The inflation being
+    # corrected lives in the MEASURED PRODUCTION - a z-score banked against weak
+    # defences - so the discount should scale with how much production was measured,
+    # and a player who was exactly league-average has nothing to discount. The absolute
+    # value is what keeps it stable: the denominator is a sum of magnitudes, strictly
+    # positive and nowhere near zero, so there is no ratio to blow up and no sign to
+    # flip. Everyone on a weak-schedule team is marked down in proportion to what he
+    # was credited with, which is the direction the correction actually runs.
+    #
+    # CHOSEN ON A CRITERION THAT IS NOT THE LEADERBOARD. Picking the basis that demotes
+    # the G5 quarterbacks would be fitting to the complaint. The test used instead is
+    # the transfer one: how well a player's WAA predicts his OWN next season AT A
+    # DIFFERENT TEAM, which is as close as this data comes to asking whether we measured
+    # the player or his circumstances. Over the 4,509 player-seasons that moved:
+    #
+    #   no schedule allocation (was)   r = .2423
+    #   per snap                       r = .2864
+    #   per w_f * snaps                r = .2893
+    #   per |f_contrib|                r = .3017     <- shipped
+    #
+    # Every allocation beats not allocating, which is the finding that matters; the
+    # production-weighted one wins by enough to choose it. Same-team r moves .4046 ->
+    # .4271, so this is not bought by smoothing everything toward the team mean.
+    # The residual is defined against WHAT IS ACTUALLY BEING ALLOCATED - the summed
+    # f_contrib of the players on the frame - and not against the ratings table's own
+    # `f`. The two differ by the mean-centering applied before the Massey solve, and
+    # by any team-season present in one and not the other. Taking the difference here
+    # makes the identity below exact by construction rather than approximately true.
+    own = (fv.assign(_c=fv.c_t * fv.f_contrib)
+             .groupby(["season", "team"])._c.sum().rename("own"))
+    tgt = ratings.set_index(["season", "team"]).massey.rename("massey")
+    resid = (tgt.reindex(own.index).fillna(0.0) - own).rename("sched_t")
+    fv = fv.merge(resid.reset_index(), on=["season", "team"], how="left")
+    fv["sched_t"] = fv.sched_t.fillna(0.0)
+
+    fv["sched_basis"] = fv.f_contrib.abs().fillna(0.0)
+    team_basis = fv.groupby(["season", "team"]).sched_basis.transform("sum")
+    fv["sched_share"] = np.where(team_basis > 0, fv.sched_basis / team_basis, 0.0)
+
+    fv["waa"] = fv.games * slope * (fv.c_t * fv.f_contrib
+                                    + fv.sched_t * fv.sched_share)
+
+    # The allocation is exact by construction; assert it rather than trust it.
+    _chk = fv.groupby(["season", "team"]).agg(
+        waa=("waa", "sum"), g=("games", "first"), s=("sched_t", "first")).reset_index()
+    _chk = _chk.merge(ratings, on=["season", "team"])
+    _want = _chk.g * slope * _chk.massey
+    _err = float((_chk.waa - _want).abs().max())
+    print(f"  schedule allocated: summed team WAA now equals games*slope*rating "
+          f"(max abs error {_err:.2e})")
+    assert _err < 1e-6, "player WAA no longer sums to the team's schedule-adjusted rating"
 
     # Replacement credit is payment for OCCUPYING A SNAP, so it can only be paid
     # through facets where the volume column is the player's own playing time.
@@ -485,6 +560,16 @@ def main():
     # The whole point of the correction, asserted rather than eyeballed: summed team
     # WAR has to regress on actual wins above replacement with slope 1, or WAR is not
     # in units of wins and every number the site shows is on a private scale.
+    #
+    # THE CORRELATION ON THIS LINE FELL, .8481 -> .7175, AND THAT IS THE POINT.
+    # It is the slope that has to be 1, not the r. Summed WAR now tracks the
+    # schedule-ADJUSTED rating, and part of what makes a team's realised win total is
+    # having played nobody - the raw weighted facet total correlates .852 with wins
+    # while the Massey rating correlates .710, precisely because Massey takes that
+    # part out. A WAR that reproduced realised wins perfectly would be one that had
+    # not adjusted for schedule at all. This build answers "how many wins was he worth
+    # against an average schedule", so an 11-win Conference USA roster is expected to
+    # sum to less than eleven.
     _t = fv.groupby(["season", "team"], as_index=False).agg(war=("war", "sum"))
     _d = _t.merge(recs[["season", "team", "adj_wins", "fbs_games"]],
                   on=["season", "team"])

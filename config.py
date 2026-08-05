@@ -6,11 +6,47 @@ advanced stats. This (a) matches the doc's real use case ("2024 stats -> 2025
 projection") and (b) is genuinely leakage-free, because the features for a game
 never include that game's own outcome.
 """
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 DATA_RAW = ROOT / "data" / "raw"
 ARTIFACTS = ROOT / "artifacts"
+
+# --- External data, none of which is in git ----------------------------------
+# The PFF exports are licensed and the two-deep workbook is bought; both live
+# outside the repo. They used to be absolute paths written into five different
+# modules, which meant a machine without them got a DIFFERENT MODEL rather than an
+# error - `except Exception: print(warn)` around each loader let the pipeline finish
+# with the WAR talent silently missing from the blend. A run that cannot see its
+# inputs must fail, not quietly produce a plausible number on fewer of them.
+#
+# Override any of these with the matching environment variable.
+CFB_EXTERNAL = Path(os.environ.get("CFB_EXTERNAL", Path.home() / "Downloads"))
+PFF_DIR = Path(os.environ.get("PFF_DIR", CFB_EXTERNAL / "pff_exports"))
+GAMES_CSV = Path(os.environ.get(
+    "CFB_GAMES_CSV", CFB_EXTERNAL / "CFB_Data" / "data" / "games.csv"))
+TWODEEP_2026 = Path(os.environ.get(
+    "CFB_TWODEEP_2026",
+    CFB_EXTERNAL / "fbs_2026_two_deep_pfsn_full_position_weights.xlsx"))
+PFSN_MASTER = Path(os.environ.get(
+    "CFB_PFSN_MASTER", CFB_EXTERNAL / "cfb_pfsn_all_raw_numbers_master.xlsx"))
+LOGO_DIR = Path(os.environ.get("CFB_LOGO_DIR", CFB_EXTERNAL / "cfb_logos"))
+
+
+def require(path, what, env):
+    """Return `path`, or explain exactly what is missing and which variable moves it.
+
+    Every external input goes through here. The alternative - a truthiness check at
+    the call site that falls through to a default - is what produced runs whose
+    printed accuracy described a model with one of its three talent inputs absent.
+    """
+    p = Path(path)
+    if not p.exists():
+        raise FileNotFoundError(
+            f"{what} not found at {p}. Set {env} to its location. "
+            f"This input is not optional; the model is not the same model without it.")
+    return p
 
 # Season we are projecting (the whole point of this build).
 PROJECTION_YEAR = 2026

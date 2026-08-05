@@ -23,12 +23,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import requests
 
-from config import ROOT
+from config import ROOT, LOGO_DIR as FALLBACK_DIR
 
 LOGO_DIR = ROOT / "viz" / "logos"
 VIZ_DATA = ROOT / "viz" / "data"
-# last-resort local source for a team ESPN has no usable mark for
-FALLBACK_DIR = Path("/Users/markstolte/Downloads/cfb_logos")
+# FALLBACK_DIR is the last-resort local source for a team ESPN has no usable mark
+# for. Genuinely optional - a missing logo degrades a picture, not a number - so it
+# is the one external path that does not go through require().
 PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
 
 

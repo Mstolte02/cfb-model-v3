@@ -11,7 +11,9 @@ import pandas as pd
 import artifacts
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-XL = "/Users/markstolte/Downloads/fbs_2026_two_deep_pfsn_full_position_weights.xlsx"
+from paths import TWODEEP_2026, require
+
+XL = str(require(TWODEEP_2026, "the 2026 two-deep workbook", "CFB_TWODEEP_2026"))
 
 # columns we take from the workbook: roster identity only
 ROSTER_COLS = ["team", "conference", "unit", "roster_position", "broad_group",
@@ -101,16 +103,31 @@ def main():
     # most recent season first, so a player's latest team wins a tie
     war = war.sort_values("season", ascending=False)
 
-    # match 1: name + 2025 team (strongest); match 2: name + group across any season
-    m25 = war[war.season == 2025].drop_duplicates(["key", "team"])
+    # match 1: name + 2025 team (strongest); match 2: name + group across any season.
+    #
+    # BOTH REQUIRE THE KEY TO BE UNIQUE. They were `drop_duplicates`, which does not
+    # resolve an ambiguity - it hides one, by keeping whichever row sorted first and
+    # handing that player's entire WAR history to a stranger with the same name. Two
+    # players sharing a key means we do not know which is listed, and the honest
+    # answer is no match; the two-deep slot then goes through the projection's
+    # no-history path, which is what it is for.
+    def unique_by(frame, keys):
+        n = frame.groupby(keys).player_id.transform("nunique")
+        ok = frame[n == 1].drop_duplicates(keys)
+        return ok, int((n > 1).sum())
+
+    m25, amb_team = unique_by(war[war.season == 2025], ["key", "team"])
     ros = ros.merge(
         m25[["key", "team", "player_id"]].rename(columns={"player_id": "pid_team"}),
         on=["key", "team"], how="left")
 
-    by_key_group = war.drop_duplicates(["key", "group"])[["key", "group", "player_id"]]
+    by_key_group, amb_group = unique_by(war, ["key", "group"])
+    by_key_group = by_key_group[["key", "group", "player_id"]]
     ros = ros.merge(by_key_group.rename(columns={"group": "broad_group",
                                                  "player_id": "pid_group"}),
                     on=["key", "broad_group"], how="left")
+    print(f"  ambiguous history keys refused: {amb_team} on name+team, "
+          f"{amb_group} on name+position")
 
     # No name-only fallback: it matched a South Carolina EDGE and a Delaware OL to the
     # same id. Every match must agree on either team or position group.

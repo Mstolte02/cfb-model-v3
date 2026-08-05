@@ -41,22 +41,28 @@ def blended_talent(cfbd_tal, pff_roster, w=TALENT_BLEND, war_w=None):
 
     if war_w <= 0:
         return out
-    try:
-        from src.data import war as warmod
-        if not warmod.available():
-            print("  [warn] WAR build not found; talent stays on PFF+CFBD only.")
-            return out
-        wt = warmod.talent_by_year({N: s.index for N, s in out.items()})
-        n = 0
-        for N, blend in out.items():
-            v = wt.get(N)
-            if v is None:
-                continue
-            out[N] = (1 - war_w) * blend + war_w * v.reindex(blend.index).fillna(blend)
-            n += 1
-        print(f"  [info] WAR talent blended at {war_w:.2f} for {n} seasons.")
-    except Exception as e:
-        print(f"  [warn] WAR talent unavailable ({e}); talent stays on PFF+CFBD only.")
+
+    # This used to be wrapped in `except Exception: print(warn); return out`, which
+    # meant that when WAR_BLEND said a quarter of talent comes from the WAR build and
+    # the build was absent, the run FINISHED - on PFF+CFBD only - and printed an
+    # accuracy figure describing a model nobody had configured. A warning in a log is
+    # not a substitute for the number being wrong. If the config asks for WAR talent,
+    # a run without it is a failure.
+    from src.data import war as warmod
+    if not warmod.available():
+        raise FileNotFoundError(
+            f"WAR_BLEND={war_w} but the WAR build is absent ({warmod.PLAYER_WAR}). "
+            f"Run war_model/build_hybrid.py, point WAR_DIR at an existing build, "
+            f"or set WAR_BLEND=0 to train deliberately without it.")
+    wt = warmod.talent_by_year({N: s.index for N, s in out.items()})
+    n = 0
+    for N, blend in out.items():
+        v = wt.get(N)
+        if v is None:
+            continue
+        out[N] = (1 - war_w) * blend + war_w * v.reindex(blend.index).fillna(blend)
+        n += 1
+    print(f"  [info] WAR talent blended at {war_w:.2f} for {n} seasons.")
     return out
 
 
@@ -138,21 +144,27 @@ def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=Fal
     # grade; all other positions keep PFF (CFBD can't value OL/coverage).
     from src import qbwar
     from config import ARTIFACTS as _ART
+    # qb_values.csv is genuinely optional - it is an OVERRIDE of the PFF grade at one
+    # position, and its absence leaves the QB on the same footing as every other
+    # position rather than leaving him out. A failure to PARSE it is different, and no
+    # longer swallowed: that means the file exists and we misread it.
     qb_grades = None
     qbv = _ART / "qb_values.csv"
     if qbv.exists():
-        try:
-            qb_grades = qbwar.war_qb_grades(qbv, 2025)
-            print(f"  [info] QB WAR grades for {len(qb_grades)} QBs (replacing PFF at QB).")
-        except Exception as e:
-            print(f"  [warn] QB WAR grades unavailable: {e}")
+        qb_grades = qbwar.war_qb_grades(qbv, 2025)
+        print(f"  [info] QB WAR grades for {len(qb_grades)} QBs (replacing PFF at QB).")
+    else:
+        print(f"  [info] {qbv.name} absent; QB keeps its PFF grade like every other group.")
+
+    # The projection year's roster talent is NOT optional. Without it PROJECTION_YEAR
+    # silently kept whatever build_roster_talent() happened to leave in the dict -
+    # in practice the prior season's roster - and the projection was then published as
+    # if it described next year's two-deep.
     pff_roster = pff.build_roster_talent()
-    try:
-        pff_roster[PROJECTION_YEAR] = pff.build_2026_roster_talent(qb_grades=qb_grades)[PROJECTION_YEAR]
-        print(f"  [info] {PROJECTION_YEAR} roster talent from two-deep "
-              f"({len(pff_roster[PROJECTION_YEAR])} teams).")
-    except Exception as e:
-        print(f"  [warn] {PROJECTION_YEAR} roster talent unavailable: {e}")
+    pff_roster[PROJECTION_YEAR] = pff.build_2026_roster_talent(
+        qb_grades=qb_grades)[PROJECTION_YEAR]
+    print(f"  [info] {PROJECTION_YEAR} roster talent from two-deep "
+          f"({len(pff_roster[PROJECTION_YEAR])} teams).")
     # captured before the blend overwrites it - this is the CFBD recruiting composite
     # on its own, which is one of the three things that make up talent
     cfbd_only = talent[PROJECTION_YEAR].copy()
@@ -183,14 +195,12 @@ def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=Fal
                           uncertainty=unc, od_by_year=od)
     if return_parts:
         prior = PROJECTION_YEAR - 1
-        war_z = None
-        try:
-            from src.data import war as warmod
-            if warmod.available():
-                war_z = warmod.talent_by_year(
-                    {PROJECTION_YEAR: cfbd_only.index}).get(PROJECTION_YEAR)
-        except Exception as e:
-            print(f"  [warn] WAR z unavailable for the derivation export: {e}")
+        # blended_talent() has already raised if WAR_BLEND wants a build that is not
+        # there, so by here `available()` is either true or WAR_BLEND is 0 and the
+        # derivation genuinely has no WAR column to show.
+        from src.data import war as warmod
+        war_z = (warmod.talent_by_year({PROJECTION_YEAR: cfbd_only.index})
+                 .get(PROJECTION_YEAR) if warmod.available() else None)
         parts = {
             "cfbd_talent": cfbd_only,
             "pff_roster": pff_roster.get(PROJECTION_YEAR),

@@ -24,7 +24,9 @@ from src import oppadj as OA
 from src import model as M
 from scripts.train import load_bundle, raw_returning
 
-MASTER = "/Users/markstolte/Downloads/cfb_pfsn_all_raw_numbers_master.xlsx"
+from config import PFSN_MASTER, require
+
+MASTER = str(require(PFSN_MASTER, "the PFSN master workbook", "CFB_PFSN_MASTER"))
 COMBO = ("stable_7pos_available_2019_2025", "depth_curve_top5", "free_simplex")
 ALIAS = {"Miami (FL)": "Miami", "Connecticut": "UConn", "Mississippi": "Ole Miss",
          "Appalachian State": "App State", "Hawaii": "Hawai'i", "USF": "South Florida",

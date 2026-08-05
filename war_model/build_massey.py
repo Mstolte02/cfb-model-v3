@@ -11,6 +11,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 
 from facets import FACETS, SOURCES, POS_GROUP, YEARS, PFF_DIR
+from paths import GAMES_CSV, require
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 KEY = ["season", "player_id", "player", "position", "team_name"]
@@ -96,7 +97,7 @@ def load_schedule():
     solving on five seasons while the player frame carries twelve.
     """
     games = []
-    src = "/Users/markstolte/Downloads/CFB_Data/data/games.csv"
+    src = require(GAMES_CSV, "the CFB games table", "CFB_GAMES_CSV")
     d = pd.read_csv(src, low_memory=False)
     csv_years = [y for y in YEARS if y < 2025]
     d = d[d.season.isin(csv_years) & (d.status == "completed")]
