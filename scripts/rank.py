@@ -1,7 +1,9 @@
 """2026 power ratings using the matchup-adjusted model (with uncertainty index).
 
-Run: ./venv/bin/python -m scripts.rank [roster]
+Run: ./venv/bin/python -m scripts.rank [pff|roster]
   (no arg)  balanced default frame
+  pff       PFF-ONLY variant: no EA anywhere. Needs CFB_WAR_VARIANT=pff set, or it
+            refuses -> artifacts/2026_power_ratings_pff.csv
   roster    ROSTER-WEIGHTED variant (70% two-deep PFF talent, full uncertainty
             shrinkage) -> artifacts/2026_power_ratings_roster.csv
 """
@@ -10,7 +12,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from config import PROJECTION_YEAR, ARTIFACTS, ROSTER_VARIANT
+from config import PROJECTION_YEAR, ARTIFACTS, ROSTER_VARIANT, SITE_VARIANTS, \
+    variant_suffix
 from src.data import load
 from src import matchup as MU
 from src.model import CFBModel
@@ -20,7 +23,7 @@ from scripts.train import build_projection_frame
 def main(variant=""):
     load.require_key()
     kw = ROSTER_VARIANT if variant == "roster" else {}
-    suffix = "_roster" if variant == "roster" else ""
+    suffix = variant_suffix(variant)
     frame = build_projection_frame(**kw)
     model = CFBModel.load()
 
@@ -28,7 +31,7 @@ def main(variant=""):
     out_csv = ARTIFACTS / f"{PROJECTION_YEAR}_power_ratings{suffix}.csv"
     ratings.to_csv(out_csv, index=False)
 
-    label = "roster-weighted" if variant == "roster" else "balanced"
+    label = SITE_VARIANTS[variant]
     print(f"\n=== {PROJECTION_YEAR} Power Ratings (top 25, {label}) ===")
     for _, r in ratings.head(25).iterrows():
         print(f"  {int(r['rank']):>3}. {r['team']:<24} power={r['power']:.3f}")

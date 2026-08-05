@@ -30,17 +30,50 @@ _HERE = Path(__file__).resolve().parents[2]
 WAR_DIR = Path(os.environ.get("WAR_DIR", _HERE / "war_model"))
 PLAYER_WAR = WAR_DIR / "hybrid_player_war.csv"
 
-def _projection_file():
-    """projections_2026_blended.csv when EA is switched on for lightly-played players,
-    otherwise the plain projection. Missing blend file falls back rather than failing,
-    so a fresh clone that has never run war_model/ea/blend_projection.py still works."""
+# WHICH OPINION OF EACH PLAYER THE PROJECTION USES.
+#
+#   blended (default)  our WAR, with EA's ORDERING substituted for OL/WR/DT and for
+#                      anyone under EA_BLEND_SNAPS prior snaps, and the starting
+#                      quarterbacks re-ordered by the five-source composite in
+#                      qbs_2026.xlsx (PFSN, PFF, EPA, an execs poll, EA).
+#   pff                no outside opinion at all. Every number is this model's own,
+#                      out of the PFF and CFBD facets.
+#
+# Set CFB_WAR_VARIANT=pff, or pass variant= explicitly. The two variants share a
+# ROSTER - the same two-deep, the same starters, the same injuries - so a difference
+# between them is a difference in ratings and nothing else. That is what makes the
+# toggle on the site readable: flipping it changes whose judgement is being shown,
+# not who is on the field.
+VARIANTS = ("blended", "pff")
+
+
+def variant() -> str:
+    v = os.environ.get("CFB_WAR_VARIANT", "blended").lower()
+    if v not in VARIANTS:
+        raise ValueError(f"CFB_WAR_VARIANT={v!r}; expected one of {VARIANTS}")
+    return v
+
+
+def _projection_file(v: str | None = None):
+    """The final 2026 projection for the requested variant.
+
+    depth_correction.py is the last stage in both cases: it fixes the depth chart
+    against prior snaps and strips the injury-driven share the projection hands a
+    backup. Only the PFF variant skips the quarterback value map, which is the one
+    step in that file that carries an outside opinion.
+    """
+    v = v or variant()
+    if v == "pff":
+        pff_final = WAR_DIR / "projections_2026_final_pff.csv"
+        if pff_final.exists():
+            return pff_final
+        # the unblended projection is already EA-free; it just has no depth correction
+        return WAR_DIR / "projections_2026_v2.csv"
+
     try:
         from config import EA_BLEND_SNAPS
     except Exception:
         EA_BLEND_SNAPS = 0
-    # depth_correction.py is the last stage and supersedes the blend: it fixes
-    # is_starter against prior snaps and strips the injury-driven share the projection
-    # hands a backup, neither of which the blend touches.
     final = WAR_DIR / "projections_2026_final.csv"
     if final.exists():
         return final
@@ -53,6 +86,13 @@ def _projection_file():
     return WAR_DIR / "projections_2026_v2.csv"
 
 
+def PROJECTIONS_FOR(v=None):
+    return _projection_file(v)
+
+
+# Module-level constant kept for callers that read it directly. It is resolved at
+# import time, so a process that wants the other variant sets CFB_WAR_VARIANT before
+# importing - which is what the variant-suffixed build commands do.
 PROJECTIONS = _projection_file()
 
 # the WAR build already emits CFBD-style school names, but a handful of its own

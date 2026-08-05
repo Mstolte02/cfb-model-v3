@@ -58,19 +58,28 @@ def main(no_players: bool = False):
     # folders beginning with an underscore.
     (DIST / ".nojekyll").write_text("")
 
-    players = DIST / "data" / "players.json"
-    if no_players:
-        teams, dropped = strip_players(players)
-        # The one failure that would matter, so check rather than trust.
-        leaked = [t for t, v in json.loads(players.read_text()).items()
-                  if "players" in v]
-        if leaked:
-            raise SystemExit(f"ABORT: player rows survived for {len(leaked)} teams")
-        print(f"  players.json: {teams} teams, {dropped:,} player rows removed")
-    else:
-        data = json.loads(players.read_text())
-        n = sum(len(v.get("players", [])) for v in data.values())
-        print(f"  players.json: {len(data)} teams, {n:,} players included")
+    # EVERY variant's roster file, not just the default one. The site ships two
+    # complete builds and each has its own players*.json; stripping only the first
+    # would have published the licensed rows under the other name while reporting
+    # success. Globbed rather than listed so a third variant cannot be forgotten.
+    rosters = sorted((DIST / "data").glob("players*.json"))
+    if not rosters:
+        print("  [warn] no players*.json in dist/")
+    for players in rosters:
+        if no_players:
+            teams, dropped = strip_players(players)
+            # The one failure that would matter, so check rather than trust.
+            leaked = [t for t, v in json.loads(players.read_text()).items()
+                      if "players" in v]
+            if leaked:
+                raise SystemExit(
+                    f"ABORT: player rows survived in {players.name} for "
+                    f"{len(leaked)} teams")
+            print(f"  {players.name}: {teams} teams, {dropped:,} player rows removed")
+        else:
+            data = json.loads(players.read_text())
+            n = sum(len(v.get("players", [])) for v in data.values())
+            print(f"  {players.name}: {len(data)} teams, {n:,} players included")
 
     total = sum(f.stat().st_size for f in DIST.rglob("*") if f.is_file())
     print(f"dist/ built: {total / 1e6:.1f} MB")

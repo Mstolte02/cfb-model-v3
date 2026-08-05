@@ -164,9 +164,9 @@ def _tossup_table(fbs, idx, sched, gh, ga, gp, O, po_bits, wins, n_sims):
 
 
 def main(n_sims=20000, seed=2026, variant=""):
-    from config import ROSTER_VARIANT
+    from config import ROSTER_VARIANT, SITE_VARIANTS, variant_suffix
     kw = ROSTER_VARIANT if variant == "roster" else {}
-    suffix = "_roster" if variant == "roster" else ""
+    suffix = variant_suffix(variant)
     rng = np.random.default_rng(seed)
     frame, b_o, b_d, shrink = build_projection_frame(return_params=True, **kw)
     model = CFBModel.load()
@@ -575,7 +575,7 @@ def main(n_sims=20000, seed=2026, variant=""):
         "win_dist": {t: [int(c) for c in win_hist[i]] for t, i in idx.items()
                      if win_hist[i].sum() > 0},
     }
-    result["variant"] = variant or "balanced"
+    result["variant"] = SITE_VARIANTS[variant]
     viz = ROOT / "viz" / "data"
     viz.mkdir(parents=True, exist_ok=True)
     (viz / f"playoff{suffix}.json").write_text(json.dumps(result, indent=1))
@@ -593,5 +593,5 @@ def main(n_sims=20000, seed=2026, variant=""):
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:]]
     n = next((int(a) for a in args if a.isdigit()), 20000)
-    variant = "roster" if "roster" in args else ""
+    variant = next((a for a in args if a in ("pff", "roster")), "")
     main(n, variant=variant)

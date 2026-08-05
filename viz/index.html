@@ -22,6 +22,16 @@
     <button class="tab" data-view="ratings">Team Ratings</button>
     <button class="tab" data-view="players">Players</button>
   </nav>
+  <!-- Which of the two builds is on screen. Both use the same rosters, the same
+       starters and the same schedule; they differ only in whose judgement of each
+       player the projection uses. See the title attributes, and README "Two builds". -->
+  <div class="variant" id="variant-toggle" role="group" aria-label="Rating source">
+    <span class="variant-label">RATINGS</span>
+    <button class="vbtn" data-variant=""
+            title="This model's WAR, with EA's ordering substituted for the offensive line, receivers and defensive tackles, and the starting quarterbacks ordered by a five-source composite.">Blended</button>
+    <button class="vbtn" data-variant="pff"
+            title="No outside opinion anywhere. Every number is this model's own, built from the PFF and CFBD facets.">PFF only</button>
+  </div>
 </header>
 
 <main>

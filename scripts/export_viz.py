@@ -152,9 +152,9 @@ def derivation_block(comp):
 
 
 def main(variant=""):
-    from config import ROSTER_VARIANT
+    from config import ROSTER_VARIANT, SITE_VARIANTS, variant_suffix
     kw = ROSTER_VARIANT if variant == "roster" else {}
-    suffix = "_roster" if variant == "roster" else ""
+    suffix = variant_suffix(variant)
     VIZ.mkdir(parents=True, exist_ok=True)
     frame = build_projection_frame(**kw)
     model = CFBModel.load()
@@ -222,7 +222,7 @@ def main(variant=""):
             "champ": po.get("champ", 0.0),
         })
     (VIZ / f"ratings{suffix}.json").write_text(json.dumps(
-        {"season": 2026, "teams": ratings, "variant": variant or "balanced"},
+        {"season": 2026, "teams": ratings, "variant": SITE_VARIANTS[variant]},
         indent=1))
 
     # The points model is trained on historical seasons only — identical across
@@ -280,7 +280,7 @@ def main(variant=""):
 
     # Schedule (lens-independent) powers the client-side playoff re-simulation.
     export_schedule()
-    export_players()
+    export_players(suffix)
 
     print(f"exported {len(ratings)} rated teams, {len(export['teams'])} sim teams")
     print(f"-> {VIZ / f'ratings{suffix}.json'}\n-> {VIZ / f'model{suffix}.json'}")
@@ -302,7 +302,7 @@ def export_schedule():
     print(f"-> {VIZ / 'schedule.json'} ({len(games)} games)")
 
 
-def export_players():
+def export_players(suffix=""):
     """viz/data/players.json: each team's 2026 two-deep with projected WAR.
 
     This is the roster side of the team page - who the model thinks is producing the
@@ -412,9 +412,9 @@ def export_players():
         }
     # allow_nan=False turns a stray NaN into a build failure instead of a file the
     # browser silently refuses to parse
-    (VIZ / "players.json").write_text(json.dumps(out, allow_nan=False))
+    (VIZ / f"players{suffix}.json").write_text(json.dumps(out, allow_nan=False))
     n = sum(len(v["players"]) for v in out.values())
-    print(f"-> {VIZ / 'players.json'} ({len(out)} teams, {n} players)")
+    print(f"-> {VIZ / f'players{suffix}.json'} ({len(out)} teams, {n} players)")
 
 
 if __name__ == "__main__":

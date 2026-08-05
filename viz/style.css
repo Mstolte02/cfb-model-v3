@@ -49,6 +49,22 @@ nav { display: flex; gap: 6px; flex-wrap: wrap; }
 .tab.active { background: var(--text); border-color: var(--text); color: var(--bg);
   font-weight: 700; }
 
+/* Rating-source toggle. Sits in the header beside the tabs and swaps the whole
+   build - ratings, playoff odds, player values - not a display option. */
+.variant { display: flex; align-items: center; gap: 6px; }
+.variant-label { font-size: 10px; letter-spacing: 2px; color: var(--muted);
+  font-family: var(--sans); }
+.vbtn {
+  background: none; border: 1px solid var(--line2); color: var(--muted);
+  padding: 6px 12px; font-size: 12px; cursor: pointer; font-family: var(--sans);
+  letter-spacing: .5px; transition: all .15s;
+}
+.vbtn:first-of-type { border-radius: 8px 0 0 8px; }
+.vbtn:last-of-type { border-radius: 0 8px 8px 0; margin-left: -1px; }
+.vbtn:hover { color: var(--text); border-color: var(--muted); }
+.vbtn.active { background: var(--accent); border-color: var(--accent);
+  color: var(--bg); font-weight: 700; }
+
 .blend { display: flex; align-items: center; gap: 8px; }
 .blend-label { font-size: 10px; letter-spacing: 2px; color: var(--muted);
   font-family: var(--sans); }

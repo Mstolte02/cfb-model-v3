@@ -34,6 +34,41 @@ PFSN_MASTER = Path(os.environ.get(
 LOGO_DIR = Path(os.environ.get("CFB_LOGO_DIR", CFB_EXTERNAL / "cfb_logos"))
 
 
+# --- Site variants -----------------------------------------------------------
+# Each one is a COMPLETE build - ratings, playoff simulation, viz export - written
+# with its own suffix so the site can hold several at once and let the reader switch.
+#
+#   ""        balanced default
+#   pff       no outside opinion anywhere: every number is the model's own, out of
+#             the PFF and CFBD facets. The default build substitutes EA's ordering
+#             for OL/WR/DT and the lightly-played, and re-orders the starting
+#             quarterbacks by a five-source composite that includes EA.
+#   roster    the old roster-weighted lens. No longer shipped; see ROSTER_VARIANT.
+SITE_VARIANTS = {"": "balanced", "pff": "pff-only", "roster": "roster-weighted"}
+
+
+def variant_suffix(variant: str) -> str:
+    """`_pff` for the PFF-only build, `` for the default - and a hard error if the
+    process was not started with the matching CFB_WAR_VARIANT.
+
+    The variant is decided by an environment variable because src/data/war.py resolves
+    the projection file at IMPORT time, and it is checked here because getting the two
+    out of step produces a perfectly plausible `ratings_pff.json` built from the EA
+    numbers. That is exactly the silent-different-model failure require() exists to
+    stop, one level up.
+    """
+    if variant not in SITE_VARIANTS:
+        raise ValueError(f"variant={variant!r}; expected one of {sorted(SITE_VARIANTS)}")
+    want = "pff" if variant == "pff" else "blended"
+    have = os.environ.get("CFB_WAR_VARIANT", "blended").lower()
+    if have != want:
+        raise RuntimeError(
+            f"variant={variant!r} needs CFB_WAR_VARIANT={want} but it is {have!r}. "
+            f"Run it as: CFB_WAR_VARIANT={want} ./venv/bin/python -m scripts.<script> "
+            f"{variant}".rstrip())
+    return f"_{variant}" if variant else ""
+
+
 def require(path, what, env):
     """Return `path`, or explain exactly what is missing and which variable moves it.
 

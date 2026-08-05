@@ -329,6 +329,14 @@ def main():
                          "the mislabelled player carrying the value the label gave him.")
     ap.add_argument("--in", dest="src", default=f"{HERE}/projections_2026_blended.csv")
     ap.add_argument("--out", dest="out", default=f"{HERE}/projections_2026_final.csv")
+    ap.add_argument("--no-ea", action="store_true",
+                    help="PFF-ONLY variant. Skips the quarterback value map, which is "
+                         "the one step in this file carrying an outside opinion. Pair "
+                         "it with --in projections_2026_v2.csv (the unblended "
+                         "projection) to get a run with no EA anywhere in it. The "
+                         "depth chart is deliberately NOT changed: both variants field "
+                         "the same eleven men, so a difference between them is a "
+                         "difference in ratings and nothing else.")
     args = ap.parse_args()
 
     if args.roster:
@@ -409,6 +417,14 @@ def main():
 
     print(f"\nleague total WAR: {d.proj_war_raw.sum():.1f} -> {d.proj_war.sum():.1f} "
           f"(room totals are held fixed)")
+
+    if args.no_ea:
+        d["war_source"] = "PFF"
+        d.to_csv(args.out, index=False)
+        print(f"\n--no-ea: quarterback value map SKIPPED; every number in this file is "
+              f"the model's own.")
+        print(f"-> {args.out}")
+        return
 
     # ---- the quarterback sheet, last of all ---------------------------------
     # Applied here rather than in blend_projection because the reweight above scales

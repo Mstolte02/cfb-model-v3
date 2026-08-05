@@ -654,6 +654,45 @@ returning / pythag / SOS on `ratings*.json`.
 python3 -m http.server 8642 -d viz                       # http://localhost:8642
 ```
 
+### Two builds, and the toggle between them
+
+The site ships **two complete builds** and the header switches between them. They
+are not two views of one set of numbers — each has its own ratings, playoff
+simulation and player values, because the variant changes the WAR projection, which
+changes the talent feature, which changes everything downstream.
+
+| | whose judgement of each player |
+|---|---|
+| **Blended** (default) | our WAR, with EA's *ordering* substituted for OL/WR/DT at every snap level and for anyone under `EA_BLEND_SNAPS` prior snaps, and the starting quarterbacks re-ordered by the five-source composite in `qbs_2026.xlsx` (PFSN, PFF, EPA, an execs poll, EA) |
+| **PFF only** | nobody else's. Every number is this model's own, out of the PFF and CFBD facets |
+
+**Both use the same roster.** Same two-deep, same starters, same injuries, same
+schedule — `--no-ea` skips the quarterback *value* map but not the starter *pin*,
+because who is on the field is a roster fact and not a rating. So a difference
+between the two is a difference in ratings and nothing else, which is the only way
+the toggle is readable. It is also why scenario edits survive a switch: they are
+keyed by team and player, and both builds field the same men.
+
+What it costs: 5,380 of 5,770 slots change value, Spearman .932 between them, team
+projected WAR differs by ±1.31 wins at the extremes (sd 0.42). In the ratings that
+is worth up to 0.05 of power and a dozen places for California; Notre Dame and Miami
+each gain a spot in the top five without EA.
+
+```bash
+# the PFF-only build. CFB_WAR_VARIANT is checked against the argument and the run
+# ABORTS on a mismatch — otherwise you get a plausible ratings_pff.json built from
+# the EA numbers.
+cd war_model && ../venv/bin/python depth_correction.py --no-ea \
+    --in projections_2026_v2.csv --out projections_2026_final_pff.csv && cd ..
+CFB_WAR_VARIANT=pff ./venv/bin/python -m scripts.rank pff
+CFB_WAR_VARIANT=pff ./venv/bin/python -m scripts.simulate_playoff 20000 pff
+CFB_WAR_VARIANT=pff ./venv/bin/python -m scripts.export_viz pff
+```
+
+The blended build is the plain commands above, and needs
+`war_model/ea/blend_projection.py` run first to refresh
+`projections_2026_blended.csv` whenever the underlying projection changes.
+
 ---
 
 ## What's new in v2 (July 2026)
@@ -698,8 +737,9 @@ from 2014-2025 (leave-one-season-out Spearman ρ = 0.913).
 their talent baseline). LOSO cost is known and small: Brier 0.2053 vs 0.2044,
 same 67.7% accuracy. Generate with `scripts.rank roster`,
 `scripts.simulate_playoff 20000 roster`, `scripts.export_viz roster`
-(`*_roster` artifacts); the web app has a LENS toggle to flip between the two.
-Params in `config.ROSTER_VARIANT`.
+(`*_roster` artifacts). No longer shipped — the app's header toggle now switches
+between the blended and PFF-only builds instead (see "Two builds" above). Params
+in `config.ROSTER_VARIANT`.
 
 **Web app (`viz/`):** four views — Top 25 power ratings, playoff projection
 (most-likely bracket + full odds), a client-side matchup simulator (win prob /

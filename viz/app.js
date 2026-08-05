@@ -12,22 +12,66 @@
   // data files are rewritten every time the pipeline runs, and a stale copy shows
   // wrong numbers with no visible error.
   const fetchJSON = u => fetch(u, { cache: "no-cache" }).then(r => r.json());
+
+  /* ---------- which build is on screen ----------
+     TWO COMPLETE BUILDS SHIP SIDE BY SIDE, not one build with a display option.
+     Every file below is suffixed, because the variant changes the WAR projection,
+     which changes the talent feature, which changes the ratings, which changes the
+     playoff simulation. Nothing here is recomputed in the browser.
+
+       ""     blended - our WAR with EA's ORDERING substituted for OL/WR/DT and for
+              anyone under 300 prior snaps, and the starting quarterbacks re-ordered
+              by the five-source composite in qbs_2026.xlsx.
+       pff    no outside opinion at all; every number is the model's own.
+
+     The two share a ROSTER - same two-deep, same starters, same injuries, same
+     schedule - so a difference between them is a difference in ratings and nothing
+     else. That is also why scenario edits survive the switch: they are keyed by team
+     and player, and both builds field the same men.
+
+     SWITCHING RELOADS THE PAGE. The what-if module below caches base WAR and its
+     population z-score at construction, and the power-vector check runs once at boot;
+     swapping the data underneath them in place would leave a scenario baseline that
+     belongs to the other build. A reload is the honest way to change every number at
+     once. */
+  const VKEY = "cfb-variant-v1";
+  const VARIANT = (function () {
+    const q = new URLSearchParams(location.search).get("v");
+    const v = q !== null ? q : (localStorage.getItem(VKEY) || "");
+    return v === "pff" ? "pff" : "";
+  })();
+  const sfx = VARIANT ? `_${VARIANT}` : "";
+
+  document.querySelectorAll("#variant-toggle .vbtn").forEach(b => {
+    b.classList.toggle("active", (b.dataset.variant || "") === VARIANT);
+    b.onclick = () => {
+      const v = b.dataset.variant || "";
+      if (v === VARIANT) return;
+      try { localStorage.setItem(VKEY, v); } catch (e) {}
+      // drop ?v= so the stored choice is what wins on the next load
+      const u = new URL(location.href);
+      u.searchParams.delete("v");
+      location.replace(u.toString());
+    };
+  });
+
   // diagnostics.json is no longer fetched: the Method page was the only reader, and
   // pulling 25KB on every load to render nothing is a cost with no page behind it.
   // scripts/export_diagnostics.py still writes the file.
+  //
+  // teams.json and schedule.json carry no ratings and are shared by both builds.
   const [teams, schedule, players, ratings, playoff, model] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
-    fetchJSON("data/players.json").catch(() => ({})),
-    fetchJSON("data/ratings.json"),
-    fetchJSON("data/playoff.json"),
-    fetchJSON("data/model.json"),
+    fetchJSON(`data/players${sfx}.json`).catch(() => ({})),
+    fetchJSON(`data/ratings${sfx}.json`),
+    fetchJSON(`data/playoff${sfx}.json`),
+    fetchJSON(`data/model${sfx}.json`),
   ]);
-  // One model, one set of numbers. The old lens toggle offered a second
-  // roster-weighted variant that leaned harder on the two-deep; it was a knowingly
-  // worse backtest kept as an alternative view, and it is gone. Talent is the
-  // a PFF / recruiting / WAR blend whose weights are swept jointly under
-  // leave-one-season-out and exported, not written in here.
+  // The old lens toggle offered a second roster-weighted variant that leaned harder
+  // on the two-deep; it was a knowingly worse backtest kept as an alternative view,
+  // and it is gone. Talent is a PFF / recruiting / WAR blend whose weights are swept
+  // jointly under leave-one-season-out and exported, not written in here.
   const DATA = { ratings, playoff, model };
   const cur = () => DATA;
 
