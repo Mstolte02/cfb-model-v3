@@ -1,8 +1,15 @@
 # CFB Predictive Model v3
 
-## v3.10 — the line splits, and EA stops outranking the evidence
+## v3.10 — one build, a split line, and EA back in its lane
 
-Four changes asked for directly, and two silent bugs that the third one exposed.
+Five changes asked for directly, and three silent bugs they exposed.
+
+**The site ships one set of numbers.** It shipped two — the default and a PFF-only
+build with no outside opinion anywhere — behind a header toggle, each a complete
+build written under its own suffix. The toggle is gone and so is everything behind
+it: `SITE_VARIANTS`, `variant_suffix()`, the `CFB_WAR_VARIANT` environment guard, the
+variant arguments to `rank` / `simulate_playoff` / `export_viz`, and the `_pff`
+artifacts. There is one answer, so there is nothing to choose between.
 
 **EA no longer overrides a player we have evidence about.** The blend had three rules
 and the first was that OL, WR and DT took EA's *ordering* at every snap level — not
@@ -56,12 +63,25 @@ for the 5,455 players listed by *both* sources it is unchanged (79.6% against 80
 and the drop is 445 newly-listed players — 208 of them incoming transfers with no FBS
 history — plus two teams that have never played an FBS down.
 
-**Class-year filtering on the Players tab**, as two composing controls (class ×
-redshirt/transfer) rather than one mixed list, so "juniors" means every junior and
-narrowing to the redshirts is a second question. The Class column now reads `RS SR`.
+**Class-year filtering on the Players tab**, plus a transfers-only filter. The
+position filter is ordered the way a roster is read — QB, RB, WR, TE, OT, IOL, DT,
+EDGE, LB, CB, SAF — rather than alphabetically, which had put CB and DT above QB. The
+Class column reads `RS SR`. The starters/backups scope filter is gone.
 
-**Two silent bugs, both found by the split, both worth recording** because neither
+**Three silent bugs, all found by these changes**, all worth recording because none
 raised anything — they just produced confident wrong numbers:
+
+- **`is_transfer` meant two different things on the two sides of the model.**
+  Training computes it in `project_2026_v2` as `prev_team.notna() & (prev_team !=
+  team)` — the player was somewhere else *last season*. Serving passed through the
+  depth chart's `/TR` marker, which is true for anyone who has *ever* transferred and
+  stays true for the rest of his career. So the feature arrived at **55.6%** of slots
+  against a training rate less than half that: the model learned one thing and was
+  asked to use another. Exactly the shape of the `is_starter` leak in v3.9.
+  `build_roster_2026` now recomputes it off the same PFF history the training side
+  uses, so the definitions are identical by construction. **55.6% → 23.7%**, median
+  21% per team, Air Force and Army at 0%, Notre Dame's six arrivals naming
+  Pittsburgh, Ohio State, Michigan, Alabama and Oregon.
 
 - `src/data/pff.py` keys its fitted positional weights on `"OL"`, so `weights.get("OT",
   0)` returned **zero** and the entire offensive line dropped out of the PFF talent
@@ -730,44 +750,22 @@ returning / pythag / SOS on `ratings*.json`.
 python3 -m http.server 8642 -d viz                       # http://localhost:8642
 ```
 
-### Two builds, and the toggle between them
+### One build
 
-The site ships **two complete builds** and the header switches between them. They
-are not two views of one set of numbers — each has its own ratings, playoff
-simulation and player values, because the variant changes the WAR projection, which
-changes the talent feature, which changes everything downstream.
+The site ships **one set of numbers**. Whose judgement of each player it uses: ours,
+out of the PFF and CFBD facets, with EA's *ordering* substituted only for players
+under `EA_BLEND_SNAPS` prior snaps, and the starting quarterbacks ordered by the
+five-source composite in `qbs_2026.xlsx` (PFSN, PFF, EPA, an execs poll, EA). Every
+proven player is on our own number.
 
-| | whose judgement of each player |
-|---|---|
-| **Blended** (default) | our WAR, with EA's *ordering* substituted for anyone under `EA_BLEND_SNAPS` prior snaps, and the starting quarterbacks re-ordered by the five-source composite in `qbs_2026.xlsx` (PFSN, PFF, EPA, an execs poll, EA). Every proven player keeps our own number |
-| **PFF only** | nobody else's. Every number is this model's own, out of the PFF and CFBD facets |
-
-**Both use the same roster.** Same two-deep, same starters, same injuries, same
-schedule — `--no-ea` skips the quarterback *value* map but not the starter *pin*,
-because who is on the field is a roster fact and not a rating. So a difference
-between the two is a difference in ratings and nothing else, which is the only way
-the toggle is readable. It is also why scenario edits survive a switch: they are
-keyed by team and player, and both builds field the same men.
-
-What it costs: 5,380 of 5,770 slots change value, Spearman .932 between them, team
-projected WAR differs by ±1.31 wins at the extremes (sd 0.42). In the ratings that
-is worth up to 0.05 of power and a dozen places for California; Notre Dame and Miami
-each gain a spot in the top five without EA.
-
-```bash
-# the PFF-only build. CFB_WAR_VARIANT is checked against the argument and the run
-# ABORTS on a mismatch — otherwise you get a plausible ratings_pff.json built from
-# the EA numbers.
-cd war_model && ../venv/bin/python depth_correction.py --no-ea \
-    --in projections_2026_v2.csv --out projections_2026_final_pff.csv && cd ..
-CFB_WAR_VARIANT=pff ./venv/bin/python -m scripts.rank pff
-CFB_WAR_VARIANT=pff ./venv/bin/python -m scripts.simulate_playoff 20000 pff
-CFB_WAR_VARIANT=pff ./venv/bin/python -m scripts.export_viz pff
-```
-
-The blended build is the plain commands above, and needs
-`war_model/ea/blend_projection.py` run first to refresh
-`projections_2026_blended.csv` whenever the underlying projection changes.
+It used to ship two — that one and a PFF-only build with no outside opinion anywhere
+— behind a header toggle, each a complete build with its own ratings, playoff
+simulation and player values written under a `_pff` suffix. That is gone, along with
+the toggle, `SITE_VARIANTS`, `variant_suffix()`, the `CFB_WAR_VARIANT` guard that kept
+a run and its argument in step, and the variant arguments to `scripts.rank`,
+`scripts.simulate_playoff` and `scripts.export_viz`. The build needs
+`war_model/ea/blend_projection.py` run before it whenever the underlying projection
+changes, to refresh `projections_2026_blended.csv`.
 
 ---
 
@@ -811,11 +809,10 @@ from 2014-2025 (leave-one-season-out Spearman ρ = 0.913).
 2026 roster instead of 2025 results — 70% two-deep PFF talent (vs 50%) and full
 §C uncertainty shrinkage (λ=1.0: low-continuity teams regress all the way to
 their talent baseline). LOSO cost is known and small: Brier 0.2053 vs 0.2044,
-same 67.7% accuracy. Generate with `scripts.rank roster`,
-`scripts.simulate_playoff 20000 roster`, `scripts.export_viz roster`
-(`*_roster` artifacts). No longer shipped — the app's header toggle now switches
-between the blended and PFF-only builds instead (see "Two builds" above). Params
-in `config.ROSTER_VARIANT`.
+same 67.7% accuracy. **No longer shipped or buildable** — the variant arguments it
+was generated with are gone along with the rest of the multi-build machinery (see
+"One build" above). The hyperparameters remain in `config.ROSTER_VARIANT` for anyone
+who wants to reproduce it by hand.
 
 **Web app (`viz/`):** four views — Top 25 power ratings, playoff projection
 (most-likely bracket + full odds), a client-side matchup simulator (win prob /

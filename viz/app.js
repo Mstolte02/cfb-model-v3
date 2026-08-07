@@ -13,65 +13,28 @@
   // wrong numbers with no visible error.
   const fetchJSON = u => fetch(u, { cache: "no-cache" }).then(r => r.json());
 
-  /* ---------- which build is on screen ----------
-     TWO COMPLETE BUILDS SHIP SIDE BY SIDE, not one build with a display option.
-     Every file below is suffixed, because the variant changes the WAR projection,
-     which changes the talent feature, which changes the ratings, which changes the
-     playoff simulation. Nothing here is recomputed in the browser.
+  /* ---------- the data ----------
+     ONE BUILD. The site used to ship two side by side with a header toggle - the
+     default and a PFF-only one that took no outside opinion anywhere - and the
+     reader had to pick. There is one now: our WAR, with EA's ORDERING substituted
+     only for players under 300 prior snaps, and the starting quarterbacks ordered by
+     the five-source composite in qbs_2026.xlsx. Proven players keep our own number.
 
-       ""     blended - our WAR with EA's ORDERING substituted for anyone under 300
-              prior snaps, and the starting quarterbacks re-ordered by the five-source
-              composite in qbs_2026.xlsx. Proven players keep our own number.
-       pff    no outside opinion at all; every number is the model's own.
-
-     The two share a ROSTER - same two-deep, same starters, same injuries, same
-     schedule - so a difference between them is a difference in ratings and nothing
-     else. That is also why scenario edits survive the switch: they are keyed by team
-     and player, and both builds field the same men.
-
-     SWITCHING RELOADS THE PAGE. The what-if module below caches base WAR and its
-     population z-score at construction, and the power-vector check runs once at boot;
-     swapping the data underneath them in place would leave a scenario baseline that
-     belongs to the other build. A reload is the honest way to change every number at
-     once. */
-  const VKEY = "cfb-variant-v1";
-  const VARIANT = (function () {
-    const q = new URLSearchParams(location.search).get("v");
-    const v = q !== null ? q : (localStorage.getItem(VKEY) || "");
-    return v === "pff" ? "pff" : "";
-  })();
-  const sfx = VARIANT ? `_${VARIANT}` : "";
-
-  document.querySelectorAll("#variant-toggle .vbtn").forEach(b => {
-    b.classList.toggle("active", (b.dataset.variant || "") === VARIANT);
-    b.onclick = () => {
-      const v = b.dataset.variant || "";
-      if (v === VARIANT) return;
-      try { localStorage.setItem(VKEY, v); } catch (e) {}
-      // drop ?v= so the stored choice is what wins on the next load
-      const u = new URL(location.href);
-      u.searchParams.delete("v");
-      location.replace(u.toString());
-    };
-  });
-
-  // diagnostics.json is no longer fetched: the Method page was the only reader, and
-  // pulling 25KB on every load to render nothing is a cost with no page behind it.
-  // scripts/export_diagnostics.py still writes the file.
-  //
-  // teams.json and schedule.json carry no ratings and are shared by both builds.
+     diagnostics.json is not fetched: the Method page was its only reader, and pulling
+     25KB on every load to render nothing is a cost with no page behind it.
+     scripts/export_diagnostics.py still writes the file. */
   const [teams, schedule, players, ratings, playoff, model] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
-    fetchJSON(`data/players${sfx}.json`).catch(() => ({})),
-    fetchJSON(`data/ratings${sfx}.json`),
-    fetchJSON(`data/playoff${sfx}.json`),
-    fetchJSON(`data/model${sfx}.json`),
+    fetchJSON("data/players.json").catch(() => ({})),
+    fetchJSON("data/ratings.json"),
+    fetchJSON("data/playoff.json"),
+    fetchJSON("data/model.json"),
   ]);
-  // The old lens toggle offered a second roster-weighted variant that leaned harder
-  // on the two-deep; it was a knowingly worse backtest kept as an alternative view,
-  // and it is gone. Talent is a PFF / recruiting / WAR blend whose weights are swept
-  // jointly under leave-one-season-out and exported, not written in here.
+  // An older lens toggle offered a roster-weighted variant that leaned harder on the
+  // two-deep; it was a knowingly worse backtest kept as an alternative view, and it is
+  // gone too. Talent is a PFF / recruiting / WAR blend whose weights are swept jointly
+  // under leave-one-season-out and exported, not written in here.
   const DATA = { ratings, playoff, model };
   const cur = () => DATA;
 
@@ -2072,26 +2035,20 @@
     const q = document.getElementById("pl-search").value.trim().toLowerCase();
     const c = document.getElementById("pl-conf").value;
     const g = document.getElementById("pl-group").value;
-    const sc = document.getElementById("pl-scope").value;
     const cl = document.getElementById("pl-class").value;
-    const rs = document.getElementById("pl-rs").value;
+    const tr = document.getElementById("pl-tr").value;
     let rows = ALL_PLAYERS;
     if (q) rows = rows.filter(r => r.n.toLowerCase().includes(q) ||
                                    r.t.toLowerCase().includes(q));
     if (c) rows = rows.filter(r => r.conf === c);
     if (g) rows = rows.filter(r => r.g === g);
-    // Class year and redshirt status are separate controls because they compose:
-    // "juniors" means every junior, redshirt or not, and narrowing to the redshirts
-    // is a second question. A player with no class on the chart is excluded by either
-    // filter rather than silently kept - an unknown class is not a match for JR.
+    // A player with no class on the chart is excluded rather than silently kept - an
+    // unknown class is not a match for JR.
     if (cl) rows = rows.filter(r => r.c === cl);
-    if (rs === "rs") rows = rows.filter(r => r.rs === true);
-    else if (rs === "no") rows = rows.filter(r => r.rs === false);
-    else if (rs === "tr") rows = rows.filter(r => r.tr === true);
-    if (sc === "start") rows = rows.filter(r => r.st !== undefined ? r.st : r.d === 1);
-    else if (sc === "out") rows = rows.filter(r => r.out);
-    else if (sc === "unproven") rows = rows.filter(r => r.i);
-    else if (sc === "edited") rows = rows.filter(r => WI.get(r.t, r.n) != null);
+    // `tr` is "on a new team in 2026", not "has ever transferred" - see
+    // build_roster_2026, which recomputes it as a change of team since 2025 so that
+    // the flag the site shows is the one the model was trained on.
+    if (tr === "tr") rows = rows.filter(r => r.tr === true);
     const col = PL_COLS.find(x => x.k === plSort) ||
                 PL_COLS.find(x => x.k === "war");
     const val = col.v;
@@ -2203,12 +2160,15 @@
         .forEach(c => cs.add(new Option(c, c)));
     }
     if (gs.options.length <= 1) {
-      [...new Set(ALL_PLAYERS.map(r => r.g))].filter(Boolean).sort()
-        .forEach(g => gs.add(new Option(g, g)));
+      // GROUP_ORDER, not sorted: alphabetical put CB and DT above QB, which is not an
+      // order anyone reads a roster in. This is offence then defence, each front to
+      // back.
+      const have = new Set(ALL_PLAYERS.map(r => r.g));
+      GROUP_ORDER.filter(g => have.has(g)).forEach(g => gs.add(new Option(g, g)));
     }
   }
 
-  ["pl-search", "pl-conf", "pl-group", "pl-class", "pl-rs", "pl-scope"].forEach(id =>
+  ["pl-search", "pl-conf", "pl-group", "pl-class", "pl-tr"].forEach(id =>
     document.getElementById(id).addEventListener("input", renderPlayers));
   document.getElementById("pl-reset").addEventListener("click", () => {
     WI.reset(); renderAll();

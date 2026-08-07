@@ -163,12 +163,9 @@ def _tossup_table(fbs, idx, sched, gh, ga, gp, O, po_bits, wins, n_sims):
     return out
 
 
-def main(n_sims=20000, seed=2026, variant=""):
-    from config import ROSTER_VARIANT, SITE_VARIANTS, variant_suffix
-    kw = ROSTER_VARIANT if variant == "roster" else {}
-    suffix = variant_suffix(variant)
+def main(n_sims=20000, seed=2026):
     rng = np.random.default_rng(seed)
-    frame, b_o, b_d, shrink = build_projection_frame(return_params=True, **kw)
+    frame, b_o, b_d, shrink = build_projection_frame(return_params=True)
     model = CFBModel.load()
 
     teams_meta = json.load(open(ROOT / "data" / "raw" / "teams_2026.json"))
@@ -444,7 +441,7 @@ def main(n_sims=20000, seed=2026, variant=""):
     tossups = _tossup_table(fbs, idx, sched, gh, ga, gp, O, po_bits, wins, n_sims)
 
     # ---- output ---------------------------------------------------------------
-    power = pd.read_csv(ARTIFACTS / f"2026_power_ratings{suffix}.csv").set_index("team")
+    power = pd.read_csv(ARTIFACTS / "2026_power_ratings.csv").set_index("team")
     out = []
     for t, i in idx.items():
         if stats["playoff"][i] == 0 and stats["conf_champ"][i] == 0:
@@ -575,10 +572,9 @@ def main(n_sims=20000, seed=2026, variant=""):
         "win_dist": {t: [int(c) for c in win_hist[i]] for t, i in idx.items()
                      if win_hist[i].sum() > 0},
     }
-    result["variant"] = SITE_VARIANTS[variant]
     viz = ROOT / "viz" / "data"
     viz.mkdir(parents=True, exist_ok=True)
-    (viz / f"playoff{suffix}.json").write_text(json.dumps(result, indent=1))
+    (viz / "playoff.json").write_text(json.dumps(result, indent=1))
 
     print(f"\n=== 2026-27 CFP odds ({n_sims:,} sims) — top 20 ===")
     print(f"{'team':<20}{'conf':<18}{'W':>5}{'CC%':>7}{'CFP%':>7}"
@@ -587,11 +583,9 @@ def main(n_sims=20000, seed=2026, variant=""):
         print(f"{r['team']:<20}{r['conference']:<18}{r['avg_wins']:>5.1f}"
               f"{100*r['conf_champ']:>6.1f}%{100*r['playoff']:>6.1f}%"
               f"{100*r['bye']:>6.1f}%{100*r['champ']:>7.1f}%")
-    print(f"\n-> {viz / f'playoff{suffix}.json'}")
+    print(f"\n-> {viz / 'playoff.json'}")
 
 
 if __name__ == "__main__":
-    args = [a for a in sys.argv[1:]]
-    n = next((int(a) for a in args if a.isdigit()), 20000)
-    variant = next((a for a in args if a in ("pff", "roster")), "")
-    main(n, variant=variant)
+    n = next((int(a) for a in sys.argv[1:] if a.isdigit()), 20000)
+    main(n)

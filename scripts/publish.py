@@ -58,10 +58,10 @@ def main(no_players: bool = False):
     # folders beginning with an underscore.
     (DIST / ".nojekyll").write_text("")
 
-    # EVERY variant's roster file, not just the default one. The site ships two
-    # complete builds and each has its own players*.json; stripping only the first
-    # would have published the licensed rows under the other name while reporting
-    # success. Globbed rather than listed so a third variant cannot be forgotten.
+    # Globbed rather than named. There is one players.json now - the site shipped
+    # several complete builds at one point, each with its own players*.json, and
+    # stripping only the first published the licensed rows under the other name while
+    # reporting success. The glob costs nothing and cannot forget a file.
     rosters = sorted((DIST / "data").glob("players*.json"))
     if not rosters:
         print("  [warn] no players*.json in dist/")

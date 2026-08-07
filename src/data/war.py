@@ -32,45 +32,24 @@ PLAYER_WAR = WAR_DIR / "hybrid_player_war.csv"
 
 # WHICH OPINION OF EACH PLAYER THE PROJECTION USES.
 #
-#   blended (default)  our WAR, with EA's ORDERING substituted for anyone under
-#                      EA_BLEND_SNAPS prior snaps, and the starting quarterbacks
-#                      re-ordered by the five-source composite in qbs_2026.xlsx
-#                      (PFSN, PFF, EPA, an execs poll, EA). Every proven player is
-#                      on our own number; EA only ranks players we cannot rank.
-#   pff                no outside opinion at all. Every number is this model's own,
-#                      out of the PFF and CFBD facets.
+# One build. Our WAR, with EA's ORDERING substituted for anyone under EA_BLEND_SNAPS
+# prior snaps, and the starting quarterbacks re-ordered by the five-source composite
+# in qbs_2026.xlsx (PFSN, PFF, EPA, an execs poll, EA). Every proven player is on our
+# own number; EA only ranks players we cannot rank ourselves.
 #
-# Set CFB_WAR_VARIANT=pff, or pass variant= explicitly. The two variants share a
-# ROSTER - the same two-deep, the same starters, the same injuries - so a difference
-# between them is a difference in ratings and nothing else. That is what makes the
-# toggle on the site readable: flipping it changes whose judgement is being shown,
-# not who is on the field.
-VARIANTS = ("blended", "pff")
+# THERE USED TO BE A SECOND, PFF-ONLY BUILD selected by CFB_WAR_VARIANT and shipped
+# beside this one behind a header toggle. It is gone, along with the toggle, the
+# `_pff` output suffixes and the environment-variable guard that kept the two in step.
+# One set of numbers is the answer, so there is nothing to choose between.
 
 
-def variant() -> str:
-    v = os.environ.get("CFB_WAR_VARIANT", "blended").lower()
-    if v not in VARIANTS:
-        raise ValueError(f"CFB_WAR_VARIANT={v!r}; expected one of {VARIANTS}")
-    return v
+def _projection_file():
+    """The final 2026 projection.
 
-
-def _projection_file(v: str | None = None):
-    """The final 2026 projection for the requested variant.
-
-    depth_correction.py is the last stage in both cases: it fixes the depth chart
-    against prior snaps and strips the injury-driven share the projection hands a
-    backup. Only the PFF variant skips the quarterback value map, which is the one
-    step in that file that carries an outside opinion.
+    depth_correction.py is the last stage: it fixes the depth chart against prior
+    snaps, strips the injury-driven share the projection hands a backup, and applies
+    the quarterback value map. The fallbacks below are for a partially built tree.
     """
-    v = v or variant()
-    if v == "pff":
-        pff_final = WAR_DIR / "projections_2026_final_pff.csv"
-        if pff_final.exists():
-            return pff_final
-        # the unblended projection is already EA-free; it just has no depth correction
-        return WAR_DIR / "projections_2026_v2.csv"
-
     try:
         from config import EA_BLEND_SNAPS
     except Exception:
@@ -87,13 +66,6 @@ def _projection_file(v: str | None = None):
     return WAR_DIR / "projections_2026_v2.csv"
 
 
-def PROJECTIONS_FOR(v=None):
-    return _projection_file(v)
-
-
-# Module-level constant kept for callers that read it directly. It is resolved at
-# import time, so a process that wants the other variant sets CFB_WAR_VARIANT before
-# importing - which is what the variant-suffixed build commands do.
 PROJECTIONS = _projection_file()
 
 # the WAR build already emits CFBD-style school names, but a handful of its own

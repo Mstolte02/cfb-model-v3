@@ -151,12 +151,9 @@ def derivation_block(comp):
     }
 
 
-def main(variant=""):
-    from config import ROSTER_VARIANT, SITE_VARIANTS, variant_suffix
-    kw = ROSTER_VARIANT if variant == "roster" else {}
-    suffix = variant_suffix(variant)
+def main():
     VIZ.mkdir(parents=True, exist_ok=True)
-    frame = build_projection_frame(**kw)
+    frame = build_projection_frame()
     model = CFBModel.load()
     teams_meta = {t["school"]: t for t in
                   json.load(open(ROOT / "data" / "raw" / "teams_2026.json"))}
@@ -168,9 +165,9 @@ def main(variant=""):
             comp.loc[t] = frame.quantile(0.05)
     comp = comp.loc[[t for t in teams_meta]]
 
-    power = pd.read_csv(ARTIFACTS / f"2026_power_ratings{suffix}.csv").set_index("team")
+    power = pd.read_csv(ARTIFACTS / "2026_power_ratings.csv").set_index("team")
     playoff = {r["team"]: r for r in
-               json.loads((VIZ / f"playoff{suffix}.json").read_text())["teams"]}
+               json.loads((VIZ / "playoff.json").read_text())["teams"]}
 
     # Strength of schedule from the real 2026 slate: the mean rating of everyone a
     # team actually plays, so the dashboard can separate a good record from a good
@@ -221,19 +218,15 @@ def main(variant=""):
             "final": po.get("final", 0.0),
             "champ": po.get("champ", 0.0),
         })
-    (VIZ / f"ratings{suffix}.json").write_text(json.dumps(
-        {"season": 2026, "teams": ratings, "variant": SITE_VARIANTS[variant]},
-        indent=1))
+    (VIZ / "ratings.json").write_text(json.dumps(
+        {"season": 2026, "teams": ratings}, indent=1))
 
-    # The points model is trained on historical seasons only — identical across
-    # frame variants, so reuse the balanced export's fit when it exists.
-    base_model = VIZ / "model.json"
-    if suffix and base_model.exists():
-        points = json.loads(base_model.read_text())["points"]
-        print("Reusing points model from model.json")
-    else:
-        print("Fitting points model for projected scores ...")
-        points = fit_points_model()
+    # Always fitted now. It used to be reused from the balanced build's model.json
+    # when exporting a suffixed variant, because the points model is trained on
+    # historical seasons only and is identical across frames; with one build there is
+    # nothing to reuse it from.
+    print("Fitting points model for projected scores ...")
+    points = fit_points_model()
 
     # Select by name: the frame now carries *_raw companions for retired features,
     # and iterating comp.loc[t] would silently widen the vector past the six the
@@ -276,14 +269,14 @@ def main(variant=""):
     elif SCORE_SHAPE:
         print("  [warn] score_shape.json absent; the matchup page will omit the "
               "key-number row. Run ./venv/bin/python -m scripts.score_shape")
-    (VIZ / f"model{suffix}.json").write_text(json.dumps(export, indent=1))
+    (VIZ / "model.json").write_text(json.dumps(export, indent=1))
 
     # Schedule (lens-independent) powers the client-side playoff re-simulation.
     export_schedule()
-    export_players(suffix)
+    export_players()
 
     print(f"exported {len(ratings)} rated teams, {len(export['teams'])} sim teams")
-    print(f"-> {VIZ / f'ratings{suffix}.json'}\n-> {VIZ / f'model{suffix}.json'}")
+    print(f"-> {VIZ / 'ratings.json'}\n-> {VIZ / 'model.json'}")
 
 
 def export_schedule():
@@ -302,7 +295,7 @@ def export_schedule():
     print(f"-> {VIZ / 'schedule.json'} ({len(games)} games)")
 
 
-def export_players(suffix=""):
+def export_players():
     """viz/data/players.json: each team's 2026 two-deep with projected WAR.
 
     This is the roster side of the team page - who the model thinks is producing the
@@ -418,10 +411,10 @@ def export_players(suffix=""):
         }
     # allow_nan=False turns a stray NaN into a build failure instead of a file the
     # browser silently refuses to parse
-    (VIZ / f"players{suffix}.json").write_text(json.dumps(out, allow_nan=False))
+    (VIZ / "players.json").write_text(json.dumps(out, allow_nan=False))
     n = sum(len(v["players"]) for v in out.values())
-    print(f"-> {VIZ / f'players{suffix}.json'} ({len(out)} teams, {n} players)")
+    print(f"-> {VIZ / 'players.json'} ({len(out)} teams, {n} players)")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "")
+    main()

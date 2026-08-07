@@ -160,6 +160,35 @@ def main():
         [ros.pid_team.notna(), ros.pid_group.notna()],
         ["name+team", "name+position"], default="unmatched")
 
+    # ---- is_transfer: A NEW TEAM THIS YEAR, not "has ever transferred" ----------
+    #
+    # THIS IS A MODEL FEATURE AND THE TWO SIDES HAD DIFFERENT DEFINITIONS. The
+    # training side in project_2026_v2 computes it as
+    #     prev_team.notna() & (prev_team != team)
+    # - the player played somewhere else LAST season - while this file used to pass
+    # through the depth chart's "/TR" marker, which means the player transferred at
+    # some point in his career and stays true for as long as he is on the roster. That
+    # put the serving flag at 55.6% of slots against a training rate less than half
+    # that, so the feature meant one thing when the model learned it and another when
+    # it was asked to use it. It is the same shape of defect as the is_starter leak.
+    #
+    # Recomputed here the same way the training side does it, off the same PFF history,
+    # so the definitions are identical by construction rather than by coincidence. A
+    # player with no 2025 FBS history - a true freshman, or an FCS/JUCO arrival - has no
+    # prev_team and is not a transfer, which is exactly what training does with him.
+    prev, amb_prev = unique_by(war[war.season == 2025], ["key"])
+    ros = ros.merge(prev[["key", "team"]].rename(columns={"team": "prev_team"}),
+                    on="key", how="left")
+    chart_tr = ros.is_transfer.fillna(False).astype(bool)
+    ros["is_transfer"] = (ros.prev_team.notna() & (ros.prev_team != ros.team))
+    ros["transferred_before"] = chart_tr        # kept for reference, not a feature
+    print(f"\nis_transfer recomputed as 'changed team since 2025', matching training:")
+    print(f"  new team this year : {int(ros.is_transfer.sum())} "
+          f"({ros.is_transfer.mean()*100:.1f}%)")
+    print(f"  chart's /TR marker : {int(chart_tr.sum())} ({chart_tr.mean()*100:.1f}%)"
+          f"   <- what this used to send the model")
+    print(f"  ambiguous 2025 name keys refused: {amb_prev}")
+
     # the two-deep lists a few players at two slots; keep one row per team-player so
     # nobody is counted twice in a team total
     before = len(ros)
