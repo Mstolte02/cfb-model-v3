@@ -8,6 +8,7 @@
 cfbd_cache/
 cfbd_cache_gt/
 ourlads_cache/
+twodeep_cache/
 
 # --- bulk intermediates ------------------------------------------------------
 # Every one of these is rebuilt by the stage above it, and each is 4-48 MB. The

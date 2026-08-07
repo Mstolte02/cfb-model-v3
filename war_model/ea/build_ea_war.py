@@ -58,7 +58,8 @@ WAR_DIR = os.path.dirname(HERE)
 # EA's position labels -> the broad groups the rest of the pipeline uses.
 POS_GROUP = {
     "QB": "QB", "HB": "RB", "FB": "RB", "WR": "WR", "TE": "TE",
-    "LT": "OL", "LG": "OL", "C": "OL", "RG": "OL", "RT": "OL",
+    "LT": "OT", "RT": "OT",
+    "LG": "IOL", "C": "IOL", "RG": "IOL",
     "LEDG": "EDGE", "REDG": "EDGE", "DT": "DT",
     "MIKE": "LB", "SAM": "LB", "WILL": "LB",
     "CB": "CB", "FS": "SAF", "SS": "SAF",
@@ -114,7 +115,8 @@ CONCEPT_ATTRS = {
 # "which position's run defence matters most". So each PFF facet is rebuilt here with
 # its own scope and its own fitted weight, and only the MEASUREMENT comes from EA.
 FACET_GROUPS = {
-    "QB": ["QB"], "RB": ["RB"], "WR": ["WR"], "TE": ["TE"], "OL": ["OL"],
+    "QB": ["QB"], "RB": ["RB"], "WR": ["WR"], "TE": ["TE"],
+    "OT": ["OT"], "IOL": ["IOL"],
     "DI": ["DT"], "ED": ["EDGE"], "LB": ["LB"], "CB": ["CB"], "S": ["SAF"],
     "CB-S": ["CB", "SAF"], "DI-ED": ["DT", "EDGE"], "CB-LB-S": ["CB", "LB", "SAF"],
     "QB-RB-TE-WR": ["QB", "RB", "TE", "WR"],

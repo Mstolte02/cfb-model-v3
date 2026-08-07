@@ -49,8 +49,9 @@ import pandas as pd
 HERE = os.path.dirname(os.path.abspath(__file__))
 from build_roster_2026 import PFF_TO_GROUP  # noqa: E402
 
-# how many of each group are on the field at once - from the two-deep's own slot counts
-STARTERS = {"QB": 1, "RB": 1, "WR": 3, "TE": 1, "OL": 5,
+# how many of each group are on the field at once - from the two-deep's own slot counts.
+# The five linemen are two tackles and three interior.
+STARTERS = {"QB": 1, "RB": 1, "WR": 3, "TE": 1, "OT": 2, "IOL": 3,
             "DT": 2, "EDGE": 2, "LB": 2, "CB": 3, "SAF": 2}
 
 # a swap needs a wide margin, not a nose. Below these the chart is left alone: a

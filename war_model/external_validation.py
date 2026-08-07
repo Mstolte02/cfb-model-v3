@@ -37,7 +37,8 @@ EA = f"{HERE}/ea/ea_cfb27.csv"
 
 EA_TO_GROUP = {
     "QB": "QB", "HB": "RB", "RB": "RB", "FB": "RB", "WR": "WR", "TE": "TE",
-    "LT": "OL", "LG": "OL", "C": "OL", "RG": "OL", "RT": "OL", "OL": "OL",
+    "LT": "OT", "RT": "OT", "OT": "OT",
+    "LG": "IOL", "C": "IOL", "RG": "IOL",
     "LE": "EDGE", "RE": "EDGE", "DE": "EDGE", "EDGE": "EDGE",
     "DT": "DT", "NT": "DT",
     "LOLB": "LB", "MLB": "LB", "ROLB": "LB", "LB": "LB",

@@ -7,7 +7,7 @@ import artifacts
 from sklearn.linear_model import LinearRegression
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-GROUPS = ["QB", "RB", "WR", "TE", "OL", "DT", "EDGE", "LB", "CB", "SAF"]
+GROUPS = ["QB", "RB", "WR", "TE", "OT", "IOL", "DT", "EDGE", "LB", "CB", "SAF"]
 
 
 def calibrate_wins(war, recs):

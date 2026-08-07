@@ -1,5 +1,81 @@
 # CFB Predictive Model v3
 
+## v3.10 — the line splits, and EA stops outranking the evidence
+
+Four changes asked for directly, and two silent bugs that the third one exposed.
+
+**EA no longer overrides a player we have evidence about.** The blend had three rules
+and the first was that OL, WR and DT took EA's *ordering* at every snap level — not
+just for the unproven. That rule is gone. What is left is the one EA is actually good
+for: ranking players with no track record to rank them by. The quarterback sheet is
+untouched and still has the last word.
+
+| whose number | slots |
+|---|---|
+| ours (PFF + CFBD facets) | 2,302 |
+| EA's ordering, under 300 prior snaps | 3,482 |
+| the five-source quarterback composite | 118 |
+
+**709 proven OL/WR/DT slots move back onto our own numbers.** The removed rule never
+had a result behind it — every test in `war_model/ea/gap_analysis.py` says EA is
+*different* in the tail, none says it is *better*, and the one accuracy test that
+exists had EA behind at .42 against .51.
+
+**The offensive line is two position groups.** Blocks are (job × position group), so
+one line group meant the level-1 regression answered a single question for two jobs.
+PFF's blocking export tags `T`, `G` and `C` separately and every charted depth-chart
+slot resolves to LT/LG/C/RG/RT, so the split is available at both ends. Centres go
+with the guards — three groups would fit the centre block on ~300 players a season.
+
+| | share of facet weight | per starter |
+|---|---|---|
+| **OT** (2 on the field) | 5.49% | 2.74% |
+| **IOL** (3 on the field) | 5.25% | 1.75% |
+
+A tackle prices at **1.57×** an interior lineman per man, and the split is not just
+"tackles matter more": the interior carries the larger run-blocking facet (.0319 to
+.0298) and the tackles the larger pass-blocking one. At team level it is neutral —
+same-season r .847, next-season .527, CV .855, all within .001 of the merged build.
+At player level it costs a little: the 2025 holdout goes **.621 → .610** against a
+carry-forward baseline that moved .534 → .530, so the model's margin narrows +.087 →
++.080. Splitting a group fits each half on fewer players. It is bought back as
+attribution, which is what WAR is for.
+
+**A new depth-chart source: thetwodeep.com.** All 138 FBS programs, where Ourlads had
+136 — North Dakota State and Sacramento State play their first FBS season in 2026 and
+were simply absent from the model. Its labels are granular at every charted slot,
+which is what lets `broad_group` carry OT and IOL at all, and its class years arrive
+as `RS JR` / `SO/TR`, the same shape `parse_eligibility` already read. Ourlads stays
+as the fallback. `cfbdepth.com` was evaluated and **rejected**: its terms of service
+prohibit automated access, it 403s scripted requests, and it sells data downloads as a
+paid tier. It is the only one of the three with a structured injury feed, so injuries
+remain manual in `war_model/availability_2026.csv`.
+
+The headline roster match rate falls 80.3% → 76.7%, and none of it is a regression:
+for the 5,455 players listed by *both* sources it is unchanged (79.6% against 80.3%),
+and the drop is 445 newly-listed players — 208 of them incoming transfers with no FBS
+history — plus two teams that have never played an FBS down.
+
+**Class-year filtering on the Players tab**, as two composing controls (class ×
+redshirt/transfer) rather than one mixed list, so "juniors" means every junior and
+narrowing to the redshirts is a second question. The Class column now reads `RS SR`.
+
+**Two silent bugs, both found by the split, both worth recording** because neither
+raised anything — they just produced confident wrong numbers:
+
+- `src/data/pff.py` keys its fitted positional weights on `"OL"`, so `weights.get("OT",
+  0)` returned **zero** and the entire offensive line dropped out of the PFF talent
+  feature. Fixed by collapsing the two-deep onto that module's own vocabulary; its
+  weights were NNLS-fitted with the line as one group, and splitting .12 in two would
+  be inventing a number where one was measured.
+- `war_model/concepts.py` still listed the facets under their old `OL_*` names.
+  `concept_map` sends anything unclaimed to `_solo_<facet>`, which keeps a facet in
+  the model but takes it out of every concept — so `build_ea_war`, which is keyed on
+  concepts, dropped **all 1,534 EA linemen** (EA coverage was 88–95% everywhere and
+  **0.0%** at OT and IOL), and the two-level fit priced ten orphans instead of two
+  blocks. That bad fit is where a first draft of this section got "8.8% vs 5.0%, a
+  2.7× ratio" — the corrected figures are in the table above.
+
 ## v3.9 — an audit, worked through
 
 An external review of the whole model. Most of it was right, one recommendation was
@@ -70,7 +146,7 @@ result can be reproduced rather than trusted.
 Also: merges key on `player_id` (the PFF loader never read the column, and was
 deleting one of two real players on 743 keys); position groups are snap-weighted over
 every contributor instead of `[1.0, 0.45]` over the top two by *games*; the 98 facets
-are consolidated to 82<!--live:n_facets-->; blocks are (job × position group) so positional value comes
+are consolidated to 87<!--live:n_facets-->; blocks are (job × position group) so positional value comes
 from the fit; within a block, weight splits by transfer **validity** rather than
 repeatability; there is one 2026 roster and one QB valuation instead of two and three;
 and `staleness_check.py` compares artifact *contents*, which immediately found this
@@ -663,7 +739,7 @@ changes the talent feature, which changes everything downstream.
 
 | | whose judgement of each player |
 |---|---|
-| **Blended** (default) | our WAR, with EA's *ordering* substituted for OL/WR/DT at every snap level and for anyone under `EA_BLEND_SNAPS` prior snaps, and the starting quarterbacks re-ordered by the five-source composite in `qbs_2026.xlsx` (PFSN, PFF, EPA, an execs poll, EA) |
+| **Blended** (default) | our WAR, with EA's *ordering* substituted for anyone under `EA_BLEND_SNAPS` prior snaps, and the starting quarterbacks re-ordered by the five-source composite in `qbs_2026.xlsx` (PFSN, PFF, EPA, an execs poll, EA). Every proven player keeps our own number |
 | **PFF only** | nobody else's. Every number is this model's own, out of the PFF and CFBD facets |
 
 **Both use the same roster.** Same two-deep, same starters, same injuries, same

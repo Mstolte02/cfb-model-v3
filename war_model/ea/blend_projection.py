@@ -1,32 +1,41 @@
 """Choose whose opinion of each player the 2026 projection uses.
 
-Three rules, applied in order, each replacing our ORDERING of a set of players with
+Two rules, applied in order, each replacing our ORDERING of a set of players with
 someone else's:
 
-  1. OL, WR and DT take EA's ranking at every snap level, not just for the unproven.
-  2. Quarterbacks take the `Average` column of qbs_2026.xlsx - a composite z-score
+  1. Quarterbacks take the `Average` column of qbs_2026.xlsx - a composite z-score
      across PFSN, PFF, EPA, an execs poll and EA - for the starter it names.
-  3. Everyone else keeps the older rule: below --threshold prior snaps, EA's ranking;
-     at or above it, ours.
+  2. Everyone else: below --threshold prior snaps, EA's ranking; at or above it, ours.
 
-WHAT IS TAKEN FROM THE OTHER SOURCE IS THE ORDERING, NOT THE SCALE, and that is what
-makes rules 1 and 2 safe to state so bluntly. EA's raw WAR is on its own scale (inside
-the sub-300 bucket, 0.8x our mean and 1.3x our spread) and the quarterback column is a
-z-score, which is not a wins scale at all. Both are quantile-mapped onto OUR proj_war
-values for the same set of players, so the mapping is a permutation: the multiset of
-WAR is identical before and after, the league total does not move, and only WHO IS
-WHERE changes. That is the alignment guarantee, and main() asserts it rather than
-trusting it.
+Everything not caught by those two is this model's own number, out of the PFF and CFBD
+facets. That is the whole rule now: PFF everywhere, except the quarterbacks and except
+the players with no track record to judge them on.
+
+THERE USED TO BE A RULE 0 - OL, WR and DT took EA's ranking at EVERY snap level, not
+just for the unproven - and it has been removed. It was the one rule here that
+overrode our own numbers for players we have plenty of evidence about, and it never
+had a result behind it: every test in gap_analysis.py says EA is DIFFERENT in the
+tail, none says it is BETTER, and the only accuracy test available - team ratings
+against 2025 results - had EA behind at .42 against .51. Dropping it moves the proven
+OL, WR and DT back onto PFF and leaves EA doing the one job the evidence supports,
+which is ranking players we cannot rank ourselves. main() counts and prints how many
+slots that is on the build in hand, rather than this docstring naming a figure that
+goes stale the next time the roster changes.
+
+WHAT IS TAKEN FROM THE OTHER SOURCE IS THE ORDERING, NOT THE SCALE. EA's raw WAR is on
+its own scale (inside the sub-300 bucket, 0.8x our mean and 1.3x our spread) and the
+quarterback column is a z-score, which is not a wins scale at all. Both are
+quantile-mapped onto OUR proj_war values for the same set of players, so the mapping is
+a permutation: the multiset of WAR is identical before and after, the league total does
+not move, and only WHO IS WHERE changes. That is the alignment guarantee, and main()
+asserts it rather than trusting it.
 
 The mapping is done WITHIN POSITION GROUP. Mapping globally would let EA's view of how
 a quarterback compares to a guard leak in, and that comparison is the one thing the
 fitted facet weights already answer.
 
-RULE 3 IS UNVALIDATED, and rules 1 and 2 are asserted rather than measured. Every test
-in gap_analysis.py says EA is DIFFERENT in the tail; none says it is BETTER, and the
-only accuracy test available - team ratings against 2025 results - had EA behind at .42
-against .51. Rules 1 and 2 are here because they were tested elsewhere and chosen; this
-file implements them and checks the scale, it does not judge them.
+RULE 2 IS UNVALIDATED and rule 1 is a judgement rather than a measurement. This file
+implements them and checks the scale; it does not judge them.
 
 Run: ../../venv/bin/python blend_projection.py [--threshold 300]
 """
@@ -46,9 +55,6 @@ from build_roster_2026 import norm_name  # noqa: E402
 
 SRC = f"{WAR_DIR}/projections_2026_v2.csv"
 OUT = f"{WAR_DIR}/projections_2026_blended.csv"
-
-# Position groups where EA's ranking is used for EVERY player, not only the unproven.
-FULL_EA_GROUPS = ("OL", "WR", "DT")
 
 # The quarterback sheet, copied into the repo so the build does not read from
 # ~/Downloads. One row per team, naming that team's starter and scoring him on five
@@ -164,8 +170,7 @@ def apply_map(d, mask, src_col, label, new, source):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--threshold", type=int, default=300,
-                    help="prior-season snaps below which EA's ordering is used, for "
-                         "the groups not covered by a full-group rule")
+                    help="prior-season snaps below which EA's ordering is used")
     args = ap.parse_args()
 
     pff = pd.read_csv(SRC)
@@ -181,11 +186,7 @@ def main():
     new = d.proj_war.copy()
     source = pd.Series("PFF", index=d.index)
 
-    # --- rule 1: EA outright for the three groups, at every snap level -------------
-    full_ea = d.broad_group.isin(FULL_EA_GROUPS) & d.ea_war.notna()
-    n_full = apply_map(d, full_ea, "ea_war", "EA-full", new, source)
-
-    # --- rule 2 IS NOT HERE ANY MORE ----------------------------------------------
+    # --- rule 1 IS NOT HERE ------------------------------------------------------
     # The quarterback sheet is applied by apply_qb_map(), which depth_correction calls
     # after its reweight, because the reweight's team-specific multiplier was undoing
     # the ordering this map imposes. See apply_qb_map's docstring.
@@ -196,17 +197,14 @@ def main():
     # is_starter is an input FEATURE of the projection, so a roster carrying the wrong
     # starter gets the wrong man projected as one. Syracuse is the worked example -
     # Odom was flagged starter on 2025 snaps and came out the best quarterback in FBS
-    # at 1.83, above Julian Sayin. Nothing about moving the VALUE map to the end
-    # touches that; the pin is already on the frame when this file opens it.
+    # at 1.83, above Julian Sayin. Nothing about where the VALUE map runs touches that;
+    # the pin is already on the frame when this file opens it.
     qb_slots = d.broad_group == "QB"
 
-    # --- rule 3: the old snap-threshold blend, on whatever is left ----------------
-    # A row claimed above is excluded, not re-mapped: rule 3 acting on a subset of an
-    # already-permuted group would reshuffle values rule 1 just placed. Quarterbacks
-    # are excluded outright - rule 2 will claim them at the end of the pipeline, and
-    # letting EA reorder them here would be overwritten anyway.
-    low = ((d.prior_snaps < args.threshold) & d.ea_war.notna() & ~full_ea
-           & ~d.broad_group.isin(FULL_EA_GROUPS) & ~qb_slots)
+    # --- rule 2: the snap-threshold blend, on everyone who is not a quarterback ----
+    # Quarterbacks are excluded outright - rule 1 will claim them at the end of the
+    # pipeline, and letting EA reorder them here would be overwritten anyway.
+    low = (d.prior_snaps < args.threshold) & d.ea_war.notna() & ~qb_slots
     n_low_ea = apply_map(d, low, "ea_war", "EA", new, source)
 
     d["proj_war"] = new
@@ -215,16 +213,18 @@ def main():
     # ---- what happened -----------------------------------------------------------
     n_qb_slots = int((d.broad_group == "QB").sum())
     n_qb_named = len(load_qb_sheet())
-    print(f"rule 1  EA outright for {', '.join(FULL_EA_GROUPS)}:")
-    for g in FULL_EA_GROUPS:
-        tot = int((d.broad_group == g).sum())
-        got = int((full_ea & (d.broad_group == g)).sum())
-        print(f"          {g:<4}{got:>5} of {tot:<5} slots EA-ranked "
-              f"({tot - got} have no EA rating, kept PFF)")
-    print(f"rule 2  quarterback sheet: deferred to depth_correction, which applies it "
+    print(f"rule 1  quarterback sheet: deferred to depth_correction, which applies it "
           f"after the reweight ({n_qb_named} named starters, {n_qb_slots} QB slots)")
-    print(f"rule 3  EA under {args.threshold} snaps elsewhere: {n_low_ea} slots")
+    print(f"rule 2  EA under {args.threshold} prior snaps: {n_low_ea} slots")
     print(f"        untouched (PFF): {int((source == 'PFF').sum())} of {len(d)}")
+
+    # The proven slots that the old OL/WR/DT full-group rule used to take off PFF and
+    # hand to EA. Reported so the effect of dropping that rule stays visible instead of
+    # becoming invisible the moment it is gone.
+    was_full_ea = (d.broad_group.isin(("OL", "OT", "IOL", "WR", "DT"))
+                   & d.ea_war.notna() & (d.prior_snaps >= args.threshold))
+    print(f"        of those PFF slots, {int(was_full_ea.sum())} are proven OL/WR/DT "
+          f"that the removed full-group rule would have given to EA")
 
     # ---- the scale check ---------------------------------------------------------
     # Every rule is a within-group permutation, so each group's WAR total must be
@@ -247,7 +247,7 @@ def main():
     a, b = d.proj_war_pff, d.proj_war
     print(f"\nleague total WAR: {a.sum():.2f} -> {b.sum():.2f}")
     print(f"Spearman old vs new, all slots: {a.corr(b, method='spearman'):.3f}")
-    for label in ("EA-full", "QB-avg", "EA"):
+    for label in ("QB-avg", "EA"):
         sub = d[d.war_source == label]
         if len(sub) > 1:
             print(f"  within {label:<8}({len(sub):>4} slots): "

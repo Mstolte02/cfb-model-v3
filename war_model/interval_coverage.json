@@ -1,10 +1,10 @@
 {
- "nominal_68_actual": 0.8832116788321168,
+ "nominal_68_actual": 0.8686131386861314,
  "nominal_95_actual": 0.9781021897810219,
- "mean_team_sd": 1.6543807071594228,
- "mean_team_sd_independent": 1.5140566128395403,
- "team_shock_sd_per_player": 0.014682261651597335,
- "level_exponent": 0.6179910106880359,
+ "mean_team_sd": 1.5487206083150449,
+ "mean_team_sd_independent": 1.3982101715299282,
+ "team_shock_sd_per_player": 0.0149473606801432,
+ "level_exponent": 0.597528053071671,
  "fitted_on": 2024,
  "scored_on": 2025,
  "n_teams": 137

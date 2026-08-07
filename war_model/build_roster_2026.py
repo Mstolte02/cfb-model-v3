@@ -31,9 +31,13 @@ TEAM_ALIAS = {
 # PFF position -> two-deep broad group
 PFF_TO_GROUP = {
     "QB": "QB", "HB": "RB", "FB": "RB", "WR": "WR", "TE": "TE",
-    "T": "OL", "G": "OL", "C": "OL",
+    "T": "OT", "G": "IOL", "C": "IOL",
     "DI": "DT", "ED": "EDGE", "LB": "LB", "CB": "CB", "S": "SAF",
 }
+
+# The valuation groups collapsed to the coarser ones used for IDENTITY matching only.
+# See the name+position merge in main() for why the two differ.
+COARSE_GROUP = {"OT": "OL", "IOL": "OL"}
 
 SUFFIX = re.compile(r"\b(jr|sr|ii|iii|iv|v)\b")
 
@@ -58,15 +62,26 @@ def parse_eligibility(e):
     return pd.Series({"class": cls, "redshirt": rs, "is_transfer": transfer})
 
 
-def load_two_deep():
-    """The 2026 two-deep, preferring the scraped Ourlads charts over the workbook.
+# Roster sources, best first. Each scraper emits the same columns, so this is a
+# preference order rather than three code paths.
+#
+# TWO-DEEP replaced Ourlads as the primary. It charts all 138 FBS programs where
+# Ourlads had 136 - North Dakota State and Sacramento State play their first FBS
+# season in 2026 and were simply missing - and its position labels resolve the line
+# into tackles and interior for every charted slot, which is what lets broad_group
+# carry OT and IOL separately. Ourlads stays as the fallback and is still granular
+# enough to do the same; the workbook, a 27-June export that had already drifted, is
+# the last resort.
+SOURCES = [("twodeep_2026.csv", "TWO-DEEP charts"),
+           ("ourlads_2026.csv", "Ourlads charts")]
 
-    The workbook was a 27-June export and had already drifted - LSU's starting back
-    among others. scrape_ourlads.py pulls the live charts and emits the same columns,
-    so this just picks whichever source is present and newer.
-    """
-    scraped = f"{HERE}/ourlads_2026.csv"
-    if os.path.exists(scraped):
+
+def load_two_deep():
+    """The 2026 two-deep, preferring a scraped chart over the workbook."""
+    for fname, label in SOURCES:
+        scraped = f"{HERE}/{fname}"
+        if not os.path.exists(scraped):
+            continue
         d = pd.read_csv(scraped)
         d = d[d.depth <= 2]          # the workbook was a two-deep; match it
         conf = {t["school"]: t.get("conference") for t in
@@ -74,7 +89,7 @@ def load_two_deep():
             if os.path.exists(f"{HERE}/cfbd_cache/teams_2026.json") else {}
         d["conference"] = d.team.map(conf).fillna("—")
         d["eligibility"] = d["class"].fillna("")
-        print(f"roster source: scraped Ourlads charts "
+        print(f"roster source: scraped {label} "
               f"({d.team.nunique()} teams, {len(d)} slots)")
         return d
     raw = pd.read_excel(XL, "Weighted Two Deep")
@@ -121,11 +136,20 @@ def main():
         m25[["key", "team", "player_id"]].rename(columns={"player_id": "pid_team"}),
         on=["key", "team"], how="left")
 
-    by_key_group, amb_group = unique_by(war, ["key", "group"])
-    by_key_group = by_key_group[["key", "group", "player_id"]]
-    ros = ros.merge(by_key_group.rename(columns={"group": "broad_group",
-                                                 "player_id": "pid_group"}),
-                    on=["key", "broad_group"], how="left")
+    # THE NAME+POSITION MATCH USES THE COARSE GROUP, which collapses OT and IOL back
+    # to one line. Its job is identity, not valuation: it exists to stop a receiver
+    # inheriting a quarterback's history, and a guard who moves out to tackle is the
+    # same man. Matching on the split group refused him instead, because his PFF rows
+    # say G and his 2026 slot says OT, and it cost the line 4.8 points of coverage -
+    # every one of those a real player pushed onto the no-history path that exists for
+    # players we have never seen. What the split is FOR is pricing the two jobs
+    # differently once the history is attached, and that happens downstream of here.
+    war["match_group"] = war.group.replace(COARSE_GROUP)
+    ros["match_group"] = ros.broad_group.replace(COARSE_GROUP)
+    by_key_group, amb_group = unique_by(war, ["key", "match_group"])
+    by_key_group = by_key_group[["key", "match_group", "player_id"]]
+    ros = ros.merge(by_key_group.rename(columns={"player_id": "pid_group"}),
+                    on=["key", "match_group"], how="left")
     print(f"  ambiguous history keys refused: {amb_team} on name+team, "
           f"{amb_group} on name+position")
 

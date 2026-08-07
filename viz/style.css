@@ -118,6 +118,9 @@ tbody tr:hover { background: var(--panel2); }
   cursor: help; }
 @media (prefers-color-scheme: dark) { .tag.out { color: #ff7b72; } }
 .tag.conf-tag { background: rgba(47,96,150,.14); color: var(--blue); }
+/* Transferred in for 2026. Muted rather than coloured: it is context on where the
+   player came from, not a warning about the number next to it. */
+.tag.tr { background: rgba(47,96,150,.14); color: var(--blue); cursor: help; }
 
 /* The fill used to be a 110px track sitting to the LEFT of the figure, so every one
    of these cells was a small number attached to a large chart, and the chart won.

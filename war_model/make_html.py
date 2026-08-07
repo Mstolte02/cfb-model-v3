@@ -5,10 +5,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 D = json.load(open(f"{HERE}/report_2026.json"))
 M = D["meta"]
 
-GROUPS = ["QB", "RB", "WR", "TE", "OL", "DT", "EDGE", "LB", "CB", "SAF"]
+GROUPS = ["QB", "RB", "WR", "TE", "OT", "IOL", "DT", "EDGE", "LB", "CB", "SAF"]
 GROUP_LABEL = {"QB": "Quarterback", "RB": "Running back", "WR": "Receiver",
-               "TE": "Tight end", "OL": "Offensive line", "DT": "Interior D-line",
-               "EDGE": "Edge", "LB": "Linebacker", "CB": "Cornerback", "SAF": "Safety"}
+               "TE": "Tight end", "OT": "Offensive tackle", "IOL": "Interior O-line",
+               "DT": "Interior D-line", "EDGE": "Edge", "LB": "Linebacker",
+               "CB": "Cornerback", "SAF": "Safety"}
 
 
 def esc(s):
@@ -261,9 +262,9 @@ footer {{ border-top:1px solid var(--line); padding-top:1.5rem; color:var(--mute
   on 2021&ndash;25 actual results (r&nbsp;=&nbsp;{M['war_calib_r']}). Win totals are for a
   12-game regular season and exclude any postseason.</p>
   {table(teams[:30],
-         ["rank","team","conference","proj_war","proj_wins_12","QB","CB","OL","imputed"],
-         ["#","Team","Conference","Roster WAR","Proj wins","QB","CB","OL","Imputed slots"],
-         numeric={"rank","proj_war","proj_wins_12","QB","CB","OL","imputed"})}
+         ["rank","team","conference","proj_war","proj_wins_12","QB","CB","OT","IOL","imputed"],
+         ["#","Team","Conference","Roster WAR","Proj wins","QB","CB","OT","IOL","Imputed slots"],
+         numeric={"rank","proj_war","proj_wins_12","QB","CB","OT","IOL","imputed"})}
 </section>
 
 <section>

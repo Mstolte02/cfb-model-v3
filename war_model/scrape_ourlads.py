@@ -1,4 +1,11 @@
-"""Scrape the 2026 Ourlads two-deeps and rebuild the roster the projection uses.
+"""Scrape the 2026 Ourlads two-deeps. FALLBACK ROSTER SOURCE.
+
+scrape_twodeep.py is the primary now - it charts all 138 FBS programs where this has
+136, missing North Dakota State and Sacramento State in their first FBS season. This
+is kept because it is a second independent read of the same charts and its position
+labels are equally granular, so build_roster_2026 can fall back to it without losing
+the OT/IOL split. It is only consulted when twodeep_2026.csv is absent.
+
 
 The workbook the pipeline shipped with was exported on 27 June; Ourlads keeps its
 charts current through camp, and a spot check found LSU's starting back had already
@@ -56,8 +63,11 @@ POS_GROUP = {
     "WR": "WR", "WR-X": "WR", "WR-Z": "WR", "WR-SL": "WR", "WR-H": "WR",
     "WR-F": "WR", "WR-Y": "WR",
     "TE": "TE", "TE-Y": "TE", "TE-H": "TE", "LTE": "TE", "RTE": "TE",
-    "LT": "OL", "RT": "OL", "LG": "OL", "RG": "OL", "C": "OL", "OC": "OL",
-    "QT": "OL", "QG": "OL", "OT": "OL", "OG": "OL", "SG": "OL", "ST": "OL",
+    # the line is two groups; see candidates.GROUPS. QT/QG/SG/ST are the
+    # quick-side/strong-side naming some charts use in place of left/right.
+    "LT": "OT", "RT": "OT", "OT": "OT", "QT": "OT", "ST": "OT",
+    "LG": "IOL", "RG": "IOL", "C": "IOL", "OC": "IOL", "OG": "IOL",
+    "QG": "IOL", "SG": "IOL",
     "NT": "DT", "DT": "DT", "LDT": "DT", "RDT": "DT", "DL": "DT",
     "DE": "EDGE", "LDE": "EDGE", "RDE": "EDGE", "EDGE": "EDGE", "JACK": "EDGE",
     "RUSH": "EDGE", "BAN": "EDGE", "BUCK": "EDGE", "LEO": "EDGE", "STUD": "EDGE",
@@ -189,7 +199,8 @@ def main(refresh=False):
                 unknown.add(pos)
                 continue
             out.append({"team": team, "roster_position": pos, "broad_group": grp,
-                        "unit": "OFF" if grp in ("QB", "RB", "WR", "TE", "OL") else "DEF",
+                        "unit": "OFF" if grp in ("QB", "RB", "WR", "TE", "OT", "IOL")
+                                else "DEF",
                         "depth": depth, "player": name, "class": cls,
                         "is_transfer": tr, "redshirt": rs})
             kept += 1

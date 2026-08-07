@@ -41,8 +41,8 @@ LOGO_DIR = Path(os.environ.get("CFB_LOGO_DIR", CFB_EXTERNAL / "cfb_logos"))
 #   ""        balanced default
 #   pff       no outside opinion anywhere: every number is the model's own, out of
 #             the PFF and CFBD facets. The default build substitutes EA's ordering
-#             for OL/WR/DT and the lightly-played, and re-orders the starting
-#             quarterbacks by a five-source composite that includes EA.
+#             for the lightly-played only, and re-orders the starting quarterbacks
+#             by a five-source composite that includes EA.
 #   roster    the old roster-weighted lens. No longer shipped; see ROSTER_VARIANT.
 SITE_VARIANTS = {"": "balanced", "pff": "pff-only", "roster": "roster-weighted"}
 

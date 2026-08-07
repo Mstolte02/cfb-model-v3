@@ -32,10 +32,11 @@ PLAYER_WAR = WAR_DIR / "hybrid_player_war.csv"
 
 # WHICH OPINION OF EACH PLAYER THE PROJECTION USES.
 #
-#   blended (default)  our WAR, with EA's ORDERING substituted for OL/WR/DT and for
-#                      anyone under EA_BLEND_SNAPS prior snaps, and the starting
-#                      quarterbacks re-ordered by the five-source composite in
-#                      qbs_2026.xlsx (PFSN, PFF, EPA, an execs poll, EA).
+#   blended (default)  our WAR, with EA's ORDERING substituted for anyone under
+#                      EA_BLEND_SNAPS prior snaps, and the starting quarterbacks
+#                      re-ordered by the five-source composite in qbs_2026.xlsx
+#                      (PFSN, PFF, EPA, an execs poll, EA). Every proven player is
+#                      on our own number; EA only ranks players we cannot rank.
 #   pff                no outside opinion at all. Every number is this model's own,
 #                      out of the PFF and CFBD facets.
 #
@@ -177,9 +178,15 @@ def player_contributions(year: int = 2026) -> pd.DataFrame | None:
     # questions on the team page: is_starter says he is in the lineup, available says
     # whether he is playing at all. A man who is out has proj_war 0 by construction, and
     # without the flag the page shows a listed first-teamer at 0.000 with no explanation.
+    # `redshirt` rides along with `class` because the two are one fact split in half:
+    # the chart says "RS SR", and the player ratings tab filters on the class and the
+    # redshirt independently, so it needs both halves. Leaving it off this list is a
+    # silent failure rather than a loud one - the column exists all the way through
+    # projections_2026_final.csv and simply never arrives, so every player renders as a
+    # non-redshirt and the filter returns a confidently wrong answer.
     cols = ["team", "player", "broad_group", "roster_position", "depth", "class",
-            "is_starter", "available", "is_transfer", "proj_war", "imputed", "stars",
-            "snaps_2025", "war_2025"]
+            "redshirt", "is_starter", "available", "is_transfer", "proj_war",
+            "imputed", "stars", "snaps_2025", "war_2025"]
     return p[[c for c in cols if c in p.columns]].copy()
 
 

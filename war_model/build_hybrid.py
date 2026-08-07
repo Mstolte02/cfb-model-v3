@@ -39,6 +39,13 @@ TEAM_MAP = json.load(open(f"{HERE}/team_map.json"))
 # Both sources' position labels collapsed onto one coarse group, so a CFBD row can
 # only join a PFF player who plays the same kind of football. PFF uses HB/DI/ED/T/G/C
 # where CFBD uses RB/DL/DE/EDGE/OL, hence the two vocabularies in one table.
+#
+# THIS STAYS COARSE - "OL", not OT and IOL - EVEN THOUGH THE FACET GROUPS SPLIT THE
+# LINE. It is a cross-source JOIN KEY, not a position group: its job is to stop a
+# quarterback inheriting a receiver's value, and it can only be as fine as the coarser
+# of the two vocabularies. CFBD calls roughly nine in ten linemen "OL", so splitting
+# here would fail to match nearly every lineman rather than matching him precisely.
+# The OT/IOL distinction is made in candidates.GROUPS, off PFF's own T/G/C.
 POS_GROUP = {
     "QB": "QB",
     "HB": "RB", "RB": "RB", "FB": "RB",

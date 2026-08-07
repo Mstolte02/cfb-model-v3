@@ -11,10 +11,10 @@ Five stages, each reading the one before it:
 
 1. **facets** — `facets.py`, `candidates.py`, `cfbd_facets.py`. A facet is one job
    measured one way: a grade or rate over its own denominator, standardized within
-   season and multiplied by volume, so an average snap is worth zero. 98 of them —
-   86 generated from the PFF exports, 12 from CFBD play value. `consolidate.py` then
+   season and multiplied by volume, so an average snap is worth zero. 103 of them —
+   91 generated from the PFF exports, 12 from CFBD play value. `consolidate.py` then
    merges the near-duplicate clusters onto their first principal component, which
-   leaves **82** and takes the condition number of the design from 36.3 to 28.8.
+   leaves **87**.
    Standardization is role-relative (`WAR_ROLE_NORM=partial`): a receiver is scored
    against the pooled distribution with his depth-chart tier's mean removed, so a
    fifth receiver is not charged for being a fifth receiver.
@@ -28,7 +28,7 @@ Five stages, each reading the one before it:
    units of wins. `waa`, then `war` after replacement credit. Summed player WAA
    equals `games × slope × rating` **exactly**: the schedule term is allocated to the
    players rather than discarded, which it used to be.
-4. **roster** — `build_roster_2026.py` joins the Ourlads two-deep to that history.
+4. **roster** — `build_roster_2026.py` joins the TWO-DEEP two-deep to that history.
 5. **projection** — `project_2026_v2.py`, a gradient-boosted model over every
    two-deep slot. Its output is what the site shows.
 
@@ -58,6 +58,54 @@ trade here. The win predictor is downstream in the parent repo and blends this i
 40% of one of six inputs; what WAR is *for* is saying who was worth what.
 
 Set `WAR_WEIGHTS=nonneg` to get the old behaviour back.
+
+### The line is two groups
+
+Blocks are (job × position group), so as long as the line was ONE group the level-1
+regression had to answer a single question for two jobs — a tackle alone against an
+edge rusher, an interior lineman working in double teams — and a facet's weight inside
+that block split on a validity figure pooled over both. PFF's blocking export tags
+`T`, `G` and `C` separately and every charted depth-chart slot resolves to
+LT/LG/C/RG/RT, so the split is available at both ends. Centres go with the guards:
+three groups would have fitted the centre block on ~300 players a season, and C-vs-G
+is the distinction the grades separate least.
+
+The fit does not think the two jobs are worth the same, though the gap is smaller than
+the headline share suggests, because there are three interior linemen and two tackles:
+
+| | share of total facet weight | per starter |
+|---|---|---|
+| **OT** (2 on the field) | 5.49% | 2.74% |
+| **IOL** (3 on the field) | 5.25% | 1.75% |
+
+A tackle prices at **1.57×** an interior lineman per man. The split is not simply
+"tackles matter more": `IOL_run_block` (.0319) is the larger of the two run-blocking
+facets and `OT_pass_block` (.0100) is half again the interior's, which is the fit
+saying the interior is worth more in the run game and the tackles in protection —
+exactly the distinction one merged group could not express.
+
+That is worth stating carefully because a first pass at this reported 8.8% against
+5.0% and a 2.7× ratio, and it was an artefact. `concepts.py` still listed the facets
+under their old `OL_*` names, so every line facet fell through `concept_map`'s
+unclaimed branch into its own `_solo_` concept, and the two-level fit priced ten
+orphans instead of two blocks. The numbers above are from the build where they sit in
+`pass_protection`, `run_blocking` and `discipline` beside the tight ends and backs.
+
+At team level the split is close to neutral, which is the point — it is an attribution
+change, not an accuracy claim:
+
+| | before the split | after |
+|---|---|---|
+| weighted facet total vs this season's wins | .847 | .847 |
+| ...vs next season's wins | .527 | .527 |
+| season-blocked CV r | .854 | .855 |
+
+The split is for VALUATION only. `build_roster_2026` matches a player to his history
+on a COARSE group that collapses OT and IOL back to one line, because that merge is
+about identity rather than value and a guard who moves out to tackle is the same man —
+matching on the split group refused him and cost the line 4.8 points of coverage.
+`build_hybrid`'s CFBD↔PFF join key stays coarse for the same reason, plus a harder
+one: CFBD calls roughly nine in ten linemen "OL" and cannot resolve the split at all.
 
 ### A block may not span position groups
 
@@ -105,6 +153,7 @@ Use the parent repo's venv (`../venv/bin/python`); there is no separate environm
 any more. Order:
 
 ```
+python scrape_twodeep.py               # the 2026 charts (cached; --refresh to re-pull)
 python build_hybrid.py                 # facet weights -> player WAR
 python build_roster_2026.py            # two-deep joined to the WAR history
 python depth_correction.py --roster    # pin starters BEFORE projecting
@@ -124,21 +173,31 @@ compares the counts below against the live files and complains when they drift.
 
 | | |
 |---|---|
-| facets, after consolidation | 82<!--live:n_facets--> (from 98) |
+| facets, after consolidation | 87<!--live:n_facets--> (from 103) |
 | blocks × groups | 34 concepts in 33 groups |
 | weighted facet total vs this season's wins | r = .847 |
 | ...vs next season's wins | r = .527 |
-| Massey rating vs adjusted win pct | r = .705 |
+| Massey rating vs adjusted win pct | r = .702 |
 | de-attenuation k | 0.954 |
-| player-seasons / total WAR | 89,893 / 6,070 |
-| projection holdout, 2025, ex-ante features only | r = .621 |
-| transfer validity of player WAR | .498 |
+| player-seasons / total WAR | 89,893 / 6,069 |
+| projection holdout, 2025, ex-ante features only | r = .610 |
+| ...against the carry-forward baseline it has to beat | .530 |
 
 The projection's holdout r was published as .631 and is not the same number: that one
 was measured with `is_starter` in the feature set, which was computed from the
 outcome season in training and from a preseason depth chart at serve time. It was
 worth .064 of correlation on an otherwise identical model, measured with
 both feature sets on one build.
+
+**The holdout fell .621 → .610 when the line split, and that is a real cost.** The two
+figures are not measured on identical populations — splitting the line changes which
+slots exist, and the holdout went from 6,027 rows to 5,927 — so they are not strictly
+comparable. But the baseline moved with it (carry-forward .534 → .530), and the
+model's margin over that baseline still narrowed, **+.087 → +.080**. Splitting a group
+means each half is fitted on fewer players, and at the player level that costs a
+little forward accuracy. It is bought back as attribution: the model can now say a
+tackle and a guard are worth different amounts, which is what WAR is *for*, and at
+team level the split is neutral (see the table above).
 
 ## What is not in git
 

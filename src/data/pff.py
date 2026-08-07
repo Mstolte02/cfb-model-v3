@@ -33,6 +33,20 @@ POS_MAP = {"QB": "QB", "HB": "RB", "FB": "RB", "WR": "WR", "TE": "TE",
            "T": "OL", "G": "OL", "C": "OL", "DI": "DT", "ED": "EDGE",
            "LB": "LB", "CB": "CB", "S": "SAF"}            # K/P/LS dropped
 
+# THIS MODULE KEEPS THE LINE AS ONE GROUP, and the 2026 two-deep is collapsed onto
+# that vocabulary on the way in.
+#
+# The WAR build splits the line into OT and IOL, and the 2026 roster carries the split
+# groups. This is a DIFFERENT signal with its own positional weights, and those weights
+# were fitted by NNLS against win% with the line as a single group (see
+# scripts/compare_signals.py). Handing it "OT" and "IOL" does not split .12 between
+# them, it matches neither key: `weights.get(grp, 0)` returns ZERO, the depth-share
+# profile misses, and the replacement grade comes back NaN - so the entire offensive
+# line drops out of the talent feature without raising anything. It did, silently,
+# until this map was added. Splitting the weight instead would mean inventing two
+# numbers where one was fitted.
+TWO_DEEP_TO_POS = {"OT": "OL", "IOL": "OL"}
+
 TEAM_MAP = {
     "AIR FORCE": "Air Force", "AKRON": "Akron", "ALABAMA": "Alabama",
     "APP STATE": "App State", "ARIZONA": "Arizona", "ARIZONA ST": "Arizona State",
@@ -329,18 +343,22 @@ def _join_prior_grade(td: pd.DataFrame, g25: pd.DataFrame) -> pd.DataFrame:
 def load_2026_roster() -> pd.DataFrame:
     """[team, broad_group, pname, depth] - THE 2026 roster, singular.
 
-    There were two. The WAR build scraped the Ourlads two-deep into
-    war_model/roster_2026.csv (136 teams, 5,770 slots) and this module read the PFSN
-    workbook's "Weighted Two Deep" sheet (138 teams, 5,662 slots), and they disagreed
-    about roughly 900 players and two teams' worth of naming. So the projected WAR of
-    a roster and the PFF talent of "the same" roster were computed over different
-    rosters, and the model blended the two as though they described one team.
+    There were two. The WAR build scraped a two-deep into war_model/roster_2026.csv
+    and this module read the PFSN workbook's "Weighted Two Deep" sheet, and they
+    disagreed about roughly 900 players and two teams' worth of naming. So the
+    projected WAR of a roster and the PFF talent of "the same" roster were computed
+    over different rosters, and the model blended the two as though they described one
+    team.
 
-    The Ourlads scrape wins because it is the one the rest of the pipeline already
-    depends on - build_roster_2026 attaches player ids and WAR history to it, and
-    depth_correction pins starters on it - so it is the copy that is maintained. It
-    also carries CFBD school names already, which is the vocabulary the model indexes
-    on. The workbook stays a raw input to war_model, not a second roster.
+    The scrape wins because it is the one the rest of the pipeline already depends on
+    - build_roster_2026 attaches player ids and WAR history to it, and depth_correction
+    pins starters on it - so it is the copy that is maintained. It also carries CFBD
+    school names already, which is the vocabulary the model indexes on. The workbook
+    stays a raw input to war_model, not a second roster.
+
+    The source behind it is now thetwodeep.com rather than Ourlads (138 teams against
+    136, and granular enough at every charted slot to resolve the line into tackles and
+    interior); nothing here depends on which, only on the columns.
     """
     from src.data import war as warmod
     p = warmod.WAR_DIR / "roster_2026.csv"
@@ -348,6 +366,8 @@ def load_2026_roster() -> pd.DataFrame:
     d = pd.read_csv(p)
     d = d[["team", "broad_group", "player", "depth"]].dropna(
         subset=["player", "broad_group"])
+    # onto THIS module's position vocabulary, which keeps the line as one group
+    d["broad_group"] = d.broad_group.replace(TWO_DEEP_TO_POS)
     d["pname"] = d.player.map(_norm)
     d["depth"] = pd.to_numeric(d.depth, errors="coerce").fillna(2)
     return d

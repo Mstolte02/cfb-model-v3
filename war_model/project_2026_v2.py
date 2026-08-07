@@ -52,10 +52,20 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 CACHE = f"{HERE}/cfbd_cache"
 CLASS_NUM = {"FR": 1, "SO": 2, "JR": 3, "SR": 4, "GR": 5}
 
-# CFBD roster positions -> the two-deep's broad groups
+# CFBD roster positions -> the two-deep's broad groups.
+#
+# GENERIC "OL" IS DELIBERATELY UNMAPPED. CFBD labels roughly nine in ten linemen "OL"
+# with no tackle/interior distinction, and these rows are used for one thing only:
+# topping a historical team-position room up to its two-deep slot count with
+# zero-snap, zero-WAR filler, so each past season is the same shape of object as the
+# 2026 chart. Guessing which room an unlabelled lineman belongs to would put a real
+# person in a room he may not play in to fill a slot that exists to hold a zero, so
+# they are dropped and the specific labels below are kept. The line is the one unit
+# where this costs almost nothing: five linemen play essentially every snap, so an OT
+# or IOL room is filled by real PFF players and rarely needs filler at all.
 CFBD_TO_GROUP = {
     "QB": "QB", "RB": "RB", "FB": "RB", "WR": "WR", "TE": "TE",
-    "OL": "OL", "OT": "OL", "G": "OL", "C": "OL", "OG": "OL",
+    "OT": "OT", "G": "IOL", "C": "IOL", "OG": "IOL",
     "DL": "DT", "DT": "DT", "NT": "DT", "DE": "EDGE", "EDGE": "EDGE",
     "LB": "LB", "CB": "CB", "DB": "CB", "S": "SAF",
 }

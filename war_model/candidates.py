@@ -29,19 +29,32 @@ from facets import YEARS, PFF_DIR, POS_GROUP
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 # ---------------------------------------------------------------- position groups
+# THE LINE IS TWO GROUPS. It was one, ("T","G","C"), and that made the level-1
+# regression answer a single question for two different jobs: a tackle is alone
+# against an edge rusher on an island, an interior lineman works in double teams and
+# is graded on a different distribution of pass sets. Blocks are (job x position
+# group), so one group meant one block weight covering both, and a facet's weight
+# inside it split by a validity figure pooled across both.
+#
+# The split is available because PFF's blocking export tags T, G and C separately, and
+# because the depth charts resolve every charted slot to LT/LG/C/RG/RT rather than a
+# bare "OL". Centres go with the guards rather than alone: three positions would have
+# left the centre block fitted on ~300 players a season, and the C-vs-G distinction is
+# the one the grades separate least.
 GROUPS = {
     "QB": ("QB",),
     "RB": ("HB", "FB"),
     "WR": ("WR",),
     "TE": ("TE",),
-    "OL": ("T", "G", "C"),
+    "OT": ("T",),
+    "IOL": ("G", "C"),
     "DI": ("DI",),
     "ED": ("ED",),
     "LB": ("LB",),
     "CB": ("CB",),
     "S":  ("S",),
 }
-OFFENSE = {"QB", "RB", "WR", "TE", "OL"}
+OFFENSE = {"QB", "RB", "WR", "TE", "OT", "IOL"}
 
 # Which export each prefix comes from, matching build_massey.SOURCES.
 SOURCES = {"pass": "passing", "rush": "rushing", "recv": "receiving",
@@ -108,14 +121,21 @@ CATALOGUE = [
     ("recv__grades_offense",         "recv__routes",     ("WR",),    SKILL),
 
     # ---- blocking -------------------------------------------------------------
-    ("blk__grades_pass_block",  "blk__snap_counts_pass_block", ("T", "G", "C"), SKILL),
-    ("blk__grades_run_block",   "blk__snap_counts_run_block",  ("T", "G", "C"), SKILL),
+    # every blocking metric is defined twice, once for tackles and once for the
+    # interior, so the fit prices the two jobs separately
+    ("blk__grades_pass_block",  "blk__snap_counts_pass_block", ("T",),          SKILL),
+    ("blk__grades_pass_block",  "blk__snap_counts_pass_block", ("G", "C"),      SKILL),
+    ("blk__grades_run_block",   "blk__snap_counts_run_block",  ("T",),          SKILL),
+    ("blk__grades_run_block",   "blk__snap_counts_run_block",  ("G", "C"),      SKILL),
     ("blk__grades_pass_block",  "blk__snap_counts_pass_block", ("TE",),         SKILL),
     ("blk__grades_run_block",   "blk__snap_counts_run_block",  ("TE",),         SKILL),
     ("blk__grades_run_block",   "blk__snap_counts_run_block",  ("HB", "FB"),    SKILL),
-    ("blk__pressures_allowed",  "blk__snap_counts_pass_block", ("T", "G", "C"), RATE),
-    ("blk__sacks_allowed",      "blk__snap_counts_pass_block", ("T", "G", "C"), RATE),
-    ("blk__penalties",          "blk__snap_counts_offense",    ("T", "G", "C"), RATE),
+    ("blk__pressures_allowed",  "blk__snap_counts_pass_block", ("T",),          RATE),
+    ("blk__pressures_allowed",  "blk__snap_counts_pass_block", ("G", "C"),      RATE),
+    ("blk__sacks_allowed",      "blk__snap_counts_pass_block", ("T",),          RATE),
+    ("blk__sacks_allowed",      "blk__snap_counts_pass_block", ("G", "C"),      RATE),
+    ("blk__penalties",          "blk__snap_counts_offense",    ("T",),          RATE),
+    ("blk__penalties",          "blk__snap_counts_offense",    ("G", "C"),      RATE),
 
     # ---- pass rush ------------------------------------------------------------
     ("def__grades_pass_rush_defense", "def__snap_counts_pass_rush", ("DI",), SKILL),
@@ -182,7 +202,7 @@ MIN_DENOM = {"rate": 25, "skill": 12}
 
 
 def group_of(positions):
-    """Short label for a set of PFF positions, e.g. ('T','G','C') -> OL."""
+    """Short label for a set of PFF positions, e.g. ('G','C') -> IOL."""
     for name, members in GROUPS.items():
         if tuple(positions) == members:
             return name
@@ -241,7 +261,8 @@ MAX_TIER = 5
 # receiver, carries for a back, snaps for everyone whose job has no touch count.
 TIER_BY = {
     "WR": "recv__targets", "TE": "recv__targets", "RB": "rush__attempts",
-    "QB": "pass__dropbacks", "OL": "blk__snap_counts_offense",
+    "QB": "pass__dropbacks",
+    "OT": "blk__snap_counts_offense", "IOL": "blk__snap_counts_offense",
     "DI": "def__snap_counts_defense", "ED": "def__snap_counts_defense",
     "LB": "def__snap_counts_defense", "CB": "def__snap_counts_coverage",
     "S": "def__snap_counts_coverage",

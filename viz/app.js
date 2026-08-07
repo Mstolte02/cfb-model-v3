@@ -19,9 +19,9 @@
      which changes the talent feature, which changes the ratings, which changes the
      playoff simulation. Nothing here is recomputed in the browser.
 
-       ""     blended - our WAR with EA's ORDERING substituted for OL/WR/DT and for
-              anyone under 300 prior snaps, and the starting quarterbacks re-ordered
-              by the five-source composite in qbs_2026.xlsx.
+       ""     blended - our WAR with EA's ORDERING substituted for anyone under 300
+              prior snaps, and the starting quarterbacks re-ordered by the five-source
+              composite in qbs_2026.xlsx. Proven players keep our own number.
        pff    no outside opinion at all; every number is the model's own.
 
      The two share a ROSTER - same two-deep, same starters, same injuries, same
@@ -1432,8 +1432,19 @@
   /* =======================================================================
      TEAM BREAKDOWN
      ======================================================================= */
-  const GROUP_ORDER = ["QB", "RB", "WR", "TE", "OL", "DT", "EDGE", "LB", "CB", "SAF"];
-  const OFF_GROUPS = new Set(["QB", "RB", "WR", "TE", "OL"]);
+  const GROUP_ORDER = ["QB", "RB", "WR", "TE", "OT", "IOL",
+                       "DT", "EDGE", "LB", "CB", "SAF"];
+  const OFF_GROUPS = new Set(["QB", "RB", "WR", "TE", "OT", "IOL"]);
+
+  /* The line is TWO value groups but ONE row of five men on the field. Tackles and
+     interior linemen are valued separately - different jobs, separately fitted facet
+     weights - so `p.g` is OT or IOL everywhere a number is shown. The formation
+     diagram is the one place that has to put them back together, because spreading
+     each about the centre independently would stack the guards on top of the tackles.
+     layoutGroup() is that seam, and it is used ONLY for placement and the eleven-man
+     budget, never for a value. */
+  const LINE_GROUPS = new Set(["OT", "IOL"]);
+  const layoutGroup = p => (LINE_GROUPS.has(p.g) ? "OL" : p.g);
   const FCS_WIN_P = 0.95;   // matches the simulation's buy-game assumption
 
   /* ---- formation layout -------------------------------------------------
@@ -1530,7 +1541,7 @@
     const extent = {};                    // group -> [leftmost x, rightmost x]
     for (const g of groups) {
       const lvl = LEVELS[g];
-      const members = players.filter(p => p.g === g);
+      const members = players.filter(p => layoutGroup(p) === g);
       if (!members.length || !lvl) continue;
       // left-ish labels first, slot/nickel last, so sides come out where expected
       members.sort((a, b) => orderKey(a) - orderKey(b));
@@ -1591,8 +1602,9 @@
     return players.slice()
       .sort((a, b) => (b.w ?? 0) - (a.w ?? 0))
       .map(p => {
-        const b = budget[p.g];
-        const n = (seen[p.g] = (seen[p.g] || 0) + 1);
+        const g = layoutGroup(p);
+        const b = budget[g];
+        const n = (seen[g] = (seen[g] || 0) + 1);
         if (!b) return { p, r: 60 + n };
         const [cap, base, over] = b;
         return { p, r: n <= cap ? base + (n - 1) : over + n * 0.01 };
@@ -2031,13 +2043,18 @@
     return plRankCache;
   }
 
+  /* "RS JR" where the chart says redshirt junior, "JR" where it says junior. The two
+     halves are stored separately (see export_viz) so the filters can ask about either
+     one on its own; this puts them back together for display only. */
+  const classLabel = r => r.c ? (r.rs ? `RS ${r.c}` : r.c) : "";
+
   const PL_COLS = [
     { k: "rk",   h: "#",        n: true, v: r => plRanks().overall.get(plKey(r)) },
     { k: "n",    h: "Player",   v: r => r.n },
     { k: "t",    h: "Team",     v: r => r.t },
     { k: "conf", h: "Conf",     v: r => r.conf },
     { k: "p",    h: "Pos",      v: r => r.p || r.g },
-    { k: "c",    h: "Class",    v: r => r.c || "" },
+    { k: "c",    h: "Class",    v: r => classLabel(r) },
     { k: "prk",  h: "Pos rank", n: true, v: r => plRanks().pos.get(plKey(r)) },
     { k: "war",  h: "Proj WAR", n: true, v: r => plWar(r) },
   ];
@@ -2056,11 +2073,21 @@
     const c = document.getElementById("pl-conf").value;
     const g = document.getElementById("pl-group").value;
     const sc = document.getElementById("pl-scope").value;
+    const cl = document.getElementById("pl-class").value;
+    const rs = document.getElementById("pl-rs").value;
     let rows = ALL_PLAYERS;
     if (q) rows = rows.filter(r => r.n.toLowerCase().includes(q) ||
                                    r.t.toLowerCase().includes(q));
     if (c) rows = rows.filter(r => r.conf === c);
     if (g) rows = rows.filter(r => r.g === g);
+    // Class year and redshirt status are separate controls because they compose:
+    // "juniors" means every junior, redshirt or not, and narrowing to the redshirts
+    // is a second question. A player with no class on the chart is excluded by either
+    // filter rather than silently kept - an unknown class is not a match for JR.
+    if (cl) rows = rows.filter(r => r.c === cl);
+    if (rs === "rs") rows = rows.filter(r => r.rs === true);
+    else if (rs === "no") rows = rows.filter(r => r.rs === false);
+    else if (rs === "tr") rows = rows.filter(r => r.tr === true);
     if (sc === "start") rows = rows.filter(r => r.st !== undefined ? r.st : r.d === 1);
     else if (sc === "out") rows = rows.filter(r => r.out);
     else if (sc === "unproven") rows = rows.filter(r => r.i);
@@ -2102,7 +2129,8 @@
           <button class="team-link" data-team="${esc(r.t)}">${esc(r.t)}</button></div></td>
         <td class="pl-conf">${esc(r.conf)}</td>
         <td><span class="wi-pos">${esc(r.p || r.g)}</span></td>
-        <td class="pl-conf">${esc(r.c || "—")}</td>
+        <td class="pl-conf">${esc(classLabel(r) || "—")}${r.tr
+          ? ` <span class="tag tr" title="Transferred in for 2026">TR</span>` : ""}</td>
         <td class="num pl-prk">${RK.pos.get(plKey(r))}<span class="pl-of">of ${
           (RK.groupN[grp] || 0).toLocaleString()} ${esc(grp)}</span></td>
         <td class="num"><input class="wi-in pl-in" type="number" step="0.05"
@@ -2180,7 +2208,7 @@
     }
   }
 
-  ["pl-search", "pl-conf", "pl-group", "pl-scope"].forEach(id =>
+  ["pl-search", "pl-conf", "pl-group", "pl-class", "pl-rs", "pl-scope"].forEach(id =>
     document.getElementById(id).addEventListener("input", renderPlayers));
   document.getElementById("pl-reset").addEventListener("click", () => {
     WI.reset(); renderAll();

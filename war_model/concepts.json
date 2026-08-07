@@ -55,13 +55,17 @@
    "TE_hands_drop"
   ],
   "pass_protection": [
-   "OL_pass_block",
-   "OL_pressures_allowed",
-   "OL_sacks_allowed",
+   "OT_pass_block",
+   "OT_pressures_allowed",
+   "OT_sacks_allowed",
+   "IOL_pass_block",
+   "IOL_pressures_allowed",
+   "IOL_sacks_allowed",
    "TE_pass_block"
   ],
   "run_blocking": [
-   "OL_run_block",
+   "OT_run_block",
+   "IOL_run_block",
    "TE_run_block",
    "RB_run_block"
   ],
@@ -111,7 +115,8 @@
    "RB_hands_fumble"
   ],
   "discipline": [
-   "OL_penalties",
+   "OT_penalties",
+   "IOL_penalties",
    "DI-ED_defense_penalty",
    "CB-LB-S_defense_penalty",
    "QB-RB-TE-WR_offense_penalty"
@@ -131,17 +136,17 @@
     "QB_qb_rating"
    ],
    "explained": [
-    0.6662988970167287
+    0.6408453653278405
    ],
    "pc1": {
-    "QB_pass": 0.39701629677122996,
-    "QB_accuracy_pct": 0.3619864536799441,
-    "QB_btt_rate": 0.1928711260221098,
-    "QB_twp_rate": 0.2826509771434897,
-    "QB_completion_pct": 0.37559734228498054,
-    "QB_positive_epa_pct": 0.39194320858204423,
-    "QB_ypa": 0.3633631785262274,
-    "QB_qb_rating": 0.40930108663825815
+    "QB_pass": 0.3994228486149169,
+    "QB_accuracy_pct": 0.364161607978249,
+    "QB_btt_rate": 0.17923899839403956,
+    "QB_twp_rate": 0.2710296226993439,
+    "QB_completion_pct": 0.37945044440626385,
+    "QB_positive_epa_pct": 0.39545086390131673,
+    "QB_ypa": 0.36082538061937525,
+    "QB_qb_rating": 0.4143730873665275
    }
   },
   "qb_pressure": {
@@ -150,7 +155,7 @@
     "QB_pressure_to_sack_rate"
    ],
    "explained": [
-    0.9183270849494429
+    0.9173409157408524
    ],
    "pc1": {
     "QB_sack_pct": 0.7071067811865475,
@@ -177,14 +182,14 @@
     "RB_elusive_rating"
    ],
    "explained": [
-    0.7170241374910534
+    0.7175209641029832
    ],
    "pc1": {
-    "RB_run": 0.423720136284806,
-    "RB_ypa": 0.45921042576297355,
-    "RB_yco_attempt": 0.4844323752208542,
-    "RB_breakaway_pct": 0.4108892940232354,
-    "RB_elusive_rating": 0.4539628760948889
+    "RB_run": 0.4246049684446435,
+    "RB_ypa": 0.4631492908158403,
+    "RB_yco_attempt": 0.48372959474450017,
+    "RB_breakaway_pct": 0.4080904559928115,
+    "RB_elusive_rating": 0.4524060279050315
    }
   },
   "receiving": {
@@ -208,26 +213,26 @@
     "RB_pass_route"
    ],
    "explained": [
-    0.3629007013914516
+    0.36702004540502287
    ],
    "pc1": {
-    "WR_pass_route": 0.3602391386657703,
-    "WR_offense": 0.3574934351867363,
-    "WR_yprr": 0.34939674981664537,
-    "WR_caught_pct": 0.26829948494191636,
-    "WR_contested_catch_rate": 0.13315859076148662,
-    "WR_positive_epa_pct": 0.3427812504229312,
-    "WR_targeted_qb_rating": 0.35235355768791904,
-    "WR_first_downs": 0.26514776595666883,
-    "WR_touchdowns": 0.3096607150401635,
-    "WR_yards_per_reception": 0.18863081834976497,
-    "WR_avg_depth_of_target": 0.02039439912635211,
-    "TE_pass_route": 0.06164638053510769,
-    "TE_yprr": 0.057329946831885935,
-    "TE_positive_epa_pct": 0.24413787791958444,
-    "TE_targeted_qb_rating": 0.12507303835302036,
-    "TE_first_downs": 0.06297808711838036,
-    "RB_pass_route": 0.022132749239428585
+    "WR_pass_route": 0.3609835978641547,
+    "WR_offense": 0.3569363564637753,
+    "WR_yprr": 0.34304353196295867,
+    "WR_caught_pct": 0.2817897693170759,
+    "WR_contested_catch_rate": 0.1309615236293035,
+    "WR_positive_epa_pct": 0.3487799622979391,
+    "WR_targeted_qb_rating": 0.3561433174184069,
+    "WR_first_downs": 0.26935842679748123,
+    "WR_touchdowns": 0.31146568761708443,
+    "WR_yards_per_reception": 0.17376995892004107,
+    "WR_avg_depth_of_target": -0.0031439364254495527,
+    "TE_pass_route": 0.043306455500014156,
+    "TE_yprr": 0.03954873891681117,
+    "TE_positive_epa_pct": 0.24255645144114446,
+    "TE_targeted_qb_rating": 0.12199630816401795,
+    "TE_first_downs": 0.04560965373146004,
+    "RB_pass_route": 0.023648509016419437
    }
   },
   "yac": {
@@ -238,13 +243,13 @@
     "RB_yards_after_catch"
    ],
    "explained": [
-    0.4434216429295166
+    0.44805379960545466
    ],
    "pc1": {
-    "WR_yards_after_catch": 0.7069244265209988,
-    "WR_avoided_tackles": 0.7068530685206371,
-    "TE_yards_after_catch": 0.02470332585784351,
-    "RB_yards_after_catch": -0.002518015583277575
+    "WR_yards_after_catch": 0.7058391542469091,
+    "WR_avoided_tackles": 0.7055379396071882,
+    "TE_yards_after_catch": -0.020911940093695302,
+    "RB_yards_after_catch": 0.05974943404225061
    }
   },
   "hands": {
@@ -254,44 +259,52 @@
     "TE_hands_drop"
    ],
    "explained": [
-    0.6662034140838742
+    0.6643792827287017
    ],
    "pc1": {
-    "WR_hands_drop": 0.6902827901045487,
-    "WR_drop_rate": 0.6912159774631,
-    "TE_hands_drop": 0.21384607124100113
+    "WR_hands_drop": 0.6925617673881517,
+    "WR_drop_rate": 0.6934137064452752,
+    "TE_hands_drop": 0.19883568609790717
    }
   },
   "pass_protection": {
    "members": [
-    "OL_pass_block",
-    "OL_pressures_allowed",
-    "OL_sacks_allowed",
+    "OT_pass_block",
+    "OT_pressures_allowed",
+    "OT_sacks_allowed",
+    "IOL_pass_block",
+    "IOL_pressures_allowed",
+    "IOL_sacks_allowed",
     "TE_pass_block"
    ],
    "explained": [
-    0.4921688883700214
+    0.40772180299275984
    ],
    "pc1": {
-    "OL_pass_block": 0.5181546032780616,
-    "OL_pressures_allowed": 0.6271984459733735,
-    "OL_sacks_allowed": 0.5656466202570168,
-    "TE_pass_block": 0.13483996982406193
+    "OT_pass_block": 0.3860276880281516,
+    "OT_pressures_allowed": 0.4713820515578768,
+    "OT_sacks_allowed": 0.3857756428285384,
+    "IOL_pass_block": 0.3780606258927855,
+    "IOL_pressures_allowed": 0.44055992998248944,
+    "IOL_sacks_allowed": 0.36654868383405337,
+    "TE_pass_block": 0.09261702094031525
    }
   },
   "run_blocking": {
    "members": [
-    "OL_run_block",
+    "OT_run_block",
+    "IOL_run_block",
     "TE_run_block",
     "RB_run_block"
    ],
    "explained": [
-    0.45817137159895077
+    0.44647840531067423
    ],
    "pc1": {
-    "OL_run_block": 0.6299227713202997,
-    "TE_run_block": 0.5884550679904631,
-    "RB_run_block": 0.5068707282221896
+    "OT_run_block": 0.6211754411333388,
+    "IOL_run_block": 0.5681779883674081,
+    "TE_run_block": 0.423895645571654,
+    "RB_run_block": 0.3341067591847836
    }
   },
   "pass_rush": {
@@ -308,19 +321,19 @@
     "ED_qb_rating_against"
    ],
    "explained": [
-    0.35151967128745143
+    0.3466145796685494
    ],
    "pc1": {
-    "DI_pass_rush": 0.221133989585079,
-    "ED_pass_rush": 0.4287131121106076,
-    "LB_pass_rush": 0.09844782542791614,
-    "CB-S_pass_rush": 0.039954835724952446,
-    "DI_total_pressures": 0.2491110609740733,
-    "ED_total_pressures": 0.49212159042835074,
-    "DI_sacks": 0.22650422033667936,
-    "ED_sacks": 0.4282204448134109,
-    "ED_hurries": 0.4621970976958241,
-    "ED_qb_rating_against": -0.05893567811612109
+    "DI_pass_rush": 0.23812167950553434,
+    "ED_pass_rush": 0.43766200251214904,
+    "LB_pass_rush": 0.10148741282136983,
+    "CB-S_pass_rush": 0.034502304258336475,
+    "DI_total_pressures": 0.23437818675248287,
+    "ED_total_pressures": 0.4936410976022395,
+    "DI_sacks": 0.21631028342580974,
+    "ED_sacks": 0.4262319031040111,
+    "ED_hurries": 0.46062172057496814,
+    "ED_qb_rating_against": -0.031766684970549894
    }
   },
   "run_defense": {
@@ -333,15 +346,15 @@
     "LB_stops"
    ],
    "explained": [
-    0.3799420609050323
+    0.3695230164836672
    ],
    "pc1": {
-    "DI_run": 0.480447299440204,
-    "ED_run": 0.4086522769665235,
-    "LB_run": 0.496834663037046,
-    "CB-S_run": 0.40708439169993826,
-    "DI_stops": 0.33710031199401624,
-    "LB_stops": 0.2756350926195429
+    "DI_run": 0.48493115557675176,
+    "ED_run": 0.42339081507601206,
+    "LB_run": 0.5025791881459332,
+    "CB-S_run": 0.4183555134349759,
+    "DI_stops": 0.3114204567748006,
+    "LB_stops": 0.2469658178444413
    }
   },
   "coverage": {
@@ -359,20 +372,20 @@
     "CB_yards_after_catch"
    ],
    "explained": [
-    0.29653710161730185
+    0.30089717881171213
    ],
    "pc1": {
-    "CB_coverage": 0.42248929730570406,
-    "S_coverage": 0.260260830712615,
-    "LB_coverage": 0.16495885266341484,
-    "CB_catch_rate": 0.4090279902060133,
-    "S_catch_rate": 0.2003644783316521,
-    "CB_yards": 0.18655342268172806,
-    "S_yards": 0.08724436731055762,
-    "CB_qb_rating_against": 0.4970961333368582,
-    "CB_pass_break_ups": 0.27404939829462494,
-    "CB-S_interceptions": 0.32073442722596457,
-    "CB_yards_after_catch": 0.22718688167242485
+    "CB_coverage": 0.4183098585189383,
+    "S_coverage": 0.2657143498598849,
+    "LB_coverage": 0.15813008193212633,
+    "CB_catch_rate": 0.4038823475198105,
+    "S_catch_rate": 0.197257643313912,
+    "CB_yards": 0.24505534956858685,
+    "S_yards": 0.11573660853112985,
+    "CB_qb_rating_against": 0.4915465749117212,
+    "CB_pass_break_ups": 0.25236831879671606,
+    "CB-S_interceptions": 0.30086427000997484,
+    "CB_yards_after_catch": 0.24104334824641382
    }
   },
   "tackling": {
@@ -385,15 +398,15 @@
     "CB-S_missed_tackle_rate"
    ],
    "explained": [
-    0.42927356625148205
+    0.42680251568461364
    ],
    "pc1": {
-    "LB_tackle": 0.5043294037728556,
-    "CB-S_tackle": 0.46602084507066044,
-    "DI-ED_tackle": 0.22263127571956978,
-    "LB_tackles": 0.1607188728345353,
-    "LB_missed_tackle_rate": 0.48892787797073606,
-    "CB-S_missed_tackle_rate": 0.46263453565319745
+    "LB_tackle": 0.5003585773486745,
+    "CB-S_tackle": 0.4752434049950827,
+    "DI-ED_tackle": 0.22692251703869956,
+    "LB_tackles": 0.121922911964297,
+    "LB_missed_tackle_rate": 0.4848710343369132,
+    "CB-S_missed_tackle_rate": 0.47151463916013214
    }
   },
   "ball_security": {
@@ -402,36 +415,38 @@
     "RB_hands_fumble"
    ],
    "explained": [
-    0.5349513299099113
+    0.5321741128459657
    ],
    "pc1": {
-    "QB_hands_fumble": 0.7071067811865475,
-    "RB_hands_fumble": 0.7071067811865475
+    "QB_hands_fumble": 0.7071067811865462,
+    "RB_hands_fumble": 0.7071067811865487
    }
   },
   "discipline": {
    "members": [
-    "OL_penalties",
+    "OT_penalties",
+    "IOL_penalties",
     "DI-ED_defense_penalty",
     "CB-LB-S_defense_penalty",
     "QB-RB-TE-WR_offense_penalty"
    ],
    "explained": [
-    0.3235295443671857
+    0.2785305924645159
    ],
    "pc1": {
-    "OL_penalties": 0.46339092620626265,
-    "DI-ED_defense_penalty": 0.5625668243211256,
-    "CB-LB-S_defense_penalty": 0.5679912395632681,
-    "QB-RB-TE-WR_offense_penalty": 0.3823262604926947
+    "OT_penalties": 0.46160621443504846,
+    "IOL_penalties": 0.5387124423411587,
+    "DI-ED_defense_penalty": 0.449785728641869,
+    "CB-LB-S_defense_penalty": 0.4454357792684389,
+    "QB-RB-TE-WR_offense_penalty": 0.3098199027167053
    }
   }
  },
  "representation": {
-  "raw_86": 0.16354884217168705,
-  "concept_1pc": 0.16430970060138092,
-  "concept_2pc": 0.16519775831791453,
-  "unit_quality": 0.16473024759336583,
+  "raw_86": 0.16329746310140322,
+  "concept_1pc": 0.16353183618827166,
+  "concept_2pc": 0.1646222695153044,
+  "unit_quality": 0.1643122215378988,
   "n_concept_1pc": 15,
   "n_concept_2pc": 29,
   "n_unit_quality": 15
@@ -440,162 +455,162 @@
   {
    "concept": "run_defense",
    "features_dropped": 6,
-   "rmse": 0.166064,
-   "delta": 0.002515
+   "rmse": 0.16569,
+   "delta": 0.002392
   },
   {
    "concept": "coverage",
    "features_dropped": 11,
-   "rmse": 0.164828,
-   "delta": 0.001279
-  },
-  {
-   "concept": "run_blocking",
-   "features_dropped": 3,
-   "rmse": 0.164241,
-   "delta": 0.000692
+   "rmse": 0.164516,
+   "delta": 0.001219
   },
   {
    "concept": "rushing",
    "features_dropped": 5,
-   "rmse": 0.16423,
-   "delta": 0.000681
+   "rmse": 0.164109,
+   "delta": 0.000812
+  },
+  {
+   "concept": "run_blocking",
+   "features_dropped": 4,
+   "rmse": 0.164092,
+   "delta": 0.000795
   },
   {
    "concept": "pass_rush",
    "features_dropped": 10,
-   "rmse": 0.164151,
-   "delta": 0.000602
-  },
-  {
-   "concept": "passing",
-   "features_dropped": 8,
-   "rmse": 0.164098,
-   "delta": 0.000549
-  },
-  {
-   "concept": "yac",
-   "features_dropped": 4,
-   "rmse": 0.163906,
-   "delta": 0.000358
+   "rmse": 0.163996,
+   "delta": 0.000699
   },
   {
    "concept": "receiving",
    "features_dropped": 17,
-   "rmse": 0.163684,
-   "delta": 0.000136
+   "rmse": 0.163557,
+   "delta": 0.000259
   },
   {
-   "concept": "tackling",
-   "features_dropped": 6,
-   "rmse": 0.163598,
-   "delta": 4.9e-05
+   "concept": "passing",
+   "features_dropped": 8,
+   "rmse": 0.163535,
+   "delta": 0.000237
+  },
+  {
+   "concept": "discipline",
+   "features_dropped": 5,
+   "rmse": 0.163501,
+   "delta": 0.000203
+  },
+  {
+   "concept": "yac",
+   "features_dropped": 4,
+   "rmse": 0.163465,
+   "delta": 0.000168
   },
   {
    "concept": "qb_rushing",
    "features_dropped": 1,
-   "rmse": 0.163589,
-   "delta": 4e-05
+   "rmse": 0.163305,
+   "delta": 8e-06
   },
   {
    "concept": "qb_pressure",
    "features_dropped": 2,
-   "rmse": 0.163557,
-   "delta": 8e-06
-  },
-  {
-   "concept": "discipline",
-   "features_dropped": 4,
-   "rmse": 0.163538,
-   "delta": -1.1e-05
+   "rmse": 0.163304,
+   "delta": 6e-06
   },
   {
    "concept": "ball_security",
    "features_dropped": 2,
-   "rmse": 0.163511,
-   "delta": -3.8e-05
+   "rmse": 0.163272,
+   "delta": -2.5e-05
+  },
+  {
+   "concept": "tackling",
+   "features_dropped": 6,
+   "rmse": 0.163228,
+   "delta": -6.9e-05
   },
   {
    "concept": "hands",
    "features_dropped": 3,
-   "rmse": 0.16349,
-   "delta": -5.9e-05
+   "rmse": 0.163216,
+   "delta": -8.1e-05
   },
   {
    "concept": "pass_protection",
-   "features_dropped": 4,
-   "rmse": 0.163424,
-   "delta": -0.000125
+   "features_dropped": 7,
+   "rmse": 0.163027,
+   "delta": -0.00027
   }
  ],
  "forward_by_concept": [
-  "passing",
+  "receiving",
   "run_defense",
   "rushing",
   "coverage",
   "run_blocking",
   "pass_rush",
+  "passing",
   "yac",
-  "receiving",
+  "discipline",
   "qb_pressure",
-  "tackling",
   "ball_security",
   "qb_rushing",
-  "discipline",
   "hands",
+  "tackling",
   "pass_protection"
  ],
  "quality_interactions": [
   {
-   "interaction": "rushing x run_blocking",
-   "rmse": 0.164683,
-   "delta": -4.7e-05
+   "interaction": "pass_rush x coverage",
+   "rmse": 0.164266,
+   "delta": -4.6e-05
   },
   {
    "interaction": "pass_rush x run_defense",
-   "rmse": 0.164697,
+   "rmse": 0.164279,
    "delta": -3.3e-05
   },
   {
-   "interaction": "passing x rushing",
-   "rmse": 0.164715,
-   "delta": -1.5e-05
-  },
-  {
-   "interaction": "coverage x tackling",
-   "rmse": 0.164753,
-   "delta": 2.3e-05
-  },
-  {
-   "interaction": "pass_rush x coverage",
-   "rmse": 0.164756,
-   "delta": 2.5e-05
+   "interaction": "rushing x run_blocking",
+   "rmse": 0.164329,
+   "delta": 1.7e-05
   },
   {
    "interaction": "run_defense x tackling",
-   "rmse": 0.164759,
+   "rmse": 0.164338,
+   "delta": 2.5e-05
+  },
+  {
+   "interaction": "coverage x tackling",
+   "rmse": 0.164341,
    "delta": 2.9e-05
   },
   {
-   "interaction": "passing x yac",
-   "rmse": 0.164818,
-   "delta": 8.8e-05
-  },
-  {
-   "interaction": "pass_protection x receiving",
-   "rmse": 0.164818,
-   "delta": 8.8e-05
+   "interaction": "passing x rushing",
+   "rmse": 0.164369,
+   "delta": 5.7e-05
   },
   {
    "interaction": "passing x receiving",
-   "rmse": 0.164839,
-   "delta": 0.000109
+   "rmse": 0.164439,
+   "delta": 0.000126
+  },
+  {
+   "interaction": "pass_protection x receiving",
+   "rmse": 0.164448,
+   "delta": 0.000135
+  },
+  {
+   "interaction": "passing x yac",
+   "rmse": 0.16446,
+   "delta": 0.000148
   },
   {
    "interaction": "passing x pass_protection",
-   "rmse": 0.165032,
-   "delta": 0.000302
+   "rmse": 0.1646,
+   "delta": 0.000287
   }
  ],
- "quality_base_rmse": 0.16473024759336583
+ "quality_base_rmse": 0.1643122215378988
 }

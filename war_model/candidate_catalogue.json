@@ -25,6 +25,11 @@
   "ED_run",
   "ED_sacks",
   "ED_total_pressures",
+  "IOL_pass_block",
+  "IOL_penalties",
+  "IOL_pressures_allowed",
+  "IOL_run_block",
+  "IOL_sacks_allowed",
   "LB_coverage",
   "LB_missed_tackle_rate",
   "LB_pass_rush",
@@ -32,11 +37,11 @@
   "LB_stops",
   "LB_tackle",
   "LB_tackles",
-  "OL_pass_block",
-  "OL_penalties",
-  "OL_pressures_allowed",
-  "OL_run_block",
-  "OL_sacks_allowed",
+  "OT_pass_block",
+  "OT_penalties",
+  "OT_pressures_allowed",
+  "OT_run_block",
+  "OT_sacks_allowed",
   "QB-RB-TE-WR_offense_penalty",
   "QB_accuracy_pct",
   "QB_btt_rate",
@@ -475,22 +480,38 @@
    "kind": "skill"
   },
   {
-   "name": "OL_pass_block",
+   "name": "OT_pass_block",
    "metric": "blk__grades_pass_block",
    "denominator": "blk__snap_counts_pass_block",
    "positions": [
-    "T",
+    "T"
+   ],
+   "kind": "skill"
+  },
+  {
+   "name": "IOL_pass_block",
+   "metric": "blk__grades_pass_block",
+   "denominator": "blk__snap_counts_pass_block",
+   "positions": [
     "G",
     "C"
    ],
    "kind": "skill"
   },
   {
-   "name": "OL_run_block",
+   "name": "OT_run_block",
    "metric": "blk__grades_run_block",
    "denominator": "blk__snap_counts_run_block",
    "positions": [
-    "T",
+    "T"
+   ],
+   "kind": "skill"
+  },
+  {
+   "name": "IOL_run_block",
+   "metric": "blk__grades_run_block",
+   "denominator": "blk__snap_counts_run_block",
+   "positions": [
     "G",
     "C"
    ],
@@ -525,33 +546,57 @@
    "kind": "skill"
   },
   {
-   "name": "OL_pressures_allowed",
+   "name": "OT_pressures_allowed",
    "metric": "blk__pressures_allowed",
    "denominator": "blk__snap_counts_pass_block",
    "positions": [
-    "T",
+    "T"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "IOL_pressures_allowed",
+   "metric": "blk__pressures_allowed",
+   "denominator": "blk__snap_counts_pass_block",
+   "positions": [
     "G",
     "C"
    ],
    "kind": "rate"
   },
   {
-   "name": "OL_sacks_allowed",
+   "name": "OT_sacks_allowed",
    "metric": "blk__sacks_allowed",
    "denominator": "blk__snap_counts_pass_block",
    "positions": [
-    "T",
+    "T"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "IOL_sacks_allowed",
+   "metric": "blk__sacks_allowed",
+   "denominator": "blk__snap_counts_pass_block",
+   "positions": [
     "G",
     "C"
    ],
    "kind": "rate"
   },
   {
-   "name": "OL_penalties",
+   "name": "OT_penalties",
    "metric": "blk__penalties",
    "denominator": "blk__snap_counts_offense",
    "positions": [
-    "T",
+    "T"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "IOL_penalties",
+   "metric": "blk__penalties",
+   "denominator": "blk__snap_counts_offense",
+   "positions": [
     "G",
     "C"
    ],

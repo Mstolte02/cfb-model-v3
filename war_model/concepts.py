@@ -57,9 +57,16 @@ CONCEPTS = {
     "yac":             ["WR_yards_after_catch", "WR_avoided_tackles",
                         "TE_yards_after_catch", "RB_yards_after_catch"],
     "hands":           ["WR_hands_drop", "WR_drop_rate", "TE_hands_drop"],
-    "pass_protection": ["OL_pass_block", "OL_pressures_allowed", "OL_sacks_allowed",
-                        "TE_pass_block"],
-    "run_blocking":    ["OL_run_block", "TE_run_block", "RB_run_block"],
+    # The line is two position groups, so each blocking facet is named twice. Both
+    # names have to be listed: concept_map() falls through to "_solo_<facet>" for
+    # anything unclaimed, which keeps the facet in the model but takes it out of every
+    # concept - and build_ea_war, which is keyed on concepts, then drops it entirely.
+    # That is how 1,534 EA linemen silently went missing.
+    "pass_protection": ["OT_pass_block", "OT_pressures_allowed", "OT_sacks_allowed",
+                        "IOL_pass_block", "IOL_pressures_allowed",
+                        "IOL_sacks_allowed", "TE_pass_block"],
+    "run_blocking":    ["OT_run_block", "IOL_run_block", "TE_run_block",
+                        "RB_run_block"],
     "pass_rush":       ["DI_pass_rush", "ED_pass_rush", "LB_pass_rush",
                         "CB-S_pass_rush", "DI_total_pressures", "ED_total_pressures",
                         "DI_sacks", "ED_sacks", "ED_hurries", "ED_qb_rating_against"],
@@ -72,7 +79,7 @@ CONCEPTS = {
     "tackling":        ["LB_tackle", "CB-S_tackle", "DI-ED_tackle", "LB_tackles",
                         "LB_missed_tackle_rate", "CB-S_missed_tackle_rate"],
     "ball_security":   ["QB_hands_fumble", "RB_hands_fumble"],
-    "discipline":      ["OL_penalties", "DI-ED_defense_penalty",
+    "discipline":      ["OT_penalties", "IOL_penalties", "DI-ED_defense_penalty",
                         "CB-LB-S_defense_penalty", "QB-RB-TE-WR_offense_penalty"],
 }
 
