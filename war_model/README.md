@@ -180,8 +180,8 @@ compares the counts below against the live files and complains when they drift.
 | Massey rating vs adjusted win pct | r = .702 |
 | de-attenuation k | 0.954 |
 | player-seasons / total WAR | 89,893 / 6,069 |
-| projection holdout, 2025, ex-ante features only | r = .610 |
-| ...against the carry-forward baseline it has to beat | .530 |
+| projection holdout, 2025, ex-ante features only | r = .607<!--live:holdout_r--> |
+| ...against the carry-forward baseline it has to beat | .530<!--live:carry_r--> |
 
 The projection's holdout r was published as .631 and is not the same number: that one
 was measured with `is_starter` in the feature set, which was computed from the
@@ -198,6 +198,20 @@ means each half is fitted on fewer players, and at the player level that costs a
 little forward accuracy. It is bought back as attribution: the model can now say a
 tackle and a guard are worth different amounts, which is what WAR is *for*, and at
 team level the split is neutral (see the table above).
+
+**It then fell .610 → .607 on the recruiting re-pull (7-Aug-2026), and that is the
+price of a better input, not a regression.** CFBD had backfilled the bottom of every
+high-school class since the July pull — the 2025 class went from 2,507 recruits to
+4,120, and from 12 two-star recruits to 427 — so the cached classes had been, in
+effect, a top-of-the-class sample. Filling in the tail gives the low-history players a
+real low rating where they used to have a missing one, and missingness was doing some
+of that work: "no rating" correlated with "lightly recruited" almost perfectly while
+the tail was absent, and now it means something weaker. The feature got more honest
+and slightly less discriminating at the same time. Recruiting now covers 84.4% of the
+2026 two-deep and 79.7% of the players with no PFF snaps at all, which are the ones
+the prior actually carries. (The before-figures are not quoted because `rec_*.json` is
+not in git and the re-pull overwrote it; the class sizes above come from comparing the
+API against the cache before it was replaced.)
 
 ## What is not in git
 

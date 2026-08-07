@@ -38,10 +38,21 @@ def has_key() -> bool:
 
 
 def _get(endpoint: str, params: dict, cache_name: str) -> list:
-    """GET an endpoint with on-disk caching."""
+    """GET an endpoint with on-disk caching.
+
+    AN EMPTY RESPONSE IS NOT CACHED, and an empty cache file is not a hit. Asking CFBD
+    for a season it has not published yet returns `[]`, and caching that turns a
+    "not yet" into a permanent "no": talent_2026.json and rankings_2026.json both sat
+    at two bytes for weeks, and the talent one is load-bearing - config.py's
+    PROJECTION_TALENT_FALLBACK_YEAR quietly substitutes the 2025 composite whenever
+    2026 is absent, so a frozen cache means the fallback never lifts and nothing says
+    so. Re-asking costs one request per run for a year that genuinely is not out.
+    """
     cache = DATA_RAW / cache_name
     if cache.exists():
-        return json.loads(cache.read_text())
+        cached = json.loads(cache.read_text())
+        if cached:
+            return cached
 
     _load_dotenv()
     key = os.environ.get("CFBD_API_KEY")
@@ -57,7 +68,8 @@ def _get(endpoint: str, params: dict, cache_name: str) -> list:
             continue
         resp.raise_for_status()
         data = resp.json()
-        cache.write_text(json.dumps(data))
+        if data:
+            cache.write_text(json.dumps(data))
         return data
     raise RuntimeError(f"CFBD rate-limited after retries: {endpoint} {params}")
 

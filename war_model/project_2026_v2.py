@@ -51,6 +51,7 @@ from facets import YEARS as WAR_YEARS
 HERE = os.path.dirname(os.path.abspath(__file__))
 CACHE = f"{HERE}/cfbd_cache"
 CLASS_NUM = {"FR": 1, "SO": 2, "JR": 3, "SR": 4, "GR": 5}
+PROJECTION_YEAR = 2026
 
 # CFBD roster positions -> the two-deep's broad groups.
 #
@@ -130,6 +131,36 @@ def load_rosters(years, fbs_teams):
         rows.append(d[["team", "group", "player", "key", "class_num"]].assign(season=y))
     r = pd.concat(rows, ignore_index=True)
     return r.drop_duplicates(["season", "team", "group", "key"])
+
+
+def load_cfbd_classes(year, fbs_teams):
+    """[team, key, class_num] for one season, WITHOUT the position-group filter.
+
+    load_rosters drops anyone whose CFBD position has no two-deep group, which is
+    right when the rows exist to fill a position room and wrong here: a long snapper's
+    class year is still his class year. This is the serving-side counterpart of the
+    class column the training side reads, so it has to cover the same people the
+    two-deep does, not the same people the population build does.
+
+    Returns an empty frame if CFBD has not published the season, which is a real state
+    and not an error - the caller falls back and says so.
+    """
+    p = f"{CACHE}/roster_{year}.json"
+    if not os.path.exists(p):
+        return pd.DataFrame(columns=["team", "key", "class_num"])
+    d = pd.DataFrame(json.load(open(p)))
+    if d.empty:
+        return pd.DataFrame(columns=["team", "key", "class_num"])
+    d = d[d.team.isin(fbs_teams)].copy()
+    d["key"] = (d.firstName.fillna("") + " " + d.lastName.fillna(""
+                )).str.strip().map(norm_name)
+    d["class_num"] = pd.to_numeric(d.year, errors="coerce")
+    d.loc[(d.class_num < 1) | (d.class_num > 5), "class_num"] = np.nan
+    d = d[(d.key != "") & d.class_num.notna()]
+    # a name that resolves to two players on one roster cannot be assigned a class
+    n = d.groupby(["team", "key"]).class_num.nunique()
+    d = d[~d.set_index(["team", "key"]).index.isin(n[n > 1].index)]
+    return d.drop_duplicates(["team", "key"])[["team", "key", "class_num"]]
 
 
 def build_population(w, rosters, K):
@@ -352,7 +383,43 @@ def main():
     r = r.merge(w25.drop_duplicates("key")[["key", "share"]].rename(
         columns={"share": "share_lag1"}), on="key", how="left")
     r["share_lag1"] = r.share_lag1.fillna(0.0)
-    r["class_num"] = r["class"].map(CLASS_NUM)
+
+    # CLASS COMES FROM THE CFBD ROSTER ON BOTH SIDES, which is what this file has
+    # claimed since it was written and could not do until CFBD published 2026. While
+    # that endpoint returned `[]` the serving side read the two-deep's own class
+    # column instead, and the two are not the same variable: they disagree on 21.8%
+    # of matched slots, almost all by a year, and Ourlads carries a GR tier that
+    # CFBD's 1-4 scale does not. The model was trained on one and served the other.
+    cls26 = load_cfbd_classes(PROJECTION_YEAR, fbs)
+    r = r.merge(cls26, on=["team", "key"], how="left", suffixes=("", "_cfbd"))
+    fallback = r["class"].map(CLASS_NUM)
+    matched = r.class_num.notna()
+    r["class_num"] = r.class_num.fillna(fallback)
+    if cls26.empty:
+        print(f"\n  [warn] no CFBD {PROJECTION_YEAR} roster; class falls back to the "
+              f"two-deep, which is NOT the variable the model was trained on")
+    else:
+        print(f"\nclass from the CFBD {PROJECTION_YEAR} roster: {matched.sum()} of "
+              f"{len(r)} slots ({matched.mean()*100:.1f}%); the rest keep the "
+              f"two-deep's own class year")
+        both = r[matched & fallback.notna()]
+        print(f"  disagreed with the two-deep on {(both.class_num != fallback[both.index]).sum()} "
+              f"of {len(both)} matched slots")
+
+    # THE DISPLAYED CLASS IS THE ONE THE MODEL USED. final_report.py publishes this
+    # column and make_html.py puts it in a table, so leaving it as the chart's own
+    # label would print "SR" beside a projection conditioned on a junior - the exact
+    # two-meanings-one-column defect the rest of this file exists to remove.
+    #
+    # GR IS THE ONE EXCEPTION, and it is not an exception to that rule. CFBD's scale
+    # runs 1-4 and has no graduate tier at all, so a player the chart calls GR and
+    # CFBD calls 4 is not two sources disagreeing - it is one source being coarser.
+    # Collapsing him to SR would be discarding a true label to match a scale that
+    # cannot express it, and it emptied the app's Graduates filter from 194 slots to
+    # 18. The ±1-year cases below are real disagreements and do resolve to CFBD.
+    shown = r.class_num.map({v: k for k, v in CLASS_NUM.items()})
+    coarser = matched & (r["class"] == "GR") & (r.class_num == 4)
+    r["class"] = shown.where(matched, r["class"]).mask(coarser, "GR")
     # the SAME ex-ante rank the training side computes: last season's snaps, ranked
     # within the team-position group. Not the two-deep's listed depth - see FEATURES.
     r["prior_rank"] = (r.groupby(["team", "broad_group"])

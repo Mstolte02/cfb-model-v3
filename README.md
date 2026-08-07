@@ -669,10 +669,25 @@ as field diagrams with the personnel grouping named from the roster itself
 **Restyled:** eggshell background, Georgia throughout, warm neutral palette so team
 colours carry the emphasis. Schedule spreads use an en dash with letter-spacing.
 
-**Roster freshness:** CFBD has no 2026 rosters yet (returns empty). Ourlads has 2026
-charts updated through late July against the 27-Jun two-deep xlsx; an LSU spot-check
-matched 5 of 6 skill starters, with the RB changed. Refreshing all 136 teams would
-mean scraping a commercial site, so it is left as a decision rather than done.
+**Roster freshness:** CFBD published its 2026 rosters some time between 25-Jul and
+7-Aug-2026 (15,171 players, 138 teams), and they are now in. Ourlads still supplies
+the *chart* — who lines up where — because CFBD has no depth order; an LSU spot-check
+against the 27-Jun two-deep xlsx matched 5 of 6 skill starters, with the RB changed.
+Refreshing all 136 Ourlads charts would mean scraping a commercial site, so it is left
+as a decision rather than done.
+
+What the CFBD roster did fix is **class year**. `project_2026_v2.py` takes class from
+the CFBD roster in training and had been falling back to the two-deep's own class
+column at serve time, because the endpoint was empty — and the two are not the same
+variable. They disagree on 1,162 of 5,339 matched slots, almost all by a year. 90.5% of slots
+now take class from the same source the model was trained on; the remainder, whom CFBD
+has no row for, still fall back and the run says so.
+
+The displayed class moved with it, so the table cannot print "SR" beside a projection
+conditioned on a junior. **GR is deliberately exempt:** CFBD's scale runs 1–4 with no
+graduate tier, so a chart GR whom CFBD calls a 4 is one source being coarser, not two
+disagreeing — collapsing him would discard a true label and empty the app's Graduates
+filter from 192 slots to 18.
 
 ---
 
@@ -965,14 +980,29 @@ A single held-out season can't separate methods that differ by ~0.2% Brier — o
 CALIBRATED wins on all three metrics and beats TALENT in 3 of 5 folds (it loses
 only 2021 and 2025 — and 2025 is exactly the season the one-shot test had used).
 
-> **2026 inputs:** CFBD hasn't loaded 2026 talent or returning production yet
-> (the endpoints return empty for 2026). Returning production uses the real 2026
-> numbers (Bill Connelly / ESPN) in `data/returning_2026.csv`, names reconciled to
-> CFBD — this is the conceptually correct "entering-2026" continuity signal, not
-> the off-by-one 2025 proxy. Talent still falls back to the 2025 composite until
-> CFBD loads 2026. Both auto-switch to CFBD when it publishes. Note: returning
-> production is a roster/continuity metric known *preseason*, so 2026 values exist
-> now; performance stats and Pythagorean correctly use the completed 2025 season.
+> **2026 inputs (checked 7-Aug-2026):** `/talent` still returns empty for 2026, so
+> **talent still falls back to the 2025 composite** — `PROJECTION_TALENT_FALLBACK_YEAR`
+> in `config.py`, and every run that uses it says so on stdout. This is the one
+> placeholder left in the build.
+>
+> Returning production uses the real 2026 numbers (Bill Connelly / ESPN) in
+> `data/returning_2026.csv`, names reconciled to CFBD — the conceptually correct
+> "entering-2026" continuity signal, not the off-by-one 2025 proxy. CFBD's own
+> `/player/returning` *has* gone live for 2026 since this note was written, and the
+> curated CSV is still preferred deliberately: CFBD serves `percentPPA`, an unbounded
+> PPA share that runs −0.57 to 1.00 across FBS and correlates only 0.32 with the
+> published returning-production figure. They are different quantities, not two
+> measurements of one.
+>
+> Note: returning production is a roster/continuity metric known *preseason*, so 2026
+> values exist now; performance stats and Pythagorean correctly use the completed 2025
+> season.
+>
+> **The talent switch is not automatic**, despite what this note used to claim.
+> `load_bundle()` only requests `TALENT_YEARS`, which ends at 2025, so 2026 can never
+> enter the talent dict from the API however live the endpoint goes. The live path is
+> a `data/talent_2026.csv`, which does not exist. When CFBD publishes, add 2026 to
+> `TALENT_YEARS` — nothing will prompt you to.
 
 ## How it works
 

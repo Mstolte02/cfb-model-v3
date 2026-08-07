@@ -72,11 +72,27 @@ ROOT = os.path.dirname(HERE)
 #
 # A claim with no marker is prose about the past and is left alone; a marker whose
 # value has drifted is a real defect, every time.
+def _metric(name):
+    """A CLAIMS accessor for one key of projection_metrics.json.
+
+    Raises LookupError when the artifact has not been built, which the checker treats
+    as "cannot check" rather than "found nothing" - the DEPS pass above is what
+    reports a missing artifact, and reporting it twice from here would be noise.
+    """
+    return lambda a: a["projection_metrics.json"][name]
+
+
 CLAIMS = [
     ("../README.md", r"(\d+)<!--live:n_facets-->", lambda a: a["n_facets"], 0,
      "facet count in the root README"),
     ("README.md", r"(\d+)<!--live:n_facets-->", lambda a: a["n_facets"], 0,
      "facet count in war_model/README.md"),
+    # The holdout r sat at .610 in this table while the artifact said .607, because a
+    # recruiting re-pull moved it and nothing was watching the number. It is watched now.
+    ("README.md", r"([\d.]+)<!--live:holdout_r-->", _metric("holdout_r"), 5e-4,
+     "projection holdout r in war_model/README.md"),
+    ("README.md", r"([\d.]+)<!--live:carry_r-->", _metric("carry_r"), 5e-4,
+     "carry-forward baseline r in war_model/README.md"),
     ("../viz/app.js", r"(?:&times;|×)\s*(\d\.\d+)", lambda a: None, None,
      "a hardcoded WAR rescale in the app. build_hybrid solves the de-attenuation "
      "internally now, so ANY such factor in the viz is stale by construction"),
@@ -149,7 +165,10 @@ def check_contents(live):
             continue
         text = open(path, errors="ignore").read()
         found = re.findall(pattern, text)
-        want = live_fn(live)
+        try:
+            want = live_fn(live)
+        except LookupError:
+            continue   # artifact not built; the DEPS pass already says so
         if want is None:
             if found:
                 problems.append(f"{os.path.relpath(path, ROOT)}: {what} "
