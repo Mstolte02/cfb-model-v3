@@ -3,220 +3,156 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CFB Model v4 — 2026 Projections</title>
-<link rel="stylesheet" href="style.css?v=24">
+<meta name="description" content="Independent 2026 college football projections, sportsbook comparisons, player WAR, power rankings and scenario simulations.">
+<meta property="og:title" content="CFB Model v4 — 2026 Forecast Lab">
+<meta property="og:description" content="Futures value, weekly matchup edges, player rankings and build-your-own playoff scenarios.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://mstolte02.github.io/cfb-model-v3/social-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<title>CFB Model v4 — 2026 Forecast Lab</title>
+<link rel="stylesheet" href="style.css?v=28">
 </head>
 <body>
-<header>
+<header class="site-header">
   <div class="brand">
     <span class="logo-dot"></span>
-    <h1>CFB MODEL <span class="v2">v4</span></h1>
-    <span class="season">2026 SEASON</span>
+    <div><h1>CFB MODEL <span class="v2">v4</span></h1><span class="brand-kicker">Forecast lab · independent model</span></div>
+    <span class="season">2026</span>
   </div>
-  <nav>
-    <button class="tab active" data-view="dash">Season Odds</button>
-    <button class="tab" data-view="playoff">Playoff Projection</button>
-    <button class="tab" data-view="scenario">Scenario Builder</button>
-    <button class="tab" data-view="matchup">Matchup Simulator</button>
-    <button class="tab" data-view="team">Team Breakdown</button>
-    <button class="tab" data-view="ratings">Team Ratings</button>
-    <button class="tab" data-view="players">Players</button>
+  <nav class="hub-nav" aria-label="Primary">
+    <button class="hub-tab active" data-hub="futures" data-default="dash"><span>01</span> Futures</button>
+    <button class="hub-tab" data-hub="weekly" data-default="matchup"><span>02</span> Weekly</button>
+    <button class="hub-tab" data-hub="people" data-default="leaders"><span>03</span> Players &amp; Teams</button>
+    <button class="hub-tab" data-hub="simulation" data-default="scenario"><span>04</span> Simulation</button>
   </nav>
 </header>
+<div class="section-bar">
+  <nav class="section-nav active" data-hub-nav="futures">
+    <button class="tab active" data-view="dash">Futures board</button>
+    <button class="tab" data-view="playoff">Playoff projection</button>
+  </nav>
+  <nav class="section-nav" data-hub-nav="weekly">
+    <button class="tab" data-view="matchup">Matchup lab</button>
+    <button class="tab" data-view="power">Power rankings</button>
+  </nav>
+  <nav class="section-nav" data-hub-nav="people">
+    <button class="tab" data-view="leaders">Top 10 studio</button>
+    <button class="tab" data-view="team">Team breakdown</button>
+    <button class="tab" data-view="ratings">Team tables</button>
+    <button class="tab" data-view="players">Player tables</button>
+  </nav>
+  <nav class="section-nav" data-hub-nav="simulation">
+    <button class="tab" data-view="scenario">Scenario builder</button>
+    <button class="tab" data-view="playoff">Projected bracket</button>
+    <button class="tab" data-view="team">Depth charts</button>
+  </nav>
+</div>
 
 <main>
-  <!-- ============ RATINGS DASHBOARD ============ -->
   <section id="view-dash" class="view active">
-    <div class="view-head">
-      <h2>2026 Season Odds</h2>
-      <p class="sub">Every FBS team's chance of winning its conference, making the
-        playoff and going all the way, from a 20,000-season Monte Carlo over the
-        <b>real 2026 schedule</b>. <b>Power</b> = mean win probability against every
-        other FBS team on a neutral field. The ratings underneath &mdash; offense,
-        defense, talent, schedule strength &mdash; are on each team's
-        <b>Team Breakdown</b> page.</p>
+    <div class="view-head editorial-head">
+      <span class="eyebrow">Season-long markets</span>
+      <h2>Find the gap between the forecast and the price.</h2>
+      <p class="sub">Twenty thousand simulated seasons, team-specific outcome bands,
+        and dated sportsbook snapshots. Prices are context—not model inputs.</p>
     </div>
+    <div class="market-toolbar">
+      <div class="seg" id="future-market">
+        <button class="seg-btn active" data-market="national_title">National title</button>
+        <button class="seg-btn" data-market="make_cfp">Make CFP</button>
+        <button class="seg-btn" data-market="conference_title">Conference title</button>
+        <button class="seg-btn" data-market="win_totals">Win totals</button>
+        <button class="seg-btn" data-market="heisman">Heisman</button>
+      </div>
+      <label>Sportsbook <select id="future-book"></select></label>
+    </div>
+    <div id="future-spotlight" class="future-spotlight"></div>
+    <div class="section-intro"><div><span class="eyebrow">Range of outcomes</span><h3>Floor, ceiling, and volatility</h3></div>
+      <p>Each floor and ceiling comes from that team’s own 10th and 90th percentile simulated win total.</p></div>
+    <div id="outcome-bands"></div>
+    <div class="section-intro"><div><span class="eyebrow">All 136</span><h3>Season forecast table</h3></div></div>
     <div class="dash-toolbar">
       <input type="search" id="dash-search" placeholder="Search teams…">
       <select id="dash-conf"><option value="">All conferences</option></select>
-      <select id="dash-tier">
-        <option value="">All teams</option>
-        <option value="p4">Power 4 only</option>
-        <option value="g6">Group of 6 only</option>
-      </select>
-      <span class="spacer"></span>
-      <span id="dash-count" class="dash-count"></span>
+      <select id="dash-tier"><option value="">All teams</option><option value="p4">Power 4 only</option><option value="g6">Group of 6 only</option></select>
+      <span class="spacer"></span><span id="dash-count" class="dash-count"></span>
     </div>
     <div id="dash-table"></div>
   </section>
 
-  <!-- ============ PLAYOFF ============ -->
   <section id="view-playoff" class="view">
-    <div class="view-head">
-      <h2>2026–27 College Football Playoff</h2>
-      <p class="sub" id="playoff-meta"></p>
-    </div>
-    <h3 class="bracket-title">Projected Bracket
-      <span class="hint">— modal field and seeding; every game scored by the same
-        points model the matchup simulator uses</span></h3>
+    <div class="view-head"><span class="eyebrow">The projected field</span><h2>2026–27 College Football Playoff</h2><p class="sub" id="playoff-meta"></p></div>
+    <h3 class="bracket-title">Projected Bracket <span class="hint">— modal field and seeding; every game scored by the matchup model</span></h3>
     <div id="bracket"></div>
-    <h3 class="bracket-title">How the field is chosen</h3>
-    <div id="playoff-explain"></div>
-    <h3 class="bracket-title">Conference title races
-      <span class="hint">— the four Power 4 champions are in no matter where they
-        finish, so these are auto bids</span></h3>
-    <div id="playoff-ccg"></div>
-    <h3 class="bracket-title">How each of the twelve got in
-      <span class="hint">— the route, the record it took, and what the committee
-        stand-in was actually rewarding</span></h3>
-    <div id="playoff-resumes"></div>
+    <h3 class="bracket-title">How the field is chosen</h3><div id="playoff-explain"></div>
+    <h3 class="bracket-title">Conference title races <span class="hint">— four Power 4 champions receive automatic bids</span></h3><div id="playoff-ccg"></div>
+    <h3 class="bracket-title">How each of the twelve got in</h3><div id="playoff-resumes"></div>
   </section>
 
-  <!-- ============ SCENARIO BUILDER ============ -->
-  <section id="view-scenario" class="view">
-    <div class="view-head">
-      <h2>Scenario Builder</h2>
-      <p class="sub">Play one season by hand. Click a team to make it the winner of
-        any game on the 2026 schedule &mdash; everything you leave alone stays on the
-        model&rsquo;s favourite &mdash; and the conference champions, the committee
-        ranking, the twelve-team field and the bracket all rebuild underneath you.
-        The selection rules and the fitted committee weights are the same ones the
-        Monte Carlo uses, so this is that machinery run on a season you chose instead
-        of one it drew. It is <b>an outcome, not odds</b>; your picks stay in this
-        browser and change nothing else on the site.</p>
+  <section id="view-power" class="view">
+    <div class="view-head editorial-head"><span class="eyebrow">Two different questions</span><h2>Best team or best résumé?</h2>
+      <p class="sub">Neutral-field power asks who would win today. Deserving starts with the final 2025 AP poll and will update with 2026 results.</p></div>
+    <div class="rankings-split">
+      <article class="ranking-board"><div class="board-head"><span>Model</span><h3>Neutral-field Top 25</h3></div><div id="power-top25"></div></article>
+      <article class="ranking-board deserving"><div class="board-head"><span>Résumé</span><h3>Deserving Top 25</h3><small>2025 final AP baseline</small></div><div id="deserving-top25"></div></article>
     </div>
-    <div class="dash-toolbar" id="sc-toolbar">
-      <div class="seg" id="sc-mode">
-        <button class="seg-btn active" data-mode="pick">Pick the games</button>
-        <button class="seg-btn" data-mode="playoff">See the playoff</button>
-      </div>
-      <span class="sc-filters">
-        <input type="search" id="sc-search" placeholder="Search teams…">
-        <select id="sc-conf"><option value="">All conferences</option></select>
-        <select id="sc-week"><option value="">All weeks</option></select>
-        <select id="sc-scope">
-          <option value="">All games</option>
-          <option value="close">Toss-ups only</option>
-          <option value="conf">Conference games</option>
-          <option value="picked">Games I picked</option>
-        </select>
-      </span>
-      <span class="spacer"></span>
-      <button id="sc-reset" class="wi-btn">Reset picks</button>
-      <span id="sc-count" class="dash-count"></span>
-    </div>
-    <div id="sc-body"></div>
   </section>
 
-  <!-- ============ MATCHUP ============ -->
+  <section id="view-leaders" class="view">
+    <div class="view-head editorial-head"><span class="eyebrow">The roster atlas</span><h2>Top 10, every way you want it.</h2>
+      <p class="sub">Player and team-room leaderboards powered by projected WAR, with sortable tables one tab away.</p></div>
+    <div class="leader-controls">
+      <div class="seg" id="leader-kind"><button class="seg-btn active" data-kind="players">Players</button><button class="seg-btn" data-kind="teams">Team rooms</button></div>
+      <label>Position <select id="leader-group"></select></label>
+      <label>Class <select id="leader-class"><option value="">All classes</option><option>FR</option><option>SO</option><option>JR</option><option>SR</option><option>GR</option></select></label>
+      <label>Team <select id="leader-team"><option value="">All teams</option></select></label>
+    </div>
+    <div id="leader-grid" class="leader-grid"></div>
+  </section>
+
   <section id="view-matchup" class="view">
-    <div class="view-head">
-      <h2>Matchup Simulator</h2>
-      <p class="sub">Head-to-head win probability, projected score, spread and
-        total from the trained model — any two FBS teams, any venue.</p>
-    </div>
+    <div class="view-head editorial-head"><span class="eyebrow">Weekly matchup lab</span><h2>Simulate the game. Understand the edge.</h2>
+      <p class="sub">Head-to-head win probability, score, spread and total plus the model’s matchup-specific advantages. Compare available DraftKings and Bovada lines.</p></div>
     <div class="matchup-controls">
       <div class="picker" id="pickerA"></div>
-      <div class="venue">
-        <div class="venue-label">VENUE</div>
-        <div class="venue-opts">
-          <label><input type="radio" name="venue" value="A"> <span id="venueA-label">Home A</span></label>
-          <label><input type="radio" name="venue" value="N" checked> Neutral</label>
-          <label><input type="radio" name="venue" value="B"> <span id="venueB-label">Home B</span></label>
-        </div>
-      </div>
-      <div class="picker" id="pickerB"></div>
+      <div class="venue"><div class="venue-label">VENUE</div><div class="venue-opts">
+        <label><input type="radio" name="venue" value="A"> <span id="venueA-label">Home A</span></label>
+        <label><input type="radio" name="venue" value="N" checked> Neutral</label>
+        <label><input type="radio" name="venue" value="B"> <span id="venueB-label">Home B</span></label>
+      </div></div><div class="picker" id="pickerB"></div>
     </div>
     <div id="matchup-result"></div>
+    <div class="section-intro"><div><span class="eyebrow">Market board</span><h3>2026 games with posted lines</h3></div><label>Sportsbook <select id="weekly-book"></select></label></div>
+    <div id="weekly-lines"></div>
   </section>
 
-  <!-- ============ TEAM BREAKDOWN ============ -->
+  <section id="view-scenario" class="view">
+    <div class="view-head editorial-head"><span class="eyebrow">Build your season</span><h2>Scenario Builder</h2>
+      <p class="sub">Pick schedule and conference-title winners, rebuild the committee field, then choose every playoff round and crown your own champion. Unpicked games stay on the model favorite; this is an outcome, not odds.</p></div>
+    <div class="dash-toolbar" id="sc-toolbar">
+      <div class="seg" id="sc-mode"><button class="seg-btn active" data-mode="pick">Pick the games</button><button class="seg-btn" data-mode="playoff">Pick the playoff</button></div>
+      <span class="sc-filters"><input type="search" id="sc-search" placeholder="Search teams…"><select id="sc-conf"><option value="">All conferences</option></select><select id="sc-week"><option value="">All weeks</option></select><select id="sc-scope"><option value="">All games</option><option value="close">Toss-ups only</option><option value="conf">Conference games</option><option value="picked">Games I picked</option></select></span>
+      <span class="spacer"></span><button id="sc-reset" class="wi-btn">Reset picks</button><span id="sc-count" class="dash-count"></span>
+    </div><div id="sc-body"></div>
+  </section>
+
   <section id="view-team" class="view">
-    <div class="view-head">
-      <h2>Team Breakdown</h2>
-      <p class="sub">Everything the model believes about one team: how its projected
-        record is distributed, which players are producing the wins, where it is
-        strong on each side of the ball, and what it does game by game.</p>
-    </div>
-    <div class="team-toolbar">
-      <div class="picker" id="pickerTeam"></div>
-    </div>
-    <div id="team-body"></div>
+    <div class="view-head"><span class="eyebrow">Team room</span><h2>Team Breakdown &amp; Depth Chart</h2><p class="sub">Outcome distribution, projected two-deep, player WAR, strengths, weaknesses and schedule—all in one place.</p></div>
+    <div class="team-toolbar"><div class="picker" id="pickerTeam"></div></div><div id="team-body"></div>
   </section>
 
-  <!-- ============ TEAM RATINGS BY INPUT ============ -->
   <section id="view-ratings" class="view">
-    <div class="view-head">
-      <h2>Team Ratings by Input</h2>
-      <p class="sub">The Season Odds page ranks teams by what the model concludes;
-        this ranks them by what it is built from. Sort on any column to ask a
-        narrower question &mdash; best quarterback room, best offensive line, best
-        defense, hardest schedule &mdash; against all 136 FBS teams. The rank on the
-        left is always the team&rsquo;s place in the whole country on the sorted
-        column, so filtering to one conference tells you where its teams stand in
-        FBS rather than renumbering them.</p>
-    </div>
-    <div class="dash-toolbar">
-      <select id="tr-set">
-        <option value="war">Roster WAR by position</option>
-        <option value="inputs">Model inputs</option>
-      </select>
-      <input type="search" id="tr-search" placeholder="Search teams…">
-      <select id="tr-conf"><option value="">All conferences</option></select>
-      <select id="tr-tier">
-        <option value="">All teams</option>
-        <option value="p4">Power 4 only</option>
-        <option value="g6">Group of 6 only</option>
-      </select>
-      <span class="spacer"></span>
-      <span id="tr-count" class="dash-count"></span>
-    </div>
-    <div id="tr-table"></div>
+    <div class="view-head"><span class="eyebrow">Team database</span><h2>Team Ratings by Input</h2><p class="sub">Sort every FBS team by model input or roster WAR position group.</p></div>
+    <div class="dash-toolbar"><select id="tr-set"><option value="war">Roster WAR by position</option><option value="inputs">Model inputs</option></select><input type="search" id="tr-search" placeholder="Search teams…"><select id="tr-conf"><option value="">All conferences</option></select><select id="tr-tier"><option value="">All teams</option><option value="p4">Power 4 only</option><option value="g6">Group of 6 only</option></select><span class="spacer"></span><span id="tr-count" class="dash-count"></span></div><div id="tr-table"></div>
   </section>
 
-  <!-- ============ PLAYERS ============ -->
   <section id="view-players" class="view">
-    <div class="view-head">
-      <h2>Players</h2>
-      <p class="sub">Every projected two-deep slot in FBS, sortable and filterable
-        across teams, conferences and positions, with each player&rsquo;s rank in FBS
-        and at his own position. <b>Proj WAR</b> is editable: change
-        what you think a player is worth and the ratings, power ranks and matchup
-        simulator all move with it. These are wins above replacement
-        directly &mdash; summed over a roster they reproduce the team&rsquo;s actual
-        wins above a replacement-level team, so the team page shows the same figures.</p>
-    </div>
-    <div class="dash-toolbar">
-      <input type="search" id="pl-search" placeholder="Search players or teams…">
-      <select id="pl-conf"><option value="">All conferences</option></select>
-      <select id="pl-group"><option value="">All positions</option></select>
-      <select id="pl-class">
-        <option value="">All classes</option>
-        <option value="FR">Freshmen</option>
-        <option value="SO">Sophomores</option>
-        <option value="JR">Juniors</option>
-        <option value="SR">Seniors</option>
-        <option value="GR">Graduates</option>
-      </select>
-      <select id="pl-tr">
-        <option value="">Everyone</option>
-        <option value="tr">Transfers only</option>
-      </select>
-      <span class="spacer"></span>
-      <button id="pl-reset" class="wi-btn">Reset edits</button>
-      <span id="pl-count" class="dash-count"></span>
-    </div>
-    <div id="pl-table"></div>
+    <div class="view-head"><span class="eyebrow">Player database</span><h2>Every projected two-deep</h2><p class="sub">Sortable and filterable across teams, conferences and positions. Edit projected WAR and the power ratings and matchup simulator respond.</p></div>
+    <div class="dash-toolbar"><input type="search" id="pl-search" placeholder="Search players or teams…"><select id="pl-conf"><option value="">All conferences</option></select><select id="pl-group"><option value="">All positions</option></select><select id="pl-class"><option value="">All classes</option><option value="FR">Freshmen</option><option value="SO">Sophomores</option><option value="JR">Juniors</option><option value="SR">Seniors</option><option value="GR">Graduates</option></select><select id="pl-tr"><option value="">Everyone</option><option value="tr">Transfers only</option></select><span class="spacer"></span><button id="pl-reset" class="wi-btn">Reset edits</button><span id="pl-count" class="dash-count"></span></div><div id="pl-table"></div>
   </section>
 </main>
 
-<footer>
-  Data: CollegeFootballData.com, PFF · CFP rules: 2026-27 format
-  (4 P4 champs + top G6 + 7 at-large, straight seeding, top-4 byes).
-</footer>
-
-<!-- The local revision is readable while developing; publish.py replaces it with
-     the JS content hash so cached code can never run against a different model. -->
-<script src="app.js?v=27"></script>
+<footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Model probabilities are estimates. Sportsbook prices are dated snapshots, not live quotes. Gamble responsibly.</span></footer>
+<script src="app.js?v=28"></script>
 </body>
 </html>

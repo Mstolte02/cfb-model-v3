@@ -852,6 +852,10 @@ editor is wanted back.
 `bracket` in `playoff*.json`, week/date/venue on `schedule.json`, and talent /
 returning / pythag / SOS on `ratings*.json`.
 
+`scripts.export_site_data` adds dated sportsbook snapshots, CFBD weekly lines, the
+prior final AP poll, and roster headshot IDs without feeding any market number back
+into the trained model.
+
 **Pipeline (run in order):**
 
 ```bash
@@ -860,6 +864,7 @@ returning / pythag / SOS on `ratings*.json`.
 ./venv/bin/python -m scripts.simulate_playoff 20000      # CFP odds + bracket + win dists
 ./venv/bin/python -m scripts.prepare_logos               # ESPN basic logos + teams.json
 ./venv/bin/python -m scripts.export_viz                  # data for the web app
+./venv/bin/python -m scripts.export_site_data            # odds, poll + player imagery
 ./venv/bin/python -m scripts.export_diagnostics          # Method tab — must run last
 python3 -m http.server 8642 -d viz                       # http://localhost:8642
 ```
@@ -906,6 +911,7 @@ retuning, MOV sample weighting. Bug fix: Air Force & Navy were silently dropped
 ./venv/bin/python -m scripts.simulate_playoff  # 20k-sim Monte Carlo -> CFP odds
 ./venv/bin/python -m scripts.prepare_logos     # map/download team logos
 ./venv/bin/python -m scripts.export_viz        # export data for the web app
+./venv/bin/python -m scripts.export_site_data  # odds, poll + player imagery
 python3 -m http.server 8642 -d viz             # open http://localhost:8642
 ```
 

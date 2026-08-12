@@ -23,13 +23,15 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoff, model] = await Promise.all([
+  const [teams, schedule, players, ratings, playoff, model, odds, editorial] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
     fetchJSON("data/ratings.json"),
     fetchJSON("data/playoff.json"),
     fetchJSON("data/model_v4.json"),
+    fetchJSON("data/odds.json").catch(() => ({ markets: {}, weekly: [], sources: {} })),
+    fetchJSON("data/editorial.json").catch(() => ({ prior_final_ap: [], headshots: {} })),
   ]);
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
   // two-deep; it was a knowingly worse backtest kept as an alternative view, and it is
@@ -391,11 +393,25 @@
   }
 
   /* ---------- tabs ---------- */
-  document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(x => x.classList.toggle("active", x === b));
+  function activateHub(hub, view) {
+    document.querySelectorAll(".hub-tab").forEach(x =>
+      x.classList.toggle("active", x.dataset.hub === hub));
+    document.querySelectorAll(".section-nav").forEach(x =>
+      x.classList.toggle("active", x.dataset.hubNav === hub));
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    const nav = document.querySelector(`.section-nav[data-hub-nav="${hub}"]`);
+    const button = nav && nav.querySelector(`.tab[data-view="${view}"]`);
+    if (button) button.classList.add("active");
     document.querySelectorAll(".view").forEach(v =>
-      v.classList.toggle("active", v.id === "view-" + b.dataset.view));
-    render(b.dataset.view);
+      v.classList.toggle("active", v.id === "view-" + view));
+    render(view);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  document.querySelectorAll(".hub-tab").forEach(b => b.addEventListener("click", () =>
+    activateHub(b.dataset.hub, b.dataset.default)));
+  document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
+    const nav = b.closest(".section-nav");
+    activateHub(nav.dataset.hubNav, b.dataset.view);
   }));
 
   /* =======================================================================
@@ -548,7 +564,7 @@
 
   /* Resolve forward: score each game, advance the projected winner into the slot it
      feeds. Returns a copy - the caller's game list is not mutated. */
-  function resolveBracket(games, feeds) {
+  function resolveBracket(games, feeds, picks) {
     const G = games.map(g => ({ ...g }));
     for (let i = 0; i < G.length; i++) {
       const g = G[i];
@@ -564,27 +580,30 @@
       if (!r) continue;
       g.p = r.pA;
       [g.sa, g.sb] = displayScore(r);
-      g.winner = r.pA >= 0.5 ? g.top : g.bottom;
+      const picked = picks && picks.get ? picks.get(i) : null;
+      g.winner = picked === g.top || picked === g.bottom
+        ? picked : (r.pA >= 0.5 ? g.top : g.bottom);
+      g.picked = picked === g.winner;
     }
     return G;
   }
 
-  function bracketHTML(G, seeds, trophyNote) {
+  function bracketHTML(G, seeds, trophyNote, pickable = false) {
     const seedOf = {};
     (seeds || []).forEach((t, i) => { if (t) seedOf[t] = i + 1; });
-    const side = (t, won, score) => {
+    const side = (t, won, score, gameIndex) => {
       if (!t) return `<div class="slot empty"><span class="seed">–</span>
         <span class="tbd">TBD</span></div>`;
       return `<div class="slot ${won ? "won" : "lost"}"
           style="--wash:${rgba(t, won ? .26 : .06)};--tint:${color(t)}">
         <span class="seed">${seedOf[t] || ""}</span>
         <img src="${logoURL(t)}" alt="" loading="lazy">
-        <button class="team-link" data-team="${esc(t)}">${esc(abbr(t))}</button>
+        <button class="${pickable ? "bracket-pick" : "team-link"}" data-team="${esc(t)}"${pickable ? ` data-game="${gameIndex}" title="Pick ${esc(t)}"` : ""}>${esc(abbr(t))}</button>
         <span class="gscore">${score != null ? score : ""}</span></div>`;
     };
-    const card = g => `<div class="game-card">
-        ${side(g.top, g.winner && g.winner === g.top, g.sa)}
-        ${side(g.bottom, g.winner && g.winner === g.bottom, g.sb)}
+    const card = (g, gameIndex) => `<div class="game-card${g.picked ? " user-picked" : ""}">
+        ${side(g.top, g.winner && g.winner === g.top, g.sa, gameIndex)}
+        ${side(g.bottom, g.winner && g.winner === g.bottom, g.sb, gameIndex)}
         <div class="gmeta">
           <span class="bye-tag">${g.site ? "at " + esc(abbr(g.site)) : "neutral"}</span>
           ${g.p != null ? `<span class="gwp">${pct(Math.max(g.p, 1 - g.p), 0)}</span>` : ""}
@@ -593,10 +612,10 @@
     return `
       <div class="round-label">First Round</div><div class="round-label">Quarterfinals</div>
       <div class="round-label">Semifinals</div><div class="round-label">Championship</div>
-      <div class="round-col">${G.slice(0, 4).map(card).join("")}</div>
-      <div class="round-col">${G.slice(4, 8).map(card).join("")}</div>
-      <div class="round-col">${G.slice(8, 10).map(card).join("")}</div>
-      <div class="round-col">${card(G[10])}
+      <div class="round-col">${G.slice(0, 4).map((g, i) => card(g, i)).join("")}</div>
+      <div class="round-col">${G.slice(4, 8).map((g, i) => card(g, i + 4)).join("")}</div>
+      <div class="round-col">${G.slice(8, 10).map((g, i) => card(g, i + 8)).join("")}</div>
+      <div class="round-col">${card(G[10], 10)}
         ${champ ? `<div class="trophy-card" style="--wash:${rgba(champ, .18)}">
           <div class="emoji">🏆</div><img src="${logoURL(champ)}" alt="">
           <div class="champ-name" style="color:${color(champ)}">${esc(champ)}</div>
@@ -775,11 +794,12 @@
     const KEY = "cfb-scenario-v1";
     const games = new Map();      // game key -> winning team
     const titles = new Map();     // conference -> champion
+    const bracket = new Map();    // playoff game index -> winning team
     let ver = 0;
     function save() {
       try {
         localStorage.setItem(KEY, JSON.stringify(
-          { games: [...games], titles: [...titles] }));
+          { games: [...games], titles: [...titles], bracket: [...bracket] }));
       } catch (e) { /* private mode; the scenario just will not outlive the tab */ }
     }
     try {
@@ -788,16 +808,25 @@
         const j = JSON.parse(raw);
         for (const [k, v] of j.games || []) games.set(k, v);
         for (const [k, v] of j.titles || []) titles.set(k, v);
+        for (const [k, v] of j.bracket || []) bracket.set(Number(k), v);
       }
-    } catch (e) { games.clear(); titles.clear(); }
+    } catch (e) { games.clear(); titles.clear(); bracket.clear(); }
     return {
       version: () => ver,
-      count: () => games.size + titles.size,
+      count: () => games.size + titles.size + bracket.size,
       game: k => games.get(k),
       title: c => titles.get(c),
+      bracket: i => bracket.get(i),
+      bracketPicks: () => bracket,
       setGame(k, team) { team == null ? games.delete(k) : games.set(k, team); ver++; save(); },
       setTitle(c, team) { team == null ? titles.delete(c) : titles.set(c, team); ver++; save(); },
-      reset() { games.clear(); titles.clear(); ver++; save(); },
+      setBracket(i, team) {
+        i = Number(i);
+        for (const k of [...bracket.keys()]) if (k > i) bracket.delete(k);
+        team == null ? bracket.delete(i) : bracket.set(i, team);
+        ver++; save();
+      },
+      reset() { games.clear(); titles.clear(); bracket.clear(); ver++; save(); },
     };
   })();
 
@@ -989,7 +1018,8 @@
     scCache = {
       names, wins, losses, played, cWins, cGames, wpct, rating, sosZ, h2h,
       score, parts, champs, titleGames, seeds, bubble, route, g6bid,
-      games: played_games, bracket: br, resolved: resolveBracket(br.games, br.feeds),
+      games: played_games, bracket: br,
+      resolved: resolveBracket(br.games, br.feeds, SC_STATE.bracketPicks()),
       provisional: !!PW,
     };
     scCacheVer = stamp;
@@ -1113,9 +1143,9 @@
           <div class="sc-diff">${diff}</div>
         </div>
         <div class="panel sc-bracket">
-          <h3>The bracket</h3>
+          <h3>Pick the bracket <span class="hint">— click either team in every game</span></h3>
           <div id="sc-bracket-grid">${bracketHTML(S.resolved, S.seeds,
-            () => "wins this scenario")}</div>
+            () => "your scenario champion", true)}</div>
         </div>
       </div>
       <div class="sc-back-row">
@@ -1169,6 +1199,12 @@
         const key = b.dataset.key;
         if (key.startsWith("ccg:")) SC_STATE.setTitle(key.slice(4), null);
         else SC_STATE.setGame(key, null);
+        scRerender();
+      }));
+    host.querySelectorAll(".bracket-pick").forEach(b =>
+      b.addEventListener("click", () => {
+        const i = Number(b.dataset.game), team = b.dataset.team;
+        SC_STATE.setBracket(i, SC_STATE.bracket(i) === team ? null : team);
         scRerender();
       }));
     wireTeamLinks();
@@ -1409,7 +1445,8 @@
         <span><b>${r.total.toFixed(1)}</b> total (O/U)</span>
         <span><b>${sa}–${sb}</b> projected score</span>
       </div>
-      ${keyRow}`;
+      ${keyRow}
+      ${matchupDriversHTML(a, b)}`;
   }
   selA.addEventListener("change", renderMatchup);
   selB.addEventListener("change", renderMatchup);
@@ -1977,12 +2014,7 @@
         const t = e.currentTarget.dataset.team;
         if (!vecOf(t)) return;
         selT.value = t;
-        document.querySelectorAll(".tab").forEach(x =>
-          x.classList.toggle("active", x.dataset.view === "team"));
-        document.querySelectorAll(".view").forEach(v =>
-          v.classList.toggle("active", v.id === "view-team"));
-        renderTeam();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        activateHub("people", "team");
       }));
   }
 
@@ -2169,12 +2201,7 @@
         const t = b.dataset.team;
         if (!vecOf(t)) return;
         selT.value = t;
-        document.querySelectorAll(".tab").forEach(x =>
-          x.classList.toggle("active", x.dataset.view === "team"));
-        document.querySelectorAll(".view").forEach(v =>
-          v.classList.toggle("active", v.id === "view-team"));
-        renderTeam();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        activateHub("people", "team");
       }));
   }
 
@@ -2382,6 +2409,230 @@
   });
 
 
+  /* =======================================================================
+     FUTURES, RANKINGS, LEADERBOARDS AND WEEKLY MARKET BOARD
+     ======================================================================= */
+  const americanOdds = n => n > 0 ? `+${n}` : String(n);
+  const implied = n => n < 0 ? (-n) / ((-n) + 100) : 100 / (n + 100);
+  const quantileFromCounts = (counts, q) => {
+    const total = counts.reduce((a, b) => a + b, 0), target = total * q;
+    let seen = 0;
+    for (let i = 0; i < counts.length; i++) {
+      seen += counts[i];
+      if (seen >= target) return i;
+    }
+    return counts.length - 1;
+  };
+  function regularWinDist(team) {
+    let dist = [1];
+    for (const g of schedule) {
+      if (g.h !== team && g.a !== team) continue;
+      let p;
+      if (vecOf(g.h) && vecOf(g.a)) {
+        const r = predict(g.h, g.a, g.n ? "N" : "A");
+        p = g.h === team ? r.pA : 1 - r.pA;
+      } else p = vecOf(team) ? FCS_WIN_P : 1 - FCS_WIN_P;
+      const next = Array(dist.length + 1).fill(0);
+      dist.forEach((v, i) => { next[i] += v * (1 - p); next[i + 1] += v * p; });
+      dist = next;
+    }
+    return dist;
+  }
+
+  let futureMarket = "national_title";
+  function marketSource(market, book) {
+    const key = market === "national_title" ? (book === "BetMGM" ? "betmgm_title" : "fanduel_title")
+      : market === "make_cfp" ? "fanduel_cfp"
+      : market === "conference_title" ? "draftkings_conference"
+      : market === "win_totals" ? "betmgm_wins" : "betmgm_heisman";
+    return odds.sources && odds.sources[key];
+  }
+  function setFutureBooks() {
+    const sel = document.getElementById("future-book");
+    const books = Object.keys((odds.markets || {})[futureMarket] || {});
+    const old = sel.value;
+    sel.innerHTML = books.map(b => `<option${b === old ? " selected" : ""}>${esc(b)}</option>`).join("");
+  }
+  function heismanIndex(rows) {
+    const byTeam = ratingRow(), sim = simRow();
+    const pos = { QB: .55, WR: .20, RB: .12, TE: -.08 };
+    const scored = rows.map(row => {
+      const roster = (players[row.team] && players[row.team].players) || [];
+      const player = roster.find(p => p.n === row.player);
+      const war = player ? player.raw || 0 : 0;
+      const rt = byTeam[row.team] || {}, po = sim[row.team] || {};
+      const score = 1.65 * war + .75 * ((rt.avg_wins || 6) / 12) +
+        .55 * (po.playoff || 0) + .35 * (po.champ || 0) + (pos[row.position] || 0);
+      return { ...row, war, score };
+    });
+    const lo = Math.min(...scored.map(r => r.score)), hi = Math.max(...scored.map(r => r.score));
+    return scored.map(r => ({ ...r, index: hi === lo ? 50 : 20 + 80 * (r.score - lo) / (hi - lo) }));
+  }
+  function renderFutures() {
+    setFutureBooks();
+    const book = document.getElementById("future-book").value;
+    const rows = ((((odds || {}).markets || {})[futureMarket] || {})[book] || []).slice();
+    const sim = simRow();
+    const src = marketSource(futureMarket, book);
+    let body = "", note = "";
+    if (futureMarket === "heisman") {
+      const ranked = heismanIndex(rows).sort((a, b) => b.index - a.index);
+      body = ranked.map((r, i) => `<div class="market-row">
+        <span class="market-rank">${i + 1}</span><div class="market-team"><b>${esc(r.player)}</b><small>${esc(r.team)} · ${r.position} · ${r.war.toFixed(2)} WAR</small></div>
+        <div><small>Heisman index</small><b>${r.index.toFixed(0)}</b></div><div><small>${esc(book)}</small><b>${americanOdds(r.odds)}</b></div>
+      </div>`).join("");
+      note = "Experimental Heisman index: projected player WAR plus team wins, CFP/title equity and a position effect. It ranks this quoted field; it is not a calibrated award probability.";
+    } else if (futureMarket === "win_totals") {
+      const priced = rows.map(r => {
+        const d = regularWinDist(r.team), overP = d.reduce((s, p, w) => s + (w > r.line ? p : 0), 0);
+        const io = implied(r.over), iu = implied(r.under), marketOver = io / (io + iu);
+        const overEdge = overP - marketOver;
+        return { ...r, overP, marketOver, side: overEdge >= 0 ? "Over" : "Under", edge: Math.abs(overEdge) };
+      }).sort((a, b) => b.edge - a.edge);
+      body = priced.map((r, i) => `<div class="market-row">
+        <span class="market-rank">${i + 1}</span><div class="market-team">${teamMini(r.team)}<small>${r.side} ${r.line} · ${americanOdds(r.side === "Over" ? r.over : r.under)}</small></div>
+        <div><small>Model</small><b>${pct(r.side === "Over" ? r.overP : 1 - r.overP, 0)}</b></div><div class="edge"><small>vs no-vig price</small><b>+${pct(r.edge, 1)}</b></div>
+      </div>`).join("");
+      note = "Regular-season win distributions are rebuilt game by game so conference championships never leak into sportsbook win-total comparisons.";
+    } else {
+      const key = futureMarket === "make_cfp" ? "playoff"
+        : futureMarket === "conference_title" ? "conf_champ" : "champ";
+      const priced = rows.map(r => ({ ...r, modelP: (sim[r.team] || {})[key] || 0,
+        marketP: implied(r.odds) })).map(r => ({ ...r, edge: r.modelP - r.marketP }))
+        .sort((a, b) => b.edge - a.edge);
+      body = priced.map((r, i) => `<div class="market-row">
+        <span class="market-rank">${i + 1}</span><div class="market-team">${teamMini(r.team)}<small>${esc(book)} ${americanOdds(r.odds)}</small></div>
+        <div><small>Model</small><b>${pct(r.modelP, 1)}</b></div><div class="edge ${r.edge < 0 ? "negative" : ""}"><small>Price gap</small><b>${r.edge >= 0 ? "+" : ""}${pct(r.edge, 1)}</b></div>
+      </div>`).join("");
+      note = "Price gap compares the model with raw implied probability. It is a screening tool, not a guaranteed return; incomplete futures boards are not de-vigged.";
+    }
+    document.getElementById("future-spotlight").innerHTML = `<article class="market-panel"><div class="market-panel-head"><div><span class="eyebrow">Model vs market</span><h3>${futureMarket.replaceAll("_", " ")}</h3></div>${src ? `<a href="${src.url}" target="_blank" rel="noopener">${esc(book)} · ${src.as_of}</a>` : ""}</div><div class="market-list">${body || `<p class="sub">No quoted market is available.</p>`}</div><div class="market-note">${note}</div></article>`;
+  }
+  function teamMini(team) {
+    return `<span class="mini-team"><img src="${logoURL(team)}" alt="" loading="lazy"><b>${esc(team)}</b></span>`;
+  }
+  function renderOutcomeBands() {
+    const all = liveRatings(), dist = cur().playoff.win_dist || {};
+    const rows = all.map(r => {
+      const d = dist[r.team] || [];
+      const floor = d.length ? quantileFromCounts(d, .10) : 0;
+      const ceil = d.length ? quantileFromCounts(d, .90) : 0;
+      return { ...r, floor, ceil, width: ceil - floor };
+    }).sort((a, b) => b.width - a.width || b.power - a.power).slice(0, 18);
+    const max = Math.max(...rows.map(r => r.ceil), 12);
+    document.getElementById("outcome-bands").innerHTML = `<div class="range-grid">${rows.map(r => `<button class="range-card team-link" data-team="${esc(r.team)}">
+      <span class="range-team"><img src="${logoURL(r.team)}" alt="">${esc(r.team)}</span><span class="range-values"><b>${r.floor}</b><i>${r.avg_wins.toFixed(1)} mean</i><b>${r.ceil}</b></span>
+      <span class="range-track"><i style="left:${100 * r.floor / max}%;width:${100 * r.width / max}%;background:${color(r.team)}"></i></span><small>${r.width}-win central range</small>
+    </button>`).join("")}</div>`;
+    wireTeamLinks();
+  }
+
+  function rankingRow(r, value) {
+    return `<div class="ranking-row"><span>${r.rank}</span>${teamMini(r.team)}<b>${value}</b></div>`;
+  }
+  function renderPower() {
+    const neutral = liveRatings().slice().sort((a, b) => b.power - a.power).slice(0, 25)
+      .map((r, i) => ({ ...r, rank: i + 1 }));
+    document.getElementById("power-top25").innerHTML = neutral.map(r => rankingRow(r, (100 * r.power).toFixed(1))).join("");
+    document.getElementById("deserving-top25").innerHTML = (editorial.prior_final_ap || []).map(r => rankingRow(r, r.points || "")).join("");
+  }
+
+  let leaderKind = "players";
+  function renderLeaders() {
+    const group = document.getElementById("leader-group").value;
+    const cls = document.getElementById("leader-class").value;
+    const teamFilter = document.getElementById("leader-team").value;
+    let rows;
+    if (leaderKind === "players") {
+      rows = [];
+      for (const [team, roster] of Object.entries(players)) for (const p of roster.players || []) {
+        if (teamFilter && team !== teamFilter) continue;
+        const groupMiss = group === "OFF" ? !OFF_GROUPS.has(p.g)
+          : group === "DEF" ? OFF_GROUPS.has(p.g)
+          : group && group !== "ALL" && p.g !== group;
+        if (groupMiss || (cls && p.c !== cls)) continue;
+        rows.push({ team, ...p });
+      }
+      rows.sort((a, b) => (b.raw || 0) - (a.raw || 0));
+      document.getElementById("leader-grid").innerHTML = rows.slice(0, 10).map((p, i) => {
+        const photo = (editorial.headshots || {})[p.team + "\u0000" + p.n];
+        return `<article class="leader-card" style="--team:${color(p.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span>
+          <div class="leader-portrait" style="background-image:url('${logoURL(p.team)}')">${photo ? `<img src="${photo}" alt="${esc(p.n)}" loading="lazy" onerror="this.remove()">` : ""}</div>
+          <div class="leader-copy"><span>${p.g} · ${p.c} · ${esc(p.team)}</span><h3>${esc(p.n)}</h3><b>${(p.raw || 0).toFixed(2)} <small>projected WAR</small></b></div></article>`;
+      }).join("");
+    } else {
+      rows = Object.entries(players).map(([team, r]) => {
+        const by = r.byGroup || {};
+        const value = group === "ALL" ? r.total
+          : group === "OFF" ? Object.entries(by).reduce((s, [g, v]) => s + (OFF_GROUPS.has(g) ? v : 0), 0)
+          : group === "DEF" ? Object.entries(by).reduce((s, [g, v]) => s + (!OFF_GROUPS.has(g) ? v : 0), 0)
+          : (by[group] || 0);
+        return { team, value };
+      })
+        .sort((a, b) => b.value - a.value).slice(0, 10);
+      document.getElementById("leader-grid").innerHTML = rows.map((r, i) => `<article class="leader-card team-room" style="--team:${color(r.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span><div class="leader-portrait"><img src="${logoURL(r.team)}" alt=""></div><div class="leader-copy"><span>${group === "ALL" ? "Complete roster" : group === "OFF" ? "Offense" : group === "DEF" ? "Defense" : group + " room"}</span><h3>${esc(r.team)}</h3><b>${r.value.toFixed(2)} <small>projected WAR</small></b></div></article>`).join("");
+    }
+  }
+  function fillLeaderControls() {
+    const sel = document.getElementById("leader-group");
+    if (sel.options.length) return;
+    ["ALL", "OFF", "DEF", ...GROUP_ORDER].forEach(g => sel.add(new Option(
+      g === "ALL" ? "Overall" : g === "OFF" ? "Offense" : g === "DEF" ? "Defense" : g, g)));
+    sel.value = "QB";
+    const team = document.getElementById("leader-team");
+    Object.keys(players).sort().forEach(t => team.add(new Option(t, t)));
+  }
+
+  function matchupDriversHTML(a, b) {
+    const labels = { O: "Offensive profile", D: "Defensive profile", talent: "Talent baseline", returning: "Returning production", war_projected: "Projected WAR" };
+    const A = vecOf(a), B = vecOf(b), M = cur().model;
+    const rows = M.features.map((f, i) => ({ name: labels[f] || f, v: M.logistic.coef[i] * (A[i] - B[i]) }))
+      .sort((x, y) => Math.abs(y.v) - Math.abs(x.v));
+    return `<div class="driver-panel"><div class="section-intro"><div><span class="eyebrow">Why the model leans</span><h3>Matchup advantage drivers</h3></div><p>Contribution to the pregame log-odds; larger bars have more pull in this matchup.</p></div><div class="driver-grid">${rows.map(r => {
+      const team = r.v >= 0 ? a : b, w = Math.min(100, 25 + 75 * Math.abs(r.v) / Math.max(...rows.map(x => Math.abs(x.v)), .001));
+      return `<div class="driver"><span>${esc(r.name)}</span><b>${esc(team)}</b><i><em style="width:${w}%;background:${color(team)}"></em></i></div>`;
+    }).join("")}</div></div>`;
+  }
+
+  function fillWeeklyBooks() {
+    const sel = document.getElementById("weekly-book");
+    if (sel.options.length) return;
+    const books = [...new Set((odds.weekly || []).flatMap(g => Object.keys(g.books || {})))].sort();
+    books.forEach(b => sel.add(new Option(b, b)));
+    if (books.includes("DraftKings")) sel.value = "DraftKings";
+  }
+  function renderWeeklyLines() {
+    const book = document.getElementById("weekly-book").value;
+    const rows = (odds.weekly || []).filter(g => g.books && g.books[book]).map(g => {
+      const line = g.books[book], r = predict(g.home, g.away, "A");
+      if (!r) return { ...g, line, r: null, edge: 0 };
+      const modelSpread = -r.margin, edge = line.spread == null ? 0 : line.spread - modelSpread;
+      return { ...g, line, r, modelSpread, edge };
+    }).sort((a, b) => (a.week || 99) - (b.week || 99) || String(a.start).localeCompare(String(b.start)));
+    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(book)}</span><span>Model</span><span>Difference</span></div>${rows.map(g => {
+      const lean = g.edge >= 0 ? g.home : g.away;
+      return `<div class="weekly-row"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${g.line.spread == null ? "—" : (g.line.spread > 0 ? "+" : "") + g.line.spread}</b><small>total ${g.line.overUnder == null ? "—" : g.line.overUnder}</small></div><div><b>${g.r ? (g.modelSpread > 0 ? "+" : "") + g.modelSpread.toFixed(1) : "—"}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${g.line.spread == null || !g.r ? "—" : `${esc(abbr(lean))} ${Math.abs(g.edge).toFixed(1)}`}</b><small>model/market gap</small></div></div>`;
+    }).join("")}</div>`;
+  }
+
+  document.querySelectorAll("#future-market .seg-btn").forEach(b => b.addEventListener("click", () => {
+    futureMarket = b.dataset.market;
+    document.querySelectorAll("#future-market .seg-btn").forEach(x => x.classList.toggle("active", x === b));
+    renderFutures();
+  }));
+  document.getElementById("future-book").addEventListener("change", renderFutures);
+  document.querySelectorAll("#leader-kind .seg-btn").forEach(b => b.addEventListener("click", () => {
+    leaderKind = b.dataset.kind;
+    document.querySelectorAll("#leader-kind .seg-btn").forEach(x => x.classList.toggle("active", x === b));
+    document.getElementById("leader-class").disabled = leaderKind === "teams";
+    document.getElementById("leader-team").disabled = leaderKind === "teams";
+    renderLeaders();
+  }));
+  document.getElementById("leader-group").addEventListener("change", renderLeaders);
+  document.getElementById("leader-class").addEventListener("change", renderLeaders);
+  document.getElementById("leader-team").addEventListener("change", renderLeaders);
+  document.getElementById("weekly-book").addEventListener("change", renderWeeklyLines);
+
   /* ---------- boot ---------- */
   function render(view) {
     if (view === "dash") renderDash();
@@ -2391,12 +2642,15 @@
     else if (view === "scenario") renderScenario();
     else if (view === "ratings") renderRatings();
     else if (view === "players") renderPlayers();
+    else if (view === "power") renderPower();
+    else if (view === "leaders") renderLeaders();
   }
   function renderAll() {
     fillConfSelect(); fillPlayerSelects(); fillRatingSelects();
-    fillScenarioSelects();
+    fillScenarioSelects(); fillLeaderControls(); fillWeeklyBooks();
     renderDash(); renderPlayoff(); renderScenario(); renderMatchup(); renderTeam();
-    renderRatings(); renderPlayers();
+    renderRatings(); renderPlayers(); renderFutures(); renderOutcomeBands();
+    renderPower(); renderLeaders(); renderWeeklyLines();
   }
   // Check the client-side power reproduces the exported column before anyone edits
   // anything. A scenario is only meaningful as a difference from the published
