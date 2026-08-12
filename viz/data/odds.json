@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-12T22:40:36Z",
+   "as_of": "2026-08-12T22:43:02Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1100,7 +1100,7 @@
    "week": 1,
    "start": "2026-08-29T19:00:00.000Z",
    "home": "USC",
-   "away": "San Jos\u00c3\u00a9 State",
+   "away": "San Jos\u00e9 State",
    "books": {
     "Bovada": {
      "spread": -38,
@@ -1375,7 +1375,7 @@
    "week": 1,
    "start": "2026-09-04T22:30:00.000Z",
    "home": "Eastern Michigan",
-   "away": "San Jos\u00c3\u00a9 State",
+   "away": "San Jos\u00e9 State",
    "books": {
     "DraftKings": {
      "spread": -3.5,
