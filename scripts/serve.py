@@ -121,9 +121,11 @@ def load_state():
     ret_raw = raw_returning()
 
     # 2026 returning + CFBD talent proxy, exactly as build_projection_frame does.
-    rp_csv = ROOT / "data" / f"returning_{YEAR}.csv"
-    if YEAR not in ret and rp_csv.exists():
-        df = pd.read_csv(rp_csv).set_index("team")["ret_prod"]
+    # The helper deliberately prefers the definition-matched CFBD snapshot over the
+    # separately defined Connelly/ESPN context file.
+    if YEAR not in ret:
+        from scripts.train import projection_returning_raw
+        df = projection_returning_raw(ret_raw)
         ret[YEAR] = _z(df); ret_raw[YEAR] = df
     tal_csv = ROOT / "data" / f"talent_{YEAR}.csv"
     if YEAR not in cfbd_tal and tal_csv.exists():

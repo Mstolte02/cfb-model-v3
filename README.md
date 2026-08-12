@@ -72,6 +72,17 @@ now enters the team prior through the same all-roster projection family tested
 historically; individual position contributions are still reporting rather than
 causal game-level effects.
 
+### 2026 returning-production definition
+
+The historical v4 feature is CFBD `percentPPA`, so the live frame now reads the
+checked-in `data/returning_2026_cfbd.csv` snapshot of that same field. The earlier
+live path substituted the separately published Connelly/ESPN estimate from
+`data/returning_2026.csv`. Both are reasonable continuity statistics, but they are
+not interchangeable model features: across the 135 matched 2026 teams their
+correlation is only 0.30. The old path therefore changed the feature definition
+between training and prediction. The Connelly offense/defense splits remain useful
+descriptive context; they no longer occupy a coefficient trained on CFBD PPA share.
+
 ## v3.10 — one build, a split line, and EA back in its lane
 
 Five changes asked for directly, and three silent bugs they exposed.
@@ -1057,14 +1068,14 @@ only 2021 and 2025 — and 2025 is exactly the season the one-shot test had used
 > in `config.py`, and every run that uses it says so on stdout. This is the one
 > placeholder left in the build.
 >
-> Returning production uses the real 2026 numbers (Bill Connelly / ESPN) in
-> `data/returning_2026.csv`, names reconciled to CFBD — the conceptually correct
-> "entering-2026" continuity signal, not the off-by-one 2025 proxy. CFBD's own
-> `/player/returning` *has* gone live for 2026 since this note was written, and the
-> curated CSV is still preferred deliberately: CFBD serves `percentPPA`, an unbounded
-> PPA share that runs −0.57 to 1.00 across FBS and correlates only 0.32 with the
-> published returning-production figure. They are different quantities, not two
-> measurements of one.
+> Returning production has two real 2026 sources in the repository. The model uses
+> CFBD `percentPPA` from `data/returning_2026_cfbd.csv` because that is the definition
+> used in every historical training season. The Bill Connelly / ESPN estimates and
+> offense/defense splits remain in `data/returning_2026.csv` for descriptive use.
+> The two total-returning measures correlate only about 0.30 in 2026; that is exactly
+> why one cannot be substituted for the other after a coefficient has been trained.
+> CFBD's PPA share is unbounded (roughly −0.57 to 1.00 in this snapshot), so it should
+> not be displayed as though it were the Connelly percentage.
 >
 > Note: returning production is a roster/continuity metric known *preseason*, so 2026
 > values exist now; performance stats and Pythagorean correctly use the completed 2025

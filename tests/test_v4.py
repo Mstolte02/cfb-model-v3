@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 
 from scripts import v4_backtest as BT
+from scripts.train import projection_returning_raw
 from src import v4 as V4
 from src.data import pff, war
 from src.dynamic import WeeklyRatingState
@@ -64,6 +65,15 @@ class WeeklyUpdateTests(unittest.TestCase):
 
 
 class TemporalFeatureTests(unittest.TestCase):
+    def test_live_returning_uses_training_feature_definition(self):
+        live = projection_returning_raw()
+        self.assertEqual(len(live), 136)
+        self.assertFalse(live.index.duplicated().any())
+        # This snapshot is CFBD percentPPA, the same field returned by the historical
+        # loader.  The older Connelly/ESPN file has Vanderbilt at 0.44 and must not be
+        # silently substituted for the trained feature.
+        self.assertAlmostEqual(float(live.loc["Vanderbilt"]), .354, places=6)
+
     def test_pff_entering_year_ignores_that_year_rows(self):
         base = pd.DataFrame([
             {"season": 2024, "team": "A", "group": "QB", "grade": 80., "snaps": 100},

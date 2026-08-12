@@ -79,21 +79,29 @@ def raw_returning():
 
 
 def projection_returning_raw(ret_raw=None):
-    """Raw returning production entering PROJECTION_YEAR, curated CSV then proxy.
+    """Raw returning production entering PROJECTION_YEAR, matched CSV then proxy.
 
-    Pulled out of build_projection_frame because export_viz needs the same series to
-    build the per-team shrink u for the what-if block, and a second copy of this
-    fallback chain would be free to drift out of step with this one - which would
-    show the page a shrink the model never applied.
+    Historical model rows use CFBD ``percentPPA``.  The live row must use that same
+    definition: the separately published Connelly/ESPN returning-production estimate
+    is useful context, but substituting it at serve time changes the meaning of a
+    trained feature (the two 2026 series correlate only 0.30).  A checked-in CFBD
+    snapshot makes the production build reproducible without an API key.
+
+    Pulled out of build_projection_frame because every live consumer must follow the
+    same fallback chain; otherwise the dashboard and model can silently disagree.
     """
     import pandas as pd
     from config import PROJECTION_YEAR, PROJECTION_RETURNING_FALLBACK_YEAR, ROOT
-    rp_csv = ROOT / "data" / f"returning_{PROJECTION_YEAR}.csv"
-    if rp_csv.exists():
-        rp = pd.read_csv(rp_csv).set_index("team")["ret_prod"]
-        print(f"  [info] {PROJECTION_YEAR} returning production from {rp_csv.name} "
-              f"({len(rp)} teams).")
-        return rp
+    candidates = [
+        ROOT / "data" / f"returning_{PROJECTION_YEAR}_cfbd.csv",
+        ROOT / "data" / f"returning_{PROJECTION_YEAR}.csv",
+    ]
+    for rp_csv in candidates:
+        if rp_csv.exists():
+            rp = pd.read_csv(rp_csv).set_index("team")["ret_prod"]
+            print(f"  [info] {PROJECTION_YEAR} returning production from "
+                  f"{rp_csv.name} ({len(rp)} teams).")
+            return rp
     ret_raw = raw_returning() if ret_raw is None else ret_raw
     print(f"  [warn] {PROJECTION_YEAR} returning unavailable; using "
           f"{PROJECTION_RETURNING_FALLBACK_YEAR} proxy.")
@@ -103,8 +111,9 @@ def projection_returning_raw(ret_raw=None):
 def build_projection_frame(talent_blend=None, unc_lambda=None, return_params=False,
                            return_parts=False):
     """Entering-PROJECTION_YEAR team frame (O/D/pythag/talent/returning, uncertainty
-    applied), with 2026 returning from the curated CSV and talent proxied from the
-    latest composite. Shared by scripts/rank.py and scripts/spreads.py.
+    applied), with 2026 returning from the definition-matched CFBD snapshot and
+    talent proxied from the latest composite. Shared by scripts/rank.py and
+    scripts/spreads.py.
 
     return_parts hands back every INTERMEDIATE the frame was assembled from - the
     CFBD composite before the PFF roster is blended in, the roster talent itself, the

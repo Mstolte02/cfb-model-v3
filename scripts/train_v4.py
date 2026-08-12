@@ -58,8 +58,11 @@ def _projection_preseason_inputs(talent, returning):
         floor = float(talent[PROJECTION_YEAR].quantile(.10))
         talent[PROJECTION_YEAR] = pd.concat([
             talent[PROJECTION_YEAR], pd.Series(floor, index=missing, dtype=float)])
-    return {"returning_source": (ROOT / "data" /
-                                  f"returning_{PROJECTION_YEAR}.csv").name,
+    returning_source = (f"returning_{PROJECTION_YEAR}_cfbd.csv"
+                        if (ROOT / "data" /
+                            f"returning_{PROJECTION_YEAR}_cfbd.csv").exists()
+                        else f"returning_{PROJECTION_YEAR}.csv")
+    return {"returning_source": returning_source,
             "talent_source": talent_source,
             "talent_floor_teams": fallback_teams}
 
