@@ -1,0 +1,58 @@
+name: Capture market snapshot
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Six-hour retrievals during the football calendar. These timestamps are our
+    # observation times, not sportsbook-native quote times.
+    - cron: "17 */6 * 7-12 *"
+    - cron: "17 */6 1-15 1 *"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Capture timestamped provider prices
+        run: python3 scripts/capture_market_snapshot.py --allow-missing-key
+      - id: changes
+        name: Record append-only snapshot changes
+        shell: bash
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "cfb-market-tracker[bot]"
+          git config user.email "cfb-market-tracker[bot]@users.noreply.github.com"
+          git add data/market_snapshots viz/data/odds.json viz/data/market_tracking.json
+          git commit -m "Capture 2026 market snapshot"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Build publishable site
+        if: steps.changes.outputs.changed == 'true'
+        run: python3 scripts/publish.py
+      - uses: actions/configure-pages@v6
+        if: steps.changes.outputs.changed == 'true'
+      - uses: actions/upload-pages-artifact@v5
+        if: steps.changes.outputs.changed == 'true'
+        with:
+          path: dist
+          include-hidden-files: true
+      - id: deploy
+        uses: actions/deploy-pages@v5
+        if: steps.changes.outputs.changed == 'true'

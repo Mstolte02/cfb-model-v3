@@ -1,0 +1,3 @@
+event_id,observed_at,effective_at,team,player,status,source_type,source_ref,note
+nd-jagusah-out-20260803,2026-08-03T14:47:00Z,2026-08-03,Notre Dame,Charles Jagusah,out,manual_audit,git:57d118d,Injured again in camp; Sullivan Absher takes right guard
+nd-absher-starter-20260803,2026-08-03T14:47:00Z,2026-08-03,Notre Dame,Sullivan Absher,starter,manual_audit,git:57d118d,Starts at RG with Jagusah out

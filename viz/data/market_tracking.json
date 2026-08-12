@@ -1,0 +1,29 @@
+{
+  "checked_at": "2026-08-12T22:40:36Z",
+  "source": "CFBD /lines",
+  "timestamp_semantics": "retrieval time, not sportsbook quote time",
+  "quote_events": 104,
+  "successful_checks": 3,
+  "changed_quotes_this_check": 0,
+  "games_with_quotes": 53,
+  "books_with_quotes": [
+    "Bovada",
+    "DraftKings"
+  ],
+  "watchlist_rule": {
+    "minimum_gap": 0.15,
+    "minimum_books": 2,
+    "uncertainty_gate": "80% Jeffreys lower bound > best-price break-even + 1pp",
+    "status": "forward research; never an automatic bet"
+  },
+  "current_candidates": [],
+  "entries": 0,
+  "new_entries_this_check": 0,
+  "settlements": 0,
+  "qualified_clv_observations": 0,
+  "mean_consensus_clv": null,
+  "availability": {
+    "events": 2,
+    "last_event_at": "2026-08-03T14:47:00Z"
+  }
+}

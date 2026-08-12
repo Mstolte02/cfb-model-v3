@@ -807,6 +807,17 @@ main { max-width: 1320px; padding-top: 38px; }
 .validation-strip b { font: 750 13px/1.2 var(--sans); }
 .validation-strip span { color: var(--text); font: 650 12px/1.2 var(--sans); }
 .validation-strip small { color: var(--muted); font-size: 11px; }
+.tracking-strip { display: grid; grid-template-columns: minmax(260px,1.7fr) repeat(3,minmax(150px,1fr));
+  gap: 1px; overflow: hidden; margin: 12px 0 10px; border: 1px solid var(--line2);
+  border-radius: 11px; background: var(--line2); }
+.tracking-strip > div { min-height: 86px; padding: 15px 16px; background: var(--panel); }
+.tracking-strip > div:first-child { background: var(--navy); color: #fff; }
+.tracking-strip span { display: block; margin-bottom: 8px; color: var(--muted);
+  font: 750 9px/1 var(--sans); text-transform: uppercase; letter-spacing: .12em; }
+.tracking-strip > div:first-child span { color: var(--coral); }
+.tracking-strip b { display: block; font: 800 16px/1.2 var(--sans); }
+.tracking-strip small { display: block; margin-top: 7px; color: var(--muted); font: 10px/1.35 var(--sans); }
+.tracking-strip > div:first-child small { color: #a9bac8; }
 .weekly-head, .weekly-row { display: grid; grid-template-columns: minmax(320px,1.6fr) 120px 120px 160px; gap: 10px; align-items: center; }
 .weekly-head { padding: 10px 16px; color: #9fb0c2; background: var(--navy); font: 700 9px/1 var(--sans); text-transform: uppercase; letter-spacing: .12em; }
 .weekly-row { min-height: 60px; padding: 8px 16px; border-bottom: 1px solid var(--line); }
@@ -835,6 +846,8 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
   .leader-card { grid-template-columns: 125px 1fr; min-height: 165px; }.leader-copy h3 { font-size: 21px; }
   .driver-grid { grid-template-columns: 1fr 1fr; }.weekly-board { overflow-x: auto; }
   .validation-strip { grid-template-columns: 1fr; }
+  .tracking-strip { grid-template-columns: 1fr 1fr; }
+  .tracking-strip > div:first-child { grid-column: 1 / -1; }
   .weekly-head, .weekly-row { min-width: 720px; }.section-intro { align-items: flex-start; flex-direction: column; }
   footer { flex-direction: column; }.market-panel-head { align-items: flex-start; flex-direction: column; }
 }

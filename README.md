@@ -852,9 +852,26 @@ editor is wanted back.
 `bracket` in `playoff*.json`, week/date/venue on `schedule.json`, and talent /
 returning / pythag / SOS on `ratings*.json`.
 
-`scripts.export_site_data` adds dated sportsbook snapshots, CFBD weekly lines, the
-prior final AP poll, and roster headshot IDs without feeding any market number back
-into the trained model.
+`scripts.export_site_data` adds sportsbook context, the prior final AP poll, and roster
+headshot IDs without feeding any market number back into the trained model.
+
+**Forward market ledger (12 August 2026).** `scripts.capture_market_snapshot` now owns
+weekly prices. Every successful CFBD retrieval is timestamped in
+`data/market_snapshots/checks_2026.jsonl`; a provider quote is appended to
+`lines_2026.jsonl` only when one of its price fields changes. This distinction matters:
+CFBD supplies open/current fields but no quote timestamp, so the ledger says only when
+*we observed* a value. A price is called a qualified close only when a successful
+capture occurred within six hours before kickoff and at least two books carried valid
+two-sided moneylines. `-100000` provider sentinels are rejected as unavailable prices.
+
+The 15-point consensus-moneyline rule is pre-registered for 2026. It cannot enter the
+watchlist with one book. Even with two books, it clears the uncertainty gate only when
+the matching historical side/edge bucket's 80% Jeffreys lower win-rate bound exceeds
+the best price's break-even probability by one point. The gate is still a research
+label, never an automatic bet. `viz/data/market_tracking.json` publishes quote-event,
+entry, settlement and consensus-CLV counts. A scheduled GitHub workflow captures every
+six hours during the football calendar when the repository's `CFBD_API_KEY` secret is
+configured and republishes the site only when tracked state changes.
 
 **Betting validation (August 2026).** `scripts.betting_backtest` joins the strict
 expanding-window v4 predictions to 2,872 archived CFBD posted lines and 342 historical
@@ -864,6 +881,13 @@ DraftKings team win totals. Thresholds are selected on 2022-24 and evaluated onc
 labels current differences **model gaps**, not betting edges, and shows this result
 beside the boards. CFBD does not timestamp its snapshot as a true closing line, so the
 audit does not call it one.
+
+**Availability history is append-only.** New injuries, returns and starter changes go
+into `war_model/availability_events_2026.csv` with observation/effective times and a
+source reference. `materialize_availability.py` produces the compact current-state CSV
+used by the WAR build; `depth_correction.py` refuses to run if that generated state has
+drifted from the event stream. Corrections are new events with status `clear`, not edits
+to old evidence.
 
 **Roster eligibility precedence.** Current depth charts now own the displayed and
 modeled class year; CFBD fills only a missing label. The prior order let a stale CFBD

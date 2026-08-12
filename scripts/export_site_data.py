@@ -286,6 +286,12 @@ def normalize_market(rows, numeric=("odds", "over", "under"), floats=("line",)):
 
 
 def export_weekly_lines() -> list[dict]:
+    # Prefer the append-only tracker once it exists. It records exactly when we
+    # observed every provider price; the ordinary cache has no timestamp semantics.
+    from scripts.capture_market_snapshot import latest_weekly
+    tracked = latest_weekly()
+    if tracked:
+        return tracked
     raw = _get("/lines", {"year": PROJECTION_YEAR, "seasonType": "regular"},
                f"lines_{PROJECTION_YEAR}.json")
     rows = []
@@ -336,9 +342,16 @@ def export_headshots() -> dict[str, str]:
 
 def main() -> None:
     VIZ.mkdir(parents=True, exist_ok=True)
+    sources = json.loads(json.dumps(SOURCES))
+    tracking_path = VIZ / "market_tracking.json"
+    if tracking_path.exists():
+        tracking = json.loads(tracking_path.read_text())
+        sources["cfbd_lines"].update({
+            "as_of": tracking.get("checked_at"),
+            "timestamp_semantics": tracking.get("timestamp_semantics")})
     odds = {
         "season": PROJECTION_YEAR,
-        "sources": SOURCES,
+        "sources": sources,
         "markets": {
             "national_title": {
                 "BetMGM": normalize_market(TITLE_BETMGM),

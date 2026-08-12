@@ -12,6 +12,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy.stats import beta
 
 from config import ARTIFACTS, ROOT
 from scripts.betting_backtest import american_profit, implied
@@ -84,6 +85,35 @@ def cluster_bootstrap(d: pd.DataFrame, n=10000, seed=20260812) -> dict:
             "probability_roi_above_zero": float((roi > 0).mean())}
 
 
+def calibration_buckets(d: pd.DataFrame) -> list[dict]:
+    """Conservative realized win-rate prior for the live uncertainty gate.
+
+    The forward board never uses its raw model probability as certainty.  It looks up
+    the matching side/edge bucket and requires the 20th percentile of a Jeffreys
+    posterior to clear the selected price by another percentage point.
+    """
+    home = d.gap >= 0
+    z = d.copy()
+    z["market_side_p"] = np.where(home, z.consensus_home_p, 1-z.consensus_home_p)
+    z["model_side_p"] = np.where(home, z.model_home_p, 1-z.model_home_p)
+    z["edge"] = z.model_side_p-z.market_side_p
+    z["side_type"] = np.where(z.price > 0, "underdog", "favorite")
+    rows = []
+    for side in ("underdog", "favorite"):
+        for low, high in ((.15, .20), (.20, .25), (.25, 1.01)):
+            g = z[(z.side_type == side) & (z.edge >= low) & (z.edge < high)]
+            wins, n = int(g.won.sum()), len(g)
+            if not n:
+                continue
+            rows.append({"side_type": side, "edge_low": low, "edge_high": high,
+                "bets": n, "wins": wins, "realized_win_rate": float(g.won.mean()),
+                "mean_market_probability": float(g.market_side_p.mean()),
+                "mean_model_probability": float(g.model_side_p.mean()),
+                "posterior_lower_80": float(beta.ppf(.20, wins+.5, n-wins+.5)),
+                "posterior_lower_90": float(beta.ppf(.10, wins+.5, n-wins+.5))})
+    return rows
+
+
 def main():
     d = rows()
     bets = d[d.gap.abs() >= THRESHOLD].copy()
@@ -101,6 +131,7 @@ def main():
         "season_2025": summary(bets[bets.season == 2025]),
         "all_2022_2025": summary(bets),
         "by_season": {str(y): summary(g) for y, g in bets.groupby("season")},
+        "calibration_buckets": calibration_buckets(bets),
         "uncertainty": cluster_bootstrap(bets),
         "operating_rule": "Track in 2026; require timestamped prices and positive closing-line value before promotion to a bet label.",
     }

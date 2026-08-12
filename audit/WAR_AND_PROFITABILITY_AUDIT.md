@@ -83,24 +83,26 @@ This is mostly an underdog strategy (87.7% of bets; average price +290). It lost
 evidence, not a pristine holdout. The site calls it a **research watchlist**, defaults
 the weekly board to consensus plus best price, and requires 2026 forward validation.
 
-## Highest-value next additions
+## Forward system implemented 12 August 2026
 
-1. **Timestamped multi-book odds and closing-line value.** Store each quote with its
-   retrieval time, then judge the research signal first by whether it beats the close.
-   Historical CFBD posted lines do not provide enough timestamp detail for this test.
-2. **Availability as a versioned event stream.** Starting-quarterback changes, major
-   injuries, suspensions, and depth-chart promotions should create before/after model
-   snapshots. These are plausible sources of information the market may incorporate
-   with delay.
-3. **Predictive distributions, not point gaps.** Estimate matchup-conditional error and
-   require the price edge to survive model uncertainty and vig. This should reduce bet
-   count rather than manufacture more picks.
-4. **Forward-only segmentation.** The candidate is underdog-heavy. Pre-register the
-   15% rule for 2026; do not keep slicing conference, price, week, or team subsets until
-   an attractive backtest appears.
-5. **Track execution quality.** Record requested price, available price, filled price,
-   limits, and close. A model cannot overcome a strategy whose historical profit exists
-   only at prices that were not actually obtainable.
+1. **Timestamped multi-book odds and closing-line value:** implemented as append-only
+   quote-change and successful-check ledgers. A close requires a capture within six
+   hours before kickoff; older last-seen lines remain visible but do not count for CLV.
+2. **Availability as a versioned event stream:** implemented. The current override CSV
+   is generated and checked against immutable observed events.
+3. **Predictive uncertainty:** the 2026 rule now requires two books and uses an 80%
+   Jeffreys lower bound from historical side/edge buckets. It must exceed best-price
+   break-even by another percentage point. This reduces picks; it does not manufacture
+   confidence from the raw model gap.
+4. **Forward-only segmentation:** the 15% rule and uncertainty gate are frozen for the
+   season. Quote entries preserve the model fingerprint and initial offered price.
+5. **Execution/CLV:** entry price and consensus probability are frozen. Completed games
+   record qualified close, consensus CLV and result. Requested/filled price and limits
+   still require a real wagering execution feed and are intentionally not fabricated.
+
+The initial capture recorded 104 provider quotes across 53 games. No game qualified for
+the multi-book watchlist because only one provider yet carried valid two-sided
+moneylines. That is the desired behavior: a single book is a quote, not consensus.
 
 The practical path over the hump is therefore better market data and disciplined
 execution around the model's largest disagreements, not another broad batch of football

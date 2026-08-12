@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoff, model, odds, editorial, bettingValidation, warValidity] = await Promise.all([
+  const [teams, schedule, players, ratings, playoff, model, odds, editorial, bettingValidation, warValidity, marketTracking] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -34,6 +34,7 @@
     fetchJSON("data/editorial.json").catch(() => ({ prior_final_ap: [], headshots: {} })),
     fetchJSON("data/betting_validation.json").catch(() => ({ markets: {} })),
     fetchJSON("data/war_validity.json").catch(() => ({})),
+    fetchJSON("data/market_tracking.json").catch(() => ({})),
   ]);
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
   // two-deep; it was a knowingly worse backtest kept as an alternative view, and it is
@@ -2678,9 +2679,15 @@
     }).sort((a, b) => (a.week || 99) - (b.week || 99) || String(a.start).localeCompare(String(b.start)));
     const v = (bettingValidation.markets || {})[market];
     const shopping = ((bettingValidation.research_candidates || {}).book_shopped_moneyline || {});
+    const currentWatch = new Map((marketTracking.current_candidates || []).map(x => [String(x.game_id), x]));
+    const checked = marketTracking.checked_at ? new Date(marketTracking.checked_at) : null;
+    const qualified = (marketTracking.current_candidates || []).filter(x => x.uncertainty_cleared).length;
+    document.getElementById("market-tracking").innerHTML = marketTracking.checked_at ?
+      `<div class="tracking-strip"><div><span class="eyebrow">Forward validation ledger</span><b>${marketTracking.games_with_quotes || 0} games · ${marketTracking.quote_events || 0} quote events</b><small>Last successful retrieval ${checked.toLocaleString()} · provider prices are timestamped when we observe them</small></div><div><span>Watchlist</span><b>${(marketTracking.current_candidates || []).length}</b><small>${qualified} clear the uncertainty gate</small></div><div><span>Qualified closes</span><b>${marketTracking.qualified_clv_observations || 0}</b><small>${marketTracking.mean_consensus_clv == null ? "CLV begins after a capture within six hours of kickoff" : `${marketTracking.mean_consensus_clv >= 0 ? "+" : ""}${pct(marketTracking.mean_consensus_clv, 1)} mean consensus CLV`}</small></div><div><span>Availability history</span><b>${(marketTracking.availability || {}).events || 0} events</b><small>Append-only roster status ledger</small></div></div>` :
+      `<div class="validation-strip not-validated"><b>Forward ledger not initialized</b><small>Historical lines remain visible, but no price is treated as timestamped until a successful capture is recorded.</small></div>`;
     document.getElementById("weekly-validation").innerHTML = combined && market === "moneyline" && shopping.development_2022_2024 ? (() => {
       const d = shopping.development_2022_2024, h = shopping.season_2025 || {};
-      return `<div class="validation-strip not-validated"><b>Research watchlist · forward validation required</b><span>${d.bets} development bets · ${d.roi >= 0 ? "+" : ""}${pct(d.roi, 1)} ROI · 2025 ${h.roi >= 0 ? "+" : ""}${pct(h.roi, 1)}</span><small>15-point model-vs-consensus gap, executed at the best available moneyline. The cutoff was found during expanded analysis and its 95% interval crosses zero, so this is not a validated bet label.</small></div>`;
+      return `<div class="validation-strip not-validated"><b>Research watchlist · forward validation required</b><span>${d.bets} development bets · ${d.roi >= 0 ? "+" : ""}${pct(d.roi, 1)} ROI · 2025 ${h.roi >= 0 ? "+" : ""}${pct(h.roi, 1)}</span><small>Requires two valid books and a 15-point model-vs-consensus gap. “Gate cleared” additionally requires the historical 80% lower win-rate bound to beat the best price by 1 point. Promotion still requires positive timestamped closing-line value.</small></div>`;
     })() : v ? (() => {
       const h = v.holdout_2025 || {}, ok = !!v.validated_edge;
       return `<div class="validation-strip ${ok ? "validated" : "not-validated"}"><b>${ok ? "Historically validated" : "No repeatable historical edge"}</b><span>${h.bets || 0} holdout bets · ${h.roi == null ? "—" : (h.roi >= 0 ? "+" : "") + pct(h.roi, 1)} ROI</span><small>2022–24 set the threshold; 2025 tested it. Rows below show model gaps, not bet recommendations.</small></div>`;
@@ -2692,8 +2699,8 @@
       const marketText = g.marketValue == null ? "—" : market === "moneyline" ? americanOdds(g.marketValue) : `${g.marketValue > 0 && market !== "total" ? "+" : ""}${Number(g.marketValue).toFixed(1)}`;
       const modelText = g.modelValue == null ? "—" : market === "moneyline" ? pct(g.modelValue, 1) : `${g.modelValue > 0 && market === "spread" ? "+" : ""}${g.modelValue.toFixed(1)}`;
       const gapText = g.gap == null ? "—" : `${esc(market === "total" ? lean : abbr(lean))} ${market === "moneyline" ? pct(Math.abs(g.gap), 1) : Math.abs(g.gap).toFixed(1)}`;
-      const watch = combined && market === "moneyline" && g.gap != null && Math.abs(g.gap) >= .15;
-      return `<div class="weekly-row"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b><small>${watch ? "research watchlist" : "not a bet label"}</small></div></div>`;
+      const watch = combined && market === "moneyline" ? currentWatch.get(String(g.id)) : null;
+      return `<div class="weekly-row"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b><small>${watch ? (watch.uncertainty_cleared ? "research gate cleared" : "research watchlist") : "not a bet label"}</small></div></div>`;
     }).join("")}</div>`;
   }
 

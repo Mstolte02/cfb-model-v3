@@ -76,6 +76,80 @@
       "underdog_share": 0.907563025210084
     }
   },
+  "calibration_buckets": [
+    {
+      "side_type": "underdog",
+      "edge_low": 0.15,
+      "edge_high": 0.2,
+      "bets": 220,
+      "wins": 64,
+      "realized_win_rate": 0.2909090909090909,
+      "mean_market_probability": 0.27347095158251317,
+      "mean_model_probability": 0.4455791013233178,
+      "posterior_lower_80": 0.26594446419273443,
+      "posterior_lower_90": 0.2531210597990868
+    },
+    {
+      "side_type": "underdog",
+      "edge_low": 0.2,
+      "edge_high": 0.25,
+      "bets": 120,
+      "wins": 40,
+      "realized_win_rate": 0.3333333333333333,
+      "mean_market_probability": 0.2801489041770191,
+      "mean_model_probability": 0.5011876664165555,
+      "posterior_lower_80": 0.2983475937178055,
+      "posterior_lower_90": 0.28043222184251276
+    },
+    {
+      "side_type": "underdog",
+      "edge_low": 0.25,
+      "edge_high": 1.01,
+      "bets": 108,
+      "wins": 33,
+      "realized_win_rate": 0.3055555555555556,
+      "mean_market_probability": 0.27568168031643164,
+      "mean_model_probability": 0.5716010162392142,
+      "posterior_lower_80": 0.26982342915922186,
+      "posterior_lower_90": 0.25160866606024773
+    },
+    {
+      "side_type": "favorite",
+      "edge_low": 0.15,
+      "edge_high": 0.2,
+      "bets": 38,
+      "wins": 22,
+      "realized_win_rate": 0.5789473684210527,
+      "mean_market_probability": 0.5873029774243181,
+      "mean_model_probability": 0.7584555318892715,
+      "posterior_lower_80": 0.5106212685026761,
+      "posterior_lower_90": 0.47512891224618015
+    },
+    {
+      "side_type": "favorite",
+      "edge_low": 0.2,
+      "edge_high": 0.25,
+      "bets": 17,
+      "wins": 10,
+      "realized_win_rate": 0.5882352941176471,
+      "mean_market_probability": 0.5685700443465977,
+      "mean_model_probability": 0.7881541393473438,
+      "posterior_lower_80": 0.4861116827088584,
+      "posterior_lower_90": 0.43381964941502005
+    },
+    {
+      "side_type": "favorite",
+      "edge_low": 0.25,
+      "edge_high": 1.01,
+      "bets": 8,
+      "wins": 2,
+      "realized_win_rate": 0.25,
+      "mean_market_probability": 0.5359706689269583,
+      "mean_model_probability": 0.8076648506425611,
+      "posterior_lower_80": 0.14994963281832446,
+      "posterior_lower_90": 0.10562416427691877
+    }
+  ],
   "uncertainty": {
     "cluster": "season-week",
     "draws": 10000,

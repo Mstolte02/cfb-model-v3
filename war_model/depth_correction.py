@@ -112,6 +112,16 @@ def apply_availability(d, path=AVAILABILITY):
     notes = []
     if not os.path.exists(path):
         return d, notes
+    if os.path.abspath(path) == os.path.abspath(AVAILABILITY):
+        events = f"{HERE}/availability_events_2026.csv"
+        if os.path.exists(events):
+            from materialize_availability import current_rows  # noqa: E402
+            expected = pd.DataFrame(current_rows(events)).sort_values(
+                ["team", "player"]).reset_index(drop=True)
+            actual = pd.read_csv(path).sort_values(["team", "player"]).reset_index(drop=True)
+            if list(actual.columns) != list(expected.columns) or not actual.equals(expected):
+                raise ValueError("availability_2026.csv has drifted from the append-only "
+                                 "event stream; run materialize_availability.py")
     ov = pd.read_csv(path)
     d = d.copy()
     if "pinned_starter" not in d.columns:
