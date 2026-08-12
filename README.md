@@ -25,6 +25,11 @@ predeclared 0.001 adoption bar in consecutive selection windows (+0.00213 and
 Rest/load context worsened the online replay; travel improved just 0.00010 and was
 directionally inconsistent, so none of those features ship. Full results are in
 [`audit/CONTEXT_AND_PLAYER_PROJECTION_EXPERIMENTS.md`](audit/CONTEXT_AND_PLAYER_PROJECTION_EXPERIMENTS.md).
+That audit now also tests quantitative fragility, reversibility, and structural
+weighting both as post-hoc corrections and inside the initial reciprocal fit. Only
+the jointly fitted rolling reversibility family clears the research bar; it remains a
+candidate pending a dedicated live game-context path rather than being forced into
+the season-fixed power-rating frame.
 
 | Strict expanding replay, 2022–25 | Games | Brier | Log loss | Accuracy |
 |---|---:|---:|---:|---:|
@@ -53,6 +58,10 @@ python -m scripts.train_v4
 
 # Re-run the strict historical replay and same-game Elo benchmark
 python -m scripts.v4_backtest
+
+# Re-run the Four-Pass proxy overlay and joint initial-fit experiments
+python -m scripts.four_pass_backtest
+python -m scripts.four_pass_initial_backtest
 
 # Apply newly completed games once, then publish current ratings
 python -m scripts.update_v4

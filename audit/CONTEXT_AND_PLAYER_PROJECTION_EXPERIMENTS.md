@@ -5,7 +5,9 @@ Date: 2026-08-12
 ## Decision
 
 Ship the all-roster projected-WAR team prior. Do not ship rest, travel, schedule-load,
-realized weather, or qualitative Four-Pass overrides.
+realized weather, or qualitative Four-Pass overrides. A quantitative rolling
+reversibility family earns continued development as a jointly fitted initial-model
+candidate; it is not interchangeable with a post-hoc override.
 
 The player feature cleared the repository's frozen 0.001 Brier adoption threshold in
 two consecutive expanding selection windows. Context did not. Plausible football
@@ -23,9 +25,67 @@ defined candidate questions, not a numerical component.
 - Pass 1 became the schedule-context experiment below.
 - Pass 2 maps to v4's already-tested granular offense/defense mismatch candidates;
   those still fail the 0.001 adoption threshold.
-- Passes 3 and 4 require timestamped injury/depth, coaching tendency, and scheme data
-  absent from this repository. Encoding them as analyst flags would make the backtest
-  irreproducible, so they remain hypotheses.
+- The article's versions of Passes 3 and 4 require timestamped injury/depth, coaching
+  tendency, and scheme data absent from this repository. Encoding them as analyst
+  flags would make the backtest irreproducible. The experiment below instead defines
+  reproducible scoreboard-based versions that are the model's own indices, not a
+  reconstruction of an unpublished Russo formula.
+
+## Fragility, reversibility, and structural weighting
+
+Two distinct entry points were tested on the same 2,189 games from 2023-25. The
+overlay test fits a penalized correction after the locked weekly v4 probability. The
+initial test jointly estimates the core team and context coefficients inside the
+reciprocal logistic/margin model. For every outer season N, all fitting and numeric
+tuning use seasons before N only.
+
+The rolling last-12-game measurements are frozen before kickoff. Fragility uses
+giveback after halftime leads, lead-loss rate, second-half decline, and final-margin
+volatility. Reversibility uses gain after halftime deficits, comeback-win rate, and
+second-half gain. Four pseudo-opportunities shrink small samples. Structural evidence
+uses five existing v4 offense-versus-defense matchup edges, their breadth and
+nonlinearity, and antisymmetric interactions with the clean-core strength difference.
+All features negate when the teams are swapped.
+
+Post-hoc overlay results (negative is better):
+
+| Candidate | Brier change | Margin MAE change | Margin RMSE change |
+|---|---:|---:|---:|
+| Fragility components | +0.00085 | -0.041 | -0.083 |
+| Reversibility components | +0.00017 | -0.038 | -0.046 |
+| Compact fragility/reversibility indices | +0.00031 | -0.046 | -0.060 |
+| Structural edges | +0.00024 | -0.026 | +0.009 |
+| Structural context weighting | +0.00036 | -0.122 | -0.162 |
+| All Four-Pass proxies | +0.00072 | -0.294 | -0.287 |
+
+The overlay can improve margins while worsening probability calibration. It is not a
+probability-model candidate.
+
+Joint initial-fit results against the same core-only architecture (negative is
+better):
+
+| Candidate | Tuned Brier change | Same-knobs Brier change | Margin MAE change | Decision |
+|---|---:|---:|---:|---|
+| Fragility components | -0.00074 | +0.00027 | +0.055 | reject: below bar and control regresses |
+| **Reversibility components** | **-0.00155** | **-0.00101** | **-0.021** | promote as candidate |
+| Compact fragility/reversibility indices | -0.00030 | +0.00034 | +0.028 | reject |
+| Structural initial weighting | +0.00001 | +0.00007 | +0.033 | reject |
+| All Four-Pass proxies | +0.00080 | +0.00039 | +0.070 | reject |
+
+The tuned reversibility changes are -0.00250, -0.00013, and -0.00205 in 2023, 2024,
+and 2025: improvement in all three outer folds. Its paired season-week bootstrap
+interval for `Brier(joint)-Brier(core)` is [-0.00272, -0.00039], with 99.6% of draws
+favoring the joint model. The identical-knobs control clears the pooled 0.001 bar but
+is less stable (-0.00292, +0.00175, -0.00190 by season), and its interval includes
+zero. The comeback-win coefficient is positive in every outer fold; component
+direction is not being rescued by one anomalous season.
+
+This promotes only the granular reversibility family, not the compact index and not
+the full framework. Production v4 remains unchanged in this commit because rolling
+pregame features need a guarded game-context path; forcing them into the season-fixed
+team frame would silently change power-rating semantics. The reproducible research
+paths are `python -m scripts.four_pass_backtest` and
+`python -m scripts.four_pass_initial_backtest`.
 
 ## Rest, travel, and load
 
