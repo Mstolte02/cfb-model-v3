@@ -259,7 +259,7 @@ def export_schedule():
 
 
 def export_players():
-    """viz/data/players.json: each team's 2026 two-deep with projected WAR.
+    """2026 two-deep: intrinsic value plus role-adjusted contribution.
 
     This is the roster side of the team page - who the model thinks is producing the
     wins. It comes straight from the WAR build's 2026 projection, the same numbers
@@ -366,7 +366,20 @@ def export_players():
                 "rs": bool(getattr(r, "redshirt", False)),
                 "tr": bool(getattr(r, "is_transfer", False)),
                 "w": round(float(r.wins_added), 3),
+                # `q` is the player forecast before the current depth-chart overlay;
+                # `raw` remains expected contribution and is what team sums/scenarios
+                # must use. Keeping both prevents "best player" from becoming "player
+                # whom one July chart happens to list first".
+                "q": round(float(getattr(r, "intrinsic_war", r.proj_war)), 3),
                 "raw": round(float(r.proj_war), 3),
+                "opp": clean(getattr(r, "expected_snap_share", None),
+                             lambda x: round(float(x), 3)),
+                "oppLo": clean(getattr(r, "snap_share_low", None),
+                               lambda x: round(float(x), 3)),
+                "oppHi": clean(getattr(r, "snap_share_high", None),
+                               lambda x: round(float(x), 3)),
+                "roleConf": clean(getattr(r, "role_confidence", None),
+                                  lambda x: round(float(x), 3)),
                 "s": clean(r.stars, int),
                 "i": bool(r.imputed),
                 "sn": clean(r.snaps_2025, int),

@@ -101,7 +101,7 @@
 
   <section id="view-leaders" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">The roster atlas</span><h2>Top 10, every way you want it.</h2>
-      <p class="sub">Player and team-room leaderboards powered by projected WAR, with sortable tables one tab away.</p></div>
+      <p class="sub">Player leaderboards use intrinsic WAR; team rooms use role-adjusted contribution, with sortable tables one tab away.</p></div>
     <div id="war-validation"></div>
     <div class="leader-controls">
       <div class="seg" id="leader-kind"><button class="seg-btn active" data-kind="players">Players</button><button class="seg-btn" data-kind="teams">Team rooms</button></div>
@@ -114,7 +114,7 @@
 
   <section id="view-matchup" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">Weekly matchup lab</span><h2>Simulate the game. Understand the edge.</h2>
-      <p class="sub">Head-to-head win probability, score, spread and total plus the model’s matchup-specific advantages. Compare available DraftKings and Bovada lines.</p></div>
+      <p class="sub">Head-to-head win probability, score, spread and total plus the model’s matchup-specific advantages. Compare individual books or use consensus probability with the best available price.</p></div>
     <div class="matchup-controls">
       <div class="picker" id="pickerA"></div>
       <div class="venue"><div class="venue-label">VENUE</div><div class="venue-opts">
@@ -150,12 +150,12 @@
   </section>
 
   <section id="view-players" class="view">
-    <div class="view-head"><span class="eyebrow">Player database</span><h2>Every projected two-deep</h2><p class="sub">Sortable and filterable across teams, conferences and positions. Edit projected WAR and the power ratings and matchup simulator respond.</p></div>
+    <div class="view-head"><span class="eyebrow">Player database</span><h2>Every projected two-deep</h2><p class="sub">Value WAR ranks the player independent of a disputed depth-chart label. Expected WAR and role range show likely 2026 contribution; edit expected WAR and the power ratings and matchup simulator respond.</p></div>
     <div class="dash-toolbar"><input type="search" id="pl-search" placeholder="Search players or teams…"><select id="pl-conf"><option value="">All conferences</option></select><select id="pl-group"><option value="">All positions</option></select><select id="pl-class"><option value="">All classes</option><option value="FR">Freshmen</option><option value="SO">Sophomores</option><option value="JR">Juniors</option><option value="SR">Seniors</option><option value="GR">Graduates</option></select><select id="pl-tr"><option value="">Everyone</option><option value="tr">Transfers only</option></select><span class="spacer"></span><button id="pl-reset" class="wi-btn">Reset edits</button><span id="pl-count" class="dash-count"></span></div><div id="pl-table"></div>
   </section>
 </main>
 
 <footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Model probabilities are estimates. Sportsbook prices are dated snapshots, not live quotes. Gamble responsibly.</span></footer>
-<script src="app.js?v=28"></script>
+<script src="app.js?v=29"></script>
 </body>
 </html>

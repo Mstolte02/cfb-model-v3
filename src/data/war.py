@@ -169,7 +169,7 @@ def talent_by_year(index_by_year: dict[int, pd.Index],
 
 
 def player_contributions(year: int = 2026) -> pd.DataFrame | None:
-    """Per-player projected WAR, for the team breakdown view."""
+    """Per-player intrinsic value and role-adjusted contribution."""
     if not PROJECTIONS.exists():
         return None
     p = pd.read_csv(PROJECTIONS)
@@ -187,6 +187,8 @@ def player_contributions(year: int = 2026) -> pd.DataFrame | None:
     cols = ["team", "player", "broad_group", "roster_position", "depth", "class",
             "class_source",
             "redshirt", "is_starter", "available", "is_transfer", "proj_war",
+            "intrinsic_war", "expected_snap_share", "snap_share_low",
+            "snap_share_high", "role_confidence", "chart_agreement",
             "imputed", "stars", "snaps_2025", "war_2025"]
     return p[[c for c in cols if c in p.columns]].copy()
 

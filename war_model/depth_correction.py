@@ -32,8 +32,13 @@ TWO FAULTS, both about playing time, both measured rather than asserted.
    committee is a real thing rather than an injury artefact. Interior defensive line
    stays high for the same reason: that room genuinely rotates.
 
-   The room TOTAL is held fixed and the share moved from backups to starters, because
-   the snaps do not disappear when nobody is hurt - the starter takes them.
+   The room TOTAL is held fixed.  The old implementation forced every room all the
+   way to this league-average split.  That made a binary July depth chart overpower
+   the player model: a strong listed backup could fall from first to fifty-first at
+   his position while the starter inherited his value.  The current implementation
+   treats the chart as one noisy role prior, blends it with prior usage and intrinsic
+   player value, and publishes an opportunity range instead of pretending the listed
+   1/2 is certain.
 
 Run: ../venv/bin/python depth_correction.py [--in FILE] [--out FILE]
 """
@@ -47,7 +52,7 @@ import numpy as np
 import pandas as pd
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-from build_roster_2026 import PFF_TO_GROUP  # noqa: E402
+from build_roster_2026 import PFF_TO_GROUP, norm_name  # noqa: E402
 
 # how many of each group are on the field at once - from the two-deep's own slot counts.
 # The five linemen are two tackles and three interior.
@@ -277,47 +282,99 @@ def _backup_share(d, group, rooms):
     return float(g[~g.is_starter].proj_war.sum() / tot) if tot else 0.0
 
 
+def _chart_agreement(d):
+    """Agreement between the two current depth-chart sources, by player.
+
+    Missing from either source is deliberately not agreement.  The value is only a
+    confidence input; it never decides who starts by itself.
+    """
+    maps = []
+    for name in ("twodeep_2026.csv", "ourlads_2026.csv"):
+        path = f"{HERE}/{name}"
+        if not os.path.exists(path):
+            continue
+        c = pd.read_csv(path)
+        c["key"] = c.player.map(norm_name)
+        maps.append(c.drop_duplicates(["team", "key"]).set_index(["team", "key"]).depth)
+    if len(maps) < 2:
+        return pd.Series(np.nan, index=d.index)
+    a, b = maps[:2]
+    keys = pd.MultiIndex.from_arrays([d.team, d.player.map(norm_name)])
+    av = a.reindex(keys).to_numpy()
+    bv = b.reindex(keys).to_numpy()
+    present = pd.notna(av) & pd.notna(bv)
+    return pd.Series(np.where(present, av == bv, np.nan), index=d.index, dtype=float)
+
+
 def reweight(d, target):
-    """Move share from backups to starters until the backup share matches the
-    no-injury target, holding each room's total fixed.
+    """Softly allocate room value to expected 2026 roles.
 
-    THIS STEP GOT MORE IMPORTANT, NOT LESS, WHEN THE PROJECTION STOPPED LEAKING.
-    The expectation was the opposite - that a projection which no longer over-trusts
-    a listed starter would need no correction - and the direction is worth writing
-    down, because it is the reverse.
-
-    is_starter used to be an input feature carrying the value of a REALISED workhorse
-    (see project_2026_v2), so listed starters came out inflated and backups came out
-    small. Removing it leaves the model distinguishing a starter from a backup only
-    by last season's snaps, which for two true freshmen in the same room is no
-    distinction at all - so the raw backup share rose to 29-41% by group against
-    historical no-injury shares of 5-36%.
-
-    That is the honest position. The depth structure now enters ONCE, explicitly,
-    through a target measured off completed seasons, instead of implicitly through a
-    feature that knew the answer.
+    ``intrinsic_war`` is the player's schedule-neutral quality estimate and is never
+    changed by the depth chart. ``proj_war`` is expected contribution after role.  A
+    room's total is invariant, but the chart receives only 25-55% weight depending on
+    source agreement and competition.  That avoids double-counting role already
+    present in prior snaps and stops a disputed July ``2`` from erasing player quality.
     """
     d = d.copy()
-    d["proj_war_raw"] = d.proj_war
-    for (t, g), unit in d.groupby(["team", "broad_group"]):
+    d["intrinsic_war"] = d.proj_war.clip(lower=0.0)
+    d["proj_war"] = d.intrinsic_war
+    d["chart_agreement"] = _chart_agreement(d)
+    d["role_confidence"] = 0.35
+    d["expected_snap_share"] = 0.0
+    d["snap_share_low"] = 0.0
+    d["snap_share_high"] = 0.0
+
+    for (_, g), unit in d.groupby(["team", "broad_group"]):
         tgt = target.get(g)
-        if tgt is None:
+        st, bk = unit[unit.is_starter & unit.available], unit[~unit.is_starter & unit.available]
+        tot = float(unit.intrinsic_war.sum())
+        if tgt is None or tot <= 0 or st.empty or bk.empty:
+            n_on = float(STARTERS.get(g, 1))
+            share = unit.intrinsic_war / tot if tot > 0 else pd.Series(0.0, index=unit.index)
+            rate = (share * n_on).clip(0.0, 1.0)
+            d.loc[unit.index, "expected_snap_share"] = rate
+            d.loc[unit.index, "snap_share_low"] = (rate - .20).clip(0.0, 1.0)
+            d.loc[unit.index, "snap_share_high"] = (rate + .20).clip(0.0, 1.0)
             continue
-        st, bk = unit[unit.is_starter], unit[~unit.is_starter]
-        tot = unit.proj_war.sum()
-        if tot <= 0 or st.empty or bk.empty:
-            continue
-        cur_bk = bk.proj_war.sum()
-        if cur_bk <= 0:
-            continue
-        want_bk = tot * tgt
-        # only ever pull backups DOWN - the point is to stop paying for injuries
-        if want_bk >= cur_bk:
-            continue
-        d.loc[bk.index, "proj_war"] = bk.proj_war * (want_bk / cur_bk)
-        st_tot = st.proj_war.sum()
-        if st_tot > 0:
-            d.loc[st.index, "proj_war"] = st.proj_war * ((tot - want_bk) / st_tot)
+
+        agree = float(unit.chart_agreement.mean()) if unit.chart_agreement.notna().any() else 0.0
+        weakest_starter = max(float(st.intrinsic_war.min()), 1e-9)
+        competition = min(float(bk.intrinsic_war.max()) / weakest_starter, 1.5) / 1.5
+        confidence = float(np.clip(.35 + .45 * agree - .25 * competition, .20, .85))
+        chart_weight = .25 + .35 * confidence
+
+        # The chart template says how the healthy historical room split is shared
+        # between tiers.  Prior snaps choose players *within* a tier; intrinsic value
+        # is the fallback for newcomers and zero-snap rooms.
+        prior = unit.snaps_2025.fillna(0.0).clip(lower=0.0)
+        base = prior if prior.sum() > 0 else unit.intrinsic_war
+        template = pd.Series(0.0, index=unit.index)
+        for tier, tier_share in ((st, 1.0 - float(tgt)), (bk, float(tgt))):
+            weights = base.loc[tier.index]
+            if weights.sum() <= 0:
+                weights = unit.loc[tier.index, "intrinsic_war"]
+            if weights.sum() <= 0:
+                weights = pd.Series(1.0, index=tier.index)
+            template.loc[tier.index] = tier_share * weights / weights.sum()
+
+        intrinsic_share = unit.intrinsic_war / tot
+        contribution_share = (1.0 - chart_weight) * intrinsic_share + chart_weight * template
+        d.loc[unit.index, "proj_war"] = tot * contribution_share
+
+        usage = prior / prior.sum() if prior.sum() > 0 else intrinsic_share
+        opportunity = (1.0 - chart_weight) * usage + chart_weight * template
+        rate = (opportunity * float(STARTERS.get(g, 1))).clip(0.0, 1.0)
+        width = .06 + .22 * (1.0 - confidence)
+        d.loc[unit.index, "role_confidence"] = confidence
+        d.loc[unit.index, "expected_snap_share"] = rate
+        d.loc[unit.index, "snap_share_low"] = (rate - width).clip(0.0, 1.0)
+        d.loc[unit.index, "snap_share_high"] = (rate + width).clip(0.0, 1.0)
+
+        assert abs(float(d.loc[unit.index, "proj_war"].sum()) - tot) < 1e-8
+
+    # Backward-compatible name for analysis notebooks.  It now unambiguously means
+    # quality before role rather than "whatever existed before the hard reweight".
+    d["proj_war_raw"] = d.intrinsic_war
     return d
 
 
@@ -416,7 +473,7 @@ def main():
                         "after": after * 100, "target": target * 100}).round(1)
     print("\n" + cmp.to_string())
 
-    print(f"\nleague total WAR: {d.proj_war_raw.sum():.1f} -> {d.proj_war.sum():.1f} "
+    print(f"\nleague total WAR: {d.intrinsic_war.sum():.1f} -> {d.proj_war.sum():.1f} "
           f"(room totals are held fixed)")
 
     if args.no_ea:
@@ -438,7 +495,7 @@ def main():
     named_rooms = {t for _, t in sheet}
     qb_before = d[d.broad_group == "QB"].proj_war.sum()
     bk_before = _backup_share(d, "QB", named_rooms)
-    d_pre = d
+    d_pre = d.copy()
     d, n_qb, n_named = apply_qb_map(d)
     qb_after = d[d.broad_group == "QB"].proj_war.sum()
 
@@ -467,6 +524,15 @@ def main():
           f"(invariant under a permutation, as expected)")
     print(f"  per-room mean |share - {tgt*100:.2f}% target|: {mad_b*100:.2f}pp -> "
           f"{mad_a*100:.2f}pp  (this is what running the map last costs)")
+
+    # The QB opinion is a player-quality input too.  Apply the same within-group
+    # permutation to the intrinsic column independently, so QB rankings do not fall
+    # back to the pre-sheet ordering while team contribution keeps the role allocation.
+    q = d.copy()
+    q["proj_war"] = q.intrinsic_war
+    q, _, _ = apply_qb_map(q, verbose=False)
+    d["intrinsic_war"] = q.proj_war
+    d["proj_war_raw"] = d.intrinsic_war
 
     d.to_csv(args.out, index=False)
     print(f"-> {args.out}")

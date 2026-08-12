@@ -20,6 +20,192 @@
     "no_prior_snap_correlation": 0.216,
     "ex_ante_only": true
   },
+  "intrinsic_vs_role_holdout_2025": {
+    "contract": "2025 holdout; trained on player seasons through 2024; all 2025 roster members included",
+    "intrinsic_definition": "preseason expected player WAR before a current depth-chart overlay",
+    "role_proxy": "prior-season room rank and snap share; exact archived preseason depth charts unavailable",
+    "all_roster_players": {
+      "intrinsic": {
+        "players": 12073,
+        "pearson_r": 0.5916950834050915,
+        "spearman_r": 0.4103302412915278,
+        "mae_wins": 0.04113128977185968,
+        "calibration_slope": 0.9961156235384754,
+        "calibration_intercept": 0.004607689722973975,
+        "top_decile_precision": 0.4519867549668874,
+        "top_decile_lift": 4.519867549668874
+      },
+      "soft_role_overlay": {
+        "players": 12073,
+        "pearson_r": 0.5824709350469304,
+        "spearman_r": 0.4039496309785264,
+        "mae_wins": 0.040952835758423047,
+        "calibration_slope": 0.8751962179237351,
+        "calibration_intercept": 0.008570382544041036,
+        "top_decile_precision": 0.4478476821192053,
+        "top_decile_lift": 4.478476821192053
+      },
+      "hard_role_overlay": {
+        "players": 12073,
+        "pearson_r": 0.5424502867746963,
+        "spearman_r": 0.35268260618707803,
+        "mae_wins": 0.04260992665400912,
+        "calibration_slope": 0.6941944502454617,
+        "calibration_intercept": 0.01452872021569019,
+        "top_decile_precision": 0.40728476821192056,
+        "top_decile_lift": 4.072847682119205
+      }
+    },
+    "players_with_2025_snaps": {
+      "intrinsic": {
+        "players": 6149,
+        "pearson_r": 0.5822643364014397,
+        "spearman_r": 0.42979606089457867,
+        "mae_wins": 0.06675985494274293,
+        "calibration_slope": 1.0130679835973795,
+        "calibration_intercept": 0.022101549682825,
+        "top_decile_precision": 0.4276422764227642,
+        "top_decile_lift": 4.276422764227641
+      },
+      "soft_role_overlay": {
+        "players": 6149,
+        "pearson_r": 0.5798029383249077,
+        "spearman_r": 0.41655237160457353,
+        "mae_wins": 0.06753143223204457,
+        "calibration_slope": 0.9049347796975904,
+        "calibration_intercept": 0.02655676473249083,
+        "top_decile_precision": 0.4113821138211382,
+        "top_decile_lift": 4.113821138211382
+      },
+      "hard_role_overlay": {
+        "players": 6149,
+        "pearson_r": 0.5472572445680284,
+        "spearman_r": 0.36091567189609636,
+        "mae_wins": 0.07189176113226414,
+        "calibration_slope": 0.7333889517338344,
+        "calibration_intercept": 0.034623774640081914,
+        "top_decile_precision": 0.3934959349593496,
+        "top_decile_lift": 3.9349593495934956
+      }
+    },
+    "by_position_intrinsic": {
+      "CB": {
+        "players": 2092,
+        "pearson_r": 0.3811803970919922,
+        "spearman_r": 0.31825078224954595,
+        "mae_wins": 0.03015115798920471,
+        "calibration_slope": 0.828915093021367,
+        "calibration_intercept": 0.003405199842367413,
+        "top_decile_precision": 0.35714285714285715,
+        "top_decile_lift": 3.571428571428571
+      },
+      "DT": {
+        "players": 1934,
+        "pearson_r": 0.42786915257482383,
+        "spearman_r": 0.35683943702203397,
+        "mae_wins": 0.03953558954644958,
+        "calibration_slope": 0.885583986540012,
+        "calibration_intercept": 0.006711398220415403,
+        "top_decile_precision": 0.3917525773195876,
+        "top_decile_lift": 3.917525773195876
+      },
+      "EDGE": {
+        "players": 507,
+        "pearson_r": 0.5808158171314668,
+        "spearman_r": 0.5172685890376726,
+        "mae_wins": 0.03582534991246487,
+        "calibration_slope": 0.9710603815423656,
+        "calibration_intercept": 0.006447172805744542,
+        "top_decile_precision": 0.45098039215686275,
+        "top_decile_lift": 4.509803921568627
+      },
+      "IOL": {
+        "players": 40,
+        "pearson_r": 0.6362629222012844,
+        "spearman_r": 0.5027470921762108,
+        "mae_wins": 0.02274461607094887,
+        "calibration_slope": 0.8156127549641022,
+        "calibration_intercept": -0.0035075144379849133,
+        "top_decile_precision": 0.75,
+        "top_decile_lift": 7.5
+      },
+      "LB": {
+        "players": 1814,
+        "pearson_r": 0.5160892521328947,
+        "spearman_r": 0.3856492002986495,
+        "mae_wins": 0.035102135834151824,
+        "calibration_slope": 0.9382346098295553,
+        "calibration_intercept": 0.005100970541649987,
+        "top_decile_precision": 0.42857142857142855,
+        "top_decile_lift": 4.285714285714286
+      },
+      "OT": {
+        "players": 41,
+        "pearson_r": 0.6316723640166484,
+        "spearman_r": 0.2666855091921305,
+        "mae_wins": 0.030880815367950898,
+        "calibration_slope": 1.057705383118127,
+        "calibration_intercept": -0.005152806248639535,
+        "top_decile_precision": 0.4,
+        "top_decile_lift": 4.0
+      },
+      "QB": {
+        "players": 740,
+        "pearson_r": 0.6422454533486501,
+        "spearman_r": 0.5504611558491916,
+        "mae_wins": 0.11613932582165856,
+        "calibration_slope": 1.0217394909587076,
+        "calibration_intercept": 0.017529210641874904,
+        "top_decile_precision": 0.581081081081081,
+        "top_decile_lift": 5.81081081081081
+      },
+      "RB": {
+        "players": 1054,
+        "pearson_r": 0.44793881899869187,
+        "spearman_r": 0.48573128027602935,
+        "mae_wins": 0.05793412515890281,
+        "calibration_slope": 0.7574840670230676,
+        "calibration_intercept": 0.021415939207086888,
+        "top_decile_precision": 0.33962264150943394,
+        "top_decile_lift": 3.3962264150943393
+      },
+      "SAF": {
+        "players": 814,
+        "pearson_r": 0.48781582520411043,
+        "spearman_r": 0.411253011586614,
+        "mae_wins": 0.022589268030371763,
+        "calibration_slope": 0.7967384194355357,
+        "calibration_intercept": 0.0029993325072540486,
+        "top_decile_precision": 0.3780487804878049,
+        "top_decile_lift": 3.7804878048780486
+      },
+      "TE": {
+        "players": 977,
+        "pearson_r": 0.6327416349023446,
+        "spearman_r": 0.4962034441196566,
+        "mae_wins": 0.043099980110072,
+        "calibration_slope": 1.1159384136386454,
+        "calibration_intercept": 0.002518344063744068,
+        "top_decile_precision": 0.5204081632653061,
+        "top_decile_lift": 5.204081632653061
+      },
+      "WR": {
+        "players": 2060,
+        "pearson_r": 0.5100424971068869,
+        "spearman_r": 0.3895071688326543,
+        "mae_wins": 0.031807461198030726,
+        "calibration_slope": 0.9873220145327267,
+        "calibration_intercept": 0.0038827803178255083,
+        "top_decile_precision": 0.5048543689320388,
+        "top_decile_lift": 5.048543689320388
+      }
+    },
+    "limitations": [
+      "Player WAR is realized seasonal contribution, not a per-snap scouting grade.",
+      "The role overlay test cannot validate individual 2026 depth-chart disagreements.",
+      "Correlation measures ordering; calibration and top-decile precision measure scale and useful ranking separately."
+    ]
+  },
   "team_model_ablation": [
     {
       "season": 2023,
@@ -39,13 +225,14 @@
   ],
   "independent_ea_convergent_validity": {
     "matched_players": 3475,
-    "war_ea_correlation": 0.5453262773667623,
-    "partial_after_playing_time": 0.3692897481589168,
+    "war_ea_correlation": 0.545326277366762,
+    "partial_after_playing_time": 0.3692897481589167,
     "note": "EA is an independent opinion, not ground truth."
   },
   "limitations": [
     "The no-prior-snap individual projection is weak (r=.216).",
     "EA's low-snap ordering is not historically player-level validated.",
-    "WAR is a projection component, not a literal causal value for a roster move."
+    "WAR is a projection component, not a literal causal value for a roster move.",
+    "Exact 2026 role ranges cannot be backtested without archived preseason depth charts."
   ]
 }

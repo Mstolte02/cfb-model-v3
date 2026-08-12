@@ -289,6 +289,10 @@ def main():
             "total": validate(weekly, "total", [0, 1, 1.5, 2, 2.5, 3, 4, 5, 6]),
             "win_total": validate(futures, "win_total", [0, .5, 1, 1.5, 2], futures=True),
         }}
+    shopping = ROOT / "audit" / "book_shopping_backtest.json"
+    if shopping.exists():
+        result["research_candidates"] = {
+            "book_shopped_moneyline": json.loads(shopping.read_text())}
     OUT_JSON.write_text(json.dumps(result, indent=2))
     SITE_JSON.write_text(json.dumps(result, separators=(",", ":"), allow_nan=False))
     print(json.dumps(result, indent=2))

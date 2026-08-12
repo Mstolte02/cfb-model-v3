@@ -2037,6 +2037,7 @@
   })();
 
   const plWar = r => { const e = WI.get(r.t, r.n); return e != null ? e : (r.raw || 0); };
+  const plQuality = r => r.q != null ? r.q : (r.raw || 0);
   const plKey = r => r.t + "\u0000" + r.n;
 
   /* Depth, 2025 snaps and 2025 WAR are gone from this table. They are inputs to the
@@ -2049,18 +2050,17 @@
      Both ranks are over EVERY projected slot, not the filtered view, and they are
      recomputed whenever an edit lands - a scenario that makes a backup the best
      quarterback in the country has to say so. */
-  let plRankCache = null, plRankVer = -1;
+  let plRankCache = null;
   function plRanks() {
-    if (plRankVer === WI.version() && plRankCache) return plRankCache;
+    if (plRankCache) return plRankCache;
     const overall = new Map(), pos = new Map(), groupN = {};
-    ALL_PLAYERS.slice().sort((a, b) => plWar(b) - plWar(a)).forEach((r, i) => {
+    ALL_PLAYERS.slice().sort((a, b) => plQuality(b) - plQuality(a)).forEach((r, i) => {
       overall.set(plKey(r), i + 1);
       const g = r.g || "—";
       groupN[g] = (groupN[g] || 0) + 1;
       pos.set(plKey(r), groupN[g]);
     });
     plRankCache = { overall, pos, groupN };
-    plRankVer = WI.version();
     return plRankCache;
   }
 
@@ -2077,7 +2077,9 @@
     { k: "p",    h: "Pos",      v: r => r.p || r.g },
     { k: "c",    h: "Class",    v: r => classLabel(r) },
     { k: "prk",  h: "Pos rank", n: true, v: r => plRanks().pos.get(plKey(r)) },
-    { k: "war",  h: "Proj WAR", n: true, v: r => plWar(r) },
+    { k: "q",    h: "Value WAR", n: true, v: r => plQuality(r) },
+    { k: "role", h: "Role range", v: r => r.opp || 0 },
+    { k: "war",  h: "Expected WAR", n: true, v: r => plWar(r) },
   ];
   // Ranks sort smallest-first; every other numeric column sorts largest-first.
   const PL_ASC = new Set(["n", "t", "conf", "c", "rk", "prk"]);
@@ -2086,7 +2088,7 @@
   // that this table did not apply. That rescale is gone (it was covering an attenuated
   // slope in build_hybrid, now fixed at source), so both surfaces show the same number
   // and there is nothing left to reconcile.
-  let plSort = "war", plDesc = true;
+  let plSort = "q", plDesc = true;
   const PL_LIMIT = 300;
 
   function plFilled() {
@@ -2148,9 +2150,12 @@
           ? ` <span class="tag tr" title="Transferred in for 2026">TR</span>` : ""}</td>
         <td class="num pl-prk">${RK.pos.get(plKey(r))}<span class="pl-of">of ${
           (RK.groupN[grp] || 0).toLocaleString()} ${esc(grp)}</span></td>
+        <td class="num">${plQuality(r).toFixed(3)}</td>
+        <td class="pl-conf" title="Expected share of team snaps; range reflects depth-chart and rotation uncertainty">${
+          r.oppLo == null || r.oppHi == null ? "—" : `${pct(r.oppLo, 0)}–${pct(r.oppHi, 0)}`}</td>
         <td class="num"><input class="wi-in pl-in" type="number" step="0.05"
           data-team="${esc(r.t)}" data-player="${esc(r.n)}"
-          value="${plWar(r).toFixed(3)}" aria-label="Projected WAR for ${esc(r.n)}"
+          value="${plWar(r).toFixed(3)}" aria-label="Expected role-adjusted WAR for ${esc(r.n)}"
           ${WI.enabled() ? "" : "disabled title=\"Read-only: current-roster WAR is not a validated v4 win-probability input\""}></td>
       </tr>`;
     }).join("");
@@ -2551,8 +2556,9 @@
   let leaderKind = "players";
   function renderLeaders() {
     const ph = warValidity.projection_holdout_2025 || {};
-    const ea = warValidity.ea_replacement || {};
-    document.getElementById("war-validation").innerHTML = `<div class="validation-strip ${ea.accepted ? "validated" : "not-validated"}"><b>WAR audit: ${ea.accepted ? "EA replacement accepted" : "EA replacement rejected"}</b><span>${ph.players || 0} player holdout · r=${ph.correlation == null ? "—" : ph.correlation.toFixed(3)}</span><small>EA remains a low-snap ordering prior; measured PFF/CFBD production remains the base. No-prior-snap projections are explicitly the weak tier (r=${ph.no_prior_snap_correlation == null ? "—" : ph.no_prior_snap_correlation.toFixed(3)}).</small></div>`;
+    const pv = ((warValidity.intrinsic_vs_role_holdout_2025 || {}).all_roster_players || {});
+    const intrinsic = pv.intrinsic || {}, soft = pv.soft_role_overlay || {};
+    document.getElementById("war-validation").innerHTML = `<div class="validation-strip validated"><b>Player forecast audit: intrinsic rankings retained</b><span>${ph.players || 0} player holdout · r=${intrinsic.pearson_r == null ? "—" : intrinsic.pearson_r.toFixed(3)} · ${(intrinsic.top_decile_precision || 0) * 100 | 0}% top-decile precision</span><small>A second soft role overlay scored r=${soft.pearson_r == null ? "—" : soft.pearson_r.toFixed(3)} and hard allocation was worse, so rankings use intrinsic WAR. Team totals and scenarios use expected role-adjusted contribution. EA replacement remains rejected.</small></div>`;
     const group = document.getElementById("leader-group").value;
     const cls = document.getElementById("leader-class").value;
     const teamFilter = document.getElementById("leader-team").value;
@@ -2567,12 +2573,12 @@
         if (groupMiss || (cls && p.c !== cls)) continue;
         rows.push({ team, ...p });
       }
-      rows.sort((a, b) => (b.raw || 0) - (a.raw || 0));
+      rows.sort((a, b) => plQuality(b) - plQuality(a));
       document.getElementById("leader-grid").innerHTML = rows.slice(0, 10).map((p, i) => {
         const photo = (editorial.headshots || {})[p.team + "\u0000" + p.n];
         return `<article class="leader-card" style="--team:${color(p.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span>
           <div class="leader-portrait" style="background-image:url('${logoURL(p.team)}')">${photo ? `<img src="${photo}" alt="${esc(p.n)}" loading="lazy" onerror="this.remove()">` : ""}</div>
-          <div class="leader-copy"><span>${p.g} · ${p.c} · ${esc(p.team)}</span><h3>${esc(p.n)}</h3><b>${(p.raw || 0).toFixed(2)} <small>projected WAR</small></b></div></article>`;
+          <div class="leader-copy"><span>${p.g} · ${p.c} · ${esc(p.team)}</span><h3>${esc(p.n)}</h3><b>${plQuality(p).toFixed(2)} <small>intrinsic WAR</small></b><small>${(p.raw || 0).toFixed(2)} expected contribution · ${p.oppLo == null ? "role uncertain" : `${pct(p.oppLo, 0)}–${pct(p.oppHi, 0)} snaps`}</small></div></article>`;
       }).join("");
     } else {
       rows = Object.entries(players).map(([team, r]) => {
@@ -2612,15 +2618,48 @@
     const sel = document.getElementById("weekly-book");
     if (sel.options.length) return;
     const books = [...new Set((odds.weekly || []).flatMap(g => Object.keys(g.books || {})))].sort();
+    sel.add(new Option("Consensus + best price", "__consensus_best"));
     books.forEach(b => sel.add(new Option(b, b)));
-    if (books.includes("DraftKings")) sel.value = "DraftKings";
+    sel.value = "__consensus_best";
   }
   function renderWeeklyLines() {
     const book = document.getElementById("weekly-book").value;
     const market = document.getElementById("weekly-market").value;
-    const rows = (odds.weekly || []).filter(g => g.books && g.books[book]).map(g => {
-      const line = g.books[book], r = predict(g.home, g.away, "A");
+    const combined = book === "__consensus_best";
+    const median = a => { const x = a.slice().sort((u, v) => u-v), n = x.length; return n % 2 ? x[(n-1)/2] : (x[n/2-1] + x[n/2]) / 2; };
+    const rows = (odds.weekly || []).filter(g => g.books && (combined || g.books[book])).map(g => {
+      let line = combined ? null : g.books[book];
+      const r = predict(g.home, g.away, "A");
       if (!r) return { ...g, line, r: null, gap: null };
+      if (combined) {
+        const available = Object.values(g.books || {});
+        if (market === "moneyline") {
+          const pairs = available.filter(x => x.homeMoneyline != null && x.awayMoneyline != null);
+          if (!pairs.length) return { ...g, line: {}, r, gap: null };
+          const marketHome = median(pairs.map(x => {
+            const ih = implied(x.homeMoneyline), ia = implied(x.awayMoneyline);
+            return ih / (ih + ia);
+          }));
+          const home = r.pA >= marketHome;
+          const best = Math.max(...pairs.map(x => home ? x.homeMoneyline : x.awayMoneyline));
+          return { ...g, line: {}, r, gap: r.pA - marketHome, marketValue: best,
+            modelValue: home ? r.pA : 1-r.pA, combined: true, booksUsed: pairs.length };
+        }
+        if (market === "total") {
+          const lines = available.map(x => x.overUnder).filter(x => x != null);
+          if (!lines.length) return { ...g, line: {}, r, gap: null };
+          const consensus = median(lines), gap = r.total - consensus;
+          return { ...g, line: {}, r, gap,
+            marketValue: gap >= 0 ? Math.min(...lines) : Math.max(...lines),
+            modelValue: r.total, combined: true, booksUsed: lines.length };
+        }
+        const lines = available.map(x => x.spread).filter(x => x != null);
+        if (!lines.length) return { ...g, line: {}, r, gap: null };
+        const consensus = median(lines), modelSpread = -r.margin, gap = consensus - modelSpread;
+        return { ...g, line: {}, r, modelSpread, gap,
+          marketValue: gap >= 0 ? Math.max(...lines) : Math.min(...lines),
+          modelValue: modelSpread, combined: true, booksUsed: lines.length };
+      }
       if (market === "moneyline") {
         const ih = line.homeMoneyline == null ? null : implied(line.homeMoneyline);
         const ia = line.awayMoneyline == null ? null : implied(line.awayMoneyline);
@@ -2638,17 +2677,23 @@
         marketValue: line.spread, modelValue: modelSpread };
     }).sort((a, b) => (a.week || 99) - (b.week || 99) || String(a.start).localeCompare(String(b.start)));
     const v = (bettingValidation.markets || {})[market];
-    document.getElementById("weekly-validation").innerHTML = v ? (() => {
+    const shopping = ((bettingValidation.research_candidates || {}).book_shopped_moneyline || {});
+    document.getElementById("weekly-validation").innerHTML = combined && market === "moneyline" && shopping.development_2022_2024 ? (() => {
+      const d = shopping.development_2022_2024, h = shopping.season_2025 || {};
+      return `<div class="validation-strip not-validated"><b>Research watchlist · forward validation required</b><span>${d.bets} development bets · ${d.roi >= 0 ? "+" : ""}${pct(d.roi, 1)} ROI · 2025 ${h.roi >= 0 ? "+" : ""}${pct(h.roi, 1)}</span><small>15-point model-vs-consensus gap, executed at the best available moneyline. The cutoff was found during expanded analysis and its 95% interval crosses zero, so this is not a validated bet label.</small></div>`;
+    })() : v ? (() => {
       const h = v.holdout_2025 || {}, ok = !!v.validated_edge;
       return `<div class="validation-strip ${ok ? "validated" : "not-validated"}"><b>${ok ? "Historically validated" : "No repeatable historical edge"}</b><span>${h.bets || 0} holdout bets · ${h.roi == null ? "—" : (h.roi >= 0 ? "+" : "") + pct(h.roi, 1)} ROI</span><small>2022–24 set the threshold; 2025 tested it. Rows below show model gaps, not bet recommendations.</small></div>`;
     })() : "";
     const marketLabel = market === "moneyline" ? "Moneyline" : market === "total" ? "Total" : "Spread";
-    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(book)}</span><span>Model</span><span>Model gap</span></div>${rows.map(g => {
+    const bookLabel = combined ? "Best price" : book;
+    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span></div>${rows.map(g => {
       const lean = market === "total" ? (g.gap >= 0 ? "Over" : "Under") : (g.gap >= 0 ? g.home : g.away);
       const marketText = g.marketValue == null ? "—" : market === "moneyline" ? americanOdds(g.marketValue) : `${g.marketValue > 0 && market !== "total" ? "+" : ""}${Number(g.marketValue).toFixed(1)}`;
       const modelText = g.modelValue == null ? "—" : market === "moneyline" ? pct(g.modelValue, 1) : `${g.modelValue > 0 && market === "spread" ? "+" : ""}${g.modelValue.toFixed(1)}`;
       const gapText = g.gap == null ? "—" : `${esc(market === "total" ? lean : abbr(lean))} ${market === "moneyline" ? pct(Math.abs(g.gap), 1) : Math.abs(g.gap).toFixed(1)}`;
-      return `<div class="weekly-row"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b><small>not a bet label</small></div></div>`;
+      const watch = combined && market === "moneyline" && g.gap != null && Math.abs(g.gap) >= .15;
+      return `<div class="weekly-row"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b><small>${watch ? "research watchlist" : "not a bet label"}</small></div></div>`;
     }).join("")}</div>`;
   }
 

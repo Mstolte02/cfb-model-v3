@@ -10,6 +10,7 @@ ROOT = HERE.parent
 
 def main():
     projection = json.loads((HERE / "projection_metrics.json").read_text())
+    player_validation = json.loads((HERE / "player_projection_validation.json").read_text())
     external = json.loads((HERE / "external_validation.json").read_text())
     v4 = json.loads((ROOT / "artifacts" / "v4_backtest.json").read_text())
     deltas = []
@@ -41,6 +42,7 @@ def main():
             "no_prior_snap_correlation": projection["nohist_r"],
             "ex_ante_only": projection["ex_ante_only"],
         },
+        "intrinsic_vs_role_holdout_2025": player_validation,
         "team_model_ablation": deltas,
         "independent_ea_convergent_validity": {
             "matched_players": external["hist_matched"],
@@ -52,6 +54,7 @@ def main():
             "The no-prior-snap individual projection is weak (r=.216).",
             "EA's low-snap ordering is not historically player-level validated.",
             "WAR is a projection component, not a literal causal value for a roster move.",
+            "Exact 2026 role ranges cannot be backtested without archived preseason depth charts.",
         ],
     }
     (HERE / "war_validity_audit.json").write_text(json.dumps(report, indent=2))
