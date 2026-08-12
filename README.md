@@ -30,6 +30,10 @@ weighting both as post-hoc corrections and inside the initial reciprocal fit. On
 the jointly fitted rolling reversibility family clears the research bar; it remains a
 candidate pending a dedicated live game-context path rather than being forced into
 the season-fixed power-rating frame.
+Pace identity, scripted-game windows, tempo control, and prior-year QB time-to-throw
+versus pressure were also tested from leakage-safe CFBD drive and PFF/TruMedia data.
+Several replace missing current form in a static model, but none clears the adoption
+bar after the weekly rating update is retained; they remain research-only.
 
 | Strict expanding replay, 2022–25 | Games | Brier | Log loss | Accuracy |
 |---|---:|---:|---:|---:|
@@ -62,6 +66,9 @@ python -m scripts.v4_backtest
 # Re-run the Four-Pass proxy overlay and joint initial-fit experiments
 python -m scripts.four_pass_backtest
 python -m scripts.four_pass_initial_backtest
+
+# Re-run pace, game-script/control, and quick-pass/pressure experiments
+python -m scripts.tempo_style_backtest
 
 # Apply newly completed games once, then publish current ratings
 python -m scripts.update_v4

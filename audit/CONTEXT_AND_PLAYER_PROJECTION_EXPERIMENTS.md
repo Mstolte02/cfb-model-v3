@@ -87,6 +87,65 @@ team frame would silently change power-rating semantics. The reproducible resear
 paths are `python -m scripts.four_pass_backtest` and
 `python -m scripts.four_pass_initial_backtest`.
 
+## Pace, scripted windows, and style control
+
+The pace hypothesis was tested with the [official CFBD API](https://api.collegefootballdata.com/)
+`/drives` endpoint, which publishes drive clock, play count, score state, drive
+number, and starting/ending period. One request per season cached all regular-season
+drives for 2021-25. The
+quick-pass hypothesis uses PFF's prior-year, dropback-weighted quarterback average
+time to throw (TTT), depth of target, positive-EPA rate, and pressure-to-sack rate,
+matched against prior-year TruMedia pressure generated/allowed, blitz volume, and
+early-down pass tendency.
+
+All drive traits are start-of-week rolling last-12-game summaries; same-week games
+cannot see one another. Pace is valid-drive offensive game-clock seconds per play.
+Provider rows with impossible elapsed time are discarded, and sparse values shrink
+to a neutral 26.5 seconds/play. The candidate families are:
+
+- pace identity: offensive/defensive seconds per play and plays per drive;
+- scripted windows: approximately the first 15 offensive plays, final four minutes
+  of Q2 plus first four of Q3 (Middle Eight), and Q4 net performance;
+- state/control: shrunk win rates when entering Q4 trailing/leading and whether a
+  game's realized pace moved closer to one team's entering preference;
+- matchup control: expected fast/slow conditional success and pace-clash interactions
+  with prior control and script strength;
+- quick-pass/pressure: TTT and early pass tendency versus pressure, blitz, protection
+  exposure, depth of target, and pressure-to-sack conversion.
+
+Each quantity is reciprocal: swapping the teams negates the complete matchup vector.
+Three entry points were evaluated on 2,189 games from 2023-25 (negative Brier change
+is better):
+
+| Candidate | Post-hoc overlay vs locked weekly v4 | Joint static initial fit | Context-adjusted weekly v4 |
+|---|---:|---:|---:|
+| Pace identity | +0.00045 | -0.00021 | +0.00019 |
+| Scripted windows | +0.00034 | -0.00571 | **-0.00019** |
+| State and control | +0.00108 | -0.00596 | +0.00322 |
+| Pace matchup/control | +0.00007 | -0.00653 | +0.00111 |
+| Quick pass versus pressure | +0.00183 | +0.00204 | +0.00115 |
+| Pace + script + control | +0.00222 | -0.00824 | +0.00254 |
+| All tempo/style | +0.00390 | -0.00576 | +0.00419 |
+
+The static gains are large but do not survive the complete production architecture.
+They are primarily another measurement of current team form, which the weekly rating
+update already captures more efficiently. The best full-model result, scripted
+windows, saves only 0.00019 Brier, changes sign by season (-0.00172 / +0.00215 /
+-0.00105), and has a paired season-week 95% interval of [-0.00146, +0.00116]. It
+fails both the 0.001 adoption bar and fold stability. Quick-pass/pressure regresses in
+all three full-model folds; the available season-level TTT aggregation does not
+validate that matchup theory.
+
+The complete bundle worsens Brier by 0.00419. No pace/style feature ships. This does
+not establish that tempo is irrelevant; it establishes that these pregame summaries
+do not add independent probability information after the live rating. A future test
+should use archived play-level win probability joined to clocked play-by-play for
+state-conditioned WPA. CFBD's `/metrics/wp` requires a game ID and omits period/clock,
+so reconstructing five seasons requires a per-game WPA pull plus the play feed—beyond
+the current free API request budget. Selectively sampling games would be weaker than
+the complete drive replay and was not used. Reproduce the present test with
+`python -m scripts.tempo_style_backtest`.
+
 ## Rest, travel, and load
 
 Inputs are exact CFBD kickoff timestamps, venue IDs, team home coordinates/time zones,

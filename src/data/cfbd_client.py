@@ -129,6 +129,19 @@ def game_advanced(year: int) -> list:
                 f"game_advanced_{year}.json")
 
 
+def drives(year: int) -> list:
+    """Regular-season drive summaries with clock, score state, and play count.
+
+    A season is one request rather than the week-by-week play endpoint, which keeps
+    the pace research reproducible without spending dozens of calls or storing the
+    full play text.  The cache is ignored by git with the other raw API payloads.
+    """
+    return _get("/drives",
+                {"year": year, "seasonType": "regular",
+                 "classification": "fbs"},
+                f"drives_{year}.json")
+
+
 def returning_production(year: int) -> list:
     """Bill Connelly-style returning production (percent of PPA returning).
     Computed preseason from the prior roster, so leakage-free for season N."""
