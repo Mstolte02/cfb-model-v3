@@ -856,6 +856,28 @@ returning / pythag / SOS on `ratings*.json`.
 prior final AP poll, and roster headshot IDs without feeding any market number back
 into the trained model.
 
+**Betting validation (August 2026).** `scripts.betting_backtest` joins the strict
+expanding-window v4 predictions to 2,872 archived CFBD posted lines and 342 historical
+DraftKings team win totals. Thresholds are selected on 2022-24 and evaluated once on
+2025. No market survived that holdout: spread -6.5% ROI (709 bets), moneyline -8.4%
+(237), total -5.5% (707), and season win totals -8.7% (127). The website therefore
+labels current differences **model gaps**, not betting edges, and shows this result
+beside the boards. CFBD does not timestamp its snapshot as a true closing line, so the
+audit does not call it one.
+
+**Roster eligibility precedence.** Current depth charts now own the displayed and
+modeled class year; CFBD fills only a missing label. The prior order let a stale CFBD
+year overwrite two current charts (Bear Bachmeier appeared as FR instead of SO) and
+disagreed on 1,162 of 5,339 comparable 2026 slots. `class_source` is preserved through
+the player export so the published value remains auditable.
+
+**EA replacement decision.** The full-player reboot history is only CFB25-27, and a
+stable archived full-player payload for both completed editions was not found. The one
+clean team-level test has EA CFB26 at r=.420 against 2025 adjusted win percentage,
+versus r=.476 for the current PFF+CFBD+WAR talent, with only +.001 incremental R².
+Measured WAR remains the base; EA only reorders low-snap players. The machine-readable
+evidence and limitations are in `war_model/war_validity_audit.json`.
+
 **Pipeline (run in order):**
 
 ```bash

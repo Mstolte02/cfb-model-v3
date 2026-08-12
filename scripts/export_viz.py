@@ -358,6 +358,7 @@ def export_players():
                 "st": bool(getattr(r, "is_starter", False)),
                 "out": not bool(getattr(r, "available", True)),
                 "c": clean(getattr(r, "cls", None), str),
+                "cs": clean(getattr(r, "class_source", None), str),
                 # Redshirt and transfer status, kept as separate flags rather than
                 # baked into `c` as "RS JR". The class filter needs to be able to ask
                 # for juniors and get redshirt juniors too, which a merged string

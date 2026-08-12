@@ -144,9 +144,9 @@ def validation_sheet():
         ("R2, our talent alone", round(float(1 - res.var() / d.y.var()), 3)),
         ("R2, our talent + EA", round(float(1 - (d.y - X2 @ b2).var() / d.y.var()), 3)),
         ("", ""),
-        ("VERDICT", "EA is the weaker signal on its own (.42 vs .51) and adds "
-                    "essentially nothing on top of what we already have (+.004 R2, "
-                    "residual correlation -.03)."),
+        ("VERDICT", "EA is the weaker signal on its own (.420 vs .476) and adds "
+                    "essentially nothing on top of what we already have (+.001 R2, "
+                    "residual correlation -.013)."),
         ("CAVEAT", "Team-level only. These are EA's own aggregates, not a player-level "
                    "EA WAR, which could extract more from the same ratings."),
     ]

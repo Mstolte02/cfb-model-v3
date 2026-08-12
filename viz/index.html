@@ -66,6 +66,7 @@
       </div>
       <label>Sportsbook <select id="future-book"></select></label>
     </div>
+    <div id="future-validation"></div>
     <div id="future-spotlight" class="future-spotlight"></div>
     <div class="section-intro"><div><span class="eyebrow">Range of outcomes</span><h3>Floor, ceiling, and volatility</h3></div>
       <p>Each floor and ceiling comes from that team’s own 10th and 90th percentile simulated win total.</p></div>
@@ -101,6 +102,7 @@
   <section id="view-leaders" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">The roster atlas</span><h2>Top 10, every way you want it.</h2>
       <p class="sub">Player and team-room leaderboards powered by projected WAR, with sortable tables one tab away.</p></div>
+    <div id="war-validation"></div>
     <div class="leader-controls">
       <div class="seg" id="leader-kind"><button class="seg-btn active" data-kind="players">Players</button><button class="seg-btn" data-kind="teams">Team rooms</button></div>
       <label>Position <select id="leader-group"></select></label>
@@ -122,7 +124,8 @@
       </div></div><div class="picker" id="pickerB"></div>
     </div>
     <div id="matchup-result"></div>
-    <div class="section-intro"><div><span class="eyebrow">Market board</span><h3>2026 games with posted lines</h3></div><label>Sportsbook <select id="weekly-book"></select></label></div>
+    <div class="section-intro"><div><span class="eyebrow">Market board</span><h3>2026 games with posted lines</h3></div><div class="market-selects"><label>Market <select id="weekly-market"><option value="spread">Spread</option><option value="moneyline">Moneyline</option><option value="total">Over / under</option></select></label><label>Sportsbook <select id="weekly-book"></select></label></div></div>
+    <div id="weekly-validation"></div>
     <div id="weekly-lines"></div>
   </section>
 

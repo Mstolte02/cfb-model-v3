@@ -361,42 +361,39 @@ def main():
         columns={"share": "share_lag1"}), on="key", how="left")
     r["share_lag1"] = r.share_lag1.fillna(0.0)
 
-    # CLASS COMES FROM THE CFBD ROSTER ON BOTH SIDES, which is what this file has
-    # claimed since it was written and could not do until CFBD published 2026. While
-    # that endpoint returned `[]` the serving side read the two-deep's own class
-    # column instead, and the two are not the same variable: they disagree on 21.8%
-    # of matched slots, almost all by a year, and Ourlads carries a GR tier that
-    # CFBD's 1-4 scale does not. The model was trained on one and served the other.
+    # CURRENT ELIGIBILITY COMES FROM THE CURRENT DEPTH CHART.  CFBD is still useful
+    # as a fallback, but it is not allowed to overwrite a fresher source.  The old
+    # order did exactly that and labelled Bear Bachmeier a freshman in 2026: CFBD's
+    # roster said year 1 while both independent current charts, EA, and BYU's own
+    # biography establish that 2025 was his true-freshman season.  This is a general
+    # source-precedence fix, not a player-specific exception.
     cls26 = load_cfbd_classes(PROJECTION_YEAR, fbs)
     r = r.merge(cls26, on=["team", "key"], how="left", suffixes=("", "_cfbd"))
-    fallback = r["class"].map(CLASS_NUM)
-    matched = r.class_num.notna()
-    r["class_num"] = r.class_num.fillna(fallback)
+    chart_class = r["class"].map(CLASS_NUM)
+    cfbd_class = r.class_num.copy()
+    chart_matched = chart_class.notna()
+    cfbd_matched = cfbd_class.notna()
+    r["class_num"] = chart_class.fillna(cfbd_class)
+    r["class_source"] = np.select(
+        [chart_matched, ~chart_matched & cfbd_matched],
+        ["current depth chart", "CFBD fallback"], default="unknown")
     if cls26.empty:
-        print(f"\n  [warn] no CFBD {PROJECTION_YEAR} roster; class falls back to the "
-              f"two-deep, which is NOT the variable the model was trained on")
+        print(f"\n  [warn] no CFBD {PROJECTION_YEAR} roster; current depth-chart "
+              f"classes retained with no fallback for missing labels")
     else:
-        print(f"\nclass from the CFBD {PROJECTION_YEAR} roster: {matched.sum()} of "
-              f"{len(r)} slots ({matched.mean()*100:.1f}%); the rest keep the "
-              f"two-deep's own class year")
-        both = r[matched & fallback.notna()]
-        print(f"  disagreed with the two-deep on {(both.class_num != fallback[both.index]).sum()} "
-              f"of {len(both)} matched slots")
+        both = chart_matched & cfbd_matched
+        disagreements = int((chart_class[both] != cfbd_class[both]).sum())
+        print(f"\nclass from current depth charts: {chart_matched.sum()} of {len(r)} "
+              f"slots ({chart_matched.mean()*100:.1f}%); CFBD fills "
+              f"{int((~chart_matched & cfbd_matched).sum())} missing labels")
+        print(f"  CFBD disagreed on {disagreements} of {int(both.sum())} comparable "
+              f"slots; current charts kept")
 
-    # THE DISPLAYED CLASS IS THE ONE THE MODEL USED. final_report.py publishes this
-    # column and make_html.py puts it in a table, so leaving it as the chart's own
-    # label would print "SR" beside a projection conditioned on a junior - the exact
-    # two-meanings-one-column defect the rest of this file exists to remove.
-    #
-    # GR IS THE ONE EXCEPTION, and it is not an exception to that rule. CFBD's scale
-    # runs 1-4 and has no graduate tier at all, so a player the chart calls GR and
-    # CFBD calls 4 is not two sources disagreeing - it is one source being coarser.
-    # Collapsing him to SR would be discarding a true label to match a scale that
-    # cannot express it, and it emptied the app's Graduates filter from 194 slots to
-    # 18. The ±1-year cases below are real disagreements and do resolve to CFBD.
+    # The displayed class and projection feature are deliberately the same resolved
+    # value. Keeping the chart label also preserves its graduate tier, which CFBD's
+    # coarser 1-4 field cannot express.
     shown = r.class_num.map({v: k for k, v in CLASS_NUM.items()})
-    coarser = matched & (r["class"] == "GR") & (r.class_num == 4)
-    r["class"] = shown.where(matched, r["class"]).mask(coarser, "GR")
+    r["class"] = r["class"].where(chart_matched, shown)
     # the SAME ex-ante rank the training side computes: last season's snaps, ranked
     # within the team-position group. Not the two-deep's listed depth - see FEATURES.
     r["prior_rank"] = (r.groupby(["team", "broad_group"])

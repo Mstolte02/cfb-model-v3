@@ -185,6 +185,7 @@ def player_contributions(year: int = 2026) -> pd.DataFrame | None:
     # projections_2026_final.csv and simply never arrives, so every player renders as a
     # non-redshirt and the filter returns a confidently wrong answer.
     cols = ["team", "player", "broad_group", "roster_position", "depth", "class",
+            "class_source",
             "redshirt", "is_starter", "available", "is_transfer", "proj_war",
             "imputed", "stars", "snaps_2025", "war_2025"]
     return p[[c for c in cols if c in p.columns]].copy()

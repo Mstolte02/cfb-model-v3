@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoff, model, odds, editorial] = await Promise.all([
+  const [teams, schedule, players, ratings, playoff, model, odds, editorial, bettingValidation, warValidity] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -32,6 +32,8 @@
     fetchJSON("data/model_v4.json"),
     fetchJSON("data/odds.json").catch(() => ({ markets: {}, weekly: [], sources: {} })),
     fetchJSON("data/editorial.json").catch(() => ({ prior_final_ap: [], headshots: {} })),
+    fetchJSON("data/betting_validation.json").catch(() => ({ markets: {} })),
+    fetchJSON("data/war_validity.json").catch(() => ({})),
   ]);
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
   // two-deep; it was a knowingly worse backtest kept as an alternative view, and it is
@@ -2469,6 +2471,12 @@
     return scored.map(r => ({ ...r, index: hi === lo ? 50 : 20 + 80 * (r.score - lo) / (hi - lo) }));
   }
   function renderFutures() {
+    function validationHTML(market, label) {
+      const v = (bettingValidation.markets || {})[market];
+      if (!v) return "";
+      const h = v.holdout_2025 || {}, ok = !!v.validated_edge;
+      return `<div class="validation-strip ${ok ? "validated" : "not-validated"}"><b>${esc(label)}: ${ok ? "Held up in 2025" : "No repeatable edge in 2025"}</b><span>${h.bets || 0} holdout bets · ${h.hit_rate == null ? "—" : pct(h.hit_rate, 1)} hit · ${h.roi == null ? "—" : (h.roi >= 0 ? "+" : "") + pct(h.roi, 1)} ROI</span><small>Thresholds frozen on 2022–24; 2025 was untouched. A displayed model gap is not called an edge unless it survived this test.</small></div>`;
+    }
     setFutureBooks();
     const book = document.getElementById("future-book").value;
     const rows = ((((odds || {}).markets || {})[futureMarket] || {})[book] || []).slice();
@@ -2502,10 +2510,13 @@
         .sort((a, b) => b.edge - a.edge);
       body = priced.map((r, i) => `<div class="market-row">
         <span class="market-rank">${i + 1}</span><div class="market-team">${teamMini(r.team)}<small>${esc(book)} ${americanOdds(r.odds)}</small></div>
-        <div><small>Model</small><b>${pct(r.modelP, 1)}</b></div><div class="edge ${r.edge < 0 ? "negative" : ""}"><small>Price gap</small><b>${r.edge >= 0 ? "+" : ""}${pct(r.edge, 1)}</b></div>
+        <div><small>Model</small><b>${pct(r.modelP, 1)}</b></div><div class="edge ${r.edge < 0 ? "negative" : ""}"><small>Model gap</small><b>${r.edge >= 0 ? "+" : ""}${pct(r.edge, 1)}</b></div>
       </div>`).join("");
       note = "Price gap compares the model with raw implied probability. It is a screening tool, not a guaranteed return; incomplete futures boards are not de-vigged.";
     }
+    document.getElementById("future-validation").innerHTML = futureMarket === "win_totals"
+      ? validationHTML("win_total", "Season win totals")
+      : `<div class="validation-strip not-validated"><b>Model gap, not a validated betting edge</b><span>Championship and award futures are too sparse for a credible four-season ROI claim.</span><small>They remain probability-and-price screens; only season win totals have enough team-season observations for the historical test.</small></div>`;
     document.getElementById("future-spotlight").innerHTML = `<article class="market-panel"><div class="market-panel-head"><div><span class="eyebrow">Model vs market</span><h3>${futureMarket.replaceAll("_", " ")}</h3></div>${src ? `<a href="${src.url}" target="_blank" rel="noopener">${esc(book)} · ${src.as_of}</a>` : ""}</div><div class="market-list">${body || `<p class="sub">No quoted market is available.</p>`}</div><div class="market-note">${note}</div></article>`;
   }
   function teamMini(team) {
@@ -2539,6 +2550,9 @@
 
   let leaderKind = "players";
   function renderLeaders() {
+    const ph = warValidity.projection_holdout_2025 || {};
+    const ea = warValidity.ea_replacement || {};
+    document.getElementById("war-validation").innerHTML = `<div class="validation-strip ${ea.accepted ? "validated" : "not-validated"}"><b>WAR audit: ${ea.accepted ? "EA replacement accepted" : "EA replacement rejected"}</b><span>${ph.players || 0} player holdout · r=${ph.correlation == null ? "—" : ph.correlation.toFixed(3)}</span><small>EA remains a low-snap ordering prior; measured PFF/CFBD production remains the base. No-prior-snap projections are explicitly the weak tier (r=${ph.no_prior_snap_correlation == null ? "—" : ph.no_prior_snap_correlation.toFixed(3)}).</small></div>`;
     const group = document.getElementById("leader-group").value;
     const cls = document.getElementById("leader-class").value;
     const teamFilter = document.getElementById("leader-team").value;
@@ -2603,15 +2617,38 @@
   }
   function renderWeeklyLines() {
     const book = document.getElementById("weekly-book").value;
+    const market = document.getElementById("weekly-market").value;
     const rows = (odds.weekly || []).filter(g => g.books && g.books[book]).map(g => {
       const line = g.books[book], r = predict(g.home, g.away, "A");
-      if (!r) return { ...g, line, r: null, edge: 0 };
-      const modelSpread = -r.margin, edge = line.spread == null ? 0 : line.spread - modelSpread;
-      return { ...g, line, r, modelSpread, edge };
+      if (!r) return { ...g, line, r: null, gap: null };
+      if (market === "moneyline") {
+        const ih = line.homeMoneyline == null ? null : implied(line.homeMoneyline);
+        const ia = line.awayMoneyline == null ? null : implied(line.awayMoneyline);
+        const marketHome = ih == null || ia == null ? null : ih / (ih + ia);
+        return { ...g, line, r, gap: marketHome == null ? null : r.pA - marketHome,
+          marketValue: r.pA >= marketHome ? line.homeMoneyline : line.awayMoneyline,
+          modelValue: r.pA >= marketHome ? r.pA : 1-r.pA };
+      }
+      if (market === "total") return { ...g, line, r,
+        gap: line.overUnder == null ? null : r.total - line.overUnder,
+        marketValue: line.overUnder, modelValue: r.total };
+      const modelSpread = -r.margin;
+      return { ...g, line, r, modelSpread,
+        gap: line.spread == null ? null : line.spread - modelSpread,
+        marketValue: line.spread, modelValue: modelSpread };
     }).sort((a, b) => (a.week || 99) - (b.week || 99) || String(a.start).localeCompare(String(b.start)));
-    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(book)}</span><span>Model</span><span>Difference</span></div>${rows.map(g => {
-      const lean = g.edge >= 0 ? g.home : g.away;
-      return `<div class="weekly-row"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${g.line.spread == null ? "—" : (g.line.spread > 0 ? "+" : "") + g.line.spread}</b><small>total ${g.line.overUnder == null ? "—" : g.line.overUnder}</small></div><div><b>${g.r ? (g.modelSpread > 0 ? "+" : "") + g.modelSpread.toFixed(1) : "—"}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${g.line.spread == null || !g.r ? "—" : `${esc(abbr(lean))} ${Math.abs(g.edge).toFixed(1)}`}</b><small>model/market gap</small></div></div>`;
+    const v = (bettingValidation.markets || {})[market];
+    document.getElementById("weekly-validation").innerHTML = v ? (() => {
+      const h = v.holdout_2025 || {}, ok = !!v.validated_edge;
+      return `<div class="validation-strip ${ok ? "validated" : "not-validated"}"><b>${ok ? "Historically validated" : "No repeatable historical edge"}</b><span>${h.bets || 0} holdout bets · ${h.roi == null ? "—" : (h.roi >= 0 ? "+" : "") + pct(h.roi, 1)} ROI</span><small>2022–24 set the threshold; 2025 tested it. Rows below show model gaps, not bet recommendations.</small></div>`;
+    })() : "";
+    const marketLabel = market === "moneyline" ? "Moneyline" : market === "total" ? "Total" : "Spread";
+    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(book)}</span><span>Model</span><span>Model gap</span></div>${rows.map(g => {
+      const lean = market === "total" ? (g.gap >= 0 ? "Over" : "Under") : (g.gap >= 0 ? g.home : g.away);
+      const marketText = g.marketValue == null ? "—" : market === "moneyline" ? americanOdds(g.marketValue) : `${g.marketValue > 0 && market !== "total" ? "+" : ""}${Number(g.marketValue).toFixed(1)}`;
+      const modelText = g.modelValue == null ? "—" : market === "moneyline" ? pct(g.modelValue, 1) : `${g.modelValue > 0 && market === "spread" ? "+" : ""}${g.modelValue.toFixed(1)}`;
+      const gapText = g.gap == null ? "—" : `${esc(market === "total" ? lean : abbr(lean))} ${market === "moneyline" ? pct(Math.abs(g.gap), 1) : Math.abs(g.gap).toFixed(1)}`;
+      return `<div class="weekly-row"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b><small>not a bet label</small></div></div>`;
     }).join("")}</div>`;
   }
 
@@ -2632,6 +2669,7 @@
   document.getElementById("leader-class").addEventListener("change", renderLeaders);
   document.getElementById("leader-team").addEventListener("change", renderLeaders);
   document.getElementById("weekly-book").addEventListener("change", renderWeeklyLines);
+  document.getElementById("weekly-market").addEventListener("change", renderWeeklyLines);
 
   /* ---------- boot ---------- */
   function render(view) {
