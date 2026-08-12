@@ -48,6 +48,49 @@ def fit_points_model():
             "alpha": alpha, "resid_sd": float(np.std(resid))}
 
 
+def legacy_cache_compat(model, comp, points):
+    """Finite, v4-equivalent model for browsers still caching app.js?v=26.
+
+    That app hard-codes six slots and a cross O-vs-D difference. Two duplicated team
+    strengths make its cross difference an ordinary strength difference; separate
+    pairs carry the logistic and margin O/D scores. Talent and returning occupy the
+    two direct-difference slots the legacy app already understood. The temporary
+    client therefore produces the same preseason logit and margin instead of NaN.
+    New code loads model_v4.json and never uses this shim.
+    """
+    if not (np.isclose(model.ensemble_weight, 1.0) and
+            np.isclose(model.probability_scale, 1.0)):
+        raise ValueError("legacy cache shim requires the production logistic-only "
+                         "link; remove the shim after old app.js caches expire")
+    wc = dict(zip(model.feature_names, model.coef))
+    wm = dict(zip(model.feature_names, model.margin_coef))
+    teams = {}
+    for team, row in comp.iterrows():
+        logit_od = wc.get("O", 0.0) * row.O + wc.get("D", 0.0) * row.D
+        margin_od = wm.get("O", 0.0) * row.O + wm.get("D", 0.0) * row.D
+        teams[team] = [round(float(v), 4) for v in
+                       [logit_od, logit_od, margin_od, margin_od,
+                        row.talent, row.returning]]
+    return {
+        "features": ["logit_a", "logit_b", "margin_a", "margin_b",
+                     "talent", "returning"],
+        "logistic": {"coef": [.5, .5, 0.0, 0.0,
+                              float(wc.get("talent", 0.0)),
+                              float(wc.get("returning", 0.0))],
+                     "hfa": model.hfa_coef, "intercept": 0.0},
+        "margin": {"coef": [0.0, 0.0, .5, .5,
+                            float(wm.get("talent", 0.0)),
+                            float(wm.get("returning", 0.0))],
+                   "hfa": model.margin_hfa, "intercept": 0.0,
+                   "sigma": model.margin_sigma},
+        "ens_w": 1.0,
+        "points": {**points, "coef": [0.0, 0.0, 0.0]},
+        "teams": teams,
+        "whatif": None,
+        "derivation": {"compatibility_for": "cached app.js?v=26"},
+    }
+
+
 def main():
     VIZ.mkdir(parents=True, exist_ok=True)
     frame = pd.read_csv(ARTIFACTS / f"{PROJECTION_YEAR}_v4_team_frame.csv",
@@ -136,6 +179,7 @@ def main():
     for team in comp.index:
         state.ratings.setdefault(team, model.team_logit_strength(comp, team))
     export = {
+        "schema_version": 4,
         "features": FEATS,
         "logistic": {"coef": model.coef.tolist(), "hfa": model.hfa_coef,
                      "intercept": 0.0},
@@ -181,14 +225,21 @@ def main():
     elif SCORE_SHAPE:
         print("  [warn] score_shape.json absent; the matchup page will omit the "
               "key-number row. Run ./venv/bin/python -m scripts.score_shape")
-    (VIZ / "model.json").write_text(json.dumps(export, indent=1))
+    # New clients load the explicit v4 file. ``model.json`` remains a six-slot shim
+    # for already-open/cached v3 clients during the migration.
+    (VIZ / "model_v4.json").write_text(json.dumps(export, indent=1))
+    compat = legacy_cache_compat(model, comp, points)
+    if "shape" in export:
+        compat["shape"] = export["shape"]
+    (VIZ / "model.json").write_text(json.dumps(compat, indent=1))
 
     # Schedule (lens-independent) powers the client-side playoff re-simulation.
     export_schedule()
     export_players()
 
     print(f"exported {len(ratings)} rated teams, {len(export['teams'])} sim teams")
-    print(f"-> {VIZ / 'ratings.json'}\n-> {VIZ / 'model.json'}")
+    print(f"-> {VIZ / 'ratings.json'}\n-> {VIZ / 'model_v4.json'}")
+    print(f"-> {VIZ / 'model.json'} (cached-v3 compatibility)")
 
 
 def export_schedule():

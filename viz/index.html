@@ -215,9 +215,8 @@
   (4 P4 champs + top G6 + 7 at-large, straight seeding, top-4 byes).
 </footer>
 
-<!-- The data files are fetched with cache: "no-cache", but the script tag itself is
-     not, so a stale app.js kept running against freshly regenerated JSON and failed
-     silently — the page rendered nothing and threw nothing visible. Bump on edit. -->
-<script src="app.js?v=26"></script>
+<!-- The local revision is readable while developing; publish.py replaces it with
+     the JS content hash so cached code can never run against a different model. -->
+<script src="app.js?v=27"></script>
 </body>
 </html>

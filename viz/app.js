@@ -29,7 +29,7 @@
     fetchJSON("data/players.json").catch(() => ({})),
     fetchJSON("data/ratings.json"),
     fetchJSON("data/playoff.json"),
-    fetchJSON("data/model.json"),
+    fetchJSON("data/model_v4.json"),
   ]);
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
   // two-deep; it was a knowingly worse backtest kept as an alternative view, and it is
@@ -37,6 +37,16 @@
   // under leave-one-season-out and exported, not written in here.
   const DATA = { ratings, playoff, model };
   const cur = () => DATA;
+
+  if (model.schema_version !== 4 ||
+      model.architecture !== "reciprocal_team_difference_v4" ||
+      !Array.isArray(model.features) || model.features.length !== model.logistic.coef.length) {
+    document.querySelector("main").innerHTML = `<section class="view active">
+      <h2>Model assets are out of sync</h2>
+      <p>Please reload this page. The prediction code and model data came from
+      different builds, so no probabilities will be shown.</p></section>`;
+    throw new Error("incompatible model/app schema");
+  }
 
   // The header used to carry a "TALENT 38/38/25" chip. It is gone: the blend is an
   // internal weighting that means nothing to a reader who has not been told what the

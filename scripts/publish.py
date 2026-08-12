@@ -26,6 +26,8 @@ installed. Everything it needs is already committed under viz/.
 Run: python3 scripts/publish.py [--no-players]
 """
 import json
+import hashlib
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -38,6 +40,27 @@ DIST = ROOT / "dist"
 # per-player array itself.
 TEAM_KEYS = ("total", "winsTotal", "projWins", "replWins", "context", "scale",
              "byGroup")
+
+
+def fingerprint_assets(site: Path):
+    """Make deployed HTML request the exact JS/CSS copied in this build.
+
+    A cached six-feature v3 app running against a four-feature v4 model turns missing
+    array slots into NaN probabilities and scores. Content hashes prevent that mixed
+    version without relying on a manual query-string bump.
+    """
+    index = site / "index.html"
+    html = index.read_text()
+    versions = {}
+    for name in ("app.js", "style.css"):
+        digest = hashlib.sha256((site / name).read_bytes()).hexdigest()[:12]
+        pattern = re.escape(name) + r'(?:\?v=[^"\']*)?'
+        html, count = re.subn(pattern, f"{name}?v={digest}", html)
+        if count != 1:
+            raise RuntimeError(f"expected exactly one {name} reference; found {count}")
+        versions[name] = digest
+    index.write_text(html)
+    return versions
 
 
 def strip_players(path: Path) -> tuple[int, int]:
@@ -57,6 +80,8 @@ def main(no_players: bool = False):
     # GitHub Pages runs everything through Jekyll otherwise, which drops files and
     # folders beginning with an underscore.
     (DIST / ".nojekyll").write_text("")
+    versions = fingerprint_assets(DIST)
+    print("  assets: " + ", ".join(f"{k}?v={v}" for k, v in versions.items()))
 
     # Globbed rather than named. There is one players.json now - the site shipped
     # several complete builds at one point, each with its own players*.json, and
