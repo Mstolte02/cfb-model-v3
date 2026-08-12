@@ -145,6 +145,11 @@ def fbs_teams(year: int) -> list:
     return _get("/teams/fbs", {"year": year}, f"teams_{year}.json")
 
 
+def venues() -> list:
+    """Venue coordinates/time zones used by the pregame travel-context layer."""
+    return _get("/venues", {}, "venues.json")
+
+
 # --- Player-level PPA (EPA) + volume, for the QB-value / WAR layer -------------
 
 def player_ppa_season(year: int) -> list:

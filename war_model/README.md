@@ -29,8 +29,9 @@ Five stages, each reading the one before it:
    equals `games × slope × rating` **exactly**: the schedule term is allocated to the
    players rather than discarded, which it used to be.
 4. **roster** — `build_roster_2026.py` joins the TWO-DEEP two-deep to that history.
-5. **projection** — `project_2026_v2.py`, a gradient-boosted model over every
-   two-deep slot. Its output is what the site shows.
+5. **projection** — `project_2026_v2.py`, a gradient-boosted model trained over every
+   historical roster member, including players who record no target-season snap. It
+   serves the published 2026 two-deep. Its output is what the site shows.
 
 ## The weighting, and why it changed
 
@@ -180,10 +181,12 @@ compares the counts below against the live files and complains when they drift.
 | Massey rating vs adjusted win pct | r = .702 |
 | de-attenuation k | 0.954 |
 | player-seasons / total WAR | 89,893 / 6,069 |
-| projection holdout, 2025, ex-ante features only | r = .607<!--live:holdout_r--> |
-| ...against the carry-forward baseline it has to beat | .530<!--live:carry_r--> |
+| projection holdout, 2025, ex-ante features and all-roster population | r = .592<!--live:holdout_r--> |
+| ...against the carry-forward baseline it has to beat | .523<!--live:carry_r--> |
 
-The projection's holdout r was published as .631 and is not the same number: that one
+The all-roster holdout is deliberately harder than the former target-snap-selected
+population: 55% of historical roster rows record no target-season snap. The earlier
+projection holdout r was published as .631 and is not the same number: that one
 was measured with `is_starter` in the feature set, which was computed from the
 outcome season in training and from a preseason depth chart at serve time. It was
 worth .064 of correlation on an otherwise identical model, measured with

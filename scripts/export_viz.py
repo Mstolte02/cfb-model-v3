@@ -58,32 +58,32 @@ def legacy_cache_compat(model, comp, points):
     client therefore produces the same preseason logit and margin instead of NaN.
     New code loads model_v4.json and never uses this shim.
     """
-    if not (np.isclose(model.ensemble_weight, 1.0) and
-            np.isclose(model.probability_scale, 1.0)):
-        raise ValueError("legacy cache shim requires the production logistic-only "
-                         "link; remove the shim after old app.js caches expire")
     wc = dict(zip(model.feature_names, model.coef))
     wm = dict(zip(model.feature_names, model.margin_coef))
     teams = {}
     for team, row in comp.iterrows():
-        logit_od = wc.get("O", 0.0) * row.O + wc.get("D", 0.0) * row.D
-        margin_od = wm.get("O", 0.0) * row.O + wm.get("D", 0.0) * row.D
+        # Fold every selected team feature (including projected WAR) into the two
+        # duplicated strengths. This preserves the old client's cross-difference
+        # algebra without assuming the production selector still has four features.
+        logit_od = sum(wc.get(name, 0.0) * float(row.get(name, 0.0))
+                       for name in model.feature_names)
+        margin_od = sum(wm.get(name, 0.0) * float(row.get(name, 0.0))
+                        for name in model.feature_names)
         teams[team] = [round(float(v), 4) for v in
                        [logit_od, logit_od, margin_od, margin_od,
-                        row.talent, row.returning]]
+                        0.0, 0.0]]
     return {
         "features": ["logit_a", "logit_b", "margin_a", "margin_b",
                      "talent", "returning"],
         "logistic": {"coef": [.5, .5, 0.0, 0.0,
-                              float(wc.get("talent", 0.0)),
-                              float(wc.get("returning", 0.0))],
+                              0.0, 0.0],
                      "hfa": model.hfa_coef, "intercept": 0.0},
         "margin": {"coef": [0.0, 0.0, .5, .5,
-                            float(wm.get("talent", 0.0)),
-                            float(wm.get("returning", 0.0))],
+                            0.0, 0.0],
                    "hfa": model.margin_hfa, "intercept": 0.0,
                    "sigma": model.margin_sigma},
-        "ens_w": 1.0,
+        "ens_w": model.ensemble_weight,
+        "probability_scale": model.probability_scale,
         "points": {**points, "coef": [0.0, 0.0, 0.0]},
         "teams": teams,
         "whatif": None,

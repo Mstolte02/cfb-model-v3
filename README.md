@@ -1,6 +1,6 @@
 # CFB Predictive Model v4
 
-## v4.0 — clean time, reciprocal matchups, live evidence
+## v4.1 — projected rosters, clean time, reciprocal matchups, live evidence
 
 V4 is the production team model. It is a deliberately smaller model than v3 because
 the rigorous audit found that part of the old player signal knew which players would
@@ -9,27 +9,32 @@ predicting. It also found that the static model lost to CFBD's pregame Elo becau
 never learned from the season in progress. The complete evidence trail is in
 [`audit/CFB_MODEL_V3_AUDIT.md`](audit/CFB_MODEL_V3_AUDIT.md).
 
-The new temporal contract is explicit: a season-N forecast may use completed N-1 team
-performance, completed N-1 team PFF/WAR summaries, and information actually known in
-the N preseason (recruiting and returning production). It may not use season-N player
-rows, participant lists, roles, or realized snaps. Candidate features and every
-numeric parameter are selected inside expanding forward folds.
+The temporal contract is explicit: a season-N forecast may use completed N-1 team
+performance, earlier player history, the published season-N roster, and information
+known in the N preseason (recruiting and returning production). Every player on the
+roster is projected before the position-room top K are selected. It may not use
+season-N participation, roles, performance, or realized snaps. Candidate features and
+every numeric parameter are selected inside expanding forward folds. Historical CFBD
+roster caches do not carry retrieval timestamps, so they remove outcome-based player
+selection but are not a substitute for a frozen preseason transaction archive.
 
-The production selector chose the four-feature clean core—opponent-adjusted offense,
-defense, recruiting talent, and returning production. Lagged PFF/WAR and granular
-matchup extensions were evaluated, but their best final validation gain was only
-0.00013 Brier. V4 requires at least 0.001 before adding an extension, so that tiny win
-was treated as selection noise rather than shipped.
+The production selector chose opponent-adjusted offense, defense, recruiting talent,
+returning production, and all-roster projected WAR. The player extension cleared the
+predeclared 0.001 adoption bar in consecutive selection windows (+0.00213 and
++0.00232 Brier). Lagged team PFF/WAR and granular matchup extensions did not clear it.
+Rest/load context worsened the online replay; travel improved just 0.00010 and was
+directionally inconsistent, so none of those features ship. Full results are in
+[`audit/CONTEXT_AND_PLAYER_PROJECTION_EXPERIMENTS.md`](audit/CONTEXT_AND_PLAYER_PROJECTION_EXPERIMENTS.md).
 
 | Strict expanding replay, 2022–25 | Games | Brier | Log loss | Accuracy |
 |---|---:|---:|---:|---:|
-| V4 preseason/static | 2,913 | .2096 | .6066 | 66.36% |
-| **V4 weekly pregame update** | **2,913** | **.1882** | **.5552** | **70.55%** |
+| V4 preseason/static | 2,913 | .2080 | .6018 | 66.50% |
+| **V4 weekly pregame update** | **2,913** | **.1871** | **.5524** | **70.82%** |
 | CFBD pregame Elo, same games | 2,913 | .1898 | .5613 | 70.99% |
 
 V4 is slightly better than Elo on this replay, but not decisively: the paired
-season-week bootstrap difference is −0.00159 Brier with a 95% interval of
-[−0.00629, +0.00289]. The defensible conclusion is “competitive with Elo,” not that
+season-week bootstrap difference is −0.00270 Brier with a 95% interval of
+[−0.00738, +0.00183]. The defensible conclusion is “competitive with Elo,” not that
 the benchmark has been conquered. No historical closing-line file is present, so the
 model still has no market benchmark.
 
@@ -44,7 +49,7 @@ applied.
 
 ```powershell
 # Full forward selection, final fit, 2026 ratings, and empty live state
-python -m scripts.train
+python -m scripts.train_v4
 
 # Re-run the strict historical replay and same-game Elo benchmark
 python -m scripts.v4_backtest
@@ -62,9 +67,10 @@ python -m unittest discover -s tests -v
 ```
 
 The old build remains reproducible with `python -m scripts.train_legacy`, but it is no
-longer the default. Current-roster player WAR remains visible in roster reports; it is
-read-only in the prediction UI until dated historical depth-chart snapshots make a
-leakage-free validation possible.
+longer the default. Current-roster player WAR remains visible in roster reports and
+now enters the team prior through the same all-roster projection family tested
+historically; individual position contributions are still reporting rather than
+causal game-level effects.
 
 ## v3.10 — one build, a split line, and EA back in its lane
 

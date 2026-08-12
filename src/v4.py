@@ -155,7 +155,7 @@ class ReciprocalTeamModel:
     alpha: float = 10.0
     ensemble_weight: float = 0.5
     probability_scale: float = 1.0
-    version: str = "4.0"
+    version: str = "4.1"
 
     def raw_logit(self, x_diff, is_home=0.0):
         return float(self.coef @ np.asarray(x_diff) + self.hfa_coef * is_home)
@@ -197,7 +197,7 @@ class ReciprocalTeamModel:
                    C=d.get("C", .1), alpha=d.get("alpha", 10.0),
                    ensemble_weight=d.get("ensemble_weight", .5),
                    probability_scale=d.get("probability_scale", 1.0),
-                   version=d.get("version", "4.0"))
+                   version=d.get("version", "4.1"))
 
 
 def fit(X, y, home_flag, margins, feature_names, *, C=.1, alpha=10.0,

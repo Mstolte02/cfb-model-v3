@@ -12,12 +12,13 @@ class LegacyCacheCompatibilityTests(unittest.TestCase):
         frame = pd.DataFrame({
             "O": [1.2, -.4, .1], "D": [.7, -.2, .3],
             "talent": [.8, -.6, .2], "returning": [-.1, .4, .5],
+            "war_projected": [.3, -.2, .7],
         }, index=["A", "B", "C"])
         model = ReciprocalTeamModel(
-            feature_names=["O", "D", "talent", "returning"],
-            coef=np.array([.35, .32, .38, .18]), hfa_coef=.29,
-            margin_coef=np.array([3.9, 3.4, 5.0, 1.5]), margin_hfa=3.0,
-            margin_sigma=17.7, ensemble_weight=1.0, probability_scale=1.0)
+            feature_names=["O", "D", "talent", "returning", "war_projected"],
+            coef=np.array([.35, .32, .38, .18, .2]), hfa_coef=.29,
+            margin_coef=np.array([3.9, 3.4, 5.0, 1.5, 2.0]), margin_hfa=3.0,
+            margin_sigma=17.7, ensemble_weight=.75, probability_scale=.9)
         compat = legacy_cache_compat(
             model, frame, {"coef": [1., 1., 1.], "intercept": 27.,
                            "alpha": 1., "resid_sd": 10.})

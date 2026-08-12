@@ -1,4 +1,4 @@
-"""Stage 8b: 2026 projections, with the training population fixed.
+"""Stage 8b: leakage-safe player projections for the published 2026 two-deep.
 
 The v1 model projects a true freshman who has never taken a snap as the best receiver
 in the country, ahead of the actual best receiver in the country. Three defects
@@ -20,16 +20,11 @@ ones:
   3. class_num was approximated as prior_seasons + 1 in training but read from the
      real roster in serving, so the two were not the same variable.
 
-The fix is to make both sides the same object: a two-deep. For every historical
-team-position group we take the K players who actually occupied those slots, where K
-is that group's slot count on the 2026 two-deep, and fill any short group from the
-CFBD roster at zero WAR. Class comes from the CFBD roster in both.
-
-AND THAT FIXED THE WRONG HALF OF DEFECT 1. Matching the DENSITY of the starter flag
-left its MEANING different on the two sides: in training it still came from
-snap_rank, which is the player's rank by snaps in the season being predicted, and at
-serve time it was still somebody's opinion in August. The model learned what a
-realised workhorse is worth and applied it to a listed one.
+The first attempted fix made each historical room the size of the current two-deep,
+but chose its members using target-season snap rank. That fixed density while still
+revealing who later won playing time. The final fix trains on every published roster
+member, including zero-snap players, and removes target-season role from both features
+and population selection. Class comes from the CFBD roster on both sides.
 
 Measured on an otherwise identical model and the same 2025 holdout, the flag was
 worth 0.064 of correlation - r = .617 without it against .681 with it. That 10% was
@@ -55,15 +50,9 @@ PROJECTION_YEAR = 2026
 
 # CFBD roster positions -> the two-deep's broad groups.
 #
-# GENERIC "OL" IS DELIBERATELY UNMAPPED. CFBD labels roughly nine in ten linemen "OL"
-# with no tackle/interior distinction, and these rows are used for one thing only:
-# topping a historical team-position room up to its two-deep slot count with
-# zero-snap, zero-WAR filler, so each past season is the same shape of object as the
-# 2026 chart. Guessing which room an unlabelled lineman belongs to would put a real
-# person in a room he may not play in to fill a slot that exists to hold a zero, so
-# they are dropped and the specific labels below are kept. The line is the one unit
-# where this costs almost nothing: five linemen play essentially every snap, so an OT
-# or IOL room is filled by real PFF players and rarely needs filler at all.
+# GENERIC "OL" IS DELIBERATELY UNMAPPED. CFBD does not say whether those players are
+# tackles or interior linemen. Guessing would manufacture the position-group feature
+# and label, so the projection uses only specific tackle/guard/center designations.
 CFBD_TO_GROUP = {
     "QB": "QB", "RB": "RB", "FB": "RB", "WR": "WR", "TE": "TE",
     "OT": "OT", "G": "IOL", "C": "IOL", "OG": "IOL",
@@ -90,7 +79,7 @@ CFBD_TO_GROUP = {
 # things on the two sides of the model is the defect being removed.
 FEATURES = ["war_lag1", "war_lag2", "war_lag3", "snaps_lag1", "snaps_lag2",
             "rate_lag1", "share_lag1", "prior_rank", "prior_seasons", "class_num",
-            "is_transfer", "stars", "rating", "team_rating", "team_massey", "group_code"]
+            "is_transfer", "stars", "rating", "team_massey", "group_code"]
 
 MAX_RANK = 8.0   # beyond this a player is a name on the list, not a rotation slot
 
@@ -99,7 +88,8 @@ MAX_RANK = 8.0   # beyond this a player is a name on the list, not a rotation sl
 def slot_counts(ros26):
     """Slots and starter slots per team-position group, taken from the 2026 two-deep.
 
-    These define the population on BOTH sides of the model, which is the whole point.
+    These describe serving and the post-projection historical team aggregation. They
+    no longer select the player-model training population.
     """
     per_team = ros26.groupby(["team", "broad_group"]).agg(
         slots=("player", "size"), starters=("is_starter", "sum"))
@@ -163,42 +153,30 @@ def load_cfbd_classes(year, fbs_teams):
     return d.drop_duplicates(["team", "key"])[["team", "key", "class_num"]]
 
 
-def build_population(w, rosters, K):
-    """One row per two-deep slot per historical season, players and non-players alike.
+def build_population(w, rosters, K=None):
+    """Every historical roster member, selected without target-season outcomes.
 
-    Within a team-position group the slots go to the K highest-snap players; if fewer
-    than K played, the rest are filled from the roster at zero. That reproduces, for
-    each past season, the same kind of object the 2026 two-deep is.
+    The former population retained the K highest-snap players in the season being
+    predicted.  Even though its features were lagged, that filter revealed who won
+    the future playing-time competition.  The serving population is a published
+    preseason depth chart, so the honest training analogue is the full published
+    season roster: players with no target PFF row receive zero target WAR.
+
+    ``K`` remains accepted for compatibility with older callers but is deliberately
+    unused.  Position-room slot selection now happens only after players have been
+    projected (see preseason_team_projection.py).
     """
     w = w.copy()
     w["key"] = w.player.map(norm_name)
-    w["snap_rank"] = w.groupby(["season", "team", "group"]).snaps.rank(
-        ascending=False, method="first")
-    kept = w[w.snap_rank <= w.group.map(K).fillna(2)].copy()
-    kept["played"] = True
-
-    # roster members who did not take a snap, ranked behind everyone who did
-    have = set(zip(kept.season, kept.team, kept.group, kept.key))
-    ros = rosters[[k not in have for k in
-                   zip(rosters.season, rosters.team, rosters.group, rosters.key)]].copy()
-    # how many slots each group still has open
-    filled = kept.groupby(["season", "team", "group"]).size().rename("n")
-    ros = ros.merge(filled.reset_index(), on=["season", "team", "group"], how="left")
-    ros["n"] = ros.n.fillna(0)
-    ros["room"] = ros.group.map(K).fillna(2) - ros.n
-    ros = ros[ros.room > 0]
-    # no signal to order non-players by, so take them arbitrarily but reproducibly
-    ros = ros.sort_values(["season", "team", "group", "key"])
-    ros["slot"] = ros.groupby(["season", "team", "group"]).cumcount() + 1
-    ros = ros[ros.slot <= ros.room]
-
-    zeros = pd.DataFrame({
-        "season": ros.season, "team": ros.team, "group": ros.group,
-        "player": ros.player, "key": ros.key, "player_id": np.nan,
-        "war": 0.0, "snaps": 0.0, "played": False,
-        "snap_rank": ros.n + ros.slot,
-    })
-    return pd.concat([kept, zeros], ignore_index=True)
+    actual = (w.groupby(["season", "team", "group", "key"], as_index=False)
+                .agg(player_id=("player_id", "first"), war=("war", "sum"),
+                     snaps=("snaps", "sum")))
+    base = rosters[["season", "team", "group", "player", "key"]].copy()
+    pop = base.merge(actual, on=["season", "team", "group", "key"], how="left")
+    pop["war"] = pop.war.fillna(0.0)
+    pop["snaps"] = pop.snaps.fillna(0.0)
+    pop["played"] = pop.snaps > 0
+    return pop
 
 
 def build_history(war):
@@ -278,7 +256,6 @@ def make_training(pop, w, ratings, rec, rosters, S, seasons):
     tr = tr.merge(cls, on=["season", "team", "key"], how="left")
 
     tr = tr.merge(rec[["key", "stars", "rating"]].drop_duplicates("key"), on="key", how="left")
-    tr["team_rating"] = tr.team.map(rec.groupby("committedTo").rating.mean())
     r = ratings[["season", "team", "massey"]].copy()
     r["season"] += 1
     tr = tr.merge(r.rename(columns={"massey": "team_massey"}), on=["season", "team"], how="left")
@@ -300,7 +277,7 @@ def main():
     ros26 = pd.read_csv(f"{HERE}/roster_2026.csv")
 
     K, S = slot_counts(ros26)
-    print("two-deep slots per team-position group (defines BOTH populations):")
+    print("2026 two-deep slots per team-position group (serving/aggregation only):")
     print("  " + "  ".join(f"{g}:{K[g]}/{S[g]}" for g in sorted(K)) + "   (slots/starters)")
 
     w = build_history(war)
@@ -309,7 +286,7 @@ def main():
     print(f"\nCFBD roster rows (FBS only): {len(rosters)}")
 
     pop = build_population(w, rosters, K)
-    print(f"two-deep-equivalent population: {len(pop)} slot-seasons")
+    print(f"all-roster ex-ante population: {len(pop)} player-seasons")
     print(f"  of which never took a snap: {int((~pop.played).sum())} "
           f"({(~pop.played).mean()*100:.1f}%)   [v1 trained on ZERO of these]")
 
@@ -429,7 +406,6 @@ def main():
     r["is_transfer"] = r.is_transfer.astype(int)
     r["group_code"] = r.broad_group.map(gcode)
     r["team_massey"] = r.team.map(ratings[ratings.season == 2025].set_index("team").massey)
-    r["team_rating"] = r.team.map(rec.groupby("committedTo").rating.mean())
     if "stars" not in r or r.stars.isna().all():
         r = r.merge(rec[["key", "stars", "rating"]].drop_duplicates("key"), on="key", how="left")
 

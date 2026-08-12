@@ -35,6 +35,7 @@ CANDIDATES = {
     "clean_core": ["O", "D", "talent", "returning"],
     "core_pff_lag": ["O", "D", "talent", "returning", "pff_lag"],
     "core_war_lag": ["O", "D", "talent", "returning", "war_lag"],
+    "core_war_projected": ["O", "D", "talent", "returning", "war_projected"],
     "core_players_lag": V4.CORE_FEATURES,
     "granular_clean": [*V4.OFF_STATS, *V4.DEF_STATS, "talent", "returning"],
     "granular_players": V4.TEAM_FEATURES,
@@ -210,11 +211,16 @@ def main():
     od = OA.build_od_by_year(std, games, OPP_ADJ_ALPHA)
     pff_lag = pff.build_lagged_team_talent()
     war_lag = war.lagged_team_talent({y: s.index for y, s in talent.items()})
+    war_projected = war.projected_team_talent(
+        {y: s.index for y, s in talent.items()})
 
     frames = {}
     for y in GAME_YEARS:
         fr = V4.build_frame(y, std, talent, ret, od, pff_lag, war_lag, granular=True)
         if fr is not None:
+            wp = war_projected.get(y, pd.Series(dtype=float)).reindex(fr.index)
+            fr["war_projected"] = wp.fillna(0.0)
+            fr.attrs["war_projected_coverage"] = float(wp.notna().mean())
             fr["strength"] = fr.O + fr.D
             frames[y] = fr
     all_parts = {name: V4.assemble(GAME_YEARS, frames, games, cols)
@@ -263,6 +269,8 @@ def main():
                                       "by_period": period_metrics(aligned)},
               "pff_coverage": {str(y): frames[y].attrs.get("pff_coverage") for y in frames},
               "war_coverage": {str(y): frames[y].attrs.get("war_coverage") for y in frames}}
+    result["war_projected_coverage"] = {
+        str(y): frames[y].attrs.get("war_projected_coverage") for y in frames}
     OUT_JSON.write_text(json.dumps(result, indent=2))
     pred.to_csv(OUT_CSV, index=False)
     print(f"\npooled static : {pooled_static}")

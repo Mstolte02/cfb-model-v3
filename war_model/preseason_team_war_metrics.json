@@ -1,0 +1,122 @@
+{
+  "contract": "all season-roster players predicted from N-1 and earlier; top K selected by prediction",
+  "target_snap_population_selection": false,
+  "slot_counts": {
+    "CB": 6,
+    "DT": 4,
+    "EDGE": 4,
+    "IOL": 6,
+    "LB": 4,
+    "OT": 4,
+    "QB": 2,
+    "RB": 2,
+    "SAF": 4,
+    "TE": 2,
+    "WR": 6
+  },
+  "features": [
+    "war_lag1",
+    "war_lag2",
+    "war_lag3",
+    "snaps_lag1",
+    "snaps_lag2",
+    "rate_lag1",
+    "share_lag1",
+    "prior_rank",
+    "prior_seasons",
+    "class_num",
+    "is_transfer",
+    "stars",
+    "rating",
+    "team_massey",
+    "group_code"
+  ],
+  "folds": [
+    {
+      "season": 2021,
+      "train_target_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "n_roster_players": 11995,
+      "n_teams": 130,
+      "team_war_r": 0.5806364942800999,
+      "team_war_z_mae": 0.7081041460797475,
+      "roster_players_with_target_snaps": 5384,
+      "roster_players_without_target_snaps": 6611
+    },
+    {
+      "season": 2022,
+      "train_target_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "n_roster_players": 12609,
+      "n_teams": 131,
+      "team_war_r": 0.6871760890935564,
+      "team_war_z_mae": 0.6215152935025582,
+      "roster_players_with_target_snaps": 5451,
+      "roster_players_without_target_snaps": 7158
+    },
+    {
+      "season": 2023,
+      "train_target_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2022
+      ],
+      "n_roster_players": 12490,
+      "n_teams": 133,
+      "team_war_r": 0.8032390312616366,
+      "team_war_z_mae": 0.5061071725477908,
+      "roster_players_with_target_snaps": 5619,
+      "roster_players_without_target_snaps": 6871
+    },
+    {
+      "season": 2024,
+      "train_target_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2022,
+        2023
+      ],
+      "n_roster_players": 12595,
+      "n_teams": 134,
+      "team_war_r": 0.7410171689759727,
+      "team_war_z_mae": 0.5834758001852386,
+      "roster_players_with_target_snaps": 5810,
+      "roster_players_without_target_snaps": 6785
+    },
+    {
+      "season": 2025,
+      "train_target_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2022,
+        2023,
+        2024
+      ],
+      "n_roster_players": 12073,
+      "n_teams": 136,
+      "team_war_r": 0.7624396654347296,
+      "team_war_z_mae": 0.529929273329253,
+      "roster_players_with_target_snaps": 6149,
+      "roster_players_without_target_snaps": 5924
+    }
+  ]
+}

@@ -191,6 +191,35 @@ def player_contributions(year: int = 2026) -> pd.DataFrame | None:
 
 
 TALENT_NOISE = WAR_DIR / "talent_noise.json"
+PRESEASON_TEAM_WAR = WAR_DIR / "preseason_team_war.csv"
+
+
+def projected_team_talent(index_by_year: dict[int, pd.Index],
+                          projection_year: int = 2026) -> dict[int, pd.Series]:
+    """All-roster ex-ante player projections, standardized within season.
+
+    Historical rows come from ``preseason_team_projection.py``: every roster member
+    is projected from earlier seasons and the top K per position room are selected by
+    the projection, never by target-season snaps.  The live projection uses the
+    actual published two-deep, which is stronger information available in preseason.
+    """
+    raw = {}
+    if PRESEASON_TEAM_WAR.exists():
+        d = pd.read_csv(PRESEASON_TEAM_WAR)
+        raw.update({int(y): g.set_index("team").projected_war
+                    for y, g in d.groupby("season")})
+    live = projected_team_war(projection_year)
+    if live is not None:
+        raw[int(projection_year)] = live
+    out = {}
+    for year, idx in index_by_year.items():
+        s = raw.get(int(year))
+        if s is None:
+            continue
+        s = s.reindex(idx)
+        mu, sd = s.mean(), s.std(ddof=0)
+        out[int(year)] = (s - mu) / sd if sd and np.isfinite(sd) else s * 0.0
+    return out
 
 
 def talent_noise_sd() -> float:

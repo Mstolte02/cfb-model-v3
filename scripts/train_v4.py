@@ -76,11 +76,16 @@ def build_inputs(include_projection=True):
 
 
 def build_frames(std, talent, returning, od, pff_lag, war_lag, years):
+    war_projected = war.projected_team_talent(
+        {y: s.index for y, s in talent.items()})
     frames = {}
     for year in years:
         frame = V4.build_frame(year, std, talent, returning, od, pff_lag,
                                war_lag, granular=True)
         if frame is not None:
+            wp = war_projected.get(year, pd.Series(dtype=float)).reindex(frame.index)
+            frame["war_projected"] = wp.fillna(0.0)
+            frame.attrs["war_projected_coverage"] = float(wp.notna().mean())
             frame["strength"] = frame.O + frame.D
             frames[year] = frame
     return frames
