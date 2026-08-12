@@ -101,9 +101,9 @@ def talent(year: int) -> pd.DataFrame:
     return df.drop_duplicates(subset=["team"]).reset_index(drop=True)
 
 
-def games(year: int) -> pd.DataFrame:
+def games(year: int, refresh=False) -> pd.DataFrame:
     require_key()
-    raw = cfbd_client.games(year)
+    raw = cfbd_client.games(year, refresh=refresh)
     rows = [{
         "season": year,
         "week": g.get("week"),
@@ -113,4 +113,6 @@ def games(year: int) -> pd.DataFrame:
         "away_points": g.get("awayPoints"),
         "neutral_site": g.get("neutralSite", False),
     } for g in raw if g.get("completed") and g.get("homePoints") is not None]
-    return pd.DataFrame(rows).reset_index(drop=True)
+    columns = ["season", "week", "home_team", "away_team", "home_points",
+               "away_points", "neutral_site"]
+    return pd.DataFrame(rows, columns=columns).reset_index(drop=True)

@@ -108,6 +108,34 @@ def team_war_by_year() -> dict[int, pd.Series]:
     return out
 
 
+def lagged_team_talent(index_by_year: dict[int, pd.Index] | None = None) -> dict[int, pd.Series]:
+    """Leakage-safe prior-team WAR, keyed by the season being entered.
+
+    ``team_war_by_year`` uses the season-N participant table as the N roster and
+    attaches N-1 WAR.  That is transfer-aware retrospectively, but not preseason-safe:
+    the completed season reveals who played and where.  Here each team's realized WAR
+    is summed in N-1 and carried forward to N without consulting any N rows.
+
+    When ``index_by_year`` is provided, values are aligned to the other preseason
+    features. Missing teams remain missing so the caller can make the imputation
+    policy explicit (the v4 team frame uses neutral zero plus a coverage flag).
+    """
+    w = _load()
+    raw = {int(season) + 1: g.groupby("team").war.sum()
+           for season, g in w.groupby("season")}
+    out = {}
+    years = raw if index_by_year is None else index_by_year
+    for year in years:
+        s = raw.get(int(year))
+        if s is None:
+            continue
+        if index_by_year is not None:
+            s = s.reindex(index_by_year[year])
+        mu, sd = s.mean(), s.std(ddof=0)
+        out[int(year)] = (s - mu) / sd if sd and np.isfinite(sd) else s * 0.0
+    return out
+
+
 def projected_team_war(year: int = 2026) -> pd.Series | None:
     """Projected 2026 team WAR, summed over every two-deep slot."""
     if not PROJECTIONS.exists():

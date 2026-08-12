@@ -1,4 +1,10 @@
-"""Train the win-probability model using the true MATCHUP-adjusted, team-level
+"""Shared input builders plus the default v4 training entry point.
+
+The legacy v3 trainer below is retained as ``legacy_main`` for reproducibility. The
+normal ``python -m scripts.train`` command now publishes the strict reciprocal v4
+model.
+
+Legacy model: train the win-probability model using the MATCHUP-adjusted, team-level
 ratings (offense vs opponent defense), with talent / returning production /
 Pythagorean priors blended by the L2 logistic on game outcomes (target B).
 
@@ -228,7 +234,7 @@ def load_bundle():
     return std_by_year, talent_by_year, returning_by_year, games_by_year, pythag_by_year
 
 
-def main():
+def legacy_main():
     load.require_key()
     print("Pulling stats, talent, returning production, games from CFBD ...")
     std, cfbd_tal, ret, games, pyth = load_bundle()
@@ -269,6 +275,12 @@ def main():
 def _pm(m):
     print(f"  games={m['n_games']}  accuracy={m['accuracy']}  "
           f"Brier={m['brier']}  log_loss={m['log_loss']}")
+
+
+def main():
+    """Publish v4; retained here so the repository's established command improves."""
+    from scripts.train_v4 import main as train_v4_main
+    return train_v4_main()
 
 
 if __name__ == "__main__":

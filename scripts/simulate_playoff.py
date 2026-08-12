@@ -27,9 +27,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 import pandas as pd
 
-from config import ROOT, ARTIFACTS
-from src.model import CFBModel
-from scripts.train import build_projection_frame
+from config import ROOT, ARTIFACTS, PROJECTION_YEAR
+from src import v4 as V4
+from src.dynamic import WeeklyRatingState
 
 P4 = {"ACC", "Big 12", "Big Ten", "SEC"}
 G6 = {"American Athletic", "Conference USA", "Mid-American",
@@ -75,37 +75,34 @@ FCS_WIN_P = 0.95                         # FBS team over a non-FBS opponent
 FCS_OPP_RATING = -2.0                    # z-rating charged to SOS for FCS games
 
 
-FEATURE_ORDER = ("O", "D", "fp_margin", "pythag", "talent", "returning")
-TALENT_IX = FEATURE_ORDER.index("talent")
-
-
-def _talent_noise_sd():
-    """Extra sd carried by the 2026 talent feature. 0 disables the perturbation."""
-    from src.data import war
-    return war.talent_noise_sd()
-
-
 def _blend(model, z, m):
     from scipy.stats import norm
-    return (model.ens_w / (1.0 + np.exp(-z))
-            + (1 - model.ens_w) * norm.cdf(m / model.margin_sigma))
+    p = (model.ensemble_weight / (1.0 + np.exp(-z))
+         + (1 - model.ensemble_weight) * norm.cdf(m / model.margin_sigma))
+    p = np.clip(p, 1e-8, 1 - 1e-8)
+    return 1.0 / (1.0 + np.exp(-model.probability_scale * np.log(p / (1 - p))))
 
 
-def pairwise_probs(model, comp):
-    """Vectorized win-prob + margin matrices for every ordered team pair.
-
-    Also returns the pre-link scores, because the simulation perturbs talent and needs
-    somewhere to add the shift that is still linear.
-    """
-    O, D, fp, py, tal, ret = (comp[c].values[:, None] for c in FEATURE_ORDER)
-    X = np.stack([O - D.T, D - O.T, fp - fp.T, py - py.T,
-                  tal - tal.T, ret - ret.T])                 # (6, n, n)
-    z0 = model.intercept + np.tensordot(model.coef, X, axes=1)
-    m0 = model.margin_intercept + np.tensordot(model.margin_coef, X, axes=1)
+def pairwise_probs(model, comp, state=None):
+    """Win-probability matrices for every ordered team pair."""
+    teams = list(comp.index)
+    X = np.asarray([[V4.matchup_vector(comp, a, b, model.feature_names)
+                     for b in teams] for a in teams])         # (n, n, features)
+    z0 = np.tensordot(X, model.coef, axes=([2], [0]))
+    m0 = np.tensordot(X, model.margin_coef, axes=([2], [0]))
 
     p_neutral = _blend(model, z0, m0)
     p_home = _blend(model, z0 + model.hfa_coef, m0 + model.margin_hfa)
-    return p_neutral, p_home, m0, z0
+    if state is not None:
+        r = np.asarray([state.ratings[t] for t in teams])
+        gap = r[:, None] - r[None, :]
+        dynamic_neutral = 1.0 / (1.0 + np.exp(-np.clip(gap, -40, 40)))
+        dynamic_home = 1.0 / (1.0 + np.exp(
+            -np.clip(gap + model.hfa_coef, -40, 40)))
+        w = state.dynamic_blend
+        p_neutral = (1 - w) * p_neutral + w * dynamic_neutral
+        p_home = (1 - w) * p_home + w * dynamic_home
+    return p_neutral, p_home
 
 
 TOSSUP_LO, TOSSUP_HI = 0.45, 0.55
@@ -165,8 +162,12 @@ def _tossup_table(fbs, idx, sched, gh, ga, gp, O, po_bits, wins, n_sims):
 
 def main(n_sims=20000, seed=2026):
     rng = np.random.default_rng(seed)
-    frame, b_o, b_d, shrink = build_projection_frame(return_params=True)
-    model = CFBModel.load()
+    frame_path = ARTIFACTS / f"{PROJECTION_YEAR}_v4_team_frame.csv"
+    frame = pd.read_csv(frame_path, index_col="team")
+    model = V4.ReciprocalTeamModel.load()
+    state_path = ARTIFACTS / f"{PROJECTION_YEAR}_dynamic_state.json"
+    state = (WeeklyRatingState.load(state_path) if state_path.exists() else
+             WeeklyRatingState.initialize(model, frame, PROJECTION_YEAR))
 
     teams_meta = json.load(open(ROOT / "data" / "raw" / "teams_2026.json"))
     conf = {t["school"]: t["conference"] for t in teams_meta}
@@ -183,15 +184,17 @@ def main(n_sims=20000, seed=2026):
     idx = {t: i for i, t in enumerate(fbs)}
     n = len(fbs)
 
-    rating = ((comp["O"] + comp["D"]) / 2.0).values
+    # Newcomer fallbacks are not in the persisted state; seed them from the model.
+    for team in comp.index:
+        state.ratings.setdefault(team, model.team_logit_strength(comp, team))
+    rating = np.asarray([state.ratings[t] for t in comp.index])
     rating = (rating - rating.mean()) / rating.std()
 
-    p_neutral, p_home, m_pair, z_pair = pairwise_probs(model, comp)
+    p_neutral, p_home = pairwise_probs(model, comp, state)
 
     # ---- schedule ------------------------------------------------------------
     sched = json.load(open(ROOT / "data" / "raw" / "schedule_2026.json"))
     gh, ga, gp, gconf = [], [], [], []          # FBS-vs-FBS games
-    gz, gm = [], []                             # pre-link scores, for the talent shift
     fcs_count = np.zeros(n)                     # buy games vs non-FBS
     sos_sum, sos_n = np.zeros(n), np.zeros(n)
     for g in sched:
@@ -201,8 +204,6 @@ def main(n_sims=20000, seed=2026):
             neutral = bool(g.get("neutralSite"))
             gh.append(hi); ga.append(ai)
             gp.append(p_neutral[hi, ai] if neutral else p_home[hi, ai])
-            gz.append(z_pair[hi, ai] + (0.0 if neutral else model.hfa_coef))
-            gm.append(m_pair[hi, ai] + (0.0 if neutral else model.margin_hfa))
             gconf.append(bool(g.get("conferenceGame")) and conf[h] == conf[a])
             sos_sum[hi] += rating[ai]; sos_n[hi] += 1
             sos_sum[ai] += rating[hi]; sos_n[ai] += 1
@@ -211,7 +212,7 @@ def main(n_sims=20000, seed=2026):
             fcs_count[t] += 1
             sos_sum[t] += FCS_OPP_RATING; sos_n[t] += 1
     gh, ga = np.array(gh), np.array(ga)
-    gp, gz, gm = np.array(gp), np.array(gz), np.array(gm)
+    gp = np.array(gp)
     gconf = np.array(gconf)
     ng = len(gh)
     print(f"  schedule: {ng} FBS-vs-FBS games, {int(fcs_count.sum())} buy games")
@@ -237,51 +238,9 @@ def main(n_sims=20000, seed=2026):
     conf_teams = {c: np.array([idx[t] for t in fbs if conf[t] == c])
                   for c in sorted(CCG_CONFS)}
 
-    # ---- roster uncertainty ---------------------------------------------------
-    # Two different things can make a season turn out differently, and only one of
-    # them was being simulated. Coin-flip games are one; the other is that the talent
-    # estimate itself may be wrong, and for 2026 it is built from PROJECTED player WAR
-    # rather than an observed prior season. war_model/uncertainty.talent_noise()
-    # measures what that substitution costs by building 2025 talent both ways: the
-    # residual is 0.505 sd, which is what gets drawn here.
-    #
-    # ONE sd for every team, and that is a finding rather than a shortcut. The obvious
-    # per-team story - a roster full of unproven players should be less predictable -
-    # does not survive: correlation between a team's predicted uncertainty and how far
-    # its talent estimate actually missed in 2025 is +0.01. See that function's
-    # docstring. Drawing one delta per team per sim (not per game) is what makes this
-    # different from noise: a team that draws badly is worse all season, which is how
-    # a season actually goes wrong.
-    talent_sd = _talent_noise_sd()
-    if talent_sd > 0:
-        # Talent is a RETIRED column (config.DROPPED_FEATURES), so model.coef[TALENT_IX]
-        # is exactly zero and scaling the noise by it would silently turn this whole
-        # perturbation into a no-op while still printing that it ran. Talent now reaches
-        # the model through the shrink instead: a talent delta d moves O by
-        # shrink*b_o*d and D by shrink*b_d*d, and those land on off_edge and def_edge
-        # with opposite signs for the two teams -
-        #     off_edge = O_home - D_away,  def_edge = D_home - O_away
-        # so the home and away multipliers are NOT equal and are carried separately.
-        cO, cD = float(model.coef[0]), float(model.coef[1])
-        mO, mD = float(model.margin_coef[0]), float(model.margin_coef[1])
-        cz_h = shrink * (cO * b_o + cD * b_d) * talent_sd
-        cz_a = shrink * (cO * b_d + cD * b_o) * talent_sd
-        cm_h = shrink * (mO * b_o + mD * b_d) * talent_sd
-        cm_a = shrink * (mO * b_d + mD * b_o) * talent_sd
-        from scipy.stats import norm
-        O = np.empty((n_sims, ng), np.float32)
-        for lo in range(0, n_sims, 4000):        # chunked: (sims x games) is large
-            hi_ = min(lo + 4000, n_sims)
-            d = rng.standard_normal((hi_ - lo, n))
-            dz = cz_h * d[:, gh] - cz_a * d[:, ga]
-            dm = cm_h * d[:, gh] - cm_a * d[:, ga]
-            p = (model.ens_w / (1.0 + np.exp(-(gz + dz)))
-                 + (1 - model.ens_w) * norm.cdf((gm + dm) / model.margin_sigma))
-            O[lo:hi_] = rng.random((hi_ - lo, ng)) < p
-        print(f"  roster uncertainty: talent perturbed by {talent_sd:.3f} sd per team "
-              f"per sim (uniform - per-team spread did not validate)")
-    else:
-        O = (rng.random((n_sims, ng)) < gp).astype(np.float32)
+    # Current-roster WAR uncertainty is deliberately absent: v4 does not use the
+    # current roster in its validated probability model. Game randomness remains.
+    O = (rng.random((n_sims, ng)) < gp).astype(np.float32)
     wins = O @ H + (1 - O) @ A
     cwins = O[:, gconf] @ Hc + (1 - O[:, gconf]) @ Ac
     fcs_w = rng.binomial(fcs_count.astype(int), FCS_WIN_P, size=(n_sims, n))
@@ -565,7 +524,9 @@ def main(n_sims=20000, seed=2026):
         # Everything else the client needs to replay selection on a hand-picked season.
         "p4_confs": sorted(P4), "g6_confs": sorted(G6),
         "fcs_opp_rating": FCS_OPP_RATING,
-        "talent_noise_sd": round(talent_sd, 4),
+        # Retained for client-schema compatibility. V4 does not inject current-roster
+        # WAR uncertainty into probabilities because that layer did not validate.
+        "talent_noise_sd": 0.0,
         "teams": out,
         "bracket": bracket,
         "tossups": tossups,

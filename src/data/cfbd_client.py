@@ -11,7 +11,9 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import time
+import urllib.parse
 from pathlib import Path
 
 import requests
@@ -37,7 +39,35 @@ def has_key() -> bool:
     return bool(os.environ.get("CFBD_API_KEY"))
 
 
-def _get(endpoint: str, params: dict, cache_name: str) -> list:
+def _request(endpoint: str, params: dict, key: str):
+    """Return ``(status, payload)`` without exposing the API key in a process list.
+
+    The checked-in Windows environment currently carries an OpenSSL DLL collision
+    that aborts Python (rather than raising) on the first HTTPS request. Windows curl
+    uses the OS TLS stack and avoids that collision. Its config is passed on stdin so
+    the bearer token is never part of the command line. Other platforms keep the
+    normal requests path.
+    """
+    if os.name == "nt":
+        url = f"{BASE}{endpoint}?{urllib.parse.urlencode(params)}"
+        config = (f'url = "{url}"\n'
+                  f'header = "Authorization: Bearer {key}"\n'
+                  'header = "Accept: application/json"\n'
+                  'silent\nshow-error\nmax-time = 30\n'
+                  'write-out = "\\n%{http_code}"\n')
+        proc = subprocess.run(["curl.exe", "--config", "-"], input=config,
+                              text=True, capture_output=True, timeout=40)
+        if proc.returncode and not proc.stdout:
+            raise RuntimeError(f"CFBD request failed: {proc.stderr.strip()}")
+        body, status = proc.stdout.rsplit("\n", 1)
+        return int(status), json.loads(body) if body.strip() else []
+    resp = requests.get(f"{BASE}{endpoint}", params=params,
+                        headers={"Authorization": f"Bearer {key}",
+                                 "Accept": "application/json"}, timeout=30)
+    return resp.status_code, (resp.json() if resp.content else [])
+
+
+def _get(endpoint: str, params: dict, cache_name: str, refresh=False) -> list:
     """GET an endpoint with on-disk caching.
 
     AN EMPTY RESPONSE IS NOT CACHED, and an empty cache file is not a hit. Asking CFBD
@@ -49,7 +79,7 @@ def _get(endpoint: str, params: dict, cache_name: str) -> list:
     so. Re-asking costs one request per run for a year that genuinely is not out.
     """
     cache = DATA_RAW / cache_name
-    if cache.exists():
+    if cache.exists() and not refresh:
         cached = json.loads(cache.read_text())
         if cached:
             return cached
@@ -59,15 +89,14 @@ def _get(endpoint: str, params: dict, cache_name: str) -> list:
     if not key:
         raise RuntimeError("CFBD_API_KEY not set; cannot reach the API.")
 
-    headers = {"Authorization": f"Bearer {key}", "Accept": "application/json"}
     for attempt in range(6):
-        resp = requests.get(f"{BASE}{endpoint}", params=params, headers=headers, timeout=30)
-        if resp.status_code == 429:                 # rate limited: back off and retry
-            wait = float(resp.headers.get("Retry-After", 2 ** attempt))
+        status, data = _request(endpoint, params, key)
+        if status == 429:                           # rate limited: back off and retry
+            wait = float(2 ** attempt)
             time.sleep(min(wait, 30))
             continue
-        resp.raise_for_status()
-        data = resp.json()
+        if status < 200 or status >= 300:
+            raise RuntimeError(f"CFBD HTTP {status}: {endpoint} {params}")
         if data:
             cache.write_text(json.dumps(data))
         return data
@@ -84,13 +113,13 @@ def advanced_season_stats(year: int) -> list:
     )
 
 
-def games(year: int, season_type: str = "regular") -> list:
+def games(year: int, season_type: str = "regular", refresh=False) -> list:
     """Completed game results with scores, home/away, neutral-site flag.
     These are the labels for training the logistic regression (doc §4.3)."""
     return _get(
         "/games",
         {"year": year, "seasonType": season_type, "division": "fbs"},
-        f"games_{year}.json",
+        f"games_{year}.json", refresh=refresh,
     )
 
 

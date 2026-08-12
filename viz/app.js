@@ -1,4 +1,4 @@
-/* CFB Model v3 — 2026 visuals.
+/* CFB Model v4 — 2026 visuals.
    Tabs: Season Odds · Playoff Projection · Scenario Builder · Matchup Simulator ·
    Team Breakdown · Team Ratings · Players.
 
@@ -279,14 +279,28 @@
     return s * y;
   }
   const normCdf = x => 0.5 * (1 + erf(x / Math.SQRT2));
-  const dot = (c, v) => c[0]*v[0]+c[1]*v[1]+c[2]*v[2]+c[3]*v[3]+c[4]*v[4]+c[5]*v[5];
+  const dot = (c, v) => c.reduce((s, x, i) => s + x * v[i], 0);
   function winpFromDiff(x, homeA) {
     const M = cur().model, L = M.logistic, G = M.margin;
     const z = L.intercept + dot(L.coef, x) + homeA * L.hfa;
     const m = G.intercept + dot(G.coef, x) + homeA * G.hfa;
-    return M.ens_w * sigmoid(z) + (1 - M.ens_w) * normCdf(m / G.sigma);
+    let p = M.ens_w * sigmoid(z) + (1 - M.ens_w) * normCdf(m / G.sigma);
+    const scale = M.probability_scale == null ? 1 : M.probability_scale;
+    p = Math.max(1e-8, Math.min(1 - 1e-8, p));
+    return sigmoid(scale * Math.log(p / (1 - p)));
   }
-  const diffVec = (a, b) => [a[0]-b[1], a[1]-b[0], a[2]-b[2], a[3]-b[3], a[4]-b[4], a[5]-b[5]];
+  // V4 is a true team-difference model. Swapping teams negates this vector and makes
+  // neutral probabilities exact complements.
+  const diffVec = (a, b) => a.map((x, i) => x - b[i]);
+  function winpTeams(a, b, homeA) {
+    const M = cur().model;
+    const pStatic = winpFromDiff(diffVec(vecOf(a), vecOf(b)), homeA);
+    const D = M.dynamic, ra = D && D.ratings && D.ratings[a];
+    const rb = D && D.ratings && D.ratings[b];
+    if (ra == null || rb == null) return pStatic;
+    const pDynamic = sigmoid(ra - rb + homeA * M.logistic.hfa);
+    return (1 - D.blend) * pStatic + D.blend * pDynamic;
+  }
 
   /* One prediction routine for every view. venue is "A" | "B" | "N", A's perspective. */
   function predict(a, b, venue) {
@@ -296,11 +310,11 @@
     let pA, marginA;
     if (homeB) {
       const xb = diffVec(B, A);
-      pA = 1 - winpFromDiff(xb, 1);
+      pA = 1 - winpTeams(b, a, 1);
       marginA = -(M.margin.intercept + dot(M.margin.coef, xb) + M.margin.hfa);
     } else {
       const x = diffVec(A, B);
-      pA = winpFromDiff(x, homeA);
+      pA = winpTeams(a, b, homeA);
       marginA = M.margin.intercept + dot(M.margin.coef, x) + homeA * M.margin.hfa;
     }
     const Pt = M.points;
@@ -2065,7 +2079,7 @@
     document.getElementById("pl-count").textContent =
       `${all.length > PL_LIMIT ? `top ${PL_LIMIT} of ` : ""}${all.length} slots` +
       (WI.count() ? ` · ${WI.count()} edited` : "");
-    document.getElementById("pl-reset").disabled = !WI.count();
+    document.getElementById("pl-reset").disabled = !WI.enabled() || !WI.count();
 
     const head = PL_COLS.map(c => `<th class="${c.n ? "num" : ""} sortable${
       c.k === plSort ? " sorted" : ""}" data-k="${c.k}">${c.h}${
@@ -2092,7 +2106,8 @@
           (RK.groupN[grp] || 0).toLocaleString()} ${esc(grp)}</span></td>
         <td class="num"><input class="wi-in pl-in" type="number" step="0.05"
           data-team="${esc(r.t)}" data-player="${esc(r.n)}"
-          value="${plWar(r).toFixed(3)}" aria-label="Projected WAR for ${esc(r.n)}"></td>
+          value="${plWar(r).toFixed(3)}" aria-label="Projected WAR for ${esc(r.n)}"
+          ${WI.enabled() ? "" : "disabled title=\"Read-only: current-roster WAR is not a validated v4 win-probability input\""}></td>
       </tr>`;
     }).join("");
 
@@ -2219,9 +2234,9 @@
     war: {
       label: "Roster WAR by position",
       note: `Projected wins above replacement contributed by each position group,
-        summed over that group's slots in the 2026 two-deep. These are the same
-        per-player figures the <b>Players</b> tab lists and edits, so an edit there
-        re-ranks this table.`,
+        summed over that group's slots in the 2026 two-deep. V4 shows this roster
+        layer as read-only: it does not alter win probability until dated historical
+        roster snapshots support a leakage-free validation.`,
       fmt: v => v.toFixed(2),
       cols: () => [
         ...GROUP_ORDER.map(g => ({ k: g, h: g,

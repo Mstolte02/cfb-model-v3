@@ -278,6 +278,55 @@ def build_roster_talent(weights=PFF_OPT_WEIGHTS, group_scores=None) -> dict:
     return out
 
 
+def build_lagged_team_talent(weights=PFF_OPT_WEIGHTS) -> dict:
+    """Leakage-safe preseason PFF talent keyed by the season being ENTERED.
+
+    The historical roster-aware signal in :func:`build_roster_talent` answers a
+    useful retrospective question, but it is not a valid preseason feature: its
+    season-N roster is the set of players who eventually recorded a PFF row in N and
+    its depth weights are their realized season-N snaps.  That reveals participation,
+    injuries, roles and transfer destinations from the season being predicted.
+
+    This function uses only the completed prior season.  It first summarizes each
+    season's actual position rooms from that season's grades and snaps, then carries
+    the resulting TEAM value forward one year.  The trade-off is explicit: it cannot
+    know offseason player movement by itself.  Entering-season recruiting and
+    returning-production features carry that information until dated historical
+    roster snapshots are available.
+
+    Returns ``{N: Series(team -> z)}``, where every value for N is constructed only
+    from season N-1 data.
+    """
+    g = load_player_grades()
+    group_rows = []
+    for (season, team, group), room in g.groupby(["season", "team", "group"]):
+        room = room.dropna(subset=["grade"])
+        if not len(room):
+            continue
+        snaps = room.snaps.clip(lower=0).astype(float)
+        if snaps.sum() > 0:
+            score = float(np.average(room.grade.astype(float), weights=snaps))
+        else:
+            score = float(room.grade.astype(float).mean())
+        group_rows.append({"season": int(season), "team": team,
+                           "group": group, "group_score": score})
+    gs = pd.DataFrame(group_rows)
+
+    out = {}
+    for season, sub in gs.groupby("season"):
+        scores = {}
+        for team, tg in sub.groupby("team"):
+            num = sum(weights.get(r.group, 0.0) * r.group_score
+                      for r in tg.itertuples())
+            den = sum(weights.get(r.group, 0.0) for r in tg.itertuples())
+            if den > 0:
+                scores[team] = num / den
+        s = pd.Series(scores, dtype=float)
+        if len(s):
+            out[int(season) + 1] = (s - s.mean()) / (s.std(ddof=0) or 1.0)
+    return out
+
+
 # How far down a group the snap-share profile is measured. Beyond this a player is
 # taking a rounding error's worth of the group's playing time.
 _MAX_RANK = 8

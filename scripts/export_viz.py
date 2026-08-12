@@ -16,12 +16,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 import pandas as pd
 
-from config import ROOT, ARTIFACTS, GAME_YEARS, TEST_GAME_YEAR, PROJECTION_YEAR
-from src.model import CFBModel
-from src import matchup as MU
+from config import ROOT, ARTIFACTS, GAME_YEARS, PROJECTION_YEAR
+from src import v4 as V4
+from src.dynamic import WeeklyRatingState
 from src import spread as SP
-from scripts.train import (build_projection_frame, load_bundle,
-                           projection_returning_raw)
+from scripts.train import load_bundle
 
 VIZ = ROOT / "viz" / "data"
 
@@ -29,24 +28,15 @@ VIZ = ROOT / "viz" / "data"
 def fit_points_model():
     """Two-sided points model (points ~ O_scorer + D_opp + home) on all seasons,
     entering-season frames — powers projected scores/totals in the matchup sim."""
-    from scripts.train import raw_returning, blended_talent
-    from src.data import load, pff
     from src import oppadj as OA
-    from config import UNCERTAINTY_LAMBDA, OPP_ADJ_ALPHA
+    from config import OPP_ADJ_ALPHA
 
-    std, cfbd_tal, ret, games, pyth = load_bundle()
-    ret_raw = raw_returning()
-    talent = blended_talent(cfbd_tal, pff.build_roster_talent())
+    std, talent, ret, games, _ = load_bundle()
     od = OA.build_od_by_year(std, games, OPP_ADJ_ALPHA)
-    b_o, b_d = MU.fit_talent_od_slopes(
-        [g for g in GAME_YEARS if g != TEST_GAME_YEAR], std, talent, od_by_year=od)
 
     Xs, ys = [], []
     for N in GAME_YEARS:
-        u = MU.uncertainty_u(ret_raw[N]) if N in ret_raw else None
-        unc = (UNCERTAINTY_LAMBDA, b_o, b_d, u) if u is not None else None
-        frame = MU.team_frame(N, std, pyth, talent, ret, uncertainty=unc,
-                              od_by_year=od)
+        frame = V4.build_frame(N, std, talent, ret, od)
         if frame is None:
             continue
         X, y = SP.build_points_rows(frame, games[N])
@@ -58,103 +48,11 @@ def fit_points_model():
             "alpha": alpha, "resid_sd": float(np.std(resid))}
 
 
-def whatif_block(comp):
-    """What the page needs to re-derive O and D after someone edits a player's WAR.
-
-    Talent is a retired feature - its coefficient is exactly zero - so it does not
-    reach a prediction directly. It reaches one through the shrink in
-    matchup.team_frame, where a team with little returning production is pulled toward
-    its talent-implied rating:
-
-        O_adj = (1 - lam*u)*O + lam*u*(b_o*talent)
-
-    The useful thing about that line is that it is LINEAR in talent, so the page never
-    has to reconstruct the pre-shrink O. A talent delta moves the exported vector by
-
-        dO = lam*u*b_o*dt        dD = lam*u*b_d*dt
-
-    and that is exact, not an approximation. So the only per-team quantity that has to
-    ship is u; everything else is four scalars. Inverting the shrink to recover O would
-    have worked too and is what I tried first, but it divides by (1 - lam*u) and there
-    is no reason to introduce a division when the derivative is what is wanted.
-
-    WAR reaches talent through config.WAR_BLEND, and only that share of it moves:
-        talent = (1 - WAR_BLEND)*(PFF/CFBD blend) + WAR_BLEND*z(team WAR)
-    The z is taken within season over the teams the WAR build covers, with ddof=0, and
-    the page has to reproduce that exactly - editing one player shifts the league mean
-    and sd, so every other team's talent moves a little too. That is not a rounding
-    artefact, it is what the model would actually do.
-
-    u ships per team even though it is currently 1.0 for all of them: matchup.py holds
-    it flat while UNCERTAINTY_USE_RETURNING is False, which it is, and which it is for
-    a measured reason. Exporting the scalar it happens to equal today would turn that
-    config flag into a silent liar the moment anyone set it back to True.
-    """
-    from config import UNCERTAINTY_LAMBDA, WAR_BLEND
-    _, b_o, b_d, lam = build_projection_frame(return_params=True)
-    u = MU.uncertainty_u(projection_returning_raw())
-    u = u.reindex(comp.index).fillna(0.0).clip(lower=0, upper=1)
-    return {
-        "lam": float(lam if lam is not None else UNCERTAINTY_LAMBDA),
-        "bO": float(b_o), "bD": float(b_d), "warBlend": float(WAR_BLEND),
-        "u": {t: round(float(u[t]), 4) for t in comp.index},
-    }
-
-
-def derivation_block(comp):
-    """Every intermediate between a roster's WAR and a team's power rating.
-
-    This is what the Testing tab's calculator renders. It is a strict superset of
-    `whatif` - the four scalars there are the derivative of one step in here - and it
-    exists because "show me how this team got its rating" needs the steps, not just
-    the sensitivity.
-
-    The chain, in the order the page walks it:
-
-      team WAR      sum of projected WAR over the two-deep      (players.json)
-      warZ          standardized within season, ddof=0
-      talent        (1-tb)*cfbd + tb*pffRoster, then (1-wb)*that + wb*warZ
-      O, D          opponent-adjusted prior-season composites, then shrunk toward
-                    the talent-implied baseline:  O = (1-lam*u)*Oraw + lam*u*bO*talent
-      features      [O, D, fp_margin, pythag, talent, returning]
-      power         mean win probability against every other team, neutral field
-
-    Only O and D reach a prediction directly - fp_margin, pythag and talent all carry
-    a coefficient of exactly zero, which is why the page draws them greyed. Talent
-    still moves the rating, but through the shrink above rather than through its own
-    coefficient, and that is the single most confusing thing about this model to
-    anyone reading it off the page. Showing both facts in one place is most of why
-    the tab is here.
-    """
-    from config import WAR_BLEND
-    _, parts = build_projection_frame(return_parts=True)
-
-    def ser(s):
-        if s is None:
-            return {}
-        s = s.reindex(comp.index)
-        return {t: round(float(v), 4) for t, v in s.items() if pd.notna(v)}
-
-    return {
-        "talentBlend": float(parts["talent_blend"]), "warBlend": float(WAR_BLEND),
-        "lam": float(parts["lam"]), "bO": float(parts["b_o"]),
-        "bD": float(parts["b_d"]),
-        "cfbdTalent": ser(parts["cfbd_talent"]),
-        "pffRoster": ser(parts["pff_roster"]),
-        "warZ": ser(parts["war_z"]),
-        "talent": ser(parts["talent"]),
-        "Oraw": ser(parts["O_raw"]), "Draw": ser(parts["D_raw"]),
-        "u": ser(parts["u"]),
-        "talentFloor": (None if parts["talent_floor"] is None
-                        else round(float(parts["talent_floor"]), 4)),
-        "fallbackTeams": list(parts["fallback_teams"]),
-    }
-
-
 def main():
     VIZ.mkdir(parents=True, exist_ok=True)
-    frame = build_projection_frame()
-    model = CFBModel.load()
+    frame = pd.read_csv(ARTIFACTS / f"{PROJECTION_YEAR}_v4_team_frame.csv",
+                        index_col="team")
+    model = V4.ReciprocalTeamModel.load()
     teams_meta = {t["school"]: t for t in
                   json.load(open(ROOT / "data" / "raw" / "teams_2026.json"))}
 
@@ -201,7 +99,7 @@ def main():
             # by design, and exporting that zero would have shown every team an
             # identical talent of 0.00 (which is what "pythag": 0.0 has been doing
             # since v3.1 - it is retired, so it is no longer exported at all).
-            "talent": round(float(comp.loc[t, "talent_raw"]), 3),
+            "talent": round(float(comp.loc[t, "talent"]), 3),
             "returning": round(float(comp.loc[t, "returning"]), 3),
             "sos": round(float(sos_sum[t] / max(sos_n[t], 1)), 3),
             "games": int(sos_n[t]),
@@ -231,20 +129,34 @@ def main():
     # Select by name: the frame now carries *_raw companions for retired features,
     # and iterating comp.loc[t] would silently widen the vector past the six the
     # coefficients are indexed against.
-    FEATS = ["O", "D", "fp_margin", "pythag", "talent", "returning"]
+    FEATS = model.feature_names
+    state_path = ARTIFACTS / f"{PROJECTION_YEAR}_dynamic_state.json"
+    state = (WeeklyRatingState.load(state_path) if state_path.exists() else
+             WeeklyRatingState.initialize(model, frame, PROJECTION_YEAR))
+    for team in comp.index:
+        state.ratings.setdefault(team, model.team_logit_strength(comp, team))
     export = {
         "features": FEATS,
         "logistic": {"coef": model.coef.tolist(), "hfa": model.hfa_coef,
-                     "intercept": model.intercept},
+                     "intercept": 0.0},
         "margin": {"coef": model.margin_coef.tolist(), "hfa": model.margin_hfa,
-                   "intercept": model.margin_intercept,
+                   "intercept": 0.0,
                    "sigma": model.margin_sigma},
-        "ens_w": model.ens_w,
+        "ens_w": model.ensemble_weight,
+        "probability_scale": model.probability_scale,
+        "architecture": "reciprocal_team_difference_v4",
+        "dynamic": {"blend": state.dynamic_blend,
+                    "ratings": {t: round(float(state.ratings[t]), 6)
+                                for t in comp.index}},
         "points": points,
         "teams": {t: [round(float(comp.loc[t, c]), 4) for c in FEATS]
                   for t in comp.index},
-        "whatif": whatif_block(comp),
-        "derivation": derivation_block(comp),
+        # Current-roster WAR is still exported in players.json for reporting, but it
+        # is not allowed to move win probability until historical dated snapshots
+        # support a clean backtest. The UI treats a null block as read-only.
+        "whatif": None,
+        "derivation": {"features": FEATS,
+                       "temporal_contract": "N-1 team performance plus preseason-N inputs"},
     }
 
     # Key-number probabilities from scripts/score_shape.py. Only the margin PMF ships,

@@ -1,40 +1,52 @@
-"""2026 power ratings using the matchup-adjusted model (with uncertainty index).
+"""Publish current 2026 v4 power ratings.
 
-Run: ./venv/bin/python -m scripts.rank
+Before Week 1 these are preseason ratings. After ``scripts.update_v4`` they blend
+the validated preseason prior with completed-game evidence.
 
-It used to take a variant argument and write a suffixed table for each of several
-complete builds. The site ships one build now, so it takes none.
+Run: python -m scripts.rank
 """
+from __future__ import annotations
+
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from config import PROJECTION_YEAR, ARTIFACTS
-from src.data import load
-from src import matchup as MU
-from src.model import CFBModel
-from scripts.train import build_projection_frame
+import pandas as pd
+
+from config import ARTIFACTS, PROJECTION_YEAR
+from src import v4 as V4
+from src.dynamic import WeeklyRatingState, current_power_ratings
 
 
 def main():
-    load.require_key()
-    frame = build_projection_frame()
-    model = CFBModel.load()
+    model_path = ARTIFACTS / "model_v4.json"
+    frame_path = ARTIFACTS / f"{PROJECTION_YEAR}_v4_team_frame.csv"
+    state_path = ARTIFACTS / f"{PROJECTION_YEAR}_dynamic_state.json"
+    if not model_path.exists() or not frame_path.exists():
+        raise FileNotFoundError("v4 artifacts are missing; run "
+                                "python -m scripts.train_v4 first")
 
-    ratings = MU.power_ratings(model, frame)
+    model = V4.ReciprocalTeamModel.load(model_path)
+    frame = pd.read_csv(frame_path, index_col="team")
+    if state_path.exists():
+        state = WeeklyRatingState.load(state_path)
+    else:
+        state = WeeklyRatingState.initialize(model, frame, PROJECTION_YEAR)
+    ratings = current_power_ratings(model, frame, state)
     out_csv = ARTIFACTS / f"{PROJECTION_YEAR}_power_ratings.csv"
     ratings.to_csv(out_csv, index=False)
 
-    print(f"\n=== {PROJECTION_YEAR} Power Ratings (top 25) ===")
-    for _, r in ratings.head(25).iterrows():
-        print(f"  {int(r['rank']):>3}. {r['team']:<24} power={r['power']:.3f}")
+    print(f"\n=== {PROJECTION_YEAR} v4 Power Ratings (top 25) ===")
+    for r in ratings.head(25).itertuples():
+        print(f"  {r.rank:>3}. {r.team:<24} power={r.power:.3f}  "
+              f"vs_avg={r.vs_average:.3f}")
     print(f"\nFull table -> {out_csv}")
 
-    a, b = ratings.iloc[0]["team"], ratings.iloc[1]["team"]
-    p = model.win_prob(MU.matchup_vector(frame, a, b), is_home=0.0)
-    print(f"\nExample neutral-site matchup: {a} vs {b}")
-    print(f"   P({a}) = {p:.3f}   P({b}) = {1-p:.3f}")
+    first, second = ratings.iloc[0].team, ratings.iloc[1].team
+    p = state.predict(model, frame, first, second, neutral_site=True)["p_home"]
+    print(f"\nExample neutral site: P({first} over {second})={p:.3f}; "
+          f"reverse={1-p:.3f}")
 
 
 if __name__ == "__main__":

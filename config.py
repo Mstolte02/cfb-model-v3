@@ -22,7 +22,10 @@ ARTIFACTS = ROOT / "artifacts"
 # inputs must fail, not quietly produce a plausible number on fewer of them.
 #
 # Override any of these with the matching environment variable.
-CFB_EXTERNAL = Path(os.environ.get("CFB_EXTERNAL", Path.home() / "Downloads"))
+_SIBLING_EXTERNAL = ROOT.parent / "source-data"
+_DEFAULT_EXTERNAL = (_SIBLING_EXTERNAL if _SIBLING_EXTERNAL.exists()
+                     else Path.home() / "Downloads")
+CFB_EXTERNAL = Path(os.environ.get("CFB_EXTERNAL", _DEFAULT_EXTERNAL))
 PFF_DIR = Path(os.environ.get("PFF_DIR", CFB_EXTERNAL / "pff_exports"))
 GAMES_CSV = Path(os.environ.get(
     "CFB_GAMES_CSV", CFB_EXTERNAL / "CFB_Data" / "data" / "games.csv"))

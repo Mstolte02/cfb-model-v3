@@ -1,0 +1,565 @@
+{
+  "benchmark_ablation": [
+    {
+      "n": 2913,
+      "brier": 0.20202459555807759,
+      "logloss": 0.5869697071504029,
+      "accuracy": 0.678681771369722,
+      "calibration_intercept": 0.07211190453970077,
+      "calibration_slope": 0.859907017849732,
+      "margin_mae": 13.67067491946786,
+      "margin_rmse": 17.221734837816207,
+      "margin_r2": 0.2796945292973402,
+      "margin_r": 0.5348611065022602,
+      "margin_bias": -0.3834967369915767,
+      "variant": "configured"
+    },
+    {
+      "n": 2913,
+      "brier": 0.20919781900525947,
+      "logloss": 0.6043942863054348,
+      "accuracy": 0.6608307586680399,
+      "calibration_intercept": 0.06735718044881865,
+      "calibration_slope": 0.8837651330831946,
+      "margin_mae": 14.04396912668292,
+      "margin_rmse": 17.726478464941753,
+      "margin_r2": 0.2368536141989599,
+      "margin_r": 0.48903289637787767,
+      "margin_bias": -0.59069457326611,
+      "variant": "no_player_pff_or_war"
+    },
+    {
+      "n": 2913,
+      "brier": 0.20404342134968873,
+      "logloss": 0.5911937464615695,
+      "accuracy": 0.6735324407826982,
+      "calibration_intercept": 0.06522835886612008,
+      "calibration_slope": 0.9075977874457907,
+      "margin_mae": 13.77803967410592,
+      "margin_rmse": 17.352017508391224,
+      "margin_r2": 0.2687550642235885,
+      "margin_r": 0.5207395805122534,
+      "margin_bias": -0.5860470662970024,
+      "variant": "no_war"
+    },
+    {
+      "n": 2913,
+      "brier": 0.201365763913756,
+      "logloss": 0.5854956959309563,
+      "accuracy": 0.6803982148987299,
+      "calibration_intercept": 0.06781444336046084,
+      "calibration_slope": 0.8728151965557256,
+      "margin_mae": 13.642339151337168,
+      "margin_rmse": 17.16122004777699,
+      "margin_r2": 0.28474774276790105,
+      "margin_r": 0.538825717368469,
+      "margin_bias": -0.36545992774432573,
+      "variant": "no_qb_player_signal"
+    },
+    {
+      "n": 2913,
+      "brier": 0.21188042156501888,
+      "logloss": 0.6105908730766746,
+      "accuracy": 0.6604874699622383,
+      "calibration_intercept": 0.051018396661968876,
+      "calibration_slope": 0.9413970228114815,
+      "margin_mae": 14.378776359915955,
+      "margin_rmse": 18.072876267637252,
+      "margin_r2": 0.2067365077327804,
+      "margin_r": 0.45630888523955676,
+      "margin_bias": -0.6704806895557777,
+      "variant": "no_talent_shrink"
+    },
+    {
+      "n": 2913,
+      "brier": 0.20668997565637878,
+      "logloss": 0.6000772777766185,
+      "accuracy": 0.6725025746652935,
+      "calibration_intercept": 0.09132097918426942,
+      "calibration_slope": 0.8288941253231612,
+      "margin_mae": 14.090771229571907,
+      "margin_rmse": 17.84010811987813,
+      "margin_r2": 0.227038467576116,
+      "margin_r": 0.4950227194841148,
+      "margin_bias": -0.2966929609928381,
+      "variant": "talent_only_od"
+    },
+    {
+      "n": 2913,
+      "brier": 0.20533931584018808,
+      "logloss": 0.5949336628537949,
+      "accuracy": 0.6742190181943014,
+      "calibration_intercept": 0.051796276727938184,
+      "calibration_slope": 0.9306316380501,
+      "margin_mae": 13.906131766487821,
+      "margin_rmse": 17.484596576013427,
+      "margin_r2": 0.25753813925235824,
+      "margin_r": 0.5090637524034197,
+      "margin_bias": -0.5119708986035648,
+      "variant": "no_opponent_adjustment"
+    },
+    {
+      "n": 2913,
+      "brier": 0.2025080037380514,
+      "logloss": 0.5887272270043779,
+      "accuracy": 0.6749055956059046,
+      "calibration_intercept": 0.07081858637465926,
+      "calibration_slope": 0.8598163039777953,
+      "margin_mae": 13.676545450962339,
+      "margin_rmse": 17.21987001333605,
+      "margin_r2": 0.27985051480777434,
+      "margin_r": 0.5353882474848046,
+      "margin_bias": -0.3503265533103443,
+      "variant": "team_strength_scalar"
+    },
+    {
+      "n": 2913,
+      "brier": 0.2023641069875507,
+      "logloss": 0.5882767664484309,
+      "accuracy": 0.6769653278407141,
+      "calibration_intercept": 0.06755610414634061,
+      "calibration_slope": 0.8758137223863873,
+      "margin_mae": 13.652668399958133,
+      "margin_rmse": 17.19905096698494,
+      "margin_r2": 0.28159080230588185,
+      "margin_r": 0.5355180168647891,
+      "margin_bias": -0.38178031441953025,
+      "variant": "off_def_edges_only"
+    },
+    {
+      "n": 2913,
+      "brier": 0.2399603486460944,
+      "logloss": 0.6727934718520029,
+      "accuracy": 0.5859938208032955,
+      "calibration_intercept": 0.09819048220548492,
+      "calibration_slope": 0.8284835979641342,
+      "margin_mae": 15.807137642509419,
+      "margin_rmse": 20.22530948452922,
+      "margin_r2": 0.00653340504779254,
+      "margin_r": 0.1077640230285169,
+      "margin_bias": -0.8650966570641934,
+      "variant": "returning_only"
+    },
+    {
+      "n": 2913,
+      "brier": 0.2423616381312817,
+      "logloss": 0.6778012766550554,
+      "accuracy": 0.588053553038105,
+      "calibration_intercept": 0.11522566189195352,
+      "calibration_slope": 0.7315516195510057,
+      "variant": "home_only_aligned"
+    },
+    {
+      "n": 14697,
+      "brier": 0.2446952284009338,
+      "logloss": 0.682506598256846,
+      "accuracy": 0.573586446213513,
+      "calibration_intercept": 0.07923178385508062,
+      "calibration_slope": 0.7476630415170656,
+      "variant": "home_only_all_fbs"
+    },
+    {
+      "n": 2998,
+      "brier": 0.19048903946995133,
+      "logloss": 0.5629506132918928,
+      "accuracy": 0.7091394262841895,
+      "calibration_intercept": 0.07733096149886659,
+      "calibration_slope": 0.7486035369665123,
+      "variant": "cfbd_pregame_elo"
+    },
+    {
+      "n": 2913,
+      "brier": 0.18983488238476565,
+      "logloss": 0.5613315711634604,
+      "accuracy": 0.7099210435976656,
+      "calibration_intercept": 0.07266622757766604,
+      "calibration_slope": 0.7492109365019907,
+      "variant": "cfbd_pregame_elo_aligned",
+      "week_1_4_brier": 0.18082909173274764,
+      "week_5_plus_brier": 0.19320939761728206
+    },
+    {
+      "n": 2913,
+      "brier": 0.217431794414296,
+      "logloss": 0.624632399049044,
+      "accuracy": 0.6464126330243735,
+      "calibration_intercept": -0.015981501273067168,
+      "calibration_slope": 1.1666595022513448,
+      "margin_mae": 14.610503032854552,
+      "margin_rmse": 18.4511805901853,
+      "margin_r2": 0.17317949978454483,
+      "margin_r": 0.4230725198358046,
+      "margin_bias": -0.7166093721855965,
+      "variant": "prior_pythag_only"
+    }
+  ],
+  "collinearity": {
+    "names": [
+      "off_edge",
+      "def_edge",
+      "returning",
+      "home_field"
+    ],
+    "correlation": [
+      [
+        1.0,
+        0.61300723895415,
+        0.14386523986169245,
+        0.036553904218980145
+      ],
+      [
+        0.61300723895415,
+        1.0,
+        0.16405935809018027,
+        0.052760909669651336
+      ],
+      [
+        0.14386523986169245,
+        0.16405935809018027,
+        0.9999999999999998,
+        -0.014408906161840257
+      ],
+      [
+        0.036553904218980145,
+        0.05276090966965134,
+        -0.014408906161840256,
+        1.0
+      ]
+    ],
+    "vif": {
+      "off_edge": 1.6070240056606255,
+      "def_edge": 1.6198883798467962,
+      "returning": 1.0314228302133608,
+      "home_field": 1.0033859181432407
+    },
+    "condition_number": 2.089510209427874
+  },
+  "antisymmetry": {
+    "prob_mean_abs": 0.00789330982538322,
+    "prob_max_abs": 0.038366530421109935,
+    "margin_mean_abs_sum": 0.5400014204355731,
+    "margin_max_abs_sum": 1.642434397713874
+  },
+  "residual": {
+    "by_season": [
+      {
+        "season": 2022,
+        "n": 724,
+        "brier": 0.20468791057655397,
+        "prob_bias": 0.008756392238508971,
+        "margin_bias": -0.29657076065179,
+        "margin_rmse": 17.09025259951036
+      },
+      {
+        "season": 2023,
+        "n": 729,
+        "brier": 0.19489103634591617,
+        "prob_bias": 0.007266139001890769,
+        "margin_bias": 0.3233728038867048,
+        "margin_rmse": 16.941387507980064
+      },
+      {
+        "season": 2024,
+        "n": 741,
+        "brier": 0.2061384138023479,
+        "prob_bias": 0.006564246376438015,
+        "margin_bias": 0.8584611710552429,
+        "margin_rmse": 17.593163687443468
+      },
+      {
+        "season": 2025,
+        "n": 719,
+        "brier": 0.20233584072259,
+        "prob_bias": 0.008364299700973429,
+        "margin_bias": 0.6397562222295078,
+        "margin_rmse": 17.248616121378134
+      }
+    ],
+    "by_probability_bucket": [
+      {
+        "p_bucket": "(-0.001, 0.2]",
+        "n": 158,
+        "predicted": 0.13566089521966648,
+        "actual": 0.18354430379746836,
+        "margin_bias": 4.069733071632876
+      },
+      {
+        "p_bucket": "(0.2, 0.35]",
+        "n": 384,
+        "predicted": 0.28291094416303736,
+        "actual": 0.3203125,
+        "margin_bias": 3.061880711056189
+      },
+      {
+        "p_bucket": "(0.35, 0.5]",
+        "n": 574,
+        "predicted": 0.4288668781483247,
+        "actual": 0.47038327526132406,
+        "margin_bias": 1.6787666524280438
+      },
+      {
+        "p_bucket": "(0.5, 0.65]",
+        "n": 586,
+        "predicted": 0.5757809631730731,
+        "actual": 0.5665529010238908,
+        "margin_bias": -0.19463085987971365
+      },
+      {
+        "p_bucket": "(0.65, 0.8]",
+        "n": 648,
+        "predicted": 0.7245972524887875,
+        "actual": 0.7083333333333334,
+        "margin_bias": -1.280460522357127
+      },
+      {
+        "p_bucket": "(0.8, 1.0]",
+        "n": 563,
+        "predicted": 0.8868505196170399,
+        "actual": 0.8738898756660746,
+        "margin_bias": -1.2814813137191379
+      }
+    ],
+    "neutral_brier": 0.19958780542414312,
+    "home_brier": 0.20210763845934052,
+    "detail": {
+      "by_week": [
+        {
+          "week_bucket": "wk1-4",
+          "n": 794,
+          "brier": 0.1802636482052299,
+          "prob_bias": 0.009142258618347115,
+          "margin_bias": 0.9882926470514853,
+          "margin_rmse": 16.974153227723065
+        },
+        {
+          "week_bucket": "wk5-9",
+          "n": 1040,
+          "brier": 0.20786650897953704,
+          "prob_bias": 0.031859650228072835,
+          "margin_bias": 0.6638806137920715,
+          "margin_rmse": 16.890992029398106
+        },
+        {
+          "week_bucket": "wk10+",
+          "n": 1079,
+          "brier": 0.21240698873680158,
+          "prob_bias": -0.016569331063173338,
+          "margin_bias": -0.33180185843018617,
+          "margin_rmse": 17.71137866902906
+        }
+      ],
+      "by_spread": [
+        {
+          "spread_bucket": "0-3",
+          "n": 556,
+          "brier": 0.2484264629669096,
+          "prob_bias": 0.04312265829676086,
+          "margin_bias": 1.8390466287875569,
+          "margin_rmse": 17.931711205290664
+        },
+        {
+          "spread_bucket": "3-7",
+          "n": 682,
+          "brier": 0.2479472953652168,
+          "prob_bias": -0.008861309147158955,
+          "margin_bias": -0.2047587023780389,
+          "margin_rmse": 17.15523763368689
+        },
+        {
+          "spread_bucket": "7-14",
+          "n": 898,
+          "brier": 0.20534804318027272,
+          "prob_bias": 0.004860277019392357,
+          "margin_bias": 0.21602077453748678,
+          "margin_rmse": 16.472907941403353
+        },
+        {
+          "spread_bucket": "14-21",
+          "n": 442,
+          "brier": 0.15783423885457326,
+          "prob_bias": 0.01197842723517378,
+          "margin_bias": -0.058742079454057655,
+          "margin_rmse": 17.04530240222461
+        },
+        {
+          "spread_bucket": "21+",
+          "n": 335,
+          "brier": 0.08091701988774366,
+          "prob_bias": -0.01515551466566702,
+          "margin_bias": 0.19772790404905724,
+          "margin_rmse": 18.314780654267082
+        }
+      ],
+      "by_favorite": [
+        {
+          "favorite": "away_favorite",
+          "n": 1116,
+          "brier": 0.22367826385819548,
+          "prob_bias": 0.041001960519308205,
+          "margin_bias": 2.4931828645674443,
+          "margin_rmse": 17.06825290985418
+        },
+        {
+          "favorite": "home_favorite",
+          "n": 1797,
+          "brier": 0.1885769084000745,
+          "prob_bias": -0.012934616904033738,
+          "margin_bias": -0.9266923105179773,
+          "margin_rmse": 17.316367752864238
+        }
+      ],
+      "conference": [
+        {
+          "conference": "ACC",
+          "n": 688,
+          "prob_bias": -0.008633530724169515,
+          "margin_bias": -0.7060093045127014,
+          "margin_rmse": 15.620958222366323
+        },
+        {
+          "conference": "American Athletic",
+          "n": 573,
+          "prob_bias": -0.011149446561071483,
+          "margin_bias": -0.5322068672055124,
+          "margin_rmse": 19.306534733475015
+        },
+        {
+          "conference": "Big 12",
+          "n": 629,
+          "prob_bias": 0.009863189378761236,
+          "margin_bias": 0.7430009987867616,
+          "margin_rmse": 19.33267428390077
+        },
+        {
+          "conference": "Big Ten",
+          "n": 732,
+          "prob_bias": 0.011937481286901846,
+          "margin_bias": 0.7250836294784665,
+          "margin_rmse": 16.496363204048908
+        },
+        {
+          "conference": "Conference USA",
+          "n": 382,
+          "prob_bias": -0.010170183643939467,
+          "margin_bias": -0.35287815899693487,
+          "margin_rmse": 18.053666717363367
+        },
+        {
+          "conference": "FBS Independents",
+          "n": 172,
+          "prob_bias": 0.004103364249260936,
+          "margin_bias": 1.5401401059163544,
+          "margin_rmse": 18.076322169223015
+        },
+        {
+          "conference": "Mid-American",
+          "n": 547,
+          "prob_bias": -0.021647470001026348,
+          "margin_bias": -1.4216453431385667,
+          "margin_rmse": 17.03169113410082
+        },
+        {
+          "conference": "Mountain West",
+          "n": 516,
+          "prob_bias": -0.00427657687121,
+          "margin_bias": -0.2542258837680394,
+          "margin_rmse": 16.238872059367562
+        },
+        {
+          "conference": "Pac-12",
+          "n": 317,
+          "prob_bias": 0.014289874399810143,
+          "margin_bias": 0.6664956919476692,
+          "margin_rmse": 16.551653199026877
+        },
+        {
+          "conference": "SEC",
+          "n": 669,
+          "prob_bias": 0.018858859364526488,
+          "margin_bias": 1.085962754777266,
+          "margin_rmse": 15.817376353315112
+        },
+        {
+          "conference": "Sun Belt",
+          "n": 601,
+          "prob_bias": -0.004214702572247336,
+          "margin_bias": -0.6098040077449166,
+          "margin_rmse": 17.425740922679225
+        }
+      ],
+      "team_residual_r2": 0.05754066398712535,
+      "team_residual_null_mean": 0.02295738314520724,
+      "team_residual_permutation_p": 0.001996007984031936,
+      "worst_team_margin_bias": [
+        {
+          "team": "Kennesaw State",
+          "n": 11,
+          "prob_bias": 0.46773879317702155,
+          "margin_bias": 16.082584349618774
+        },
+        {
+          "team": "James Madison",
+          "n": 34,
+          "prob_bias": 0.25306017110805,
+          "margin_bias": 12.960487038758728
+        },
+        {
+          "team": "Massachusetts",
+          "n": 43,
+          "prob_bias": -0.27847126234336306,
+          "margin_bias": -11.731879399489058
+        },
+        {
+          "team": "Navy",
+          "n": 33,
+          "prob_bias": 0.17996520183983553,
+          "margin_bias": 11.086807124935898
+        },
+        {
+          "team": "Georgia State",
+          "n": 44,
+          "prob_bias": -0.24375566154602063,
+          "margin_bias": -9.905849031898084
+        },
+        {
+          "team": "Oklahoma State",
+          "n": 45,
+          "prob_bias": -0.1492071400019039,
+          "margin_bias": -9.205457300672164
+        },
+        {
+          "team": "UNLV",
+          "n": 46,
+          "prob_bias": 0.2012185375942351,
+          "margin_bias": 8.7563127134608
+        },
+        {
+          "team": "BYU",
+          "n": 44,
+          "prob_bias": 0.2698363289128424,
+          "margin_bias": 8.728498531534319
+        },
+        {
+          "team": "Tulsa",
+          "n": 43,
+          "prob_bias": -0.14273308219175665,
+          "margin_bias": -8.598284957104903
+        },
+        {
+          "team": "Indiana",
+          "n": 45,
+          "prob_bias": 0.11755090736172565,
+          "margin_bias": 8.305804394424813
+        }
+      ],
+      "model_vs_elo_same_games": {
+        "model_brier": 0.20202459555807759,
+        "elo_brier": 0.18983488238476565
+      }
+    }
+  },
+  "sample": {
+    "configured_games_2022_2025": 2913,
+    "all_fbs_games_2022_2025": 14730
+  }
+}
