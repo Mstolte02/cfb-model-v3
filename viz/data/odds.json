@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-13T13:52:26Z",
+   "as_of": "2026-08-13T19:29:17Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1077,14 +1077,6 @@
    "home": "TCU",
    "away": "North Carolina",
    "books": {
-    "Bovada": {
-     "spread": -7.5,
-     "spreadOpen": -7.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 50.5,
-     "homeMoneyline": -235,
-     "awayMoneyline": 195
-    },
     "DraftKings": {
      "spread": -6.5,
      "spreadOpen": null,
@@ -1092,6 +1084,14 @@
      "overUnderOpen": null,
      "homeMoneyline": -250,
      "awayMoneyline": 205
+    },
+    "Bovada": {
+     "spread": -8.5,
+     "spreadOpen": -7.5,
+     "overUnder": 47.5,
+     "overUnderOpen": 50.5,
+     "homeMoneyline": -235,
+     "awayMoneyline": 195
     }
    }
   },
