@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-12T22:43:02Z",
+   "as_of": "2026-08-13T03:02:52Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1130,7 +1130,7 @@
     "Bovada": {
      "spread": -5.5,
      "spreadOpen": -3.5,
-     "overUnder": 53.5,
+     "overUnder": 53,
      "overUnderOpen": 54.5,
      "homeMoneyline": -145,
      "awayMoneyline": 125
@@ -1886,7 +1886,7 @@
      "awayMoneyline": null
     },
     "Bovada": {
-     "spread": 13.5,
+     "spread": 14,
      "spreadOpen": 11.5,
      "overUnder": 61,
      "overUnderOpen": 61.5,
@@ -1980,7 +1980,7 @@
     "Bovada": {
      "spread": -16,
      "spreadOpen": -17,
-     "overUnder": 51,
+     "overUnder": 51.5,
      "overUnderOpen": 50.5,
      "homeMoneyline": -1300,
      "awayMoneyline": 725
