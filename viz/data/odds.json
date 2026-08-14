@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-14T07:54:10Z",
+   "as_of": "2026-08-14T13:48:00Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1513,7 +1513,7 @@
     "Bovada": {
      "spread": -6.5,
      "spreadOpen": -6,
-     "overUnder": 51.5,
+     "overUnder": 52.5,
      "overUnderOpen": 50.5,
      "homeMoneyline": -250,
      "awayMoneyline": 210
@@ -1621,6 +1621,31 @@
    }
   },
   {
+   "id": 401858207,
+   "week": 1,
+   "start": "2026-09-05T16:00:00.000Z",
+   "home": "Pittsburgh",
+   "away": "Miami (OH)",
+   "books": {
+    "Bovada": {
+     "spread": -16,
+     "spreadOpen": -16.5,
+     "overUnder": 50.5,
+     "overUnderOpen": 50.5,
+     "homeMoneyline": -800,
+     "awayMoneyline": 525
+    },
+    "DraftKings": {
+     "spread": -16.5,
+     "spreadOpen": -16.5,
+     "overUnder": null,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
    "id": 401856780,
    "week": 1,
    "start": "2026-09-05T16:00:00.000Z",
@@ -1638,31 +1663,6 @@
     "DraftKings": {
      "spread": -17.5,
      "spreadOpen": -17.5,
-     "overUnder": null,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
-   "id": 401858207,
-   "week": 1,
-   "start": "2026-09-05T16:00:00.000Z",
-   "home": "Pittsburgh",
-   "away": "Miami (OH)",
-   "books": {
-    "Bovada": {
-     "spread": -16.5,
-     "spreadOpen": -16.5,
-     "overUnder": 50.5,
-     "overUnderOpen": 50.5,
-     "homeMoneyline": -800,
-     "awayMoneyline": 525
-    },
-    "DraftKings": {
-     "spread": -16.5,
-     "spreadOpen": -16.5,
      "overUnder": null,
      "overUnderOpen": null,
      "homeMoneyline": null,
@@ -1786,7 +1786,7 @@
      "awayMoneyline": null
     },
     "Bovada": {
-     "spread": -9.5,
+     "spread": -8.5,
      "spreadOpen": -8.5,
      "overUnder": 52,
      "overUnderOpen": 53.5,
