@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-14T13:48:00Z",
+   "as_of": "2026-08-14T19:17:25Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1102,14 +1102,6 @@
    "home": "USC",
    "away": "San Jos\u00e9 State",
    "books": {
-    "Bovada": {
-     "spread": -38,
-     "spreadOpen": -35.5,
-     "overUnder": 59.5,
-     "overUnderOpen": 57.5,
-     "homeMoneyline": null,
-     "awayMoneyline": 3500
-    },
     "DraftKings": {
      "spread": -35.5,
      "spreadOpen": -35.5,
@@ -1117,6 +1109,14 @@
      "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
+    },
+    "Bovada": {
+     "spread": -38,
+     "spreadOpen": -35.5,
+     "overUnder": 60.5,
+     "overUnderOpen": 57.5,
+     "homeMoneyline": null,
+     "awayMoneyline": 3500
     }
    }
   },
@@ -1211,7 +1211,7 @@
      "awayMoneyline": null
     },
     "Bovada": {
-     "spread": -5.5,
+     "spread": -5,
      "spreadOpen": -3,
      "overUnder": 49.5,
      "overUnderOpen": 50.5,
