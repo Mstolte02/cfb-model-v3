@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-17T13:10:17Z",
+   "as_of": "2026-08-17T19:01:40Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1211,7 +1211,7 @@
      "awayMoneyline": null
     },
     "Bovada": {
-     "spread": -5,
+     "spread": -6,
      "spreadOpen": -3,
      "overUnder": 49.5,
      "overUnderOpen": 50.5,
@@ -1486,7 +1486,7 @@
      "awayMoneyline": null
     },
     "Bovada": {
-     "spread": 23.5,
+     "spread": 24.5,
      "spreadOpen": 21.5,
      "overUnder": 49.5,
      "overUnderOpen": 48.5,
@@ -1621,31 +1621,6 @@
    }
   },
   {
-   "id": 401858207,
-   "week": 1,
-   "start": "2026-09-05T16:00:00.000Z",
-   "home": "Pittsburgh",
-   "away": "Miami (OH)",
-   "books": {
-    "Bovada": {
-     "spread": -16,
-     "spreadOpen": -16.5,
-     "overUnder": 50.5,
-     "overUnderOpen": 50.5,
-     "homeMoneyline": -800,
-     "awayMoneyline": 525
-    },
-    "DraftKings": {
-     "spread": -16.5,
-     "spreadOpen": -16.5,
-     "overUnder": null,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
    "id": 401856780,
    "week": 1,
    "start": "2026-09-05T16:00:00.000Z",
@@ -1663,6 +1638,31 @@
     "DraftKings": {
      "spread": -17.5,
      "spreadOpen": -17.5,
+     "overUnder": null,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401858207,
+   "week": 1,
+   "start": "2026-09-05T16:30:00.000Z",
+   "home": "Pittsburgh",
+   "away": "Miami (OH)",
+   "books": {
+    "Bovada": {
+     "spread": -16,
+     "spreadOpen": -16.5,
+     "overUnder": 50.5,
+     "overUnderOpen": 50.5,
+     "homeMoneyline": -800,
+     "awayMoneyline": 525
+    },
+    "DraftKings": {
+     "spread": -16.5,
+     "spreadOpen": -16.5,
      "overUnder": null,
      "overUnderOpen": null,
      "homeMoneyline": null,
