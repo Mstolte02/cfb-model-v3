@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-16T18:49:27Z",
+   "as_of": "2026-08-17T01:57:27Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1952,14 +1952,6 @@
    "home": "South Florida",
    "away": "Florida International",
    "books": {
-    "Bovada": {
-     "spread": -12.5,
-     "spreadOpen": -12.5,
-     "overUnder": 55,
-     "overUnderOpen": 54.5,
-     "homeMoneyline": -460,
-     "awayMoneyline": 340
-    },
     "DraftKings": {
      "spread": -12.5,
      "spreadOpen": -12.5,
@@ -1967,6 +1959,14 @@
      "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
+    },
+    "Bovada": {
+     "spread": -13,
+     "spreadOpen": -12.5,
+     "overUnder": 55,
+     "overUnderOpen": 54.5,
+     "homeMoneyline": -460,
+     "awayMoneyline": 340
     }
    }
   },
