@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-08-18T13:11:56Z",
+  "checked_at": "2026-08-18T19:00:26Z",
   "source": "CFBD /lines",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
-  "quote_events": 130,
-  "successful_checks": 27,
+  "quote_events": 133,
+  "successful_checks": 28,
   "changed_quotes_this_check": 3,
   "games_with_quotes": 53,
   "books_with_quotes": [
