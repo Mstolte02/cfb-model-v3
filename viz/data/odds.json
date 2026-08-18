@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-18T01:53:36Z",
+   "as_of": "2026-08-18T07:08:08Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1186,7 +1186,7 @@
      "awayMoneyline": null
     },
     "Bovada": {
-     "spread": -8.5,
+     "spread": -9.5,
      "spreadOpen": -8.5,
      "overUnder": 52.5,
      "overUnderOpen": 52.5,
@@ -1853,7 +1853,7 @@
    "away": "Marshall",
    "books": {
     "Bovada": {
-     "spread": -24.5,
+     "spread": -24,
      "spreadOpen": -23.5,
      "overUnder": 54.5,
      "overUnderOpen": 54.5,
@@ -1946,31 +1946,6 @@
    }
   },
   {
-   "id": 401870763,
-   "week": 1,
-   "start": "2026-09-05T23:00:00.000Z",
-   "home": "Troy",
-   "away": "Sam Houston",
-   "books": {
-    "Bovada": {
-     "spread": -16,
-     "spreadOpen": -17,
-     "overUnder": 51.5,
-     "overUnderOpen": 50.5,
-     "homeMoneyline": -1300,
-     "awayMoneyline": 725
-    },
-    "DraftKings": {
-     "spread": -16.5,
-     "spreadOpen": -17.5,
-     "overUnder": null,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
    "id": 401862699,
    "week": 1,
    "start": "2026-09-05T23:00:00.000Z",
@@ -1988,6 +1963,31 @@
     "DraftKings": {
      "spread": -12.5,
      "spreadOpen": -12.5,
+     "overUnder": null,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401870763,
+   "week": 1,
+   "start": "2026-09-05T23:00:00.000Z",
+   "home": "Troy",
+   "away": "Sam Houston",
+   "books": {
+    "Bovada": {
+     "spread": -16,
+     "spreadOpen": -17,
+     "overUnder": 51.5,
+     "overUnderOpen": 50.5,
+     "homeMoneyline": -1300,
+     "awayMoneyline": 725
+    },
+    "DraftKings": {
+     "spread": -16.5,
+     "spreadOpen": -17.5,
      "overUnder": null,
      "overUnderOpen": null,
      "homeMoneyline": null,
