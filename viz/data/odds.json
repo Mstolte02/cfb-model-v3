@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-17T19:01:40Z",
+   "as_of": "2026-08-18T01:53:36Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1211,7 +1211,7 @@
      "awayMoneyline": null
     },
     "Bovada": {
-     "spread": -6,
+     "spread": -5.5,
      "spreadOpen": -3,
      "overUnder": 49.5,
      "overUnderOpen": 50.5,
@@ -1302,6 +1302,14 @@
    "home": "Wake Forest",
    "away": "Akron",
    "books": {
+    "Bovada": {
+     "spread": -23.5,
+     "spreadOpen": -22.5,
+     "overUnder": 50,
+     "overUnderOpen": 49.5,
+     "homeMoneyline": -3500,
+     "awayMoneyline": 1100
+    },
     "DraftKings": {
      "spread": -22.5,
      "spreadOpen": -22.5,
@@ -1309,14 +1317,6 @@
      "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
-    },
-    "Bovada": {
-     "spread": -22.5,
-     "spreadOpen": -22.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 49.5,
-     "homeMoneyline": -3500,
-     "awayMoneyline": 1100
     }
    }
   },
@@ -1353,7 +1353,7 @@
    "away": "UAB",
    "books": {
     "Bovada": {
-     "spread": -27.5,
+     "spread": -28.5,
      "spreadOpen": -27.5,
      "overUnder": 57,
      "overUnderOpen": 56.5,
@@ -2028,7 +2028,7 @@
    "away": "Missouri State",
    "books": {
     "Bovada": {
-     "spread": -39.5,
+     "spread": -40.5,
      "spreadOpen": -38.5,
      "overUnder": 52.5,
      "overUnderOpen": 52.5,
