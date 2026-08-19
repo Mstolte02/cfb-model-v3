@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-19T13:13:03Z",
+   "as_of": "2026-08-19T18:56:35Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1338,7 +1338,7 @@
     "Bovada": {
      "spread": -7,
      "spreadOpen": -7,
-     "overUnder": 50.5,
+     "overUnder": 51,
      "overUnderOpen": 51.5,
      "homeMoneyline": -290,
      "awayMoneyline": 240
@@ -1513,7 +1513,7 @@
     "Bovada": {
      "spread": -6.5,
      "spreadOpen": -6,
-     "overUnder": 52.5,
+     "overUnder": 53,
      "overUnderOpen": 50.5,
      "homeMoneyline": -250,
      "awayMoneyline": 210
@@ -1946,31 +1946,6 @@
    }
   },
   {
-   "id": 401862699,
-   "week": 1,
-   "start": "2026-09-05T23:00:00.000Z",
-   "home": "South Florida",
-   "away": "Florida International",
-   "books": {
-    "Bovada": {
-     "spread": -13.5,
-     "spreadOpen": -12.5,
-     "overUnder": 55,
-     "overUnderOpen": 54.5,
-     "homeMoneyline": -460,
-     "awayMoneyline": 340
-    },
-    "DraftKings": {
-     "spread": -12.5,
-     "spreadOpen": -12.5,
-     "overUnder": null,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
    "id": 401870763,
    "week": 1,
    "start": "2026-09-05T23:00:00.000Z",
@@ -1978,7 +1953,7 @@
    "away": "Sam Houston",
    "books": {
     "Bovada": {
-     "spread": -16,
+     "spread": -16.5,
      "spreadOpen": -17,
      "overUnder": 51.5,
      "overUnderOpen": 50.5,
@@ -1988,6 +1963,31 @@
     "DraftKings": {
      "spread": -16.5,
      "spreadOpen": -17.5,
+     "overUnder": null,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401862699,
+   "week": 1,
+   "start": "2026-09-05T23:00:00.000Z",
+   "home": "South Florida",
+   "away": "Florida International",
+   "books": {
+    "Bovada": {
+     "spread": -12.5,
+     "spreadOpen": -12.5,
+     "overUnder": 55,
+     "overUnderOpen": 54.5,
+     "homeMoneyline": -460,
+     "awayMoneyline": 340
+    },
+    "DraftKings": {
+     "spread": -12.5,
+     "spreadOpen": -12.5,
      "overUnder": null,
      "overUnderOpen": null,
      "homeMoneyline": null,
@@ -2046,6 +2046,31 @@
    }
   },
   {
+   "id": 401858428,
+   "week": 1,
+   "start": "2026-09-05T23:30:00.000Z",
+   "home": "Michigan",
+   "away": "Western Michigan",
+   "books": {
+    "Bovada": {
+     "spread": -27.5,
+     "spreadOpen": -26.5,
+     "overUnder": 47.5,
+     "overUnderOpen": 47.5,
+     "homeMoneyline": null,
+     "awayMoneyline": 2200
+    },
+    "DraftKings": {
+     "spread": -26.5,
+     "spreadOpen": -26.5,
+     "overUnder": null,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
    "id": 401856662,
    "week": 1,
    "start": "2026-09-05T23:30:00.000Z",
@@ -2067,31 +2092,6 @@
      "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
-    }
-   }
-  },
-  {
-   "id": 401858428,
-   "week": 1,
-   "start": "2026-09-05T23:30:00.000Z",
-   "home": "Michigan",
-   "away": "Western Michigan",
-   "books": {
-    "DraftKings": {
-     "spread": -26.5,
-     "spreadOpen": -26.5,
-     "overUnder": null,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    },
-    "Bovada": {
-     "spread": -26.5,
-     "spreadOpen": -26.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 47.5,
-     "homeMoneyline": null,
-     "awayMoneyline": 2200
     }
    }
   },
@@ -2153,7 +2153,7 @@
    "away": "Central Michigan",
    "books": {
     "Bovada": {
-     "spread": -13,
+     "spread": -12.5,
      "spreadOpen": -12.5,
      "overUnder": 49,
      "overUnderOpen": 49,

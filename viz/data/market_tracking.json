@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-08-19T13:13:03Z",
+  "checked_at": "2026-08-19T18:56:35Z",
   "source": "CFBD /lines",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
-  "quote_events": 134,
-  "successful_checks": 31,
-  "changed_quotes_this_check": 0,
+  "quote_events": 140,
+  "successful_checks": 32,
+  "changed_quotes_this_check": 6,
   "games_with_quotes": 53,
   "books_with_quotes": [
     "Bovada",
