@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-21T02:00:37Z",
+   "as_of": "2026-08-21T07:11:02Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1253,7 +1253,7 @@
    "away": "Memphis",
    "books": {
     "DraftKings": {
-     "spread": -6,
+     "spread": -5.5,
      "spreadOpen": -3,
      "overUnder": 56.5,
      "overUnderOpen": null,
@@ -2954,7 +2954,7 @@
     "Bovada": {
      "spread": -12,
      "spreadOpen": -12.5,
-     "overUnder": 48,
+     "overUnder": 47.5,
      "overUnderOpen": 49,
      "homeMoneyline": -575,
      "awayMoneyline": 400
