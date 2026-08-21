@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-21T13:14:55Z",
+   "as_of": "2026-08-21T19:00:36Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1455,12 +1455,12 @@
    "away": "Idaho",
    "books": {
     "DraftKings": {
-     "spread": -32.5,
+     "spread": -33.5,
      "spreadOpen": -32.5,
      "overUnder": 56.5,
      "overUnderOpen": 56.5,
-     "homeMoneyline": -50000,
-     "awayMoneyline": 4000
+     "homeMoneyline": -10000,
+     "awayMoneyline": 3000
     }
    }
   },
