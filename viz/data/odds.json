@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-22T13:03:48Z",
+   "as_of": "2026-08-22T18:51:56Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1128,7 +1128,7 @@
    "away": "NC State",
    "books": {
     "Bovada": {
-     "spread": -6,
+     "spread": -5.5,
      "spreadOpen": -3.5,
      "overUnder": 53.5,
      "overUnderOpen": 54.5,
@@ -2357,8 +2357,8 @@
      "spreadOpen": -29.5,
      "overUnder": 45.5,
      "overUnderOpen": null,
-     "homeMoneyline": -50000,
-     "awayMoneyline": 4000
+     "homeMoneyline": null,
+     "awayMoneyline": 5000
     }
    }
   },
@@ -2632,7 +2632,7 @@
    "away": "Arkansas State",
    "books": {
     "Bovada": {
-     "spread": -9.5,
+     "spread": -10,
      "spreadOpen": -10.5,
      "overUnder": 55.5,
      "overUnderOpen": 55.5,
@@ -2640,7 +2640,7 @@
      "awayMoneyline": 330
     },
     "DraftKings": {
-     "spread": -9.5,
+     "spread": -10,
      "spreadOpen": -10.5,
      "overUnder": 55.5,
      "overUnderOpen": null,
@@ -3037,10 +3037,10 @@
     "DraftKings": {
      "spread": 1.5,
      "spreadOpen": -1.5,
-     "overUnder": 55.5,
+     "overUnder": 54.5,
      "overUnderOpen": null,
-     "homeMoneyline": -108,
-     "awayMoneyline": -112
+     "homeMoneyline": -105,
+     "awayMoneyline": -115
     }
    }
   },
