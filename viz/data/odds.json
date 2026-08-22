@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-21T19:00:36Z",
+   "as_of": "2026-08-22T01:53:44Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1255,10 +1255,10 @@
     "DraftKings": {
      "spread": -5.5,
      "spreadOpen": -3,
-     "overUnder": 56.5,
+     "overUnder": 57.5,
      "overUnderOpen": null,
-     "homeMoneyline": -218,
-     "awayMoneyline": 180
+     "homeMoneyline": -230,
+     "awayMoneyline": 190
     },
     "Bovada": {
      "spread": -5.5,
@@ -1515,23 +1515,6 @@
    }
   },
   {
-   "id": 401858435,
-   "week": 1,
-   "start": "2026-09-04T23:00:00.000Z",
-   "home": "Purdue",
-   "away": "Indiana State",
-   "books": {
-    "DraftKings": {
-     "spread": -34.5,
-     "spreadOpen": -34.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
    "id": 401866623,
    "week": 1,
    "start": "2026-09-04T23:00:00.000Z",
@@ -1545,6 +1528,23 @@
      "overUnderOpen": 63.5,
      "homeMoneyline": -5000,
      "awayMoneyline": 1800
+    }
+   }
+  },
+  {
+   "id": 401858435,
+   "week": 1,
+   "start": "2026-09-04T23:00:00.000Z",
+   "home": "Purdue",
+   "away": "Indiana State",
+   "books": {
+    "DraftKings": {
+     "spread": -35.5,
+     "spreadOpen": -34.5,
+     "overUnder": 56.5,
+     "overUnderOpen": 56.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
     }
    }
   },
@@ -2619,8 +2619,8 @@
      "spreadOpen": -12.5,
      "overUnder": 54.5,
      "overUnderOpen": null,
-     "homeMoneyline": -520,
-     "awayMoneyline": 390
+     "homeMoneyline": -535,
+     "awayMoneyline": 400
     }
    }
   },
