@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-22T01:53:44Z",
+   "as_of": "2026-08-22T07:03:26Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -2918,7 +2918,7 @@
    "away": "Portland State",
    "books": {
     "DraftKings": {
-     "spread": -38.5,
+     "spread": -40.5,
      "spreadOpen": -38.5,
      "overUnder": 57.5,
      "overUnderOpen": 57.5,
@@ -3207,8 +3207,8 @@
      "spreadOpen": -1.5,
      "overUnder": 46.5,
      "overUnderOpen": 46.5,
-     "homeMoneyline": -122,
-     "awayMoneyline": 102
+     "homeMoneyline": -118,
+     "awayMoneyline": -102
     },
     "Bovada": {
      "spread": -2.5,
