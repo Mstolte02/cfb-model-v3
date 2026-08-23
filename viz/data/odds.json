@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-23T13:05:30Z",
+   "as_of": "2026-08-23T18:51:10Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -2473,23 +2473,6 @@
    }
   },
   {
-   "id": 401860880,
-   "week": 1,
-   "start": "2026-09-05T23:00:00.000Z",
-   "home": "Utah State",
-   "away": "Idaho State",
-   "books": {
-    "DraftKings": {
-     "spread": -11.5,
-     "spreadOpen": -11.5,
-     "overUnder": 64.5,
-     "overUnderOpen": 64.5,
-     "homeMoneyline": -535,
-     "awayMoneyline": 400
-    }
-   }
-  },
-  {
    "id": 401862697,
    "week": 1,
    "start": "2026-09-05T23:00:00.000Z",
@@ -2571,6 +2554,23 @@
      "overUnderOpen": 52.5,
      "homeMoneyline": -500,
      "awayMoneyline": 380
+    }
+   }
+  },
+  {
+   "id": 401860880,
+   "week": 1,
+   "start": "2026-09-05T23:00:00.000Z",
+   "home": "Utah State",
+   "away": "Idaho State",
+   "books": {
+    "DraftKings": {
+     "spread": -12.5,
+     "spreadOpen": -11.5,
+     "overUnder": 64.5,
+     "overUnderOpen": 64.5,
+     "homeMoneyline": -575,
+     "awayMoneyline": 425
     }
    }
   },
@@ -2952,7 +2952,7 @@
    "away": "Central Michigan",
    "books": {
     "Bovada": {
-     "spread": -12,
+     "spread": -11.5,
      "spreadOpen": -12.5,
      "overUnder": 47.5,
      "overUnderOpen": 49,
@@ -2962,10 +2962,10 @@
     "DraftKings": {
      "spread": -12.5,
      "spreadOpen": -12.5,
-     "overUnder": 48.5,
+     "overUnder": 47.5,
      "overUnderOpen": null,
-     "homeMoneyline": -520,
-     "awayMoneyline": 390
+     "homeMoneyline": -485,
+     "awayMoneyline": 370
     }
    }
   },
