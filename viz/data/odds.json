@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-22T18:51:56Z",
+   "as_of": "2026-08-23T02:02:27Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1077,14 +1077,6 @@
    "home": "TCU",
    "away": "North Carolina",
    "books": {
-    "DraftKings": {
-     "spread": -7.5,
-     "spreadOpen": null,
-     "overUnder": 47.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -325,
-     "awayMoneyline": 260
-    },
     "Bovada": {
      "spread": -8,
      "spreadOpen": -7.5,
@@ -1092,6 +1084,14 @@
      "overUnderOpen": 50.5,
      "homeMoneyline": -235,
      "awayMoneyline": 195
+    },
+    "DraftKings": {
+     "spread": -7.5,
+     "spreadOpen": null,
+     "overUnder": 47.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -310,
+     "awayMoneyline": 250
     }
    }
   },
@@ -1102,14 +1102,6 @@
    "home": "USC",
    "away": "San Jos\u00e9 State",
    "books": {
-    "DraftKings": {
-     "spread": -38.5,
-     "spreadOpen": -35.5,
-     "overUnder": 60.5,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    },
     "Bovada": {
      "spread": -38,
      "spreadOpen": -35.5,
@@ -1117,6 +1109,14 @@
      "overUnderOpen": 57.5,
      "homeMoneyline": null,
      "awayMoneyline": 3500
+    },
+    "DraftKings": {
+     "spread": -38.5,
+     "spreadOpen": -35.5,
+     "overUnder": 59.5,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
     }
    }
   },
@@ -1178,12 +1178,12 @@
    "away": "Sacramento State",
    "books": {
     "DraftKings": {
-     "spread": -8.5,
+     "spread": -9.5,
      "spreadOpen": -8.5,
      "overUnder": 52.5,
      "overUnderOpen": null,
-     "homeMoneyline": -325,
-     "awayMoneyline": 260
+     "homeMoneyline": -355,
+     "awayMoneyline": 280
     },
     "Bovada": {
      "spread": -9.5,
@@ -1257,8 +1257,8 @@
      "spreadOpen": -3,
      "overUnder": 57.5,
      "overUnderOpen": null,
-     "homeMoneyline": -230,
-     "awayMoneyline": 190
+     "homeMoneyline": -225,
+     "awayMoneyline": 185
     },
     "Bovada": {
      "spread": -5.5,
@@ -1303,9 +1303,9 @@
    "away": "Bethune-Cookman",
    "books": {
     "DraftKings": {
-     "spread": -41.5,
+     "spread": -42.5,
      "spreadOpen": -41.5,
-     "overUnder": null,
+     "overUnder": 59.5,
      "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
@@ -1572,21 +1572,21 @@
    "home": "Michigan State",
    "away": "Toledo",
    "books": {
-    "Bovada": {
-     "spread": -10.5,
-     "spreadOpen": -10.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 49.5,
-     "homeMoneyline": -410,
-     "awayMoneyline": 305
-    },
     "DraftKings": {
-     "spread": -10.5,
+     "spread": -10,
      "spreadOpen": -10.5,
      "overUnder": 49.5,
      "overUnderOpen": null,
      "homeMoneyline": -410,
      "awayMoneyline": 320
+    },
+    "Bovada": {
+     "spread": -10,
+     "spreadOpen": -10.5,
+     "overUnder": 49.5,
+     "overUnderOpen": 49.5,
+     "homeMoneyline": -410,
+     "awayMoneyline": 305
     }
    }
   },
@@ -2034,7 +2034,7 @@
    "away": "Tennessee State",
    "books": {
     "DraftKings": {
-     "spread": -46.5,
+     "spread": -47.5,
      "spreadOpen": -46.5,
      "overUnder": 56.5,
      "overUnderOpen": 56.5,
@@ -2086,23 +2086,6 @@
    }
   },
   {
-   "id": 401862694,
-   "week": 1,
-   "start": "2026-09-05T19:30:00.000Z",
-   "home": "Charlotte",
-   "away": "The Citadel",
-   "books": {
-    "DraftKings": {
-     "spread": -15.5,
-     "spreadOpen": -15.5,
-     "overUnder": 46.5,
-     "overUnderOpen": 46.5,
-     "homeMoneyline": -800,
-     "awayMoneyline": 550
-    }
-   }
-  },
-  {
    "id": 401862696,
    "week": 1,
    "start": "2026-09-05T19:30:00.000Z",
@@ -2116,6 +2099,23 @@
      "overUnderOpen": 53.5,
      "homeMoneyline": -50000,
      "awayMoneyline": 4000
+    }
+   }
+  },
+  {
+   "id": 401862694,
+   "week": 1,
+   "start": "2026-09-05T19:30:00.000Z",
+   "home": "Charlotte",
+   "away": "The Citadel",
+   "books": {
+    "DraftKings": {
+     "spread": -15.5,
+     "spreadOpen": -15.5,
+     "overUnder": 46.5,
+     "overUnderOpen": 46.5,
+     "homeMoneyline": -1100,
+     "awayMoneyline": 700
     }
    }
   },
@@ -2345,7 +2345,7 @@
    "away": "Northern Illinois",
    "books": {
     "Bovada": {
-     "spread": -31,
+     "spread": -32,
      "spreadOpen": -29.5,
      "overUnder": 45.5,
      "overUnderOpen": 43.5,
