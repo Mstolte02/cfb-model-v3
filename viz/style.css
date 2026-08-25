@@ -14,6 +14,7 @@
   --blue: #2f6096;
   --red: #a83226;
   --field: #e7eadd;
+  --bet: #e8b53f;
   --sans: -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -748,6 +749,14 @@ main { max-width: 1320px; padding-top: 38px; }
 .market-row > div > b { color: #fff; font: 800 15px/1 var(--sans); }
 .market-row .edge b { color: #7ed49a; }
 .market-row .edge.negative b { color: #e88f80; }
+/* A flagged row is a bet we would place, so it gets the one warm colour on the
+   dark panel: an inset rail, a lit background and a chip beside the team. Nothing
+   else on this panel is amber, which is what makes it findable at a glance. */
+.market-row.bet { background: linear-gradient(90deg, rgba(232,181,63,.15), rgba(232,181,63,0) 62%);
+  box-shadow: inset 3px 0 0 var(--bet); }
+.market-row.bet:hover { background: linear-gradient(90deg, rgba(232,181,63,.22), rgba(232,181,63,.03) 62%); }
+.bet-flag { display: inline-block; margin-left: 9px; padding: 3px 6px; border-radius: 4px;
+  background: var(--bet); color: #10202f; font: 800 9px/1 var(--sans); letter-spacing: .1em; }
 .mini-team { display: inline-flex; align-items: center; gap: 8px; }
 .mini-team img { width: 24px; height: 24px; object-fit: contain; }
 .market-note { padding: 13px 22px; color: #8fa3b5; background: #091724; font: 11px/1.5 var(--sans); }
@@ -807,10 +816,11 @@ main { max-width: 1320px; padding-top: 38px; }
 .validation-strip b { font: 750 13px/1.2 var(--sans); }
 .validation-strip span { color: var(--text); font: 650 12px/1.2 var(--sans); }
 .validation-strip small { color: var(--muted); font-size: 11px; }
-.tracking-strip { display: grid; grid-template-columns: minmax(260px,1.7fr) repeat(3,minmax(150px,1fr));
+.tracking-strip { display: grid; grid-template-columns: minmax(260px,1.7fr) minmax(180px,1fr);
   gap: 1px; overflow: hidden; margin: 12px 0 10px; border: 1px solid var(--line2);
   border-radius: 11px; background: var(--line2); }
-.tracking-strip > div { min-height: 86px; padding: 15px 16px; background: var(--panel); }
+.tracking-strip.has-panel { margin-bottom: 0; border-radius: 11px 11px 0 0; }
+.tracking-strip > div, .tracking-strip > button { min-height: 86px; padding: 15px 16px; background: var(--panel); }
 .tracking-strip > div:first-child { background: var(--navy); color: #fff; }
 .tracking-strip span { display: block; margin-bottom: 8px; color: var(--muted);
   font: 750 9px/1 var(--sans); text-transform: uppercase; letter-spacing: .12em; }
@@ -818,12 +828,34 @@ main { max-width: 1320px; padding-top: 38px; }
 .tracking-strip b { display: block; font: 800 16px/1.2 var(--sans); }
 .tracking-strip small { display: block; margin-top: 7px; color: var(--muted); font: 10px/1.35 var(--sans); }
 .tracking-strip > div:first-child small { color: #a9bac8; }
-.weekly-head, .weekly-row { display: grid; grid-template-columns: minmax(320px,1.6fr) 120px 120px 160px; gap: 10px; align-items: center; }
+/* The watchlist tile is a button, so it has to look pressable and say so when it
+   has nothing to open - a disabled tile that still invited a click read as broken. */
+.watch-toggle { display: block; width: 100%; border: 0; color: inherit; cursor: pointer;
+  font: inherit; text-align: left; }
+.watch-toggle:hover:not(:disabled) { background: var(--panel2); }
+.watch-toggle.open { box-shadow: inset 0 -3px 0 var(--accent); }
+.watch-toggle:disabled { cursor: default; opacity: .65; }
+.watch-panel { overflow: hidden; margin: 0 0 10px; border: 1px solid var(--line2);
+  border-top: 0; border-radius: 0 0 11px 11px; background: var(--panel); }
+.watch-row { display: grid; grid-template-columns: minmax(280px,1.5fr) repeat(3,minmax(110px,1fr));
+  gap: 10px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--line); }
+.watch-row > div:first-child { display: grid; grid-template-columns: 40px 1fr 22px 1fr; align-items: center; gap: 5px; }
+.watch-row i { color: var(--muted); font-size: 11px; text-align: center; }
+.watch-row small { display: block; color: var(--muted); font: 10px/1.4 var(--sans); }
+.watch-row b { display: block; margin-top: 3px; font: 800 14px/1.2 var(--sans); }
+.weekly-board { margin-bottom: 18px; }
+.weekly-head, .weekly-row { display: grid; grid-template-columns: minmax(300px,1.5fr) 110px 100px 110px 150px; gap: 10px; align-items: center; }
 .weekly-head { padding: 10px 16px; color: #9fb0c2; background: var(--navy); font: 700 9px/1 var(--sans); text-transform: uppercase; letter-spacing: .12em; }
 .weekly-row { min-height: 60px; padding: 8px 16px; border-bottom: 1px solid var(--line); }
 .weekly-row > div:first-child { display: grid; grid-template-columns: 40px 1fr 22px 1fr; align-items: center; gap: 5px; }
 .weekly-row i { color: var(--muted); font-size: 11px; text-align: center; }.weekly-row small { display: block; color: var(--muted); font: 10px/1.4 var(--sans); }
-.weekly-row > div > b { font: 800 15px/1.2 var(--sans); }.weekly-row .edge b { color: var(--green); }
+.weekly-row > div > b { font: 800 15px/1.2 var(--sans); }
+/* The gap is a measurement, not a verdict, so it is plain text. Only the bet cell
+   is allowed to look like a recommendation. */
+.weekly-row .edge b { color: var(--text); }
+.weekly-row.bet { background: rgba(232,181,63,.12); box-shadow: inset 3px 0 0 var(--bet); }
+.bet-cell b { color: var(--text); font: 800 14px/1.2 var(--sans); }
+.bet-none { color: var(--line2); font: 700 14px/1 var(--sans); }
 .game-card.user-picked { outline: 2px solid var(--coral); }.bracket-pick { border: 0; background: none; color: inherit; cursor: pointer; font: inherit; text-align: left; }
 .bracket-pick:hover { color: var(--coral); text-decoration: underline; }
 footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px max(28px,calc((100vw - 1280px)/2));
@@ -835,7 +867,7 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
   .hub-tab { min-width: 128px; padding: 12px; }.section-bar { top: 115px; padding-inline: 18px; }
   .market-list { grid-template-columns: 1fr; }.market-row:nth-child(odd) { border-right: 0; }
   .range-grid { grid-template-columns: repeat(2,1fr); }.driver-grid { grid-template-columns: repeat(3,1fr); }
-  .weekly-head, .weekly-row { grid-template-columns: minmax(290px,1fr) 100px 100px 130px; }
+  .weekly-head, .weekly-row { grid-template-columns: minmax(260px,1fr) 92px 88px 96px 120px; }
 }
 @media (max-width: 700px) {
   main { padding-inline: 12px; }.section-bar { position: static; overflow-x: auto; }.section-nav { flex-wrap: nowrap; overflow-x: auto; }
@@ -846,8 +878,8 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
   .leader-card { grid-template-columns: 125px 1fr; min-height: 165px; }.leader-copy h3 { font-size: 21px; }
   .driver-grid { grid-template-columns: 1fr 1fr; }.weekly-board { overflow-x: auto; }
   .validation-strip { grid-template-columns: 1fr; }
-  .tracking-strip { grid-template-columns: 1fr 1fr; }
-  .tracking-strip > div:first-child { grid-column: 1 / -1; }
-  .weekly-head, .weekly-row { min-width: 720px; }.section-intro { align-items: flex-start; flex-direction: column; }
+  .tracking-strip { grid-template-columns: 1fr; }
+  .watch-panel { overflow-x: auto; }.watch-row { min-width: 700px; }
+  .weekly-head, .weekly-row { min-width: 820px; }.section-intro { align-items: flex-start; flex-direction: column; }
   footer { flex-direction: column; }.market-panel-head { align-items: flex-start; flex-direction: column; }
 }

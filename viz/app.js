@@ -2422,6 +2422,27 @@
      ======================================================================= */
   const americanOdds = n => n > 0 ? `+${n}` : String(n);
   const implied = n => n < 0 ? (-n) / ((-n) + 100) : 100 / (n + 100);
+
+  /* Which gaps we would actually back. A price gap on its own is not enough: the
+     model also has to think the thing happens. A team at 33% to make the playoff
+     is a screen even when it is 11 points over the market, because we still do not
+     expect it to happen. National title is exempt by design - it is a long-odds
+     market where nothing clears 50%, so it stays a pure price screen.
+     minGap is in probability points for futures and moneylines, and in points of
+     spread or total for the other two. Change the numbers here; nothing else. */
+  const BET_RULES = {
+    futures:   { minModelP: .50, minGap: .05 },
+    // Win totals sit against a de-vigged price the model beats almost everywhere,
+    // so a 5-point gate would flag four rows in five and highlight nothing. This
+    // one wants a real look before the season.
+    win_total: { minModelP: .50, minGap: .20 },
+    // Weekly gates are in points of spread and total. minModelP is 0 on the
+    // moneyline on purpose: a priced underdog the model likes is still a bet, so
+    // the more-likely-than-not rule that governs futures does not apply here.
+    spread:    { minModelP: 0,   minGap: 4.5 },
+    total:     { minModelP: 0,   minGap: 6.0 },
+    moneyline: { minModelP: 0,   minGap: .12 }
+  };
   const quantileFromCounts = (counts, q) => {
     const total = counts.reduce((a, b) => a + b, 0), target = total * q;
     let seen = 0;
@@ -2476,13 +2497,8 @@
     const lo = Math.min(...scored.map(r => r.score)), hi = Math.max(...scored.map(r => r.score));
     return scored.map(r => ({ ...r, index: hi === lo ? 50 : 20 + 80 * (r.score - lo) / (hi - lo) }));
   }
+  const betFlag = `<span class="bet-flag">BET</span>`;
   function renderFutures() {
-    function validationHTML(market, label) {
-      const v = (bettingValidation.markets || {})[market];
-      if (!v) return "";
-      const h = v.holdout_2025 || {}, ok = !!v.validated_edge;
-      return `<div class="validation-strip ${ok ? "validated" : "not-validated"}"><b>${esc(label)}: ${ok ? "Held up in 2025" : "No repeatable edge in 2025"}</b><span>${h.bets || 0} holdout bets · ${h.hit_rate == null ? "—" : pct(h.hit_rate, 1)} hit · ${h.roi == null ? "—" : (h.roi >= 0 ? "+" : "") + pct(h.roi, 1)} ROI</span><small>Thresholds frozen on 2022–24; 2025 was untouched. A displayed model gap is not called an edge unless it survived this test.</small></div>`;
-    }
     setFutureBooks();
     const book = document.getElementById("future-book").value;
     const rows = ((((odds || {}).markets || {})[futureMarket] || {})[book] || []).slice();
@@ -2503,26 +2519,32 @@
         const overEdge = overP - marketOver;
         return { ...r, overP, marketOver, side: overEdge >= 0 ? "Over" : "Under", edge: Math.abs(overEdge) };
       }).sort((a, b) => b.edge - a.edge);
-      body = priced.map((r, i) => `<div class="market-row">
-        <span class="market-rank">${i + 1}</span><div class="market-team">${teamMini(r.team)}<small>${r.side} ${r.line} · ${americanOdds(r.side === "Over" ? r.over : r.under)}</small></div>
-        <div><small>Model</small><b>${pct(r.side === "Over" ? r.overP : 1 - r.overP, 0)}</b></div><div class="edge"><small>vs no-vig price</small><b>+${pct(r.edge, 1)}</b></div>
-      </div>`).join("");
-      note = "Regular-season win distributions are rebuilt game by game so conference championships never leak into sportsbook win-total comparisons.";
+      const W = BET_RULES.win_total;
+      body = priced.map((r, i) => {
+        const sideP = r.side === "Over" ? r.overP : 1 - r.overP;
+        const bet = sideP > W.minModelP && r.edge >= W.minGap;
+        return `<div class="market-row${bet ? " bet" : ""}">
+        <span class="market-rank">${i + 1}</span><div class="market-team">${teamMini(r.team)}${bet ? betFlag : ""}<small>${r.side} ${r.line} · ${americanOdds(r.side === "Over" ? r.over : r.under)}</small></div>
+        <div><small>Model</small><b>${pct(sideP, 0)}</b></div><div class="edge"><small>vs no-vig price</small><b>+${pct(r.edge, 1)}</b></div>
+      </div>`;
+      }).join("");
+      note = `Regular-season win distributions are rebuilt game by game so conference championships never leak into sportsbook win-total comparisons. BET marks a side the model gives more than ${pct(BET_RULES.win_total.minModelP, 0)} with at least a ${pct(BET_RULES.win_total.minGap, 0)} gap.`;
     } else {
       const key = futureMarket === "make_cfp" ? "playoff"
         : futureMarket === "conference_title" ? "conf_champ" : "champ";
       const priced = rows.map(r => ({ ...r, modelP: (sim[r.team] || {})[key] || 0,
         marketP: implied(r.odds) })).map(r => ({ ...r, edge: r.modelP - r.marketP }))
         .sort((a, b) => b.edge - a.edge);
-      body = priced.map((r, i) => `<div class="market-row">
-        <span class="market-rank">${i + 1}</span><div class="market-team">${teamMini(r.team)}<small>${esc(book)} ${americanOdds(r.odds)}</small></div>
+      const F = BET_RULES.futures, longOdds = futureMarket === "national_title";
+      body = priced.map((r, i) => {
+        const bet = !longOdds && r.modelP > F.minModelP && r.edge >= F.minGap;
+        return `<div class="market-row${bet ? " bet" : ""}">
+        <span class="market-rank">${i + 1}</span><div class="market-team">${teamMini(r.team)}${bet ? betFlag : ""}<small>${esc(book)} ${americanOdds(r.odds)}</small></div>
         <div><small>Model</small><b>${pct(r.modelP, 1)}</b></div><div class="edge ${r.edge < 0 ? "negative" : ""}"><small>Model gap</small><b>${r.edge >= 0 ? "+" : ""}${pct(r.edge, 1)}</b></div>
-      </div>`).join("");
-      note = "Price gap compares the model with raw implied probability. It is a screening tool, not a guaranteed return; incomplete futures boards are not de-vigged.";
+      </div>`;
+      }).join("");
+      note = `Price gap compares the model with raw implied probability; incomplete futures boards are not de-vigged. ${longOdds ? "National title is a long-odds screen, so no row is flagged as a bet." : `BET marks a team the model gives more than ${pct(BET_RULES.futures.minModelP, 0)} with at least a ${pct(BET_RULES.futures.minGap, 0)} gap. A large gap on a team we still do not expect to get there is not flagged.`}`;
     }
-    document.getElementById("future-validation").innerHTML = futureMarket === "win_totals"
-      ? validationHTML("win_total", "Season win totals")
-      : `<div class="validation-strip not-validated"><b>Model gap, not a validated betting edge</b><span>Championship and award futures are too sparse for a credible four-season ROI claim.</span><small>They remain probability-and-price screens; only season win totals have enough team-season observations for the historical test.</small></div>`;
     document.getElementById("future-spotlight").innerHTML = `<article class="market-panel"><div class="market-panel-head"><div><span class="eyebrow">Model vs market</span><h3>${futureMarket.replaceAll("_", " ")}</h3></div>${src ? `<a href="${src.url}" target="_blank" rel="noopener">${esc(book)} · ${src.as_of}</a>` : ""}</div><div class="market-list">${body || `<p class="sub">No quoted market is available.</p>`}</div><div class="market-note">${note}</div></article>`;
   }
   function teamMini(team) {
@@ -2677,31 +2699,64 @@
         gap: line.spread == null ? null : line.spread - modelSpread,
         marketValue: line.spread, modelValue: modelSpread };
     }).sort((a, b) => (a.week || 99) - (b.week || 99) || String(a.start).localeCompare(String(b.start)));
-    const v = (bettingValidation.markets || {})[market];
-    const shopping = ((bettingValidation.research_candidates || {}).book_shopped_moneyline || {});
-    const currentWatch = new Map((marketTracking.current_candidates || []).map(x => [String(x.game_id), x]));
+    const candidates = marketTracking.current_candidates || [];
     const checked = marketTracking.checked_at ? new Date(marketTracking.checked_at) : null;
-    const qualified = (marketTracking.current_candidates || []).filter(x => x.uncertainty_cleared).length;
-    document.getElementById("market-tracking").innerHTML = marketTracking.checked_at ?
-      `<div class="tracking-strip"><div><span class="eyebrow">Forward validation ledger</span><b>${marketTracking.games_with_quotes || 0} games · ${marketTracking.quote_events || 0} quote events</b><small>Last successful retrieval ${checked.toLocaleString()} · provider prices are timestamped when we observe them</small></div><div><span>Watchlist</span><b>${(marketTracking.current_candidates || []).length}</b><small>${qualified} clear the uncertainty gate</small></div><div><span>Qualified closes</span><b>${marketTracking.qualified_clv_observations || 0}</b><small>${marketTracking.mean_consensus_clv == null ? "CLV begins after a capture within six hours of kickoff" : `${marketTracking.mean_consensus_clv >= 0 ? "+" : ""}${pct(marketTracking.mean_consensus_clv, 1)} mean consensus CLV`}</small></div><div><span>Availability history</span><b>${(marketTracking.availability || {}).events || 0} events</b><small>Append-only roster status ledger</small></div></div>` :
-      `<div class="validation-strip not-validated"><b>Forward ledger not initialized</b><small>Historical lines remain visible, but no price is treated as timestamped until a successful capture is recorded.</small></div>`;
-    document.getElementById("weekly-validation").innerHTML = combined && market === "moneyline" && shopping.development_2022_2024 ? (() => {
-      const d = shopping.development_2022_2024, h = shopping.season_2025 || {};
-      return `<div class="validation-strip not-validated"><b>Research watchlist · forward validation required</b><span>${d.bets} development bets · ${d.roi >= 0 ? "+" : ""}${pct(d.roi, 1)} ROI · 2025 ${h.roi >= 0 ? "+" : ""}${pct(h.roi, 1)}</span><small>Requires two valid books and a 15-point model-vs-consensus gap. “Gate cleared” additionally requires the historical 80% lower win-rate bound to beat the best price by 1 point. Promotion still requires positive timestamped closing-line value.</small></div>`;
-    })() : v ? (() => {
-      const h = v.holdout_2025 || {}, ok = !!v.validated_edge;
-      return `<div class="validation-strip ${ok ? "validated" : "not-validated"}"><b>${ok ? "Historically validated" : "No repeatable historical edge"}</b><span>${h.bets || 0} holdout bets · ${h.roi == null ? "—" : (h.roi >= 0 ? "+" : "") + pct(h.roi, 1)} ROI</span><small>2022–24 set the threshold; 2025 tested it. Rows below show model gaps, not bet recommendations.</small></div>`;
-    })() : "";
+    renderMarketTracking(candidates, checked);
+
+    // The bet cell is the whole point of the board: everything else is context.
+    // A row only earns one when the gap clears the threshold in BET_RULES, and it
+    // names the side and the number to write on the ticket, not the model output.
+    const RULE = BET_RULES[market];
+    function betToPlace(g) {
+      if (g.gap == null || g.marketValue == null || Math.abs(g.gap) < RULE.minGap) return null;
+      if (market === "total") return `${g.gap >= 0 ? "Over" : "Under"} ${Number(g.marketValue).toFixed(1)}`;
+      const home = g.gap >= 0, side = home ? g.home : g.away;
+      if (market === "moneyline") {
+        if (g.modelValue == null || g.modelValue < RULE.minModelP) return null;
+        return `${esc(abbr(side))} ${americanOdds(g.marketValue)}`;
+      }
+      const num = home ? g.marketValue : -g.marketValue;
+      return `${esc(abbr(side))} ${num > 0 ? "+" : ""}${num.toFixed(1)}`;
+    }
     const marketLabel = market === "moneyline" ? "Moneyline" : market === "total" ? "Total" : "Spread";
     const bookLabel = combined ? "Best price" : book;
-    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span></div>${rows.map(g => {
+    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span><span>Bet to place</span></div>${rows.map(g => {
       const lean = market === "total" ? (g.gap >= 0 ? "Over" : "Under") : (g.gap >= 0 ? g.home : g.away);
       const marketText = g.marketValue == null ? "—" : market === "moneyline" ? americanOdds(g.marketValue) : `${g.marketValue > 0 && market !== "total" ? "+" : ""}${Number(g.marketValue).toFixed(1)}`;
       const modelText = g.modelValue == null ? "—" : market === "moneyline" ? pct(g.modelValue, 1) : `${g.modelValue > 0 && market === "spread" ? "+" : ""}${g.modelValue.toFixed(1)}`;
       const gapText = g.gap == null ? "—" : `${esc(market === "total" ? lean : abbr(lean))} ${market === "moneyline" ? pct(Math.abs(g.gap), 1) : Math.abs(g.gap).toFixed(1)}`;
-      const watch = combined && market === "moneyline" ? currentWatch.get(String(g.id)) : null;
-      return `<div class="weekly-row"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b><small>${watch ? (watch.uncertainty_cleared ? "research gate cleared" : "research watchlist") : "not a bet label"}</small></div></div>`;
+      const bet = betToPlace(g);
+      return `<div class="weekly-row${bet ? " bet" : ""}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
     }).join("")}</div>`;
+  }
+
+  /* The watchlist tile opens the games behind the number. It used to report only a
+     count, which is useless - the question anyone has is which games are on it. */
+  let watchlistOpen = false;
+  function renderMarketTracking(candidates, checked) {
+    const host = document.getElementById("market-tracking");
+    if (!checked) {
+      host.innerHTML = `<div class="tracking-strip"><div><span class="eyebrow">Market data</span><b>No capture recorded</b><small>Historical lines stay visible; no price is treated as timestamped until a capture succeeds.</small></div></div>`;
+      return;
+    }
+    const list = candidates.map(c => {
+      const p = c.model_side_p == null ? "—" : pct(c.model_side_p, 1);
+      const m = c.consensus_side_p == null ? "—" : pct(c.consensus_side_p, 1);
+      return `<div class="watch-row"><div><small>WK ${c.week == null ? "—" : c.week}</small>${teamMini(c.away)}<i>at</i>${teamMini(c.home)}</div>
+        <div><small>Side</small><b>${esc(abbr(c.team))} ${c.best_price == null ? "" : americanOdds(c.best_price)}</b></div>
+        <div><small>Model vs market</small><b>${p} vs ${m}</b></div>
+        <div class="edge"><small>Gap</small><b>${c.gap == null ? "—" : (c.gap >= 0 ? "+" : "") + pct(c.gap, 1)}</b></div></div>`;
+    }).join("");
+    host.innerHTML = `<div class="tracking-strip${candidates.length ? " has-panel" : ""}">
+      <div><span class="eyebrow">Market data</span><b>${marketTracking.games_with_quotes || 0} games with posted lines</b><small>Last retrieved ${checked.toLocaleString()}</small></div>
+      <button type="button" class="watch-toggle${watchlistOpen ? " open" : ""}" id="watch-toggle" aria-expanded="${watchlistOpen}"${candidates.length ? "" : " disabled"}>
+        <span>Watchlist</span><b>${candidates.length}</b><small>${candidates.length ? (watchlistOpen ? "Hide the games" : "Show the games") : "No games on the watchlist"}</small></button>
+      </div>${candidates.length ? `<div class="watch-panel"${watchlistOpen ? "" : " hidden"}>${list}</div>` : ""}`;
+    const toggle = document.getElementById("watch-toggle");
+    if (toggle) toggle.addEventListener("click", () => {
+      watchlistOpen = !watchlistOpen;
+      renderMarketTracking(candidates, checked);
+    });
   }
 
   document.querySelectorAll("#future-market .seg-btn").forEach(b => b.addEventListener("click", () => {
