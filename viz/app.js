@@ -2675,32 +2675,45 @@
     Object.keys(players).sort().forEach(t => team.add(new Option(t, t)));
   }
 
-  /* Matchup advantage as a tug of war. The old grid gave every factor its own card
-     with a left-anchored bar, so direction lived in a text label and magnitudes were
-     only comparable by squinting. A centre-split track says both at a glance: the bar
-     points at the team the factor helps, its length is that factor's pull relative to
-     the strongest one here, and the net row is what remains after the two sides
-     cancel. */
+  /* Matchup advantage in the unit fans actually read: POINTS of margin. The margin
+     model is linear, so each input's coefficient times the team difference IS that
+     input's point contribution, and the rows sum to the projected spread. Five
+     statistical facets was model-speak; consumers get three plain buckets - what the
+     offence did, what the defence did, who is on the roster - plus home field when
+     there is one. */
   function matchupDriversHTML(a, b) {
-    const labels = { O: "Offensive profile", D: "Defensive profile", talent: "Talent baseline", returning: "Returning production", war_projected: "Projected WAR" };
     const A = vecOf(a), B = vecOf(b), M = cur().model;
-    const rows = M.features.map((f, i) => ({ name: labels[f] || f, v: M.logistic.coef[i] * (A[i] - B[i]) }))
-      .sort((x, y) => Math.abs(y.v) - Math.abs(x.v));
+    const pt = f => {
+      const i = M.features.indexOf(f);
+      return i < 0 ? 0 : M.margin.coef[i] * (A[i] - B[i]);
+    };
+    const rows = [
+      { name: "Offense", v: pt("O") },
+      { name: "Defense", v: pt("D") },
+      { name: "Roster & recruits", v: ["talent", "returning", "war_projected"].reduce((s, f) => s + pt(f), 0) },
+    ];
+    const venue = document.querySelector("input[name=venue]:checked").value;
+    if (venue !== "N") rows.push({ name: "Home field", v: M.margin.hfa * (venue === "A" ? 1 : -1) });
+    rows.sort((x, y) => Math.abs(y.v) - Math.abs(x.v));
     const maxAbs = Math.max(...rows.map(r => Math.abs(r.v)), 1e-9);
-    const sumAbs = rows.reduce((s, r) => s + Math.abs(r.v), 0) || 1e-9;
     const bar = v => {
       const w = Math.min(50, 50 * Math.abs(v) / maxAbs).toFixed(2);
+      const fav = v >= 0 ? a : b;
       return v >= 0
         ? `<i class="l" style="width:${w}%;background:${color(a)}"></i>`
         : `<i class="r" style="width:${w}%;background:${color(b)}"></i>`;
     };
+    const val = v => {
+      const fav = v >= 0 ? a : b;
+      return `<b class="tug-val" style="color:${color(fav)}">+${Math.abs(v).toFixed(1)}</b>`;
+    };
     const net = rows.reduce((s, r) => s + r.v, 0);
     const netFav = net >= 0 ? a : b;
-    return `<div class="driver-panel"><div class="section-intro"><div><span class="eyebrow">Why the model leans</span><h3>Matchup advantage, factor by factor</h3></div><p>Every bar points at the team it helps, from the centre out; length is that factor's share of the pull, scaled to the biggest one in this game.</p></div>
-      <div class="tug tug-head"><span class="tug-label"></span><div class="tug-track head"><span class="tn" style="color:${color(a)}">${esc(abbr(a))}</span><span class="tn" style="color:${color(b)}">${esc(abbr(b))}</span></div></div>
-      ${rows.map(r => `<div class="tug"><span class="tug-label">${esc(r.name)}</span><div class="tug-track">${bar(r.v)}</div></div>`).join("")}
-      <div class="tug tug-net"><span class="tug-label">Net edge</span><div class="tug-track"><i class="${net >= 0 ? "l" : "r"}" style="width:${(50 * Math.abs(net) / sumAbs).toFixed(2)}%;background:${color(netFav)}"></i></div>
-        <span class="tug-note">${esc(abbr(netFav))} wins the exchange ${pct(Math.abs(net) / sumAbs, 0)} to ${pct(1 - Math.abs(net) / sumAbs, 0)}</span></div>
+    return `<div class="driver-panel"><div class="section-intro"><div><span class="eyebrow">Why the model leans</span><h3>Matchup advantage, in points</h3></div><p>Every bar points at the team it helps and counts the points of margin that factor adds. Added together, they are the spread.</p></div>
+      <div class="tug tug-head"><span class="tug-label"></span><div class="tug-track head" style="grid-column:2/4"><span class="tn" style="color:${color(a)}">${esc(abbr(a))}</span><span class="tn" style="color:${color(b)}">${esc(abbr(b))}</span></div></div>
+      ${rows.map(r => `<div class="tug"><span class="tug-label">${esc(r.name)}</span><div class="tug-track">${bar(r.v)}</div>${val(r.v)}</div>`).join("")}
+      <div class="tug tug-net"><span class="tug-label">All together</span><div class="tug-track"><i class="${net >= 0 ? "l" : "r"}" style="width:${Math.min(50, 50 * Math.abs(net) / maxAbs).toFixed(2)}%;background:${color(netFav)}"></i></div><b class="tug-val" style="color:${color(netFav)}">+${Math.abs(net).toFixed(1)}</b></div>
+      <p class="tug-sum">That adds up to <b style="color:${color(netFav)}">${esc(netFav)}</b> by ${Math.abs(net).toFixed(1)} points — the spread above.</p>
     </div>`;
   }
 
