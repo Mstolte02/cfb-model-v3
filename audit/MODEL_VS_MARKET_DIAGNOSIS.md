@@ -113,6 +113,59 @@ improvement whose 95% interval excludes zero. That removes a meaningless publish
 number. It does not make totals bettable — .156 against the market's .379 — and the
 board now says so beside the column.
 
+## Does the model gain edge as it disagrees more?
+
+The threshold sweep asks "which grid point has the best ROI", a maximum over noisy
+estimates, which is why its selection null eats the answer. The fairer question is
+whether performance *trends* with the size of the disagreement. A trend is much harder
+to fake: noise produces a best bucket every time, but not a monotone ordering with a
+direction declared in advance. `scripts/disagreement_trend.py` runs it as one
+permutation test per market rather than fourteen.
+
+**Spread.** Spearman rho +.0044, p = .42. No trend, and the buckets are not ordered —
+the 5.9-8.4 point bucket is the *worst* in the set at .407 hit and −.21 ROI.
+
+**Moneyline.** Spearman rho **−.0984, p = 1.00** against the declared direction. Hit
+rate falls monotonically as the model disagrees more: .475, .430, .367, .353, .354,
+.331. Bigger disagreement means the model is more likely to be wrong.
+
+**Total.** rho +.0202, p = .14. Weak, positive, not significant, buckets not ordered.
+
+### The confound, and the clean version
+
+The moneyline result is partly mechanical: a larger moneyline gap means backing a
+bigger underdog, and underdogs win less by construction. The confound-free test
+compares the edge the model *claims* against the edge it *realises*, where realised
+edge is the model side's actual win rate minus the market price of that side.
+
+| claimed edge | market price of the side | realised edge |
+|---:|---:|---:|
+| +1.1% | .480 | −0.6% |
+| +3.3% | .428 | +0.2% |
+| +5.7% | .392 | −2.5% |
+| +8.9% | .360 | −0.7% |
+| +13.1% | .341 | +1.3% |
+| **+22.0%** | .313 | **+1.8%** |
+
+Regression of realised on claimed: **slope +0.150 ± 0.111, p = .18.** A model whose
+edge were entirely real would have slope 1. This one keeps about 15% of what it
+claims, and that 15% is not distinguishable from zero.
+
+So the answer to "does confidence buy anything" is: a little, in the right direction,
+too small to measure and far too small to bet. When the model says it is 22 points
+better than the price, it is worth under 2.
+
+### One place the disagreement does mean something
+
+When model and market pick **different winners** outright — 373 of 2,716 moneyline
+games — the model side wins only 41.8%, so the market is right 58% of the time. But
+those bets are taken at plus money, and the ROI is **−0.75%** against −4.44% for games
+where the two agree. It is the least-losing subset anywhere in this study, and still
+losing, on 373 bets whose standard error is about five points.
+
+On the spread the same disagreement carries nothing at all: 48.5% cover against 48.4%,
+ROI −5.48% against −5.58%.
+
 ## What is actually missing
 
 Ranked by likely contribution to the .0121 gap:

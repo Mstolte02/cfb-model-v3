@@ -58,9 +58,12 @@ OUT = f"{WAR_DIR}/projections_2026_blended.csv"
 
 # The quarterback sheet, copied into the repo so the build does not read from
 # ~/Downloads. One row per team, naming that team's starter and scoring him on five
-# independent opinions; `Average` is the mean of the five z-scores.
+# independent opinions. `Average` is the mean of all five z-scores; the build now
+# reads `PFF Z` alone, so the quarterback ordering comes from the same source as
+# every other position rather than from a blend that included EA, an execs poll and
+# PFSN. The other columns stay in the sheet for comparison.
 QB_XLSX = f"{HERE}/qbs_2026.xlsx"
-QB_COL = "Average"
+QB_COL = "PFF Z"
 
 # The sheet writes some schools out in full where CFBD abbreviates. Names are matched
 # on player AND team, so these have to resolve or seven starters silently keep PFF.
@@ -89,16 +92,28 @@ def quantile_map(src_vals, target_vals):
 
 
 def load_qb_sheet():
-    """{(player key, CFBD team): composite z}, one row per team's named starter.
+    """{(player key, CFBD team): PFF z}, one row per team's named starter.
 
     Returns an empty dict rather than raising if the sheet is absent, so a clone that
     has never been given it still builds - the quarterbacks simply stay on PFF.
+
+    Single-source columns carry the literal string "Unknown" where that source has no
+    opinion, which the old `Average` column hid by averaging whatever was present. A
+    quarterback with no PFF grade - a true freshman, a JUCO arrival - is dropped here
+    and keeps the projection's own number, which is the right answer: there is no PFF
+    evidence to override it with.
     """
     if not os.path.exists(QB_XLSX):
         print(f"  [warn] {os.path.basename(QB_XLSX)} not found; quarterbacks stay PFF.")
         return {}
     q = pd.read_excel(QB_XLSX)
-    q = q[q[QB_COL].notna()]
+    graded = pd.to_numeric(q[QB_COL], errors="coerce")
+    missing = int(graded.isna().sum())
+    if missing:
+        print(f"  [info] {missing} of {len(q)} named starters have no {QB_COL}; "
+              f"they keep the projection's own value.")
+    q = q[graded.notna()].copy()
+    q[QB_COL] = graded[graded.notna()]
     q["key"] = q.Player.map(norm_name)
     q["cfbd_team"] = q.Team.replace(QB_TEAM_ALIAS)
     return dict(zip(zip(q.key, q.cfbd_team), q[QB_COL].astype(float)))

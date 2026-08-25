@@ -158,6 +158,29 @@ def plays(year: int, week: int) -> list:
                 f"plays_{year}_w{week:02d}.json")
 
 
+def transfer_portal(year: int) -> list:
+    """Portal entries for a season, with origin, destination and a recruit rating.
+
+    Team talent currently has three axes - CFBD recruiting, PFF roster grades and
+    roster WAR - and none of them price the portal directly. A roster that lost four
+    rated starters and replaced them with three looks the same to the recruiting
+    composite as one that stood still.
+    """
+    return _get("/player/portal", {"year": year}, f"portal_{year}.json")
+
+
+def recruiting_groups(start_year: int, end_year: int) -> list:
+    """Recruiting rating per team per position group.
+
+    The shipping talent number is one figure per team. This is the same composite
+    split into quarterback, line, skill and secondary, which is what makes a
+    positional talent feature possible at all.
+    """
+    return _get("/recruiting/groups",
+                {"startYear": start_year, "endYear": end_year},
+                f"recruiting_groups_{start_year}_{end_year}.json")
+
+
 def returning_production(year: int) -> list:
     """Bill Connelly-style returning production (percent of PPA returning).
     Computed preseason from the prior roster, so leakage-free for season N."""

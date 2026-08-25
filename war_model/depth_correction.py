@@ -500,7 +500,7 @@ def main():
     # the ordering the sheet had just imposed. Whatever runs last wins, and the sheet
     # should win. See blend_projection.apply_qb_map.
     sys.path.insert(0, f"{HERE}/ea")
-    from blend_projection import apply_qb_map, load_qb_sheet  # noqa: E402
+    from blend_projection import apply_qb_map, load_qb_sheet, QB_COL  # noqa: E402
     sheet = load_qb_sheet()
     named_rooms = {t for _, t in sheet}
     qb_before = d[d.broad_group == "QB"].proj_war.sum()
@@ -519,7 +519,8 @@ def main():
     rho = named.qb_z.corr(named.proj_war, method="spearman")
     moved = int((named.proj_war.rank(ascending=False) - rk).abs().max())
     print(f"  QB group total {qb_before:.3f} -> {qb_after:.3f} (permutation, as required)")
-    print(f"  Spearman vs the sheet's Average: {rho:.4f}   largest rank move: {moved}")
+    print(f"  Spearman vs the sheet's {QB_COL}: {rho:.4f}   "
+          f"largest rank move: {moved}")
     # The AGGREGATE backup share over the named rooms cannot move - the map permutes
     # starter values among exactly those rooms, so their sum is invariant and the
     # backups are untouched. What moves is each room INDIVIDUALLY, and that is the

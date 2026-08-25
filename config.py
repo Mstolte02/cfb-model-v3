@@ -246,7 +246,10 @@ WAR_BLEND = 0.40
 # ratings against 2025 results - had EA behind, .42 against our .51. Settling it needs
 # CFB 26 launch player ratings, which are behind a robots.txt that disallows this
 # crawler. See war_model/ea/gap_analysis.py.
-EA_BLEND_SNAPS = 300
+# EA is no longer an input. The projection is PFF facets, CFBD play value and
+# production only; 0 disables the snap-threshold blend that handed unproven players
+# EA's ordering. Kept as a knob rather than deleted so the comparison can be rerun.
+EA_BLEND_SNAPS = 0
 
 # --- v3.1: features retired after a collinearity audit --------------------------
 # scripts/feature_audit.py + scripts/feature_sets.py. The six inputs were checked for

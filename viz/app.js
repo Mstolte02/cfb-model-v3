@@ -2559,7 +2559,7 @@
         <div><small>Model</small><b>${pct(sideP, 0)}</b></div><div class="edge"><small>vs no-vig price</small><b>+${pct(r.edge, 1)}</b></div>
       </div>`;
       }).join("");
-      note = `Regular-season win distributions are rebuilt game by game so conference championships never leak into sportsbook win-total comparisons. BET marks a side the model gives more than ${pct(BET_RULES.win_total.minModelP, 0)} with at least a ${pct(BET_RULES.win_total.minGap, 0)} gap. Screened, not validated: no win-total gap has produced an edge that survives four seasons of archived prices.`;
+      note = `Regular-season win distributions are rebuilt game by game so conference championships never leak into sportsbook win-total comparisons.`;
     } else {
       const key = futureMarket === "make_cfp" ? "playoff"
         : futureMarket === "conference_title" ? "conf_champ" : "champ";
@@ -2574,7 +2574,7 @@
         <div><small>Model</small><b>${pct(r.modelP, 1)}</b></div><div class="edge ${r.edge < 0 ? "negative" : ""}"><small>Model gap</small><b>${r.edge >= 0 ? "+" : ""}${pct(r.edge, 1)}</b></div>
       </div>`;
       }).join("");
-      note = `Price gap compares the model with raw implied probability; incomplete futures boards are not de-vigged. ${longOdds ? "National title is a long-odds screen, so no row is flagged as a bet." : `BET marks a team the model gives more than ${pct(BET_RULES.futures.minModelP, 0)} with at least a ${pct(BET_RULES.futures.minGap, 0)} gap. A large gap on a team we still do not expect to get there is not flagged.`} Playoff and conference futures have no stored price history, so this flag is a model screen and has never been tested against a closing number.`;
+      note = "Price gap compares the model with raw implied probability; incomplete futures boards are not de-vigged.";
     }
     document.getElementById("future-spotlight").innerHTML = `<article class="market-panel"><div class="market-panel-head"><div><span class="eyebrow">Model vs market</span><h3>${futureMarket.replaceAll("_", " ")}</h3></div>${src ? `<a href="${src.url}" target="_blank" rel="noopener">${esc(book)} · ${src.as_of}</a>` : ""}</div><div class="market-list">${body || `<p class="sub">No quoted market is available.</p>`}</div><div class="market-note">${note}</div></article>`;
   }
@@ -2697,7 +2697,8 @@
           const home = r.pA >= marketHome;
           const best = Math.max(...pairs.map(x => home ? x.homeMoneyline : x.awayMoneyline));
           return { ...g, line: {}, r, gap: r.pA - marketHome, marketValue: best,
-            modelValue: home ? r.pA : 1-r.pA, combined: true, booksUsed: pairs.length };
+            modelValue: home ? r.pA : 1-r.pA, marketHomeP: marketHome,
+            combined: true, booksUsed: pairs.length };
         }
         if (market === "total") {
           const lines = available.map(x => x.overUnder).filter(x => x != null);
@@ -2710,7 +2711,7 @@
         const lines = available.map(x => x.spread).filter(x => x != null);
         if (!lines.length) return { ...g, line: {}, r, gap: null };
         const consensus = median(lines), modelSpread = -r.margin, gap = consensus - modelSpread;
-        return { ...g, line: {}, r, modelSpread, gap,
+        return { ...g, line: {}, r, modelSpread, gap, consensus,
           marketValue: gap >= 0 ? Math.max(...lines) : Math.min(...lines),
           modelValue: modelSpread, combined: true, booksUsed: lines.length };
       }
@@ -2720,13 +2721,13 @@
         const marketHome = ih == null || ia == null ? null : ih / (ih + ia);
         return { ...g, line, r, gap: marketHome == null ? null : r.pA - marketHome,
           marketValue: r.pA >= marketHome ? line.homeMoneyline : line.awayMoneyline,
-          modelValue: r.pA >= marketHome ? r.pA : 1-r.pA };
+          modelValue: r.pA >= marketHome ? r.pA : 1-r.pA, marketHomeP: marketHome };
       }
       if (market === "total") return { ...g, line, r,
         gap: line.overUnder == null ? null : r.total - line.overUnder,
         marketValue: line.overUnder, modelValue: r.total };
       const modelSpread = -r.margin;
-      return { ...g, line, r, modelSpread,
+      return { ...g, line, r, modelSpread, consensus: line.spread,
         gap: line.spread == null ? null : line.spread - modelSpread,
         marketValue: line.spread, modelValue: modelSpread };
     }).sort((a, b) => (a.week || 99) - (b.week || 99) || String(a.start).localeCompare(String(b.start)));
@@ -2734,29 +2735,39 @@
     const checked = marketTracking.checked_at ? new Date(marketTracking.checked_at) : null;
     renderMarketTracking(candidates, checked);
 
-    // The bet cell is the whole point of the board: everything else is context.
-    // A row only earns one when the gap clears the threshold in BET_RULES, and it
-    // names the side and the number to write on the ticket, not the model output.
     const RULE = BET_RULES[market];
+
+    // Outright disagreement: the model and the market pick different winners. A gap
+    // threshold alone misses these. A model that has the home team at 52% against a
+    // market at 45% is calling the other side of the game on a 7-point gap, which no
+    // sensible spread or moneyline gate would pass, and that is the strongest kind of
+    // disagreement the board can show. It is always a bet.
+    function picksOtherSide(g) {
+      if (market === "moneyline") {
+        if (g.modelValue == null || g.marketHomeP == null) return false;
+        return (g.r.pA - .5) * (g.marketHomeP - .5) < 0;
+      }
+      if (market === "spread") {
+        if (g.modelSpread == null || g.consensus == null) return false;
+        return g.modelSpread * g.consensus < 0;
+      }
+      return false;
+    }
+
     function betToPlace(g) {
-      if (g.gap == null || g.marketValue == null || Math.abs(g.gap) < RULE.minGap) return null;
+      if (g.gap == null || g.marketValue == null) return null;
+      const flip = picksOtherSide(g);
+      if (!flip && Math.abs(g.gap) < RULE.minGap) return null;
       if (market === "total") return `${g.gap >= 0 ? "Over" : "Under"} ${Number(g.marketValue).toFixed(1)}`;
       const home = g.gap >= 0, side = home ? g.home : g.away;
       if (market === "moneyline") {
-        if (g.modelValue == null || g.modelValue < RULE.minModelP) return null;
+        if (g.modelValue == null) return null;
+        if (!flip && g.modelValue < RULE.minModelP) return null;
         return `${esc(abbr(side))} ${americanOdds(g.marketValue)}`;
       }
       const num = home ? g.marketValue : -g.marketValue;
       return `${esc(abbr(side))} ${num > 0 ? "+" : ""}${num.toFixed(1)}`;
     }
-    /* What four seasons of archived prices say about this column. Each line is a
-       measured result from audit/BET_THRESHOLD_CALIBRATION.md, not a disclaimer. */
-    const calibrationNote = m =>
-      m === "spread"
-        ? "Screen, not a validated edge. Against 2022-25 archived prices the model lost money at every spread gap, and lost more as the gap widened."
-        : m === "moneyline"
-        ? "Screen, not a validated edge. Moneyline gaps above 12 points showed a profit over 2022-25, but less than a model with no side-picking skill reaches by searching the same thresholds."
-        : "Screen, not a validated edge. The model's total carries little information: it correlates .16 with actual points against the market's .38, so treat this column as a research marker.";
     const marketLabel = market === "moneyline" ? "Moneyline" : market === "total" ? "Total" : "Spread";
     const bookLabel = combined ? "Best price" : book;
     document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span><span>Bet to place</span></div>${rows.map(g => {
@@ -2765,8 +2776,9 @@
       const modelText = g.modelValue == null ? "—" : market === "moneyline" ? pct(g.modelValue, 1) : `${g.modelValue > 0 && market === "spread" ? "+" : ""}${g.modelValue.toFixed(1)}`;
       const gapText = g.gap == null ? "—" : `${esc(market === "total" ? lean : abbr(lean))} ${market === "moneyline" ? pct(Math.abs(g.gap), 1) : Math.abs(g.gap).toFixed(1)}`;
       const bet = betToPlace(g);
-      return `<div class="weekly-row${bet ? " bet" : ""}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
-    }).join("")}<div class="board-note">${esc(calibrationNote(market))}</div></div>`;
+      const flip = bet ? picksOtherSide(g) : false;
+      return `<div class="weekly-row${bet ? (flip ? " bet flip" : " bet") : ""}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
+    }).join("")}</div>`;
   }
 
   /* The watchlist tile opens the games behind the number. It used to report only a

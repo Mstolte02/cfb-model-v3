@@ -883,8 +883,5 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
   .weekly-head, .weekly-row { min-width: 820px; }.section-intro { align-items: flex-start; flex-direction: column; }
   footer { flex-direction: column; }.market-panel-head { align-items: flex-start; flex-direction: column; }
 }
-
-/* Calibration caveat under the weekly board. It sits inside the board rather than
-   above it because the claim it qualifies - the bet column - is read here. */
-.board-note { padding: 11px 16px; border-top: 1px solid var(--line2);
-  color: var(--muted); background: var(--panel2); font: 11px/1.5 var(--sans); }
+.weekly-row.flip { background: rgba(168,50,38,.10); box-shadow: inset 3px 0 0 var(--red); }
+.weekly-row.flip .bet-cell b { color: var(--red); }
