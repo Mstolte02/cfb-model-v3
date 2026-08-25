@@ -28,6 +28,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 
+from src.data import fbs
 from src.data import plays as PLAYS  # noqa: F401  (re-exported for callers)
 
 
@@ -226,6 +227,7 @@ def lagged_profiles(target_years, plays_frame: pd.DataFrame | None = None,
     history describes a staff that has left.
     """
     frame = PLAYS.load() if plays_frame is None else plays_frame
+    frame = fbs.filter_frame(frame, "season", "offense", "defense")
     result = {}
     for season in sorted(int(y) for y in target_years):
         history = frame[frame.season < season]

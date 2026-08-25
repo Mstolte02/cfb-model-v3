@@ -37,7 +37,7 @@ from scripts import v4_backtest as BT
 from scripts.train import load_bundle
 from src import oppadj as OA
 from src import v4 as V4
-from src.data import cfbd_client, pff, war
+from src.data import cfbd_client, fbs, pff, war
 
 
 OUT_JSON = ARTIFACTS / "talent_sources_backtest.json"
@@ -79,7 +79,12 @@ def portal_features(years) -> dict[int, pd.DataFrame]:
     out = {}
     for year in years:
         rows = cfbd_client.transfer_portal(year)
-        rated = [float(r["rating"]) for r in rows if r.get("rating")]
+        # The feed covers every division. A move between two FCS programmes is not an
+        # FBS roster event and must not set the imputed rating that FBS arrivals are
+        # scored against, so the fallback is the mean of moves landing in FBS.
+        members = fbs.teams(year)
+        rated = [float(r["rating"]) for r in rows
+                 if r.get("rating") and r.get("destination") in members]
         fallback = float(np.mean(rated)) if rated else 0.85
         incoming, outgoing = defaultdict(float), defaultdict(float)
         in_rated, out_rated = defaultdict(float), defaultdict(float)

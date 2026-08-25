@@ -58,7 +58,13 @@ def team_season_means(values: pd.DataFrame) -> pd.DataFrame:
 
 
 def schedule_pairs(schedule: pd.DataFrame) -> pd.DataFrame:
-    """Two directed rows per game: (team, opponent)."""
+    """Two directed rows per game: (team, opponent).
+
+    Games where either side is outside the facet table are dropped by the caller,
+    which is what keeps FCS opponents out of the attack/defence solve. An FCS visitor
+    would otherwise get a defence term fitted from one or two games and every FBS team
+    that played one would have its schedule correction distorted by it.
+    """
     home = schedule.rename(columns={"home_team": "team", "away_team": "opponent"})
     away = schedule.rename(columns={"away_team": "team", "home_team": "opponent"})
     both = pd.concat([home[["season", "team", "opponent"]],

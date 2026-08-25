@@ -58,12 +58,13 @@ OUT = f"{WAR_DIR}/projections_2026_blended.csv"
 
 # The quarterback sheet, copied into the repo so the build does not read from
 # ~/Downloads. One row per team, naming that team's starter and scoring him on five
-# independent opinions. `Average` is the mean of all five z-scores; the build now
-# reads `PFF Z` alone, so the quarterback ordering comes from the same source as
-# every other position rather than from a blend that included EA, an execs poll and
-# PFSN. The other columns stay in the sheet for comparison.
+# independent opinions; `Average` is the mean of the five z-scores.
+#
+# This was briefly switched to `PFF Z` alone and switched back. The single-source
+# column is also the sparser one - ten of 124 named starters have no PFF grade, and
+# on `Average` they still get an opinion from the other four sources.
 QB_XLSX = f"{HERE}/qbs_2026.xlsx"
-QB_COL = "PFF Z"
+QB_COL = "Average"
 
 # The sheet writes some schools out in full where CFBD abbreviates. Names are matched
 # on player AND team, so these have to resolve or seven starters silently keep PFF.

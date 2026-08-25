@@ -27,7 +27,7 @@ import numpy as np
 import pandas as pd
 
 from config import DATA_RAW, GAME_YEARS
-from src.data import plays as PLAYS
+from src.data import fbs, plays as PLAYS
 
 
 LEVEL_COLUMNS = ["points_for", "points_against"]
@@ -40,13 +40,19 @@ DEFAULTS = {"points_for": 28.0, "points_against": 28.0,
 
 
 def scoring_levels(years=GAME_YEARS) -> pd.DataFrame:
-    """Per team-season points scored and allowed per game, from completed games."""
+    """Per team-season points scored and allowed per game, from completed games.
+
+    FBS opponents only. A 63-3 win over an FCS visitor is a real result but it is not
+    evidence about how many points this team scores against the schedule it is being
+    projected into, and leaving those games in inflates the scoring level of whoever
+    scheduled the most of them.
+    """
     rows = []
     for year in years:
         path = DATA_RAW / f"games_{year}.json"
         if not path.exists():
             continue
-        for game in json.loads(path.read_text()):
+        for game in fbs.filter_games(json.loads(path.read_text())):
             if game.get("homePoints") is None or game.get("awayPoints") is None:
                 continue
             if game.get("seasonType") == "postseason":
@@ -65,6 +71,9 @@ def scoring_levels(years=GAME_YEARS) -> pd.DataFrame:
 def pace_levels(plays_frame: pd.DataFrame | None = None) -> pd.DataFrame:
     """Per team-season offensive plays run and defensive plays faced, per game."""
     frame = PLAYS.load() if plays_frame is None else plays_frame
+    # Same rule as the scoring level: pace against an FCS opponent is measured in a
+    # game this model does not predict, and the FCS team itself must not get a row.
+    frame = fbs.filter_frame(frame, "season", "offense", "defense")
     offense = (frame.groupby(["season", "game_id", "offense"]).size()
                .rename("plays").reset_index()
                .groupby(["season", "offense"])
