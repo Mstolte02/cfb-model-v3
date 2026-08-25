@@ -82,7 +82,7 @@
 
   <section id="view-playoff" class="view">
     <div class="view-head"><span class="eyebrow">The projected field</span><h2>2026–27 College Football Playoff</h2><p class="sub" id="playoff-meta"></p></div>
-    <h3 class="bracket-title">Projected Bracket <span class="hint">— modal field and seeding; every game scored by the matchup model</span></h3>
+    <h3 class="bracket-title">Projected Bracket <span class="hint">— odds view: each number is a win probability over 20,000 simulations, not a score</span></h3>
     <div id="bracket"></div>
     <h3 class="bracket-title">How the field is chosen</h3><div id="playoff-explain"></div>
     <h3 class="bracket-title">Conference title races <span class="hint">— four Power 4 champions receive automatic bids</span></h3><div id="playoff-ccg"></div>
@@ -101,7 +101,6 @@
   <section id="view-leaders" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">The roster atlas</span><h2>Top 10, every way you want it.</h2>
       <p class="sub">Player leaderboards use intrinsic WAR; team rooms use role-adjusted contribution, with sortable tables one tab away.</p></div>
-    <div id="war-validation"></div>
     <div class="leader-controls">
       <div class="seg" id="leader-kind"><button class="seg-btn active" data-kind="players">Players</button><button class="seg-btn" data-kind="teams">Team rooms</button></div>
       <label>Position <select id="leader-group"></select></label>
@@ -155,6 +154,6 @@
 </main>
 
 <footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Model probabilities are estimates. Sportsbook prices are dated snapshots, not live quotes. Gamble responsibly.</span></footer>
-<script src="app.js?v=32"></script>
+<script src="app.js?v=33"></script>
 </body>
 </html>

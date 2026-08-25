@@ -614,10 +614,17 @@
     return G;
   }
 
-  function bracketHTML(G, seeds, trophyNote, pickable = false) {
+  /* showProbs renders each side's WIN PROBABILITY where the score would sit. The
+      two brackets have to read differently or consumers see one tool contradicting
+      another: the projected bracket is what the simulations believe (odds), the
+      scenario builder is one hand-picked outcome (scores). */
+  function bracketHTML(G, seeds, trophyNote, pickable = false, showProbs = false) {
     const seedOf = {};
     (seeds || []).forEach((t, i) => { if (t) seedOf[t] = i + 1; });
-    const side = (t, won, score, gameIndex) => {
+    const side = (t, won, score, gameIndex, isTop) => {
+      let mark = "";
+      if (!showProbs) mark = score != null ? score : "";
+      else if (score != null) mark = pct(isTop ? score : 1 - score, 0);
       if (!t) return `<div class="slot empty"><span class="seed">–</span>
         <span class="tbd">TBD</span></div>`;
       return `<div class="slot ${won ? "won" : "lost"}"
@@ -625,14 +632,16 @@
         <span class="seed">${seedOf[t] || ""}</span>
         <img src="${logoURL(t)}" alt="" loading="lazy">
         <button class="${pickable ? "bracket-pick" : "team-link"}" data-team="${esc(t)}"${pickable ? ` data-game="${gameIndex}" title="Pick ${esc(t)}"` : ""}>${esc(abbr(t))}</button>
-        <span class="gscore">${score != null ? score : ""}</span></div>`;
+        <span class="gscore">${mark}</span></div>`;
     };
     const card = (g, gameIndex) => `<div class="game-card${g.picked ? " user-picked" : ""}">
-        ${side(g.top, g.winner && g.winner === g.top, g.sa, gameIndex)}
-        ${side(g.bottom, g.winner && g.winner === g.bottom, g.sb, gameIndex)}
+        ${side(g.top, g.winner && g.winner === g.top,
+               showProbs ? g.p : g.sa, gameIndex, true)}
+        ${side(g.bottom, g.winner && g.winner === g.bottom,
+               showProbs ? (g.p != null ? 1 - g.p : null) : g.sb, gameIndex, false)}
         <div class="gmeta">
           <span class="bye-tag">${g.site ? "at " + esc(abbr(g.site)) : "neutral"}</span>
-          ${g.p != null ? `<span class="gwp">${pct(Math.max(g.p, 1 - g.p), 0)}</span>` : ""}
+          ${!showProbs && g.p != null ? `<span class="gwp">${pct(Math.max(g.p, 1 - g.p), 0)}</span>` : ""}
         </div></div>`;
     const champ = G[10] && G[10].winner;
     return `
@@ -667,7 +676,8 @@
     } else {
       const G = resolveBracket(br.games, br.feeds);
       document.getElementById("bracket").innerHTML = bracketHTML(G, br.seeds,
-        champ => `projected champion · ${pct((byTeam[champ] || {}).champ || 0, 1)} title odds`);
+        champ => `projected champion · ${pct((byTeam[champ] || {}).champ || 0, 1)} title odds`,
+        false, true);
     }
 
     renderSelection(P, byTeam, br);
@@ -2602,22 +2612,18 @@
     wireTeamLinks();
   }
 
-  function rankingRow(r, value) {
-    return `<div class="ranking-row"><span>${r.rank}</span>${teamMini(r.team)}<b>${value}</b></div>`;
+  function rankingRow(r) {
+    return `<div class="ranking-row"><span>${r.rank}</span>${teamMini(r.team)}</div>`;
   }
   function renderPower() {
     const neutral = liveRatings().slice().sort((a, b) => b.power - a.power).slice(0, 25)
       .map((r, i) => ({ ...r, rank: i + 1 }));
-    document.getElementById("power-top25").innerHTML = neutral.map(r => rankingRow(r, (100 * r.power).toFixed(1))).join("");
-    document.getElementById("deserving-top25").innerHTML = (editorial.prior_final_ap || []).map(r => rankingRow(r, r.points || "")).join("");
+    document.getElementById("power-top25").innerHTML = neutral.map(r => rankingRow(r)).join("");
+    document.getElementById("deserving-top25").innerHTML = (editorial.prior_final_ap || []).map(r => rankingRow(r)).join("");
   }
 
   let leaderKind = "players";
   function renderLeaders() {
-    const ph = warValidity.projection_holdout_2025 || {};
-    const pv = ((warValidity.intrinsic_vs_role_holdout_2025 || {}).all_roster_players || {});
-    const intrinsic = pv.intrinsic || {}, soft = pv.soft_role_overlay || {};
-    document.getElementById("war-validation").innerHTML = `<div class="validation-strip validated"><b>Player forecast audit: intrinsic rankings retained</b><span>${ph.players || 0} player holdout · r=${intrinsic.pearson_r == null ? "—" : intrinsic.pearson_r.toFixed(3)} · ${(intrinsic.top_decile_precision || 0) * 100 | 0}% top-decile precision</span><small>A second soft role overlay scored r=${soft.pearson_r == null ? "—" : soft.pearson_r.toFixed(3)} and hard allocation was worse, so rankings use intrinsic WAR. Team totals and scenarios use expected role-adjusted contribution. EA replacement remains rejected.</small></div>`;
     const group = document.getElementById("leader-group").value;
     const cls = document.getElementById("leader-class").value;
     const teamFilter = document.getElementById("leader-team").value;
@@ -2637,7 +2643,7 @@
         const photo = (editorial.headshots || {})[p.team + "\u0000" + p.n];
         return `<article class="leader-card" style="--team:${color(p.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span>
           <div class="leader-portrait" style="background-image:url('${logoURL(p.team)}')">${photo ? `<img src="${photo}" alt="${esc(p.n)}" loading="lazy" onerror="this.remove()">` : ""}</div>
-          <div class="leader-copy"><span>${p.g} · ${p.c} · ${esc(p.team)}</span><h3>${esc(p.n)}</h3><b>${plQuality(p).toFixed(2)} <small>intrinsic WAR</small></b><small>${(p.raw || 0).toFixed(2)} expected contribution · ${p.oppLo == null ? "role uncertain" : `${pct(p.oppLo, 0)}–${pct(p.oppHi, 0)} snaps`}</small></div></article>`;
+          <div class="leader-copy"><span>${p.g} · ${esc(p.team)}</span><h3>${esc(p.n)}</h3></div></article>`;
       }).join("");
     } else {
       rows = Object.entries(players).map(([team, r]) => {
@@ -2649,7 +2655,7 @@
         return { team, value };
       })
         .sort((a, b) => b.value - a.value).slice(0, 10);
-      document.getElementById("leader-grid").innerHTML = rows.map((r, i) => `<article class="leader-card team-room" style="--team:${color(r.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span><div class="leader-portrait"><img src="${logoURL(r.team)}" alt=""></div><div class="leader-copy"><span>${group === "ALL" ? "Complete roster" : group === "OFF" ? "Offense" : group === "DEF" ? "Defense" : group + " room"}</span><h3>${esc(r.team)}</h3><b>${r.value.toFixed(2)} <small>projected WAR</small></b></div></article>`).join("");
+      document.getElementById("leader-grid").innerHTML = rows.map((r, i) => `<article class="leader-card team-room" style="--team:${color(r.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span><div class="leader-portrait"><img src="${logoURL(r.team)}" alt=""></div><div class="leader-copy"><span>${group === "ALL" ? "Complete roster" : group === "OFF" ? "Offense" : group === "DEF" ? "Defense" : group + " room"}</span><h3>${esc(r.team)}</h3></div></article>`).join("");
     }
   }
   function fillLeaderControls() {
