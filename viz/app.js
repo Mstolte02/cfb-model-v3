@@ -2447,32 +2447,35 @@
   const implied = n => n < 0 ? (-n) / ((-n) + 100) : 100 / (n + 100);
 
   /* Which gaps we would actually back. A price gap on its own is not enough: the
-     model also has to think the thing happens. A team at 33% to make the playoff
-     is a screen even when it is 11 points over the market, because we still do not
-     expect it to happen. National title is exempt by design - it is a long-odds
-     market where nothing clears 50%, so it stays a pure price screen.
-     minGap is in probability points for futures and moneylines, and in points of
-     spread or total for the other two. Change the numbers here; nothing else.
+      model also has to think the thing happens. A team at 33% to make the playoff
+      is a screen even when it is 11 points over the market, because we still do not
+      expect it to happen. National title is exempt by design - it is a long-odds
+      market where nothing clears 50%, so it stays a pure price screen.
+      minGap is in probability points for futures and moneylines, and in points of
+      spread or total for the other two. Change the numbers here; nothing else.
 
-     These numbers are NOT calibrated, and four seasons of history say they cannot
-     be. audit/BET_THRESHOLD_CALIBRATION.md sweeps every market against archived
-     prices: spreads lose money at every gap and get worse as the gap grows, the
-     moneyline and win-total gains at wide gaps sit inside what a no-skill model
-     reaches by searching the same grid, and playoff futures have no price archive to
-     calibrate against at all. The flag marks a model screen, not a validated edge,
-     and the board says so. */
+      These are NOT validated edges, and audit/BET_THRESHOLD_CALIBRATION.md says four
+      seasons of history cannot make them one: spreads lose at most gaps and the
+      moneyline/win-total gains at wide gaps sit inside what a no-skill model reaches
+      by searching the same grid, while playoff futures have no price archive to
+      calibrate against at all. What shipped here (2026-08-25) is each market's
+      least-unsupported reading from that study, adopted as TRACKING screens: spread
+      8 (the only positive region), total 2 (the flattest positive point), moneyline
+      .20 (the observed best, just above its null), win totals a 0.5-win model gap on
+      top of the price screen. Every flag this produces is a forward observation in
+      the ledger, not a claim of edge, and the board says so. */
   const BET_RULES = {
     futures:   { minModelP: .50, minGap: .05 },
     // Win totals sit against a de-vigged price the model beats almost everywhere,
-    // so a 5-point gate would flag four rows in five and highlight nothing. This
-    // one wants a real look before the season.
-    win_total: { minModelP: .50, minGap: .20 },
+    // plus the calibration study's own quantity: the model's expected wins must
+    // clear the posted line by minWinGap before a row earns the flag.
+    win_total: { minModelP: .50, minGap: .20, minWinGap: .5 },
     // Weekly gates are in points of spread and total. minModelP is 0 on the
     // moneyline on purpose: a priced underdog the model likes is still a bet, so
     // the more-likely-than-not rule that governs futures does not apply here.
-    spread:    { minModelP: 0,   minGap: 4.5 },
-    total:     { minModelP: 0,   minGap: 6.0 },
-    moneyline: { minModelP: 0,   minGap: .12 }
+    spread:    { minModelP: 0,   minGap: 8 },
+    total:     { minModelP: 0,   minGap: 2 },
+    moneyline: { minModelP: 0,   minGap: .20 }
   };
   const quantileFromCounts = (counts, q) => {
     const total = counts.reduce((a, b) => a + b, 0), target = total * q;
@@ -2546,20 +2549,22 @@
     } else if (futureMarket === "win_totals") {
       const priced = rows.map(r => {
         const d = regularWinDist(r.team), overP = d.reduce((s, p, w) => s + (w > r.line ? p : 0), 0);
+        const expWins = d.reduce((s, p, w) => s + w * p, 0);
         const io = implied(r.over), iu = implied(r.under), marketOver = io / (io + iu);
         const overEdge = overP - marketOver;
-        return { ...r, overP, marketOver, side: overEdge >= 0 ? "Over" : "Under", edge: Math.abs(overEdge) };
+        return { ...r, overP, marketOver, expWins, side: overEdge >= 0 ? "Over" : "Under", edge: Math.abs(overEdge) };
       }).sort((a, b) => b.edge - a.edge);
       const W = BET_RULES.win_total;
       body = priced.map((r, i) => {
         const sideP = r.side === "Over" ? r.overP : 1 - r.overP;
-        const bet = sideP > W.minModelP && r.edge >= W.minGap;
+        const bet = sideP > W.minModelP && r.edge >= W.minGap &&
+          Math.abs(r.expWins - r.line) >= W.minWinGap;
         return `<div class="market-row${bet ? " bet" : ""}">
         <span class="market-rank">${i + 1}</span><div class="market-team">${teamMini(r.team)}${bet ? betFlag : ""}<small>${r.side} ${r.line} · ${americanOdds(r.side === "Over" ? r.over : r.under)}</small></div>
         <div><small>Model</small><b>${pct(sideP, 0)}</b></div><div class="edge"><small>vs no-vig price</small><b>+${pct(r.edge, 1)}</b></div>
       </div>`;
       }).join("");
-      note = `Regular-season win distributions are rebuilt game by game so conference championships never leak into sportsbook win-total comparisons.`;
+      note = `Regular-season win distributions are rebuilt game by game so conference championships never leak into sportsbook win-total comparisons. A flag also needs the model's expected wins to clear the line by ${BET_RULES.win_total.minWinGap}.`;
     } else {
       const key = futureMarket === "make_cfp" ? "playoff"
         : futureMarket === "conference_title" ? "conf_champ" : "champ";
