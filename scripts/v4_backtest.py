@@ -21,6 +21,7 @@ import pandas as pd
 from config import ARTIFACTS, GAME_YEARS, OPP_ADJ_ALPHA, ROOT
 from scripts.train import load_bundle
 from src import oppadj as OA
+from src import talent_sources as TS
 from src import v4 as V4
 from src.dynamic import weekly_replay
 from src.data import pff, war
@@ -36,6 +37,11 @@ CANDIDATES = {
     "core_pff_lag": ["O", "D", "talent", "returning", "pff_lag"],
     "core_war_lag": ["O", "D", "talent", "returning", "war_lag"],
     "core_war_projected": ["O", "D", "talent", "returning", "war_projected"],
+    # Positional recruiting plus the rated portal, on top of the shipping feature
+    # set (audit/TALENT_SOURCES_EXPERIMENTS.md). Adoption still runs through the
+    # same forward-selection rule as every other extension.
+    "core_war_talent_sources": ["O", "D", "talent", "returning", "war_projected",
+                                *TS.GROUPS, *TS.PORTAL_RATED],
     "core_players_lag": V4.CORE_FEATURES,
     "granular_clean": [*V4.OFF_STATS, *V4.DEF_STATS, "talent", "returning"],
     "granular_players": V4.TEAM_FEATURES,
@@ -147,11 +153,12 @@ def forward_score(parts, pool, names, knobs):
     return float(np.mean(scores)) if scores else np.inf
 
 
-def choose_candidate(all_parts, pool):
+def choose_candidate(all_parts, pool, candidates=None):
+    candidates = candidates or CANDIDATES
     if len(pool) < 2:
-        return "clean_core", {k: None for k in CANDIDATES}
+        return "clean_core", {k: None for k in candidates}
     scores = {name: forward_score(all_parts[name], pool, cols, DEFAULTS)
-              for name, cols in CANDIDATES.items()}
+              for name, cols in candidates.items()}
     best = min(scores, key=scores.get)
     selected = (best if scores["clean_core"] - scores[best] >= SELECTION_MIN_GAIN
                 else "clean_core")
@@ -213,6 +220,8 @@ def main():
     war_lag = war.lagged_team_talent({y: s.index for y, s in talent.items()})
     war_projected = war.projected_team_talent(
         {y: s.index for y, s in talent.items()})
+    portal = TS.portal_features(GAME_YEARS)
+    groups = TS.group_features(GAME_YEARS)
 
     frames = {}
     for y in GAME_YEARS:
@@ -221,6 +230,7 @@ def main():
             wp = war_projected.get(y, pd.Series(dtype=float)).reindex(fr.index)
             fr["war_projected"] = wp.fillna(0.0)
             fr.attrs["war_projected_coverage"] = float(wp.notna().mean())
+            TS.attach(fr, portal[y], groups[y])
             fr["strength"] = fr.O + fr.D
             frames[y] = fr
     all_parts = {name: V4.assemble(GAME_YEARS, frames, games, cols)
@@ -271,6 +281,9 @@ def main():
               "war_coverage": {str(y): frames[y].attrs.get("war_coverage") for y in frames}}
     result["war_projected_coverage"] = {
         str(y): frames[y].attrs.get("war_projected_coverage") for y in frames}
+    result["talent_sources_coverage"] = {
+        str(y): {"portal": frames[y].attrs.get("portal_coverage"),
+                 "groups": frames[y].attrs.get("groups_coverage")} for y in frames}
     OUT_JSON.write_text(json.dumps(result, indent=2))
     pred.to_csv(OUT_CSV, index=False)
     print(f"\npooled static : {pooled_static}")

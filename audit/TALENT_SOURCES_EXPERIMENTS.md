@@ -2,10 +2,33 @@
 
 ## Status
 
-**Adopted: positional recruiting plus the rated transfer portal.** Together they beat
-the clean core by **−.00632 static and −.00330 online**, with both 95% intervals
-excluding zero — 6.3× and 3.3× the .001 adoption bar. This is the strongest predictive
-result any phase in this project has produced.
+**Shipped (2026-08-25): positional recruiting plus the rated portal are production
+model features.** The original measurement had them beating the clean core by
+**−.00632 static and −.00330 online**, both 95% intervals excluding zero — the
+strongest predictive result any phase in this project has produced. Wiring them in
+confirmed it: the forward-selection candidate `core_war_talent_sources`
+(shipping features + the five recruiting groups + the five rated-portal columns)
+scores **.20168** against `.20636` for the previous shipping set
+(`core_war_projected`) and `.20969` for the clean core on the train_v4 selection
+pool — a further −.0047 on top of WAR, −.0080 overall, eight times the .001
+adoption bar. The strict expanding-window backtest selects it in every outer fold
+with enough history and pools **.20258 static / .18496 dynamic Brier** against the
+.18713 dynamic the projected-WAR build previously posted, and it now beats aligned
+CFBD pregame Elo with the interval excluding zero:
+**−.00487 [−.00918, −.00085]**, P(model better) = .992.
+
+## How it shipped
+
+The builders moved verbatim to `src/talent_sources.py` (`portal_features`,
+`group_features`, `attach`); this script and `rating_architecture_backtest.py`
+import from there so the measurement and the production build cannot drift apart.
+`scripts/train_v4.build_frames` attaches the standardized columns to every frame,
+projection season included — the 2026 portal class and recruiting classes through
+2026 are preseason facts, inside the temporal contract. `scripts/v4_backtest`
+gained the `core_war_talent_sources` candidate, so adoption ran through the same
+forward-selection machinery as every other extension rather than a manual override.
+Artifacts regenerated: `model_v4.json`, `v4_selection.json`, `2026_power_ratings.csv`,
+`2026_dynamic_state.json`, `v4_backtest.json/.csv`, and the viz exports.
 
 ## What was missing
 
@@ -64,15 +87,17 @@ which a roster-based axis registers only as an absence.
 ## Reproduction
 
 ```powershell
-python -m scripts.talent_sources_backtest
+python -m scripts.talent_sources_backtest   # the original measurement
+python -m scripts.train_v4                  # production build (selects core_war_talent_sources)
+python -m scripts.v4_backtest               # strict expanding-window confirmation
 ```
 
 Artifact: `artifacts/talent_sources_backtest.json`. The two endpoints are
 `cfbd_client.transfer_portal` and `cfbd_client.recruiting_groups`.
 
-## Not yet done
+## Formerly "not yet done"
 
-These are measured but **not wired into the shipping talent blend**. Adoption means
-deciding whether they enter `config.TALENT_BLEND` as new axes or stay as separate
-model features, re-running `scripts/train_v4.py`, and re-exporting. The evidence
-supports doing it; the plumbing is a separate change.
+The measured-but-unwired state ended on 2026-08-25. The plumbing decision went to
+**separate model features** rather than new axes of `config.TALENT_BLEND`: that is
+the form the backtest validated, and blending them into the scalar talent axis
+would have changed O/D construction and invalidated the evidence.

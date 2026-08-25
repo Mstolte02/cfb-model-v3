@@ -23,6 +23,7 @@ from scripts.v4_backtest import (CANDIDATES, choose_candidate, stack, tune,
                                  tune_dynamic, SELECTION_MIN_GAIN)
 from src import oppadj as OA
 from src import projection as P
+from src import talent_sources as TS
 from src import v4 as V4
 from src.data import load, pff, war
 from src.dynamic import WeeklyRatingState
@@ -81,6 +82,11 @@ def build_inputs(include_projection=True):
 def build_frames(std, talent, returning, od, pff_lag, war_lag, years):
     war_projected = war.projected_team_talent(
         {y: s.index for y, s in talent.items()})
+    # Positional recruiting and the rated portal are preseason facts for every
+    # year built here, projection season included; the 2026 portal class and
+    # classes through 2026 are what season-N leakage rules allow it to see.
+    portal = TS.portal_features(years)
+    groups = TS.group_features(years)
     frames = {}
     for year in years:
         frame = V4.build_frame(year, std, talent, returning, od, pff_lag,
@@ -89,6 +95,7 @@ def build_frames(std, talent, returning, od, pff_lag, war_lag, years):
             wp = war_projected.get(year, pd.Series(dtype=float)).reindex(frame.index)
             frame["war_projected"] = wp.fillna(0.0)
             frame.attrs["war_projected_coverage"] = float(wp.notna().mean())
+            TS.attach(frame, portal[year], groups[year])
             frame["strength"] = frame.O + frame.D
             frames[year] = frame
     return frames

@@ -24,7 +24,6 @@ from __future__ import annotations
 
 import json
 import sys
-from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -36,20 +35,22 @@ from config import ARTIFACTS, GAME_YEARS, OPP_ADJ_ALPHA
 from scripts import v4_backtest as BT
 from scripts.train import load_bundle
 from src import oppadj as OA
+from src import talent_sources as TS
 from src import v4 as V4
-from src.data import cfbd_client, fbs, pff, war
+from src.data import pff, war
+
+# The builders live in src/talent_sources.py so the production trainer attaches the
+# same columns this script measured; re-exported here for the experiment scripts
+# that already import them from this module.
+GROUPS = TS.GROUPS
+PORTAL_RATED = TS.PORTAL_RATED
+group_features = TS.group_features
+portal_features = TS.portal_features
 
 
 OUT_JSON = ARTIFACTS / "talent_sources_backtest.json"
 CORE = ["O", "D", "talent", "returning"]
-PORTAL = ["portal_in", "portal_out", "portal_net"]
-# Rated-only: the first build imputed the 44% of entries with no recruit rating at the
-# league mean, which turned portal_in into a head count with a quality label. These
-# count only players the recruiting services actually rated, plus the blue-chip tally
-# separately, so quality and volume are not the same column.
-PORTAL_RATED = ["portal_in_rated", "portal_out_rated", "portal_net_rated",
-                "portal_blue_in", "portal_blue_out"]
-GROUPS = ["rec_qb", "rec_ol", "rec_skill", "rec_front7", "rec_secondary"]
+PORTAL = TS.PORTAL
 SPECS = {
     "clean_core": CORE,
     "core_portal": [*CORE, *PORTAL],
@@ -58,106 +59,6 @@ SPECS = {
     "core_both": [*CORE, *PORTAL, *GROUPS],
     "core_groups_portal_rated": [*CORE, *GROUPS, *PORTAL_RATED],
 }
-
-GROUP_MAP = {
-    "Quarterback": "rec_qb",
-    "Offensive Line": "rec_ol",
-    "Receiver": "rec_skill", "Running Back": "rec_skill",
-    "Defensive Line": "rec_front7", "Linebacker": "rec_front7",
-    "Defensive Back": "rec_secondary",
-}
-
-
-def portal_features(years) -> dict[int, pd.DataFrame]:
-    """Incoming, outgoing and net rated portal talent per team, per season.
-
-    A portal entry is dated to the season it is listed under, which is the season the
-    player arrives for. Unrated entries are counted at the league's rated mean rather
-    than dropped: a walk-on transfer is not a zero-talent player, and dropping them
-    would make a team that took ten unrated transfers look like it took none.
-    """
-    out = {}
-    for year in years:
-        rows = cfbd_client.transfer_portal(year)
-        # The feed covers every division. A move between two FCS programmes is not an
-        # FBS roster event and must not set the imputed rating that FBS arrivals are
-        # scored against, so the fallback is the mean of moves landing in FBS.
-        members = fbs.teams(year)
-        rated = [float(r["rating"]) for r in rows
-                 if r.get("rating") and r.get("destination") in members]
-        fallback = float(np.mean(rated)) if rated else 0.85
-        incoming, outgoing = defaultdict(float), defaultdict(float)
-        in_rated, out_rated = defaultdict(float), defaultdict(float)
-        blue_in, blue_out = defaultdict(float), defaultdict(float)
-        # A blue-chip portal move is the one everybody actually notices. Four stars
-        # and up, which is roughly the top decile of rated entries.
-        for entry in rows:
-            rating = float(entry["rating"]) if entry.get("rating") else None
-            stars = float(entry["stars"]) if entry.get("stars") else 0.0
-            value = rating if rating is not None else fallback
-            dest, origin = entry.get("destination"), entry.get("origin")
-            if dest:
-                incoming[dest] += value
-                if rating is not None:
-                    in_rated[dest] += rating
-                if stars >= 4:
-                    blue_in[dest] += 1.0
-            if origin:
-                outgoing[origin] += value
-                if rating is not None:
-                    out_rated[origin] += rating
-                if stars >= 4:
-                    blue_out[origin] += 1.0
-        teams = sorted(set(incoming) | set(outgoing))
-        frame = pd.DataFrame({
-            "portal_in": [incoming.get(t, 0.0) for t in teams],
-            "portal_out": [outgoing.get(t, 0.0) for t in teams],
-            "portal_in_rated": [in_rated.get(t, 0.0) for t in teams],
-            "portal_out_rated": [out_rated.get(t, 0.0) for t in teams],
-            "portal_blue_in": [blue_in.get(t, 0.0) for t in teams],
-            "portal_blue_out": [blue_out.get(t, 0.0) for t in teams],
-        }, index=teams)
-        frame["portal_net"] = frame.portal_in - frame.portal_out
-        frame["portal_net_rated"] = frame.portal_in_rated - frame.portal_out_rated
-        out[year] = frame
-    return out
-
-
-def group_features(years) -> dict[int, pd.DataFrame]:
-    """Three-year rolling recruiting rating per position group, per team.
-
-    One class is a small sample and most of a roster is not freshmen, so each season
-    averages the three classes that make up the bulk of it.
-    """
-    raw = cfbd_client.recruiting_groups(min(years) - 4, max(years))
-    frame = pd.DataFrame(raw)
-    frame["column"] = frame.positionGroup.map(GROUP_MAP)
-    frame = frame.dropna(subset=["column", "averageRating"])
-    frame["year"] = pd.to_numeric(frame.year, errors="coerce") if "year" in frame \
-        else np.nan
-    if frame.year.isna().all():
-        # The endpoint omits the year when a range is requested; fall back to the
-        # single-season call so each class keeps its date.
-        blocks = []
-        for year in range(min(years) - 3, max(years) + 1):
-            block = pd.DataFrame(cfbd_client.recruiting_groups(year, year))
-            block["year"] = year
-            blocks.append(block)
-        frame = pd.concat(blocks, ignore_index=True)
-        frame["column"] = frame.positionGroup.map(GROUP_MAP)
-        frame = frame.dropna(subset=["column", "averageRating"])
-    frame["averageRating"] = pd.to_numeric(frame.averageRating, errors="coerce")
-
-    out = {}
-    for year in years:
-        window = frame[(frame.year <= year) & (frame.year >= year - 2)]
-        pivot = window.pivot_table(index="team", columns="column",
-                                   values="averageRating", aggfunc="mean")
-        for column in GROUPS:
-            if column not in pivot:
-                pivot[column] = np.nan
-        out[year] = pivot[GROUPS]
-    return out
 
 
 def build_frames():
@@ -175,23 +76,11 @@ def build_frames():
                                granular=True)
         if frame is None:
             continue
-        p = portal[year].reindex(frame.index)
-        g = groups[year].reindex(frame.index)
+        frames[year] = TS.attach(frame, portal[year], groups[year])
         coverage[str(year)] = {
-            "portal": float(p.portal_in.notna().mean()),
-            "groups": float(g[GROUPS[0]].notna().mean()),
+            "portal": frames[year].attrs["portal_coverage"],
+            "groups": frames[year].attrs["groups_coverage"],
         }
-        # Standardize within season so a portal sum and a recruit rating enter on the
-        # same scale as the rest of the frame, and centre missing at zero.
-        for column in [*PORTAL, *PORTAL_RATED]:
-            values = p[column]
-            frame[column] = ((values - values.mean()) /
-                             (values.std(ddof=0) or 1.0)).fillna(0.0)
-        for column in GROUPS:
-            values = g[column]
-            frame[column] = ((values - values.mean()) /
-                             (values.std(ddof=0) or 1.0)).fillna(0.0)
-        frames[year] = frame
     return frames, games, coverage
 
 
