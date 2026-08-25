@@ -808,7 +808,24 @@ main { max-width: 1320px; padding-top: 38px; }
   border-radius: 14px; background: var(--panel); }
 .sim-ring { position: relative; }
 .sim-ring svg { display: block; width: 100%; height: auto; }
-.sim-arc { transition: stroke-dasharray .3s; }
+/* stroke-width and stroke-opacity are presentation ATTRIBUTES on the arcs, so these
+   rules win over them without any inline style to fight. */
+.sim-arc { cursor: pointer; transition: stroke-width .12s ease, opacity .12s ease; }
+.sim-panel.hovering .sim-arc:not(.is-on) { opacity: .3; }
+.sim-arc.is-on { stroke-width: 7.2; }
+.sim-panel.hovering .sim-row:not(.is-on) { opacity: .45; }
+.sim-row { border-radius: 6px; transition: opacity .12s ease, background .12s ease; }
+.sim-row.is-on { background: var(--panel2); }
+.sim-tip { position: absolute; z-index: 5; max-width: 190px; padding: 8px 11px;
+  border: 1px solid var(--line2); border-radius: 9px; background: var(--panel);
+  box-shadow: 0 10px 26px rgba(35,32,26,.16); color: var(--muted);
+  font: 11.5px/1.45 var(--sans); text-align: left; pointer-events: none;
+  transform: translate(-50%, calc(-100% - 12px)); }
+.sim-tip b { color: var(--text); font: 800 13px/1 var(--sans);
+  font-variant-numeric: tabular-nums; }
+.tip-team { display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
+  color: var(--text); font-weight: 700; }
+.tip-team i { width: 9px; height: 9px; border-radius: 3px; flex: none; }
 .sim-center { position: absolute; inset: 0; display: flex; flex-direction: column;
   align-items: center; justify-content: center; text-align: center; }
 .sim-center b { font: 700 34px/1 Georgia, serif; font-variant-numeric: tabular-nums; }
@@ -821,8 +838,11 @@ main { max-width: 1320px; padding-top: 38px; }
 .sim-side-head b { display: block; font: 700 15px/1.2 Georgia, serif; }
 .sim-side-head i { display: block; margin-top: 2px; color: var(--muted);
   font: 650 11px/1 var(--sans); font-style: normal; font-variant-numeric: tabular-nums; }
+/* Padded and pulled back out again, so the hover highlight has room around the text
+   without the rows sitting inset from the header they line up under. */
 .sim-row { display: grid; grid-template-columns: 10px 1fr auto auto; gap: 9px;
-  align-items: center; padding: 5px 0; font: 12.5px/1 var(--sans); }
+  align-items: center; padding: 5px 7px; margin: 0 -7px;
+  font: 12.5px/1 var(--sans); cursor: default; }
 .sim-swatch { width: 10px; height: 10px; border-radius: 3px; }
 .sim-band { color: var(--muted); }
 .sim-n { font-weight: 700; font-variant-numeric: tabular-nums; }

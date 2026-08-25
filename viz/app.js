@@ -1516,6 +1516,7 @@
       </div>
       ${simPanelHTML(a, b, r)}
       ${roomsPanelHTML(a, b)}`;
+    wireSimHover();          // the panel is rewritten on every change, listeners with it
   }
   selA.addEventListener("change", renderMatchup);
   selB.addEventListener("change", renderMatchup);
@@ -2804,10 +2805,17 @@
       ...sim.B.map((n, i) => ({ n, team: b, i })).reverse(),
     ];
     const FADE = [1, .8, .62, .45, .28];
+    // One key per slice, shared by the arc and its legend row, so hovering either one
+    // can find the other without either of them knowing how the ring was built.
+    const segKey = (team, i) => (team === a ? "A" : "B") + i;
+    const segData = (team, i, n) => `data-seg="${segKey(team, i)}" data-team="${esc(team)}"
+      data-band="${SIM_BANDS[i].label}" data-n="${num(n)}" data-pct="${share(n)}"
+      data-color="${color(team)}" data-fade="${FADE[i]}"`;
     let off = 25;                        // start the ring at twelve o'clock
     const ring = arcs.map(x => {
       const len = 100 * x.n / SIM_N;
-      const seg = `<circle class="sim-arc" cx="21" cy="21" r="15.915" fill="none"
+      const seg = `<circle class="sim-arc" ${segData(x.team, x.i, x.n)}
+        cx="21" cy="21" r="15.915" fill="none"
         stroke="${color(x.team)}" stroke-opacity="${FADE[x.i]}" stroke-width="5.6"
         stroke-dasharray="${len.toFixed(3)} ${(100 - len).toFixed(3)}"
         stroke-dashoffset="${off.toFixed(3)}"></circle>`;
@@ -2817,7 +2825,7 @@
     const side = (team, counts, wins, other) => `<div class="sim-side">
       <div class="sim-side-head"><img src="${logoURL(team)}" alt="" loading="lazy">
         <span><b>${esc(team)}</b><i>${num(wins)} wins · ${share(wins)}</i></span></div>
-      ${counts.map((n, i) => `<div class="sim-row">
+      ${counts.map((n, i) => `<div class="sim-row" ${segData(team, i, n)}>
         <span class="sim-swatch" style="background:${color(team)};opacity:${FADE[i]}"></span>
         <span class="sim-band">${SIM_BANDS[i].label}</span>
         <span class="sim-n">${num(n)}</span><span class="sim-pct">${share(n)}</span></div>`).join("")}
@@ -2853,6 +2861,7 @@
           </svg>
           <div class="sim-center"><b style="color:${color(lead)}">${share(Math.max(winsA, winsB))}</b>
             <i>${esc(abbr(lead))} wins</i></div>
+          <div class="sim-tip" hidden></div>
         </div>
         <div class="sim-key">${side(a, sim.A, winsA)}${side(b, sim.B, winsB)}</div>
       </div>
@@ -2864,6 +2873,60 @@
       ${thinNote}
       ${keyRow}
     </div>`;
+  }
+
+  /* Hover on the ring. The arcs and the legend rows carry the same data-seg, so each
+     one can light the other up without a lookup table. Pointer events rather than
+     mouse events: a tap on a phone fires them too, which is the only way a slice on a
+     touch screen can say what it is. The box is positioned against the ring box and
+     clamped to it - a slice on the left edge would otherwise push the tooltip off the
+     side of a phone, where body{overflow-x:hidden} silently clips it. */
+  function wireSimHover() {
+    const panel = document.querySelector(".sim-panel");
+    if (!panel) return;
+    const ring = panel.querySelector(".sim-ring"), tip = panel.querySelector(".sim-tip");
+    if (!ring || !tip) return;
+    const all = panel.querySelectorAll("[data-seg]");
+    const clear = () => {
+      panel.classList.remove("hovering");
+      all.forEach(el => el.classList.remove("is-on"));
+      tip.hidden = true;
+    };
+    const light = el => {
+      const key = el.dataset.seg;
+      panel.classList.add("hovering");
+      all.forEach(x => x.classList.toggle("is-on", x.dataset.seg === key));
+      tip.innerHTML = `<span class="tip-team"><i style="background:${el.dataset.color};
+        opacity:${el.dataset.fade}"></i>${esc(el.dataset.team)} ${esc(el.dataset.band)}</span>
+        <b>${esc(el.dataset.n)}</b> of ${SIM_N.toLocaleString("en-US")} · ${esc(el.dataset.pct)}`;
+      tip.hidden = false;
+    };
+    const place = e => {
+      const box = ring.getBoundingClientRect();
+      tip.style.left = Math.max(0, Math.min(box.width, e.clientX - box.left)) + "px";
+      tip.style.top = Math.max(0, Math.min(box.height, e.clientY - box.top)) + "px";
+    };
+    const track = e => {
+      const arc = e.target.closest && e.target.closest(".sim-arc");
+      if (!arc) return clear();
+      light(arc); place(e);
+    };
+    ring.addEventListener("pointermove", track);
+    // A tap sends pointerdown and may never send a move, which would leave a phone
+    // with a ring it cannot ask about.
+    ring.addEventListener("pointerdown", track);
+    ring.addEventListener("pointerleave", clear);
+    panel.querySelectorAll(".sim-row").forEach(row => {
+      row.addEventListener("pointerenter", () => {
+        light(row);
+        // Anchored under the ring rather than at the cursor: the pointer is off in the
+        // legend, and a box that far from the arc it is naming reads as unrelated.
+        const box = ring.getBoundingClientRect();
+        tip.style.left = box.width / 2 + "px";
+        tip.style.top = box.height + "px";
+      });
+      row.addEventListener("pointerleave", clear);
+    });
   }
 
   /* ---------- position group ranks ----------
