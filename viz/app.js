@@ -2677,20 +2677,24 @@
 
   /* Matchup advantage in the unit fans actually read: POINTS of margin. The margin
      model is linear, so each input's coefficient times the team difference IS that
-     input's point contribution, and the rows sum to the projected spread. Five
-     statistical facets was model-speak; consumers get three plain buckets - what the
-     offence did, what the defence did, who is on the roster - plus home field when
-     there is one. */
+     input's point contribution, and the rows sum to the projected spread - which is
+     why every feature must land in a bucket. They are grouped by NAME here, not by
+     position: when the model grew from five inputs to fifteen (positional recruiting,
+     portal) a positional slice silently dropped ten coefficients and the panel
+     contradicted the spread above it. */
   function matchupDriversHTML(a, b) {
     const A = vecOf(a), B = vecOf(b), M = cur().model;
-    const pt = f => {
-      const i = M.features.indexOf(f);
-      return i < 0 ? 0 : M.margin.coef[i] * (A[i] - B[i]);
-    };
+    const acc = { off: 0, def: 0, roster: 0 };
+    for (let i = 0; i < M.features.length; i++) {
+      const c = M.margin.coef[i] * (A[i] - B[i]);
+      if (M.features[i] === "O") acc.off += c;
+      else if (M.features[i] === "D") acc.def += c;
+      else acc.roster += c;          // every non-O/D input is a roster fact
+    }
     const rows = [
-      { name: "Offense", v: pt("O") },
-      { name: "Defense", v: pt("D") },
-      { name: "Roster & recruits", v: ["talent", "returning", "war_projected"].reduce((s, f) => s + pt(f), 0) },
+      { name: "Offense", v: acc.off },
+      { name: "Defense", v: acc.def },
+      { name: "Roster & recruits", v: acc.roster },
     ];
     const venue = document.querySelector("input[name=venue]:checked").value;
     if (venue !== "N") rows.push({ name: "Home field", v: M.margin.hfa * (venue === "A" ? 1 : -1) });
