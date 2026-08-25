@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-24T19:04:01Z",
+   "as_of": "2026-08-25T01:55:42Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1078,7 +1078,7 @@
    "away": "North Carolina",
    "books": {
     "Bovada": {
-     "spread": -8,
+     "spread": -8.5,
      "spreadOpen": -7.5,
      "overUnder": 47.5,
      "overUnderOpen": 50.5,
@@ -1105,7 +1105,7 @@
     "Bovada": {
      "spread": -38,
      "spreadOpen": -35.5,
-     "overUnder": 59.5,
+     "overUnder": 60.5,
      "overUnderOpen": 57.5,
      "homeMoneyline": null,
      "awayMoneyline": 3500
@@ -1203,15 +1203,15 @@
    "away": "Hawai'i",
    "books": {
     "DraftKings": {
-     "spread": -5.5,
+     "spread": -4,
      "spreadOpen": -3,
      "overUnder": 48.5,
      "overUnderOpen": null,
-     "homeMoneyline": -218,
-     "awayMoneyline": 180
+     "homeMoneyline": -185,
+     "awayMoneyline": 154
     },
     "Bovada": {
-     "spread": -5,
+     "spread": -4,
      "spreadOpen": -3,
      "overUnder": 49,
      "overUnderOpen": 50.5,
@@ -1255,10 +1255,10 @@
     "DraftKings": {
      "spread": -5.5,
      "spreadOpen": -3,
-     "overUnder": 57.5,
+     "overUnder": 56.5,
      "overUnderOpen": null,
-     "homeMoneyline": -225,
-     "awayMoneyline": 185
+     "homeMoneyline": -218,
+     "awayMoneyline": 180
     },
     "Bovada": {
      "spread": -5.5,
@@ -1370,14 +1370,6 @@
    "home": "Wake Forest",
    "away": "Akron",
    "books": {
-    "Bovada": {
-     "spread": -23.5,
-     "spreadOpen": -22.5,
-     "overUnder": 50,
-     "overUnderOpen": 49.5,
-     "homeMoneyline": -3500,
-     "awayMoneyline": 1100
-    },
     "DraftKings": {
      "spread": -23.5,
      "spreadOpen": -22.5,
@@ -1385,6 +1377,14 @@
      "overUnderOpen": null,
      "homeMoneyline": -2800,
      "awayMoneyline": 1300
+    },
+    "Bovada": {
+     "spread": -23.5,
+     "spreadOpen": -22.5,
+     "overUnder": 49.5,
+     "overUnderOpen": 49.5,
+     "homeMoneyline": -3500,
+     "awayMoneyline": 1100
     }
    }
   },
