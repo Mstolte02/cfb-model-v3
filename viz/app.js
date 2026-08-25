@@ -1480,7 +1480,6 @@
         <span><b>${r.total.toFixed(1)}</b> total (O/U)</span>
         <span><b>${sa}–${sb}</b> projected score</span>
       </div>
-      ${matchupDriversHTML(a, b)}
       ${simPanelHTML(a, b, r)}
       ${roomsPanelHTML(a, b)}`;
   }
@@ -2668,101 +2667,6 @@
     Object.keys(players).sort().forEach(t => team.add(new Option(t, t)));
   }
 
-  /* ---------- matchup advantage, in points ----------
-     The margin model is linear, so a coefficient times the team difference IS that
-     input's contribution in points, and the bars have to add up to the spread
-     printed above them. Two things follow from that.
-
-     Every one of the fifteen inputs must land in a bucket. When the model grew from
-     five inputs to fifteen (positional recruiting, the portal) a positional slice
-     silently dropped ten coefficients and the panel contradicted its own spread, so
-     an unrecognised feature falls through to the roster bucket rather than vanishing.
-
-     And the offence and defence terms are REGROUPED into the matchup people actually
-     argue about, which is an identity rather than an approximation:
-
-         cO(Oa − Ob) + cD(Da − Db)  ≡  [cO·Oa − cD·Db] + [cD·Da − cO·Ob]
-
-     The left bracket is one team's offence measured against the other's defence, the
-     right one the reverse. Both units are standardised, so a bar sits at zero when
-     the two rooms are league average, and the pair still sums to the same points the
-     split-by-team version gave.
-
-     Talent sits with the recruiting classes rather than on a bar of its own. Its
-     coefficient is negative — it corrects the double count in projected WAR and the
-     class ratings — and alone on a row it would read as "more talent, fewer points",
-     which is a statement about collinearity and not about football. */
-  const DRIVER_BUCKET = {
-    talent: "class", rec_qb: "class", rec_ol: "class", rec_skill: "class",
-    rec_front7: "class", rec_secondary: "class",
-    war_projected: "roster", returning: "roster",
-    portal_in_rated: "portal", portal_out_rated: "portal", portal_net_rated: "portal",
-    portal_blue_in: "portal", portal_blue_out: "portal",
-  };
-  const DRIVER_META = {
-    class:  { name: "Recruiting classes", sub: "signing-day talent, room by room" },
-    roster: { name: "Roster value", sub: "projected WAR and returning production" },
-    portal: { name: "Transfer portal", sub: "who arrived, who left, how highly rated" },
-  };
-  const FEATURE_LABEL = {
-    O: "Offense rating", D: "Defense rating", talent: "Blue-chip talent",
-    returning: "Returning production", war_projected: "Projected roster WAR",
-    rec_qb: "Recruiting · quarterback", rec_ol: "Recruiting · offensive line",
-    rec_skill: "Recruiting · skill", rec_front7: "Recruiting · front seven",
-    rec_secondary: "Recruiting · secondary",
-    portal_in_rated: "Portal · rated arrivals", portal_out_rated: "Portal · rated losses",
-    portal_net_rated: "Portal · net rating", portal_blue_in: "Portal · blue-chips in",
-    portal_blue_out: "Portal · blue-chips out",
-  };
-
-  function matchupDriversHTML(a, b) {
-    const A = vecOf(a), B = vecOf(b), M = cur().model;
-    const iO = M.features.indexOf("O"), iD = M.features.indexOf("D");
-    const cO = iO >= 0 ? M.margin.coef[iO] : 0, cD = iD >= 0 ? M.margin.coef[iD] : 0;
-    const bucket = { class: 0, roster: 0, portal: 0 };
-    const parts = [];
-    for (let i = 0; i < M.features.length; i++) {
-      const f = M.features[i], v = M.margin.coef[i] * (A[i] - B[i]);
-      parts.push({ f, v, a: A[i], b: B[i] });
-      if (i === iO || i === iD) continue;      // the two unit rows carry these
-      bucket[DRIVER_BUCKET[f] || "roster"] += v;
-    }
-    const rows = [];
-    if (iO >= 0 && iD >= 0) {
-      rows.push({ name: `${abbr(a)} offense`, sub: `against the ${abbr(b)} defense`,
-                  v: cO * A[iO] - cD * B[iD] });
-      rows.push({ name: `${abbr(b)} offense`, sub: `against the ${abbr(a)} defense`,
-                  v: cD * A[iD] - cO * B[iO] });
-    }
-    const rest = Object.keys(DRIVER_META)
-      .map(k => ({ name: DRIVER_META[k].name, sub: DRIVER_META[k].sub, v: bucket[k] }))
-      .sort((x, y) => Math.abs(y.v) - Math.abs(x.v));
-    rows.push(...rest);
-    const venue = document.querySelector("input[name=venue]:checked").value;
-    if (venue !== "N") rows.push({ name: "Home field", sub: "at " + abbr(venue === "A" ? a : b),
-                                   v: M.margin.hfa * (venue === "A" ? 1 : -1) });
-    const maxAbs = Math.max(...rows.map(r => Math.abs(r.v)), 1e-9);
-    const bar = v => `<i class="${v >= 0 ? "l" : "r"}" style="width:${
-      Math.min(50, 50 * Math.abs(v) / maxAbs).toFixed(2)}%;background:${color(v >= 0 ? a : b)}"></i>`;
-    const val = v => `<b class="tug-val" style="color:${color(v >= 0 ? a : b)}">${
-      Math.abs(v) < 0.05 ? "—" : "+" + Math.abs(v).toFixed(1)}</b>`;
-    const net = rows.reduce((s, r) => s + r.v, 0);
-    const netFav = net >= 0 ? a : b;
-    const label = r => `<span class="tug-label">${esc(r.name)}${
-      r.sub ? `<i>${esc(r.sub)}</i>` : ""}</span>`;
-    return `<div class="driver-panel"><div class="section-intro"><div><span class="eyebrow">Why the model leans</span><h3>Matchup advantage, in points</h3></div><p>Every bar points at the team it helps and counts the points of margin that factor is worth. Added together, they are the spread.</p></div>
-      <div class="tug tug-head"><span class="tug-label"></span><div class="tug-track head" style="grid-column:2/4"><span class="tn" style="color:${color(a)}">${esc(abbr(a))}</span><span class="tn" style="color:${color(b)}">${esc(abbr(b))}</span></div></div>
-      ${rows.map(r => `<div class="tug">${label(r)}<div class="tug-track">${bar(r.v)}</div>${val(r.v)}</div>`).join("")}
-      <div class="tug tug-net"><span class="tug-label">All together</span><div class="tug-track"><i class="${net >= 0 ? "l" : "r"}" style="width:${Math.min(50, 50 * Math.abs(net) / maxAbs).toFixed(2)}%;background:${color(netFav)}"></i></div><b class="tug-val" style="color:${color(netFav)}">+${Math.abs(net).toFixed(1)}</b></div>
-      <p class="tug-sum">That adds up to <b style="color:${color(netFav)}">${esc(netFav)}</b> by ${Math.abs(net).toFixed(1)} points — the spread above.</p>
-      <details class="tug-all"><summary>All ${parts.length} model inputs, one row each</summary>
-        <table class="tug-table"><thead><tr><th>Input</th><th>${esc(abbr(a))}</th><th>${esc(abbr(b))}</th><th>Points</th></tr></thead>
-        <tbody>${parts.map(p => `<tr><td>${esc(FEATURE_LABEL[p.f] || p.f)}</td><td class="num">${p.a.toFixed(2)}</td><td class="num">${p.b.toFixed(2)}</td><td class="num"><b style="color:${color(p.v >= 0 ? a : b)}">${p.v >= 0 ? "+" : "−"}${Math.abs(p.v).toFixed(2)}</b></td></tr>`).join("")}</tbody></table>
-        <p class="tug-foot">Standardised inputs, so 0.00 is an average FBS team and the points column is the coefficient times the difference. The bars above regroup the offence and defence rows into the two unit matchups; the total is the same either way.</p>
-      </details>
-    </div>`;
-  }
-
   /* ---------- 20,000 simulations ----------
      Margins are drawn from the fitted distribution of ACTUAL results given the
      predicted one, not from the normal the win model uses: the normal puts .044 on a
@@ -2782,8 +2686,17 @@
      A figure that moved every time the panel repainted would look like a bug, and
      nobody could quote it. */
   const SIM_N = 20000;
+  /* Bands, and why the widest one is split. Residual margin has a standard deviation
+     of 17 points, so even a pick'em ends by two touchdowns about 44% of the time -
+     and across every FBS game from 2021 to 2025, 58% did. That is a fact about
+     college football, but an open-ended "by 14+" slice next to slices 2, 4 and 7
+     points wide made it look like a bug: the biggest arc on the ring was the one
+     allowed to run from 14 to 60. Splitting it at three scores gives the ring five
+     bands of comparable weight and leaves the ladder underneath - by 3, by 7, by 14 -
+     to answer the cumulative question. */
   const SIM_BANDS = [
-    { lo: 14, label: "by 14+" },
+    { lo: 21, label: "by 21+" },
+    { lo: 14, hi: 20, label: "by 14–20" },
     { lo: 7, hi: 13, label: "by 7–13" },
     { lo: 3, hi: 6, label: "by 3–6" },
     { lo: 1, hi: 2, label: "by 1–2" },
@@ -2856,7 +2769,7 @@
       ...sim.A.map((n, i) => ({ n, team: a, i })),
       ...sim.B.map((n, i) => ({ n, team: b, i })).reverse(),
     ];
-    const FADE = [1, .74, .5, .3];
+    const FADE = [1, .8, .62, .45, .28];
     let off = 25;                        // start the ring at twelve o'clock
     const ring = arcs.map(x => {
       const len = 100 * x.n / SIM_N;
@@ -2891,6 +2804,13 @@
     const thinNote = !thin ? "" : `<p class="sim-note">${esc(abbr(winsA < winsB ? a : b))}
       wins this game rarely enough that its bands rest on a handful of real results in
       the fit. Read them as “rare”, not as a shape.</p>`;
+    // The first thing anyone asks of this ring is how a projected one-point game ends
+    // in a blowout so often. It does, and the answer is the width of the sport.
+    const wideNote = `<p class="sim-note">College football margins are wide: this
+      model's error is a standard deviation of ${cur().model.margin.sigma.toFixed(0)}
+      points, so even a game projected inside a point ends by two touchdowns or more
+      about four times in ten. Across every FBS game from 2021 to 2025, 58% finished
+      by 14+.</p>`;
     return `<div class="sim-panel"><div class="section-intro"><div><span class="eyebrow">20,000 simulations</span><h3>How the game finishes</h3></div><p>Every simulation draws a final margin from the distribution of real results this model fits — which is why 3 and 7 are lumpy and a normal curve would miss them. How often each side wins is held to the win probability above, so this ring breaks that number down rather than arguing with it.</p></div>
       <div class="sim-body">
         <div class="sim-ring">
@@ -2907,6 +2827,7 @@
         <th><img src="${logoURL(a)}" alt="" loading="lazy">${esc(abbr(a))}</th>
         <th><img src="${logoURL(b)}" alt="" loading="lazy">${esc(abbr(b))}</th></tr></thead>
         <tbody>${ladder}</tbody></table>
+      ${wideNote}
       ${thinNote}
       ${keyRow}
     </div>`;
