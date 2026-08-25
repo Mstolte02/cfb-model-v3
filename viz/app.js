@@ -398,15 +398,49 @@
       Math.round((margin - P.pred_lo) / P.pred_step)));
     return P.rows[i];
   }
-  function keyNumberP(margin, k) {
-    const row = marginPMF(margin);
+  function keyNumberP(row, k) {
     if (!row) return null;
     const P = SHAPE.margin_pmf;
-    let s = 0;
+    let s = 0, tot = 0;
     for (let j = 0; j < row.length; j++) {
+      tot += row[j];
       if (Math.abs(P.margin_lo + j) === k) s += row[j];
     }
-    return s;
+    return tot ? s / tot : null;
+  }
+
+  /* ---------- the same game replayed, not games like it ----------
+     The fitted rows above answer "of every game the model called +7, how did they
+     end", and their spread is the model's full residual: 17 points. Part of that is
+     the sport and part of it is the model being wrong about the two teams - and when
+     you replay ONE matchup, the second part does not get to roll again. It is a fixed
+     error, the same in all 20,000 games.
+
+     Measured rather than assumed. 53 pairs met twice in the same season since 2014;
+     the two margins differ with a standard deviation of 19.1 points, which puts the
+     within-matchup figure at 19.1/sqrt(2) = 13.5 (scripts/rematch_variance.py). If
+     anything that overstates it: those meetings sit weeks apart, so roster and form
+     drift are in there too.
+
+     So the row is reweighted to that narrower spread instead of being resampled. A
+     Gaussian tilt does it exactly - multiplying by the ratio of two normal densities
+     rescales the envelope and leaves everything else standing - which matters,
+     because the whole reason for using the fitted row is the lumps at 3 and 7 that a
+     normal misses. They survive; only the tails come in. */
+  const REPLAY_SD = 13.49;
+  function replayRow(row) {
+    if (!row) return null;
+    const P = SHAPE.margin_pmf, sigma = cur().model.margin.sigma;
+    let s = 0, mu = 0;
+    for (let j = 0; j < row.length; j++) { s += row[j]; mu += row[j] * (P.margin_lo + j); }
+    if (!s) return row;
+    mu /= s;
+    let va = 0;
+    for (let j = 0; j < row.length; j++) va += row[j] * ((P.margin_lo + j) - mu) ** 2;
+    const sd = Math.sqrt(va / s), k = REPLAY_SD / sigma;
+    if (!(sd > 0) || !(k > 0) || k >= 1) return row;   // never widen, only narrow
+    const c = 0.5 * (1 / (k * k * sd * sd) - 1 / (sd * sd));
+    return row.map((v, j) => v * Math.exp(-c * ((P.margin_lo + j) - mu) ** 2));
   }
 
   /* A margin under half a point is a coin flip, and "−0.0" reads as a rendering
@@ -2717,7 +2751,7 @@
     return h >>> 0;
   }
   function simulateGame(margin, pA, seed) {
-    const row = marginPMF(margin);
+    const row = replayRow(marginPMF(margin));
     if (!row) return null;
     const P = SHAPE.margin_pmf;
     // One conditional ladder per side. A tie is not a football result and the fit
@@ -2754,7 +2788,7 @@
     const A = SIM_BANDS.map(() => 0), B = SIM_BANDS.map(() => 0);
     const winsA = Math.round(Math.min(1, Math.max(0, pA)) * SIM_N);
     for (let n = 0; n < SIM_N; n++) draw(n < winsA ? pos : neg, n < winsA ? A : B);
-    return { A, B };
+    return { A, B, row };
   }
 
   function simPanelHTML(a, b, r) {
@@ -2792,7 +2826,7 @@
     const ladder = SIM_LADDER.map(k => `<tr><th>Wins by ${k}+</th>
       <td><b style="color:${color(a)}">${num(atLeast(sim.A, k))}</b><i>${share(atLeast(sim.A, k))}</i></td>
       <td><b style="color:${color(b)}">${num(atLeast(sim.B, k))}</b><i>${share(atLeast(sim.B, k))}</i></td></tr>`).join("");
-    const keyP = [3, 7, 10, 14].map(k => [k, keyNumberP(r.margin, k)]);
+    const keyP = [3, 7, 10, 14].map(k => [k, keyNumberP(sim.row, k)]);
     const keyRow = keyP[0][1] == null ? "" : `<div class="keynums">
       <span class="kn-label">Decided by exactly</span>
       ${keyP.map(([k, p]) => `<span class="kn"><b>${k}</b>${pct(p, 1)}</span>`).join("")}</div>`;
@@ -2804,14 +2838,13 @@
     const thinNote = !thin ? "" : `<p class="sim-note">${esc(abbr(winsA < winsB ? a : b))}
       wins this game rarely enough that its bands rest on a handful of real results in
       the fit. Read them as “rare”, not as a shape.</p>`;
-    // The first thing anyone asks of this ring is how a projected one-point game ends
-    // in a blowout so often. It does, and the answer is the width of the sport.
-    const wideNote = `<p class="sim-note">College football margins are wide: this
-      model's error is a standard deviation of ${cur().model.margin.sigma.toFixed(0)}
-      points, so even a game projected inside a point ends by two touchdowns or more
-      about four times in ten. Across every FBS game from 2021 to 2025, 58% finished
-      by 14+.</p>`;
-    return `<div class="sim-panel"><div class="section-intro"><div><span class="eyebrow">20,000 simulations</span><h3>How the game finishes</h3></div><p>Every simulation draws a final margin from the distribution of real results this model fits — which is why 3 and 7 are lumpy and a normal curve would miss them. How often each side wins is held to the win probability above, so this ring breaks that number down rather than arguing with it.</p></div>
+    // Two different questions, and the ring answers only one of them. Say which.
+    const wideNote = `<p class="sim-note">Replayed like this the margin carries a
+      standard deviation of about ${REPLAY_SD.toFixed(1)} points, measured on teams
+      that actually met twice in a season. To bet a single meeting you want the wider
+      ${cur().model.margin.sigma.toFixed(0)} the model is graded against, which also
+      carries what it may have wrong about these two.</p>`;
+    return `<div class="sim-panel"><div class="section-intro"><div><span class="eyebrow">20,000 simulations</span><h3>If these two played 20,000 times</h3></div><p>The same matchup replayed, both teams held at the strength the model gives them today — not 20,000 fresh guesses about who they are. Margins come from the distribution of real results, so 3 and 7 stay lumpy where a normal curve would smooth them, narrowed to the spread teams actually produce when they meet twice in one season. How often each side wins is held to the win probability above.</p></div>
       <div class="sim-body">
         <div class="sim-ring">
           <svg viewBox="0 0 42 42" role="img" aria-label="Simulated margins of victory">
