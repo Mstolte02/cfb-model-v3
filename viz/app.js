@@ -624,7 +624,12 @@
     const side = (t, won, score, gameIndex, isTop) => {
       let mark = "";
       if (!showProbs) mark = score != null ? score : "";
-      else if (score != null) mark = pct(isTop ? score : 1 - score, 0);
+      else if (score != null) {
+        // Round ONE side and take the other as its complement, so the pair always
+        // sums to exactly 100 instead of 99/101 when both round independently.
+        const topPct = Math.round(100 * score);
+        mark = (isTop ? topPct : 100 - topPct) + "%";
+      }
       if (!t) return `<div class="slot empty"><span class="seed">–</span>
         <span class="tbd">TBD</span></div>`;
       return `<div class="slot ${won ? "won" : "lost"}"
@@ -638,7 +643,7 @@
         ${side(g.top, g.winner && g.winner === g.top,
                showProbs ? g.p : g.sa, gameIndex, true)}
         ${side(g.bottom, g.winner && g.winner === g.bottom,
-               showProbs ? (g.p != null ? 1 - g.p : null) : g.sb, gameIndex, false)}
+               showProbs ? g.p : g.sb, gameIndex, false)}
         <div class="gmeta">
           <span class="bye-tag">${g.site ? "at " + esc(abbr(g.site)) : "neutral"}</span>
           ${!showProbs && g.p != null ? `<span class="gwp">${pct(Math.max(g.p, 1 - g.p), 0)}</span>` : ""}
@@ -1441,6 +1446,8 @@
       return;
     }
     const r = predict(a, b, venue);
+    // One rounding, one complement: 67/33 always, never 68/33.
+    const pAint = Math.round(100 * r.pA);
     const fav = r.margin >= 0 ? a : b, spread = Math.abs(r.margin);
     const venueNote = venue === "N" ? "Neutral field" : "At " + (venue === "A" ? a : b);
     const [sa, sb] = displayScore(r);
@@ -1460,7 +1467,7 @@
         <div class="side">
           <img src="${logoURL(a)}" alt=""><div class="name">${esc(a)}</div>
           <div class="conf">${esc(conf(a))}</div>
-          <div class="winp" style="color:${color(a)}">${pct(r.pA)}</div>
+          <div class="winp" style="color:${color(a)}">${pAint}%</div>
         </div>
         <div class="mid">
           <div class="score">${sa} · ${sb}</div>
@@ -1469,7 +1476,7 @@
         <div class="side">
           <img src="${logoURL(b)}" alt=""><div class="name">${esc(b)}</div>
           <div class="conf">${esc(conf(b))}</div>
-          <div class="winp" style="color:${color(b)}">${pct(1 - r.pA)}</div>
+          <div class="winp" style="color:${color(b)}">${100 - pAint}%</div>
         </div>
       </div>
       <div class="prob-strip">
@@ -2668,15 +2675,33 @@
     Object.keys(players).sort().forEach(t => team.add(new Option(t, t)));
   }
 
+  /* Matchup advantage as a tug of war. The old grid gave every factor its own card
+     with a left-anchored bar, so direction lived in a text label and magnitudes were
+     only comparable by squinting. A centre-split track says both at a glance: the bar
+     points at the team the factor helps, its length is that factor's pull relative to
+     the strongest one here, and the net row is what remains after the two sides
+     cancel. */
   function matchupDriversHTML(a, b) {
     const labels = { O: "Offensive profile", D: "Defensive profile", talent: "Talent baseline", returning: "Returning production", war_projected: "Projected WAR" };
     const A = vecOf(a), B = vecOf(b), M = cur().model;
     const rows = M.features.map((f, i) => ({ name: labels[f] || f, v: M.logistic.coef[i] * (A[i] - B[i]) }))
       .sort((x, y) => Math.abs(y.v) - Math.abs(x.v));
-    return `<div class="driver-panel"><div class="section-intro"><div><span class="eyebrow">Why the model leans</span><h3>Matchup advantage drivers</h3></div><p>Contribution to the pregame log-odds; larger bars have more pull in this matchup.</p></div><div class="driver-grid">${rows.map(r => {
-      const team = r.v >= 0 ? a : b, w = Math.min(100, 25 + 75 * Math.abs(r.v) / Math.max(...rows.map(x => Math.abs(x.v)), .001));
-      return `<div class="driver"><span>${esc(r.name)}</span><b>${esc(team)}</b><i><em style="width:${w}%;background:${color(team)}"></em></i></div>`;
-    }).join("")}</div></div>`;
+    const maxAbs = Math.max(...rows.map(r => Math.abs(r.v)), 1e-9);
+    const sumAbs = rows.reduce((s, r) => s + Math.abs(r.v), 0) || 1e-9;
+    const bar = v => {
+      const w = Math.min(50, 50 * Math.abs(v) / maxAbs).toFixed(2);
+      return v >= 0
+        ? `<i class="l" style="width:${w}%;background:${color(a)}"></i>`
+        : `<i class="r" style="width:${w}%;background:${color(b)}"></i>`;
+    };
+    const net = rows.reduce((s, r) => s + r.v, 0);
+    const netFav = net >= 0 ? a : b;
+    return `<div class="driver-panel"><div class="section-intro"><div><span class="eyebrow">Why the model leans</span><h3>Matchup advantage, factor by factor</h3></div><p>Every bar points at the team it helps, from the centre out; length is that factor's share of the pull, scaled to the biggest one in this game.</p></div>
+      <div class="tug tug-head"><span class="tug-label"></span><div class="tug-track head"><span class="tn" style="color:${color(a)}">${esc(abbr(a))}</span><span class="tn" style="color:${color(b)}">${esc(abbr(b))}</span></div></div>
+      ${rows.map(r => `<div class="tug"><span class="tug-label">${esc(r.name)}</span><div class="tug-track">${bar(r.v)}</div></div>`).join("")}
+      <div class="tug tug-net"><span class="tug-label">Net edge</span><div class="tug-track"><i class="${net >= 0 ? "l" : "r"}" style="width:${(50 * Math.abs(net) / sumAbs).toFixed(2)}%;background:${color(netFav)}"></i></div>
+        <span class="tug-note">${esc(abbr(netFav))} wins the exchange ${pct(Math.abs(net) / sumAbs, 0)} to ${pct(1 - Math.abs(net) / sumAbs, 0)}</span></div>
+    </div>`;
   }
 
   function fillWeeklyBooks() {
