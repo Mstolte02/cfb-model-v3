@@ -824,10 +824,98 @@ main { max-width: 1320px; padding-top: 38px; }
 .tug-net .tug-track { height: 20px; }
 .tug-net { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--line); }
 .tug-sum { margin-top: 12px; color: var(--muted); font: 650 13.5px/1.5 var(--sans); }
+/* The second line of a bar label names the other half of the matchup, so it has to
+   read as part of the same label and never as a bar of its own. */
+.tug-label i { display: block; margin-top: 3px; color: var(--muted); opacity: .78;
+  font: 600 10.5px/1.25 var(--sans); text-transform: none; letter-spacing: 0;
+  font-style: normal; }
+.tug-all { margin-top: 16px; }
+.tug-all summary { color: var(--muted); font: 700 11px/1 var(--sans);
+  text-transform: uppercase; letter-spacing: .08em; cursor: pointer; }
+.tug-all summary:hover { color: var(--text); }
+.tug-table { width: 100%; margin-top: 12px; border-collapse: collapse;
+  font: 13px/1.4 var(--sans); }
+.tug-table th { padding: 7px 8px; border-bottom: 1px solid var(--line2); color: var(--muted);
+  font: 700 10px/1 var(--sans); text-transform: uppercase; letter-spacing: .07em; text-align: right; }
+.tug-table th:first-child { text-align: left; }
+.tug-table td { padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.tug-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.tug-foot { margin-top: 10px; color: var(--muted); font: 12px/1.5 var(--sans); }
 @media (max-width: 720px) {
   .tug { grid-template-columns: 96px 1fr 44px; gap: 9px; }
   .tug-label { font-size: 10px; }
+  .tug-label i { font-size: 9px; }
 }
+
+/* ---- 20,000 simulations: ring, legend, ladder ----------------------------- */
+.sim-panel { margin-top: 30px; }
+.sim-body { display: grid; grid-template-columns: minmax(210px, 280px) 1fr; gap: 26px;
+  align-items: center; padding: 20px 22px; border: 1px solid var(--line2);
+  border-radius: 14px; background: var(--panel); }
+.sim-ring { position: relative; }
+.sim-ring svg { display: block; width: 100%; height: auto; }
+.sim-arc { transition: stroke-dasharray .3s; }
+.sim-center { position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center; }
+.sim-center b { font: 700 34px/1 Georgia, serif; font-variant-numeric: tabular-nums; }
+.sim-center i { color: var(--muted); font: 700 10px/1 var(--sans); font-style: normal;
+  text-transform: uppercase; letter-spacing: .1em; margin-top: 6px; }
+.sim-key { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.sim-side-head { display: flex; align-items: center; gap: 9px; margin-bottom: 10px;
+  padding-bottom: 9px; border-bottom: 1px solid var(--line); }
+.sim-side-head img { width: 26px; height: 26px; object-fit: contain; }
+.sim-side-head b { display: block; font: 700 15px/1.2 Georgia, serif; }
+.sim-side-head i { display: block; margin-top: 2px; color: var(--muted);
+  font: 650 11px/1 var(--sans); font-style: normal; font-variant-numeric: tabular-nums; }
+.sim-row { display: grid; grid-template-columns: 10px 1fr auto auto; gap: 9px;
+  align-items: center; padding: 5px 0; font: 12.5px/1 var(--sans); }
+.sim-swatch { width: 10px; height: 10px; border-radius: 3px; }
+.sim-band { color: var(--muted); }
+.sim-n { font-weight: 700; font-variant-numeric: tabular-nums; }
+.sim-pct { min-width: 42px; text-align: right; color: var(--muted);
+  font-variant-numeric: tabular-nums; }
+/* The bands above are disjoint slices of the ring; this table is the cumulative
+   read - "by 3 or more" - which is the question people actually ask of a spread. */
+.sim-ladder { width: 100%; margin-top: 16px; border-collapse: collapse; }
+.sim-ladder th { padding: 8px 10px; color: var(--muted); font: 700 10px/1 var(--sans);
+  text-transform: uppercase; letter-spacing: .07em; text-align: right; }
+.sim-ladder thead th { border-bottom: 1px solid var(--line2); }
+.sim-ladder thead th img { width: 17px; height: 17px; object-fit: contain;
+  vertical-align: -4px; margin-right: 6px; }
+.sim-ladder tbody th { text-align: left; color: var(--text); font: 650 12.5px/1 var(--sans);
+  text-transform: none; letter-spacing: 0; }
+.sim-ladder td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: right;
+  font-variant-numeric: tabular-nums; }
+.sim-ladder td b { font: 800 15px/1 var(--sans); }
+.sim-ladder td i { margin-left: 7px; color: var(--muted); font: 600 11px/1 var(--sans);
+  font-style: normal; }
+.sim-note { margin-top: 10px; color: var(--muted); font: 12.5px/1.5 var(--sans); }
+@media (max-width: 820px) {
+  .sim-body { grid-template-columns: 1fr; }
+  .sim-ring { max-width: 240px; margin: 0 auto; }
+}
+@media (max-width: 520px) { .sim-key { grid-template-columns: 1fr; } }
+
+/* ---- position group ranks ------------------------------------------------- */
+.room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 10px; }
+.room-card { position: relative; overflow: hidden; padding: 11px 12px 9px;
+  border: 1px solid var(--line2); border-radius: 12px; background: var(--panel); }
+.room-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px;
+  background: var(--edge, var(--line2)); }
+.room-card.sum { background: var(--panel2); }
+.room-g { display: block; margin-bottom: 8px; color: var(--muted);
+  font: 800 10px/1 var(--sans); text-transform: uppercase; letter-spacing: .09em; }
+.room-row { display: grid; grid-template-columns: 20px 1fr auto; gap: 8px;
+  align-items: center; padding: 4px 0; opacity: .62; }
+.room-row.win { opacity: 1; }
+.room-row img { width: 20px; height: 20px; object-fit: contain; }
+.room-row b { font: 800 15px/1 var(--sans); font-variant-numeric: tabular-nums;
+  color: var(--t); }
+.room-row i { color: var(--muted); font: 600 11px/1 var(--sans); font-style: normal;
+  font-variant-numeric: tabular-nums; }
+.room-n { display: block; margin-top: 6px; color: var(--muted); opacity: .7;
+  font: 600 9.5px/1 var(--sans); text-transform: uppercase; letter-spacing: .08em; }
 
 .weekly-board { overflow: hidden; border: 1px solid var(--line2); border-radius: 12px; background: var(--panel); }
 .market-selects { display: flex; gap: 14px; flex-wrap: wrap; }

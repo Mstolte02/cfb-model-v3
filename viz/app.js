@@ -1451,17 +1451,9 @@
     const fav = r.margin >= 0 ? a : b, spread = Math.abs(r.margin);
     const venueNote = venue === "N" ? "Neutral field" : "At " + (venue === "A" ? a : b);
     const [sa, sb] = displayScore(r);
-    // The margins that actually happen, from the fitted distribution rather than the
-    // normal the win model uses - it puts .044 on a 3-point game against a real .106.
-    // This is a statement about the spread, not a rounding of it, which is why it
-    // survives the scoreline snapping that used to sit above it.
-    const KEYS = [3, 7, 10, 14];
-    const keyP = KEYS.map(k => [k, keyNumberP(r.margin, k)]);
-    const keyRow = keyP[0][1] == null ? "" : `
-      <div class="keynums">
-        <span class="kn-label">Chance the game is decided by exactly</span>
-        ${keyP.map(([k, p]) => `<span class="kn"><b>${k}</b>${pct(p, 1)}</span>`).join("")}
-      </div>`;
+    // The key numbers used to sit here, under the scoreline. They are a statement
+    // about the shape of the margin rather than about the spread, so they now live
+    // inside the simulation panel, next to the rest of that shape.
     document.getElementById("matchup-result").innerHTML = `
       <div class="face-off">
         <div class="side">
@@ -1488,8 +1480,9 @@
         <span><b>${r.total.toFixed(1)}</b> total (O/U)</span>
         <span><b>${sa}–${sb}</b> projected score</span>
       </div>
-      ${keyRow}
-      ${matchupDriversHTML(a, b)}`;
+      ${matchupDriversHTML(a, b)}
+      ${simPanelHTML(a, b, r)}
+      ${roomsPanelHTML(a, b)}`;
   }
   selA.addEventListener("change", renderMatchup);
   selB.addEventListener("change", renderMatchup);
@@ -2675,50 +2668,280 @@
     Object.keys(players).sort().forEach(t => team.add(new Option(t, t)));
   }
 
-  /* Matchup advantage in the unit fans actually read: POINTS of margin. The margin
-     model is linear, so each input's coefficient times the team difference IS that
-     input's point contribution, and the rows sum to the projected spread - which is
-     why every feature must land in a bucket. They are grouped by NAME here, not by
-     position: when the model grew from five inputs to fifteen (positional recruiting,
-     portal) a positional slice silently dropped ten coefficients and the panel
-     contradicted the spread above it. */
+  /* ---------- matchup advantage, in points ----------
+     The margin model is linear, so a coefficient times the team difference IS that
+     input's contribution in points, and the bars have to add up to the spread
+     printed above them. Two things follow from that.
+
+     Every one of the fifteen inputs must land in a bucket. When the model grew from
+     five inputs to fifteen (positional recruiting, the portal) a positional slice
+     silently dropped ten coefficients and the panel contradicted its own spread, so
+     an unrecognised feature falls through to the roster bucket rather than vanishing.
+
+     And the offence and defence terms are REGROUPED into the matchup people actually
+     argue about, which is an identity rather than an approximation:
+
+         cO(Oa − Ob) + cD(Da − Db)  ≡  [cO·Oa − cD·Db] + [cD·Da − cO·Ob]
+
+     The left bracket is one team's offence measured against the other's defence, the
+     right one the reverse. Both units are standardised, so a bar sits at zero when
+     the two rooms are league average, and the pair still sums to the same points the
+     split-by-team version gave.
+
+     Talent sits with the recruiting classes rather than on a bar of its own. Its
+     coefficient is negative — it corrects the double count in projected WAR and the
+     class ratings — and alone on a row it would read as "more talent, fewer points",
+     which is a statement about collinearity and not about football. */
+  const DRIVER_BUCKET = {
+    talent: "class", rec_qb: "class", rec_ol: "class", rec_skill: "class",
+    rec_front7: "class", rec_secondary: "class",
+    war_projected: "roster", returning: "roster",
+    portal_in_rated: "portal", portal_out_rated: "portal", portal_net_rated: "portal",
+    portal_blue_in: "portal", portal_blue_out: "portal",
+  };
+  const DRIVER_META = {
+    class:  { name: "Recruiting classes", sub: "signing-day talent, room by room" },
+    roster: { name: "Roster value", sub: "projected WAR and returning production" },
+    portal: { name: "Transfer portal", sub: "who arrived, who left, how highly rated" },
+  };
+  const FEATURE_LABEL = {
+    O: "Offense rating", D: "Defense rating", talent: "Blue-chip talent",
+    returning: "Returning production", war_projected: "Projected roster WAR",
+    rec_qb: "Recruiting · quarterback", rec_ol: "Recruiting · offensive line",
+    rec_skill: "Recruiting · skill", rec_front7: "Recruiting · front seven",
+    rec_secondary: "Recruiting · secondary",
+    portal_in_rated: "Portal · rated arrivals", portal_out_rated: "Portal · rated losses",
+    portal_net_rated: "Portal · net rating", portal_blue_in: "Portal · blue-chips in",
+    portal_blue_out: "Portal · blue-chips out",
+  };
+
   function matchupDriversHTML(a, b) {
     const A = vecOf(a), B = vecOf(b), M = cur().model;
-    const acc = { off: 0, def: 0, roster: 0 };
+    const iO = M.features.indexOf("O"), iD = M.features.indexOf("D");
+    const cO = iO >= 0 ? M.margin.coef[iO] : 0, cD = iD >= 0 ? M.margin.coef[iD] : 0;
+    const bucket = { class: 0, roster: 0, portal: 0 };
+    const parts = [];
     for (let i = 0; i < M.features.length; i++) {
-      const c = M.margin.coef[i] * (A[i] - B[i]);
-      if (M.features[i] === "O") acc.off += c;
-      else if (M.features[i] === "D") acc.def += c;
-      else acc.roster += c;          // every non-O/D input is a roster fact
+      const f = M.features[i], v = M.margin.coef[i] * (A[i] - B[i]);
+      parts.push({ f, v, a: A[i], b: B[i] });
+      if (i === iO || i === iD) continue;      // the two unit rows carry these
+      bucket[DRIVER_BUCKET[f] || "roster"] += v;
     }
-    const rows = [
-      { name: "Offense", v: acc.off },
-      { name: "Defense", v: acc.def },
-      { name: "Roster & recruits", v: acc.roster },
-    ];
+    const rows = [];
+    if (iO >= 0 && iD >= 0) {
+      rows.push({ name: `${abbr(a)} offense`, sub: `against the ${abbr(b)} defense`,
+                  v: cO * A[iO] - cD * B[iD] });
+      rows.push({ name: `${abbr(b)} offense`, sub: `against the ${abbr(a)} defense`,
+                  v: cD * A[iD] - cO * B[iO] });
+    }
+    const rest = Object.keys(DRIVER_META)
+      .map(k => ({ name: DRIVER_META[k].name, sub: DRIVER_META[k].sub, v: bucket[k] }))
+      .sort((x, y) => Math.abs(y.v) - Math.abs(x.v));
+    rows.push(...rest);
     const venue = document.querySelector("input[name=venue]:checked").value;
-    if (venue !== "N") rows.push({ name: "Home field", v: M.margin.hfa * (venue === "A" ? 1 : -1) });
-    rows.sort((x, y) => Math.abs(y.v) - Math.abs(x.v));
+    if (venue !== "N") rows.push({ name: "Home field", sub: "at " + abbr(venue === "A" ? a : b),
+                                   v: M.margin.hfa * (venue === "A" ? 1 : -1) });
     const maxAbs = Math.max(...rows.map(r => Math.abs(r.v)), 1e-9);
-    const bar = v => {
-      const w = Math.min(50, 50 * Math.abs(v) / maxAbs).toFixed(2);
-      const fav = v >= 0 ? a : b;
-      return v >= 0
-        ? `<i class="l" style="width:${w}%;background:${color(a)}"></i>`
-        : `<i class="r" style="width:${w}%;background:${color(b)}"></i>`;
-    };
-    const val = v => {
-      const fav = v >= 0 ? a : b;
-      return `<b class="tug-val" style="color:${color(fav)}">+${Math.abs(v).toFixed(1)}</b>`;
-    };
+    const bar = v => `<i class="${v >= 0 ? "l" : "r"}" style="width:${
+      Math.min(50, 50 * Math.abs(v) / maxAbs).toFixed(2)}%;background:${color(v >= 0 ? a : b)}"></i>`;
+    const val = v => `<b class="tug-val" style="color:${color(v >= 0 ? a : b)}">${
+      Math.abs(v) < 0.05 ? "—" : "+" + Math.abs(v).toFixed(1)}</b>`;
     const net = rows.reduce((s, r) => s + r.v, 0);
     const netFav = net >= 0 ? a : b;
-    return `<div class="driver-panel"><div class="section-intro"><div><span class="eyebrow">Why the model leans</span><h3>Matchup advantage, in points</h3></div><p>Every bar points at the team it helps and counts the points of margin that factor adds. Added together, they are the spread.</p></div>
+    const label = r => `<span class="tug-label">${esc(r.name)}${
+      r.sub ? `<i>${esc(r.sub)}</i>` : ""}</span>`;
+    return `<div class="driver-panel"><div class="section-intro"><div><span class="eyebrow">Why the model leans</span><h3>Matchup advantage, in points</h3></div><p>Every bar points at the team it helps and counts the points of margin that factor is worth. Added together, they are the spread.</p></div>
       <div class="tug tug-head"><span class="tug-label"></span><div class="tug-track head" style="grid-column:2/4"><span class="tn" style="color:${color(a)}">${esc(abbr(a))}</span><span class="tn" style="color:${color(b)}">${esc(abbr(b))}</span></div></div>
-      ${rows.map(r => `<div class="tug"><span class="tug-label">${esc(r.name)}</span><div class="tug-track">${bar(r.v)}</div>${val(r.v)}</div>`).join("")}
+      ${rows.map(r => `<div class="tug">${label(r)}<div class="tug-track">${bar(r.v)}</div>${val(r.v)}</div>`).join("")}
       <div class="tug tug-net"><span class="tug-label">All together</span><div class="tug-track"><i class="${net >= 0 ? "l" : "r"}" style="width:${Math.min(50, 50 * Math.abs(net) / maxAbs).toFixed(2)}%;background:${color(netFav)}"></i></div><b class="tug-val" style="color:${color(netFav)}">+${Math.abs(net).toFixed(1)}</b></div>
       <p class="tug-sum">That adds up to <b style="color:${color(netFav)}">${esc(netFav)}</b> by ${Math.abs(net).toFixed(1)} points — the spread above.</p>
+      <details class="tug-all"><summary>All ${parts.length} model inputs, one row each</summary>
+        <table class="tug-table"><thead><tr><th>Input</th><th>${esc(abbr(a))}</th><th>${esc(abbr(b))}</th><th>Points</th></tr></thead>
+        <tbody>${parts.map(p => `<tr><td>${esc(FEATURE_LABEL[p.f] || p.f)}</td><td class="num">${p.a.toFixed(2)}</td><td class="num">${p.b.toFixed(2)}</td><td class="num"><b style="color:${color(p.v >= 0 ? a : b)}">${p.v >= 0 ? "+" : "−"}${Math.abs(p.v).toFixed(2)}</b></td></tr>`).join("")}</tbody></table>
+        <p class="tug-foot">Standardised inputs, so 0.00 is an average FBS team and the points column is the coefficient times the difference. The bars above regroup the offence and defence rows into the two unit matchups; the total is the same either way.</p>
+      </details>
     </div>`;
+  }
+
+  /* ---------- 20,000 simulations ----------
+     Margins are drawn from the fitted distribution of ACTUAL results given the
+     predicted one, not from the normal the win model uses: the normal puts .044 on a
+     three-point game where the real figure is .106, and a panel about margins of
+     victory that cannot see the key numbers is worse than no panel at all.
+
+     WHO wins is not drawn, though. That distribution is conditioned on the predicted
+     margin alone, while the win probability printed above it blends the margin model
+     with the logistic one - so sampling both from the margin fit put 47.7% next to a
+     headline 45% for the same team in the same game. The count of wins is therefore
+     fixed at the shipped probability and only the SHAPE of each side's margin is
+     sampled, from that side of the fitted distribution. The ring decomposes the
+     number above it instead of competing with it, and the winner can no longer flip
+     between the two on a near-coin-flip.
+
+     The seed is the matchup, so the same game always returns the same 20,000 draws.
+     A figure that moved every time the panel repainted would look like a bug, and
+     nobody could quote it. */
+  const SIM_N = 20000;
+  const SIM_BANDS = [
+    { lo: 14, label: "by 14+" },
+    { lo: 7, hi: 13, label: "by 7–13" },
+    { lo: 3, hi: 6, label: "by 3–6" },
+    { lo: 1, hi: 2, label: "by 1–2" },
+  ];
+  const SIM_LADDER = [3, 7, 14];
+  function mulberry32(seed) {
+    let t = seed >>> 0;
+    return function () {
+      t = (t + 0x6D2B79F5) >>> 0;
+      let x = Math.imul(t ^ (t >>> 15), 1 | t);
+      x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x;
+      return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function seedOf(s) {
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+  function simulateGame(margin, pA, seed) {
+    const row = marginPMF(margin);
+    if (!row) return null;
+    const P = SHAPE.margin_pmf;
+    // One conditional ladder per side. A tie is not a football result and the fit
+    // gives it no mass, but if one ever appears it goes to the side it was drawn for.
+    const side = sign => {
+      const vals = [], cum = [];
+      let s = 0;
+      for (let j = 0; j < row.length; j++) {
+        const m = P.margin_lo + j;
+        if (Math.sign(m) !== sign || !row[j]) continue;
+        s += row[j]; vals.push(Math.max(1, Math.abs(m))); cum.push(s);
+      }
+      return { vals, cum, s };
+    };
+    const pos = side(1), neg = side(-1);
+    const band = m => {
+      for (let k = 0; k < SIM_BANDS.length; k++) {
+        const bd = SIM_BANDS[k];
+        if (m >= bd.lo && (bd.hi == null || m <= bd.hi)) return k;
+      }
+      return SIM_BANDS.length - 1;
+    };
+    const rnd = mulberry32(seed);
+    const draw = (d, out) => {
+      // A predicted blowout can leave the losing side of the fit with no mass at all.
+      // Those wins still happened in the simulation, so they land in the closest
+      // band the distribution can support rather than disappearing from the count.
+      if (!d.vals.length) { out[SIM_BANDS.length - 1]++; return; }
+      const u = rnd() * d.s;
+      let lo = 0, hi = d.cum.length - 1;
+      while (lo < hi) { const mid = (lo + hi) >> 1; if (d.cum[mid] < u) lo = mid + 1; else hi = mid; }
+      out[band(d.vals[lo])]++;
+    };
+    const A = SIM_BANDS.map(() => 0), B = SIM_BANDS.map(() => 0);
+    const winsA = Math.round(Math.min(1, Math.max(0, pA)) * SIM_N);
+    for (let n = 0; n < SIM_N; n++) draw(n < winsA ? pos : neg, n < winsA ? A : B);
+    return { A, B };
+  }
+
+  function simPanelHTML(a, b, r) {
+    const sim = simulateGame(r.margin, r.pA, seedOf(a + "|" + b + "|" + r.margin.toFixed(2)));
+    if (!sim) return "";
+    const num = n => n.toLocaleString("en-US");
+    const share = n => (100 * n / SIM_N).toFixed(1) + "%";
+    const winsA = sim.A.reduce((s, x) => s + x, 0), winsB = SIM_N - winsA;
+    // Arcs run A's widest margin round to B's, so each team owns one continuous half
+    // of the ring and the two meet at the coin-flip games.
+    const arcs = [
+      ...sim.A.map((n, i) => ({ n, team: a, i })),
+      ...sim.B.map((n, i) => ({ n, team: b, i })).reverse(),
+    ];
+    const FADE = [1, .74, .5, .3];
+    let off = 25;                        // start the ring at twelve o'clock
+    const ring = arcs.map(x => {
+      const len = 100 * x.n / SIM_N;
+      const seg = `<circle class="sim-arc" cx="21" cy="21" r="15.915" fill="none"
+        stroke="${color(x.team)}" stroke-opacity="${FADE[x.i]}" stroke-width="5.6"
+        stroke-dasharray="${len.toFixed(3)} ${(100 - len).toFixed(3)}"
+        stroke-dashoffset="${off.toFixed(3)}"></circle>`;
+      off -= len;
+      return seg;
+    }).join("");
+    const side = (team, counts, wins, other) => `<div class="sim-side">
+      <div class="sim-side-head"><img src="${logoURL(team)}" alt="" loading="lazy">
+        <span><b>${esc(team)}</b><i>${num(wins)} wins · ${share(wins)}</i></span></div>
+      ${counts.map((n, i) => `<div class="sim-row">
+        <span class="sim-swatch" style="background:${color(team)};opacity:${FADE[i]}"></span>
+        <span class="sim-band">${SIM_BANDS[i].label}</span>
+        <span class="sim-n">${num(n)}</span><span class="sim-pct">${share(n)}</span></div>`).join("")}
+    </div>`;
+    const atLeast = (counts, k) => counts.reduce((s, n, i) => s + (SIM_BANDS[i].lo >= k ? n : 0), 0);
+    const ladder = SIM_LADDER.map(k => `<tr><th>Wins by ${k}+</th>
+      <td><b style="color:${color(a)}">${num(atLeast(sim.A, k))}</b><i>${share(atLeast(sim.A, k))}</i></td>
+      <td><b style="color:${color(b)}">${num(atLeast(sim.B, k))}</b><i>${share(atLeast(sim.B, k))}</i></td></tr>`).join("");
+    const keyP = [3, 7, 10, 14].map(k => [k, keyNumberP(r.margin, k)]);
+    const keyRow = keyP[0][1] == null ? "" : `<div class="keynums">
+      <span class="kn-label">Decided by exactly</span>
+      ${keyP.map(([k, p]) => `<span class="kn"><b>${k}</b>${pct(p, 1)}</span>`).join("")}</div>`;
+    const lead = winsA >= winsB ? a : b;
+    // Past about a four-touchdown spread the losing side of the fit is a few isolated
+    // games rather than a curve, and its bands come out jagged - more wins by 14+ than
+    // by 7-13, which reads as a bug and is really a thin tail. Say so where it bites.
+    const thin = Math.min(winsA, winsB) < 0.05 * SIM_N;
+    const thinNote = !thin ? "" : `<p class="sim-note">${esc(abbr(winsA < winsB ? a : b))}
+      wins this game rarely enough that its bands rest on a handful of real results in
+      the fit. Read them as “rare”, not as a shape.</p>`;
+    return `<div class="sim-panel"><div class="section-intro"><div><span class="eyebrow">20,000 simulations</span><h3>How the game finishes</h3></div><p>Every simulation draws a final margin from the distribution of real results this model fits — which is why 3 and 7 are lumpy and a normal curve would miss them. How often each side wins is held to the win probability above, so this ring breaks that number down rather than arguing with it.</p></div>
+      <div class="sim-body">
+        <div class="sim-ring">
+          <svg viewBox="0 0 42 42" role="img" aria-label="Simulated margins of victory">
+            <circle cx="21" cy="21" r="15.915" fill="none" stroke="var(--line)" stroke-width="5.6"></circle>
+            ${ring}
+          </svg>
+          <div class="sim-center"><b style="color:${color(lead)}">${share(Math.max(winsA, winsB))}</b>
+            <i>${esc(abbr(lead))} wins</i></div>
+        </div>
+        <div class="sim-key">${side(a, sim.A, winsA)}${side(b, sim.B, winsB)}</div>
+      </div>
+      <table class="sim-ladder"><thead><tr><th></th>
+        <th><img src="${logoURL(a)}" alt="" loading="lazy">${esc(abbr(a))}</th>
+        <th><img src="${logoURL(b)}" alt="" loading="lazy">${esc(abbr(b))}</th></tr></thead>
+        <tbody>${ladder}</tbody></table>
+      ${thinNote}
+      ${keyRow}
+    </div>`;
+  }
+
+  /* ---------- position group ranks ----------
+     National rank of each room, off the same live WAR the players tab edits, so a
+     what-if that promotes a backup moves these cards too. The rank is over every team
+     that fields the group. */
+  function roomsPanelHTML(a, b) {
+    const war = trGroupWar();
+    if (!war[a] || !war[b]) return "";
+    const teams = Object.keys(war);
+    const KEYS = [
+      { k: "__all", label: "Whole roster", sum: true },
+      { k: "__off", label: "Offense", sum: true },
+      { k: "__def", label: "Defense", sum: true },
+      ...GROUP_ORDER.map(g => ({ k: g, label: g })),
+    ];
+    const cards = KEYS.map(({ k, label, sum }) => {
+      const pool = teams.filter(t => war[t][k] != null)
+                        .sort((x, y) => war[y][k] - war[x][k]);
+      const rank = t => pool.indexOf(t) + 1;
+      const ra = rank(a), rb = rank(b);
+      if (!ra || !rb) return "";
+      const winner = ra < rb ? a : rb < ra ? b : null;
+      const row = (t, rk) => `<div class="room-row${winner === t ? " win" : ""}" style="--t:${color(t)}">
+        <img src="${logoURL(t)}" alt="" loading="lazy">
+        <b>#${rk}</b><i>${war[t][k].toFixed(2)}</i></div>`;
+      return `<article class="room-card${sum ? " sum" : ""}"${winner ? ` style="--edge:${color(winner)}"` : ""}>
+        <span class="room-g">${esc(label)}</span>${row(a, ra)}${row(b, rb)}
+        <span class="room-n">of ${pool.length}</span></article>`;
+    }).join("");
+    return `<div class="rooms-panel"><div class="section-intro"><div><span class="eyebrow">Roster</span><h3>Position group ranks</h3></div><p>Where each room sits nationally by projected WAR, and how much of it the group is worth. The stripe marks the side that holds the edge.</p></div>
+      <div class="room-grid">${cards}</div></div>`;
   }
 
   function fillWeeklyBooks() {
