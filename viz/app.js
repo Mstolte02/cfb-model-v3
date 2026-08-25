@@ -318,6 +318,30 @@
   }
 
   /* One prediction routine for every view. venue is "A" | "B" | "N", A's perspective. */
+  /* One side's projected points. Mirrors src/totals.side_row term for term - if that
+     changes, this changes with it.
+
+     The old three-coefficient model read only the two standardised O/D composites, so
+     it knew a team was 1.4 SD above average but not that it scores 34 a game, and it
+     had no possession term at all. Its published total correlated .104 with actual
+     points across 2022-25 and .005 in 2025. points_v2 adds prior scoring level and
+     pace; see audit/MODEL_VS_MARKET_DIAGNOSIS.md. A payload without points_v2 falls
+     back to the old block so a stale data file still renders. */
+  function sidePoints(scorer, opponent, S, O, isHome) {
+    const M = cur().model, P2 = M.points_v2;
+    if (!P2 || !P2.team_inputs) {
+      const Pt = M.points;
+      return Pt.intercept + Pt.coef[0]*S[0] + Pt.coef[1]*O[1] + Pt.coef[2]*isHome;
+    }
+    const dflt = [28.0, 28.0, P2.league_pace, P2.league_pace];
+    const si = P2.team_inputs[scorer] || dflt;
+    const oi = P2.team_inputs[opponent] || dflt;
+    // [points_for, points_against, off_plays, def_plays]
+    const x = [S[0], O[1], isHome, si[0], oi[1], si[2], oi[3],
+               si[0] * si[2] / P2.league_pace, oi[1] * oi[3] / P2.league_pace];
+    return P2.intercept + x.reduce((sum, v, i) => sum + v * P2.coef[i], 0);
+  }
+
   function predict(a, b, venue) {
     const A = vecOf(a), B = vecOf(b), M = cur().model;
     if (!A || !B) return null;
@@ -332,9 +356,8 @@
       pA = winpTeams(a, b, homeA);
       marginA = M.margin.intercept + dot(M.margin.coef, x) + homeA * M.margin.hfa;
     }
-    const Pt = M.points;
-    const ptsA = Pt.intercept + Pt.coef[0]*A[0] + Pt.coef[1]*B[1] + Pt.coef[2]*homeA;
-    const ptsB = Pt.intercept + Pt.coef[0]*B[0] + Pt.coef[1]*A[1] + Pt.coef[2]*homeB;
+    const ptsA = sidePoints(a, b, A, B, homeA);
+    const ptsB = sidePoints(b, a, B, A, homeB);
     const total = ptsA + ptsB;
     return { pA, margin: marginA, total,
              scoreA: (total + marginA) / 2, scoreB: (total - marginA) / 2 };
@@ -2429,7 +2452,15 @@
      expect it to happen. National title is exempt by design - it is a long-odds
      market where nothing clears 50%, so it stays a pure price screen.
      minGap is in probability points for futures and moneylines, and in points of
-     spread or total for the other two. Change the numbers here; nothing else. */
+     spread or total for the other two. Change the numbers here; nothing else.
+
+     These numbers are NOT calibrated, and four seasons of history say they cannot
+     be. audit/BET_THRESHOLD_CALIBRATION.md sweeps every market against archived
+     prices: spreads lose money at every gap and get worse as the gap grows, the
+     moneyline and win-total gains at wide gaps sit inside what a no-skill model
+     reaches by searching the same grid, and playoff futures have no price archive to
+     calibrate against at all. The flag marks a model screen, not a validated edge,
+     and the board says so. */
   const BET_RULES = {
     futures:   { minModelP: .50, minGap: .05 },
     // Win totals sit against a de-vigged price the model beats almost everywhere,
@@ -2528,7 +2559,7 @@
         <div><small>Model</small><b>${pct(sideP, 0)}</b></div><div class="edge"><small>vs no-vig price</small><b>+${pct(r.edge, 1)}</b></div>
       </div>`;
       }).join("");
-      note = `Regular-season win distributions are rebuilt game by game so conference championships never leak into sportsbook win-total comparisons. BET marks a side the model gives more than ${pct(BET_RULES.win_total.minModelP, 0)} with at least a ${pct(BET_RULES.win_total.minGap, 0)} gap.`;
+      note = `Regular-season win distributions are rebuilt game by game so conference championships never leak into sportsbook win-total comparisons. BET marks a side the model gives more than ${pct(BET_RULES.win_total.minModelP, 0)} with at least a ${pct(BET_RULES.win_total.minGap, 0)} gap. Screened, not validated: no win-total gap has produced an edge that survives four seasons of archived prices.`;
     } else {
       const key = futureMarket === "make_cfp" ? "playoff"
         : futureMarket === "conference_title" ? "conf_champ" : "champ";
@@ -2543,7 +2574,7 @@
         <div><small>Model</small><b>${pct(r.modelP, 1)}</b></div><div class="edge ${r.edge < 0 ? "negative" : ""}"><small>Model gap</small><b>${r.edge >= 0 ? "+" : ""}${pct(r.edge, 1)}</b></div>
       </div>`;
       }).join("");
-      note = `Price gap compares the model with raw implied probability; incomplete futures boards are not de-vigged. ${longOdds ? "National title is a long-odds screen, so no row is flagged as a bet." : `BET marks a team the model gives more than ${pct(BET_RULES.futures.minModelP, 0)} with at least a ${pct(BET_RULES.futures.minGap, 0)} gap. A large gap on a team we still do not expect to get there is not flagged.`}`;
+      note = `Price gap compares the model with raw implied probability; incomplete futures boards are not de-vigged. ${longOdds ? "National title is a long-odds screen, so no row is flagged as a bet." : `BET marks a team the model gives more than ${pct(BET_RULES.futures.minModelP, 0)} with at least a ${pct(BET_RULES.futures.minGap, 0)} gap. A large gap on a team we still do not expect to get there is not flagged.`} Playoff and conference futures have no stored price history, so this flag is a model screen and has never been tested against a closing number.`;
     }
     document.getElementById("future-spotlight").innerHTML = `<article class="market-panel"><div class="market-panel-head"><div><span class="eyebrow">Model vs market</span><h3>${futureMarket.replaceAll("_", " ")}</h3></div>${src ? `<a href="${src.url}" target="_blank" rel="noopener">${esc(book)} · ${src.as_of}</a>` : ""}</div><div class="market-list">${body || `<p class="sub">No quoted market is available.</p>`}</div><div class="market-note">${note}</div></article>`;
   }
@@ -2718,6 +2749,14 @@
       const num = home ? g.marketValue : -g.marketValue;
       return `${esc(abbr(side))} ${num > 0 ? "+" : ""}${num.toFixed(1)}`;
     }
+    /* What four seasons of archived prices say about this column. Each line is a
+       measured result from audit/BET_THRESHOLD_CALIBRATION.md, not a disclaimer. */
+    const calibrationNote = m =>
+      m === "spread"
+        ? "Screen, not a validated edge. Against 2022-25 archived prices the model lost money at every spread gap, and lost more as the gap widened."
+        : m === "moneyline"
+        ? "Screen, not a validated edge. Moneyline gaps above 12 points showed a profit over 2022-25, but less than a model with no side-picking skill reaches by searching the same thresholds."
+        : "Screen, not a validated edge. The model's total carries little information: it correlates .16 with actual points against the market's .38, so treat this column as a research marker.";
     const marketLabel = market === "moneyline" ? "Moneyline" : market === "total" ? "Total" : "Spread";
     const bookLabel = combined ? "Best price" : book;
     document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span><span>Bet to place</span></div>${rows.map(g => {
@@ -2727,7 +2766,7 @@
       const gapText = g.gap == null ? "—" : `${esc(market === "total" ? lean : abbr(lean))} ${market === "moneyline" ? pct(Math.abs(g.gap), 1) : Math.abs(g.gap).toFixed(1)}`;
       const bet = betToPlace(g);
       return `<div class="weekly-row${bet ? " bet" : ""}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
-    }).join("")}</div>`;
+    }).join("")}<div class="board-note">${esc(calibrationNote(market))}</div></div>`;
   }
 
   /* The watchlist tile opens the games behind the number. It used to report only a

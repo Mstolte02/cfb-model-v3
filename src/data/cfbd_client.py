@@ -142,6 +142,22 @@ def drives(year: int) -> list:
                 f"drives_{year}.json")
 
 
+def plays(year: int, week: int) -> list:
+    """Regular-season plays for one week, with down, distance, field position,
+    score state, clock and timeouts.
+
+    Unlike ``drives`` this endpoint is week-scoped, so a season costs one request
+    per week. The raw payloads are large and carry play text nobody downstream
+    reads, which is why ``src.data.plays`` reduces each week to the dozen decision
+    columns and caches the slim season frame instead. Ask for a week here only
+    when rebuilding that cache.
+    """
+    return _get("/plays",
+                {"year": year, "week": week, "seasonType": "regular",
+                 "classification": "fbs"},
+                f"plays_{year}_w{week:02d}.json")
+
+
 def returning_production(year: int) -> list:
     """Bill Connelly-style returning production (percent of PPA returning).
     Computed preseason from the prior roster, so leakage-free for season N."""
@@ -156,6 +172,14 @@ def talent(year: int) -> list:
 
 def fbs_teams(year: int) -> list:
     return _get("/teams/fbs", {"year": year}, f"teams_{year}.json")
+
+
+def coaches(min_year: int, max_year: int, refresh=False) -> list:
+    """Head-coach season records, including stable coach and team ids."""
+    return _get(
+        "/coaches", {"minYear": min_year, "maxYear": max_year},
+        f"coaches_{min_year}_{max_year}.json", refresh=refresh,
+    )
 
 
 def venues() -> list:

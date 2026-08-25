@@ -27,7 +27,11 @@ VIZ = ROOT / "viz" / "data"
 
 def fit_points_model():
     """Two-sided points model (points ~ O_scorer + D_opp + home) on all seasons,
-    entering-season frames — powers projected scores/totals in the matchup sim."""
+    entering-season frames — powers projected scores/totals in the matchup sim.
+
+    Retained for the legacy compatibility payload only. The published total now comes
+    from ``fit_points_model_v2``; see that docstring for why.
+    """
     from src import oppadj as OA
     from config import OPP_ADJ_ALPHA
 
@@ -46,6 +50,61 @@ def fit_points_model():
     resid = y - pm.predict(X)
     return {"coef": pm.coef_.tolist(), "intercept": float(pm.intercept_),
             "alpha": alpha, "resid_sd": float(np.std(resid))}
+
+
+def fit_points_model_v2():
+    """Points model with scoring level and pace, plus the per-team inputs it needs.
+
+    The three-feature model above predicts a *margin* well enough - a margin is a
+    difference of two standardised composites - but its total carried almost no
+    information: r = .104 with actual points over 2022-25 and .005 in 2025, against
+    the market's .379. It had no possession term and no scoring level, only z-scores.
+
+    `scripts.totals_backtest` measured the repair inside expanding folds: r rises to
+    .156 and RMSE falls with a 95% interval excluding zero. That is a real gain and
+    still far short of the market, which is why the site presents the total as a
+    projection and not as a bet.
+    """
+    from src import oppadj as OA
+    from src import totals as TT
+    from config import OPP_ADJ_ALPHA
+    from sklearn.linear_model import Ridge
+
+    std, talent, ret, games, _ = load_bundle()
+    od = OA.build_od_by_year(std, games, OPP_ADJ_ALPHA)
+    profiles = TT.team_season_profiles()
+    lagged = TT.lagged_profiles([*GAME_YEARS, PROJECTION_YEAR], profiles)
+
+    designs, targets = [], []
+    for N in GAME_YEARS:
+        frame = V4.build_frame(N, std, talent, ret, od)
+        if frame is None:
+            continue
+        design, target, _ = TT.build_points_rows(TT.attach(frame, lagged[N]),
+                                                 games[N])
+        designs.append(design)
+        targets.append(target)
+    design = pd.concat(designs, ignore_index=True)[TT.POINTS_FEATURES]
+    target = np.concatenate(targets)
+    model = Ridge(alpha=3.0).fit(design.to_numpy(float), target)
+    resid = target - model.predict(design.to_numpy(float))
+
+    current = lagged[PROJECTION_YEAR]
+    team_inputs = {
+        team: [round(float(current.loc[team, column]), 3)
+               if team in current.index else TT.DEFAULTS[column]
+               for column in TT.PROFILE_COLUMNS]
+        for team in current.index}
+    return {
+        "features": TT.POINTS_FEATURES,
+        "coef": [float(c) for c in model.coef_],
+        "intercept": float(model.intercept_),
+        "resid_sd": float(np.std(resid)),
+        "team_input_order": TT.PROFILE_COLUMNS,
+        "league_pace": TT.DEFAULTS["off_plays"],
+        "team_inputs": team_inputs,
+        "source_season": int(current.attrs.get("source_season", 0)),
+    }
 
 
 def legacy_cache_compat(model, comp, points):
@@ -168,6 +227,7 @@ def main():
     # nothing to reuse it from.
     print("Fitting points model for projected scores ...")
     points = fit_points_model()
+    points_v2 = fit_points_model_v2()
 
     # Select by name: the frame now carries *_raw companions for retired features,
     # and iterating comp.loc[t] would silently widen the vector past the six the
@@ -193,6 +253,10 @@ def main():
                     "ratings": {t: round(float(state.ratings[t]), 6)
                                 for t in comp.index}},
         "points": points,
+        # Kept alongside `points` rather than replacing it: a browser holding a
+        # cached older app.js still indexes the three-coefficient block, and a client
+        # that does not understand points_v2 falls back to it rather than breaking.
+        "points_v2": points_v2,
         "teams": {t: [round(float(comp.loc[t, c]), 4) for c in FEATS]
                   for t in comp.index},
         # Current-roster WAR is still exported in players.json for reporting, but it
