@@ -1,0 +1,34 @@
+{
+  "question": "does opponent-adjusting production close the gap to PFF",
+  "method": {
+    "model": "ridge attack/defence on the season schedule, per facet",
+    "ridge_alpha": 25.0,
+    "estimator": "RandomForest, GroupKFold on season, as horse_race"
+  },
+  "correction_size": {
+    "mean_abs": 0.018024367409169444,
+    "p90": 0.06272761951892913,
+    "grade_sd": 0.22440309445960166
+  },
+  "cfbd_raw": {
+    "label": "cfbd raw",
+    "n_same": 1421,
+    "same_season_r": 0.7369106707631913,
+    "n_forward": 1164,
+    "next_season_r": 0.36120124864182124,
+    "n_features": 12
+  },
+  "cfbd_opponent_adjusted": {
+    "label": "cfbd opponent-adjusted",
+    "n_same": 1421,
+    "same_season_r": 0.7485080509304617,
+    "n_forward": 1164,
+    "next_season_r": 0.37648544200791517,
+    "n_features": 12
+  },
+  "pff_reference": {
+    "same_season_r": 0.83,
+    "next_season_r": 0.475,
+    "source": "horse_race.py on the same rows"
+  }
+}

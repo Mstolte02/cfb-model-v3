@@ -1,0 +1,64 @@
+{
+  "period": [
+    2014,
+    2025
+  ],
+  "expected_fbs_team_seasons": 1568,
+  "matched_team_seasons": 1568,
+  "join_coverage": 1.0,
+  "unmatched_team_seasons": 0,
+  "unmatched_examples": [],
+  "multi_coach_team_seasons": 132,
+  "coach_share": {
+    "median": 1.0,
+    "p10": 1.0,
+    "minimum": 0.0
+  },
+  "qualifying_movers": {
+    "2_seasons_each_school": 72,
+    "3_seasons_each_school": 37
+  },
+  "components": 39,
+  "largest_component": {
+    "schools": 88,
+    "coaches": 212,
+    "team_seasons": 1021,
+    "fraction_of_matched": 0.6511479591836735,
+    "fraction_of_all_fbs": 0.6511479591836735
+  },
+  "team_seasons_outside_largest_component": 547,
+  "team_seasons_outside_any_mover_component": 332,
+  "spells": {
+    "count": 432,
+    "histogram": {
+      "1": 87,
+      "2": 89,
+      "3": 77,
+      "4": 63,
+      "5": 32,
+      "6": 32,
+      "7": 17,
+      "8": 8,
+      "9": 7,
+      "10": 7,
+      "11": 4,
+      "12": 9
+    },
+    "mean": 3.6296296296296298,
+    "quantiles": {
+      "0.0": 1.0,
+      "0.25": 2.0,
+      "0.5": 3.0,
+      "0.75": 5.0,
+      "0.9": 7.0,
+      "0.95": 9.0,
+      "1.0": 12.0
+    }
+  },
+  "gate": {
+    "largest_component_min_fraction": 0.6,
+    "minimum_qualifying_movers": 40,
+    "pass": true,
+    "decision": "eligible for Phase 2 after review"
+  }
+}

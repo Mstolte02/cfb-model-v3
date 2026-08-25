@@ -8,6 +8,7 @@ from scripts import v4_backtest as BT
 from scripts.train import projection_returning_raw
 from src import v4 as V4
 from src.data import pff, war
+from war_model import player_production_forecast as PPF
 from src.dynamic import WeeklyRatingState
 
 
@@ -102,6 +103,26 @@ class TemporalFeatureTests(unittest.TestCase):
             second = war.lagged_team_talent(index)
         pd.testing.assert_series_equal(first[2025], second[2025])
 
+    def test_player_production_lag_ignores_target_season_outcome(self):
+        base = pd.DataFrame({
+            "season": [2025], "target_season": [2025],
+            "player_id": ["10"], "team": ["A"], "group": ["QB"],
+            "player": ["Test Player"], "key": ["test player"],
+        })
+        history = pd.DataFrame({
+            "season": [2024, 2025], "player_id": [10, 10],
+            "player": ["Test Player", "Test Player"],
+            "key": ["test player", "test player"], "team": ["A", "A"],
+            "group": ["QB", "QB"],
+            **{name: [100.0, 200.0] for name in PPF.MARKETS},
+        })
+        changed = history.copy()
+        changed.loc[changed.season == 2025, list(PPF.MARKETS)] = 99999.0
+        first = PPF.attach_market_targets(base, history)
+        second = PPF.attach_market_targets(base, changed)
+        lag_columns = [f"{name}_lag1" for name in PPF.MARKETS]
+        pd.testing.assert_frame_equal(first[lag_columns], second[lag_columns])
+
 
 class SelectionPolicyTests(unittest.TestCase):
     def test_tiny_extension_gain_is_rejected(self):
@@ -123,6 +144,17 @@ class SelectionPolicyTests(unittest.TestCase):
             selected, _ = BT.choose_candidate(
                 {name: name for name in BT.CANDIDATES}, [2021, 2022])
         self.assertEqual(selected, "core_war_lag")
+
+    def test_research_candidate_map_uses_same_selection_policy(self):
+        candidates = {"clean_core": ["O"], "new_component": ["O", "new"]}
+        with patch.object(BT, "forward_score",
+                          side_effect=lambda part, *_: {
+                              "base": .2000, "new": .1989}[part]):
+            selected, scores = BT.choose_candidate(
+                {"clean_core": "base", "new_component": "new"},
+                [2022, 2023], candidates)
+        self.assertEqual(selected, "new_component")
+        self.assertAlmostEqual(scores["new_component"], .1989)
 
 
 if __name__ == "__main__":

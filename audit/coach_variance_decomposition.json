@@ -1,0 +1,1343 @@
+{
+  "frame": {
+    "seasons": [
+      2021,
+      2025
+    ],
+    "team_seasons": 653,
+    "programs": 134,
+    "coaches": 222,
+    "hc_changes": 147,
+    "midseason_changes": 87
+  },
+  "models": {
+    "rating_overall": {
+      "naive_hdfe": {
+        "var_xb": 0.06561930378888592,
+        "var_program": 0.9121569096849346,
+        "var_coach": 0.9224049112928727,
+        "var_residual": 0.5858605011172066,
+        "twice_cov_xb_program": -0.18258134448787935,
+        "twice_cov_xb_coach": -0.13170763605749833,
+        "twice_cov_xb_residual": -5.1150954336777475e-09,
+        "twice_cov_program_coach": 0.3725324021610688,
+        "twice_cov_program_residual": 5.970947359328573e-18,
+        "twice_cov_coach_residual": 2.9118622497491244e-07,
+        "var_outcome": 2.5442853335707207,
+        "reconstructed": 2.5442853335707203,
+        "reconstruction_error": 4.440892098500626e-16,
+        "n_input": 653,
+        "n_used": 595,
+        "singletons_dropped": 58,
+        "coefficients": {
+          "prior_offense": -0.0456890926911761,
+          "prior_defense": 0.08648162000672915,
+          "talent": -0.21371834736032708,
+          "returning": 0.18551213326747662
+        },
+        "coach_program_correlation": 0.20306659079744488,
+        "warnings": [
+          "58 singleton fixed effect(s) dropped from the model."
+        ]
+      },
+      "partial_pool_candidates": [
+        {
+          "likelihood": "gaussian",
+          "interactions": false,
+          "n": 653,
+          "chains": 4,
+          "draws_per_chain": 750,
+          "tune": 750,
+          "elpd_loo": -714.3120398367954,
+          "se_elpd_loo": 21.026718039409953,
+          "p_loo": 38.561769268440784,
+          "loo_warning": false,
+          "max_rhat": 1.0086317891600112,
+          "min_bulk_ess": 324.39651554661884,
+          "divergences": 0,
+          "coach_program_correlation": 0.7489778008988243,
+          "variance_decomposition_standardized": {
+            "var_xb": {
+              "median": 0.45339282562260963,
+              "q05": 0.364805168685159,
+              "q95": 0.5327860007972931
+            },
+            "var_program": {
+              "median": 0.005104705000461071,
+              "q05": 3.892230089167261e-05,
+              "q95": 0.03298004151791486
+            },
+            "var_coach": {
+              "median": 0.012373245842186437,
+              "q05": 8.994562827324996e-05,
+              "q95": 0.061516989526605
+            },
+            "var_residual": {
+              "median": 0.4936036423349664,
+              "q05": 0.45210795256514763,
+              "q95": 0.5138726834578509
+            },
+            "twice_cov_xb_program": {
+              "median": 0.008949074137085181,
+              "q05": -0.0014104029156010226,
+              "q95": 0.062240029387888536
+            },
+            "twice_cov_xb_coach": {
+              "median": 0.014486210441807704,
+              "q05": -0.001459450018099074,
+              "q95": 0.07477159836098544
+            },
+            "twice_cov_xb_residual": {
+              "median": -0.0053153511165333475,
+              "q05": -0.0704914968338853,
+              "q95": 0.05331431691728169
+            },
+            "twice_cov_program_coach": {
+              "median": -3.4095721462479905e-05,
+              "q05": -0.0035704806692084955,
+              "q95": 0.0023312689958891854
+            },
+            "twice_cov_program_residual": {
+              "median": -0.0003034204848875744,
+              "q05": -0.010953173878408298,
+              "q95": 0.005964079740412932
+            },
+            "twice_cov_coach_residual": {
+              "median": -0.0002134402079402835,
+              "q05": -0.01609037821566912,
+              "q95": 0.00864784141988971
+            },
+            "var_outcome": {
+              "median": 1.0,
+              "q05": 1.0,
+              "q95": 1.0
+            },
+            "reconstructed": {
+              "median": 0.9999999999999999,
+              "q05": 0.9999999999999998,
+              "q95": 1.0
+            },
+            "reconstruction_error": {
+              "median": 1.1102230246251565e-16,
+              "q05": 0.0,
+              "q95": 2.220446049250313e-16
+            }
+          },
+          "outcome_scale": 1.624052975221445
+        },
+        {
+          "likelihood": "student_t",
+          "interactions": false,
+          "n": 653,
+          "chains": 4,
+          "draws_per_chain": 750,
+          "tune": 750,
+          "elpd_loo": -710.6507949629555,
+          "se_elpd_loo": 20.5542658403794,
+          "p_loo": 32.65100110521044,
+          "loo_warning": false,
+          "max_rhat": 1.0116791411297468,
+          "min_bulk_ess": 384.83120737457466,
+          "divergences": 0,
+          "coach_program_correlation": 0.7647990137035838,
+          "variance_decomposition_standardized": {
+            "var_xb": {
+              "median": 0.46386729166494656,
+              "q05": 0.3845838907833301,
+              "q95": 0.537950364127588
+            },
+            "var_program": {
+              "median": 0.0037102955895863053,
+              "q05": 2.8811645788765175e-05,
+              "q95": 0.026631917730898368
+            },
+            "var_coach": {
+              "median": 0.008604395101605343,
+              "q05": 9.017386017990672e-05,
+              "q95": 0.04794041164530217
+            },
+            "var_residual": {
+              "median": 0.4987992552422478,
+              "q05": 0.46491285870556426,
+              "q95": 0.5145038837813819
+            },
+            "twice_cov_xb_program": {
+              "median": 0.00645768648342069,
+              "q05": -0.0020973665296184435,
+              "q95": 0.052829428755163506
+            },
+            "twice_cov_xb_coach": {
+              "median": 0.010637779936863373,
+              "q05": -0.0020176690294747275,
+              "q95": 0.06449294150760684
+            },
+            "twice_cov_xb_residual": {
+              "median": -0.00828190221894835,
+              "q05": -0.07050061304652293,
+              "q95": 0.04755444999396768
+            },
+            "twice_cov_program_coach": {
+              "median": -8.13958947915431e-06,
+              "q05": -0.0023319931048857525,
+              "q95": 0.0017552101697293065
+            },
+            "twice_cov_program_residual": {
+              "median": -0.0002614833127678065,
+              "q05": -0.009846415820300576,
+              "q95": 0.005266299992614596
+            },
+            "twice_cov_coach_residual": {
+              "median": -0.0002731232277063285,
+              "q05": -0.013212910785689466,
+              "q95": 0.008343287477397805
+            },
+            "var_outcome": {
+              "median": 1.0,
+              "q05": 1.0,
+              "q95": 1.0
+            },
+            "reconstructed": {
+              "median": 0.9999999999999999,
+              "q05": 0.9999999999999998,
+              "q95": 1.0
+            },
+            "reconstruction_error": {
+              "median": 1.1102230246251565e-16,
+              "q05": 0.0,
+              "q95": 2.220446049250313e-16
+            }
+          },
+          "outcome_scale": 1.624052975221445,
+          "student_t_nu": {
+            "median": 11.299448845992444,
+            "q05": 6.49838039439349,
+            "q95": 23.826671344903215
+          }
+        },
+        {
+          "likelihood": "student_t",
+          "interactions": true,
+          "n": 653,
+          "chains": 4,
+          "draws_per_chain": 750,
+          "tune": 750,
+          "elpd_loo": -713.4016387985876,
+          "se_elpd_loo": 20.49889227442394,
+          "p_loo": 42.52391727927815,
+          "loo_warning": true,
+          "max_rhat": 1.0093320301442608,
+          "min_bulk_ess": 283.37064880023496,
+          "divergences": 0,
+          "coach_program_correlation": 0.7032055608967073,
+          "variance_decomposition_standardized": {
+            "var_xb": {
+              "median": 0.47329795087861415,
+              "q05": 0.3909961466255898,
+              "q95": 0.5463486682517473
+            },
+            "var_program": {
+              "median": 0.003189387546820235,
+              "q05": 2.4780780509632e-05,
+              "q95": 0.023590996141652554
+            },
+            "var_coach": {
+              "median": 0.01690596649162106,
+              "q05": 0.001510248540114963,
+              "q95": 0.05707411880382494
+            },
+            "var_residual": {
+              "median": 0.49449599129228616,
+              "q05": 0.4586168723035166,
+              "q95": 0.5128919928941585
+            },
+            "twice_cov_xb_program": {
+              "median": 0.005195471103425456,
+              "q05": -0.0022074776595716393,
+              "q95": 0.045669258374584985
+            },
+            "twice_cov_xb_coach": {
+              "median": 0.00999004354639774,
+              "q05": -0.007592918452940861,
+              "q95": 0.06442073166247016
+            },
+            "twice_cov_xb_residual": {
+              "median": -0.014234235823099933,
+              "q05": -0.07799950602431843,
+              "q95": 0.04238063681048539
+            },
+            "twice_cov_program_coach": {
+              "median": -1.6063185196951845e-05,
+              "q05": -0.002436242284448081,
+              "q95": 0.001718489181691008
+            },
+            "twice_cov_program_residual": {
+              "median": -0.00039254410293401655,
+              "q05": -0.009966925363082706,
+              "q95": 0.004385991488505199
+            },
+            "twice_cov_coach_residual": {
+              "median": -0.0011519337713865832,
+              "q05": -0.017362152306824422,
+              "q95": 0.009101092197018322
+            },
+            "var_outcome": {
+              "median": 1.0,
+              "q05": 1.0,
+              "q95": 1.0
+            },
+            "reconstructed": {
+              "median": 0.9999999999999999,
+              "q05": 0.9999999999999998,
+              "q95": 1.0
+            },
+            "reconstruction_error": {
+              "median": 1.1102230246251565e-16,
+              "q05": 0.0,
+              "q95": 2.220446049250313e-16
+            }
+          },
+          "outcome_scale": 1.624052975221445,
+          "student_t_nu": {
+            "median": 11.505574948078785,
+            "q05": 6.601260326793051,
+            "q95": 25.24015182599374
+          }
+        }
+      ],
+      "selected_candidate": 1,
+      "selection_rule": "largest PSIS-LOO expected log predictive density"
+    },
+    "rating_offense": {
+      "naive_hdfe": {
+        "var_xb": 0.03668813206806996,
+        "var_program": 0.31579986722648706,
+        "var_coach": 0.3470689370636669,
+        "var_residual": 0.3123812651473392,
+        "twice_cov_xb_program": -0.08473837469338891,
+        "twice_cov_xb_coach": -0.05230526690013777,
+        "twice_cov_xb_residual": -1.8655935345203726e-08,
+        "twice_cov_program_coach": 0.09533228795831224,
+        "twice_cov_program_residual": 5.970947359328573e-18,
+        "twice_cov_coach_residual": 8.19457579066783e-08,
+        "var_outcome": 0.9702269111601712,
+        "reconstructed": 0.9702269111601712,
+        "reconstruction_error": 0.0,
+        "n_input": 653,
+        "n_used": 595,
+        "singletons_dropped": 58,
+        "coefficients": {
+          "prior_offense": -0.08652939447368946,
+          "prior_defense": 0.11107559009434925,
+          "talent": -0.11678490107015728,
+          "returning": 0.13107423546542277
+        },
+        "coach_program_correlation": 0.1439780131264148,
+        "warnings": [
+          "58 singleton fixed effect(s) dropped from the model."
+        ]
+      },
+      "partial_pool_candidates": [
+        {
+          "likelihood": "gaussian",
+          "interactions": false,
+          "n": 653,
+          "chains": 4,
+          "draws_per_chain": 750,
+          "tune": 750,
+          "elpd_loo": -789.0013276483509,
+          "se_elpd_loo": 20.16866426642227,
+          "p_loo": 56.233970455205935,
+          "loo_warning": false,
+          "max_rhat": 1.0083532068855012,
+          "min_bulk_ess": 321.9506150838822,
+          "divergences": 0,
+          "coach_program_correlation": 0.7633237044350053,
+          "variance_decomposition_standardized": {
+            "var_xb": {
+              "median": 0.3025192490023587,
+              "q05": 0.22968068211243053,
+              "q95": 0.3814617671912161
+            },
+            "var_program": {
+              "median": 0.006833748897222991,
+              "q05": 8.007643828221103e-05,
+              "q95": 0.04172412333446981
+            },
+            "var_coach": {
+              "median": 0.048374990701776435,
+              "q05": 0.0018427830025233647,
+              "q95": 0.11143115042005464
+            },
+            "var_residual": {
+              "median": 0.5967000914156027,
+              "q05": 0.5494086242255213,
+              "q95": 0.6437918881993786
+            },
+            "twice_cov_xb_program": {
+              "median": 0.006584519377994236,
+              "q05": -0.0022045380521468483,
+              "q95": 0.04560634637702499
+            },
+            "twice_cov_xb_coach": {
+              "median": 0.03192098702007161,
+              "q05": -0.00023711418100333563,
+              "q95": 0.07871248441441689
+            },
+            "twice_cov_xb_residual": {
+              "median": -0.003530680395578706,
+              "q05": -0.06458543126861031,
+              "q95": 0.04635986077970068
+            },
+            "twice_cov_program_coach": {
+              "median": -3.6787614211595815e-05,
+              "q05": -0.005998371309793707,
+              "q95": 0.004907194928263962
+            },
+            "twice_cov_program_residual": {
+              "median": -0.00044744308173143066,
+              "q05": -0.01436290475329034,
+              "q95": 0.007144168200211143
+            },
+            "twice_cov_coach_residual": {
+              "median": -0.00015714452033398771,
+              "q05": -0.026693632187155692,
+              "q95": 0.01861404279334531
+            },
+            "var_outcome": {
+              "median": 1.0,
+              "q05": 1.0,
+              "q95": 1.0
+            },
+            "reconstructed": {
+              "median": 1.0,
+              "q05": 0.9999999999999999,
+              "q95": 1.0
+            },
+            "reconstruction_error": {
+              "median": 0.0,
+              "q05": 0.0,
+              "q95": 1.1102230246251565e-16
+            }
+          },
+          "outcome_scale": 0.994094427157571
+        },
+        {
+          "likelihood": "student_t",
+          "interactions": false,
+          "n": 653,
+          "chains": 4,
+          "draws_per_chain": 750,
+          "tune": 750,
+          "elpd_loo": -786.9258193620992,
+          "se_elpd_loo": 19.98920616536442,
+          "p_loo": 62.89411887525154,
+          "loo_warning": false,
+          "max_rhat": 1.0245870899460483,
+          "min_bulk_ess": 176.56420695519242,
+          "divergences": 0,
+          "coach_program_correlation": 0.7595277669729575,
+          "variance_decomposition_standardized": {
+            "var_xb": {
+              "median": 0.30704427118855326,
+              "q05": 0.2317613315847067,
+              "q95": 0.3843865206447587
+            },
+            "var_program": {
+              "median": 0.006587976755522978,
+              "q05": 5.270349411979902e-05,
+              "q95": 0.04314070590550885
+            },
+            "var_coach": {
+              "median": 0.05309291231172748,
+              "q05": 0.0029498995103741077,
+              "q95": 0.1220866764579587
+            },
+            "var_residual": {
+              "median": 0.5926708237583598,
+              "q05": 0.5433733895305982,
+              "q95": 0.640426393253618
+            },
+            "twice_cov_xb_program": {
+              "median": 0.005567363366389603,
+              "q05": -0.0026031284586918247,
+              "q95": 0.04576863854232446
+            },
+            "twice_cov_xb_coach": {
+              "median": 0.03556893380035711,
+              "q05": 0.00013018873446006478,
+              "q95": 0.08229943331064675
+            },
+            "twice_cov_xb_residual": {
+              "median": -0.010734107246063683,
+              "q05": -0.07290964414065328,
+              "q95": 0.03948620220244163
+            },
+            "twice_cov_program_coach": {
+              "median": -2.6531632919729522e-05,
+              "q05": -0.006758652771558752,
+              "q95": 0.0049933628557138265
+            },
+            "twice_cov_program_residual": {
+              "median": -0.0005653220260539897,
+              "q05": -0.014660657170278733,
+              "q95": 0.006417824719751217
+            },
+            "twice_cov_coach_residual": {
+              "median": -0.0010534531221662912,
+              "q05": -0.02826136907741554,
+              "q95": 0.017391113064746933
+            },
+            "var_outcome": {
+              "median": 1.0,
+              "q05": 1.0,
+              "q95": 1.0
+            },
+            "reconstructed": {
+              "median": 1.0,
+              "q05": 0.9999999999999999,
+              "q95": 1.0
+            },
+            "reconstruction_error": {
+              "median": 0.0,
+              "q05": 0.0,
+              "q95": 1.1102230246251565e-16
+            }
+          },
+          "outcome_scale": 0.994094427157571,
+          "student_t_nu": {
+            "median": 13.219993420776365,
+            "q05": 7.277541677780184,
+            "q95": 29.593148397746724
+          }
+        },
+        {
+          "likelihood": "student_t",
+          "interactions": true,
+          "n": 653,
+          "chains": 4,
+          "draws_per_chain": 750,
+          "tune": 750,
+          "elpd_loo": -789.9627031955004,
+          "se_elpd_loo": 19.74580556672089,
+          "p_loo": 69.37335277310035,
+          "loo_warning": false,
+          "max_rhat": 1.009578582802555,
+          "min_bulk_ess": 353.2399369810247,
+          "divergences": 0,
+          "coach_program_correlation": 0.7535524253746555,
+          "variance_decomposition_standardized": {
+            "var_xb": {
+              "median": 0.31543864218686324,
+              "q05": 0.24193441426738,
+              "q95": 0.38992669561655563
+            },
+            "var_program": {
+              "median": 0.007329046039695076,
+              "q05": 4.754378863248789e-05,
+              "q95": 0.0453471412557169
+            },
+            "var_coach": {
+              "median": 0.05887569055449551,
+              "q05": 0.006724219730751489,
+              "q95": 0.12408462944196773
+            },
+            "var_residual": {
+              "median": 0.5894345776046424,
+              "q05": 0.542138905572687,
+              "q95": 0.638569361876134
+            },
+            "twice_cov_xb_program": {
+              "median": 0.006603414557761002,
+              "q05": -0.002364201851789789,
+              "q95": 0.04450724444884393
+            },
+            "twice_cov_xb_coach": {
+              "median": 0.032978634873774094,
+              "q05": -0.0026267216555171976,
+              "q95": 0.07830034528385398
+            },
+            "twice_cov_xb_residual": {
+              "median": -0.016223120656446637,
+              "q05": -0.0754058830411795,
+              "q95": 0.03616079913461878
+            },
+            "twice_cov_program_coach": {
+              "median": -7.368433613627566e-05,
+              "q05": -0.0069950055611371605,
+              "q95": 0.0050579237336146
+            },
+            "twice_cov_program_residual": {
+              "median": -0.0007055977770556891,
+              "q05": -0.016475327863011122,
+              "q95": 0.006086924299373264
+            },
+            "twice_cov_coach_residual": {
+              "median": -0.002515796799729679,
+              "q05": -0.03208057603891045,
+              "q95": 0.017799084434501976
+            },
+            "var_outcome": {
+              "median": 1.0,
+              "q05": 1.0,
+              "q95": 1.0
+            },
+            "reconstructed": {
+              "median": 1.0,
+              "q05": 0.9999999999999999,
+              "q95": 1.0
+            },
+            "reconstruction_error": {
+              "median": 0.0,
+              "q05": 0.0,
+              "q95": 1.1102230246251565e-16
+            }
+          },
+          "outcome_scale": 0.994094427157571,
+          "student_t_nu": {
+            "median": 14.010350329726347,
+            "q05": 7.430714699557622,
+            "q95": 32.54351993569777
+          }
+        }
+      ],
+      "selected_candidate": 1,
+      "selection_rule": "largest PSIS-LOO expected log predictive density"
+    },
+    "rating_defense": {
+      "naive_hdfe": {
+        "var_xb": 0.0106427896271836,
+        "var_program": 0.3311168277633251,
+        "var_coach": 0.3296632633252075,
+        "var_residual": 0.34509283317563577,
+        "twice_cov_xb_program": -0.04422253045916513,
+        "twice_cov_xb_coach": -0.04043499127507033,
+        "twice_cov_xb_residual": 1.085240676184973e-08,
+        "twice_cov_program_coach": 0.0468123700413435,
+        "twice_cov_program_residual": 0.0,
+        "twice_cov_coach_residual": 1.7873602441385008e-07,
+        "var_outcome": 0.9786707517868912,
+        "reconstructed": 0.9786707517868911,
+        "reconstruction_error": 1.1102230246251565e-16,
+        "n_input": 653,
+        "n_used": 595,
+        "singletons_dropped": 58,
+        "coefficients": {
+          "prior_offense": 0.040840301797750306,
+          "prior_defense": -0.02459397010184486,
+          "talent": -0.09693344622932962,
+          "returning": 0.054437897812683884
+        },
+        "coach_program_correlation": 0.07084427018211423,
+        "warnings": [
+          "58 singleton fixed effect(s) dropped from the model."
+        ]
+      },
+      "partial_pool_candidates": [
+        {
+          "likelihood": "gaussian",
+          "interactions": false,
+          "n": 653,
+          "chains": 4,
+          "draws_per_chain": 750,
+          "tune": 750,
+          "elpd_loo": -800.9061506178026,
+          "se_elpd_loo": 19.272387152456854,
+          "p_loo": 34.79606923678016,
+          "loo_warning": false,
+          "max_rhat": 1.0111764158627297,
+          "min_bulk_ess": 221.30009081368433,
+          "divergences": 1,
+          "coach_program_correlation": 0.7495641324027391,
+          "variance_decomposition_standardized": {
+            "var_xb": {
+              "median": 0.3071848630975249,
+              "q05": 0.23677221216444205,
+              "q95": 0.37853393780834016
+            },
+            "var_program": {
+              "median": 0.0057919372213170815,
+              "q05": 5.355076860377871e-05,
+              "q95": 0.0376003763421193
+            },
+            "var_coach": {
+              "median": 0.016704461147646406,
+              "q05": 0.0001716870303237172,
+              "q95": 0.07019002320759286
+            },
+            "var_residual": {
+              "median": 0.6455187715651397,
+              "q05": 0.6009775057425739,
+              "q95": 0.6699683427143251
+            },
+            "twice_cov_xb_program": {
+              "median": 0.005773311582138925,
+              "q05": -0.0025171231569016796,
+              "q95": 0.04445827216372231
+            },
+            "twice_cov_xb_coach": {
+              "median": 0.011304803529356582,
+              "q05": -0.0021491743986851984,
+              "q95": 0.05386672094307555
+            },
+            "twice_cov_xb_residual": {
+              "median": -0.006611162831610118,
+              "q05": -0.06964436940631649,
+              "q95": 0.04743061942129256
+            },
+            "twice_cov_program_coach": {
+              "median": -2.120275160382993e-05,
+              "q05": -0.0037713840540310613,
+              "q95": 0.002615940397014507
+            },
+            "twice_cov_program_residual": {
+              "median": -0.00044369185258193655,
+              "q05": -0.014508060583297112,
+              "q95": 0.0071834465561765905
+            },
+            "twice_cov_coach_residual": {
+              "median": -0.0003433715231749453,
+              "q05": -0.019903969831492015,
+              "q95": 0.011181741709499173
+            },
+            "var_outcome": {
+              "median": 1.0,
+              "q05": 1.0,
+              "q95": 1.0
+            },
+            "reconstructed": {
+              "median": 1.0,
+              "q05": 0.9999999999999999,
+              "q95": 1.0
+            },
+            "reconstruction_error": {
+              "median": 0.0,
+              "q05": 0.0,
+              "q95": 1.1102230246251565e-16
+            }
+          },
+          "outcome_scale": 0.9925497498048496
+        },
+        {
+          "likelihood": "student_t",
+          "interactions": false,
+          "n": 653,
+          "chains": 4,
+          "draws_per_chain": 750,
+          "tune": 750,
+          "elpd_loo": -799.596043358305,
+          "se_elpd_loo": 19.28836215525178,
+          "p_loo": 42.721666325327334,
+          "loo_warning": false,
+          "max_rhat": 1.0273640473767072,
+          "min_bulk_ess": 277.6163898862823,
+          "divergences": 0,
+          "coach_program_correlation": 0.7509713643298425,
+          "variance_decomposition_standardized": {
+            "var_xb": {
+              "median": 0.2973489438649207,
+              "q05": 0.2258519589544501,
+              "q95": 0.3678303171131677
+            },
+            "var_program": {
+              "median": 0.007299849355083674,
+              "q05": 0.0001015484141574662,
+              "q95": 0.046848374255600185
+            },
+            "var_coach": {
+              "median": 0.02494391899927168,
+              "q05": 0.00035252424517796013,
+              "q95": 0.08044354497596633
+            },
+            "var_residual": {
+              "median": 0.6347108503466088,
+              "q05": 0.59328958818927,
+              "q95": 0.6677920479843151
+            },
+            "twice_cov_xb_program": {
+              "median": 0.007783006049423137,
+              "q05": -0.002049483881263852,
+              "q95": 0.0524495906636407
+            },
+            "twice_cov_xb_coach": {
+              "median": 0.017644949403195928,
+              "q05": -0.00173820369057636,
+              "q95": 0.06191304584576888
+            },
+            "twice_cov_xb_residual": {
+              "median": -0.004363521379276548,
+              "q05": -0.06417910730021668,
+              "q95": 0.04611220622403269
+            },
+            "twice_cov_program_coach": {
+              "median": -1.7702743312643988e-05,
+              "q05": -0.004795008197273352,
+              "q95": 0.003645774304953692
+            },
+            "twice_cov_program_residual": {
+              "median": -0.0006830600832377159,
+              "q05": -0.015369230662867711,
+              "q95": 0.007042140052562568
+            },
+            "twice_cov_coach_residual": {
+              "median": -0.0007293615313607063,
+              "q05": -0.023222589391923263,
+              "q95": 0.01271450954410992
+            },
+            "var_outcome": {
+              "median": 1.0,
+              "q05": 1.0,
+              "q95": 1.0
+            },
+            "reconstructed": {
+              "median": 1.0,
+              "q05": 0.9999999999999999,
+              "q95": 1.0
+            },
+            "reconstruction_error": {
+              "median": 0.0,
+              "q05": 0.0,
+              "q95": 1.1102230246251565e-16
+            }
+          },
+          "outcome_scale": 0.9925497498048496,
+          "student_t_nu": {
+            "median": 16.74793405735849,
+            "q05": 8.804025984481791,
+            "q95": 39.22270535827008
+          }
+        },
+        {
+          "likelihood": "student_t",
+          "interactions": true,
+          "n": 653,
+          "chains": 4,
+          "draws_per_chain": 750,
+          "tune": 750,
+          "elpd_loo": -802.5552754150913,
+          "se_elpd_loo": 19.014940211398,
+          "p_loo": 54.80674762898386,
+          "loo_warning": true,
+          "max_rhat": 1.0125902801639042,
+          "min_bulk_ess": 523.798510079991,
+          "divergences": 0,
+          "coach_program_correlation": 0.6513205638985853,
+          "variance_decomposition_standardized": {
+            "var_xb": {
+              "median": 0.3105095399059871,
+              "q05": 0.24074033460502006,
+              "q95": 0.3826753981378083
+            },
+            "var_program": {
+              "median": 0.0064585661580425675,
+              "q05": 6.762542821233562e-05,
+              "q95": 0.04158995291885987
+            },
+            "var_coach": {
+              "median": 0.03716909194925971,
+              "q05": 0.0050276781486587405,
+              "q95": 0.09651356415548559
+            },
+            "var_residual": {
+              "median": 0.6272943158164381,
+              "q05": 0.5811733465954522,
+              "q95": 0.6633044967537551
+            },
+            "twice_cov_xb_program": {
+              "median": 0.006924494384390644,
+              "q05": -0.0021486542345038246,
+              "q95": 0.04821034293041285
+            },
+            "twice_cov_xb_coach": {
+              "median": 0.011421381899999389,
+              "q05": -0.00990271595156629,
+              "q95": 0.05433953836603523
+            },
+            "twice_cov_xb_residual": {
+              "median": -0.011116047151723058,
+              "q05": -0.07276416841026036,
+              "q95": 0.04117813156415657
+            },
+            "twice_cov_program_coach": {
+              "median": -3.101363282251028e-05,
+              "q05": -0.0044358880709363295,
+              "q95": 0.0034192686023518533
+            },
+            "twice_cov_program_residual": {
+              "median": -0.0006083703892646826,
+              "q05": -0.016285176330000734,
+              "q95": 0.006810940569320707
+            },
+            "twice_cov_coach_residual": {
+              "median": -0.0019706206592334267,
+              "q05": -0.028748732213241295,
+              "q95": 0.014635825353451691
+            },
+            "var_outcome": {
+              "median": 1.0,
+              "q05": 1.0,
+              "q95": 1.0
+            },
+            "reconstructed": {
+              "median": 1.0,
+              "q05": 0.9999999999999999,
+              "q95": 1.0
+            },
+            "reconstruction_error": {
+              "median": 0.0,
+              "q05": 0.0,
+              "q95": 1.1102230246251565e-16
+            }
+          },
+          "outcome_scale": 0.9925497498048496,
+          "student_t_nu": {
+            "median": 18.03405944069504,
+            "q05": 9.022663579130203,
+            "q95": 42.170966822812765
+          }
+        }
+      ],
+      "selected_candidate": 1,
+      "selection_rule": "largest PSIS-LOO expected log predictive density"
+    }
+  },
+  "top_bottom": {
+    "rating_overall": {
+      "highest": [
+        {
+          "coach_id": 1741,
+          "coach_name": "Curt Cignetti",
+          "effect": 0.16316286257211327,
+          "posterior_sd": 0.26754083817575847,
+          "seasons": 3
+        },
+        {
+          "coach_id": 523,
+          "coach_name": "Mario Cristobal",
+          "effect": 0.14115401904815542,
+          "posterior_sd": 0.22844968778076724,
+          "seasons": 5
+        },
+        {
+          "coach_id": 195,
+          "coach_name": "Jim Harbaugh",
+          "effect": 0.12535031687943665,
+          "posterior_sd": 0.226924341827623,
+          "seasons": 3
+        },
+        {
+          "coach_id": 529,
+          "coach_name": "Josh Heupel",
+          "effect": 0.12079765104165949,
+          "posterior_sd": 0.21461955723968976,
+          "seasons": 5
+        },
+        {
+          "coach_id": 524,
+          "coach_name": "Ryan Day",
+          "effect": 0.11417460335667771,
+          "posterior_sd": 0.21115081200444108,
+          "seasons": 5
+        },
+        {
+          "coach_id": 1745,
+          "coach_name": "Dan Lanning",
+          "effect": 0.11410961661791932,
+          "posterior_sd": 0.2146947767152056,
+          "seasons": 4
+        },
+        {
+          "coach_id": 172,
+          "coach_name": "James Franklin",
+          "effect": 0.11370250924713607,
+          "posterior_sd": 0.2155905822955991,
+          "seasons": 4
+        },
+        {
+          "coach_id": 546,
+          "coach_name": "Eli Drinkwitz",
+          "effect": 0.11253560822631267,
+          "posterior_sd": 0.2087947310526731,
+          "seasons": 5
+        },
+        {
+          "coach_id": 1739,
+          "coach_name": "Mike Elko",
+          "effect": 0.10275648013622604,
+          "posterior_sd": 0.2079316807168161,
+          "seasons": 4
+        },
+        {
+          "coach_id": 68,
+          "coach_name": "Troy Calhoun",
+          "effect": 0.10059813265542794,
+          "posterior_sd": 0.2045580322905121,
+          "seasons": 4
+        }
+      ],
+      "lowest": [
+        {
+          "coach_id": 1720,
+          "coach_name": "Will Hall",
+          "effect": -0.11608968371073466,
+          "posterior_sd": 0.21647593491915101,
+          "seasons": 4
+        },
+        {
+          "coach_id": 1743,
+          "coach_name": "Ken Wilson",
+          "effect": -0.11559132155933177,
+          "posterior_sd": 0.22971044915953778,
+          "seasons": 2
+        },
+        {
+          "coach_id": 1771,
+          "coach_name": "Kenni Burns",
+          "effect": -0.11331439544279816,
+          "posterior_sd": 0.22895193851368026,
+          "seasons": 2
+        },
+        {
+          "coach_id": 1747,
+          "coach_name": "Stan Drayton",
+          "effect": -0.09418342398127952,
+          "posterior_sd": 0.21056497389336337,
+          "seasons": 3
+        },
+        {
+          "coach_id": 1775,
+          "coach_name": "Ryan Walters",
+          "effect": -0.08373760109391096,
+          "posterior_sd": 0.21060474620178282,
+          "seasons": 2
+        },
+        {
+          "coach_id": 237,
+          "coach_name": "Butch Jones",
+          "effect": -0.08196495263457423,
+          "posterior_sd": 0.194466062854634,
+          "seasons": 5
+        },
+        {
+          "coach_id": 638,
+          "coach_name": "Kevin Wilson",
+          "effect": -0.07916651432790278,
+          "posterior_sd": 0.20969684420939053,
+          "seasons": 2
+        },
+        {
+          "coach_id": 353,
+          "coach_name": "Jay Norvell",
+          "effect": -0.07882830704332752,
+          "posterior_sd": 0.19134608058041028,
+          "seasons": 5
+        },
+        {
+          "coach_id": 550,
+          "coach_name": "Will Healy",
+          "effect": -0.07611958585880024,
+          "posterior_sd": 0.20482422358312913,
+          "seasons": 2
+        },
+        {
+          "coach_id": 421,
+          "coach_name": "David Shaw",
+          "effect": -0.07416879240652556,
+          "posterior_sd": 0.20197269318585856,
+          "seasons": 2
+        }
+      ]
+    },
+    "rating_offense": {
+      "highest": [
+        {
+          "coach_id": 1745,
+          "coach_name": "Dan Lanning",
+          "effect": 0.3133058772913721,
+          "posterior_sd": 0.27182450780209905,
+          "seasons": 4
+        },
+        {
+          "coach_id": 267,
+          "coach_name": "Lance Leipold",
+          "effect": 0.294279006167656,
+          "posterior_sd": 0.246931729846437,
+          "seasons": 5
+        },
+        {
+          "coach_id": 529,
+          "coach_name": "Josh Heupel",
+          "effect": 0.25458575719643367,
+          "posterior_sd": 0.241653412782602,
+          "seasons": 5
+        },
+        {
+          "coach_id": 1774,
+          "coach_name": "Eric Morris",
+          "effect": 0.2466701983064174,
+          "posterior_sd": 0.2640586219300331,
+          "seasons": 3
+        },
+        {
+          "coach_id": 323,
+          "coach_name": "Jeff Monken",
+          "effect": 0.2268680712025362,
+          "posterior_sd": 0.2311681977718313,
+          "seasons": 5
+        },
+        {
+          "coach_id": 523,
+          "coach_name": "Mario Cristobal",
+          "effect": 0.21971532762316864,
+          "posterior_sd": 0.22507218555644892,
+          "seasons": 5
+        },
+        {
+          "coach_id": 394,
+          "coach_name": "Lincoln Riley",
+          "effect": 0.209461236912252,
+          "posterior_sd": 0.21493176602956068,
+          "seasons": 5
+        },
+        {
+          "coach_id": 429,
+          "coach_name": "Kirby Smart",
+          "effect": 0.20655961868635217,
+          "posterior_sd": 0.22507730789117494,
+          "seasons": 5
+        },
+        {
+          "coach_id": 210,
+          "coach_name": "Clay Helton",
+          "effect": 0.19054530626914615,
+          "posterior_sd": 0.22293702684421468,
+          "seasons": 4
+        },
+        {
+          "coach_id": 526,
+          "coach_name": "Sonny Dykes",
+          "effect": 0.18657838974686605,
+          "posterior_sd": 0.21388877932602407,
+          "seasons": 5
+        }
+      ],
+      "lowest": [
+        {
+          "coach_id": 1720,
+          "coach_name": "Will Hall",
+          "effect": -0.3195394273542944,
+          "posterior_sd": 0.27570450918826317,
+          "seasons": 4
+        },
+        {
+          "coach_id": 1743,
+          "coach_name": "Ken Wilson",
+          "effect": -0.24089948782631207,
+          "posterior_sd": 0.27443817737080967,
+          "seasons": 2
+        },
+        {
+          "coach_id": 1771,
+          "coach_name": "Kenni Burns",
+          "effect": -0.24076035701545329,
+          "posterior_sd": 0.27504636694288354,
+          "seasons": 2
+        },
+        {
+          "coach_id": 1747,
+          "coach_name": "Stan Drayton",
+          "effect": -0.21415998138347633,
+          "posterior_sd": 0.24567424588437525,
+          "seasons": 3
+        },
+        {
+          "coach_id": 166,
+          "coach_name": "Jimbo Fisher",
+          "effect": -0.20259776835927698,
+          "posterior_sd": 0.23653531838233632,
+          "seasons": 3
+        },
+        {
+          "coach_id": 162,
+          "coach_name": "Kirk Ferentz",
+          "effect": -0.17053725349776863,
+          "posterior_sd": 0.2400230282186355,
+          "seasons": 5
+        },
+        {
+          "coach_id": 1822,
+          "coach_name": "Joe Harasymiak",
+          "effect": -0.15614283146876642,
+          "posterior_sd": 0.25233104248947824,
+          "seasons": 1
+        },
+        {
+          "coach_id": 115,
+          "coach_name": "Butch Davis",
+          "effect": -0.15408815768327838,
+          "posterior_sd": 0.26369016793417743,
+          "seasons": 1
+        },
+        {
+          "coach_id": 1557,
+          "coach_name": "Scotty Walden",
+          "effect": -0.1529147902433203,
+          "posterior_sd": 0.2360796662595119,
+          "seasons": 2
+        },
+        {
+          "coach_id": 1777,
+          "coach_name": "Troy Taylor",
+          "effect": -0.1519082181749447,
+          "posterior_sd": 0.23865388386062938,
+          "seasons": 2
+        }
+      ]
+    },
+    "rating_defense": {
+      "highest": [
+        {
+          "coach_id": 1741,
+          "coach_name": "Curt Cignetti",
+          "effect": 0.20371572831823587,
+          "posterior_sd": 0.2293564826627488,
+          "seasons": 3
+        },
+        {
+          "coach_id": 548,
+          "coach_name": "Hugh Freeze",
+          "effect": 0.16659286642016477,
+          "posterior_sd": 0.19161823543507164,
+          "seasons": 5
+        },
+        {
+          "coach_id": 172,
+          "coach_name": "James Franklin",
+          "effect": 0.16346671865666393,
+          "posterior_sd": 0.19967691609750307,
+          "seasons": 4
+        },
+        {
+          "coach_id": 343,
+          "coach_name": "Pat Narduzzi",
+          "effect": 0.15101274537366566,
+          "posterior_sd": 0.19248134886484183,
+          "seasons": 5
+        },
+        {
+          "coach_id": 497,
+          "coach_name": "Kyle Whittingham",
+          "effect": 0.1231465740830992,
+          "posterior_sd": 0.1745591748548454,
+          "seasons": 5
+        },
+        {
+          "coach_id": 1744,
+          "coach_name": "Brent Venables",
+          "effect": 0.1165461559298869,
+          "posterior_sd": 0.18560339885172197,
+          "seasons": 4
+        },
+        {
+          "coach_id": 195,
+          "coach_name": "Jim Harbaugh",
+          "effect": 0.11548901811482767,
+          "posterior_sd": 0.18621765633085116,
+          "seasons": 3
+        },
+        {
+          "coach_id": 546,
+          "coach_name": "Eli Drinkwitz",
+          "effect": 0.11074535877213307,
+          "posterior_sd": 0.1740747156225977,
+          "seasons": 5
+        },
+        {
+          "coach_id": 162,
+          "coach_name": "Kirk Ferentz",
+          "effect": 0.10770359166321075,
+          "posterior_sd": 0.17030345594687377,
+          "seasons": 5
+        },
+        {
+          "coach_id": 1749,
+          "coach_name": "Jon Sumrall",
+          "effect": 0.10135596618839862,
+          "posterior_sd": 0.1710773872730134,
+          "seasons": 4
+        }
+      ],
+      "lowest": [
+        {
+          "coach_id": 309,
+          "coach_name": "Bronco Mendenhall",
+          "effect": -0.12356434321313446,
+          "posterior_sd": 0.1897712432626086,
+          "seasons": 3
+        },
+        {
+          "coach_id": 81,
+          "coach_name": "Jamey Chadwell",
+          "effect": -0.12001385526701275,
+          "posterior_sd": 0.17429404916012003,
+          "seasons": 5
+        },
+        {
+          "coach_id": 57,
+          "coach_name": "Mack Brown",
+          "effect": -0.11715035596588065,
+          "posterior_sd": 0.1810379753765977,
+          "seasons": 4
+        },
+        {
+          "coach_id": 98,
+          "coach_name": "Chris Creighton",
+          "effect": -0.11644482183300092,
+          "posterior_sd": 0.18165548434177511,
+          "seasons": 5
+        },
+        {
+          "coach_id": 550,
+          "coach_name": "Will Healy",
+          "effect": -0.11344058610956363,
+          "posterior_sd": 0.1920107987671467,
+          "seasons": 2
+        },
+        {
+          "coach_id": 1779,
+          "coach_name": "Trent Dilfer",
+          "effect": -0.10880237295877516,
+          "posterior_sd": 0.17867172307472629,
+          "seasons": 3
+        },
+        {
+          "coach_id": 1727,
+          "coach_name": "Michael Desormeaux",
+          "effect": -0.10498056020139138,
+          "posterior_sd": 0.17297443213743985,
+          "seasons": 4
+        },
+        {
+          "coach_id": 549,
+          "coach_name": "Thomas Hammock",
+          "effect": -0.10172042662699073,
+          "posterior_sd": 0.17870997529448174,
+          "seasons": 5
+        },
+        {
+          "coach_id": 210,
+          "coach_name": "Clay Helton",
+          "effect": -0.09973866460312693,
+          "posterior_sd": 0.1802994350295744,
+          "seasons": 4
+        },
+        {
+          "coach_id": 347,
+          "coach_name": "Mike Neu",
+          "effect": -0.09714087712250553,
+          "posterior_sd": 0.1686860400467942,
+          "seasons": 4
+        }
+      ]
+    }
+  }
+}

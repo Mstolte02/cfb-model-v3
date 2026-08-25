@@ -22,6 +22,23 @@ The production selector chose opponent-adjusted offense, defense, recruiting tal
 returning production, and all-roster projected WAR. The player extension cleared the
 predeclared 0.001 adoption bar in consecutive selection windows (+0.00213 and
 +0.00232 Brier). Lagged team PFF/WAR and granular matchup extensions did not clear it.
+An NFL-style player-production forecast was also ported to six CFB season markets,
+then expanded with production×WAR/usage interactions, two-part participation hurdles,
+Gaussian/Laplace WAR losses, and an ensemble. The selected extensions improve
+player-level WAR correlation in every modern fold, but team WAR remains mixed and the
+game gain is only 0.00030 online Brier beyond projected WAR (bootstrap 95% interval
+−0.00090 to +0.00026). Consecutive incremental selection gains are 0.00063 and
+0.00020, so the production-derived game features are
+rejected and remain research-only. The full evidence is in
+[`audit/PLAYER_PRODUCTION_EXPERIMENTS.md`](audit/PLAYER_PRODUCTION_EXPERIMENTS.md).
+A separate head-coach experiment passed its mover-graph gate (72 qualifying movers;
+65.1% of team-seasons in the largest component), but the apparent 34–36% naive coach
+variance collapses to about 0.9% overall, 5.3% offense, and 2.5% defense under partial
+pooling, with coach/program correlations around .75. Leakage-safe coach means, O/D
+effects, mixed interactions, tenure/change features, and first-year uncertainty
+shocks all worsen the v4 replay. The flat uncertainty control also beats every
+coach-specific shock on the rating target. Nothing coach-derived ships; see
+[`audit/COACH_EFFECTS_EXPERIMENTS.md`](audit/COACH_EFFECTS_EXPERIMENTS.md).
 Rest/load context worsened the online replay; travel improved just 0.00010 and was
 directionally inconsistent, so none of those features ship. Full results are in
 [`audit/CONTEXT_AND_PLAYER_PROJECTION_EXPERIMENTS.md`](audit/CONTEXT_AND_PLAYER_PROJECTION_EXPERIMENTS.md).

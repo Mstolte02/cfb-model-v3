@@ -1,0 +1,1709 @@
+{
+  "source_framework": "Mstolte02/nfl-prop-models",
+  "adaptation": "season-level CFB player production; no sportsbook lines used",
+  "temporal_contract": "season N roster population and identity use the existing CFBD roster path; every model feature and fitted parameter uses completed seasons <= N-1",
+  "markets": {
+    "passing_yards": {
+      "source": "passing",
+      "column": "yards",
+      "groups": [
+        "QB"
+      ],
+      "thresholds": [
+        1000.5,
+        2000.5,
+        3000.5
+      ],
+      "kind": "continuous",
+      "target_scale": 1
+    },
+    "passing_touchdowns": {
+      "source": "passing",
+      "column": "touchdowns",
+      "groups": [
+        "QB"
+      ],
+      "thresholds": [
+        5.5,
+        15.5,
+        25.5
+      ],
+      "kind": "count",
+      "target_scale": 1
+    },
+    "rushing_yards": {
+      "source": "rushing",
+      "column": "yards",
+      "groups": [
+        "QB",
+        "RB",
+        "WR"
+      ],
+      "thresholds": [
+        250.5,
+        500.5,
+        1000.5
+      ],
+      "kind": "continuous",
+      "target_scale": 1
+    },
+    "receiving_yards": {
+      "source": "receiving",
+      "column": "yards",
+      "groups": [
+        "RB",
+        "WR",
+        "TE"
+      ],
+      "thresholds": [
+        250.5,
+        500.5,
+        1000.5
+      ],
+      "kind": "continuous",
+      "target_scale": 1
+    },
+    "receptions": {
+      "source": "receiving",
+      "column": "receptions",
+      "groups": [
+        "RB",
+        "WR",
+        "TE"
+      ],
+      "thresholds": [
+        20.5,
+        40.5,
+        60.5
+      ],
+      "kind": "count",
+      "target_scale": 1
+    },
+    "defensive_sacks": {
+      "source": "defense",
+      "column": "sacks",
+      "groups": [
+        "DT",
+        "EDGE",
+        "LB",
+        "CB",
+        "SAF"
+      ],
+      "thresholds": [
+        1.25,
+        3.25,
+        6.25
+      ],
+      "kind": "count",
+      "target_scale": 2
+    }
+  },
+  "candidate_models": [
+    "carry_forward",
+    "ridge",
+    "hist_gradient_boosting",
+    "interaction_hgb",
+    "hurdle_hgb"
+  ],
+  "war_stability_candidates": [
+    "baseline_hgb",
+    "production_hgb",
+    "production_interactions_hgb",
+    "production_laplace",
+    "production_hurdle",
+    "ensemble_50"
+  ],
+  "selection": "lowest calibration-season predictive NLL",
+  "market_folds": {
+    "passing_yards": [
+      {
+        "season": 2017,
+        "calibration_season": 2016,
+        "train_target_seasons": [
+          2015,
+          2016
+        ],
+        "selected": "carry_forward",
+        "calibration_nll": {
+          "carry_forward": 7.605909732054056,
+          "ridge": 7.678556993703088,
+          "hist_gradient_boosting": 7.777850852647478,
+          "interaction_hgb": 7.775411314332769,
+          "hurdle_hgb": 7.707912493394881
+        },
+        "n": 643,
+        "active_n": 290,
+        "mae": 361.90513219284605,
+        "active_mae": 780.4655172413793,
+        "rmse": 748.2236371550365,
+        "pearson_r": 0.7222252547880365,
+        "nll": 7.57627728478791,
+        "threshold_brier": 0.10441529660711016
+      },
+      {
+        "season": 2018,
+        "calibration_season": 2017,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017
+        ],
+        "selected": "carry_forward",
+        "calibration_nll": {
+          "carry_forward": 7.177317933917211,
+          "ridge": 7.500943813348626,
+          "hist_gradient_boosting": 7.691729474202692,
+          "interaction_hgb": 7.6750696676538315,
+          "hurdle_hgb": 7.650285431881932
+        },
+        "n": 638,
+        "active_n": 305,
+        "mae": 415.73354231974923,
+        "active_mae": 838.0098360655737,
+        "rmse": 844.4826540421398,
+        "pearson_r": 0.6243300123786911,
+        "nll": 7.274820417067319,
+        "threshold_brier": 0.0861148050727082
+      },
+      {
+        "season": 2019,
+        "calibration_season": 2018,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018
+        ],
+        "selected": "carry_forward",
+        "calibration_nll": {
+          "carry_forward": 7.4440338761148475,
+          "ridge": 7.596730801169424,
+          "hist_gradient_boosting": 7.6552285125788355,
+          "interaction_hgb": 7.669414127150274,
+          "hurdle_hgb": 7.650235347955131
+        },
+        "n": 700,
+        "active_n": 313,
+        "mae": 389.37857142857143,
+        "active_mae": 832.2076677316294,
+        "rmse": 833.4998251778032,
+        "pearson_r": 0.616602693982981,
+        "nll": 7.3611441062943515,
+        "threshold_brier": 0.09126656502944966
+      },
+      {
+        "season": 2022,
+        "calibration_season": 2019,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019
+        ],
+        "selected": "ridge",
+        "calibration_nll": {
+          "carry_forward": 7.6576992422678085,
+          "ridge": 7.525502106730037,
+          "hist_gradient_boosting": 7.6394753423197574,
+          "interaction_hgb": 7.588140718605813,
+          "hurdle_hgb": 7.644095348712799
+        },
+        "n": 736,
+        "active_n": 303,
+        "mae": 386.2734423908593,
+        "active_mae": 631.4762273026066,
+        "rmse": 615.2817833115662,
+        "pearson_r": 0.7576986345190148,
+        "nll": 7.453357207016453,
+        "threshold_brier": 0.05681639076886235
+      },
+      {
+        "season": 2023,
+        "calibration_season": 2022,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022
+        ],
+        "selected": "interaction_hgb",
+        "calibration_nll": {
+          "carry_forward": 7.459555682942635,
+          "ridge": 7.438039620629952,
+          "hist_gradient_boosting": 7.4308337202894394,
+          "interaction_hgb": 7.409618194729064,
+          "hurdle_hgb": 7.476927810530944
+        },
+        "n": 735,
+        "active_n": 318,
+        "mae": 405.6528538072539,
+        "active_mae": 673.4524007614255,
+        "rmse": 675.7164922735356,
+        "pearson_r": 0.6842424343593487,
+        "nll": 7.552021297337714,
+        "threshold_brier": 0.06757640958534732
+      },
+      {
+        "season": 2024,
+        "calibration_season": 2023,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022,
+          2023
+        ],
+        "selected": "carry_forward",
+        "calibration_nll": {
+          "carry_forward": 7.421468212091943,
+          "ridge": 7.527390725678591,
+          "hist_gradient_boosting": 7.549593749156736,
+          "interaction_hgb": 7.541395685801264,
+          "hurdle_hgb": 7.5222239640139685
+        },
+        "n": 769,
+        "active_n": 323,
+        "mae": 350.0793237971391,
+        "active_mae": 791.0835913312693,
+        "rmse": 746.2627257988804,
+        "pearson_r": 0.6269779387908828,
+        "nll": 7.371030768570658,
+        "threshold_brier": 0.09776507034601219
+      },
+      {
+        "season": 2025,
+        "calibration_season": 2024,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022,
+          2023,
+          2024
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 7.551306948784968,
+          "ridge": 7.670692709260083,
+          "hist_gradient_boosting": 7.45974027597419,
+          "interaction_hgb": 7.445576331812927,
+          "hurdle_hgb": 7.399356781522602
+        },
+        "n": 740,
+        "active_n": 339,
+        "mae": 378.8773614890922,
+        "active_mae": 652.6432673989475,
+        "rmse": 664.3252899132776,
+        "pearson_r": 0.6955314175316171,
+        "nll": 7.392578691390446,
+        "threshold_brier": 0.07015785658000302
+      }
+    ],
+    "passing_touchdowns": [
+      {
+        "season": 2017,
+        "calibration_season": 2016,
+        "train_target_seasons": [
+          2015,
+          2016
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 27.6389350276066,
+          "ridge": 2.6295158276991977,
+          "hist_gradient_boosting": 2.2629919080977934,
+          "interaction_hgb": 2.2617688936644753,
+          "hurdle_hgb": 2.1757982575702037
+        },
+        "n": 643,
+        "active_n": 240,
+        "mae": 3.346199858533373,
+        "active_mae": 6.360067662849947,
+        "rmse": 5.887069383826473,
+        "pearson_r": 0.6704692327229017,
+        "nll": 2.0259200123894727,
+        "threshold_brier": 0.0673336031542689
+      },
+      {
+        "season": 2018,
+        "calibration_season": 2017,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 24.062682067329902,
+          "ridge": 3.0955851055871917,
+          "hist_gradient_boosting": 2.2301430157537694,
+          "interaction_hgb": 2.3162252347475247,
+          "hurdle_hgb": 2.2052821456197673
+        },
+        "n": 638,
+        "active_n": 253,
+        "mae": 3.6315960525254862,
+        "active_mae": 6.757255012938295,
+        "rmse": 6.4416322351104665,
+        "pearson_r": 0.6102904701468016,
+        "nll": 2.0839355502329613,
+        "threshold_brier": 0.07156091222851356
+      },
+      {
+        "season": 2019,
+        "calibration_season": 2018,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 26.44961033644792,
+          "ridge": 2.5206002752342442,
+          "hist_gradient_boosting": 2.0564612549552996,
+          "interaction_hgb": 2.031047624994133,
+          "hurdle_hgb": 2.020147613840349
+        },
+        "n": 700,
+        "active_n": 261,
+        "mae": 3.438357383491157,
+        "active_mae": 6.573758919369094,
+        "rmse": 6.427657869625954,
+        "pearson_r": 0.6052456013150667,
+        "nll": 1.9829122907250705,
+        "threshold_brier": 0.06529535554198787
+      },
+      {
+        "season": 2022,
+        "calibration_season": 2019,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 20.514913758605793,
+          "ridge": 2.0031373632599254,
+          "hist_gradient_boosting": 2.0211764262040384,
+          "interaction_hgb": 2.013259653671237,
+          "hurdle_hgb": 1.9706020301042277
+        },
+        "n": 736,
+        "active_n": 249,
+        "mae": 2.8657804509404436,
+        "active_mae": 5.232385055292169,
+        "rmse": 4.8248827297338295,
+        "pearson_r": 0.7433520967308047,
+        "nll": 1.713284967066771,
+        "threshold_brier": 0.04964752945579565
+      },
+      {
+        "season": 2023,
+        "calibration_season": 2022,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022
+        ],
+        "selected": "interaction_hgb",
+        "calibration_nll": {
+          "carry_forward": 13.824371001410013,
+          "ridge": 2.1773325609712653,
+          "hist_gradient_boosting": 1.8692479962817046,
+          "interaction_hgb": 1.8438975713668724,
+          "hurdle_hgb": 1.8699634639203828
+        },
+        "n": 735,
+        "active_n": 257,
+        "mae": 2.8876929312823605,
+        "active_mae": 5.639925161122957,
+        "rmse": 5.158683574306943,
+        "pearson_r": 0.6871782178699891,
+        "nll": 2.014884361621789,
+        "threshold_brier": 0.05632983613948503
+      },
+      {
+        "season": 2024,
+        "calibration_season": 2023,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022,
+          2023
+        ],
+        "selected": "hist_gradient_boosting",
+        "calibration_nll": {
+          "carry_forward": 17.848920038462985,
+          "ridge": 2.5061432600064797,
+          "hist_gradient_boosting": 1.9505545955671217,
+          "interaction_hgb": 1.9765982272182991,
+          "hurdle_hgb": 1.9635954625999765
+        },
+        "n": 769,
+        "active_n": 253,
+        "mae": 2.913074104080983,
+        "active_mae": 6.297022906136805,
+        "rmse": 5.4136780231853665,
+        "pearson_r": 0.6210039960477826,
+        "nll": 1.8599732380384277,
+        "threshold_brier": 0.06293756758085874
+      },
+      {
+        "season": 2025,
+        "calibration_season": 2024,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022,
+          2023,
+          2024
+        ],
+        "selected": "interaction_hgb",
+        "calibration_nll": {
+          "carry_forward": 15.299976429968376,
+          "ridge": 2.2519375498288015,
+          "hist_gradient_boosting": 1.793669758936796,
+          "interaction_hgb": 1.7922939919524679,
+          "hurdle_hgb": 1.8089180783290788
+        },
+        "n": 740,
+        "active_n": 272,
+        "mae": 2.6682527754224132,
+        "active_mae": 5.184257124469651,
+        "rmse": 4.793797821647846,
+        "pearson_r": 0.7013809485179431,
+        "nll": 1.982233284143045,
+        "threshold_brier": 0.05594477598979384
+      }
+    ],
+    "rushing_yards": [
+      {
+        "season": 2017,
+        "calibration_season": 2016,
+        "train_target_seasons": [
+          2015,
+          2016
+        ],
+        "selected": "carry_forward",
+        "calibration_nll": {
+          "carry_forward": 5.193979571433662,
+          "ridge": 5.70164509464,
+          "hist_gradient_boosting": 5.521879861954081,
+          "interaction_hgb": 5.521602428442669,
+          "hurdle_hgb": 5.509418498618782
+        },
+        "n": 3840,
+        "active_n": 1088,
+        "mae": 54.74375,
+        "active_mae": 177.81433823529412,
+        "rmse": 160.11968993277083,
+        "pearson_r": 0.6723803338198671,
+        "nll": 5.224825805170093,
+        "threshold_brier": 0.048576086494071066
+      },
+      {
+        "season": 2018,
+        "calibration_season": 2017,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017
+        ],
+        "selected": "carry_forward",
+        "calibration_nll": {
+          "carry_forward": 5.360912665541055,
+          "ridge": 5.6923186476533045,
+          "hist_gradient_boosting": 5.473938758140508,
+          "interaction_hgb": 5.461710829564752,
+          "hurdle_hgb": 5.419332024736258
+        },
+        "n": 3732,
+        "active_n": 1129,
+        "mae": 60.800375133976424,
+        "active_mae": 187.45527015057573,
+        "rmse": 173.64603692995445,
+        "pearson_r": 0.6318311479947204,
+        "nll": 5.430895330771087,
+        "threshold_brier": 0.07024330792290868
+      },
+      {
+        "season": 2019,
+        "calibration_season": 2018,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018
+        ],
+        "selected": "carry_forward",
+        "calibration_nll": {
+          "carry_forward": 5.430237318336765,
+          "ridge": 5.695429087429321,
+          "hist_gradient_boosting": 5.569732268765266,
+          "interaction_hgb": 5.549652520104637,
+          "hurdle_hgb": 5.476590381517908
+        },
+        "n": 3915,
+        "active_n": 1135,
+        "mae": 53.32388250319285,
+        "active_mae": 169.3092511013216,
+        "rmse": 155.75796874505718,
+        "pearson_r": 0.6867012877310594,
+        "nll": 5.36159954955837,
+        "threshold_brier": 0.061551994211504056
+      },
+      {
+        "season": 2022,
+        "calibration_season": 2019,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019
+        ],
+        "selected": "carry_forward",
+        "calibration_nll": {
+          "carry_forward": 5.318039323351496,
+          "ridge": 5.660039470779091,
+          "hist_gradient_boosting": 5.450468626067452,
+          "interaction_hgb": 5.471876803615166,
+          "hurdle_hgb": 5.408830714687122
+        },
+        "n": 4054,
+        "active_n": 1101,
+        "mae": 49.010113468179576,
+        "active_mae": 165.41053587647593,
+        "rmse": 143.29018531531077,
+        "pearson_r": 0.6653194069079198,
+        "nll": 5.278159379075194,
+        "threshold_brier": 0.06275304977866718
+      },
+      {
+        "season": 2023,
+        "calibration_season": 2022,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022
+        ],
+        "selected": "carry_forward",
+        "calibration_nll": {
+          "carry_forward": 5.035834607032761,
+          "ridge": 5.818789306886751,
+          "hist_gradient_boosting": 5.403706839520847,
+          "interaction_hgb": 5.386430295173197,
+          "hurdle_hgb": 5.275335857769889
+        },
+        "n": 4052,
+        "active_n": 1158,
+        "mae": 50.014560710760115,
+        "active_mae": 161.33937823834196,
+        "rmse": 143.84965878882852,
+        "pearson_r": 0.650433920328497,
+        "nll": 5.057958232995279,
+        "threshold_brier": 0.04236471852884937
+      },
+      {
+        "season": 2024,
+        "calibration_season": 2023,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022,
+          2023
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 5.6054613578086645,
+          "ridge": 5.791185352051858,
+          "hist_gradient_boosting": 5.450665775927871,
+          "interaction_hgb": 5.408377929000278,
+          "hurdle_hgb": 5.230496809568909
+        },
+        "n": 4072,
+        "active_n": 1206,
+        "mae": 55.36323146106008,
+        "active_mae": 142.41659143818606,
+        "rmse": 134.83409487610845,
+        "pearson_r": 0.7084376003628147,
+        "nll": 5.202221266232056,
+        "threshold_brier": 0.03547444075780105
+      },
+      {
+        "season": 2025,
+        "calibration_season": 2024,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022,
+          2023,
+          2024
+        ],
+        "selected": "carry_forward",
+        "calibration_nll": {
+          "carry_forward": 5.061019577453225,
+          "ridge": 5.827597729386052,
+          "hist_gradient_boosting": 5.324178319871996,
+          "interaction_hgb": 5.355978344032901,
+          "hurdle_hgb": 5.235089064192024
+        },
+        "n": 3854,
+        "active_n": 1236,
+        "mae": 57.55552672548002,
+        "active_mae": 166.4668284789644,
+        "rmse": 158.1739950625997,
+        "pearson_r": 0.5925223071659614,
+        "nll": 5.150894335328465,
+        "threshold_brier": 0.04385770723913952
+      }
+    ],
+    "receiving_yards": [
+      {
+        "season": 2017,
+        "calibration_season": 2016,
+        "train_target_seasons": [
+          2015,
+          2016
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 5.83492875870904,
+          "ridge": 5.826244572159431,
+          "hist_gradient_boosting": 5.720002708424536,
+          "interaction_hgb": 5.700611199187356,
+          "hurdle_hgb": 5.686254133183385
+        },
+        "n": 4045,
+        "active_n": 1605,
+        "mae": 72.81429393926905,
+        "active_mae": 133.02584230357843,
+        "rmse": 139.59056074303533,
+        "pearson_r": 0.6921345375162569,
+        "nll": 5.6749937065972516,
+        "threshold_brier": 0.04214390124011176
+      },
+      {
+        "season": 2018,
+        "calibration_season": 2017,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017
+        ],
+        "selected": "interaction_hgb",
+        "calibration_nll": {
+          "carry_forward": 5.748255688147855,
+          "ridge": 5.797769999973917,
+          "hist_gradient_boosting": 5.682244148732417,
+          "interaction_hgb": 5.672146351825997,
+          "hurdle_hgb": 5.674758041663223
+        },
+        "n": 3930,
+        "active_n": 1662,
+        "mae": 75.40237260355212,
+        "active_mae": 125.25535951922328,
+        "rmse": 140.9110367684806,
+        "pearson_r": 0.7060340664135965,
+        "nll": 5.656280407510346,
+        "threshold_brier": 0.040040921331312165
+      },
+      {
+        "season": 2019,
+        "calibration_season": 2018,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018
+        ],
+        "selected": "hist_gradient_boosting",
+        "calibration_nll": {
+          "carry_forward": 5.84729904224141,
+          "ridge": 5.8135895375655045,
+          "hist_gradient_boosting": 5.6352696044481005,
+          "interaction_hgb": 5.644726039684961,
+          "hurdle_hgb": 5.706616250256736
+        },
+        "n": 4135,
+        "active_n": 1622,
+        "mae": 74.98178754961098,
+        "active_mae": 130.4947846943684,
+        "rmse": 139.77190553623967,
+        "pearson_r": 0.7073157988297243,
+        "nll": 5.617872072923974,
+        "threshold_brier": 0.04035021907405511
+      },
+      {
+        "season": 2022,
+        "calibration_season": 2019,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019
+        ],
+        "selected": "hist_gradient_boosting",
+        "calibration_nll": {
+          "carry_forward": 5.82440769057143,
+          "ridge": 5.777781622377525,
+          "hist_gradient_boosting": 5.604732805328649,
+          "interaction_hgb": 5.612307361734103,
+          "hurdle_hgb": 5.685386512436862
+        },
+        "n": 4386,
+        "active_n": 1733,
+        "mae": 67.19136862365606,
+        "active_mae": 118.7432839653564,
+        "rmse": 126.39564094734556,
+        "pearson_r": 0.6954176148405862,
+        "nll": 5.629040944120371,
+        "threshold_brier": 0.03500736460758703
+      },
+      {
+        "season": 2023,
+        "calibration_season": 2022,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022
+        ],
+        "selected": "carry_forward",
+        "calibration_nll": {
+          "carry_forward": 5.313395386187973,
+          "ridge": 5.67781541472276,
+          "hist_gradient_boosting": 5.595840013453899,
+          "interaction_hgb": 5.593783907237187,
+          "hurdle_hgb": 5.627127792417959
+        },
+        "n": 4360,
+        "active_n": 1787,
+        "mae": 62.97798165137615,
+        "active_mae": 141.58925573587018,
+        "rmse": 146.95875349688362,
+        "pearson_r": 0.6177793543506096,
+        "nll": 5.401835029107316,
+        "threshold_brier": 0.046657277016747066
+      },
+      {
+        "season": 2024,
+        "calibration_season": 2023,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022,
+          2023
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 5.835932348265755,
+          "ridge": 5.751319183913333,
+          "hist_gradient_boosting": 5.63145199842078,
+          "interaction_hgb": 5.644514576748831,
+          "hurdle_hgb": 5.6275824534442105
+        },
+        "n": 4349,
+        "active_n": 1808,
+        "mae": 67.92075259670972,
+        "active_mae": 119.95725884184111,
+        "rmse": 131.30070924832546,
+        "pearson_r": 0.6761749383494965,
+        "nll": 5.587056284926777,
+        "threshold_brier": 0.03930998551135478
+      },
+      {
+        "season": 2025,
+        "calibration_season": 2024,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022,
+          2023,
+          2024
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 5.596573198060323,
+          "ridge": 5.761848011033024,
+          "hist_gradient_boosting": 5.617039442956964,
+          "interaction_hgb": 5.626485048672742,
+          "hurdle_hgb": 5.585785045306955
+        },
+        "n": 4091,
+        "active_n": 1885,
+        "mae": 70.99214467784232,
+        "active_mae": 121.44726577976003,
+        "rmse": 135.4185384148223,
+        "pearson_r": 0.6507788906689317,
+        "nll": 5.687037568897706,
+        "threshold_brier": 0.03982900633247692
+      }
+    ],
+    "receptions": [
+      {
+        "season": 2017,
+        "calibration_season": 2016,
+        "train_target_seasons": [
+          2015,
+          2016
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 33.95946142478701,
+          "ridge": 3.661889714517653,
+          "hist_gradient_boosting": 2.5711685414557226,
+          "interaction_hgb": 2.5572698133761342,
+          "hurdle_hgb": 2.524322774690944
+        },
+        "n": 4045,
+        "active_n": 1626,
+        "mae": 5.676380252395935,
+        "active_mae": 10.012601665369875,
+        "rmse": 10.277962888749084,
+        "pearson_r": 0.692166991752968,
+        "nll": 2.4655449914770156,
+        "threshold_brier": 0.039204655167582717
+      },
+      {
+        "season": 2018,
+        "calibration_season": 2017,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017
+        ],
+        "selected": "hist_gradient_boosting",
+        "calibration_nll": {
+          "carry_forward": 36.7550446214142,
+          "ridge": 3.3934128015876843,
+          "hist_gradient_boosting": 2.4580570652249705,
+          "interaction_hgb": 2.4813715222445705,
+          "hurdle_hgb": 2.466418352870517
+        },
+        "n": 3930,
+        "active_n": 1681,
+        "mae": 5.749005354810731,
+        "active_mae": 9.488937192012106,
+        "rmse": 10.30502187391907,
+        "pearson_r": 0.7089245264907221,
+        "nll": 2.4626782363786823,
+        "threshold_brier": 0.0397512933967471
+      },
+      {
+        "season": 2019,
+        "calibration_season": 2018,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 34.585033233373274,
+          "ridge": 3.4373268339303777,
+          "hist_gradient_boosting": 2.530361830085803,
+          "interaction_hgb": 2.536513328484077,
+          "hurdle_hgb": 2.5223299895373286
+        },
+        "n": 4135,
+        "active_n": 1643,
+        "mae": 5.7273586057935235,
+        "active_mae": 9.796005548903631,
+        "rmse": 10.38639850226084,
+        "pearson_r": 0.7013251052346258,
+        "nll": 2.4574139133304906,
+        "threshold_brier": 0.0375938224254503
+      },
+      {
+        "season": 2022,
+        "calibration_season": 2019,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 28.893098497793,
+          "ridge": 3.2948326812489497,
+          "hist_gradient_boosting": 2.460497623304694,
+          "interaction_hgb": 2.4566023043147496,
+          "hurdle_hgb": 2.4385937455122084
+        },
+        "n": 4386,
+        "active_n": 1750,
+        "mae": 5.349526851900084,
+        "active_mae": 9.320892907884522,
+        "rmse": 9.46120466779719,
+        "pearson_r": 0.7078528039607282,
+        "nll": 2.3829115630913478,
+        "threshold_brier": 0.0342950177521232
+      },
+      {
+        "season": 2023,
+        "calibration_season": 2022,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022
+        ],
+        "selected": "hist_gradient_boosting",
+        "calibration_nll": {
+          "carry_forward": 25.56582928188129,
+          "ridge": 3.35784350641046,
+          "hist_gradient_boosting": 2.4093240448320983,
+          "interaction_hgb": 2.4144093128205744,
+          "hurdle_hgb": 2.4357326549849385
+        },
+        "n": 4360,
+        "active_n": 1807,
+        "mae": 5.515461171866584,
+        "active_mae": 9.716004862826408,
+        "rmse": 10.011182556335791,
+        "pearson_r": 0.67426396852978,
+        "nll": 2.5463088769998254,
+        "threshold_brier": 0.03731573253649678
+      },
+      {
+        "season": 2024,
+        "calibration_season": 2023,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022,
+          2023
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 33.9955263134514,
+          "ridge": 3.0743036844664116,
+          "hist_gradient_boosting": 2.531265540773293,
+          "interaction_hgb": 2.53263086798752,
+          "hurdle_hgb": 2.521216541802137
+        },
+        "n": 4349,
+        "active_n": 1825,
+        "mae": 5.405885940337949,
+        "active_mae": 9.452339137230478,
+        "rmse": 10.039314530621505,
+        "pearson_r": 0.6754344992585377,
+        "nll": 2.4385326544820822,
+        "threshold_brier": 0.03709242792376201
+      },
+      {
+        "season": 2025,
+        "calibration_season": 2024,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022,
+          2023,
+          2024
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 30.348416088252392,
+          "ridge": 3.711097486649788,
+          "hist_gradient_boosting": 2.4946205132207413,
+          "interaction_hgb": 2.495604483542191,
+          "hurdle_hgb": 2.4655544635261233
+        },
+        "n": 4091,
+        "active_n": 1905,
+        "mae": 5.7873118053981765,
+        "active_mae": 10.021893205974278,
+        "rmse": 10.542543489383158,
+        "pearson_r": 0.6461249708391631,
+        "nll": 3.047788912949403,
+        "threshold_brier": 0.042194608816121346
+      }
+    ],
+    "defensive_sacks": [
+      {
+        "season": 2017,
+        "calibration_season": 2016,
+        "train_target_seasons": [
+          2015,
+          2016
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 6.947520773337405,
+          "ridge": 1.0358201147017387,
+          "hist_gradient_boosting": 0.852279626792188,
+          "interaction_hgb": 0.8515309613397684,
+          "hurdle_hgb": 0.8392486726118316
+        },
+        "n": 6500,
+        "active_n": 1013,
+        "mae": 0.4571202441525959,
+        "active_mae": 1.5593687620930754,
+        "rmse": 1.0015931322331568,
+        "pearson_r": 0.5474898516923222,
+        "nll": 0.8132002538594622,
+        "threshold_brier": 0.03057581915047532
+      },
+      {
+        "season": 2018,
+        "calibration_season": 2017,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 6.302317878285966,
+          "ridge": 0.9237226986557614,
+          "hist_gradient_boosting": 0.8488674030779838,
+          "interaction_hgb": 0.8516187454271679,
+          "hurdle_hgb": 0.8374347716003031
+        },
+        "n": 6432,
+        "active_n": 1044,
+        "mae": 0.47265203279976536,
+        "active_mae": 1.5574286403655273,
+        "rmse": 1.023159172264596,
+        "pearson_r": 0.5602655766091013,
+        "nll": 0.8489698535911393,
+        "threshold_brier": 0.03147246396128711
+      },
+      {
+        "season": 2019,
+        "calibration_season": 2018,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018
+        ],
+        "selected": "hist_gradient_boosting",
+        "calibration_nll": {
+          "carry_forward": 6.743280102531169,
+          "ridge": 0.9756378272934657,
+          "hist_gradient_boosting": 0.8527335605936575,
+          "interaction_hgb": 0.8538844835159697,
+          "hurdle_hgb": 0.8567107172148007
+        },
+        "n": 6920,
+        "active_n": 1017,
+        "mae": 0.4618489077603389,
+        "active_mae": 1.609858218697548,
+        "rmse": 0.991825896341841,
+        "pearson_r": 0.5473276339597346,
+        "nll": 0.818661329246616,
+        "threshold_brier": 0.030487294546533667
+      },
+      {
+        "season": 2022,
+        "calibration_season": 2019,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 6.344816065796925,
+          "ridge": 0.8958302108484968,
+          "hist_gradient_boosting": 0.816542294703652,
+          "interaction_hgb": 0.8186896304539047,
+          "hurdle_hgb": 0.806973435879353
+        },
+        "n": 7333,
+        "active_n": 1042,
+        "mae": 0.4093647095449175,
+        "active_mae": 1.450305770420928,
+        "rmse": 0.8686920240693311,
+        "pearson_r": 0.5156782120835002,
+        "nll": 0.7465892398040146,
+        "threshold_brier": 0.026275201456021743
+      },
+      {
+        "season": 2023,
+        "calibration_season": 2022,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 5.546048243841458,
+          "ridge": 0.8877660970439122,
+          "hist_gradient_boosting": 0.7632368782210722,
+          "interaction_hgb": 0.7620927435360263,
+          "hurdle_hgb": 0.7601199277014615
+        },
+        "n": 7277,
+        "active_n": 1098,
+        "mae": 0.4049453087856791,
+        "active_mae": 1.412574971723851,
+        "rmse": 0.8948587924271413,
+        "pearson_r": 0.5218591150841473,
+        "nll": 0.7785151414026895,
+        "threshold_brier": 0.027112412832137178
+      },
+      {
+        "season": 2024,
+        "calibration_season": 2023,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022,
+          2023
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 5.989920629620035,
+          "ridge": 0.9358730692954663,
+          "hist_gradient_boosting": 0.782774170165886,
+          "interaction_hgb": 0.781568868229365,
+          "hurdle_hgb": 0.7752875809899696
+        },
+        "n": 7386,
+        "active_n": 1081,
+        "mae": 0.40042908490464163,
+        "active_mae": 1.4794082585644426,
+        "rmse": 0.9046273806853303,
+        "pearson_r": 0.547436616138776,
+        "nll": 0.7677388164254948,
+        "threshold_brier": 0.027699963288067144
+      },
+      {
+        "season": 2025,
+        "calibration_season": 2024,
+        "train_target_seasons": [
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2022,
+          2023,
+          2024
+        ],
+        "selected": "hurdle_hgb",
+        "calibration_nll": {
+          "carry_forward": 5.86148171538037,
+          "ridge": 0.9423780633428772,
+          "hist_gradient_boosting": 0.7669151384484441,
+          "interaction_hgb": 0.7694857936725354,
+          "hurdle_hgb": 0.7622154072467945
+        },
+        "n": 7161,
+        "active_n": 1164,
+        "mae": 0.3917797952942647,
+        "active_mae": 1.4370519626136933,
+        "rmse": 0.897368864299924,
+        "pearson_r": 0.48673077875349924,
+        "nll": 0.8904259380300217,
+        "threshold_brier": 0.027547294300320477
+      }
+    ]
+  },
+  "war_channel_folds": [
+    {
+      "season": 2019,
+      "train_seasons": [
+        2017,
+        2018
+      ],
+      "calibration_season": 2018,
+      "calibration_metrics": {
+        "baseline_hgb": {
+          "mae": 0.045948706225150696,
+          "player_r": 0.5774901686124743,
+          "team_r": 0.8042732158341014,
+          "stability_score": 0.6908816922232879
+        },
+        "production_hgb": {
+          "mae": 0.04438032894700323,
+          "player_r": 0.6076464674049585,
+          "team_r": 0.8080574768706408,
+          "stability_score": 0.7078519721377996
+        },
+        "production_interactions_hgb": {
+          "mae": 0.04497711897387896,
+          "player_r": 0.6021775427129389,
+          "team_r": 0.8015350005794409,
+          "stability_score": 0.7018562716461899
+        },
+        "production_laplace": {
+          "mae": 0.04008169285648002,
+          "player_r": 0.29327180216664367,
+          "team_r": 0.7063737626755647,
+          "stability_score": 0.49982278242110423
+        },
+        "production_hurdle": {
+          "mae": 0.04453424576015929,
+          "player_r": 0.578322867486564,
+          "team_r": 0.7797522541326751,
+          "stability_score": 0.6790375608096195
+        },
+        "ensemble_50": {
+          "mae": 0.04529973165174899,
+          "player_r": 0.5994942841666345,
+          "team_r": 0.8051864296923633,
+          "stability_score": 0.7023403569294989
+        }
+      },
+      "selected": "production_hgb",
+      "n_players": 11968,
+      "baseline_mae": 0.04249400764352208,
+      "extended_mae": 0.042284234243348345,
+      "baseline_r": 0.5954199576669668,
+      "extended_r": 0.6078138845010499,
+      "team_baseline_r": 0.756387867326511,
+      "team_extended_r": 0.7599470532206121,
+      "candidate_metrics": {
+        "baseline_hgb": {
+          "mae": 0.04249400764352208,
+          "r": 0.5954199576669668,
+          "team_r": 0.756387867326511
+        },
+        "production_hgb": {
+          "mae": 0.042284234243348345,
+          "r": 0.6078138845010499,
+          "team_r": 0.7599470532206121
+        },
+        "production_interactions_hgb": {
+          "mae": 0.042456103757121624,
+          "r": 0.6087346860235829,
+          "team_r": 0.7769018994857476
+        },
+        "production_laplace": {
+          "mae": 0.037139505186173594,
+          "r": 0.3203421546757888,
+          "team_r": 0.7190037526995374
+        },
+        "production_hurdle": {
+          "mae": 0.04199571123874513,
+          "r": 0.6082326763929857,
+          "team_r": 0.7735731267728054
+        },
+        "ensemble_50": {
+          "mae": 0.04225667194103562,
+          "r": 0.609029994892921,
+          "team_r": 0.7693530700484046
+        }
+      }
+    },
+    {
+      "season": 2022,
+      "train_seasons": [
+        2017,
+        2018,
+        2019
+      ],
+      "calibration_season": 2019,
+      "calibration_metrics": {
+        "baseline_hgb": {
+          "mae": 0.0422898859921077,
+          "player_r": 0.6014889986991462,
+          "team_r": 0.7533158935781754,
+          "stability_score": 0.6774024461386607
+        },
+        "production_hgb": {
+          "mae": 0.04310732307776346,
+          "player_r": 0.6129742275563751,
+          "team_r": 0.7679289623026757,
+          "stability_score": 0.6904515949295253
+        },
+        "production_interactions_hgb": {
+          "mae": 0.04199780023130272,
+          "player_r": 0.6125733770300335,
+          "team_r": 0.7768761636727022,
+          "stability_score": 0.6947247703513678
+        },
+        "production_laplace": {
+          "mae": 0.03442457912812666,
+          "player_r": 0.5864885606515777,
+          "team_r": 0.7531872685444883,
+          "stability_score": 0.669837914598033
+        },
+        "production_hurdle": {
+          "mae": 0.041681979470703415,
+          "player_r": 0.6206380733255243,
+          "team_r": 0.7875441851217581,
+          "stability_score": 0.7040911292236411
+        },
+        "ensemble_50": {
+          "mae": 0.04195373976543346,
+          "player_r": 0.6139144455149855,
+          "team_r": 0.7691214577779012,
+          "stability_score": 0.6915179516464434
+        }
+      },
+      "selected": "production_hurdle",
+      "n_players": 12609,
+      "baseline_mae": 0.040719431106715435,
+      "extended_mae": 0.04064508212547622,
+      "baseline_r": 0.6116015990954572,
+      "extended_r": 0.624742754150254,
+      "team_baseline_r": 0.7404066666976387,
+      "team_extended_r": 0.736285593002419,
+      "candidate_metrics": {
+        "baseline_hgb": {
+          "mae": 0.040719431106715435,
+          "r": 0.6116015990954572,
+          "team_r": 0.7404066666976387
+        },
+        "production_hgb": {
+          "mae": 0.04042657067645027,
+          "r": 0.6207202598025983,
+          "team_r": 0.7599938733863854
+        },
+        "production_interactions_hgb": {
+          "mae": 0.04126871888625718,
+          "r": 0.6096672654138451,
+          "team_r": 0.743057970859636
+        },
+        "production_laplace": {
+          "mae": 0.03659441830453441,
+          "r": 0.2961238029422474,
+          "team_r": 0.6911769517689235
+        },
+        "production_hurdle": {
+          "mae": 0.04064508212547622,
+          "r": 0.624742754150254,
+          "team_r": 0.736285593002419
+        },
+        "ensemble_50": {
+          "mae": 0.04088449050015397,
+          "r": 0.6171905359586867,
+          "team_r": 0.7450214871942786
+        }
+      }
+    },
+    {
+      "season": 2023,
+      "train_seasons": [
+        2017,
+        2018,
+        2019,
+        2022
+      ],
+      "calibration_season": 2022,
+      "calibration_metrics": {
+        "baseline_hgb": {
+          "mae": 0.040773381409835746,
+          "player_r": 0.6037415241846591,
+          "team_r": 0.7414008175295912,
+          "stability_score": 0.6725711708571251
+        },
+        "production_hgb": {
+          "mae": 0.04033977251677723,
+          "player_r": 0.622231703446203,
+          "team_r": 0.7665418019899843,
+          "stability_score": 0.6943867527180937
+        },
+        "production_interactions_hgb": {
+          "mae": 0.04089202989885276,
+          "player_r": 0.616409141842373,
+          "team_r": 0.7584334657679125,
+          "stability_score": 0.6874213038051428
+        },
+        "production_laplace": {
+          "mae": 0.036441483119053764,
+          "player_r": 0.2922251602708536,
+          "team_r": 0.7122980171303365,
+          "stability_score": 0.502261588700595
+        },
+        "production_hurdle": {
+          "mae": 0.04040132591391316,
+          "player_r": 0.6271296281347991,
+          "team_r": 0.7411235378796844,
+          "stability_score": 0.6841265830072418
+        },
+        "ensemble_50": {
+          "mae": 0.04070856930944502,
+          "player_r": 0.6164206421624508,
+          "team_r": 0.7528618602574768,
+          "stability_score": 0.6846412512099638
+        }
+      },
+      "selected": "production_hgb",
+      "n_players": 12490,
+      "baseline_mae": 0.040291085054646285,
+      "extended_mae": 0.040094407725676975,
+      "baseline_r": 0.6260549855100023,
+      "extended_r": 0.6365000472804144,
+      "team_baseline_r": 0.8318328382164855,
+      "team_extended_r": 0.8141019031230577,
+      "candidate_metrics": {
+        "baseline_hgb": {
+          "mae": 0.040291085054646285,
+          "r": 0.6260549855100023,
+          "team_r": 0.8318328382164855
+        },
+        "production_hgb": {
+          "mae": 0.040094407725676975,
+          "r": 0.6365000472804144,
+          "team_r": 0.8141019031230577
+        },
+        "production_interactions_hgb": {
+          "mae": 0.04003736947371592,
+          "r": 0.6343612295089834,
+          "team_r": 0.8166028298279994
+        },
+        "production_laplace": {
+          "mae": 0.036357718294393646,
+          "r": 0.3922580097385428,
+          "team_r": 0.74200619702574
+        },
+        "production_hurdle": {
+          "mae": 0.03936344318287515,
+          "r": 0.6318269860224933,
+          "team_r": 0.802845240668792
+        },
+        "ensemble_50": {
+          "mae": 0.03997303078596981,
+          "r": 0.6364984832933901,
+          "team_r": 0.8270184487006695
+        }
+      }
+    },
+    {
+      "season": 2024,
+      "train_seasons": [
+        2017,
+        2018,
+        2019,
+        2022,
+        2023
+      ],
+      "calibration_season": 2023,
+      "calibration_metrics": {
+        "baseline_hgb": {
+          "mae": 0.04015604739417426,
+          "player_r": 0.6239885515613076,
+          "team_r": 0.819900821165061,
+          "stability_score": 0.7219446863631843
+        },
+        "production_hgb": {
+          "mae": 0.0398413113848648,
+          "player_r": 0.6260891547153539,
+          "team_r": 0.8063066620232024,
+          "stability_score": 0.7161979083692782
+        },
+        "production_interactions_hgb": {
+          "mae": 0.0398553887152622,
+          "player_r": 0.6313749156401,
+          "team_r": 0.8128714139701976,
+          "stability_score": 0.7221231648051487
+        },
+        "production_laplace": {
+          "mae": 0.03720432662847195,
+          "player_r": 0.2896875309668982,
+          "team_r": 0.7521517797208264,
+          "stability_score": 0.5209196553438623
+        },
+        "production_hurdle": {
+          "mae": 0.039330730453532435,
+          "player_r": 0.6379122407561014,
+          "team_r": 0.8130266614266455,
+          "stability_score": 0.7254694510913735
+        },
+        "ensemble_50": {
+          "mae": 0.039882153513049995,
+          "player_r": 0.6326677760716498,
+          "team_r": 0.8190604305109257,
+          "stability_score": 0.7258641032912878
+        }
+      },
+      "selected": "ensemble_50",
+      "n_players": 12595,
+      "baseline_mae": 0.04001371845924768,
+      "extended_mae": 0.03993375817278766,
+      "baseline_r": 0.6084263618401111,
+      "extended_r": 0.6179121752271347,
+      "team_baseline_r": 0.778408987637774,
+      "team_extended_r": 0.7791951938406928,
+      "candidate_metrics": {
+        "baseline_hgb": {
+          "mae": 0.04001371845924768,
+          "r": 0.6084263618401111,
+          "team_r": 0.778408987637774
+        },
+        "production_hgb": {
+          "mae": 0.040268766231551,
+          "r": 0.619580667404327,
+          "team_r": 0.7763200046734898
+        },
+        "production_interactions_hgb": {
+          "mae": 0.04014900068422695,
+          "r": 0.6188320697912716,
+          "team_r": 0.7752215288538672
+        },
+        "production_laplace": {
+          "mae": 0.034519386143366665,
+          "r": 0.5854789305816767,
+          "team_r": 0.7216806224320723
+        },
+        "production_hurdle": {
+          "mae": 0.03970886444852755,
+          "r": 0.6166775351041719,
+          "team_r": 0.7722090952797717
+        },
+        "ensemble_50": {
+          "mae": 0.03993375817278766,
+          "r": 0.6179121752271347,
+          "team_r": 0.7791951938406928
+        }
+      }
+    },
+    {
+      "season": 2025,
+      "train_seasons": [
+        2017,
+        2018,
+        2019,
+        2022,
+        2023,
+        2024
+      ],
+      "calibration_season": 2024,
+      "calibration_metrics": {
+        "baseline_hgb": {
+          "mae": 0.04028768312915753,
+          "player_r": 0.6053806653982321,
+          "team_r": 0.779646168712126,
+          "stability_score": 0.692513417055179
+        },
+        "production_hgb": {
+          "mae": 0.040482700129692996,
+          "player_r": 0.61688831454104,
+          "team_r": 0.7763310613251724,
+          "stability_score": 0.6966096879331062
+        },
+        "production_interactions_hgb": {
+          "mae": 0.040428951417992354,
+          "player_r": 0.6137011581173911,
+          "team_r": 0.7760002485814822,
+          "stability_score": 0.6948507033494367
+        },
+        "production_laplace": {
+          "mae": 0.03728728064018784,
+          "player_r": 0.3063534374497839,
+          "team_r": 0.6755182459910005,
+          "stability_score": 0.4909358417203922
+        },
+        "production_hurdle": {
+          "mae": 0.03965687171252148,
+          "player_r": 0.6212686997397101,
+          "team_r": 0.7659588386397228,
+          "stability_score": 0.6936137691897164
+        },
+        "ensemble_50": {
+          "mae": 0.040247476173383895,
+          "player_r": 0.6147526863980096,
+          "team_r": 0.781345943995179,
+          "stability_score": 0.6980493151965943
+        }
+      },
+      "selected": "ensemble_50",
+      "n_players": 12073,
+      "baseline_mae": 0.040465011152917285,
+      "extended_mae": 0.040583207618874115,
+      "baseline_r": 0.5948396713697791,
+      "extended_r": 0.6005188177717832,
+      "team_baseline_r": 0.7622849272552454,
+      "team_extended_r": 0.7691784827886582,
+      "candidate_metrics": {
+        "baseline_hgb": {
+          "mae": 0.040465011152917285,
+          "r": 0.5948396713697791,
+          "team_r": 0.7622849272552454
+        },
+        "production_hgb": {
+          "mae": 0.04069586751744424,
+          "r": 0.5954102075129708,
+          "team_r": 0.775023447857248
+        },
+        "production_interactions_hgb": {
+          "mae": 0.04099386699860958,
+          "r": 0.5981799747990532,
+          "team_r": 0.7725489505453534
+        },
+        "production_laplace": {
+          "mae": 0.03975074430613761,
+          "r": 0.2676668449744858,
+          "team_r": 0.7189478014948203
+        },
+        "production_hurdle": {
+          "mae": 0.040099491823610986,
+          "r": 0.6015235740046474,
+          "team_r": 0.7773573723688632
+        },
+        "ensemble_50": {
+          "mae": 0.040583207618874115,
+          "r": 0.6005188177717832,
+          "team_r": 0.7691784827886582
+        }
+      }
+    }
+  ],
+  "team_component_rows": 955,
+  "important_limitation": "These are football forecasts, not a betting backtest. Historical CFB player-prop lines, prices, and quote timestamps are unavailable."
+}
