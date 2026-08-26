@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-26T07:12:06Z",
+   "as_of": "2026-08-26T13:26:04Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1130,7 +1130,7 @@
     "Bovada": {
      "spread": -6,
      "spreadOpen": -3.5,
-     "overUnder": 53,
+     "overUnder": 53.5,
      "overUnderOpen": 54.5,
      "homeMoneyline": -145,
      "awayMoneyline": 125
@@ -1155,7 +1155,7 @@
     "Bovada": {
      "spread": -7,
      "spreadOpen": -10,
-     "overUnder": 46,
+     "overUnder": 46.5,
      "overUnderOpen": 48.5,
      "homeMoneyline": -330,
      "awayMoneyline": 265
@@ -1261,7 +1261,7 @@
      "awayMoneyline": 164
     },
     "Bovada": {
-     "spread": -4.5,
+     "spread": -4,
      "spreadOpen": -3,
      "overUnder": 56.5,
      "overUnderOpen": 60.5,
@@ -1505,7 +1505,7 @@
      "awayMoneyline": 180
     },
     "Bovada": {
-     "spread": -5.5,
+     "spread": -4.5,
      "spreadOpen": -3.5,
      "overUnder": 53.5,
      "overUnderOpen": 53.5,
@@ -1784,31 +1784,6 @@
    }
   },
   {
-   "id": 401858430,
-   "week": 1,
-   "start": "2026-09-05T16:00:00.000Z",
-   "home": "Nebraska",
-   "away": "Ohio",
-   "books": {
-    "DraftKings": {
-     "spread": -24.5,
-     "spreadOpen": -23.5,
-     "overUnder": 47.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -1800,
-     "awayMoneyline": 1000
-    },
-    "Bovada": {
-     "spread": -24,
-     "spreadOpen": -23.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 47.5,
-     "homeMoneyline": -4000,
-     "awayMoneyline": 1200
-    }
-   }
-  },
-  {
    "id": 401856634,
    "week": 1,
    "start": "2026-09-05T16:00:00.000Z",
@@ -1830,6 +1805,31 @@
      "overUnderOpen": 53.5,
      "homeMoneyline": -10000,
      "awayMoneyline": 1600
+    }
+   }
+  },
+  {
+   "id": 401858430,
+   "week": 1,
+   "start": "2026-09-05T16:00:00.000Z",
+   "home": "Nebraska",
+   "away": "Ohio",
+   "books": {
+    "DraftKings": {
+     "spread": -23.5,
+     "spreadOpen": -23.5,
+     "overUnder": 47.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -1800,
+     "awayMoneyline": 1000
+    },
+    "Bovada": {
+     "spread": -24,
+     "spreadOpen": -23.5,
+     "overUnder": 47.5,
+     "overUnderOpen": 47.5,
+     "homeMoneyline": -4000,
+     "awayMoneyline": 1200
     }
    }
   },
