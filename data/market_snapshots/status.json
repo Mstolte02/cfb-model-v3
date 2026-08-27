@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-08-26T20:09:40Z",
+  "checked_at": "2026-08-27T09:57:15Z",
   "source": "CFBD /lines",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
   "games": 114,
   "quotes": 167,
-  "changed_quotes": 28,
-  "payload_hash": "821632acdf25499e557e4b0b39b79047733fd4c4884004d4b9de02d70b4fcff7"
+  "changed_quotes": 14,
+  "payload_hash": "553c2790a4ad04cf2eef9cf726874eba2263fd80ca544d43e3c2bdb6e6057f91"
 }
