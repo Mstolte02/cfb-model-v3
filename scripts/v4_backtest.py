@@ -42,6 +42,11 @@ CANDIDATES = {
     # same forward-selection rule as every other extension.
     "core_war_talent_sources": ["O", "D", "talent", "returning", "war_projected",
                                 *TS.GROUPS, *TS.PORTAL_RATED],
+    # The same information with the degenerate columns removed: recruiting collapsed
+    # to one component, the redundant rated-portal columns dropped, talent
+    # orthogonalised against recruiting (audit/STANDARDISATION_AND_COLLINEARITY.md).
+    # Seven features instead of fifteen, and it competes under the same rule.
+    "reduced_talent_sources": TS.REDUCED,
     "core_players_lag": V4.CORE_FEATURES,
     "granular_clean": [*V4.OFF_STATS, *V4.DEF_STATS, "talent", "returning"],
     "granular_players": V4.TEAM_FEATURES,

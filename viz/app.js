@@ -103,21 +103,32 @@
   const simRow = () => Object.fromEntries((cur().playoff.teams || []).map(t => [t.team, t]));
 
   /* ---------- what-if: edit a player's WAR, re-derive the ratings ----------
-     Talent is a retired feature with a coefficient of exactly zero, so an edit does
-     NOT reach a prediction through the talent slot. It reaches one through the shrink
-     in matchup.team_frame, which pulls a team toward its talent-implied rating:
+     DORMANT. model_v4.json ships `whatif: null`, so WI.enabled() is false, the Players
+     tab renders its WAR inputs read-only with a tooltip saying why, and none of the
+     re-derivation below runs. It is kept because the machinery is correct and the
+     feature is wanted back; it is documented as off so nobody reads the code and
+     assumes the page is live.
 
-         O_adj = (1 - lam*u)*O + lam*u*(b_o*talent)
+     An earlier version of this comment said talent was "a retired feature with a
+     coefficient of exactly zero". That was true of model.json, the retired v3 model,
+     and never of the shipping one. It is doubly wrong now: v4 carries no `talent`
+     column at all. Since Aug-2026 the model reads `talent_resid` — talent with the
+     recruiting component projected out — alongside `rec_pc1`, because the two
+     correlate .85 and fitting both left talent holding a negative coefficient that
+     read as "talent makes teams lose". See audit/STANDARDISATION_AND_COLLINEARITY.md.
 
-     That is linear in talent, so a talent delta moves the exported vector by exactly
-     lam*u*b_o*dt — no need to reconstruct the pre-shrink O. WAR is one axis of talent
-     at config.WAR_BLEND, and it enters as a z-score taken across the teams the WAR
-     build covers. Editing one player therefore shifts the league mean and sd and moves
-     every other team a little too, which is not a rounding artefact: it is what the
-     model would do if that player really were that good.
+     So if this is ever switched back on, the path from a WAR edit to a prediction has
+     to be rebuilt against the v4 features. It is NOT the v3 shrink described before:
 
-     What this CANNOT update is the playoff odds. Those come from a 20,000-season Monte
-     Carlo over the real schedule, run in Python. Re-running it here would be a
+         O_adj = (1 - lam*u)*O + lam*u*(b_o*talent)      <- matchup.team_frame, v3 only
+
+     v4's build_frame takes O and D straight from the opponent-adjusted ratings and
+     never injects talent into them, so an edit would have to reach `war_projected`,
+     `talent_resid` and `rec_pc1` directly, and the last two are within-season
+     transforms that a single-team edit changes for every team.
+
+     What this could never update is the playoff odds. Those come from a 20,000-season
+     Monte Carlo over the real schedule, run in Python. Re-running it here would be a
      different simulation pretending to be the same one, so the odds are left showing
      their unedited values and the UI says so rather than quietly implying otherwise. */
   const WI = (function () {

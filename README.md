@@ -65,17 +65,30 @@ CFBD's roster feed lists them as `OL` and `project_2026_v2.CFBD_TO_GROUP` has no
 key; that is a live defect in a shipping feature and is written up, not yet fixed. See
 [`audit/FACET_MATCHUP_EXPERIMENTS.md`](audit/FACET_MATCHUP_EXPERIMENTS.md).
 
+The feature set was cut from fifteen columns to seven in Aug-2026 after an audit found
+the recruiting construct entered five times plus a sixth inside `talent`, and
+`portal_net_rated` entering as a construction identity of two columns already present.
+Six of fifteen coefficients flipped sign across bootstrap refits and the fit wanted
+ten times more shrinkage than it had. The five positional recruiting columns are now
+one principal component, the redundant portal columns are gone, and `talent` is
+orthogonalised against recruiting so its published coefficient stops reading as
+"talent makes teams lose". Every coefficient is now sign-stable, the train/test gap
+fell fivefold, and the reduced set won the standard forward selection outright. See
+[`audit/STANDARDISATION_AND_COLLINEARITY.md`](audit/STANDARDISATION_AND_COLLINEARITY.md).
+
 | Strict expanding replay, 2022–25 | Games | Brier | Log loss | Accuracy |
 |---|---:|---:|---:|---:|
-| V4 preseason/static | 2,913 | .2080 | .6018 | 66.50% |
-| **V4 weekly pregame update** | **2,913** | **.1871** | **.5524** | **70.82%** |
+| V4 preseason/static | 2,913 | .2025 | .5864 | 67.52% |
+| **V4 weekly pregame update** | **2,913** | **.1845** | **.5452** | **71.47%** |
 | CFBD pregame Elo, same games | 2,913 | .1898 | .5613 | 70.99% |
 
-V4 is slightly better than Elo on this replay, but not decisively: the paired
-season-week bootstrap difference is −0.00270 Brier with a 95% interval of
-[−0.00738, +0.00183]. The defensible conclusion is “competitive with Elo,” not that
-the benchmark has been conquered. No historical closing-line file is present, so the
-model still has no market benchmark.
+V4 now beats Elo on this replay by a margin that clears its own uncertainty: the
+paired season-week bootstrap difference is −0.00533 Brier with a 95% interval of
+[−0.00976, −0.00118], excluding zero, and Elo is the better model in 0.6% of draws.
+Before the feature reduction the same comparison was −0.00270 with an interval of
+[−0.00738, +0.00183] and the honest reading was "competitive with Elo". That
+qualification no longer applies, though beating Elo is a low bar and no historical
+closing-line file is present, so the model still has no market benchmark.
 
 Neutral-site matchup coherence is enforced by construction. Team A versus Team B uses
 one antisymmetric feature difference, neither fitted model has an intercept, and the

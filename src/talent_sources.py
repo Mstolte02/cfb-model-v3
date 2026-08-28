@@ -32,6 +32,18 @@ PORTAL_RATED = ["portal_in_rated", "portal_out_rated", "portal_net_rated",
                 "portal_blue_in", "portal_blue_out"]
 GROUPS = ["rec_qb", "rec_ol", "rec_skill", "rec_front7", "rec_secondary"]
 
+# The five GROUPS correlate .80-.94 with each other and .90 with talent: one construct
+# entered five times. Fitting them separately splits a single signal across five
+# coefficients that are not individually identifiable - two of the five flip sign in
+# 11-23% of bootstrap refits, and the published rec_qb came out NEGATIVE, which is not
+# a finding about quarterback recruiting but wherever a degenerate basis happened to
+# land. REDUCED replaces them with their first principal component (83.7% of the
+# block) and drops the three rated-portal columns, of which portal_net_rated is a
+# construction identity - it is built as in - out, and regresses on those two at
+# R^2 .964. See audit/STANDARDISATION_AND_COLLINEARITY.md.
+REDUCED = ["O", "D", "talent_resid", "returning", "war_projected",
+           "portal_blue_in", "rec_pc1"]
+
 GROUP_MAP = {
     "Quarterback": "rec_qb",
     "Offensive Line": "rec_ol",
@@ -153,4 +165,45 @@ def attach(frame: pd.DataFrame, year_portal: pd.DataFrame,
                          (values.std(ddof=0) or 1.0)).fillna(0.0)
     frame.attrs["portal_coverage"] = float(p.portal_in.notna().mean())
     frame.attrs["groups_coverage"] = float(g[GROUPS[0]].notna().mean())
+    return derived(frame)
+
+
+def _z(values: np.ndarray) -> np.ndarray:
+    sd = values.std(ddof=0)
+    return (values - values.mean()) / (sd or 1.0)
+
+
+def derived(frame: pd.DataFrame) -> pd.DataFrame:
+    """Add rec_pc1 and talent_resid, both within season.
+
+    rec_pc1 is the first principal component of the five recruiting groups, signed to
+    point the same way they do so a positive coefficient still means "recruits well".
+    Season by season rather than pooled, because every other column in the frame is
+    standardised within season and a pooled component would smuggle cross-season
+    drift into a feature the model reads as a within-season z.
+
+    talent_resid is talent with rec_pc1 projected out. The two correlate .85, and
+    fitting both leaves talent carrying a NEGATIVE coefficient - true as a partial
+    effect and badly misleading read alone, because talent on its own is +0.677 and
+    a 1sd talent edge is worth +0.483 logits once the correlated inputs follow.
+    Orthogonalising costs 0.0001 Brier and reports the shared axis on rec_pc1, where
+    it belongs, leaving talent_resid as the small remainder it actually is.
+    """
+    if not set(GROUPS) <= set(frame.columns):
+        return frame
+    M = frame[GROUPS].astype(float).values
+    M = (M - M.mean(axis=0)) / (M.std(axis=0, ddof=0) + 1e-12)
+    u, s, _ = np.linalg.svd(M, full_matrices=False)
+    pc = u[:, 0] * s[0]
+    # SVD fixes the component only up to sign; anchor it to the block's own mean so
+    # the sign cannot flip between seasons and silently negate the coefficient.
+    if np.corrcoef(pc, M.mean(axis=1))[0, 1] < 0:
+        pc = -pc
+    frame["rec_pc1"] = _z(pc)
+
+    if "talent" in frame.columns:
+        t = frame["talent"].astype(float).values
+        r = frame["rec_pc1"].values
+        slope, intercept = np.polyfit(r, t, 1)
+        frame["talent_resid"] = _z(t - (slope * r + intercept))
     return frame
