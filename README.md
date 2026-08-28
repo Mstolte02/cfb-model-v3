@@ -51,6 +51,19 @@ Pace identity, scripted-game windows, tempo control, and prior-year QB time-to-t
 versus pressure were also tested from leakage-safe CFBD drive and PFF/TruMedia data.
 Several replace missing current form in a static model, but none clears the adoption
 bar after the weekly rating update is retained; they remain research-only.
+Team WAR was then broken out by facet and position — 25 units that sum back to the
+team total exactly, and 11 preseason position rooms that sum to `war_projected`
+exactly — and each offensive unit was pitted against the opposing defensive unit as a
+nonlinear antisymmetric cross term. Every family loses to the shipping five columns on
+both metrics, and the pairing loses by more than the split it is built on. The reason
+is measurement, not football: team WAR persists year to year at r .693 and **every one
+of its 25 parts persists less**, from .659 down to .187, with the defensive halves of
+the marquee matchups — corner coverage .301, safety coverage .231 — among the least
+stable of all. Nothing here ships. The experiment also found that the historical
+preseason projection behind `war_projected` never sees most offensive linemen, because
+CFBD's roster feed lists them as `OL` and `project_2026_v2.CFBD_TO_GROUP` has no `OL`
+key; that is a live defect in a shipping feature and is written up, not yet fixed. See
+[`audit/FACET_MATCHUP_EXPERIMENTS.md`](audit/FACET_MATCHUP_EXPERIMENTS.md).
 
 | Strict expanding replay, 2022–25 | Games | Brier | Log loss | Accuracy |
 |---|---:|---:|---:|---:|
@@ -86,6 +99,10 @@ python -m scripts.four_pass_initial_backtest
 
 # Re-run pace, game-script/control, and quick-pass/pressure experiments
 python -m scripts.tempo_style_backtest
+
+# Re-run the facet x position unit and room matchup experiments
+python war_model/preseason_group_war.py
+python -m scripts.facet_matchup_backtest
 
 # Apply newly completed games once, then publish current ratings
 python -m scripts.update_v4

@@ -1,0 +1,120 @@
+{
+  "contract": "all season-roster players predicted from N-1 and earlier; top K per team/position room selected by the prediction",
+  "reconciles_with": "preseason_team_war.csv (group sums equal team totals)",
+  "slot_counts": {
+    "CB": 6,
+    "DT": 4,
+    "EDGE": 4,
+    "IOL": 6,
+    "LB": 4,
+    "OT": 4,
+    "QB": 2,
+    "RB": 2,
+    "SAF": 4,
+    "TE": 2,
+    "WR": 6
+  },
+  "features": [
+    "war_lag1",
+    "war_lag2",
+    "war_lag3",
+    "snaps_lag1",
+    "snaps_lag2",
+    "rate_lag1",
+    "share_lag1",
+    "prior_rank",
+    "prior_seasons",
+    "class_num",
+    "is_transfer",
+    "stars",
+    "rating",
+    "team_massey",
+    "group_code"
+  ],
+  "folds": [
+    {
+      "season": 2020,
+      "train_target_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "n_teams": 132,
+      "n_groups": 11,
+      "team_total": 348.1299501864543
+    },
+    {
+      "season": 2021,
+      "train_target_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "n_teams": 135,
+      "n_groups": 11,
+      "team_total": 197.64224813340974
+    },
+    {
+      "season": 2022,
+      "train_target_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019
+      ],
+      "n_teams": 137,
+      "n_groups": 11,
+      "team_total": 335.67780104818735
+    },
+    {
+      "season": 2023,
+      "train_target_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2022
+      ],
+      "n_teams": 137,
+      "n_groups": 11,
+      "team_total": 365.35148270240404
+    },
+    {
+      "season": 2024,
+      "train_target_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2022,
+        2023
+      ],
+      "n_teams": 137,
+      "n_groups": 11,
+      "team_total": 360.6274578092563
+    },
+    {
+      "season": 2025,
+      "train_target_seasons": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2022,
+        2023,
+        2024
+      ],
+      "n_teams": 137,
+      "n_groups": 11,
+      "team_total": 318.32811297050284
+    }
+  ]
+}
