@@ -794,25 +794,42 @@ main { max-width: 1320px; padding-top: 38px; }
 .rank-cell:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(35,32,26,.16); }
 /* The crest sits on the team's own colour at full strength - this is the one place
    on the page where the brand mark is the content, not a label beside it. */
-.rank-crest { display: grid; place-items: center; aspect-ratio: 1 / .60; background: var(--t); }
-.rank-crest img { width: 52%; height: 66%; object-fit: contain;
-  filter: drop-shadow(0 1px 3px rgba(0,0,0,.35)); }
+/* --plate is chosen per team at build time (see scripts/prepare_logos.py): the team
+   colour where the mark clears 3:1 on it, ink or eggshell where it cannot. The team
+   colour is still on every cell as the rule under the crest, so a neutral plate
+   costs the fill and not the identity. */
+.rank-crest { position: relative; display: grid; place-items: center;
+  aspect-ratio: 1 / .60; background: var(--plate); }
+.rank-crest::after { content: ""; position: absolute; inset: auto 0 0; height: 3px;
+  background: var(--tc); }
+.rank-crest img { width: 52%; height: 66%; object-fit: contain; }
 .rank-no {
   position: absolute; top: 0; left: 0; min-width: 30px; padding: 4px 8px 5px;
   border-radius: 12px 0 12px 0; background: var(--text); color: var(--bg);
   font: 900 15px/1 var(--sans); text-align: center;
 }
-.rank-name { padding: 8px 9px 0; font: 800 12px/1.1 var(--sans); letter-spacing: .01em; }
-.rank-val { display: flex; align-items: baseline; justify-content: space-between; gap: 6px;
-  padding: 3px 9px 9px; color: var(--muted); font: 700 12px/1.2 var(--sans); }
-.rank-val i { font: 700 8px/1 var(--sans); font-style: normal; text-transform: uppercase;
-  letter-spacing: .1em; opacity: .75; }
+/* Full school names, not abbreviations - the cell is 229px wide and a poll is read
+   by name. Two lines are reserved whether or not the name needs them, so the number
+   under it sits on the same baseline across the row. */
+.rank-name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  min-height: 2.2em; overflow: hidden; padding: 8px 10px 0;
+  font: 800 13px/1.1 var(--sans); letter-spacing: .01em; }
+/* The number is the hero: it is what ordered the board, so it is set larger than the
+   name and the label under it says what it measures. */
+.rank-val { display: block; padding: 2px 10px 10px; }
+.rank-val b { display: block; font: 800 19px/1.1 var(--sans); letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums; }
+.rank-val i { display: block; margin-top: 2px; color: var(--muted); font-style: normal;
+  font: 700 8px/1.2 var(--sans); text-transform: uppercase; letter-spacing: .09em; }
 /* The top five carry the poll: give them the first row to themselves at a larger
    size, so the shape of the board says who is at the top before any number is read. */
 .rank-cell.top .rank-crest { aspect-ratio: 1 / .80; }
 .rank-cell.top .rank-no { min-width: 36px; font-size: 19px; padding: 6px 10px 7px; }
 .rank-cell.top .rank-name { font-size: 14px; padding-top: 10px; }
-.rank-cell.top { border-color: var(--tc); box-shadow: inset 0 -3px 0 var(--tc); }
+.rank-cell.top { border-color: var(--tc); }
+.board-note { margin: 0; padding: 15px 22px 20px; border-top: 1px solid var(--line);
+  color: var(--muted); font: 12px/1.6 var(--sans); }
+.board-note b { color: var(--text); font-weight: 700; }
 
 .leader-controls { justify-content: flex-start; }.leader-controls .seg { margin-right: auto; }
 .leader-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }

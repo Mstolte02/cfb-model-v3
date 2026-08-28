@@ -6,7 +6,12 @@
   "mascot": "Falcons",
   "color": "#004a7b",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/air-force.png",
+   "plate": "color",
+   "contrast": 9.27
+  }
  },
  "Akron": {
   "logo": "logos/akron.png",
@@ -15,7 +20,12 @@
   "mascot": "Zips",
   "color": "#00285e",
   "altColor": "#84754e",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/akron.png",
+   "plate": "color",
+   "contrast": 9.99
+  }
  },
  "Alabama": {
   "logo": "logos/alabama.png",
@@ -24,7 +34,12 @@
   "mascot": "Crimson Tide",
   "color": "#9e1632",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/alabama.png",
+   "plate": "color",
+   "contrast": 8.03
+  }
  },
  "App State": {
   "logo": "logos/app-state.png",
@@ -33,7 +48,12 @@
   "mascot": "Mountaineers",
   "color": "#ffcc00",
   "altColor": "#222222",
-  "onColor": "#000000"
+  "onColor": "#000000",
+  "crest": {
+   "mark": "logos/app-state.png",
+   "plate": "ink",
+   "contrast": 6.83
+  }
  },
  "Arizona": {
   "logo": "logos/arizona.png",
@@ -42,7 +62,12 @@
   "mascot": "Wildcats",
   "color": "#0c234b",
   "altColor": "#ab0520",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/arizona.png",
+   "plate": "color",
+   "contrast": 7.69
+  }
  },
  "Arizona State": {
   "logo": "logos/arizona-state.png",
@@ -51,7 +76,12 @@
   "mascot": "Sun Devils",
   "color": "#8e0c3a",
   "altColor": "#ffc72c",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/arizona-state.png",
+   "plate": "color",
+   "contrast": 4.17
+  }
  },
  "Arkansas": {
   "logo": "logos/arkansas.png",
@@ -60,7 +90,12 @@
   "mascot": "Razorbacks",
   "color": "#a41f35",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/arkansas.png",
+   "plate": "panel",
+   "contrast": 8.03
+  }
  },
  "Arkansas State": {
   "logo": "logos/arkansas-state.png",
@@ -69,7 +104,12 @@
   "mascot": "Red Wolves",
   "color": "#e81018",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/arkansas-state.png",
+   "plate": "panel",
+   "contrast": 9.25
+  }
  },
  "Army": {
   "logo": "logos/army.png",
@@ -78,7 +118,12 @@
   "mascot": "Black Knights",
   "color": "#ce9c00",
   "altColor": "#231f20",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/army.png",
+   "plate": "ink",
+   "contrast": 5.1
+  }
  },
  "Auburn": {
   "logo": "logos/auburn.png",
@@ -87,7 +132,12 @@
   "mascot": "Tigers",
   "color": "#002b5c",
   "altColor": "#f26522",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/auburn.png",
+   "plate": "color",
+   "contrast": 7.37
+  }
  },
  "Ball State": {
   "logo": "logos/ball-state.png",
@@ -96,7 +146,12 @@
   "mascot": "Cardinals",
   "color": "#DA0000",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/ball-state.png",
+   "plate": "ink",
+   "contrast": 5.79
+  }
  },
  "Baylor": {
   "logo": "logos/baylor.png",
@@ -105,7 +160,12 @@
   "mascot": "Bears",
   "color": "#154734",
   "altColor": "#ffb81c",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/baylor.png",
+   "plate": "color",
+   "contrast": 6.12
+  }
  },
  "Boise State": {
   "logo": "logos/boise-state.png",
@@ -114,7 +174,12 @@
   "mascot": "Broncos",
   "color": "#0033a0",
   "altColor": "#fa4616",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/boise-state.png",
+   "plate": "panel",
+   "contrast": 4.2
+  }
  },
  "Boston College": {
   "logo": "logos/boston-college.png",
@@ -123,7 +188,12 @@
   "mascot": "Eagles",
   "color": "#8c2232",
   "altColor": "#dbcca6",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/boston-college.png",
+   "plate": "ink",
+   "contrast": 5.82
+  }
  },
  "Bowling Green": {
   "logo": "logos/bowling-green.png",
@@ -132,7 +202,12 @@
   "mascot": "Falcons",
   "color": "#2b1000",
   "altColor": "#492000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/bowling-green.png",
+   "plate": "color",
+   "contrast": 8.4
+  }
  },
  "Buffalo": {
   "logo": "logos/buffalo.png",
@@ -141,7 +216,12 @@
   "mascot": "Bulls",
   "color": "#041A9B",
   "altColor": "#ebebeb",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/buffalo.png",
+   "plate": "color",
+   "contrast": 12.91
+  }
  },
  "BYU": {
   "logo": "logos/byu.png",
@@ -150,7 +230,12 @@
   "mascot": "Cougars",
   "color": "#003da5",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/byu.png",
+   "plate": "color",
+   "contrast": 7.25
+  }
  },
  "California": {
   "logo": "logos/california.png",
@@ -159,7 +244,12 @@
   "mascot": "Golden Bears",
   "color": "#031522",
   "altColor": "#ffc423",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/california.png",
+   "plate": "color",
+   "contrast": 11.87
+  }
  },
  "Central Michigan": {
   "logo": "logos/central-michigan.png",
@@ -168,7 +258,12 @@
   "mascot": "Chippewas",
   "color": "#6a0032",
   "altColor": "#ffc82e",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/central-michigan.png",
+   "plate": "color",
+   "contrast": 7.55
+  }
  },
  "Charlotte": {
   "logo": "logos/charlotte.png",
@@ -177,7 +272,12 @@
   "mascot": "49ers",
   "color": "#046A38",
   "altColor": "#B9975B",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/charlotte.png",
+   "plate": "color",
+   "contrast": 6.72
+  }
  },
  "Cincinnati": {
   "logo": "logos/cincinnati.png",
@@ -186,7 +286,12 @@
   "mascot": "Bearcats",
   "color": "#E00122",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/cincinnati.png",
+   "plate": "color",
+   "contrast": 4.15
+  }
  },
  "Clemson": {
   "logo": "logos/clemson.png",
@@ -195,7 +300,12 @@
   "mascot": "Tigers",
   "color": "#f56600",
   "altColor": "#522d80",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/clemson.png",
+   "plate": "color",
+   "contrast": 3.1
+  }
  },
  "Coastal Carolina": {
   "logo": "logos/coastal-carolina.png",
@@ -204,7 +314,12 @@
   "mascot": "Chanticleers",
   "color": "#007073",
   "altColor": "#876447",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/coastal-carolina.png",
+   "plate": "panel",
+   "contrast": 7.18
+  }
  },
  "Colorado": {
   "logo": "logos/colorado.png",
@@ -213,7 +328,12 @@
   "mascot": "Buffaloes",
   "color": "#CFB87C",
   "altColor": "#000000",
-  "onColor": "#000000"
+  "onColor": "#000000",
+  "crest": {
+   "mark": "logos/colorado.png",
+   "plate": "ink",
+   "contrast": 4.34
+  }
  },
  "Colorado State": {
   "logo": "logos/colorado-state.png",
@@ -222,7 +342,12 @@
   "mascot": "Rams",
   "color": "#1e4d2b",
   "altColor": "#c8c372",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/colorado-state.png",
+   "plate": "color",
+   "contrast": 4.66
+  }
  },
  "Delaware": {
   "logo": "logos/delaware.png",
@@ -231,7 +356,12 @@
   "mascot": "Blue Hens",
   "color": "#033594",
   "altColor": "#e8ce31",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/delaware.png",
+   "plate": "color",
+   "contrast": 4.18
+  }
  },
  "Duke": {
   "logo": "logos/duke.png",
@@ -240,7 +370,12 @@
   "mascot": "Blue Devils",
   "color": "#013088",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/duke.png",
+   "plate": "color",
+   "contrast": 11.8
+  }
  },
  "East Carolina": {
   "logo": "logos/east-carolina.png",
@@ -249,7 +384,12 @@
   "mascot": "Pirates",
   "color": "#4b1869",
   "altColor": "#f0907b",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/east-carolina.png",
+   "plate": "color",
+   "contrast": 5.45
+  }
  },
  "Eastern Michigan": {
   "logo": "logos/eastern-michigan.png",
@@ -258,7 +398,12 @@
   "mascot": "Eagles",
   "color": "#00331b",
   "altColor": "#f0f0f0",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/eastern-michigan.png",
+   "plate": "color",
+   "contrast": 4.46
+  }
  },
  "Florida": {
   "logo": "logos/florida.png",
@@ -267,7 +412,12 @@
   "mascot": "Gators",
   "color": "#0021a5",
   "altColor": "#fa4616",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/florida.png",
+   "plate": "color",
+   "contrast": 3.55
+  }
  },
  "Florida Atlantic": {
   "logo": "logos/florida-atlantic.png",
@@ -276,7 +426,12 @@
   "mascot": "Owls",
   "color": "#00447c",
   "altColor": "#d31245",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/florida-atlantic.png",
+   "plate": "ink",
+   "contrast": 4.79
+  }
  },
  "Florida International": {
   "logo": "logos/florida-international.png",
@@ -285,7 +440,12 @@
   "mascot": "Panthers",
   "color": "#001538",
   "altColor": "#c5960c",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/florida-international.png",
+   "plate": "color",
+   "contrast": 6.29
+  }
  },
  "Florida State": {
   "logo": "logos/florida-state.png",
@@ -294,7 +454,12 @@
   "mascot": "Seminoles",
   "color": "#782f40",
   "altColor": "#ceb888",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/florida-state.png",
+   "plate": "color",
+   "contrast": 3.58
+  }
  },
  "Fresno State": {
   "logo": "logos/fresno-state.png",
@@ -303,7 +468,12 @@
   "mascot": "Bulldogs",
   "color": "#db0032",
   "altColor": "#002e6d",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/fresno-state.png",
+   "plate": "color",
+   "contrast": 3.02
+  }
  },
  "Georgia": {
   "logo": "logos/georgia.png",
@@ -312,7 +482,12 @@
   "mascot": "Bulldogs",
   "color": "#ba0c2f",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/georgia.png",
+   "plate": "ink",
+   "contrast": 6.48
+  }
  },
  "Georgia Southern": {
   "logo": "logos/georgia-southern.png",
@@ -321,7 +496,12 @@
   "mascot": "Eagles",
   "color": "#003775",
   "altColor": "#f0f0f0",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/georgia-southern.png",
+   "plate": "color",
+   "contrast": 4.82
+  }
  },
  "Georgia State": {
   "logo": "logos/georgia-state.png",
@@ -330,7 +510,12 @@
   "mascot": "Panthers",
   "color": "#1e539a",
   "altColor": "#ebebeb",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/georgia-state.png",
+   "plate": "color",
+   "contrast": 3.16
+  }
  },
  "Georgia Tech": {
   "logo": "logos/georgia-tech.png",
@@ -339,7 +524,12 @@
   "mascot": "Yellow Jackets",
   "color": "#003057",
   "altColor": "#b3a369",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/georgia-tech.png",
+   "plate": "color",
+   "contrast": 7.81
+  }
  },
  "Hawai'i": {
   "logo": "logos/hawai-i.png",
@@ -348,7 +538,12 @@
   "mascot": "Rainbow Warriors",
   "color": "#003420",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/hawai-i.png",
+   "plate": "color",
+   "contrast": 4.48
+  }
  },
  "Houston": {
   "logo": "logos/houston.png",
@@ -357,7 +552,12 @@
   "mascot": "Cougars",
   "color": "#c92a39",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/houston.png",
+   "plate": "ink",
+   "contrast": 6.33
+  }
  },
  "Illinois": {
   "logo": "logos/illinois.png",
@@ -366,7 +566,12 @@
   "mascot": "Fighting Illini",
   "color": "#ff5f05",
   "altColor": "#13294b",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/illinois.png",
+   "plate": "ink",
+   "contrast": 8.78
+  }
  },
  "Indiana": {
   "logo": "logos/indiana.png",
@@ -375,7 +580,12 @@
   "mascot": "Hoosiers",
   "color": "#990000",
   "altColor": "#edebeb",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/indiana.png",
+   "plate": "color",
+   "contrast": 8.92
+  }
  },
  "Iowa": {
   "logo": "logos/iowa.png",
@@ -384,7 +594,12 @@
   "mascot": "Hawkeyes",
   "color": "#000000",
   "altColor": "#FFCD00",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/iowa.png",
+   "plate": "color",
+   "contrast": 14.27
+  }
  },
  "Iowa State": {
   "logo": "logos/iowa-state.png",
@@ -393,7 +608,12 @@
   "mascot": "Cyclones",
   "color": "#822433",
   "altColor": "#fdca2f",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/iowa-state.png",
+   "plate": "color",
+   "contrast": 3.47
+  }
  },
  "Jacksonville State": {
   "logo": "logos/jacksonville-state.png",
@@ -402,7 +622,12 @@
   "mascot": "Gamecocks",
   "color": "#b50500",
   "altColor": "#b5b7ba",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/jacksonville-state.png",
+   "plate": "panel",
+   "contrast": 4.97
+  }
  },
  "James Madison": {
   "logo": "logos/james-madison.png",
@@ -411,7 +636,12 @@
   "mascot": "Dukes",
   "color": "#450084",
   "altColor": "#b5a068",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/james-madison.png",
+   "plate": "color",
+   "contrast": 5.16
+  }
  },
  "Kansas": {
   "logo": "logos/kansas.png",
@@ -420,7 +650,12 @@
   "mascot": "Jayhawks",
   "color": "#0051ba",
   "altColor": "#e8000d",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/kansas.png",
+   "plate": "color",
+   "contrast": 3.01
+  }
  },
  "Kansas State": {
   "logo": "logos/kansas-state.png",
@@ -429,7 +664,12 @@
   "mascot": "Wildcats",
   "color": "#3c0969",
   "altColor": "#e2e3e4",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/kansas-state.png",
+   "plate": "color",
+   "contrast": 3.28
+  }
  },
  "Kennesaw State": {
   "logo": "logos/kennesaw-state.png",
@@ -438,7 +678,12 @@
   "mascot": "Owls",
   "color": "#fdbb30",
   "altColor": "#000000",
-  "onColor": "#000000"
+  "onColor": "#000000",
+  "crest": {
+   "mark": "logos/kennesaw-state.png",
+   "plate": "ink",
+   "contrast": 6.24
+  }
  },
  "Kent State": {
   "logo": "logos/kent-state.png",
@@ -447,7 +692,12 @@
   "mascot": "Golden Flashes",
   "color": "#003976",
   "altColor": "#efab00",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/kent-state.png",
+   "plate": "color",
+   "contrast": 4.56
+  }
  },
  "Kentucky": {
   "logo": "logos/kentucky.png",
@@ -456,7 +706,12 @@
   "mascot": "Wildcats",
   "color": "#0033a0",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/kentucky.png",
+   "plate": "color",
+   "contrast": 8.63
+  }
  },
  "Liberty": {
   "logo": "logos/liberty.png",
@@ -465,7 +720,12 @@
   "mascot": "Flames",
   "color": "#071740",
   "altColor": "#a61f21",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/liberty.png",
+   "plate": "color",
+   "contrast": 7.15
+  }
  },
  "Louisiana": {
   "logo": "logos/louisiana.png",
@@ -474,7 +734,12 @@
   "mascot": "Ragin' Cajuns",
   "color": "#ce181e",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/louisiana.png",
+   "plate": "ink",
+   "contrast": 8.39
+  }
  },
  "Louisiana Tech": {
   "logo": "logos/louisiana-tech.png",
@@ -483,7 +748,12 @@
   "mascot": "Bulldogs",
   "color": "#002d65",
   "altColor": "#d3313a",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/louisiana-tech.png",
+   "plate": "color",
+   "contrast": 4.6
+  }
  },
  "Louisville": {
   "logo": "logos/louisville.png",
@@ -492,7 +762,12 @@
   "mascot": "Cardinals",
   "color": "#c9001f",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/louisville.png",
+   "plate": "ink",
+   "contrast": 4.49
+  }
  },
  "LSU": {
   "logo": "logos/lsu.png",
@@ -501,7 +776,12 @@
   "mascot": "Tigers",
   "color": "#461d7c",
   "altColor": "#fdd023",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/lsu.png",
+   "plate": "color",
+   "contrast": 8.23
+  }
  },
  "Marshall": {
   "logo": "logos/marshall.png",
@@ -510,7 +790,12 @@
   "mascot": "Thundering Herd",
   "color": "#00ae42",
   "altColor": "#be854c",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/marshall.png",
+   "plate": "ink",
+   "contrast": 7.18
+  }
  },
  "Maryland": {
   "logo": "logos/maryland.png",
@@ -519,7 +804,12 @@
   "mascot": "Terrapins",
   "color": "#D5002B",
   "altColor": "#ffcd00",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/maryland.png",
+   "plate": "ink",
+   "contrast": 4.97
+  }
  },
  "Massachusetts": {
   "logo": "logos/massachusetts.png",
@@ -528,7 +818,12 @@
   "mascot": "Minutemen",
   "color": "#971B2F",
   "altColor": "#B1B3B3",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/massachusetts.png",
+   "plate": "color",
+   "contrast": 4.2
+  }
  },
  "Memphis": {
   "logo": "logos/memphis.png",
@@ -537,7 +832,12 @@
   "mascot": "Tigers",
   "color": "#004991",
   "altColor": "#8e908f",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/memphis.png",
+   "plate": "color",
+   "contrast": 3.38
+  }
  },
  "Miami": {
   "logo": "logos/miami.png",
@@ -546,7 +846,12 @@
   "mascot": "Hurricanes",
   "color": "#005030",
   "altColor": "#f47321",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/miami.png",
+   "plate": "color",
+   "contrast": 3.83
+  }
  },
  "Miami (OH)": {
   "logo": "logos/miami-oh.png",
@@ -555,7 +860,12 @@
   "mascot": "RedHawks",
   "color": "#a4000c",
   "altColor": "#f0f0f0",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/miami-oh.png",
+   "plate": "panel",
+   "contrast": 8.96
+  }
  },
  "Michigan": {
   "logo": "logos/michigan.png",
@@ -564,7 +874,12 @@
   "mascot": "Wolverines",
   "color": "#00274c",
   "altColor": "#ffcb05",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/michigan.png",
+   "plate": "color",
+   "contrast": 9.89
+  }
  },
  "Michigan State": {
   "logo": "logos/michigan-state.png",
@@ -573,7 +888,12 @@
   "mascot": "Spartans",
   "color": "#18453b",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/michigan-state.png",
+   "plate": "color",
+   "contrast": 10.75
+  }
  },
  "Middle Tennessee": {
   "logo": "logos/middle-tennessee.png",
@@ -582,7 +902,12 @@
   "mascot": "Blue Raiders",
   "color": "#006db6",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/middle-tennessee.png",
+   "plate": "ink",
+   "contrast": 6.73
+  }
  },
  "Minnesota": {
   "logo": "logos/minnesota.png",
@@ -591,7 +916,12 @@
   "mascot": "Golden Gophers",
   "color": "#5e0a2f",
   "altColor": "#fab41c",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/minnesota.png",
+   "plate": "panel",
+   "contrast": 4.79
+  }
  },
  "Mississippi State": {
   "logo": "logos/mississippi-state.png",
@@ -600,7 +930,12 @@
   "mascot": "Bulldogs",
   "color": "#5d1725",
   "altColor": "#c1c6c8",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/mississippi-state.png",
+   "plate": "color",
+   "contrast": 5.31
+  }
  },
  "Missouri": {
   "logo": "logos/missouri.png",
@@ -609,7 +944,12 @@
   "mascot": "Tigers",
   "color": "#f1b82d",
   "altColor": "#000000",
-  "onColor": "#000000"
+  "onColor": "#000000",
+  "crest": {
+   "mark": "logos/missouri.png",
+   "plate": "ink",
+   "contrast": 6.38
+  }
  },
  "Missouri State": {
   "logo": "logos/missouri-state.png",
@@ -618,7 +958,12 @@
   "mascot": "Bears",
   "color": "#5F0000",
   "altColor": "#e8e8e8",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/missouri-state.png",
+   "plate": "color",
+   "contrast": 4.22
+  }
  },
  "Navy": {
   "logo": "logos/navy.png",
@@ -627,7 +972,12 @@
   "mascot": "Midshipmen",
   "color": "#00225b",
   "altColor": "#b5a67c",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/navy.png",
+   "plate": "color",
+   "contrast": 8.27
+  }
  },
  "NC State": {
   "logo": "logos/nc-state.png",
@@ -636,7 +986,12 @@
   "mascot": "Wolfpack",
   "color": "#cc0000",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/nc-state.png",
+   "plate": "ink",
+   "contrast": 7.01
+  }
  },
  "Nebraska": {
   "logo": "logos/nebraska.png",
@@ -645,7 +1000,12 @@
   "mascot": "Cornhuskers",
   "color": "#d00000",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/nebraska.png",
+   "plate": "ink",
+   "contrast": 5.52
+  }
  },
  "Nevada": {
   "logo": "logos/nevada.png",
@@ -654,7 +1014,12 @@
   "mascot": "Wolf Pack",
   "color": "#002d62",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/nevada.png",
+   "plate": "color",
+   "contrast": 13.53
+  }
  },
  "New Mexico": {
   "logo": "logos/new-mexico.png",
@@ -663,7 +1028,12 @@
   "mascot": "Lobos",
   "color": "#BA0C2F",
   "altColor": "#a7a8aa",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/new-mexico.png",
+   "plate": "ink",
+   "contrast": 5.53
+  }
  },
  "New Mexico State": {
   "logo": "logos/new-mexico-state.png",
@@ -672,7 +1042,12 @@
   "mascot": "Aggies",
   "color": "#891216",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/new-mexico-state.png",
+   "plate": "color",
+   "contrast": 4.75
+  }
  },
  "North Carolina": {
   "logo": "logos/north-carolina.png",
@@ -681,7 +1056,12 @@
   "mascot": "Tar Heels",
   "color": "#7bafd4",
   "altColor": "#13294b",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/north-carolina.png",
+   "plate": "ink",
+   "contrast": 14.54
+  }
  },
  "North Dakota State": {
   "logo": "logos/north-dakota-state.png",
@@ -690,7 +1070,12 @@
   "mascot": "Bison",
   "color": "#01402A",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/north-dakota-state.png",
+   "plate": "color",
+   "contrast": 3.57
+  }
  },
  "Northern Illinois": {
   "logo": "logos/northern-illinois.png",
@@ -699,7 +1084,12 @@
   "mascot": "Huskies",
   "color": "#F1122C",
   "altColor": "#cc0000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/northern-illinois.png",
+   "plate": "ink",
+   "contrast": 5.68
+  }
  },
  "North Texas": {
   "logo": "logos/north-texas.png",
@@ -708,7 +1098,12 @@
   "mascot": "Mean Green",
   "color": "#00853E",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/north-texas.png",
+   "plate": "color",
+   "contrast": 4.75
+  }
  },
  "Northwestern": {
   "logo": "logos/northwestern.png",
@@ -717,7 +1112,12 @@
   "mascot": "Wildcats",
   "color": "#582c83",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/northwestern.png",
+   "plate": "color",
+   "contrast": 3.08
+  }
  },
  "Notre Dame": {
   "logo": "logos/notre-dame.png",
@@ -726,7 +1126,12 @@
   "mascot": "Fighting Irish",
   "color": "#0c2340",
   "altColor": "#c99700",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/notre-dame.png",
+   "plate": "color",
+   "contrast": 5.95
+  }
  },
  "Ohio": {
   "logo": "logos/ohio.png",
@@ -735,7 +1140,12 @@
   "mascot": "Bobcats",
   "color": "#295A29",
   "altColor": "#e4bb85",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/ohio.png",
+   "plate": "color",
+   "contrast": 3.35
+  }
  },
  "Ohio State": {
   "logo": "logos/ohio-state.png",
@@ -744,7 +1154,12 @@
   "mascot": "Buckeyes",
   "color": "#ce1141",
   "altColor": "#505056",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/ohio-state.png",
+   "plate": "color",
+   "contrast": 3.26
+  }
  },
  "Oklahoma": {
   "logo": "logos/oklahoma.png",
@@ -753,7 +1168,12 @@
   "mascot": "Sooners",
   "color": "#a32036",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/oklahoma.png",
+   "plate": "panel",
+   "contrast": 8.28
+  }
  },
  "Oklahoma State": {
   "logo": "logos/oklahoma-state.png",
@@ -762,7 +1182,12 @@
   "mascot": "Cowboys",
   "color": "#FF7300",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/oklahoma-state.png",
+   "plate": "ink",
+   "contrast": 10.55
+  }
  },
  "Old Dominion": {
   "logo": "logos/old-dominion.png",
@@ -771,7 +1196,12 @@
   "mascot": "Monarchs",
   "color": "#00507d",
   "altColor": "#a1d2f1",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/old-dominion.png",
+   "plate": "color",
+   "contrast": 3.2
+  }
  },
  "Ole Miss": {
   "logo": "logos/ole-miss.png",
@@ -780,7 +1210,12 @@
   "mascot": "Rebels",
   "color": "#13294b",
   "altColor": "#c8102e",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/ole-miss.png",
+   "plate": "color",
+   "contrast": 5.29
+  }
  },
  "Oregon": {
   "logo": "logos/oregon.png",
@@ -789,7 +1224,12 @@
   "mascot": "Ducks",
   "color": "#007030",
   "altColor": "#fee11a",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/oregon.png",
+   "plate": "color",
+   "contrast": 5.42
+  }
  },
  "Oregon State": {
   "logo": "logos/oregon-state.png",
@@ -798,7 +1238,12 @@
   "mascot": "Beavers",
   "color": "#231f20",
   "altColor": "#d73f09",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/oregon-state.png",
+   "plate": "panel",
+   "contrast": 6.77
+  }
  },
  "Penn State": {
   "logo": "logos/penn-state.png",
@@ -807,7 +1252,12 @@
   "mascot": "Nittany Lions",
   "color": "#041E42",
   "altColor": "#FFFFFF",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/penn-state.png",
+   "plate": "color",
+   "contrast": 4.86
+  }
  },
  "Pittsburgh": {
   "logo": "logos/pittsburgh.png",
@@ -816,7 +1266,12 @@
   "mascot": "Panthers",
   "color": "#003263",
   "altColor": "#231f20",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/pittsburgh.png",
+   "plate": "color",
+   "contrast": 8.87
+  }
  },
  "Purdue": {
   "logo": "logos/purdue.png",
@@ -825,7 +1280,12 @@
   "mascot": "Boilermakers",
   "color": "#000000",
   "altColor": "#ceb888",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/purdue.png",
+   "plate": "color",
+   "contrast": 7.14
+  }
  },
  "Rice": {
   "logo": "logos/rice.png",
@@ -834,7 +1294,12 @@
   "mascot": "Owls",
   "color": "#d1d5d8",
   "altColor": "#003d7d",
-  "onColor": "#000000"
+  "onColor": "#000000",
+  "crest": {
+   "mark": "logos/rice.png",
+   "plate": "color",
+   "contrast": 10.28
+  }
  },
  "Rutgers": {
   "logo": "logos/rutgers.png",
@@ -843,7 +1308,12 @@
   "mascot": "Scarlet Knights",
   "color": "#d21034",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/rutgers.png",
+   "plate": "panel",
+   "contrast": 6.26
+  }
  },
  "Sacramento State": {
   "logo": "logos/sacramento-state.png",
@@ -852,7 +1322,12 @@
   "mascot": "Hornets",
   "color": "#00573C",
   "altColor": "#cdb97d",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/sacramento-state.png",
+   "plate": "color",
+   "contrast": 4.87
+  }
  },
  "Sam Houston": {
   "logo": "logos/sam-houston.png",
@@ -861,7 +1336,12 @@
   "mascot": "Bearkats",
   "color": "#fe5000",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/sam-houston.png",
+   "plate": "color",
+   "contrast": 3.3
+  }
  },
  "San Diego State": {
   "logo": "logos/san-diego-state.png",
@@ -870,7 +1350,12 @@
   "mascot": "Aztecs",
   "color": "#c41230",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/san-diego-state.png",
+   "plate": "panel",
+   "contrast": 10.71
+  }
  },
  "San Jos\u00e9 State": {
   "logo": "logos/san-jos-state.png",
@@ -879,7 +1364,12 @@
   "mascot": "Spartans",
   "color": "#005893",
   "altColor": "#fdba31",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/san-jos-state.png",
+   "plate": "color",
+   "contrast": 4.1
+  }
  },
  "SMU": {
   "logo": "logos/smu.png",
@@ -888,7 +1378,12 @@
   "mascot": "Mustangs",
   "color": "#354ca1",
   "altColor": "#cc0035",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/smu.png",
+   "plate": "color",
+   "contrast": 3.06
+  }
  },
  "South Alabama": {
   "logo": "logos/south-alabama.png",
@@ -897,7 +1392,12 @@
   "mascot": "Jaguars",
   "color": "#00205B",
   "altColor": "#BF0D3E",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/south-alabama.png",
+   "plate": "color",
+   "contrast": 11.7
+  }
  },
  "South Carolina": {
   "logo": "logos/south-carolina.png",
@@ -906,7 +1406,12 @@
   "mascot": "Gamecocks",
   "color": "#73000a",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/south-carolina.png",
+   "plate": "color",
+   "contrast": 3.95
+  }
  },
  "Southern Miss": {
   "logo": "logos/southern-miss.png",
@@ -915,7 +1420,12 @@
   "mascot": "Golden Eagles",
   "color": "#FFAA3C",
   "altColor": "#ffc423",
-  "onColor": "#000000"
+  "onColor": "#000000",
+  "crest": {
+   "mark": "logos-dark/southern-miss.png",
+   "plate": "ink",
+   "contrast": 5.36
+  }
  },
  "South Florida": {
   "logo": "logos/south-florida.png",
@@ -924,7 +1434,12 @@
   "mascot": "Bulls",
   "color": "#004A36",
   "altColor": "#231f20",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/south-florida.png",
+   "plate": "color",
+   "contrast": 4.24
+  }
  },
  "Stanford": {
   "logo": "logos/stanford.png",
@@ -933,7 +1448,12 @@
   "mascot": "Cardinal",
   "color": "#8c1515",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/stanford.png",
+   "plate": "color",
+   "contrast": 3.89
+  }
  },
  "Syracuse": {
   "logo": "logos/syracuse.png",
@@ -942,7 +1462,12 @@
   "mascot": "Orange",
   "color": "#ff6500",
   "altColor": "#000e54",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/syracuse.png",
+   "plate": "ink",
+   "contrast": 7.11
+  }
  },
  "TCU": {
   "logo": "logos/tcu.png",
@@ -951,7 +1476,12 @@
   "mascot": "Horned Frogs",
   "color": "#4d1979",
   "altColor": "#f1f2f3",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/tcu.png",
+   "plate": "color",
+   "contrast": 4.09
+  }
  },
  "Temple": {
   "logo": "logos/temple.png",
@@ -960,7 +1490,12 @@
   "mascot": "Owls",
   "color": "#A80532",
   "altColor": "#a7a9ac",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/temple.png",
+   "plate": "color",
+   "contrast": 7.68
+  }
  },
  "Tennessee": {
   "logo": "logos/tennessee.png",
@@ -969,7 +1504,12 @@
   "mascot": "Volunteers",
   "color": "#ff8200",
   "altColor": "#58595b",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/tennessee.png",
+   "plate": "ink",
+   "contrast": 17.39
+  }
  },
  "Texas": {
   "logo": "logos/texas.png",
@@ -978,7 +1518,12 @@
   "mascot": "Longhorns",
   "color": "#c15d26",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/texas.png",
+   "plate": "color",
+   "contrast": 4.32
+  }
  },
  "Texas A&M": {
   "logo": "logos/texas-a-m.png",
@@ -987,7 +1532,12 @@
   "mascot": "Aggies",
   "color": "#500000",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/texas-a-m.png",
+   "plate": "color",
+   "contrast": 15.66
+  }
  },
  "Texas State": {
   "logo": "logos/texas-state.png",
@@ -996,7 +1546,12 @@
   "mascot": "Bobcats",
   "color": "#4e1719",
   "altColor": "#b4975a",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/texas-state.png",
+   "plate": "panel",
+   "contrast": 10.33
+  }
  },
  "Texas Tech": {
   "logo": "logos/texas-tech.png",
@@ -1005,7 +1560,12 @@
   "mascot": "Red Raiders",
   "color": "#CC0000",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/texas-tech.png",
+   "plate": "ink",
+   "contrast": 7.23
+  }
  },
  "Toledo": {
   "logo": "logos/toledo.png",
@@ -1014,7 +1574,12 @@
   "mascot": "Rockets",
   "color": "#0a2240",
   "altColor": "#ffcd00",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/toledo.png",
+   "plate": "color",
+   "contrast": 14.86
+  }
  },
  "Troy": {
   "logo": "logos/troy.png",
@@ -1023,7 +1588,12 @@
   "mascot": "Trojans",
   "color": "#AE0210",
   "altColor": "#88898c",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/troy.png",
+   "plate": "color",
+   "contrast": 4.62
+  }
  },
  "Tulane": {
   "logo": "logos/tulane.png",
@@ -1032,7 +1602,12 @@
   "mascot": "Green Wave",
   "color": "#006547",
   "altColor": "#468ac9",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/tulane.png",
+   "plate": "ink",
+   "contrast": 4.86
+  }
  },
  "Tulsa": {
   "logo": "logos/tulsa.png",
@@ -1041,7 +1616,12 @@
   "mascot": "Golden Hurricane",
   "color": "#003595",
   "altColor": "#d0b787",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/tulsa.png",
+   "plate": "color",
+   "contrast": 5.56
+  }
  },
  "UAB": {
   "logo": "logos/uab.png",
@@ -1050,7 +1630,12 @@
   "mascot": "Blazers",
   "color": "#003b28",
   "altColor": "#ffc845",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/uab.png",
+   "plate": "panel",
+   "contrast": 5.81
+  }
  },
  "UCF": {
   "logo": "logos/ucf.png",
@@ -1059,7 +1644,12 @@
   "mascot": "Knights",
   "color": "#ba9b37",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/ucf.png",
+   "plate": "ink",
+   "contrast": 7.19
+  }
  },
  "UCLA": {
   "logo": "logos/ucla.png",
@@ -1068,7 +1658,12 @@
   "mascot": "Bruins",
   "color": "#2774ae",
   "altColor": "#f2a900",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/ucla.png",
+   "plate": "ink",
+   "contrast": 5.07
+  }
  },
  "UConn": {
   "logo": "logos/uconn.png",
@@ -1077,7 +1672,12 @@
   "mascot": "Huskies",
   "color": "#0c2340",
   "altColor": "#f1f2f3",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/uconn.png",
+   "plate": "color",
+   "contrast": 6.75
+  }
  },
  "UL Monroe": {
   "logo": "logos/ul-monroe.png",
@@ -1086,7 +1686,12 @@
   "mascot": "Warhawks",
   "color": "#231F20",
   "altColor": "#b18445",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/ul-monroe.png",
+   "plate": "color",
+   "contrast": 4.29
+  }
  },
  "UNLV": {
   "logo": "logos/unlv.png",
@@ -1095,7 +1700,12 @@
   "mascot": "Rebels",
   "color": "#b10202",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/unlv.png",
+   "plate": "color",
+   "contrast": 4.34
+  }
  },
  "USC": {
   "logo": "logos/usc.png",
@@ -1104,7 +1714,12 @@
   "mascot": "Trojans",
   "color": "#9e2237",
   "altColor": "#ffcc00",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/usc.png",
+   "plate": "ink",
+   "contrast": 4.29
+  }
  },
  "Utah": {
   "logo": "logos/utah.png",
@@ -1113,7 +1728,12 @@
   "mascot": "Utes",
   "color": "#ea002a",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/utah.png",
+   "plate": "color",
+   "contrast": 4.63
+  }
  },
  "Utah State": {
   "logo": "logos/utah-state.png",
@@ -1122,7 +1742,12 @@
   "mascot": "Aggies",
   "color": "#00263a",
   "altColor": "#949ca1",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/utah-state.png",
+   "plate": "color",
+   "contrast": 15.69
+  }
  },
  "UTEP": {
   "logo": "logos/utep.png",
@@ -1131,7 +1756,12 @@
   "mascot": "Miners",
   "color": "#ff8200",
   "altColor": "#041e42",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/utep.png",
+   "plate": "ink",
+   "contrast": 6.99
+  }
  },
  "UTSA": {
   "logo": "logos/utsa.png",
@@ -1140,7 +1770,12 @@
   "mascot": "Roadrunners",
   "color": "#002A5C",
   "altColor": "#f47321",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/utsa.png",
+   "plate": "color",
+   "contrast": 5.19
+  }
  },
  "Vanderbilt": {
   "logo": "logos/vanderbilt.png",
@@ -1149,7 +1784,12 @@
   "mascot": "Commodores",
   "color": "#866d4b",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/vanderbilt.png",
+   "plate": "color",
+   "contrast": 3.88
+  }
  },
  "Virginia": {
   "logo": "logos/virginia.png",
@@ -1158,7 +1798,12 @@
   "mascot": "Cavaliers",
   "color": "#232d4b",
   "altColor": "#f84c1e",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/virginia.png",
+   "plate": "color",
+   "contrast": 6.29
+  }
  },
  "Virginia Tech": {
   "logo": "logos/virginia-tech.png",
@@ -1167,7 +1812,12 @@
   "mascot": "Hokies",
   "color": "#630031",
   "altColor": "#cf4520",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/virginia-tech.png",
+   "plate": "color",
+   "contrast": 9.71
+  }
  },
  "Wake Forest": {
   "logo": "logos/wake-forest.png",
@@ -1176,7 +1826,12 @@
   "mascot": "Demon Deacons",
   "color": "#9E7E38",
   "altColor": "#000000",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/wake-forest.png",
+   "plate": "color",
+   "contrast": 5.5
+  }
  },
  "Washington": {
   "logo": "logos/washington.png",
@@ -1185,7 +1840,12 @@
   "mascot": "Huskies",
   "color": "#33006f",
   "altColor": "#e8d3a2",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/washington.png",
+   "plate": "color",
+   "contrast": 3.57
+  }
  },
  "Washington State": {
   "logo": "logos/washington-state.png",
@@ -1194,7 +1854,12 @@
   "mascot": "Cougars",
   "color": "#981e32",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/washington-state.png",
+   "plate": "color",
+   "contrast": 3.36
+  }
  },
  "Western Kentucky": {
   "logo": "logos/western-kentucky.png",
@@ -1203,7 +1868,12 @@
   "mascot": "Hilltoppers",
   "color": "#F32026",
   "altColor": "#b3b5b8",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/western-kentucky.png",
+   "plate": "ink",
+   "contrast": 5.3
+  }
  },
  "Western Michigan": {
   "logo": "logos/western-michigan.png",
@@ -1212,7 +1882,12 @@
   "mascot": "Broncos",
   "color": "#532e1f",
   "altColor": "#8b7f79",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/western-michigan.png",
+   "plate": "color",
+   "contrast": 6.21
+  }
  },
  "West Virginia": {
   "logo": "logos/west-virginia.png",
@@ -1221,7 +1896,12 @@
   "mascot": "Mountaineers",
   "color": "#002855",
   "altColor": "#eaaa00",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos-dark/west-virginia.png",
+   "plate": "color",
+   "contrast": 14.64
+  }
  },
  "Wisconsin": {
   "logo": "logos/wisconsin.png",
@@ -1230,7 +1910,12 @@
   "mascot": "Badgers",
   "color": "#c4012f",
   "altColor": "#ffffff",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/wisconsin.png",
+   "plate": "ink",
+   "contrast": 6.15
+  }
  },
  "Wyoming": {
   "logo": "logos/wyoming.png",
@@ -1239,6 +1924,11 @@
   "mascot": "Cowboys",
   "color": "#492f24",
   "altColor": "#ffc425",
-  "onColor": "#ffffff"
+  "onColor": "#ffffff",
+  "crest": {
+   "mark": "logos/wyoming.png",
+   "plate": "panel",
+   "contrast": 4.8
+  }
  }
 }

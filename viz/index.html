@@ -10,7 +10,7 @@
 <meta property="og:image" content="https://mstolte02.github.io/cfb-model-v3/social-preview.png">
 <meta name="twitter:card" content="summary_large_image">
 <title>CFB Model v4 — 2026 Forecast Lab</title>
-<link rel="stylesheet" href="style.css?v=34">
+<link rel="stylesheet" href="style.css?v=35">
 </head>
 <body>
 <header class="site-header">
@@ -94,8 +94,10 @@
     <div class="view-head editorial-head"><span class="eyebrow">Two different questions</span><h2>Best team or best résumé?</h2>
       <p class="sub">Neutral-field power asks who would win today. Deserving starts with the final 2025 AP poll and will update with 2026 results.</p></div>
     <div class="rankings-stack">
-      <article class="ranking-board"><div class="board-head"><span>Model</span><h3>Neutral-field Top 25</h3><small>Ordered by power rating — who wins on a neutral field today</small></div><div id="power-top25"></div></article>
-      <article class="ranking-board deserving"><div class="board-head"><span>Résumé</span><h3>Deserving Top 25</h3><small>2025 final AP baseline — updates with 2026 results</small></div><div id="deserving-top25"></div></article>
+      <article class="ranking-board"><div class="board-head"><span>Model</span><h3>Neutral-field Top 25</h3><small>Ordered by neutral win rate — who wins today</small></div><div id="power-top25"></div>
+        <p class="board-note"><b>Neutral win rate</b> is the model’s power rating written as what it actually measures: play a team against each of the other 135 FBS teams on a neutral field, and this is the share of those games it wins. Notre Dame at 89.9% beats a randomly drawn FBS opponent about nine times in ten. It is a round-robin average, so it carries no schedule — that is the other board’s job.</p></article>
+      <article class="ranking-board deserving"><div class="board-head"><span>Résumé</span><h3>Deserving Top 25</h3><small>2025 final AP baseline — updates with 2026 results</small></div><div id="deserving-top25"></div>
+        <p class="board-note"><b>AP poll points</b> are the voters’ tally, not a model output: 25 points for a first-place vote down to one for a 25th. This board is still the final 2025 poll and will not move until 2026 results start landing.</p></article>
     </div>
   </section>
 
@@ -168,6 +170,6 @@
 </main>
 
 <footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Model probabilities are estimates. Sportsbook prices are dated snapshots, not live quotes. Gamble responsibly.</span></footer>
-<script src="app.js?v=37"></script>
+<script src="app.js?v=38"></script>
 </body>
 </html>

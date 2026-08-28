@@ -2660,23 +2660,40 @@
      mark before its name. So it is drawn the way a released poll is drawn: a numbered
      grid of crests on the team's own colour, five across, with the top five given a
      larger cell of their own. The number under each crest is what ordered it. */
+  /* Which mark to draw and what to put behind it, decided at build time by
+     scripts.prepare_logos from the measured luminance of the mark itself. A school's
+     primary logo is often a knockout drawn in the school colour, so the team's own
+     colour is the one fill it cannot be seen on - Texas A&M's maroon mark on maroon
+     came out at 1.00, which is invisible, not low. The plate is the team colour
+     wherever some mark clears 3:1 on it and a neutral otherwise. */
+  const PLATE = { color: null, ink: "var(--navy)", panel: "var(--panel)" };
+  function crestOf(t) {
+    const c = (meta[t] || {}).crest;
+    if (!c) return { mark: logoURL(t), plate: "var(--panel)" };   // pre-crest data
+    return { mark: c.mark, plate: PLATE[c.plate] || rgba(t, 1) };
+  }
+
   function rankingGrid(rows, label, valueOf) {
-    return `<div class="rank-grid">${rows.map(r => `<button type="button"
+    return `<div class="rank-grid">${rows.map(r => {
+      const c = crestOf(r.team);
+      return `<button type="button"
       class="rank-cell team-link${r.rank <= 5 ? " top" : ""}" data-team="${esc(r.team)}"
-      title="${esc(r.team)}" style="--t:${rgba(r.team, 1)};--tc:${color(r.team)}">
-      <span class="rank-crest"><img src="${logoURL(r.team)}" alt="" loading="lazy"></span>
+      style="--plate:${c.plate};--tc:${color(r.team)}">
+      <span class="rank-crest"><img src="${c.mark}" alt="" loading="lazy"></span>
       <span class="rank-no">${r.rank}</span>
-      <span class="rank-name">${esc(abbr(r.team))}</span>
-      <span class="rank-val"><i>${label}</i>${valueOf(r)}</span>
-    </button>`).join("")}</div>`;
+      <span class="rank-name">${esc(r.team)}</span>
+      <span class="rank-val"><b>${valueOf(r)}</b><i>${label}</i></span>
+    </button>`;
+    }).join("")}</div>`;
   }
   function renderPower() {
     const neutral = liveRatings().slice().sort((a, b) => b.power - a.power).slice(0, 25)
       .map((r, i) => ({ ...r, rank: i + 1 }));
     document.getElementById("power-top25").innerHTML =
-      rankingGrid(neutral, "Power", r => (r.power != null ? r.power.toFixed(3) : "—"));
+      rankingGrid(neutral, "Neutral win rate",
+        r => (r.power != null ? pct(r.power, 1) : "—"));
     document.getElementById("deserving-top25").innerHTML =
-      rankingGrid(editorial.prior_final_ap || [], "AP pts",
+      rankingGrid(editorial.prior_final_ap || [], "AP poll points",
         r => (r.points != null ? r.points.toLocaleString() : "—"));
     wireTeamLinks();
   }
