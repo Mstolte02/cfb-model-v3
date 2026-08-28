@@ -775,16 +775,44 @@ main { max-width: 1320px; padding-top: 38px; }
 .range-card small { grid-column: 1 / -1; color: var(--muted); font: 10px/1 var(--sans); }
 #dash-table { border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.35); }
 
-.rankings-split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+/* Two boards, stacked rather than side by side. Each one is now a five-across grid
+   of crests, which needs the full column width to stay legible; at half width the
+   cells shrink until the logo is the size of the rank number next to it. */
+.rankings-stack { display: grid; gap: 22px; }
 .ranking-board { overflow: hidden; border: 1px solid var(--line2); border-radius: 15px; background: var(--panel); }
 .board-head { padding: 24px; color: #fff; background: var(--navy); }
 .deserving .board-head { background: #573f28; }
 .board-head > span { color: #9fb0c2; font: 800 9px/1 var(--sans); text-transform: uppercase; letter-spacing: .16em; }
 .board-head h3 { margin: 5px 0 2px; font-size: 25px; }.board-head small { color: #cdbfae; }
-.ranking-row { display: grid; grid-template-columns: 38px 1fr 70px; align-items: center; min-height: 48px;
-  padding: 7px 15px; border-bottom: 1px solid var(--line); }
-.ranking-row > span { color: var(--muted); font: 800 13px/1 var(--sans); }
-.ranking-row > b { text-align: right; font: 800 13px/1 var(--sans); }.ranking-row .mini-team b { font-family: Georgia,serif; }
+
+.rank-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 18px; }
+.rank-cell {
+  position: relative; display: grid; gap: 0; padding: 0; overflow: hidden; cursor: pointer;
+  border: 1px solid var(--line2); border-radius: 12px; background: var(--panel);
+  font-family: inherit; color: inherit; text-align: left; transition: transform .12s, box-shadow .12s;
+}
+.rank-cell:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(35,32,26,.16); }
+/* The crest sits on the team's own colour at full strength - this is the one place
+   on the page where the brand mark is the content, not a label beside it. */
+.rank-crest { display: grid; place-items: center; aspect-ratio: 1 / .60; background: var(--t); }
+.rank-crest img { width: 52%; height: 66%; object-fit: contain;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,.35)); }
+.rank-no {
+  position: absolute; top: 0; left: 0; min-width: 30px; padding: 4px 8px 5px;
+  border-radius: 12px 0 12px 0; background: var(--text); color: var(--bg);
+  font: 900 15px/1 var(--sans); text-align: center;
+}
+.rank-name { padding: 8px 9px 0; font: 800 12px/1.1 var(--sans); letter-spacing: .01em; }
+.rank-val { display: flex; align-items: baseline; justify-content: space-between; gap: 6px;
+  padding: 3px 9px 9px; color: var(--muted); font: 700 12px/1.2 var(--sans); }
+.rank-val i { font: 700 8px/1 var(--sans); font-style: normal; text-transform: uppercase;
+  letter-spacing: .1em; opacity: .75; }
+/* The top five carry the poll: give them the first row to themselves at a larger
+   size, so the shape of the board says who is at the top before any number is read. */
+.rank-cell.top .rank-crest { aspect-ratio: 1 / .80; }
+.rank-cell.top .rank-no { min-width: 36px; font-size: 19px; padding: 6px 10px 7px; }
+.rank-cell.top .rank-name { font-size: 14px; padding-top: 10px; }
+.rank-cell.top { border-color: var(--tc); box-shadow: inset 0 -3px 0 var(--tc); }
 
 .leader-controls { justify-content: flex-start; }.leader-controls .seg { margin-right: auto; }
 .leader-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -951,6 +979,7 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
   .hub-tab { min-width: 128px; padding: 12px; }.section-bar { top: 115px; padding-inline: 18px; }
   .market-list { grid-template-columns: 1fr; }.market-row:nth-child(odd) { border-right: 0; }
   .range-grid { grid-template-columns: repeat(2,1fr); }
+  .rank-grid { grid-template-columns: repeat(4, 1fr); }
   .weekly-head, .weekly-row { grid-template-columns: minmax(260px,1fr) 92px 88px 96px 120px; }
 }
 @media (max-width: 700px) {
@@ -958,7 +987,9 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
   .section-nav .tab { white-space: nowrap; }.editorial-head h2 { font-size: 39px; }
   .market-toolbar .seg { width: 100%; overflow-x: auto; }.market-toolbar .seg-btn { white-space: nowrap; }
   .market-row { grid-template-columns: 22px 1fr 70px 82px; padding-inline: 10px; }
-  .range-grid, .rankings-split, .leader-grid { grid-template-columns: 1fr; }
+  .range-grid, .leader-grid { grid-template-columns: 1fr; }
+  .rank-grid { grid-template-columns: repeat(3, 1fr); gap: 7px; padding: 12px; }
+  .rank-cell.top .rank-crest { aspect-ratio: 1 / .60; }
   .leader-card { grid-template-columns: 125px 1fr; min-height: 165px; }.leader-copy h3 { font-size: 21px; }
   .weekly-board { overflow-x: auto; }
   .validation-strip { grid-template-columns: 1fr; }
@@ -969,3 +1000,8 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
 }
 .weekly-row.flip { background: rgba(168,50,38,.10); box-shadow: inset 3px 0 0 var(--red); }
 .weekly-row.flip .bet-cell b { color: var(--red); }
+
+.weekly-empty { padding: 34px 22px; border: 1px dashed var(--line2); border-radius: 12px;
+  background: var(--panel); text-align: center; }
+.weekly-empty b { display: block; font: 700 16px/1.35 var(--sans); }
+.weekly-empty small { display: block; margin-top: 7px; color: var(--muted); font: 12px/1.5 var(--sans); }

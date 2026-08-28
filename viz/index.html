@@ -10,7 +10,7 @@
 <meta property="og:image" content="https://mstolte02.github.io/cfb-model-v3/social-preview.png">
 <meta name="twitter:card" content="summary_large_image">
 <title>CFB Model v4 — 2026 Forecast Lab</title>
-<link rel="stylesheet" href="style.css?v=33">
+<link rel="stylesheet" href="style.css?v=34">
 </head>
 <body>
 <header class="site-header">
@@ -33,6 +33,7 @@
   </nav>
   <nav class="section-nav" data-hub-nav="weekly">
     <button class="tab" data-view="matchup">Matchup lab</button>
+    <button class="tab" data-view="market">Market board</button>
     <button class="tab" data-view="power">Power rankings</button>
   </nav>
   <nav class="section-nav" data-hub-nav="people">
@@ -92,9 +93,9 @@
   <section id="view-power" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">Two different questions</span><h2>Best team or best résumé?</h2>
       <p class="sub">Neutral-field power asks who would win today. Deserving starts with the final 2025 AP poll and will update with 2026 results.</p></div>
-    <div class="rankings-split">
-      <article class="ranking-board"><div class="board-head"><span>Model</span><h3>Neutral-field Top 25</h3></div><div id="power-top25"></div></article>
-      <article class="ranking-board deserving"><div class="board-head"><span>Résumé</span><h3>Deserving Top 25</h3><small>2025 final AP baseline</small></div><div id="deserving-top25"></div></article>
+    <div class="rankings-stack">
+      <article class="ranking-board"><div class="board-head"><span>Model</span><h3>Neutral-field Top 25</h3><small>Ordered by power rating — who wins on a neutral field today</small></div><div id="power-top25"></div></article>
+      <article class="ranking-board deserving"><div class="board-head"><span>Résumé</span><h3>Deserving Top 25</h3><small>2025 final AP baseline — updates with 2026 results</small></div><div id="deserving-top25"></div></article>
     </div>
   </section>
 
@@ -112,7 +113,7 @@
 
   <section id="view-matchup" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">Weekly matchup lab</span><h2>Simulate the game. Understand the edge.</h2>
-      <p class="sub">Head-to-head win probability, score, spread and total plus the model’s matchup-specific advantages. Compare individual books or use consensus probability with the best available price.</p></div>
+      <p class="sub">Head-to-head win probability, score, spread and total plus the model’s matchup-specific advantages. Any two teams, any venue. Posted lines for the real schedule now live on the Market board.</p></div>
     <div class="matchup-controls">
       <div class="picker" id="pickerA"></div>
       <div class="venue"><div class="venue-label">VENUE</div><div class="venue-opts">
@@ -122,7 +123,20 @@
       </div></div><div class="picker" id="pickerB"></div>
     </div>
     <div id="matchup-result"></div>
-    <div class="section-intro"><div><span class="eyebrow">Market board</span><h3>2026 games with posted lines</h3></div><div class="market-selects"><label>Market <select id="weekly-market"><option value="spread">Spread</option><option value="moneyline">Moneyline</option><option value="total">Over / under</option></select></label><label>Sportsbook <select id="weekly-book"></select></label></div></div>
+  </section>
+
+  <section id="view-market" class="view">
+    <div class="view-head editorial-head"><span class="eyebrow">Weekly market board</span><h2>Where the model and the book disagree.</h2>
+      <p class="sub">Every FBS game with a posted line, one week at a time. Compare an individual sportsbook or use consensus probability with the best available price. Games against FCS opposition are left off: the model does not rate those teams, so it has no honest number to price them with.</p></div>
+    <div class="market-toolbar">
+      <div class="seg" id="weekly-market">
+        <button class="seg-btn active" data-market="spread">Spread</button>
+        <button class="seg-btn" data-market="moneyline">Moneyline</button>
+        <button class="seg-btn" data-market="total">Over / under</button>
+      </div>
+      <label>Week <select id="weekly-week"></select></label>
+      <label>Sportsbook <select id="weekly-book"></select></label>
+    </div>
     <div id="market-tracking"></div>
     <div id="weekly-lines"></div>
   </section>
@@ -154,6 +168,6 @@
 </main>
 
 <footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Model probabilities are estimates. Sportsbook prices are dated snapshots, not live quotes. Gamble responsibly.</span></footer>
-<script src="app.js?v=36"></script>
+<script src="app.js?v=37"></script>
 </body>
 </html>

@@ -89,6 +89,14 @@
   const G6 = new Set(["American Athletic", "Conference USA", "Mid-American",
     "Mountain West", "Pac-12", "Sun Belt"]);
 
+  /* ratings.json carries the 136 FBS teams and nothing else, so membership in it IS
+     the FBS test. It matters on the market board: a third of the opening weekend is
+     FBS-vs-FCS, the model has no rating for the FCS side, and a row with no model
+     number on it is not a comparison - it is a sportsbook line with an empty column
+     next to it. Worse, the watchlist was surfacing those games as edges. */
+  const FBS = new Set((ratings.teams || []).map(t => t.team));
+  const isFBS = t => FBS.has(t);
+
   const baseVec = t => cur().model.teams[t];
   const rankNames = () => liveRatings().map(t => t.team);
   const ratingRow = () => Object.fromEntries(liveRatings().map(t => [t.team, t]));
@@ -2646,14 +2654,31 @@
     wireTeamLinks();
   }
 
-  function rankingRow(r) {
-    return `<div class="ranking-row"><span>${r.rank}</span>${teamMini(r.team)}</div>`;
+  /* Both boards used to be a plain list: rank, crest, name, twenty-five rows deep,
+     twice. A ranking is something people look AT rather than read - the top of it
+     should be visibly bigger than the bottom, and a team should be findable by its
+     mark before its name. So it is drawn the way a released poll is drawn: a numbered
+     grid of crests on the team's own colour, five across, with the top five given a
+     larger cell of their own. The number under each crest is what ordered it. */
+  function rankingGrid(rows, label, valueOf) {
+    return `<div class="rank-grid">${rows.map(r => `<button type="button"
+      class="rank-cell team-link${r.rank <= 5 ? " top" : ""}" data-team="${esc(r.team)}"
+      title="${esc(r.team)}" style="--t:${rgba(r.team, 1)};--tc:${color(r.team)}">
+      <span class="rank-crest"><img src="${logoURL(r.team)}" alt="" loading="lazy"></span>
+      <span class="rank-no">${r.rank}</span>
+      <span class="rank-name">${esc(abbr(r.team))}</span>
+      <span class="rank-val"><i>${label}</i>${valueOf(r)}</span>
+    </button>`).join("")}</div>`;
   }
   function renderPower() {
     const neutral = liveRatings().slice().sort((a, b) => b.power - a.power).slice(0, 25)
       .map((r, i) => ({ ...r, rank: i + 1 }));
-    document.getElementById("power-top25").innerHTML = neutral.map(r => rankingRow(r)).join("");
-    document.getElementById("deserving-top25").innerHTML = (editorial.prior_final_ap || []).map(r => rankingRow(r)).join("");
+    document.getElementById("power-top25").innerHTML =
+      rankingGrid(neutral, "Power", r => (r.power != null ? r.power.toFixed(3) : "—"));
+    document.getElementById("deserving-top25").innerHTML =
+      rankingGrid(editorial.prior_final_ap || [], "AP pts",
+        r => (r.points != null ? r.points.toLocaleString() : "—"));
+    wireTeamLinks();
   }
 
   let leaderKind = "players";
@@ -2961,20 +2986,60 @@
       <div class="room-grid">${cards}</div></div>`;
   }
 
+  /* The board's universe: FBS vs FBS, with a line posted. Everything downstream -
+     the book list, the week list, the watchlist count - is derived from this one
+     list so the strip cannot report a game the table refuses to show. */
+  const marketGames = (odds.weekly || []).filter(g =>
+    g.books && Object.keys(g.books).length && isFBS(g.home) && isFBS(g.away));
+
   function fillWeeklyBooks() {
     const sel = document.getElementById("weekly-book");
     if (sel.options.length) return;
-    const books = [...new Set((odds.weekly || []).flatMap(g => Object.keys(g.books || {})))].sort();
+    const books = [...new Set(marketGames.flatMap(g => Object.keys(g.books || {})))].sort();
     sel.add(new Option("Consensus + best price", "__consensus_best"));
     books.forEach(b => sel.add(new Option(b, b)));
     sel.value = "__consensus_best";
   }
+
+  /* Which week is "now". Weeks run Tuesday to Monday in practice, but the only
+     calendar the page has is the kickoff times themselves, so the current week is
+     the earliest one that has not finished - a week counts as live until six hours
+     after its last kickoff, which covers the game in progress. Once the last week
+     with a posted line is over the board stays on it rather than emptying out. */
+  function currentWeek() {
+    const weeks = [...new Set(marketGames.map(g => g.week))].sort((a, b) => a - b);
+    if (!weeks.length) return null;
+    const now = Date.now(), OVER = 6 * 3600 * 1000;
+    for (const w of weeks) {
+      const last = Math.max(...marketGames.filter(g => g.week === w)
+        .map(g => new Date(g.start).getTime() || 0));
+      if (now < last + OVER) return w;
+    }
+    return weeks[weeks.length - 1];
+  }
+  function fillWeeklyWeeks() {
+    const sel = document.getElementById("weekly-week");
+    if (sel.options.length) return;
+    const weeks = [...new Set(marketGames.map(g => g.week))].sort((a, b) => a - b);
+    weeks.forEach(w => {
+      const n = marketGames.filter(g => g.week === w).length;
+      sel.add(new Option(`Week ${w} (${n} game${n === 1 ? "" : "s"})`, String(w)));
+    });
+    sel.add(new Option("All weeks", "__all"));
+    const cw = currentWeek();
+    sel.value = cw == null ? "__all" : String(cw);
+  }
+
+  let weeklyMarket = "spread";
   function renderWeeklyLines() {
     const book = document.getElementById("weekly-book").value;
-    const market = document.getElementById("weekly-market").value;
+    const market = weeklyMarket;
+    const weekSel = document.getElementById("weekly-week").value;
+    const week = weekSel === "__all" ? null : Number(weekSel);
     const combined = book === "__consensus_best";
     const median = a => { const x = a.slice().sort((u, v) => u-v), n = x.length; return n % 2 ? x[(n-1)/2] : (x[n/2-1] + x[n/2]) / 2; };
-    const rows = (odds.weekly || []).filter(g => g.books && (combined || g.books[book])).map(g => {
+    const inWeek = marketGames.filter(g => week == null || g.week === week);
+    const rows = inWeek.filter(g => combined || g.books[book]).map(g => {
       let line = combined ? null : g.books[book];
       const r = predict(g.home, g.away, "A");
       if (!r) return { ...g, line, r: null, gap: null };
@@ -3024,9 +3089,10 @@
         gap: line.spread == null ? null : line.spread - modelSpread,
         marketValue: line.spread, modelValue: modelSpread };
     }).sort((a, b) => (a.week || 99) - (b.week || 99) || String(a.start).localeCompare(String(b.start)));
-    const candidates = marketTracking.current_candidates || [];
+    const candidates = (marketTracking.current_candidates || []).filter(c =>
+      isFBS(c.home) && isFBS(c.away) && (week == null || c.week === week));
     const checked = marketTracking.checked_at ? new Date(marketTracking.checked_at) : null;
-    renderMarketTracking(candidates, checked);
+    renderMarketTracking(candidates, checked, inWeek.length, week);
 
     const RULE = BET_RULES[market];
 
@@ -3063,6 +3129,12 @@
     }
     const marketLabel = market === "moneyline" ? "Moneyline" : market === "total" ? "Total" : "Spread";
     const bookLabel = combined ? "Best price" : book;
+    if (!rows.length) {
+      document.getElementById("weekly-lines").innerHTML = `<div class="weekly-empty">
+        <b>No FBS game in ${week == null ? "the schedule" : "week " + week} has a line at ${combined ? "any book" : esc(book)}.</b>
+        <small>Try another week or another sportsbook. Later weeks post prices as the season gets closer.</small></div>`;
+      return;
+    }
     document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span><span>Bet to place</span></div>${rows.map(g => {
       const lean = market === "total" ? (g.gap >= 0 ? "Over" : "Under") : (g.gap >= 0 ? g.home : g.away);
       const marketText = g.marketValue == null ? "—" : market === "moneyline" ? americanOdds(g.marketValue) : `${g.marketValue > 0 && market !== "total" ? "+" : ""}${Number(g.marketValue).toFixed(1)}`;
@@ -3077,7 +3149,7 @@
   /* The watchlist tile opens the games behind the number. It used to report only a
      count, which is useless - the question anyone has is which games are on it. */
   let watchlistOpen = false;
-  function renderMarketTracking(candidates, checked) {
+  function renderMarketTracking(candidates, checked, gameCount, week) {
     const host = document.getElementById("market-tracking");
     if (!checked) {
       host.innerHTML = `<div class="tracking-strip"><div><span class="eyebrow">Market data</span><b>No capture recorded</b><small>Historical lines stay visible; no price is treated as timestamped until a capture succeeds.</small></div></div>`;
@@ -3092,14 +3164,14 @@
         <div class="edge"><small>Gap</small><b>${c.gap == null ? "—" : (c.gap >= 0 ? "+" : "") + pct(c.gap, 1)}</b></div></div>`;
     }).join("");
     host.innerHTML = `<div class="tracking-strip${candidates.length ? " has-panel" : ""}">
-      <div><span class="eyebrow">Market data</span><b>${marketTracking.games_with_quotes || 0} games with posted lines</b><small>Last retrieved ${checked.toLocaleString()}</small></div>
+      <div><span class="eyebrow">Market data</span><b>${gameCount} FBS game${gameCount === 1 ? "" : "s"} with posted lines</b><small>${week == null ? "All weeks" : "Week " + week} · last retrieved ${checked.toLocaleString()}</small></div>
       <button type="button" class="watch-toggle${watchlistOpen ? " open" : ""}" id="watch-toggle" aria-expanded="${watchlistOpen}"${candidates.length ? "" : " disabled"}>
         <span>Watchlist</span><b>${candidates.length}</b><small>${candidates.length ? (watchlistOpen ? "Hide the games" : "Show the games") : "No games on the watchlist"}</small></button>
       </div>${candidates.length ? `<div class="watch-panel"${watchlistOpen ? "" : " hidden"}>${list}</div>` : ""}`;
     const toggle = document.getElementById("watch-toggle");
     if (toggle) toggle.addEventListener("click", () => {
       watchlistOpen = !watchlistOpen;
-      renderMarketTracking(candidates, checked);
+      renderMarketTracking(candidates, checked, gameCount, week);
     });
   }
 
@@ -3120,7 +3192,12 @@
   document.getElementById("leader-class").addEventListener("change", renderLeaders);
   document.getElementById("leader-team").addEventListener("change", renderLeaders);
   document.getElementById("weekly-book").addEventListener("change", renderWeeklyLines);
-  document.getElementById("weekly-market").addEventListener("change", renderWeeklyLines);
+  document.getElementById("weekly-week").addEventListener("change", renderWeeklyLines);
+  document.querySelectorAll("#weekly-market .seg-btn").forEach(b => b.addEventListener("click", () => {
+    weeklyMarket = b.dataset.market;
+    document.querySelectorAll("#weekly-market .seg-btn").forEach(x => x.classList.toggle("active", x === b));
+    renderWeeklyLines();
+  }));
 
   /* ---------- boot ---------- */
   function render(view) {
@@ -3132,11 +3209,12 @@
     else if (view === "ratings") renderRatings();
     else if (view === "players") renderPlayers();
     else if (view === "power") renderPower();
+    else if (view === "market") renderWeeklyLines();
     else if (view === "leaders") renderLeaders();
   }
   function renderAll() {
     fillConfSelect(); fillPlayerSelects(); fillRatingSelects();
-    fillScenarioSelects(); fillLeaderControls(); fillWeeklyBooks();
+    fillScenarioSelects(); fillLeaderControls(); fillWeeklyBooks(); fillWeeklyWeeks();
     renderDash(); renderPlayoff(); renderScenario(); renderMatchup(); renderTeam();
     renderRatings(); renderPlayers(); renderFutures(); renderOutcomeBands();
     renderPower(); renderLeaders(); renderWeeklyLines();
