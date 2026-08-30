@@ -5,8 +5,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from scripts.capture_market_snapshot import (flatten, implied, latest_quotes,
-                                             model_probability, quote_key,
-                                             quote_value)
+                                             model_probability, publish_finals,
+                                             quote_key, quote_value)
 from war_model.materialize_availability import current_rows
 
 
@@ -45,6 +45,23 @@ class MarketTrackingTests(unittest.TestCase):
         p = model_probability(model, "A", "B", True)
         q = model_probability(model, "B", "A", True)
         self.assertAlmostEqual(p+q, 1.0, places=12)
+
+    def test_publish_finals_only_writes_completed_games(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            schedule = Path(tmp) / "schedule.json"
+            schedule.write_text(json.dumps([
+                {"id": 1, "h": "UNLV", "a": "Memphis"},
+                {"id": 2, "h": "A", "a": "B"},
+            ]))
+            changed = publish_finals([
+                {"id": 1, "completed": True, "homePoints": 21, "awayPoints": 27},
+                {"id": 2, "completed": False, "homePoints": 7, "awayPoints": 3},
+            ], schedule)
+            rows = json.loads(schedule.read_text())
+            self.assertEqual(changed, 1)
+            self.assertEqual(rows[0], {
+                "id": 1, "h": "UNLV", "a": "Memphis", "f": 1, "hp": 21, "ap": 27})
+            self.assertNotIn("f", rows[1])
 
     def test_availability_events_materialize_latest_state(self):
         with tempfile.TemporaryDirectory() as tmp:

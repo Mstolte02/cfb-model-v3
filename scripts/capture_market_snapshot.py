@@ -35,6 +35,7 @@ SETTLEMENTS = LEDGER_DIR / f"settlements_{YEAR}.jsonl"
 STATUS = LEDGER_DIR / "status.json"
 ODDS = ROOT / "viz" / "data" / "odds.json"
 TRACKING = ROOT / "viz" / "data" / "market_tracking.json"
+SCHEDULE = ROOT / "viz" / "data" / "schedule.json"
 MODEL = ROOT / "viz" / "data" / "model_v4.json"
 HISTORICAL = ROOT / "audit" / "book_shopping_backtest.json"
 AVAILABILITY = ROOT / "war_model" / "availability_events_2026.csv"
@@ -82,9 +83,8 @@ def load_env() -> None:
             os.environ.setdefault(key.strip(), value.strip().strip("\"'"))
 
 
-def fetch_lines(key: str) -> list[dict]:
-    params = {"year": YEAR, "seasonType": "regular"}
-    url = f"{BASE}/lines?{urllib.parse.urlencode(params)}"
+def fetch_cfbd(key: str, endpoint: str, params: dict) -> list[dict]:
+    url = f"{BASE}{endpoint}?{urllib.parse.urlencode(params)}"
     if os.name == "nt":
         config = (f'url = "{url}"\nheader = "Authorization: Bearer {key}"\n'
                   'header = "Accept: application/json"\nsilent\nshow-error\n'
@@ -102,6 +102,43 @@ def fetch_lines(key: str) -> list[dict]:
         "User-Agent": "cfb-model-v3-market-capture/1.0"})
     with urllib.request.urlopen(request, timeout=45) as response:
         return json.load(response)
+
+
+def fetch_lines(key: str) -> list[dict]:
+    return fetch_cfbd(key, "/lines", {"year": YEAR, "seasonType": "regular"})
+
+
+def fetch_games(key: str) -> list[dict]:
+    """Fetch the authoritative completed flag and final scores.
+
+    The lines endpoint is intentionally about prices. Its score fields are not a
+    reliable completion signal, so final-score publishing uses /games instead.
+    """
+    return fetch_cfbd(key, "/games", {
+        "year": YEAR, "seasonType": "regular", "division": "fbs"})
+
+
+def publish_finals(games: list[dict], schedule_path: Path = SCHEDULE) -> int:
+    """Merge completed CFBD scores into the compact schedule used by the site."""
+    if not schedule_path.exists():
+        return 0
+    schedule = json.loads(schedule_path.read_text(encoding="utf-8"))
+    by_id = {int(g["id"]): g for g in games if g.get("id") is not None}
+    changed = 0
+    for row in schedule:
+        game = by_id.get(int(row["id"])) if row.get("id") is not None else None
+        if not game or not game.get("completed"):
+            continue
+        hp, ap = game.get("homePoints"), game.get("awayPoints")
+        if hp is None or ap is None:
+            continue
+        final = {"f": 1, "hp": int(hp), "ap": int(ap)}
+        if any(row.get(key) != value for key, value in final.items()):
+            row.update(final)
+            changed += 1
+    if changed:
+        schedule_path.write_text(json.dumps(schedule), encoding="utf-8")
+    return changed
 
 
 def flatten(raw: list[dict], captured_at: str) -> list[dict]:
@@ -245,7 +282,7 @@ def availability_summary() -> dict:
             "last_event_at": max((r.get("observed_at") or "" for r in rows), default=None)}
 
 
-def run(raw: list[dict], now: datetime) -> dict:
+def run(raw: list[dict], now: datetime, games: list[dict] | None = None) -> dict:
     LEDGER_DIR.mkdir(parents=True, exist_ok=True)
     captured_at = iso(now)
     current = flatten(raw, captured_at)
@@ -324,13 +361,17 @@ def run(raw: list[dict], now: datetime) -> dict:
 
     existing_settlements = {(int(s["game_id"]), s["side"])
                             for s in read_jsonl(SETTLEMENTS)}
-    raw_by_id = {int(g["id"]): g for g in raw}
+    result_rows = games if games is not None else raw
+    raw_by_id = {int(g["id"]): g for g in result_rows}
     new_settlements = []
     for entry in all_entries:
         key = (int(entry["game_id"]), entry["side"])
         game = raw_by_id.get(key[0], {})
-        hp, ap = game.get("homeScore"), game.get("awayScore")
-        if key in existing_settlements or hp is None or ap is None:
+        hp = game.get("homePoints", game.get("homeScore"))
+        ap = game.get("awayPoints", game.get("awayScore"))
+        completed = game.get("completed")
+        if (key in existing_settlements or hp is None or ap is None
+                or completed is False):
             continue
         close_lines, close_meta = valid_close(events, checks, key[0], parse_time(entry["start"]))
         close_home = (statistics.median(no_vig_home(r) for r in close_lines)
@@ -356,6 +397,7 @@ def run(raw: list[dict], now: datetime) -> dict:
         "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"}
     ODDS.write_text(json.dumps(odds, indent=1, allow_nan=False))
 
+    finals_published = publish_finals(games) if games is not None else 0
     tracking = {"checked_at": captured_at, "source": "CFBD /lines",
         "timestamp_semantics": "retrieval time, not sportsbook quote time",
         "quote_events": len(events), "successful_checks": len(checks),
@@ -368,6 +410,7 @@ def run(raw: list[dict], now: datetime) -> dict:
         "entries": len(all_entries), "new_entries_this_check": len(new_entries),
         "settlements": len(settlements), "qualified_clv_observations": len(qualified_clv),
         "mean_consensus_clv": statistics.mean(qualified_clv) if qualified_clv else None,
+        "final_scores_published_this_check": finals_published,
         "availability": availability_summary()}
     TRACKING.write_text(json.dumps(tracking, indent=2, allow_nan=False))
     STATUS.write_text(json.dumps(check, indent=2))
@@ -391,10 +434,11 @@ def main() -> None:
             return
         raise RuntimeError("CFBD_API_KEY is not configured")
     now = utcnow()
-    tracking = run(fetch_lines(key), now)
+    tracking = run(fetch_lines(key), now, fetch_games(key))
     print(f"Market check {tracking['checked_at']}: {tracking['games_with_quotes']} games, "
           f"{tracking['changed_quotes_this_check']} changed quotes, "
-          f"{len(tracking['current_candidates'])} research candidates.")
+          f"{len(tracking['current_candidates'])} research candidates, "
+          f"{tracking['final_scores_published_this_check']} new final scores.")
     print(f"-> {QUOTES}\n-> {TRACKING}")
 
 

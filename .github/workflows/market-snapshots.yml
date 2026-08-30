@@ -39,7 +39,7 @@ jobs:
           fi
           git config user.name "cfb-market-tracker[bot]"
           git config user.email "cfb-market-tracker[bot]@users.noreply.github.com"
-          git add data/market_snapshots viz/data/odds.json viz/data/market_tracking.json
+          git add data/market_snapshots viz/data/odds.json viz/data/market_tracking.json viz/data/schedule.json
           git commit -m "Capture 2026 market snapshot"
           git push
           echo "changed=true" >> "$GITHUB_OUTPUT"
