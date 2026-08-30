@@ -311,15 +311,32 @@ def export_schedule():
 
     The playoff re-simulation only needs {h, a, n}; the team page also wants to show
     the slate in order, so week/date/conference-game ride along.
+
+    FINAL SCORES AND THE CFBD GAME ID RIDE ALONG TOO, for the bet tracker. The id is
+    what joins a game to its posted line in odds.json, and the scores are what settle
+    it. Before this the export dropped both, so the page had no way to know a game had
+    even been played - which is why the tracker grades in the browser off the same
+    predict() and BET_RULES the Market board flags with, rather than being handed a
+    second, separately-computed answer that could drift from what the board showed.
+
+    `f` is CFBD's completed flag rather than "points are present", because a postponed
+    or abandoned game can carry a partial score.
     """
     raw = json.load(open(ROOT / "data" / "raw" / "schedule_2026.json"))
-    games = [{"h": g["homeTeam"], "a": g["awayTeam"],
-              "n": 1 if g.get("neutralSite") else 0,
-              "w": g.get("week"), "d": (g.get("startDate") or "")[:10],
-              "c": 1 if g.get("conferenceGame") else 0,
-              "v": g.get("venue")} for g in raw]
+    games = []
+    for g in raw:
+        row = {"h": g["homeTeam"], "a": g["awayTeam"],
+               "n": 1 if g.get("neutralSite") else 0,
+               "w": g.get("week"), "d": (g.get("startDate") or "")[:10],
+               "c": 1 if g.get("conferenceGame") else 0,
+               "v": g.get("venue"), "id": g.get("id")}
+        hp, ap = g.get("homePoints"), g.get("awayPoints")
+        if g.get("completed") and hp is not None and ap is not None:
+            row.update(f=1, hp=int(hp), ap=int(ap))
+        games.append(row)
     (VIZ / "schedule.json").write_text(json.dumps(games))
-    print(f"-> {VIZ / 'schedule.json'} ({len(games)} games)")
+    final = sum(1 for g in games if g.get("f"))
+    print(f"-> {VIZ / 'schedule.json'} ({len(games)} games, {final} final)")
 
 
 def export_players():

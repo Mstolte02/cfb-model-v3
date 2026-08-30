@@ -34,6 +34,7 @@
   <nav class="section-nav" data-hub-nav="weekly">
     <button class="tab" data-view="matchup">Matchup lab</button>
     <button class="tab" data-view="market">Market board</button>
+    <button class="tab" data-view="tracking">Tracking Mark's Model</button>
     <button class="tab" data-view="power">Power rankings</button>
   </nav>
   <nav class="section-nav" data-hub-nav="people">
@@ -141,6 +142,22 @@
     </div>
     <div id="market-tracking"></div>
     <div id="weekly-lines"></div>
+  </section>
+
+  <section id="view-tracking" class="view">
+    <div class="view-head editorial-head"><span class="eyebrow">Flat <b id="tk-unit">$50</b> a bet</span><h2>What the flagged bets actually did.</h2>
+      <p class="sub">Every game the Market board flagged, settled once it was played, staked the same every time. The 2026 season is graded in this page from the same rule the board flags with, so a bet cannot show up here that the board did not show. Below it, the same three rules run over the seasons that have already finished.</p></div>
+    <div class="dash-toolbar">
+      <div class="seg" id="tk-market">
+        <button class="seg-btn active" data-market="all">All markets</button>
+        <button class="seg-btn" data-market="spread">Spread</button>
+        <button class="seg-btn" data-market="total">Over / under</button>
+        <button class="seg-btn" data-market="moneyline">Moneyline</button>
+      </div>
+      <span class="spacer"></span><span id="tk-count" class="dash-count"></span>
+    </div>
+    <div id="tk-live"></div>
+    <div id="tk-backtest"></div>
   </section>
 
   <section id="view-scenario" class="view">

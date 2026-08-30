@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoff, model, odds, editorial, bettingValidation, warValidity, marketTracking] = await Promise.all([
+  const [teams, schedule, players, ratings, playoff, model, odds, editorial, bettingValidation, warValidity, marketTracking, betTracking] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -35,6 +35,7 @@
     fetchJSON("data/betting_validation.json").catch(() => ({ markets: {} })),
     fetchJSON("data/war_validity.json").catch(() => ({})),
     fetchJSON("data/market_tracking.json").catch(() => ({})),
+    fetchJSON("data/bet_tracking.json").catch(() => null),
   ]);
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
   // two-deep; it was a knowingly worse backtest kept as an alternative view, and it is
@@ -2537,6 +2538,13 @@
     // moneyline on purpose: a priced underdog the model likes is still a bet, so
     // the more-likely-than-not rule that governs futures does not apply here.
     spread:    { minModelP: 0,   minGap: 8 },
+    // Raising this gate to 10 was considered and rejected on the evidence. Over
+    // 2022-25 the model's totals go 53.1% and +1.31% ROI at this 2-point gate, 52.3%
+    // at 6, and 51.3% and -1.97% at 10: a higher bar takes fewer, more extreme
+    // disagreements and they are not better ones. Break-even at -110 is 52.4% and the
+    // curve crosses it in both directions across the range, so no threshold here is a
+    // demonstrated edge - 2 is kept because it is where the sample is largest, not
+    // because it is proven. The Tracking tab plots the whole curve.
     total:     { minModelP: 0,   minGap: 2 },
     moneyline: { minModelP: 0,   minGap: .20 }
   };
@@ -3058,16 +3066,17 @@
     sel.value = cw == null ? "__all" : String(cw);
   }
 
-  let weeklyMarket = "spread";
-  function renderWeeklyLines() {
-    const book = document.getElementById("weekly-book").value;
-    const market = weeklyMarket;
-    const weekSel = document.getElementById("weekly-week").value;
-    const week = weekSel === "__all" ? null : Number(weekSel);
+  /* One row per game for one market: the book's number, the model's, and the gap
+     between them.
+
+     LIFTED OUT OF renderWeeklyLines SO THE TRACKING TAB GRADES THE ROWS THE BOARD
+     DRAWS. The tracker's whole claim is that it settles the bets the board flagged,
+     and a second copy of this arithmetic is a second answer waiting to disagree with
+     the first - the tab would go on reporting a record for bets nobody was shown. */
+  function marketRows(games, market, book) {
     const combined = book === "__consensus_best";
     const median = a => { const x = a.slice().sort((u, v) => u-v), n = x.length; return n % 2 ? x[(n-1)/2] : (x[n/2-1] + x[n/2]) / 2; };
-    const inWeek = marketGames.filter(g => week == null || g.week === week);
-    const rows = inWeek.filter(g => combined || g.books[book]).map(g => {
+    return games.filter(g => combined || g.books[book]).map(g => {
       let line = combined ? null : g.books[book];
       const r = predict(g.home, g.away, "A");
       if (!r) return { ...g, line, r: null, gap: null };
@@ -3116,45 +3125,59 @@
       return { ...g, line, r, modelSpread, consensus: line.spread,
         gap: line.spread == null ? null : line.spread - modelSpread,
         marketValue: line.spread, modelValue: modelSpread };
-    }).sort((a, b) => (a.week || 99) - (b.week || 99) || String(a.start).localeCompare(String(b.start)));
+    });
+  }
+
+  /* Outright disagreement: the model and the market pick different winners. A gap
+     threshold alone misses these. A model that has the home team at 52% against a
+     market at 45% is calling the other side of the game on a 7-point gap, which no
+     sensible spread or moneyline gate would pass, and that is the strongest kind of
+     disagreement the board can show. It is always a bet. */
+  function picksOtherSide(g, market) {
+    if (market === "moneyline") {
+      if (g.modelValue == null || g.marketHomeP == null) return false;
+      return (g.r.pA - .5) * (g.marketHomeP - .5) < 0;
+    }
+    if (market === "spread") {
+      if (g.modelSpread == null || g.consensus == null) return false;
+      return g.modelSpread * g.consensus < 0;
+    }
+    return false;
+  }
+
+  /* The bet the board would print, or null for no bet. This IS the rule - both the
+     board's flag and the tracker's record come from this one function. */
+  function betToPlace(g, market) {
+    const RULE = BET_RULES[market];
+    if (g.gap == null || g.marketValue == null) return null;
+    const flip = picksOtherSide(g, market);
+    if (!flip && Math.abs(g.gap) < RULE.minGap) return null;
+    if (market === "total") return `${g.gap >= 0 ? "Over" : "Under"} ${Number(g.marketValue).toFixed(1)}`;
+    const home = g.gap >= 0, side = home ? g.home : g.away;
+    if (market === "moneyline") {
+      if (g.modelValue == null) return null;
+      if (!flip && g.modelValue < RULE.minModelP) return null;
+      return `${esc(abbr(side))} ${americanOdds(g.marketValue)}`;
+    }
+    const num = home ? g.marketValue : -g.marketValue;
+    return `${esc(abbr(side))} ${num > 0 ? "+" : ""}${num.toFixed(1)}`;
+  }
+
+  let weeklyMarket = "spread";
+  function renderWeeklyLines() {
+    const book = document.getElementById("weekly-book").value;
+    const market = weeklyMarket;
+    const weekSel = document.getElementById("weekly-week").value;
+    const week = weekSel === "__all" ? null : Number(weekSel);
+    const combined = book === "__consensus_best";
+    const inWeek = marketGames.filter(g => week == null || g.week === week);
+    const rows = marketRows(inWeek, market, book)
+      .sort((a, b) => (a.week || 99) - (b.week || 99) || String(a.start).localeCompare(String(b.start)));
     const candidates = (marketTracking.current_candidates || []).filter(c =>
       isFBS(c.home) && isFBS(c.away) && (week == null || c.week === week));
     const checked = marketTracking.checked_at ? new Date(marketTracking.checked_at) : null;
     renderMarketTracking(candidates, checked, inWeek.length, week);
 
-    const RULE = BET_RULES[market];
-
-    // Outright disagreement: the model and the market pick different winners. A gap
-    // threshold alone misses these. A model that has the home team at 52% against a
-    // market at 45% is calling the other side of the game on a 7-point gap, which no
-    // sensible spread or moneyline gate would pass, and that is the strongest kind of
-    // disagreement the board can show. It is always a bet.
-    function picksOtherSide(g) {
-      if (market === "moneyline") {
-        if (g.modelValue == null || g.marketHomeP == null) return false;
-        return (g.r.pA - .5) * (g.marketHomeP - .5) < 0;
-      }
-      if (market === "spread") {
-        if (g.modelSpread == null || g.consensus == null) return false;
-        return g.modelSpread * g.consensus < 0;
-      }
-      return false;
-    }
-
-    function betToPlace(g) {
-      if (g.gap == null || g.marketValue == null) return null;
-      const flip = picksOtherSide(g);
-      if (!flip && Math.abs(g.gap) < RULE.minGap) return null;
-      if (market === "total") return `${g.gap >= 0 ? "Over" : "Under"} ${Number(g.marketValue).toFixed(1)}`;
-      const home = g.gap >= 0, side = home ? g.home : g.away;
-      if (market === "moneyline") {
-        if (g.modelValue == null) return null;
-        if (!flip && g.modelValue < RULE.minModelP) return null;
-        return `${esc(abbr(side))} ${americanOdds(g.marketValue)}`;
-      }
-      const num = home ? g.marketValue : -g.marketValue;
-      return `${esc(abbr(side))} ${num > 0 ? "+" : ""}${num.toFixed(1)}`;
-    }
     const marketLabel = market === "moneyline" ? "Moneyline" : market === "total" ? "Total" : "Spread";
     const bookLabel = combined ? "Best price" : book;
     if (!rows.length) {
@@ -3168,8 +3191,8 @@
       const marketText = g.marketValue == null ? "—" : market === "moneyline" ? americanOdds(g.marketValue) : `${g.marketValue > 0 && market !== "total" ? "+" : ""}${Number(g.marketValue).toFixed(1)}`;
       const modelText = g.modelValue == null ? "—" : market === "moneyline" ? pct(g.modelValue, 1) : `${g.modelValue > 0 && market === "spread" ? "+" : ""}${g.modelValue.toFixed(1)}`;
       const gapText = g.gap == null ? "—" : `${esc(market === "total" ? lean : abbr(lean))} ${market === "moneyline" ? pct(Math.abs(g.gap), 1) : Math.abs(g.gap).toFixed(1)}`;
-      const bet = betToPlace(g);
-      const flip = bet ? picksOtherSide(g) : false;
+      const bet = betToPlace(g, market);
+      const flip = bet ? picksOtherSide(g, market) : false;
       return `<div class="weekly-row${bet ? (flip ? " bet flip" : " bet") : ""}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
     }).join("")}</div>`;
   }
@@ -3228,8 +3251,188 @@
   }));
 
   /* ---------- boot ---------- */
+  /* =======================================================================
+     TRACKING MARK'S MODEL
+     =======================================================================
+     Settles the bets the Market board flagged, at a flat stake.
+
+     THE STAKE IS FLAT ON PURPOSE. A flat stake is the only one under which ROI means
+     "return per dollar risked"; size the bets by confidence and the headline number
+     stops being comparable between markets, and a good record can be one lucky big
+     bet. Pushes return the stake, so they are not risked capital and sit outside both
+     the hit rate and the ROI denominator - counting them as bets flatters everything.
+
+     Spreads and totals settle at -110, which is what the board's prices are quoted at;
+     moneylines settle at the price actually shown. Break-even at -110 is 52.38%, and
+     that line is drawn on the tab because a 51% record reads like a win until you see
+     it. */
+  const UNIT = (betTracking && betTracking.unit) || 50;
+  const BREAK_EVEN_110 = 110 / 210;
+  const americanProfit = o => o > 0 ? o / 100 : 100 / -o;
+
+  /* Result of one flagged bet: +profit in units, 0 for a push, -1 for a loss.
+     Returns null when the game has no final score yet. */
+  function settleBet(g, market, home, away) {
+    if (g.marketValue == null || g.gap == null) return null;
+    const margin = home - away, total = home + away;
+    if (market === "moneyline") {
+      const takeHome = g.gap >= 0;
+      if (margin === 0) return 0;
+      const won = takeHome ? margin > 0 : margin < 0;
+      return won ? americanProfit(g.marketValue) : -1;
+    }
+    const edge = market === "total"
+      ? (g.gap >= 0 ? total - g.marketValue : g.marketValue - total)
+      : (g.gap >= 0 ? margin + g.marketValue : -margin - g.marketValue);
+    return edge > 0 ? 100 / 110 : edge < 0 ? -1 : 0;
+  }
+
+  /* Every 2026 game that has been played, keyed by the CFBD id the odds feed uses.
+     export_viz puts `f`/`hp`/`ap` on the schedule; before that the page could not
+     tell a played game from an upcoming one. */
+  const finals = new Map(schedule.filter(g => g.f && g.id != null)
+    .map(g => [g.id, { home: g.hp, away: g.ap, week: g.w, d: g.d }]));
+
+  /* The live record: flag with betToPlace, settle with the final score. Same rows
+     the board draws, so the two can never disagree. */
+  function liveBets(market) {
+    const played = marketGames.filter(g => finals.has(g.id));
+    return marketRows(played, market, "__consensus_best").map(g => {
+      const bet = betToPlace(g, market);
+      if (!bet) return null;
+      const f = finals.get(g.id);
+      const profit = settleBet(g, market, f.home, f.away);
+      if (profit == null) return null;
+      return { ...g, market, bet, profit, score: `${f.away}–${f.home}`, played: f };
+    }).filter(Boolean);
+  }
+
+  function tally(bets) {
+    const won = bets.filter(b => b.profit > 0).length;
+    const push = bets.filter(b => b.profit === 0).length;
+    const lost = bets.length - won - push;
+    const decided = won + lost;
+    const units = bets.reduce((a, b) => a + b.profit, 0);
+    return { bets: bets.length, won, lost, push, decided,
+      hit: decided ? won / decided : null,
+      units, wagered: decided * UNIT, profit: units * UNIT,
+      roi: decided ? units / decided : null };
+  }
+
+  const money = v => `${v < 0 ? "−" : ""}$${Math.abs(v).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+  const signedPct = v => v == null ? "—" : `${v >= 0 ? "+" : "−"}${(Math.abs(v) * 100).toFixed(1)}%`;
+
+  function tileRow(t) {
+    const cls = v => v > 0 ? " good" : v < 0 ? " bad" : "";
+    return `<div class="tk-tiles">
+      <div class="tk-tile"><small>Bets settled</small><b>${t.bets}</b><i>${t.won}–${t.lost}${t.push ? `–${t.push}` : ""}</i></div>
+      <div class="tk-tile"><small>Wagered</small><b>${money(t.wagered)}</b><i>${money(UNIT)} a bet</i></div>
+      <div class="tk-tile${cls(t.profit)}"><small>Profit</small><b>${money(t.profit)}</b><i>${t.units >= 0 ? "+" : "−"}${Math.abs(t.units).toFixed(2)} units</i></div>
+      <div class="tk-tile${cls(t.roi)}"><small>ROI</small><b>${signedPct(t.roi)}</b><i>per dollar risked</i></div>
+      <div class="tk-tile${t.hit == null ? "" : cls(t.hit - BREAK_EVEN_110)}"><small>Hit rate</small><b>${t.hit == null ? "—" : (t.hit * 100).toFixed(1) + "%"}</b><i>break-even ${(BREAK_EVEN_110 * 100).toFixed(1)}%</i></div>
+    </div>`;
+  }
+
+  let trackMarket = "all";
+  const MKTS = ["spread", "total", "moneyline"];
+  const MKT_LABEL = { spread: "Spread", total: "Over / under", moneyline: "Moneyline" };
+
+  function renderTracking() {
+    const picked = trackMarket === "all" ? MKTS : [trackMarket];
+    const live = picked.flatMap(liveBets);
+    const t = tally(live);
+    document.getElementById("tk-unit").textContent = money(UNIT);
+    document.getElementById("tk-count").textContent =
+      `${finals.size} of ${schedule.length} games played`;
+
+    const liveHost = document.getElementById("tk-live");
+    if (!live.length) {
+      // The 2026 season has not settled a flagged bet yet. Say that plainly rather
+      // than drawing a row of zeroes, which reads like a record of nothing but losses.
+      liveHost.innerHTML = `<div class="tk-empty"><b>No settled bets yet${finals.size ? "" : " — the 2026 season has not kicked off"}.</b>
+        <small>${finals.size
+          ? `${finals.size} game${finals.size === 1 ? " has" : "s have"} finished, but none of them was a flagged bet in ${trackMarket === "all" ? "any market" : MKT_LABEL[trackMarket].toLowerCase()}.`
+          : "This fills in on its own as results land. Until then the record below is the backtest, not a live account."}</small></div>`;
+    } else {
+      const rows = live.sort((a, b) => (b.week || 0) - (a.week || 0)).map(b => `
+        <div class="tk-row ${b.profit > 0 ? "win" : b.profit < 0 ? "loss" : "push"}">
+          <div><small>WK ${b.week}</small>${teamMini(b.away)}<i>at</i>${teamMini(b.home)}</div>
+          <div><small>${MKT_LABEL[b.market]}</small><b>${b.bet}</b></div>
+          <div><small>Final</small><b>${b.score}</b></div>
+          <div class="tk-pl"><small>${b.profit > 0 ? "Won" : b.profit < 0 ? "Lost" : "Push"}</small><b>${money(b.profit * UNIT)}</b></div>
+        </div>`).join("");
+      liveHost.innerHTML = `<div class="tk-panel"><h3>2026, live</h3>${tileRow(t)}
+        <div class="tk-list">${rows}</div></div>`;
+    }
+
+    // ---- the settled seasons -------------------------------------------------
+    const host = document.getElementById("tk-backtest");
+    if (!betTracking) { host.innerHTML = ""; return; }
+    const bt = betTracking.backtest;
+    const sel = picked.map(m => bt.markets[m]).filter(Boolean);
+    const agg = sel.reduce((a, s) => ({
+      bets: a.bets + s.bets, won: a.won + s.won, lost: a.lost + s.lost,
+      push: a.push + s.push, units: a.units + s.units,
+      wagered: a.wagered + s.wagered, profit: a.profit + s.profit,
+    }), { bets: 0, won: 0, lost: 0, push: 0, units: 0, wagered: 0, profit: 0 });
+    const dec = agg.won + agg.lost;
+    const btT = { ...agg, decided: dec, hit: dec ? agg.won / dec : null,
+                  roi: dec ? agg.units / dec : null };
+
+    const byMarket = MKTS.map(m => {
+      const s = bt.markets[m];
+      if (!s) return "";
+      const on = picked.includes(m);
+      return `<tr class="${on ? "" : "dim"}"><td>${MKT_LABEL[m]}</td><td class="num">gap ≥ ${s.min_gap}</td>
+        <td class="num">${s.bets}</td><td class="num">${s.won}–${s.lost}${s.push ? `–${s.push}` : ""}</td>
+        <td class="num">${s.hit_rate == null ? "—" : (s.hit_rate * 100).toFixed(1) + "%"}</td>
+        <td class="num ${s.profit > 0 ? "good" : s.profit < 0 ? "bad" : ""}">${money(s.profit)}</td>
+        <td class="num ${s.roi > 0 ? "good" : s.roi < 0 ? "bad" : ""}">${signedPct(s.roi)}</td></tr>`;
+    }).join("");
+
+    // The curve is the point of the panel: one number at one gate invites the reading
+    // that the gate was picked because it was good. Showing the whole range shows that
+    // the record wanders either side of break-even almost everywhere.
+    const curveFor = trackMarket === "all" ? "total" : trackMarket;
+    const curve = (bt.curves && bt.curves[curveFor]) || [];
+    const gate = bt.markets[curveFor] ? bt.markets[curveFor].min_gap : null;
+    const maxAbs = Math.max(...curve.map(c => Math.abs(c.roi || 0)), .02);
+    const bars = curve.map(c => {
+      const roi = c.roi || 0, h = Math.abs(roi) / maxAbs * 46;
+      return `<div class="tk-col${c.gap === gate ? " live" : ""}" title="gap ≥ ${c.gap}: ${c.bets} bets, ${signedPct(c.roi)} ROI, ${money(c.profit)}">
+        <div class="tk-bar-wrap">${roi >= 0
+          ? `<div class="tk-bar up" style="height:${h}px"></div><div class="tk-bar-sp" style="height:${46 - h}px"></div>`
+          : `<div class="tk-bar-sp" style="height:46px"></div>`}</div>
+        <div class="tk-bar-wrap down">${roi < 0 ? `<div class="tk-bar dn" style="height:${h}px"></div>` : ""}</div>
+        <span>${c.gap}</span></div>`;
+    }).join("");
+
+    host.innerHTML = `<div class="tk-panel alt">
+      <h3>${bt.seasons[0]}–${bt.seasons[bt.seasons.length - 1]}, backtested</h3>
+      <p class="tk-sub">Not a live record. The same three rules run over the expanding-window
+      backtest, where no season is used to fit its own predictions. It is what the rule would
+      have returned, staked flat at ${money(UNIT)}, had it been followed throughout.</p>
+      ${tileRow(btT)}
+      <table class="tk-table"><thead><tr><th>Market</th><th class="num">Gate</th><th class="num">Bets</th>
+        <th class="num">Record</th><th class="num">Hit</th><th class="num">Profit</th><th class="num">ROI</th></tr></thead>
+        <tbody>${byMarket}</tbody></table>
+      <h4>${MKT_LABEL[curveFor]}: what every other gate would have returned</h4>
+      <div class="tk-curve">${bars}</div>
+      <p class="tk-foot">ROI by minimum gap, ${bt.seasons[0]}–${bt.seasons[bt.seasons.length - 1]};
+      the highlighted bar is the gate in force. Above the line is profit, below it loss.
+      ${curveFor === "total" ? "Totals cross break-even in both directions across the range, which is the honest reading: no gate here is a demonstrated edge." : "A gate that looks good at one threshold and bad at its neighbours is noise, not a finding."}</p>
+    </div>`;
+  }
+
+  document.querySelectorAll("#tk-market .seg-btn").forEach(b => b.addEventListener("click", () => {
+    trackMarket = b.dataset.market;
+    document.querySelectorAll("#tk-market .seg-btn").forEach(x => x.classList.toggle("active", x === b));
+    renderTracking();
+  }));
+
   function render(view) {
-    if (view === "dash") renderDash();
+    if (view === "tracking") renderTracking();
+    else if (view === "dash") renderDash();
     else if (view === "playoff") renderPlayoff();
     else if (view === "matchup") renderMatchup();
     else if (view === "team") renderTeam();
@@ -3245,7 +3448,7 @@
     fillScenarioSelects(); fillLeaderControls(); fillWeeklyBooks(); fillWeeklyWeeks();
     renderDash(); renderPlayoff(); renderScenario(); renderMatchup(); renderTeam();
     renderRatings(); renderPlayers(); renderFutures(); renderOutcomeBands();
-    renderPower(); renderLeaders(); renderWeeklyLines();
+    renderPower(); renderLeaders(); renderWeeklyLines(); renderTracking();
   }
   // Check the client-side power reproduces the exported column before anyone edits
   // anything. A scenario is only meaningful as a difference from the published

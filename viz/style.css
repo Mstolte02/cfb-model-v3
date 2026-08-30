@@ -1022,3 +1022,67 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
   background: var(--panel); text-align: center; }
 .weekly-empty b { display: block; font: 700 16px/1.35 var(--sans); }
 .weekly-empty small { display: block; margin-top: 7px; color: var(--muted); font: 12px/1.5 var(--sans); }
+
+/* ---------- Tracking Mark's Model ---------- */
+.tk-panel { border: 1px solid var(--line); border-radius: 16px; background: var(--panel);
+  padding: 22px 24px 24px; margin-bottom: 20px; }
+.tk-panel.alt { background: var(--panel2); }
+.tk-panel h3 { font-size: 21px; letter-spacing: -.2px; margin-bottom: 4px; }
+.tk-panel h4 { font: 700 13px/1.3 var(--sans); margin: 22px 0 10px; }
+.tk-sub { color: var(--muted); font-size: 13.5px; line-height: 1.55; max-width: 760px;
+  margin-bottom: 4px; }
+.tk-foot { color: var(--muted); font: 12px/1.55 var(--sans); margin-top: 10px; max-width: 780px; }
+
+.tk-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 10px; margin: 16px 0 4px; }
+.tk-tile { border: 1px solid var(--line); border-radius: 11px; background: var(--bg);
+  padding: 12px 13px; }
+.tk-tile small { display: block; color: var(--muted); font: 600 10px/1 var(--sans);
+  letter-spacing: .8px; text-transform: uppercase; margin-bottom: 7px; }
+.tk-tile b { display: block; font: 800 22px/1 var(--sans); letter-spacing: -.5px; }
+.tk-tile i { display: block; margin-top: 5px; color: var(--muted);
+  font: 600 11px/1 var(--sans); font-style: normal; }
+.tk-tile.good b { color: var(--green); }
+.tk-tile.bad b { color: var(--red); }
+
+.tk-list { margin-top: 16px; border-top: 1px solid var(--line); }
+.tk-row { display: grid; grid-template-columns: minmax(160px, 1.4fr) 1fr 92px 108px;
+  gap: 12px; align-items: center; padding: 11px 4px; border-bottom: 1px solid var(--line); }
+.tk-row small { display: block; color: var(--muted); font: 600 10px/1.4 var(--sans); }
+.tk-row b { font: 800 14px/1.2 var(--sans); }
+.tk-row i { color: var(--muted); font: 11px/1 var(--sans); font-style: normal; margin: 0 5px; }
+.tk-row.win { box-shadow: inset 3px 0 0 var(--green); }
+.tk-row.loss { box-shadow: inset 3px 0 0 var(--red); }
+.tk-row.push { box-shadow: inset 3px 0 0 var(--line2); }
+.tk-row .tk-pl { text-align: right; }
+.tk-row.win .tk-pl b { color: var(--green); }
+.tk-row.loss .tk-pl b { color: var(--red); }
+
+.tk-empty { padding: 34px 22px; border: 1px dashed var(--line2); border-radius: 12px;
+  background: var(--panel); text-align: center; margin-bottom: 20px; }
+.tk-empty b { display: block; font: 700 16px/1.35 var(--sans); }
+.tk-empty small { display: block; margin-top: 7px; color: var(--muted);
+  font: 12px/1.5 var(--sans); max-width: 620px; margin-inline: auto; }
+
+.tk-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+.tk-table th { text-align: left; color: var(--muted); font: 600 10px/1 var(--sans);
+  letter-spacing: .8px; text-transform: uppercase; padding: 0 8px 8px;
+  border-bottom: 1px solid var(--line2); }
+.tk-table td { padding: 9px 8px; border-bottom: 1px solid var(--line); }
+.tk-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.tk-table tr.dim { opacity: .42; }
+.tk-table td.good { color: var(--green); font-weight: 700; }
+.tk-table td.bad { color: var(--red); font-weight: 700; }
+
+/* The gate curve: profit above the centre line, loss below it. */
+.tk-curve { display: flex; gap: 5px; align-items: stretch; overflow-x: auto;
+  padding-bottom: 4px; }
+.tk-col { flex: 1 0 34px; display: flex; flex-direction: column; align-items: center; }
+.tk-col > span { margin-top: 5px; color: var(--muted); font: 600 10px/1 var(--sans); }
+.tk-bar-wrap { width: 100%; display: flex; flex-direction: column-reverse; height: 46px; }
+.tk-bar-wrap.down { flex-direction: column; border-top: 1px solid var(--line2); }
+.tk-bar { width: 100%; border-radius: 3px 3px 0 0; background: var(--green); }
+.tk-bar.dn { border-radius: 0 0 3px 3px; background: var(--red); }
+.tk-bar-sp { width: 100%; }
+.tk-col.live .tk-bar { outline: 2px solid var(--bet); outline-offset: 1px; }
+.tk-col.live > span { color: var(--text); font-weight: 800; }
