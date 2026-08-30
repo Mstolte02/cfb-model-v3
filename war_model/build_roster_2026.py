@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 
 import artifacts
+import scrape_twodeep as twodeep     # hybrid-label tables and OFFENSE, defined once
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 from paths import TWODEEP_2026, require
@@ -102,6 +103,79 @@ def load_two_deep():
     return d
 
 
+def refine_hybrid_groups(ros, war):
+    """Re-group the scheme-nickname slots from PFF's own position for the same man.
+
+    The scraper resolves a nickname per (team, label) off the bios, which is the right
+    unit for a scheme name - one programme's MONEY is one job. IT IS THE WRONG UNIT FOR
+    A NICKEL. Measured against PFF, a nickel room does not hold one job: 77 of the 126
+    matched NB slots are corners and 49 are safeties, and no reading of the room fixes
+    that because the split is between MEN, not between programmes. Resolving NB per
+    room scored 60.5% where per-player PFF is exact by construction.
+
+    So where a hybrid-labelled man is already matched to PFF history, his own most
+    recent PFF position wins. That is also the taxonomy the facet weights are fitted in
+    and the one the projection's training rows carry, so this closes a train/serve gap
+    rather than opening one: Chris Cole's history rows said LB while the slot serving
+    the model said CB.
+
+    Room-mates who match nothing - true freshmen, FCS arrivals - take the PFF majority
+    of the men who did match, and keep the scraper's answer if nobody did.
+
+    Only slots the scraper flagged as hybrid are touched, and only within the range the
+    label can mean. Nathan VanTimmeren is Central Michigan's LOLB in 2026 and PFF's tight
+    end in 2024 and 2025, because he changed position; taking PFF's word there put an
+    outside linebacker in the tight end room. History says what a man WAS, and the chart
+    is the better authority on what he is about to be - so PFF only gets to settle the
+    question the nickname left open, not to reopen a settled one.
+    """
+    if "group_source" not in ros.columns:      # Ourlads fallback carries no flag
+        print("\nhybrid regrouping skipped: roster source has no group_source column")
+        return ros
+
+    hy = ros.group_source.fillna("label") != "label"
+    if not hy.any():
+        return ros
+
+    latest = war.drop_duplicates("player_id")[["player_id", "group"]]
+    pff = (ros[["pid_team"]].merge(latest, left_on="pid_team", right_on="player_id",
+                                   how="left")["group"].to_numpy())
+    ros = ros.assign(_pff_group=pff)
+
+    # the same range the scraper allows the bios to vote within, read from one place
+    allowed = ros.roster_position.map(
+        lambda p: (twodeep.HYBRID_ALLOWED.get(twodeep.HYBRID_FAMILY.get(p), set())
+                   | twodeep.HYBRID_ALLOWED_EXTRA.get(p, set())))
+    ros.loc[[g not in a for g, a in zip(ros._pff_group, allowed)],
+            "_pff_group"] = np.nan
+
+    before = ros.broad_group.copy()
+    # per player where he is known...
+    ros.loc[hy & ros._pff_group.notna(), "broad_group"] = \
+        ros.loc[hy & ros._pff_group.notna(), "_pff_group"]
+    # ...and the room's PFF majority for the men who are not
+    room = (ros[hy & ros._pff_group.notna()]
+            .groupby(["team", "roster_position"])._pff_group
+            .agg(lambda s: s.value_counts().idxmax()))
+    fill = hy & ros._pff_group.isna()
+    ros.loc[fill, "broad_group"] = (
+        pd.MultiIndex.from_arrays([ros.loc[fill, "team"],
+                                   ros.loc[fill, "roster_position"]])
+        .map(room).to_numpy())
+    ros["broad_group"] = ros.broad_group.fillna(before)
+    # regrouping can move a slot across the ball, so the unit column moves with it
+    ros["unit"] = np.where(ros.broad_group.isin(twodeep.OFFENSE), "OFF", "DEF")
+
+    moved = ros.broad_group != before
+    print(f"\nhybrid slots regrouped from PFF: {int(moved.sum())} of {int(hy.sum())}")
+    if moved.any():
+        m = (ros[moved].assign(was=before[moved])
+             .groupby(["roster_position", "was", "broad_group"]).size()
+             .sort_values(ascending=False))
+        print(m.head(15).to_string())
+    return ros.drop(columns="_pff_group")
+
+
 def main():
     ros = load_two_deep()
     ros["is_starter"] = ros.depth == 1
@@ -135,6 +209,8 @@ def main():
     ros = ros.merge(
         m25[["key", "team", "player_id"]].rename(columns={"player_id": "pid_team"}),
         on=["key", "team"], how="left")
+
+    ros = refine_hybrid_groups(ros, war)
 
     # THE NAME+POSITION MATCH USES THE COARSE GROUP, which collapses OT and IOL back
     # to one line. Its job is identity, not valuation: it exists to stop a receiver

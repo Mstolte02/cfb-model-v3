@@ -118,6 +118,62 @@ to 2.6% and double-counted volume besides, since value is already z × snaps. Bl
 are (job × position group) now and the level-1 regression decides, which is the one
 place positional value can honestly come from.
 
+### The nickname is not the job
+
+All of the above prices a player by his group, so the group has to be right, and for
+one slot in sixteen it was decided by a word that means different things at different
+programmes. Georgia's MONEY is an inside linebacker — it sits beside the MAC, and all
+four men in the room are described as linebackers — and a flat label table read it as a
+cornerback, so Chris Cole was matched, priced and ranked against corners. The same table
+made Cincinnati's CAT and Troy's SPEAR edge rushers when both are safety rooms, and
+Alabama's STING an edge rusher when it is a linebacker.
+
+The labels are now split in two. Ones that mean the same thing everywhere — LT, MLB,
+RCB — keep the flat table. The scheme nicknames are resolved **per (team, label)**,
+because that is the unit that carries the meaning: one programme's MONEY is one job.
+The evidence is the first sentence of the player bio the site already publishes, which
+describes the man rather than the alignment, taken as a majority over the room so a true
+freshman inherits what his four room-mates established.
+
+Scored against PFF's own position for the same men — the taxonomy the facet weights are
+fitted in, and the one the projection's training rows carry:
+
+| | flat label table | per (team, label) |
+|---|---|---|
+| scheme-nickname slots | 61.5% | **71.5%** |
+| all charted slots | 92.9% | **93.7%** |
+
+No label got worse. Two things had to be true to get there, and both were found by
+measuring rather than by reasoning:
+
+- **The room heading is not the answer,** though it looks like it should be — the site
+  groups players under "S", "LB", "EDGE" and that is its own reading of the chart. It
+  agrees with PFF on 41.3% of the nickname slots. The rooms are built on where a man
+  lines up, so every nickel sits under "S" while PFF calls 77 of 126 of them corners.
+- **A bare "linebacker" in a bio does not separate an edge from an off-ball linebacker,**
+  and inside that family it is the only question being asked. Counting it cost JACK
+  94.6% → 45.9% and BANDIT 100% → 25%, because it overturned a default already close to
+  right. It is discarded there and kept everywhere else, where the contest is LB against
+  CB and prose does report it.
+
+**A nickel room does not hold one job**, so `build_roster_2026` then refines again: where
+a nickname-labelled man is matched to PFF history, his own most recent PFF position
+wins. 77 of the 126 matched NB slots are corners and 49 are safeties, and no reading of
+the room fixes that, because the split is between men rather than between programmes.
+This also closes a train/serve gap rather than opening one — the training rows already
+carried PFF's position, so Cole's history said LB while the slot serving the model said
+CB. It is bounded: a nickname may only be re-read within the range it can mean. Central
+Michigan's LOLB is PFF's tight end in 2024 and 2025 because he changed position, and
+history says what a man *was* while the chart is the better authority on what he is
+about to be.
+
+**This is an attribution change, not an accuracy claim,** the same as the line split.
+134 players move group, about 2.9 wins go from CB to SAF and LB, and the league total is
+unchanged. Against EA's CFB 27 ratings — an outside opinion neither side was fitted to —
+every untouched group is identical to three decimal places and the three that moved are
+a wash: CB .705 → .718 on 78 fewer slots, SAF .700 → .695 on 75 more, all slots
+.536 → .537.
+
 ### Within a block, validity rather than repeatability
 
 A statistic can repeat perfectly and measure nothing about the player — his

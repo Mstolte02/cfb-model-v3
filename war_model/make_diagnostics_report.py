@@ -510,7 +510,7 @@ make the product meaningless. Base with qualities alone:
 diagnostics_suite.py</code> to refresh.</p>
 </div></body></html>"""
 
-    open(OUT, "w").write(html)
+    open(OUT, "w", encoding="utf-8").write(html)
     print(f"war_diagnostics.html written ({os.path.getsize(OUT)/1024:.0f} KB)")
     print(f"  verdict: {verdict}")
 
