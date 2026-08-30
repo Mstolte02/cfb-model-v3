@@ -3322,38 +3322,49 @@
   const money = v => `${v < 0 ? "−" : ""}$${Math.abs(v).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
   const signedPct = v => v == null ? "—" : `${v >= 0 ? "+" : "−"}${(Math.abs(v) * 100).toFixed(1)}%`;
 
-  function tileRow(t) {
+  /* THE 52.4% BREAK-EVEN ONLY APPLIES WHERE THE PRICE IS -110, which is spreads and
+     totals. A moneyline settles at its own number, and the break-even moves with it:
+     a -330 favourite needs 76.7% to be worth taking and a +265 dog needs 27.4%. So a
+     selection that includes moneylines gets no break-even line and no colour against
+     one - a 35.9% hit rate is not a failing grade there, it is what backing priced
+     underdogs looks like, and printing 52.4% beside it states something false. */
+  const hasPriced110 = ms => ms.every(m => m !== "moneyline");
+
+  function tileRow(t, markets) {
     const cls = v => v > 0 ? " good" : v < 0 ? " bad" : "";
+    const flat = hasPriced110(markets);
+    const hitNote = flat ? `break-even ${(BREAK_EVEN_110 * 100).toFixed(1)}%` : "price sets break-even";
+    const hitCls = flat && t.hit != null ? cls(t.hit - BREAK_EVEN_110) : "";
     return `<div class="tk-tiles">
       <div class="tk-tile"><small>Bets settled</small><b>${t.bets}</b><i>${t.won}–${t.lost}${t.push ? `–${t.push}` : ""}</i></div>
       <div class="tk-tile"><small>Wagered</small><b>${money(t.wagered)}</b><i>${money(UNIT)} a bet</i></div>
       <div class="tk-tile${cls(t.profit)}"><small>Profit</small><b>${money(t.profit)}</b><i>${t.units >= 0 ? "+" : "−"}${Math.abs(t.units).toFixed(2)} units</i></div>
       <div class="tk-tile${cls(t.roi)}"><small>ROI</small><b>${signedPct(t.roi)}</b><i>per dollar risked</i></div>
-      <div class="tk-tile${t.hit == null ? "" : cls(t.hit - BREAK_EVEN_110)}"><small>Hit rate</small><b>${t.hit == null ? "—" : (t.hit * 100).toFixed(1) + "%"}</b><i>break-even ${(BREAK_EVEN_110 * 100).toFixed(1)}%</i></div>
+      <div class="tk-tile${hitCls}"><small>Hit rate</small><b>${t.hit == null ? "—" : (t.hit * 100).toFixed(1) + "%"}</b><i>${hitNote}</i></div>
     </div>`;
   }
 
-  let trackMarket = "all";
+  let trackMarket = "all", trackPeriod = "current";
   const MKTS = ["spread", "total", "moneyline"];
   const MKT_LABEL = { spread: "Spread", total: "Over / under", moneyline: "Moneyline" };
 
   function renderTracking() {
     const picked = trackMarket === "all" ? MKTS : [trackMarket];
-    const live = picked.flatMap(liveBets);
-    const t = tally(live);
+    const host = document.getElementById("tk-body");
     document.getElementById("tk-unit").textContent = money(UNIT);
-    document.getElementById("tk-count").textContent =
-      `${finals.size} of ${schedule.length} games played`;
 
-    const liveHost = document.getElementById("tk-live");
-    if (!live.length) {
-      // The 2026 season has not settled a flagged bet yet. Say that plainly rather
-      // than drawing a row of zeroes, which reads like a record of nothing but losses.
-      liveHost.innerHTML = `<div class="tk-empty"><b>No settled bets yet${finals.size ? "" : " — the 2026 season has not kicked off"}.</b>
-        <small>${finals.size
-          ? `${finals.size} game${finals.size === 1 ? " has" : "s have"} finished, but none of them was a flagged bet in ${trackMarket === "all" ? "any market" : MKT_LABEL[trackMarket].toLowerCase()}.`
-          : "This fills in on its own as results land. Until then the record below is the backtest, not a live account."}</small></div>`;
-    } else {
+    if (trackPeriod === "current") {
+      const live = picked.flatMap(liveBets);
+      const t = tally(live);
+      document.getElementById("tk-count").textContent =
+        `${finals.size} of ${schedule.length} games played`;
+      if (!live.length) {
+        host.innerHTML = `<div class="tk-empty"><b>No settled bets yet.</b>
+          <small>${finals.size
+            ? `${finals.size} game${finals.size === 1 ? " has" : "s have"} finished, but none was a flagged bet in ${trackMarket === "all" ? "any market" : MKT_LABEL[trackMarket].toLowerCase()}.`
+            : "This fills in as results land."}</small></div>`;
+        return;
+      }
       const rows = live.sort((a, b) => (b.week || 0) - (a.week || 0)).map(b => `
         <div class="tk-row ${b.profit > 0 ? "win" : b.profit < 0 ? "loss" : "push"}">
           <div><small>WK ${b.week}</small>${teamMini(b.away)}<i>at</i>${teamMini(b.home)}</div>
@@ -3361,12 +3372,15 @@
           <div><small>Final</small><b>${b.score}</b></div>
           <div class="tk-pl"><small>${b.profit > 0 ? "Won" : b.profit < 0 ? "Lost" : "Push"}</small><b>${money(b.profit * UNIT)}</b></div>
         </div>`).join("");
-      liveHost.innerHTML = `<div class="tk-panel"><h3>2026, live</h3>${tileRow(t)}
+      // the break-even line follows the bets actually settled, not the filter: with
+      // "All markets" selected and only spread and total bets on the board, -110 is
+      // the right number and hiding it would be the misleading answer
+      host.innerHTML = `<div class="tk-panel"><h3>2026</h3>${tileRow(t, [...new Set(live.map(b => b.market))])}
         <div class="tk-list">${rows}</div></div>`;
+      return;
     }
 
-    // ---- the settled seasons -------------------------------------------------
-    const host = document.getElementById("tk-backtest");
+    // ---- historical -----------------------------------------------------------
     if (!betTracking) { host.innerHTML = ""; return; }
     const bt = betTracking.backtest;
     const sel = picked.map(m => bt.markets[m]).filter(Boolean);
@@ -3376,53 +3390,45 @@
       wagered: a.wagered + s.wagered, profit: a.profit + s.profit,
     }), { bets: 0, won: 0, lost: 0, push: 0, units: 0, wagered: 0, profit: 0 });
     const dec = agg.won + agg.lost;
-    const btT = { ...agg, decided: dec, hit: dec ? agg.won / dec : null,
-                  roi: dec ? agg.units / dec : null };
+    const t = { ...agg, decided: dec, hit: dec ? agg.won / dec : null,
+                roi: dec ? agg.units / dec : null };
+    const span = `${bt.seasons[0]}–${bt.seasons[bt.seasons.length - 1]}`;
+    document.getElementById("tk-count").textContent = `${span} · ${agg.bets} bets`;
 
     const byMarket = MKTS.map(m => {
       const s = bt.markets[m];
       if (!s) return "";
-      const on = picked.includes(m);
-      return `<tr class="${on ? "" : "dim"}"><td>${MKT_LABEL[m]}</td><td class="num">gap ≥ ${s.min_gap}</td>
+      const flat = hasPriced110([m]);
+      return `<tr class="${picked.includes(m) ? "" : "dim"}"><td>${MKT_LABEL[m]}</td><td class="num">gap ≥ ${s.min_gap}</td>
         <td class="num">${s.bets}</td><td class="num">${s.won}–${s.lost}${s.push ? `–${s.push}` : ""}</td>
-        <td class="num">${s.hit_rate == null ? "—" : (s.hit_rate * 100).toFixed(1) + "%"}</td>
+        <td class="num${flat && s.hit_rate != null ? (s.hit_rate > BREAK_EVEN_110 ? " good" : " bad") : ""}">${s.hit_rate == null ? "—" : (s.hit_rate * 100).toFixed(1) + "%"}</td>
         <td class="num ${s.profit > 0 ? "good" : s.profit < 0 ? "bad" : ""}">${money(s.profit)}</td>
         <td class="num ${s.roi > 0 ? "good" : s.roi < 0 ? "bad" : ""}">${signedPct(s.roi)}</td></tr>`;
     }).join("");
 
-    // The curve is the point of the panel: one number at one gate invites the reading
-    // that the gate was picked because it was good. Showing the whole range shows that
-    // the record wanders either side of break-even almost everywhere.
-    const curveFor = trackMarket === "all" ? "total" : trackMarket;
-    const curve = (bt.curves && bt.curves[curveFor]) || [];
-    const gate = bt.markets[curveFor] ? bt.markets[curveFor].min_gap : null;
-    const maxAbs = Math.max(...curve.map(c => Math.abs(c.roi || 0)), .02);
-    const bars = curve.map(c => {
-      const roi = c.roi || 0, h = Math.abs(roi) / maxAbs * 46;
-      return `<div class="tk-col${c.gap === gate ? " live" : ""}" title="gap ≥ ${c.gap}: ${c.bets} bets, ${signedPct(c.roi)} ROI, ${money(c.profit)}">
-        <div class="tk-bar-wrap">${roi >= 0
-          ? `<div class="tk-bar up" style="height:${h}px"></div><div class="tk-bar-sp" style="height:${46 - h}px"></div>`
-          : `<div class="tk-bar-sp" style="height:46px"></div>`}</div>
-        <div class="tk-bar-wrap down">${roi < 0 ? `<div class="tk-bar dn" style="height:${h}px"></div>` : ""}</div>
-        <span>${c.gap}</span></div>`;
-    }).join("");
+    const bySeason = (sel.length === 1 ? sel[0].by_season : []).map(s => `
+      <tr><td>${s.season}</td><td class="num">${s.bets}</td>
+        <td class="num">${s.won}–${s.lost}${s.push ? `–${s.push}` : ""}</td>
+        <td class="num">${s.hit_rate == null ? "—" : (s.hit_rate * 100).toFixed(1) + "%"}</td>
+        <td class="num ${s.profit > 0 ? "good" : s.profit < 0 ? "bad" : ""}">${money(s.profit)}</td>
+        <td class="num ${s.roi > 0 ? "good" : s.roi < 0 ? "bad" : ""}">${signedPct(s.roi)}</td></tr>`).join("");
 
-    host.innerHTML = `<div class="tk-panel alt">
-      <h3>${bt.seasons[0]}–${bt.seasons[bt.seasons.length - 1]}, backtested</h3>
-      <p class="tk-sub">Not a live record. The same three rules run over the expanding-window
-      backtest, where no season is used to fit its own predictions. It is what the rule would
-      have returned, staked flat at ${money(UNIT)}, had it been followed throughout.</p>
-      ${tileRow(btT)}
+    host.innerHTML = `<div class="tk-panel"><h3>${span}</h3>${tileRow(t, picked)}
       <table class="tk-table"><thead><tr><th>Market</th><th class="num">Gate</th><th class="num">Bets</th>
         <th class="num">Record</th><th class="num">Hit</th><th class="num">Profit</th><th class="num">ROI</th></tr></thead>
         <tbody>${byMarket}</tbody></table>
-      <h4>${MKT_LABEL[curveFor]}: what every other gate would have returned</h4>
-      <div class="tk-curve">${bars}</div>
-      <p class="tk-foot">ROI by minimum gap, ${bt.seasons[0]}–${bt.seasons[bt.seasons.length - 1]};
-      the highlighted bar is the gate in force. Above the line is profit, below it loss.
-      ${curveFor === "total" ? "Totals cross break-even in both directions across the range, which is the honest reading: no gate here is a demonstrated edge." : "A gate that looks good at one threshold and bad at its neighbours is noise, not a finding."}</p>
+      ${bySeason ? `<h4>${MKT_LABEL[picked[0]]} by season</h4>
+      <table class="tk-table"><thead><tr><th>Season</th><th class="num">Bets</th>
+        <th class="num">Record</th><th class="num">Hit</th><th class="num">Profit</th><th class="num">ROI</th></tr></thead>
+        <tbody>${bySeason}</tbody></table>` : ""}
     </div>`;
   }
+
+  document.querySelectorAll("#tk-period .seg-btn").forEach(b => b.addEventListener("click", () => {
+    trackPeriod = b.dataset.period;
+    document.querySelectorAll("#tk-period .seg-btn").forEach(x => x.classList.toggle("active", x === b));
+    renderTracking();
+  }));
 
   document.querySelectorAll("#tk-market .seg-btn").forEach(b => b.addEventListener("click", () => {
     trackMarket = b.dataset.market;

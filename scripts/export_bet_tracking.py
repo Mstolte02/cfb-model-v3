@@ -10,19 +10,14 @@ This file is the BACKTEST half: the same three rules applied to the expanding-wi
 v4 backtest over 2022-25, which is the only place a settled record exists at all. It is
 NOT a live record and the tab says so - 2026 has not played a game yet.
 
-Two things it is careful about:
-
-  - **The thresholds are read from the app, not restated here.** BET_RULES lives in
-    viz/app.js and is parsed out of it, because a second copy in Python is a copy that
-    goes stale the first time someone tunes a gate. If the parse fails the build fails.
-  - **The threshold CURVE ships beside the record**, so the tab can show what the rest
-    of the range would have done. A single number at one gate invites the reading that
-    the gate was chosen because it was good; the curve shows the honest picture, which
-    for totals is that the record wanders either side of break-even at every threshold.
+**The thresholds are read from the app, not restated here.** BET_RULES lives in
+viz/app.js and is parsed out of it, because a second copy in Python is a copy that goes
+stale the first time someone tunes a gate. If the parse fails the build fails.
 
 Stake is flat - `UNIT` dollars a bet, win or lose - because a flat stake is the only
 one that makes ROI mean "return per dollar risked". Spreads and totals are priced at
--110 throughout; moneylines settle at the archived price for the side taken.
+-110 throughout; moneylines settle at the archived price for the side taken, which is
+why no single break-even number is reported for them.
 
 Run:  venv/Scripts/python -m scripts.export_bet_tracking
 """
@@ -47,14 +42,6 @@ APP_JS = ROOT / "viz" / "app.js"
 OUT = VIZ / "bet_tracking.json"
 
 UNIT = 50.0
-
-# Where each market's curve is worth plotting. Points of spread and total; the
-# moneyline gate is a probability, so it gets its own scale.
-CURVES = {
-    "spread": [round(x, 1) for x in np.arange(2, 16.5, 1.0)],
-    "total": [round(x, 1) for x in np.arange(2, 16.5, 1.0)],
-    "moneyline": [round(x, 2) for x in np.arange(0.05, 0.45, 0.05)],
-}
 
 
 def app_bet_rules() -> dict:
@@ -121,8 +108,6 @@ def main() -> None:
             })
 
     allz = pd.concat([settle_games(d, m, g) for m, g in rules.items()])
-    curves = {m: [{"gap": t, **summarise(settle_games(d, m, t))} for t in ts]
-              for m, ts in CURVES.items()}
 
     out = {
         "unit": UNIT,
@@ -133,7 +118,6 @@ def main() -> None:
             "source": "expanding-window v4 backtest; no season fits its own predictions",
             "overall": summarise(allz),
             "markets": markets,
-            "curves": curves,
         },
         # newest first, and capped: the tab shows a sample, not a ledger of 2,000 rows
         "recent": sorted(bets, key=lambda b: (-b["season"], -b["week"]))[:60],
