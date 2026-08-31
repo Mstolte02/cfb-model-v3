@@ -37,6 +37,7 @@ ODDS = ROOT / "viz" / "data" / "odds.json"
 TRACKING = ROOT / "viz" / "data" / "market_tracking.json"
 SCHEDULE = ROOT / "viz" / "data" / "schedule.json"
 MODEL = ROOT / "viz" / "data" / "model_v4.json"
+RATINGS = ROOT / "viz" / "data" / "ratings.json"
 HISTORICAL = ROOT / "audit" / "book_shopping_backtest.json"
 AVAILABILITY = ROOT / "war_model" / "availability_events_2026.csv"
 
@@ -139,6 +140,147 @@ def publish_finals(games: list[dict], schedule_path: Path = SCHEDULE) -> int:
     if changed:
         schedule_path.write_text(json.dumps(schedule), encoding="utf-8")
     return changed
+
+
+def _sigmoid(value: float) -> float:
+    value = max(-40.0, min(40.0, float(value)))
+    return 1.0 / (1.0 + math.exp(-value))
+
+
+def _static_win_probability(model: dict, home: str, away: str,
+                            is_home: float = 0.0) -> float:
+    a, b = model["teams"][home], model["teams"][away]
+    diff = [x - y for x, y in zip(a, b)]
+    logistic, margin = model["logistic"], model["margin"]
+    z = (logistic.get("intercept", 0.0)
+         + sum(c * x for c, x in zip(logistic["coef"], diff))
+         + is_home * logistic["hfa"])
+    m = (margin.get("intercept", 0.0)
+         + sum(c * x for c, x in zip(margin["coef"], diff))
+         + is_home * margin["hfa"])
+    p = (model["ens_w"] * _sigmoid(z)
+         + (1.0 - model["ens_w"])
+         * 0.5 * (1.0 + math.erf(m / margin["sigma"] / math.sqrt(2.0))))
+    p = max(1e-8, min(1.0 - 1e-8, p))
+    scale = model.get("probability_scale", 1.0)
+    return _sigmoid(scale * math.log(p / (1.0 - p)))
+
+
+def _power_snapshot(model: dict, names: list[str], dynamic_ratings: dict) -> list[dict]:
+    """Exact compact-data port of src.dynamic.current_power_ratings."""
+    blend = float(model.get("dynamic", {}).get("blend", 0.75))
+    mean_dynamic = sum(dynamic_ratings[t] for t in names) / len(names)
+    rows = []
+    for team in names:
+        opponents = [opp for opp in names if opp != team]
+        static_power = sum(_static_win_probability(model, team, opp)
+                           for opp in opponents) / len(opponents)
+        dynamic_power = sum(_sigmoid(dynamic_ratings[team] - dynamic_ratings[opp])
+                            for opp in opponents) / len(opponents)
+        # The published frame is standardized, so the average opponent is its mean
+        # vector. Build a temporary mean row to use the exact frozen model math.
+        mean_name = "__rating_field_average__"
+        mean_vec = [sum(model["teams"][t][i] for t in names) / len(names)
+                    for i in range(len(model["features"]))]
+        model["teams"][mean_name] = mean_vec
+        static_average = _static_win_probability(model, team, mean_name)
+        model["teams"].pop(mean_name, None)
+        dynamic_average = _sigmoid(dynamic_ratings[team] - mean_dynamic)
+        rows.append({
+            "team": team,
+            "power": (1.0 - blend) * static_power + blend * dynamic_power,
+            "vs_average": ((1.0 - blend) * static_average
+                           + blend * dynamic_average),
+        })
+    rows.sort(key=lambda row: (-row["power"], row["team"]))
+    for rank, row in enumerate(rows, 1):
+        row["rank"] = rank
+        row["power"] = round(row["power"], 6)
+        row["vs_average"] = round(row["vs_average"], 6)
+    return rows
+
+
+def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = MODEL,
+                             ratings_path: Path = RATINGS) -> int:
+    """Replay every published final from the preseason baseline, grouped by week.
+
+    Rebuilding from the baseline on every capture makes the operation idempotent and
+    preserves the validated no-within-week-lookahead rule even while a week is only
+    partially complete.
+    """
+    if not (schedule_path.exists() and model_path.exists() and ratings_path.exists()):
+        return 0
+    schedule = json.loads(schedule_path.read_text(encoding="utf-8"))
+    model = json.loads(model_path.read_text(encoding="utf-8"))
+    ratings = json.loads(ratings_path.read_text(encoding="utf-8"))
+    dynamic = model.get("dynamic") or {}
+    current = dynamic.get("ratings") or {}
+    names = [row["team"] for row in ratings.get("teams", [])
+             if row["team"] in current and row["team"] in model.get("teams", {})]
+    if len(names) < 2:
+        return 0
+
+    baseline = dict(dynamic.get("preseason_ratings") or current)
+    state = dict(baseline)
+    finals = [g for g in schedule if g.get("f") and g.get("hp") is not None
+              and g.get("ap") is not None and g.get("h") in names and g.get("a") in names]
+    by_week: dict[int, list[dict]] = {}
+    for game in finals:
+        by_week.setdefault(int(game.get("w") or 0), []).append(game)
+
+    preseason = _power_snapshot(model, names, state)
+    history = [{"week": 0, "label": "Preseason", "completed_games": 0,
+                "teams": preseason}]
+    completed = 0
+    k = float(dynamic.get("k", 0.15))
+    for week in sorted(by_week):
+        changes: dict[str, float] = {}
+        for game in by_week[week]:
+            home, away = game["h"], game["a"]
+            home_field = 0.0 if game.get("n") else 1.0
+            gap = state[home] - state[away] + model["logistic"]["hfa"] * home_field
+            expected = _sigmoid(gap)
+            margin = float(game["hp"]) - float(game["ap"])
+            actual = 1.0 if margin > 0 else (0.0 if margin < 0 else 0.5)
+            mov = math.log(abs(margin) + 1.0)
+            damping = 2.2 / (abs(gap) * 0.35 + 2.2)
+            delta = k * mov * damping * (actual - expected)
+            changes[home] = changes.get(home, 0.0) + delta
+            changes[away] = changes.get(away, 0.0) - delta
+        for team, delta in changes.items():
+            state[team] += delta
+        completed += len(by_week[week])
+        unfinished = any(int(g.get("w") or 0) == week and not g.get("f") for g in schedule)
+        history.append({"week": week,
+                        "label": f"Week {week}{' to date' if unfinished else ''}",
+                        "completed_games": completed,
+                        "teams": _power_snapshot(model, names, state)})
+
+    current_rows = history[-1]["teams"]
+    by_team = {row["team"]: row for row in current_rows}
+    updated_rows = []
+    for old in ratings.get("teams", []):
+        new = by_team.get(old["team"])
+        if new:
+            old = {**old, "rank": new["rank"], "power": new["power"],
+                   "vs_average": new["vs_average"]}
+        updated_rows.append(old)
+    updated_rows.sort(key=lambda row: (row.get("rank", 999), row["team"]))
+    ratings["teams"] = updated_rows
+    ratings["history"] = history
+    ratings["updated_through"] = {
+        "completed_fbs_games": len(finals),
+        "week": max(by_week) if by_week else 0,
+    }
+    dynamic["preseason_ratings"] = baseline
+    dynamic["ratings"] = {**current, **state}
+    dynamic["k"] = k
+    dynamic["completed_games"] = len(finals)
+    dynamic["updated_through_week"] = max(by_week) if by_week else 0
+    model["dynamic"] = dynamic
+    model_path.write_text(json.dumps(model, indent=1, allow_nan=False), encoding="utf-8")
+    ratings_path.write_text(json.dumps(ratings, indent=1, allow_nan=False), encoding="utf-8")
+    return len(finals)
 
 
 def flatten(raw: list[dict], captured_at: str) -> list[dict]:
@@ -398,6 +540,7 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None) -> dict
     ODDS.write_text(json.dumps(odds, indent=1, allow_nan=False))
 
     finals_published = publish_finals(games) if games is not None else 0
+    ratings_replayed = replay_published_results()
     tracking = {"checked_at": captured_at, "source": "CFBD /lines",
         "timestamp_semantics": "retrieval time, not sportsbook quote time",
         "quote_events": len(events), "successful_checks": len(checks),
@@ -411,6 +554,7 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None) -> dict
         "settlements": len(settlements), "qualified_clv_observations": len(qualified_clv),
         "mean_consensus_clv": statistics.mean(qualified_clv) if qualified_clv else None,
         "final_scores_published_this_check": finals_published,
+        "completed_rating_games_replayed": ratings_replayed,
         "availability": availability_summary()}
     TRACKING.write_text(json.dumps(tracking, indent=2, allow_nan=False))
     STATUS.write_text(json.dumps(check, indent=2))
@@ -438,7 +582,8 @@ def main() -> None:
     print(f"Market check {tracking['checked_at']}: {tracking['games_with_quotes']} games, "
           f"{tracking['changed_quotes_this_check']} changed quotes, "
           f"{len(tracking['current_candidates'])} research candidates, "
-          f"{tracking['final_scores_published_this_check']} new final scores.")
+          f"{tracking['final_scores_published_this_check']} new final scores, "
+          f"{tracking['completed_rating_games_replayed']} rating results replayed.")
     print(f"-> {QUOTES}\n-> {TRACKING}")
 
 

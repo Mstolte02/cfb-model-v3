@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoff, model, odds, editorial, bettingValidation, warValidity, marketTracking, betTracking] = await Promise.all([
+  const [teams, schedule, players, ratings, playoff, model, odds, editorial, bettingValidation, warValidity, betTracking] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -34,7 +34,6 @@
     fetchJSON("data/editorial.json").catch(() => ({ prior_final_ap: [], headshots: {} })),
     fetchJSON("data/betting_validation.json").catch(() => ({ markets: {} })),
     fetchJSON("data/war_validity.json").catch(() => ({})),
-    fetchJSON("data/market_tracking.json").catch(() => ({})),
     fetchJSON("data/bet_tracking.json").catch(() => null),
   ]);
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
@@ -94,7 +93,7 @@
      the FBS test. It matters on the market board: a third of the opening weekend is
      FBS-vs-FCS, the model has no rating for the FCS side, and a row with no model
      number on it is not a comparison - it is a sportsbook line with an empty column
-     next to it. Worse, the watchlist was surfacing those games as edges. */
+     next to it. Worse, the old market summary surfaced those games as edges. */
   const FBS = new Set((ratings.teams || []).map(t => t.team));
   const isFBS = t => FBS.has(t);
 
@@ -258,7 +257,7 @@
     for (let i = 0; i < names.length; i++) {
       let s = 0;
       for (let j = 0; j < names.length; j++) {
-        if (i !== j) s += winpFromDiff(diffVec(V[i], V[j]), 0);
+        if (i !== j) s += winpTeams(names[i], names[j], 0);
       }
       out[names[i]] = s / (names.length - 1);
     }
@@ -921,6 +920,11 @@
         team == null ? bracket.delete(i) : bracket.set(i, team);
         ver++; save();
       },
+      lockGames(keys) {
+        let changed = false;
+        for (const key of keys) changed = games.delete(key) || changed;
+        if (changed) { ver++; save(); }
+      },
       reset() { games.clear(); titles.clear(); bracket.clear(); ver++; save(); },
     };
   })();
@@ -932,6 +936,12 @@
      rewrites NUL to U+FFFD - the key read back off the element then matched nothing
      and every pick was silently ignored. No team name or ISO date contains a pipe. */
   const scKey = g => `${g.h}|${g.a}|${g.d || g.w}`;
+  const scFinalWinner = g => {
+    if (!g.f || g.hp == null || g.ap == null || Number(g.hp) === Number(g.ap)) return null;
+    return Number(g.hp) > Number(g.ap) ? g.h : g.a;
+  };
+  // A pick made before kickoff must not survive once the real result lands.
+  SC_STATE.lockGames(schedule.filter(scFinalWinner).map(scKey));
 
   const scPopZ = obj => {                     // ddof=0, as the simulation's .std()
     const ts = Object.keys(obj), v = ts.map(t => obj[t]);
@@ -1010,10 +1020,12 @@
       const P = scGamePredict(g);
       if (!P) continue;
       const key = scKey(g);
-      const picked = SC_STATE.game(key);
-      const winner = picked || P.fav;
+      const locked = scFinalWinner(g);
+      const picked = locked ? null : SC_STATE.game(key);
+      const winner = locked || picked || P.fav;
       const loser = winner === g.h ? g.a : g.h;
-      played_games.push({ g, key, pred: P, winner, picked: picked || null });
+      played_games.push({ g, key, pred: P, winner, picked: picked || null,
+                          locked: locked || null });
       if (kh && ka) {
         wins[winner]++; losses[loser]++; played[g.h]++; played[g.a]++;
         meetings.push([winner, loser]);
@@ -1142,15 +1154,16 @@
     return rows;
   }
 
-  function scChip(team, p, on, picked, key, side) {
+  function scChip(team, p, on, picked, key, side, locked = false) {
     const tint = color(team);
-    return `<button class="sc-chip${on ? " on" : ""}${picked ? " picked" : ""}"
+    const tag = locked ? "span" : "button";
+    return `<${tag} class="sc-chip${on ? " on" : ""}${picked ? " picked" : ""}${locked ? " locked" : ""}"
       style="--tint:${tint};--wash:${rgba(team, on ? .22 : .05)}"
       data-key="${esc(key)}" data-team="${esc(team)}" data-side="${side}"
-      title="${esc(team)} — model gives ${pct(p, 0)}">
+      title="${esc(team)} — ${locked ? (on ? "final winner" : "final loss") : "model gives " + pct(p, 0)}">
       <img src="${logoURL(team)}" alt="" loading="lazy">
       <span class="sc-abbr">${esc(abbr(team))}</span>
-      <span class="sc-p">${pct(p, 0)}</span></button>`;
+      <span class="sc-p">${locked ? (on ? "W" : "L") : pct(p, 0)}</span></${tag}>`;
   }
 
   function renderScenario() {
@@ -1172,14 +1185,15 @@
     const gameRows = shown.map(r => {
       const { g, key, pred } = r;
       const pickedH = r.picked === g.h, pickedA = r.picked === g.a;
-      return `<div class="sc-game${r.picked ? " has-pick" : ""}">
+      return `<div class="sc-game${r.picked ? " has-pick" : ""}${r.locked ? " is-final" : ""}">
         <span class="sc-wk">Wk ${g.w}</span>
-        <span class="sc-date">${g.d ? g.d.slice(5) : ""}</span>
-        ${scChip(g.a, 1 - pred.pHome, r.winner === g.a, pickedA, key, "a")}
+        <span class="sc-date">${r.locked ? `Final ${g.ap}–${g.hp}` : (g.d ? g.d.slice(5) : "")}</span>
+        ${scChip(g.a, 1 - pred.pHome, r.winner === g.a, pickedA, key, "a", !!r.locked)}
         <span class="sc-at">${g.n ? "vs" : "at"}</span>
-        ${scChip(g.h, pred.pHome, r.winner === g.h, pickedH, key, "h")}
+        ${scChip(g.h, pred.pHome, r.winner === g.h, pickedH, key, "h", !!r.locked)}
         ${r.picked ? `<button class="sc-undo" data-key="${esc(key)}"
-          title="Back to the model's pick">undo</button>` : `<span class="sc-undo-sp"></span>`}
+          title="Back to the model's pick">undo</button>` : r.locked
+          ? `<span class="sc-final-tag">LOCKED</span>` : `<span class="sc-undo-sp"></span>`}
       </div>`;
     }).join("");
 
@@ -1257,8 +1271,8 @@
       <div class="sc-games sc-ccg-list">${titleRows}</div>
 
       <h3 class="bracket-title">The schedule
-        <span class="hint">— click a team to make it the winner; everything unpicked
-          stays on the model's favourite</span></h3>
+        <span class="hint">— final scores are locked; click a team in any remaining
+          game to make it the winner</span></h3>
       <div class="sc-games">${gameRows || `<div class="wd-foot">No games match
         these filters.</div>`}</div>
       ${rows.length > SC_LIMIT ? `<div class="wd-foot">Showing the first ${SC_LIMIT}
@@ -1266,9 +1280,9 @@
         picks you have already made are kept whether or not they are on screen.</div>` : ""}`;
 
     host.innerHTML = (scMode === "playoff" ? playoffHTML : pickHTML) + `
-      <div class="wd-foot">One season, not twenty thousand: every game you have not
-        picked is resolved to the model's favourite, so this is the chalk season with
-        your results substituted in, and the field is an outcome rather than a
+      <div class="wd-foot">One season, not twenty thousand: completed games use their
+        final score and every remaining game you have not picked is resolved to the
+        model's favourite. The field is an outcome rather than a
         probability. Selection follows the real rule &mdash; four Power&nbsp;4
         champions, the highest-ranked Group of 6 team, seven at-large, straight
         seeding &mdash; and ranks teams with the same fitted committee weights the
@@ -2717,6 +2731,62 @@
     wireTeamLinks();
   }
 
+  function fillPowerHistoryTeams() {
+    const select = document.getElementById("power-history-team");
+    if (!select || select.options.length) return;
+    liveRatings().slice().sort((a, b) => a.team.localeCompare(b.team))
+      .forEach(r => select.add(new Option(r.team, r.team)));
+    select.value = liveRatings()[0] ? liveRatings()[0].team : "";
+  }
+
+  function renderPowerHistory() {
+    const host = document.getElementById("power-history-chart");
+    const select = document.getElementById("power-history-team");
+    if (!host || !select) return;
+    fillPowerHistoryTeams();
+    const team = select.value;
+    const snapshots = ratings.history || [];
+    const points = snapshots.map(s => {
+      const rows = Array.isArray(s.teams) ? s.teams : [];
+      const r = rows.find(x => x.team === team);
+      return r ? { label: s.label || (s.week ? "Week " + s.week : "Preseason"),
+                   week: s.week || 0, power: r.power, rank: r.rank,
+                   completed: s.completed_games || 0 } : null;
+    }).filter(Boolean);
+    if (!points.length) {
+      const r = liveRatings().find(x => x.team === team);
+      if (r) points.push({ label: "Current", week: 0, power: r.power, rank: r.rank, completed: 0 });
+    }
+    if (!points.length) { host.innerHTML = `<div class="weekly-empty"><b>No rating history is available.</b></div>`; return; }
+
+    const W = 900, H = 360, L = 70, R = 28, T = 30, B = 58;
+    const vals = points.map(p => p.power);
+    let lo = Math.max(0, Math.min(...vals) - .025), hi = Math.min(1, Math.max(...vals) + .025);
+    if (hi - lo < .08) { const mid = (hi + lo) / 2; lo = Math.max(0, mid - .04); hi = Math.min(1, mid + .04); }
+    const x = i => L + (points.length === 1 ? (W - L - R) / 2 : i * (W - L - R) / (points.length - 1));
+    const y = v => T + (hi - v) * (H - T - B) / Math.max(hi - lo, .001);
+    const ticks = Array.from({ length: 5 }, (_, i) => lo + i * (hi - lo) / 4);
+    const line = points.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.power).toFixed(1)}`).join(" ");
+    const last = points[points.length - 1], first = points[0];
+    const delta = last.power - first.power;
+    host.innerHTML = `<article class="history-panel" style="--team:${color(team)}">
+      <div class="history-summary">
+        <span>${teamMini(team)}</span>
+        <span><small>Current rank</small><b>#${last.rank}</b></span>
+        <span><small>Neutral win rate</small><b>${pct(last.power, 1)}</b></span>
+        <span><small>Since preseason</small><b class="${delta > 0 ? "up" : delta < 0 ? "down" : ""}">${delta > 0 ? "+" : ""}${(delta * 100).toFixed(1)} pts</b></span>
+      </div>
+      <div class="history-svg-wrap"><svg class="history-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(team)} neutral win rate history">
+        ${ticks.map(v => `<line x1="${L}" y1="${y(v)}" x2="${W-R}" y2="${y(v)}" class="history-grid"/><text x="${L-12}" y="${y(v)+4}" text-anchor="end">${pct(v, 0)}</text>`).join("")}
+        <path d="${line}" class="history-line"/>
+        ${points.map((p, i) => `<g><circle cx="${x(i)}" cy="${y(p.power)}" r="6"/><text x="${x(i)}" y="${H-B+28}" text-anchor="middle">${esc(p.label)}</text><text x="${x(i)}" y="${y(p.power)-13}" text-anchor="middle" class="history-value">${pct(p.power, 1)} · #${p.rank}</text></g>`).join("")}
+      </svg></div>
+      <p class="board-note">Each point replays every completed FBS-vs-FBS result through the model's existing weekly update, then recalculates the neutral-field round robin. Games from the same week are applied together.</p>
+    </article>`;
+  }
+  const powerHistorySelect = document.getElementById("power-history-team");
+  if (powerHistorySelect) powerHistorySelect.addEventListener("change", renderPowerHistory);
+
   let leaderKind = "players";
   function renderLeaders() {
     const group = document.getElementById("leader-group").value;
@@ -3023,7 +3093,7 @@
   }
 
   /* The board's universe: FBS vs FBS, with a line posted. Everything downstream -
-     the book list, the week list, the watchlist count - is derived from this one
+     the book list, the week list and the bet-filter count - is derived from this one
      list so the strip cannot report a game the table refuses to show. */
   const marketGames = (odds.weekly || []).filter(g =>
     g.books && Object.keys(g.books).length && isFBS(g.home) && isFBS(g.away));
@@ -3164,6 +3234,7 @@
   }
 
   let weeklyMarket = "spread";
+  let betsOnly = false;
   function renderWeeklyLines() {
     const book = document.getElementById("weekly-book").value;
     const market = weeklyMarket;
@@ -3173,10 +3244,8 @@
     const inWeek = marketGames.filter(g => week == null || g.week === week);
     const rows = marketRows(inWeek, market, book)
       .sort((a, b) => (a.week || 99) - (b.week || 99) || String(a.start).localeCompare(String(b.start)));
-    const candidates = (marketTracking.current_candidates || []).filter(c =>
-      isFBS(c.home) && isFBS(c.away) && (week == null || c.week === week));
-    const checked = marketTracking.checked_at ? new Date(marketTracking.checked_at) : null;
-    renderMarketTracking(candidates, checked, inWeek.length, week);
+    const betRows = rows.filter(g => betToPlace(g, market));
+    renderBetFilter(betRows.length, rows.length, week);
 
     const marketLabel = market === "moneyline" ? "Moneyline" : market === "total" ? "Total" : "Spread";
     const bookLabel = combined ? "Best price" : book;
@@ -3186,43 +3255,39 @@
         <small>Try another week or another sportsbook. Later weeks post prices as the season gets closer.</small></div>`;
       return;
     }
-    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span><span>Bet to place</span></div>${rows.map(g => {
+    if (betsOnly && !betRows.length) {
+      document.getElementById("weekly-lines").innerHTML = `<div class="weekly-empty">
+        <b>No ${marketLabel.toLowerCase()} bets clear the model's gate ${week == null ? "right now" : "in week " + week}.</b>
+        <small>Turn off the bet filter to compare every posted line.</small></div>`;
+      return;
+    }
+    const visibleRows = betsOnly ? betRows : rows;
+    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span><span>Bet to place</span></div>${visibleRows.map(g => {
       const lean = market === "total" ? (g.gap >= 0 ? "Over" : "Under") : (g.gap >= 0 ? g.home : g.away);
       const marketText = g.marketValue == null ? "—" : market === "moneyline" ? americanOdds(g.marketValue) : `${g.marketValue > 0 && market !== "total" ? "+" : ""}${Number(g.marketValue).toFixed(1)}`;
       const modelText = g.modelValue == null ? "—" : market === "moneyline" ? pct(g.modelValue, 1) : `${g.modelValue > 0 && market === "spread" ? "+" : ""}${g.modelValue.toFixed(1)}`;
       const gapText = g.gap == null ? "—" : `${esc(market === "total" ? lean : abbr(lean))} ${market === "moneyline" ? pct(Math.abs(g.gap), 1) : Math.abs(g.gap).toFixed(1)}`;
       const bet = betToPlace(g, market);
       const flip = bet ? picksOtherSide(g, market) : false;
-      return `<div class="weekly-row${bet ? (flip ? " bet flip" : " bet") : ""}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
+      return `<div class="weekly-row${bet ? (flip ? " bet flip" : " bet") : ""}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<span class="bet-tag">BET</span><b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
     }).join("")}</div>`;
   }
 
-  /* The watchlist tile opens the games behind the number. It used to report only a
-     count, which is useless - the question anyone has is which games are on it. */
-  let watchlistOpen = false;
-  function renderMarketTracking(candidates, checked, gameCount, week) {
+  /* One action-oriented filter. The board's own validated gate decides the count,
+     so the button and the BET tags can never disagree about what should be placed. */
+  function renderBetFilter(betCount, gameCount, week) {
     const host = document.getElementById("market-tracking");
-    if (!checked) {
-      host.innerHTML = `<div class="tracking-strip"><div><span class="eyebrow">Market data</span><b>No capture recorded</b><small>Historical lines stay visible; no price is treated as timestamped until a capture succeeds.</small></div></div>`;
-      return;
-    }
-    const list = candidates.map(c => {
-      const p = c.model_side_p == null ? "—" : pct(c.model_side_p, 1);
-      const m = c.consensus_side_p == null ? "—" : pct(c.consensus_side_p, 1);
-      return `<div class="watch-row"><div><small>WK ${c.week == null ? "—" : c.week}</small>${teamMini(c.away)}<i>at</i>${teamMini(c.home)}</div>
-        <div><small>Side</small><b>${esc(abbr(c.team))} ${c.best_price == null ? "" : americanOdds(c.best_price)}</b></div>
-        <div><small>Model vs market</small><b>${p} vs ${m}</b></div>
-        <div class="edge"><small>Gap</small><b>${c.gap == null ? "—" : (c.gap >= 0 ? "+" : "") + pct(c.gap, 1)}</b></div></div>`;
-    }).join("");
-    host.innerHTML = `<div class="tracking-strip${candidates.length ? " has-panel" : ""}">
-      <div><span class="eyebrow">Market data</span><b>${gameCount} FBS game${gameCount === 1 ? "" : "s"} with posted lines</b><small>${week == null ? "All weeks" : "Week " + week} · last retrieved ${checked.toLocaleString()}</small></div>
-      <button type="button" class="watch-toggle${watchlistOpen ? " open" : ""}" id="watch-toggle" aria-expanded="${watchlistOpen}"${candidates.length ? "" : " disabled"}>
-        <span>Watchlist</span><b>${candidates.length}</b><small>${candidates.length ? (watchlistOpen ? "Hide the games" : "Show the games") : "No games on the watchlist"}</small></button>
-      </div>${candidates.length ? `<div class="watch-panel"${watchlistOpen ? "" : " hidden"}>${list}</div>` : ""}`;
-    const toggle = document.getElementById("watch-toggle");
+    host.innerHTML = `<button type="button" class="bet-filter${betsOnly ? " active" : ""}"
+      id="bet-filter" aria-pressed="${betsOnly}">
+      <span><small>${week == null ? "All listed weeks" : "Week " + week}</small>
+      <b>Bets to place for the week</b></span>
+      <strong>${betCount}</strong>
+      <em>${betsOnly ? `Showing ${betCount} of ${gameCount}` : "Show bets only"}</em>
+    </button>`;
+    const toggle = document.getElementById("bet-filter");
     if (toggle) toggle.addEventListener("click", () => {
-      watchlistOpen = !watchlistOpen;
-      renderMarketTracking(candidates, checked, gameCount, week);
+      betsOnly = !betsOnly;
+      renderWeeklyLines();
     });
   }
 
@@ -3446,15 +3511,17 @@
     else if (view === "ratings") renderRatings();
     else if (view === "players") renderPlayers();
     else if (view === "power") renderPower();
+    else if (view === "power-history") renderPowerHistory();
     else if (view === "market") renderWeeklyLines();
     else if (view === "leaders") renderLeaders();
   }
   function renderAll() {
     fillConfSelect(); fillPlayerSelects(); fillRatingSelects();
     fillScenarioSelects(); fillLeaderControls(); fillWeeklyBooks(); fillWeeklyWeeks();
+    fillPowerHistoryTeams();
     renderDash(); renderPlayoff(); renderScenario(); renderMatchup(); renderTeam();
     renderRatings(); renderPlayers(); renderFutures(); renderOutcomeBands();
-    renderPower(); renderLeaders(); renderWeeklyLines(); renderTracking();
+    renderPower(); renderPowerHistory(); renderLeaders(); renderWeeklyLines(); renderTracking();
   }
   // Check the client-side power reproduces the exported column before anyone edits
   // anything. A scenario is only meaningful as a difference from the published

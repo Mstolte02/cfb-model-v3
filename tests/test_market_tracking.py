@@ -6,7 +6,8 @@ from pathlib import Path
 
 from scripts.capture_market_snapshot import (flatten, implied, latest_quotes,
                                              model_probability, publish_finals,
-                                             quote_key, quote_value)
+                                             quote_key, quote_value,
+                                             replay_published_results)
 from war_model.materialize_availability import current_rows
 
 
@@ -62,6 +63,45 @@ class MarketTrackingTests(unittest.TestCase):
             self.assertEqual(rows[0], {
                 "id": 1, "h": "UNLV", "a": "Memphis", "f": 1, "hp": 21, "ap": 27})
             self.assertNotIn("f", rows[1])
+
+    def test_completed_results_replay_is_idempotent_and_exports_history(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            schedule = root / "schedule.json"
+            model_path = root / "model.json"
+            ratings_path = root / "ratings.json"
+            schedule.write_text(json.dumps([
+                {"h": "A", "a": "C", "w": 1, "n": 0, "f": 1, "hp": 7, "ap": 35},
+                {"h": "B", "a": "A", "w": 1, "n": 0},
+            ]))
+            model_path.write_text(json.dumps({
+                "features": ["x"], "teams": {"A": [1.0], "B": [0.0], "C": [-1.0]},
+                "logistic": {"coef": [1.0], "hfa": 0.2, "intercept": 0.0},
+                "margin": {"coef": [4.0], "hfa": 2.0, "intercept": 0.0, "sigma": 10.0},
+                "ens_w": 0.5, "probability_scale": 1.0,
+                "dynamic": {"blend": 1.0, "k": 2.0,
+                            "ratings": {"A": 1.0, "B": 0.0, "C": -1.0}},
+            }))
+            ratings_path.write_text(json.dumps({"season": 2026, "teams": [
+                {"rank": 1, "team": "A", "power": .7, "vs_average": .7},
+                {"rank": 2, "team": "B", "power": .5, "vs_average": .5},
+                {"rank": 3, "team": "C", "power": .3, "vs_average": .3},
+            ]}))
+
+            self.assertEqual(replay_published_results(
+                schedule, model_path, ratings_path), 1)
+            first_model = model_path.read_text()
+            first_ratings = ratings_path.read_text()
+            payload = json.loads(first_ratings)
+            self.assertEqual([s["label"] for s in payload["history"]],
+                             ["Preseason", "Week 1 to date"])
+            self.assertEqual(payload["history"][-1]["completed_games"], 1)
+            self.assertGreater(json.loads(first_model)["dynamic"]["ratings"]["C"], -1.0)
+
+            self.assertEqual(replay_published_results(
+                schedule, model_path, ratings_path), 1)
+            self.assertEqual(model_path.read_text(), first_model)
+            self.assertEqual(ratings_path.read_text(), first_ratings)
 
     def test_availability_events_materialize_latest_state(self):
         with tempfile.TemporaryDirectory() as tmp:

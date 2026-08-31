@@ -10,7 +10,7 @@
 <meta property="og:image" content="https://mstolte02.github.io/cfb-model-v3/social-preview.png">
 <meta name="twitter:card" content="summary_large_image">
 <title>CFB Model v4 — 2026 Forecast Lab</title>
-<link rel="stylesheet" href="style.css?v=35">
+<link rel="stylesheet" href="style.css?v=36">
 </head>
 <body>
 <header class="site-header">
@@ -20,28 +20,32 @@
     <span class="season">2026</span>
   </div>
   <nav class="hub-nav" aria-label="Primary">
-    <button class="hub-tab active" data-hub="futures" data-default="dash"><span>01</span> Futures</button>
-    <button class="hub-tab" data-hub="weekly" data-default="matchup"><span>02</span> Weekly</button>
-    <button class="hub-tab" data-hub="people" data-default="leaders"><span>03</span> Players &amp; Teams</button>
-    <button class="hub-tab" data-hub="simulation" data-default="scenario"><span>04</span> Simulation</button>
+    <button class="hub-tab" data-hub="futures" data-default="dash">Futures</button>
+    <button class="hub-tab active" data-hub="weekly" data-default="market">Weekly</button>
+    <button class="hub-tab" data-hub="people" data-default="leaders">Ratings</button>
+    <button class="hub-tab" data-hub="rankings" data-default="power">Power Rankings</button>
+    <button class="hub-tab" data-hub="simulation" data-default="scenario">Simulation</button>
   </nav>
 </header>
 <div class="section-bar">
-  <nav class="section-nav active" data-hub-nav="futures">
-    <button class="tab active" data-view="dash">Futures board</button>
+  <nav class="section-nav" data-hub-nav="futures">
+    <button class="tab" data-view="dash">Futures board</button>
     <button class="tab" data-view="playoff">Playoff projection</button>
   </nav>
-  <nav class="section-nav" data-hub-nav="weekly">
+  <nav class="section-nav active" data-hub-nav="weekly">
     <button class="tab" data-view="matchup">Matchup lab</button>
-    <button class="tab" data-view="market">Market board</button>
+    <button class="tab active" data-view="market">Market board</button>
     <button class="tab" data-view="tracking">Tracking Mark's Model</button>
-    <button class="tab" data-view="power">Power rankings</button>
   </nav>
   <nav class="section-nav" data-hub-nav="people">
     <button class="tab" data-view="leaders">Top 10 studio</button>
     <button class="tab" data-view="team">Team breakdown</button>
     <button class="tab" data-view="ratings">Team tables</button>
     <button class="tab" data-view="players">Player tables</button>
+  </nav>
+  <nav class="section-nav" data-hub-nav="rankings">
+    <button class="tab" data-view="power">Power rankings</button>
+    <button class="tab" data-view="power-history">Team history</button>
   </nav>
   <nav class="section-nav" data-hub-nav="simulation">
     <button class="tab" data-view="scenario">Scenario builder</button>
@@ -51,7 +55,7 @@
 </div>
 
 <main>
-  <section id="view-dash" class="view active">
+  <section id="view-dash" class="view">
     <div class="view-head editorial-head">
       <span class="eyebrow">Season-long markets</span>
       <h2>Find the gap between the forecast and the price.</h2>
@@ -102,6 +106,13 @@
     </div>
   </section>
 
+  <section id="view-power-history" class="view">
+    <div class="view-head editorial-head"><span class="eyebrow">How the model moves</span><h2>Neutral win rate over the season.</h2>
+      <p class="sub">Choose a team to track its power rating after each completed week. The rating is the team's neutral-field win rate against the full FBS model universe.</p></div>
+    <div class="history-toolbar"><label>Team <select id="power-history-team"></select></label></div>
+    <div id="power-history-chart"></div>
+  </section>
+
   <section id="view-leaders" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">The roster atlas</span><h2>Top 10, every way you want it.</h2>
       <p class="sub">Player leaderboards use intrinsic WAR; team rooms use role-adjusted contribution, with sortable tables one tab away.</p></div>
@@ -128,7 +139,7 @@
     <div id="matchup-result"></div>
   </section>
 
-  <section id="view-market" class="view">
+  <section id="view-market" class="view active">
     <div class="view-head editorial-head"><span class="eyebrow">Weekly market board</span><h2>Where the model and the book disagree.</h2>
       <p class="sub">Every FBS game with a posted line, one week at a time. Compare an individual sportsbook or use consensus probability with the best available price. Games against FCS opposition are left off: the model does not rate those teams, so it has no honest number to price them with.</p></div>
     <div class="market-toolbar">
@@ -165,7 +176,7 @@
 
   <section id="view-scenario" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">Build your season</span><h2>Scenario Builder</h2>
-      <p class="sub">Pick schedule and conference-title winners, rebuild the committee field, then choose every playoff round and crown your own champion. Unpicked games stay on the model favorite; this is an outcome, not odds.</p></div>
+      <p class="sub">Completed games are locked to their final result. Pick the remaining schedule and conference-title winners, rebuild the committee field, then choose every playoff round and crown your own champion.</p></div>
     <div class="dash-toolbar" id="sc-toolbar">
       <div class="seg" id="sc-mode"><button class="seg-btn active" data-mode="pick">Pick the games</button><button class="seg-btn" data-mode="playoff">Pick the playoff</button></div>
       <span class="sc-filters"><input type="search" id="sc-search" placeholder="Search teams…"><select id="sc-conf"><option value="">All conferences</option></select><select id="sc-week"><option value="">All weeks</option></select><select id="sc-scope"><option value="">All games</option><option value="close">Toss-ups only</option><option value="conf">Conference games</option><option value="picked">Games I picked</option></select></span>
@@ -190,6 +201,6 @@
 </main>
 
 <footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Model probabilities are estimates. Sportsbook prices are dated snapshots, not live quotes. Gamble responsibly.</span></footer>
-<script src="app.js?v=39"></script>
+<script src="app.js?v=40"></script>
 </body>
 </html>
