@@ -12,6 +12,17 @@ from war_model.materialize_availability import current_rows
 
 
 class MarketTrackingTests(unittest.TestCase):
+    def test_published_ratings_cover_both_2026_fbs_newcomers(self):
+        root = Path(__file__).resolve().parents[1]
+        ratings = json.loads((root / "viz/data/ratings.json").read_text())
+        model = json.loads((root / "viz/data/model_v4.json").read_text())
+        rated = {row["team"] for row in ratings["teams"]}
+        newcomers = {"Sacramento State", "North Dakota State"}
+        self.assertEqual(rated, set(model["teams"]))
+        self.assertTrue(newcomers <= rated)
+        for snapshot in ratings.get("history", []):
+            self.assertTrue(newcomers <= {row["team"] for row in snapshot["teams"]})
+
     def test_quote_change_identity_ignores_capture_time(self):
         raw = [{"id": 1, "week": 1, "startDate": "2026-09-01T00:00:00Z",
                 "homeTeam": "A", "awayTeam": "B", "lines": [{
@@ -70,6 +81,8 @@ class MarketTrackingTests(unittest.TestCase):
             schedule = root / "schedule.json"
             model_path = root / "model.json"
             ratings_path = root / "ratings.json"
+            teams_path = root / "teams.json"
+            playoff_path = root / "playoff.json"
             schedule.write_text(json.dumps([
                 {"h": "A", "a": "C", "w": 1, "n": 0, "f": 1, "hp": 7, "ap": 35},
                 {"h": "B", "a": "A", "w": 1, "n": 0},
@@ -85,21 +98,29 @@ class MarketTrackingTests(unittest.TestCase):
             ratings_path.write_text(json.dumps({"season": 2026, "teams": [
                 {"rank": 1, "team": "A", "power": .7, "vs_average": .7},
                 {"rank": 2, "team": "B", "power": .5, "vs_average": .5},
-                {"rank": 3, "team": "C", "power": .3, "vs_average": .3},
             ]}))
+            teams_path.write_text(json.dumps({"C": {"conference": "New League"}}))
+            playoff_path.write_text(json.dumps({"teams": [{
+                "team": "C", "conference": "New League", "avg_wins": 4.5,
+                "avg_losses": 7.5, "conf_champ": .01, "playoff": 0.0,
+            }]}))
 
             self.assertEqual(replay_published_results(
-                schedule, model_path, ratings_path), 1)
+                schedule, model_path, ratings_path, teams_path, playoff_path), 1)
             first_model = model_path.read_text()
             first_ratings = ratings_path.read_text()
             payload = json.loads(first_ratings)
             self.assertEqual([s["label"] for s in payload["history"]],
                              ["Preseason", "Week 1 to date"])
             self.assertEqual(payload["history"][-1]["completed_games"], 1)
+            self.assertEqual(len(payload["teams"]), 3)
+            newcomer = next(row for row in payload["teams"] if row["team"] == "C")
+            self.assertEqual(newcomer["conference"], "New League")
+            self.assertEqual(newcomer["avg_wins"], 4.5)
             self.assertGreater(json.loads(first_model)["dynamic"]["ratings"]["C"], -1.0)
 
             self.assertEqual(replay_published_results(
-                schedule, model_path, ratings_path), 1)
+                schedule, model_path, ratings_path, teams_path, playoff_path), 1)
             self.assertEqual(model_path.read_text(), first_model)
             self.assertEqual(ratings_path.read_text(), first_ratings)
 

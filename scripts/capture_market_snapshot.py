@@ -38,6 +38,8 @@ TRACKING = ROOT / "viz" / "data" / "market_tracking.json"
 SCHEDULE = ROOT / "viz" / "data" / "schedule.json"
 MODEL = ROOT / "viz" / "data" / "model_v4.json"
 RATINGS = ROOT / "viz" / "data" / "ratings.json"
+TEAMS = ROOT / "viz" / "data" / "teams.json"
+PLAYOFF = ROOT / "viz" / "data" / "playoff.json"
 HISTORICAL = ROOT / "audit" / "book_shopping_backtest.json"
 AVAILABILITY = ROOT / "war_model" / "availability_events_2026.csv"
 
@@ -200,8 +202,89 @@ def _power_snapshot(model: dict, names: list[str], dynamic_ratings: dict) -> lis
     return rows
 
 
+def _read_optional_json(path: Path | None, fallback):
+    if path is None or not path.exists():
+        return fallback
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _percentile(values: list[float], q: float) -> float | None:
+    """Linear percentile matching pandas/numpy's default interpolation."""
+    if not values:
+        return None
+    ordered = sorted(float(value) for value in values)
+    position = (len(ordered) - 1) * q
+    lower, upper = math.floor(position), math.ceil(position)
+    if lower == upper:
+        return ordered[lower]
+    fraction = position - lower
+    return ordered[lower] * (1.0 - fraction) + ordered[upper] * fraction
+
+
+def _schedule_strength(model: dict, names: list[str], schedule: list[dict]) -> dict:
+    """Mean standardized opponent strength using the exporter's exact definition."""
+    features = model.get("features") or []
+    try:
+        oi, di = features.index("O"), features.index("D")
+    except ValueError:
+        return {team: (None, 0) for team in names}
+    raw = {team: (float(model["teams"][team][oi])
+                  + float(model["teams"][team][di])) / 2.0 for team in names}
+    mean = statistics.mean(raw.values())
+    sd = statistics.stdev(raw.values()) if len(raw) > 1 else 0.0
+    standardized = {team: ((value - mean) / sd if sd else 0.0)
+                    for team, value in raw.items()}
+    total, count = ({team: 0.0 for team in names}, {team: 0 for team in names})
+    field = set(names)
+    for game in schedule:
+        home, away = game.get("h"), game.get("a")
+        home_in, away_in = home in field, away in field
+        if home_in and away_in:
+            total[home] += standardized[away]; count[home] += 1
+            total[away] += standardized[home]; count[away] += 1
+        elif home_in or away_in:
+            team = home if home_in else away
+            total[team] += -2.0; count[team] += 1
+    return {team: ((total[team] / count[team]) if count[team] else None,
+                   count[team]) for team in names}
+
+
+def _rating_shell(team: str, model: dict, old_rows: list[dict],
+                  team_meta: dict, playoff: dict, schedule_strength: dict) -> dict:
+    """Build a complete dashboard row for a model team absent from ratings.json."""
+    features = model.get("features") or []
+    vector = model["teams"][team]
+    values = dict(zip(features, vector))
+    po = playoff.get(team, {})
+    sos, games = schedule_strength.get(team, (None, 0))
+    talent = _percentile([row["talent"] for row in old_rows
+                          if row.get("talent") is not None], 0.05)
+    row = {
+        "team": team,
+        "conference": team_meta.get(team, {}).get("conference")
+                      or po.get("conference") or "—",
+        "O": round(float(values["O"]), 3) if values.get("O") is not None else None,
+        "D": round(float(values["D"]), 3) if values.get("D") is not None else None,
+        # Newcomers receive the same fifth-percentile frame fallback everywhere.
+        # Raw talent is not in the compact model vector, so recover that percentile
+        # from the already-published rows until the full exporter next runs.
+        "talent": round(float(talent), 3) if talent is not None else None,
+        "returning": (round(float(values["returning"]), 3)
+                      if values.get("returning") is not None else None),
+        "sos": round(float(sos), 3) if sos is not None else None,
+        "games": games,
+        "avg_wins": po.get("avg_wins"),
+        "avg_losses": po.get("avg_losses"),
+    }
+    for key in ("conf_champ", "playoff", "bye", "sf", "final", "champ"):
+        row[key] = po.get(key, 0.0)
+    return row
+
+
 def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = MODEL,
-                             ratings_path: Path = RATINGS) -> int:
+                             ratings_path: Path = RATINGS,
+                             teams_path: Path | None = TEAMS,
+                             playoff_path: Path | None = PLAYOFF) -> int:
     """Replay every published final from the preseason baseline, grouped by week.
 
     Rebuilding from the baseline on every capture makes the operation idempotent and
@@ -215,8 +298,10 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
     ratings = json.loads(ratings_path.read_text(encoding="utf-8"))
     dynamic = model.get("dynamic") or {}
     current = dynamic.get("ratings") or {}
-    names = [row["team"] for row in ratings.get("teams", [])
-             if row["team"] in current and row["team"] in model.get("teams", {})]
+    # The compact model is the authoritative FBS universe. This deliberately does
+    # not inherit the old 136-row ratings truncation: 2026 newcomers have fallback
+    # vectors and are fully rated members of the schedule and simulation.
+    names = [team for team in model.get("teams", {}) if team in current]
     if len(names) < 2:
         return 0
 
@@ -258,13 +343,19 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
 
     current_rows = history[-1]["teams"]
     by_team = {row["team"]: row for row in current_rows}
+    old_rows = ratings.get("teams", [])
+    old_by_team = {row["team"]: row for row in old_rows}
+    team_meta = _read_optional_json(teams_path, {})
+    playoff_rows = _read_optional_json(playoff_path, {}).get("teams", [])
+    playoff = {row["team"]: row for row in playoff_rows}
+    strengths = _schedule_strength(model, names, schedule)
     updated_rows = []
-    for old in ratings.get("teams", []):
-        new = by_team.get(old["team"])
-        if new:
-            old = {**old, "rank": new["rank"], "power": new["power"],
-                   "vs_average": new["vs_average"]}
-        updated_rows.append(old)
+    for team in names:
+        old = old_by_team.get(team) or _rating_shell(
+            team, model, old_rows, team_meta, playoff, strengths)
+        new = by_team[team]
+        updated_rows.append({**old, "rank": new["rank"], "power": new["power"],
+                             "vs_average": new["vs_average"]})
     updated_rows.sort(key=lambda row: (row.get("rank", 999), row["team"]))
     ratings["teams"] = updated_rows
     ratings["history"] = history

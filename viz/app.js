@@ -89,7 +89,7 @@
   const G6 = new Set(["American Athletic", "Conference USA", "Mid-American",
     "Mountain West", "Pac-12", "Sun Belt"]);
 
-  /* ratings.json carries the 136 FBS teams and nothing else, so membership in it IS
+  /* ratings.json carries all 138 FBS teams and nothing else, so membership in it IS
      the FBS test. It matters on the market board: a third of the opening weekend is
      FBS-vs-FCS, the model has no rating for the FCS side, and a row with no model
      number on it is not a comparison - it is a sportsbook line with an empty column
@@ -982,13 +982,10 @@
     const P4C = new Set(pl.p4_confs || [...P4]);
     const G6C = new Set(pl.g6_confs || [...G6]);
 
-    /* The universe is every team the model carries a vector for, NOT the 136 rows in
-       ratings.json. Those two sets differ by the FBS newcomers, who get a
-       5th-percentile fallback row in the frame and so are absent from the power
-       ratings but very much present on the schedule. Ranking over the smaller set
-       charged their opponents the non-FBS schedule penalty and shifted both z-scores,
-       which moved every committee score by about 0.01 against the Python. Same set,
-       same numbers. */
+    /* The universe is every team the model carries a vector for. That includes the
+       two 2026 FBS newcomers, whose fifth-percentile fallback rows are also published
+       in ratings.json. Keeping the sets identical prevents their opponents from being
+       charged the non-FBS schedule penalty and keeps the browser aligned with Python. */
     const names = Object.keys(cur().model.teams).filter(t => vecOf(t));
     const fbs = new Set(names);
 

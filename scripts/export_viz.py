@@ -18,7 +18,7 @@ import pandas as pd
 
 from config import ROOT, ARTIFACTS, GAME_YEARS, PROJECTION_YEAR
 from src import v4 as V4
-from src.dynamic import WeeklyRatingState
+from src.dynamic import WeeklyRatingState, current_power_ratings
 from src import spread as SP
 from scripts.train import load_bundle
 
@@ -165,7 +165,16 @@ def main():
             comp.loc[t] = frame.quantile(0.05)
     comp = comp.loc[[t for t in teams_meta]]
 
-    power = pd.read_csv(ARTIFACTS / "2026_power_ratings.csv").set_index("team")
+    # Rank the complete 2026 membership, including newcomers that have no FBS prior.
+    # The training frame remains 136 teams; ``comp`` adds the same fifth-percentile
+    # fallback rows used by the simulation, so the published ratings and model team
+    # universes cannot drift apart.
+    state_path = ARTIFACTS / f"{PROJECTION_YEAR}_dynamic_state.json"
+    state = (WeeklyRatingState.load(state_path) if state_path.exists() else
+             WeeklyRatingState.initialize(model, comp, PROJECTION_YEAR))
+    for team in comp.index:
+        state.ratings.setdefault(team, model.team_logit_strength(comp, team))
+    power = current_power_ratings(model, comp, state).set_index("team")
     playoff = {r["team"]: r for r in
                json.loads((VIZ / "playoff.json").read_text())["teams"]}
 
@@ -233,11 +242,6 @@ def main():
     # and iterating comp.loc[t] would silently widen the vector past the six the
     # coefficients are indexed against.
     FEATS = model.feature_names
-    state_path = ARTIFACTS / f"{PROJECTION_YEAR}_dynamic_state.json"
-    state = (WeeklyRatingState.load(state_path) if state_path.exists() else
-             WeeklyRatingState.initialize(model, frame, PROJECTION_YEAR))
-    for team in comp.index:
-        state.ratings.setdefault(team, model.team_logit_strength(comp, team))
     export = {
         "schema_version": 4,
         "features": FEATS,
