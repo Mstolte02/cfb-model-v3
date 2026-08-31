@@ -3216,6 +3216,7 @@
      board's flag and the tracker's record come from this one function. */
   function betToPlace(g, market) {
     const RULE = BET_RULES[market];
+    if (g.bettingExcluded) return null;
     if (g.gap == null || g.marketValue == null) return null;
     const flip = picksOtherSide(g, market);
     if (!flip && Math.abs(g.gap) < RULE.minGap) return null;

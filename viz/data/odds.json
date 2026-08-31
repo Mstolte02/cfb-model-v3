@@ -1588,7 +1588,8 @@
    }
   },
   {
-   "id": 401864577,
+    "id": 401864577,
+    "bettingExcluded": true,
    "week": 1,
    "start": "2026-08-29T21:30:00.000Z",
    "home": "North Dakota State",
@@ -1715,7 +1716,8 @@
    }
   },
   {
-   "id": 401866408,
+    "id": 401866408,
+    "bettingExcluded": true,
    "week": 1,
    "start": "2026-08-29T22:30:00.000Z",
    "home": "Eastern Michigan",

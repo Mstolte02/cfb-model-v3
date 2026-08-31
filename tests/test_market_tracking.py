@@ -7,11 +7,28 @@ from pathlib import Path
 from scripts.capture_market_snapshot import (flatten, implied, latest_quotes,
                                              model_probability, publish_finals,
                                              quote_key, quote_value,
-                                             replay_published_results)
+                                             replay_published_results,
+                                             weekly_payload)
 from war_model.materialize_availability import current_rows
 
 
 class MarketTrackingTests(unittest.TestCase):
+    def test_newcomer_week_zero_games_are_excluded_from_bets(self):
+        rows = weekly_payload({
+            (401864577, "Book"): {"game_id": 401864577, "provider": "Book",
+                "week": 1, "start": "2026-08-29T21:30:00Z",
+                "home": "North Dakota State", "away": "Jacksonville State"},
+            (401866408, "Book"): {"game_id": 401866408, "provider": "Book",
+                "week": 1, "start": "2026-08-29T22:30:00Z",
+                "home": "Eastern Michigan", "away": "Sacramento State"},
+            (99, "Book"): {"game_id": 99, "provider": "Book", "week": 1,
+                "start": "2026-09-05T00:00:00Z", "home": "A", "away": "B"},
+        })
+        by_id = {row["id"]: row for row in rows}
+        self.assertTrue(by_id[401864577]["bettingExcluded"])
+        self.assertTrue(by_id[401866408]["bettingExcluded"])
+        self.assertNotIn("bettingExcluded", by_id[99])
+
     def test_published_ratings_cover_both_2026_fbs_newcomers(self):
         root = Path(__file__).resolve().parents[1]
         ratings = json.loads((root / "viz/data/ratings.json").read_text())

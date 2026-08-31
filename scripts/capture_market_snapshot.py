@@ -47,6 +47,11 @@ PROVIDER_ALIAS = {"Draft Kings": "DraftKings"}
 QUOTE_FIELDS = ("spread", "spreadOpen", "overUnder", "overUnderOpen",
                 "homeMoneyline", "awayMoneyline")
 
+# These lines were not available to the model as a ready, forward-looking Week 0
+# board. Both games also involved a first-year FBS team with only the newcomer
+# fallback prior, so they are retained as results but excluded from every bet output.
+BET_EXCLUDED_GAME_IDS = {401864577, 401866408}
+
 
 def utcnow() -> datetime:
     return datetime.now(timezone.utc).replace(microsecond=0)
@@ -485,9 +490,12 @@ def weekly_payload(quotes: dict[tuple, dict]) -> list[dict]:
         first = lines[0]
         books = {row["provider"]: {field: row.get(field) for field in QUOTE_FIELDS}
                  for row in lines}
-        out.append({"id": first["game_id"], "week": first.get("week"),
-                    "start": first.get("start"), "home": first.get("home"),
-                    "away": first.get("away"), "books": books})
+        row = {"id": first["game_id"], "week": first.get("week"),
+               "start": first.get("start"), "home": first.get("home"),
+               "away": first.get("away"), "books": books}
+        if int(first["game_id"]) in BET_EXCLUDED_GAME_IDS:
+            row["bettingExcluded"] = True
+        out.append(row)
     return sorted(out, key=lambda r: (r.get("week") or 99, r.get("start") or ""))
 
 
@@ -550,6 +558,8 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None) -> dict
     entered = {(int(e["game_id"]), e["side"]) for e in existing_entries}
     candidates, new_entries = [], []
     for game_id, lines in group_games(current_quotes).items():
+        if game_id in BET_EXCLUDED_GAME_IDS:
+            continue
         ml = [r for r in lines if no_vig_home(r) is not None]
         # One book is a quote, not a consensus. The researched rule was explicitly
         # multi-book and is not allowed to trigger until at least two providers carry
@@ -590,7 +600,8 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None) -> dict
             new_entries.append(entry)
             entered.add((game_id, side))
     append_jsonl(ENTRIES, new_entries)
-    all_entries = existing_entries + new_entries
+    all_entries = [entry for entry in existing_entries + new_entries
+                   if int(entry["game_id"]) not in BET_EXCLUDED_GAME_IDS]
 
     existing_settlements = {(int(s["game_id"]), s["side"])
                             for s in read_jsonl(SETTLEMENTS)}
