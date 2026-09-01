@@ -1,12 +1,14 @@
 import json
 import tempfile
 import unittest
+import urllib.error
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import patch
 
-from scripts.capture_market_snapshot import (flatten, implied, latest_quotes,
+from scripts.capture_market_snapshot import (fetch_cfbd, flatten, implied, latest_quotes,
                                              model_probability, publish_finals,
-                                             quote_key, quote_value,
+                                             quote_key, quote_payload_hash, quote_value,
                                              replay_published_results,
                                              weekly_payload)
 from war_model.materialize_availability import current_rows
@@ -51,6 +53,38 @@ class MarketTrackingTests(unittest.TestCase):
         self.assertEqual(quote_value(a), quote_value(b))
         self.assertEqual(latest_quotes([a, b])[(1, "DraftKings")]["captured_at"],
                          "2026-08-01T06:00:00Z")
+
+    def test_duplicate_provider_aliases_are_collapsed_before_hashing(self):
+        raw = [{"id": 1, "week": 1, "startDate": "2026-09-01T00:00:00Z",
+                "homeTeam": "A", "awayTeam": "B", "lines": [
+                    {"provider": "Draft Kings", "spread": None,
+                     "overUnder": 52.5, "homeMoneyline": None,
+                     "awayMoneyline": 130},
+                    {"provider": "DraftKings", "spread": -3.5,
+                     "overUnder": 52.5, "homeMoneyline": -150,
+                     "awayMoneyline": 130},
+                ]}]
+        rows = flatten(raw, "2026-08-01T00:00:00Z")
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(quote_key(rows[0]), (1, "DraftKings"))
+        self.assertEqual(rows[0]["spread"], -3.5)
+        self.assertEqual(len(quote_payload_hash(rows)), 64)
+
+    def test_payload_hash_handles_duplicate_keys_with_null_and_numeric_values(self):
+        rows = [
+            {"game_id": 1, "provider": "DraftKings", "spread": None},
+            {"game_id": 1, "provider": "DraftKings", "spread": -3.5},
+        ]
+        self.assertEqual(quote_payload_hash(rows), quote_payload_hash(list(reversed(rows))))
+
+    def test_cfbd_fetch_retries_transient_server_error(self):
+        error = urllib.error.HTTPError("https://example.test", 502, "Bad Gateway", {}, None)
+        with patch("scripts.capture_market_snapshot._fetch_cfbd_once",
+                   side_effect=[error, [{"id": 1}]]) as request, \
+             patch("scripts.capture_market_snapshot.time.sleep") as sleep:
+            self.assertEqual(fetch_cfbd("key", "/lines", {"year": 2026}), [{"id": 1}])
+        self.assertEqual(request.call_count, 2)
+        sleep.assert_called_once_with(1)
 
     def test_removed_quote_tombstone_does_not_remain_current(self):
         row = {"game_id": 1, "provider": "Bovada", "captured_at": "2026-08-01T00:00:00Z"}

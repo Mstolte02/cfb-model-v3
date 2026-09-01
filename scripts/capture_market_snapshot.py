@@ -19,6 +19,8 @@ import math
 import os
 import statistics
 import subprocess
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -91,8 +93,7 @@ def load_env() -> None:
             os.environ.setdefault(key.strip(), value.strip().strip("\"'"))
 
 
-def fetch_cfbd(key: str, endpoint: str, params: dict) -> list[dict]:
-    url = f"{BASE}{endpoint}?{urllib.parse.urlencode(params)}"
+def _fetch_cfbd_once(key: str, url: str) -> list[dict]:
     if os.name == "nt":
         config = (f'url = "{url}"\nheader = "Authorization: Bearer {key}"\n'
                   'header = "Accept: application/json"\nsilent\nshow-error\n'
@@ -110,6 +111,23 @@ def fetch_cfbd(key: str, endpoint: str, params: dict) -> list[dict]:
         "User-Agent": "cfb-model-v3-market-capture/1.0"})
     with urllib.request.urlopen(request, timeout=45) as response:
         return json.load(response)
+
+
+def fetch_cfbd(key: str, endpoint: str, params: dict) -> list[dict]:
+    """Fetch CFBD data, retrying only transient network and server failures."""
+    url = f"{BASE}{endpoint}?{urllib.parse.urlencode(params)}"
+    attempts = 3
+    for attempt in range(attempts):
+        try:
+            return _fetch_cfbd_once(key, url)
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError,
+                subprocess.TimeoutExpired, RuntimeError) as exc:
+            status = getattr(exc, "code", None)
+            retryable = status is None or 500 <= int(status) < 600
+            if not retryable or attempt == attempts - 1:
+                raise
+            time.sleep(2 ** attempt)
+    raise RuntimeError("CFBD request exhausted retries")
 
 
 def fetch_lines(key: str) -> list[dict]:
@@ -380,10 +398,15 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
 
 
 def flatten(raw: list[dict], captured_at: str) -> list[dict]:
-    rows = []
+    # CFBD can return both an old and new spelling for the same provider/game.
+    # Collapse those aliases before downstream identity and hashing logic sees them.
+    # Prefer the most complete quote, then the canonical provider spelling, then a
+    # deterministic serialized value when two equally complete rows disagree.
+    rows: dict[tuple[int, str], tuple[tuple, dict]] = {}
     for game in raw:
         for line in game.get("lines") or []:
-            provider = PROVIDER_ALIAS.get(line.get("provider"), line.get("provider"))
+            raw_provider = line.get("provider")
+            provider = PROVIDER_ALIAS.get(raw_provider, raw_provider)
             if not provider:
                 continue
             row = {"captured_at": captured_at, "season": YEAR,
@@ -402,8 +425,15 @@ def flatten(raw: list[dict], captured_at: str) -> list[dict]:
             if all(values[field] is None for field in QUOTE_FIELDS):
                 continue
             row.update(values)
-            rows.append(row)
-    return rows
+            priority = (
+                sum(value is not None for value in values.values()),
+                raw_provider == provider,
+                json.dumps(values, sort_keys=True, separators=(",", ":"), default=str),
+            )
+            key = quote_key(row)
+            if key not in rows or priority > rows[key][0]:
+                rows[key] = (priority, row)
+    return [rows[key][1] for key in sorted(rows)]
 
 
 def quote_key(row: dict) -> tuple:
@@ -412,6 +442,14 @@ def quote_key(row: dict) -> tuple:
 
 def quote_value(row: dict) -> tuple:
     return tuple(row.get(field) for field in QUOTE_FIELDS)
+
+
+def quote_payload_hash(rows: list[dict]) -> str:
+    """Hash quote identities without comparing nullable numeric values."""
+    serialized = [json.dumps((quote_key(row), quote_value(row)),
+                             separators=(",", ":"), default=str)
+                  for row in rows]
+    return hashlib.sha256("\n".join(sorted(serialized)).encode()).hexdigest()
 
 
 def latest_quotes(events: list[dict], before: datetime | None = None,
@@ -542,8 +580,7 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None) -> dict
         changed.append(tombstone)
     append_jsonl(QUOTES, changed)
     events = prior_events + changed
-    payload_hash = hashlib.sha256(json.dumps(
-        sorted((quote_key(r), quote_value(r)) for r in current), default=str).encode()).hexdigest()
+    payload_hash = quote_payload_hash(current)
     check = {"checked_at": captured_at, "source": "CFBD /lines",
              "timestamp_semantics": "retrieval time, not sportsbook quote time",
              "games": len({r["game_id"] for r in current}), "quotes": len(current),

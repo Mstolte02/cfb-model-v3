@@ -2,6 +2,12 @@ name: Capture market snapshot
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/capture_market_snapshot.py
+      - tests/test_market_tracking.py
+      - .github/workflows/market-snapshots.yml
   schedule:
     # Six-hour retrievals during the football calendar. These timestamps are our
     # observation times, not sportsbook-native quote times.
@@ -27,6 +33,8 @@ jobs:
       CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
     steps:
       - uses: actions/checkout@v7
+      - name: Run market tracking tests
+        run: python3 -m unittest tests.test_market_tracking
       - name: Capture timestamped provider prices
         run: python3 scripts/capture_market_snapshot.py --allow-missing-key
       - id: changes
