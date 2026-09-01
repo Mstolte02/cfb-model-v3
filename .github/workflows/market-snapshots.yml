@@ -2,6 +2,12 @@ name: Capture market snapshot
 
 on:
   workflow_dispatch:
+    inputs:
+      lock_weekly_board:
+        description: Replace the public board with this capture
+        required: false
+        default: false
+        type: boolean
   push:
     branches: [main]
     paths:
@@ -13,6 +19,10 @@ on:
     # observation times, not sportsbook-native quote times.
     - cron: "17 */6 * 7-12 *"
     - cron: "17 */6 1-15 1 *"
+    # The actionable board locks once a week. July-October is EDT (UTC-4) for
+    # the 2026 season; November-January is EST (UTC-5).
+    - cron: "30 16 * 7-10 1"
+    - cron: "30 17 * 1,11-12 1"
 
 permissions:
   contents: write
@@ -36,7 +46,15 @@ jobs:
       - name: Run market tracking tests
         run: python3 -m unittest tests.test_market_tracking
       - name: Capture timestamped provider prices
-        run: python3 scripts/capture_market_snapshot.py --allow-missing-key
+        shell: bash
+        env:
+          LOCK_WEEKLY_BOARD: ${{ inputs.lock_weekly_board || github.event.schedule == '30 16 * 7-10 1' || github.event.schedule == '30 17 * 1,11-12 1' }}
+        run: |
+          args=(--allow-missing-key)
+          if [ "$LOCK_WEEKLY_BOARD" = "true" ]; then
+            args+=(--lock-weekly-board)
+          fi
+          python3 scripts/capture_market_snapshot.py "${args[@]}"
       - id: changes
         name: Record append-only snapshot changes
         shell: bash

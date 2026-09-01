@@ -537,6 +537,36 @@ def weekly_payload(quotes: dict[tuple, dict]) -> list[dict]:
     return sorted(out, key=lambda r: (r.get("week") or 99, r.get("start") or ""))
 
 
+def update_weekly_board(odds: dict, quotes: dict[tuple, dict], captured_at: str,
+                        lock_weekly_board: bool) -> bool:
+    """Replace the actionable board only at its weekly lock.
+
+    Raw quote observations continue to accumulate between locks. Keeping this write
+    separate prevents the public picks and the lines used to grade them from drifting
+    as sportsbooks move during the week.
+    """
+    if not lock_weekly_board and "weekly" in odds:
+        existing_source = (odds.get("sources") or {}).get("cfbd_lines") or {}
+        odds.setdefault("weekly_lock", {
+            "locked_at": existing_source.get("as_of"),
+            "cadence": "Monday 12:30 PM ET",
+            "timezone": "America/New_York",
+            "reason": "pre-lock baseline",
+        })
+        return False
+    odds["weekly"] = weekly_payload(quotes)
+    odds["weekly_lock"] = {
+        "locked_at": captured_at,
+        "cadence": "Monday 12:30 PM ET",
+        "timezone": "America/New_York",
+        "reason": "scheduled" if lock_weekly_board else "initial bootstrap",
+    }
+    odds.setdefault("sources", {})["cfbd_lines"] = {
+        "book": "Multiple", "as_of": captured_at, "url": BASE + "/",
+        "timestamp_semantics": "weekly board lock; Monday 12:30 PM ET"}
+    return True
+
+
 def valid_close(events: list[dict], checks: list[dict], game_id: int,
                 kickoff: datetime) -> tuple[list[dict], dict | None]:
     eligible = [c for c in checks if parse_time(c["checked_at"]) <= kickoff]
@@ -561,7 +591,8 @@ def availability_summary() -> dict:
             "last_event_at": max((r.get("observed_at") or "" for r in rows), default=None)}
 
 
-def run(raw: list[dict], now: datetime, games: list[dict] | None = None) -> dict:
+def run(raw: list[dict], now: datetime, games: list[dict] | None = None,
+        lock_weekly_board: bool = False) -> dict:
     LEDGER_DIR.mkdir(parents=True, exist_ok=True)
     captured_at = iso(now)
     current = flatten(raw, captured_at)
@@ -632,7 +663,7 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None) -> dict
                "gate": "80% Jeffreys lower bound > best-price break-even + 1pp",
                "model_fingerprint": model_fingerprint()}
         candidates.append(row)
-        if (game_id, side) not in entered:
+        if lock_weekly_board and (game_id, side) not in entered:
             entry = {"entered_at": captured_at, **row}
             new_entries.append(entry)
             entered.add((game_id, side))
@@ -672,14 +703,17 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None) -> dict
     qualified_clv = [s["consensus_clv"] for s in settlements if s.get("consensus_clv") is not None]
 
     odds = json.loads(ODDS.read_text()) if ODDS.exists() else {"markets": {}, "sources": {}}
-    odds["weekly"] = weekly_payload(current_quotes)
-    odds.setdefault("sources", {})["cfbd_lines"] = {
-        "book": "Multiple", "as_of": captured_at, "url": BASE + "/",
-        "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"}
+    board_updated = update_weekly_board(
+        odds, current_quotes, captured_at, lock_weekly_board)
     ODDS.write_text(json.dumps(odds, indent=1, allow_nan=False))
 
     finals_published = publish_finals(games) if games is not None else 0
     ratings_replayed = replay_published_results()
+    previous_tracking = (json.loads(TRACKING.read_text())
+                         if TRACKING.exists() else {})
+    displayed_candidates = (sorted(candidates, key=lambda r: (-r["gap"], r["start"]))
+                            if board_updated
+                            else previous_tracking.get("current_candidates", []))
     tracking = {"checked_at": captured_at, "source": "CFBD /lines",
         "timestamp_semantics": "retrieval time, not sportsbook quote time",
         "quote_events": len(events), "successful_checks": len(checks),
@@ -688,7 +722,9 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None) -> dict
         "watchlist_rule": {"minimum_gap": .15, "minimum_books": 2,
             "uncertainty_gate": "80% Jeffreys lower bound > best-price break-even + 1pp",
             "status": "forward research; never an automatic bet"},
-        "current_candidates": sorted(candidates, key=lambda r: (-r["gap"], r["start"])),
+        "weekly_board_updated_this_check": board_updated,
+        "weekly_board_lock": odds.get("weekly_lock"),
+        "current_candidates": displayed_candidates,
         "entries": len(all_entries), "new_entries_this_check": len(new_entries),
         "settlements": len(settlements), "qualified_clv_observations": len(qualified_clv),
         "mean_consensus_clv": statistics.mean(qualified_clv) if qualified_clv else None,
@@ -708,6 +744,8 @@ def latest_weekly() -> list[dict]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--allow-missing-key", action="store_true")
+    parser.add_argument("--lock-weekly-board", action="store_true",
+                        help="publish the Monday 12:30 PM ET actionable board")
     args = parser.parse_args()
     load_env()
     key = os.environ.get("CFBD_API_KEY")
@@ -717,12 +755,14 @@ def main() -> None:
             return
         raise RuntimeError("CFBD_API_KEY is not configured")
     now = utcnow()
-    tracking = run(fetch_lines(key), now, fetch_games(key))
+    tracking = run(fetch_lines(key), now, fetch_games(key), args.lock_weekly_board)
     print(f"Market check {tracking['checked_at']}: {tracking['games_with_quotes']} games, "
           f"{tracking['changed_quotes_this_check']} changed quotes, "
           f"{len(tracking['current_candidates'])} research candidates, "
           f"{tracking['final_scores_published_this_check']} new final scores, "
           f"{tracking['completed_rating_games_replayed']} rating results replayed.")
+    print("Weekly board " + ("locked." if tracking["weekly_board_updated_this_check"]
+                             else "unchanged; background capture only."))
     print(f"-> {QUOTES}\n-> {TRACKING}")
 
 

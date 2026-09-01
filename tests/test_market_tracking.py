@@ -10,7 +10,7 @@ from scripts.capture_market_snapshot import (fetch_cfbd, flatten, implied, lates
                                              model_probability, publish_finals,
                                              quote_key, quote_payload_hash, quote_value,
                                              replay_published_results,
-                                             weekly_payload)
+                                             update_weekly_board, weekly_payload)
 from war_model.materialize_availability import current_rows
 
 
@@ -85,6 +85,30 @@ class MarketTrackingTests(unittest.TestCase):
             self.assertEqual(fetch_cfbd("key", "/lines", {"year": 2026}), [{"id": 1}])
         self.assertEqual(request.call_count, 2)
         sleep.assert_called_once_with(1)
+
+    def test_weekly_board_stays_frozen_between_monday_locks(self):
+        old = [{"id": 1, "books": {"Book": {"spread": -3}}}]
+        odds = {"weekly": old, "sources": {"cfbd_lines": {"as_of": "old"}}}
+        quotes = {(1, "Book"): {"game_id": 1, "provider": "Book", "week": 1,
+            "start": "2026-09-05T00:00:00Z", "home": "A", "away": "B",
+            "spread": -7}}
+        self.assertFalse(update_weekly_board(
+            odds, quotes, "2026-09-03T16:30:00Z", False))
+        self.assertEqual(odds["weekly"], old)
+        self.assertEqual(odds["sources"]["cfbd_lines"]["as_of"], "old")
+        self.assertEqual(odds["weekly_lock"]["locked_at"], "old")
+        self.assertEqual(odds["weekly_lock"]["reason"], "pre-lock baseline")
+
+    def test_monday_lock_replaces_board_and_records_timestamp(self):
+        odds = {"weekly": [{"id": 99}], "sources": {}}
+        quotes = {(1, "Book"): {"game_id": 1, "provider": "Book", "week": 1,
+            "start": "2026-09-05T00:00:00Z", "home": "A", "away": "B",
+            "spread": -7}}
+        self.assertTrue(update_weekly_board(
+            odds, quotes, "2026-09-07T16:30:00Z", True))
+        self.assertEqual([row["id"] for row in odds["weekly"]], [1])
+        self.assertEqual(odds["weekly_lock"]["locked_at"], "2026-09-07T16:30:00Z")
+        self.assertEqual(odds["weekly_lock"]["cadence"], "Monday 12:30 PM ET")
 
     def test_removed_quote_tombstone_does_not_remain_current(self):
         row = {"game_id": 1, "provider": "Bovada", "captured_at": "2026-08-01T00:00:00Z"}

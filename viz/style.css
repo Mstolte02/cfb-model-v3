@@ -755,12 +755,6 @@ main { max-width: 1320px; padding-top: 38px; }
 .market-row > div > b { color: #fff; font: 800 15px/1 var(--sans); }
 .market-row .edge b { color: #7ed49a; }
 .market-row .edge.negative b { color: #e88f80; }
-/* A flagged row is a bet we would place, so it gets the one warm colour on the
-   dark panel: an inset rail, a lit background and a chip beside the team. Nothing
-   else on this panel is amber, which is what makes it findable at a glance. */
-.market-row.bet { background: linear-gradient(90deg, rgba(232,181,63,.15), rgba(232,181,63,0) 62%);
-  box-shadow: inset 3px 0 0 var(--bet); }
-.market-row.bet:hover { background: linear-gradient(90deg, rgba(232,181,63,.22), rgba(232,181,63,.03) 62%); }
 .bet-flag { display: inline-block; margin-left: 9px; padding: 3px 6px; border-radius: 4px;
   background: var(--bet); color: #10202f; font: 800 9px/1 var(--sans); letter-spacing: .1em; }
 .mini-team { display: inline-flex; align-items: center; gap: 8px; }
@@ -1003,7 +997,9 @@ main { max-width: 1320px; padding-top: 38px; }
 /* The gap is a measurement, not a verdict, so it is plain text. Only the bet cell
    is allowed to look like a recommendation. */
 .weekly-row .edge b { color: var(--text); }
-.weekly-row.bet { background: rgba(232,181,63,.12); box-shadow: inset 3px 0 0 var(--bet); }
+.weekly-row.win { background: rgba(36,126,83,.12); box-shadow: inset 3px 0 0 var(--green); }
+.weekly-row.loss { background: rgba(168,50,38,.10); box-shadow: inset 3px 0 0 var(--red); }
+.weekly-row.push { box-shadow: inset 3px 0 0 var(--line2); }
 .bet-cell { display: flex; align-items: center; gap: 8px; }
 .bet-cell b { color: var(--text); font: 800 14px/1.2 var(--sans); }
 .bet-tag { display: inline-block; flex: none; padding: 4px 6px; border-radius: 4px;
@@ -1041,9 +1037,6 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
   .weekly-head, .weekly-row { min-width: 820px; }.section-intro { align-items: flex-start; flex-direction: column; }
   footer { flex-direction: column; }.market-panel-head { align-items: flex-start; flex-direction: column; }
 }
-.weekly-row.flip { background: rgba(168,50,38,.10); box-shadow: inset 3px 0 0 var(--red); }
-.weekly-row.flip .bet-cell b { color: var(--red); }
-
 .weekly-empty { padding: 34px 22px; border: 1px dashed var(--line2); border-radius: 12px;
   background: var(--panel); text-align: center; }
 .weekly-empty b { display: block; font: 700 16px/1.35 var(--sans); }
