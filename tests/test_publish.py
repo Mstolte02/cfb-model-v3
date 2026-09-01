@@ -7,7 +7,7 @@ from scripts.publish import fingerprint_assets
 
 
 class PublishFingerprintTests(unittest.TestCase):
-    def test_js_and_css_revisions_are_content_hashes(self):
+    def test_js_and_css_are_renamed_with_content_hashes(self):
         with tempfile.TemporaryDirectory() as tmp:
             site = Path(tmp)
             (site / "app.js").write_text("console.log('v4')")
@@ -17,10 +17,17 @@ class PublishFingerprintTests(unittest.TestCase):
                 '<script src="app.js?v=27"></script>')
             versions = fingerprint_assets(site)
             html = (site / "index.html").read_text()
-            for name in ("app.js", "style.css"):
-                expected = hashlib.sha256((site / name).read_bytes()).hexdigest()[:12]
-                self.assertEqual(versions[name], expected)
-                self.assertIn(f"{name}?v={expected}", html)
+            expected = {
+                "app.js": hashlib.sha256(b"console.log('v4')").hexdigest()[:12],
+                "style.css": hashlib.sha256(b"body { color: white; }").hexdigest()[:12],
+            }
+            for name, digest in expected.items():
+                source = Path(name)
+                target = f"{source.stem}.{digest}{source.suffix}"
+                self.assertEqual(versions[name], target)
+                self.assertIn(target, html)
+                self.assertTrue((site / target).is_file())
+                self.assertFalse((site / name).exists())
             self.assertNotIn("v=old", html)
             self.assertNotIn("v=27", html)
 

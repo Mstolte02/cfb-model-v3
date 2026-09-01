@@ -46,19 +46,24 @@ def fingerprint_assets(site: Path):
     """Make deployed HTML request the exact JS/CSS copied in this build.
 
     A cached six-feature v3 app running against a four-feature v4 model turns missing
-    array slots into NaN probabilities and scores. Content hashes prevent that mixed
-    version without relying on a manual query-string bump.
+    array slots into NaN probabilities and scores. Put the hash in the filename, not
+    only the query string: GitHub Pages/Fastly can reuse the path-level object while
+    ignoring a query-string revision. A new path makes each build unambiguous and
+    also recovers cleanly if one cached asset is ever corrupted.
     """
     index = site / "index.html"
     html = index.read_text()
     versions = {}
     for name in ("app.js", "style.css"):
-        digest = hashlib.sha256((site / name).read_bytes()).hexdigest()[:12]
+        source = site / name
+        digest = hashlib.sha256(source.read_bytes()).hexdigest()[:12]
+        target_name = f"{source.stem}.{digest}{source.suffix}"
+        source.rename(site / target_name)
         pattern = re.escape(name) + r'(?:\?v=[^"\']*)?'
-        html, count = re.subn(pattern, f"{name}?v={digest}", html)
+        html, count = re.subn(pattern, target_name, html)
         if count != 1:
             raise RuntimeError(f"expected exactly one {name} reference; found {count}")
-        versions[name] = digest
+        versions[name] = target_name
     index.write_text(html)
     return versions
 
@@ -81,7 +86,7 @@ def main(no_players: bool = False):
     # folders beginning with an underscore.
     (DIST / ".nojekyll").write_text("")
     versions = fingerprint_assets(DIST)
-    print("  assets: " + ", ".join(f"{k}?v={v}" for k, v in versions.items()))
+    print("  assets: " + ", ".join(versions.values()))
 
     # Globbed rather than named. There is one players.json now - the site shipped
     # several complete builds at one point, each with its own players*.json, and
