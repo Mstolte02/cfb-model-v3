@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "Multiple",
-   "as_of": "2026-08-28T11:30:15Z",
+   "as_of": "2026-09-01T11:44:28Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "our successful retrieval time; not a sportsbook quote timestamp"
   }
@@ -1071,23 +1071,6 @@
  },
  "weekly": [
   {
-   "id": 401867894,
-   "week": 1,
-   "start": "2026-08-27T22:00:00.000Z",
-   "home": "Youngstown State",
-   "away": "Mercyhurst",
-   "books": {
-    "DraftKings": {
-     "spread": -30.5,
-     "spreadOpen": null,
-     "overUnder": 57.5,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
    "id": 401866532,
    "week": 1,
    "start": "2026-08-27T22:00:00.000Z",
@@ -1115,6 +1098,74 @@
      "spread": 4.5,
      "spreadOpen": null,
      "overUnder": 50.5,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401867894,
+   "week": 1,
+   "start": "2026-08-27T22:00:00.000Z",
+   "home": "Youngstown State",
+   "away": "Mercyhurst",
+   "books": {
+    "DraftKings": {
+     "spread": -30.5,
+     "spreadOpen": null,
+     "overUnder": 57.5,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401867865,
+   "week": 1,
+   "start": "2026-08-27T23:00:00.000Z",
+   "home": "Murray State",
+   "away": "Eastern Illinois",
+   "books": {
+    "DraftKings": {
+     "spread": -4.5,
+     "spreadOpen": null,
+     "overUnder": 49.5,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401868060,
+   "week": 1,
+   "start": "2026-08-27T23:00:00.000Z",
+   "home": "Austin Peay",
+   "away": "Gardner-Webb",
+   "books": {
+    "DraftKings": {
+     "spread": -14.5,
+     "spreadOpen": null,
+     "overUnder": 59.5,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401868169,
+   "week": 1,
+   "start": "2026-08-27T23:00:00.000Z",
+   "home": "Lindenwood",
+   "away": "Charleston Southern",
+   "books": {
+    "DraftKings": {
+     "spread": -7.5,
+     "spreadOpen": null,
+     "overUnder": 45.5,
      "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
@@ -1156,40 +1207,6 @@
    }
   },
   {
-   "id": 401867865,
-   "week": 1,
-   "start": "2026-08-27T23:00:00.000Z",
-   "home": "Murray State",
-   "away": "Eastern Illinois",
-   "books": {
-    "DraftKings": {
-     "spread": -4.5,
-     "spreadOpen": null,
-     "overUnder": 49.5,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
-   "id": 401868169,
-   "week": 1,
-   "start": "2026-08-27T23:00:00.000Z",
-   "home": "Lindenwood",
-   "away": "Charleston Southern",
-   "books": {
-    "DraftKings": {
-     "spread": -7.5,
-     "spreadOpen": null,
-     "overUnder": 45.5,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
    "id": 401868962,
    "week": 1,
    "start": "2026-08-27T23:00:00.000Z",
@@ -1217,23 +1234,6 @@
      "spread": 19.5,
      "spreadOpen": null,
      "overUnder": 55.5,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
-   "id": 401868060,
-   "week": 1,
-   "start": "2026-08-27T23:00:00.000Z",
-   "home": "Austin Peay",
-   "away": "Gardner-Webb",
-   "books": {
-    "DraftKings": {
-     "spread": -14.5,
-     "spreadOpen": null,
-     "overUnder": 59.5,
      "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
@@ -1284,10 +1284,10 @@
     "DraftKings": {
      "spread": 20.5,
      "spreadOpen": 20.5,
-     "overUnder": 53.5,
+     "overUnder": 47.5,
      "overUnderOpen": 53.5,
-     "homeMoneyline": 720,
-     "awayMoneyline": -1360
+     "homeMoneyline": 890,
+     "awayMoneyline": -1960
     }
    }
   },
@@ -1299,12 +1299,12 @@
    "away": "Colgate",
    "books": {
     "DraftKings": {
-     "spread": 10,
+     "spread": 8.5,
      "spreadOpen": 10,
-     "overUnder": 50.5,
+     "overUnder": 55.5,
      "overUnderOpen": 50.5,
-     "homeMoneyline": 296,
-     "awayMoneyline": -401
+     "homeMoneyline": 242,
+     "awayMoneyline": -318
     }
    }
   },
@@ -1316,12 +1316,12 @@
    "away": "William & Mary",
    "books": {
     "DraftKings": {
-     "spread": -11.5,
+     "spread": -12.5,
      "spreadOpen": -11.5,
-     "overUnder": 50.5,
+     "overUnder": 47.5,
      "overUnderOpen": 50.5,
-     "homeMoneyline": -630,
-     "awayMoneyline": 428
+     "homeMoneyline": -700,
+     "awayMoneyline": 462
     }
    }
   },
@@ -1333,12 +1333,12 @@
    "away": "Marist",
    "books": {
     "DraftKings": {
-     "spread": 1.5,
+     "spread": -2.5,
      "spreadOpen": 1.5,
-     "overUnder": 45.5,
+     "overUnder": 46.5,
      "overUnderOpen": 44.5,
-     "homeMoneyline": -108,
-     "awayMoneyline": -115
+     "homeMoneyline": -145,
+     "awayMoneyline": 116
     }
    }
   },
@@ -1350,12 +1350,12 @@
    "away": "New Hampshire",
    "books": {
     "DraftKings": {
-     "spread": 11.5,
+     "spread": 10,
      "spreadOpen": 11.5,
-     "overUnder": 45.5,
+     "overUnder": 46.5,
      "overUnderOpen": 45.5,
-     "homeMoneyline": 367,
-     "awayMoneyline": -520
+     "homeMoneyline": 268,
+     "awayMoneyline": -357
     }
    }
   },
@@ -1367,12 +1367,12 @@
    "away": "Weber State",
    "books": {
     "DraftKings": {
-     "spread": -3.5,
+     "spread": -3,
      "spreadOpen": -3.5,
-     "overUnder": 49.5,
+     "overUnder": 50.5,
      "overUnderOpen": 49.5,
-     "homeMoneyline": -168,
-     "awayMoneyline": 134
+     "homeMoneyline": -161,
+     "awayMoneyline": 129
     }
    }
   },
@@ -1384,12 +1384,37 @@
    "away": "Idaho",
    "books": {
     "DraftKings": {
-     "spread": 3.5,
+     "spread": 5.5,
      "spreadOpen": 3.5,
-     "overUnder": 55.5,
+     "overUnder": 53.5,
      "overUnderOpen": 55.5,
-     "homeMoneyline": 132,
-     "awayMoneyline": -165
+     "homeMoneyline": 172,
+     "awayMoneyline": -219
+    }
+   }
+  },
+  {
+   "id": 401856766,
+   "week": 1,
+   "start": "2026-08-29T16:00:00.000Z",
+   "home": "TCU",
+   "away": "North Carolina",
+   "books": {
+    "Bovada": {
+     "spread": -7.5,
+     "spreadOpen": -7.5,
+     "overUnder": 46,
+     "overUnderOpen": 50.5,
+     "homeMoneyline": -235,
+     "awayMoneyline": 195
+    },
+    "DraftKings": {
+     "spread": -7.5,
+     "spreadOpen": null,
+     "overUnder": 46.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -310,
+     "awayMoneyline": 250
     }
    }
   },
@@ -1403,35 +1428,10 @@
     "DraftKings": {
      "spread": -5.5,
      "spreadOpen": -5.5,
-     "overUnder": 39.5,
+     "overUnder": 40.5,
      "overUnderOpen": 39.5,
-     "homeMoneyline": -219,
-     "awayMoneyline": 173
-    }
-   }
-  },
-  {
-   "id": 401856766,
-   "week": 1,
-   "start": "2026-08-29T16:00:00.000Z",
-   "home": "TCU",
-   "away": "North Carolina",
-   "books": {
-    "Bovada": {
-     "spread": -9,
-     "spreadOpen": -7.5,
-     "overUnder": 46.5,
-     "overUnderOpen": 50.5,
-     "homeMoneyline": -235,
-     "awayMoneyline": 195
-    },
-    "DraftKings": {
-     "spread": -8.5,
-     "spreadOpen": null,
-     "overUnder": 46.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -340,
-     "awayMoneyline": 270
+     "homeMoneyline": -223,
+     "awayMoneyline": 176
     }
    }
   },
@@ -1443,12 +1443,37 @@
    "away": "Central Connecticut",
    "books": {
     "DraftKings": {
-     "spread": -22.5,
+     "spread": -21.5,
      "spreadOpen": -22.5,
-     "overUnder": 53.5,
+     "overUnder": 49.5,
      "overUnderOpen": 53.5,
-     "homeMoneyline": -3600,
-     "awayMoneyline": 1140
+     "homeMoneyline": -3900,
+     "awayMoneyline": 1180
+    }
+   }
+  },
+  {
+   "id": 401864494,
+   "week": 1,
+   "start": "2026-08-29T19:00:00.000Z",
+   "home": "USC",
+   "away": "San Jos\u00e9 State",
+   "books": {
+    "Bovada": {
+     "spread": -37,
+     "spreadOpen": -35.5,
+     "overUnder": 60.5,
+     "overUnderOpen": 57.5,
+     "homeMoneyline": null,
+     "awayMoneyline": 3500
+    },
+    "DraftKings": {
+     "spread": -37.5,
+     "spreadOpen": -35.5,
+     "overUnder": 61.5,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": 5000
     }
    }
   },
@@ -1460,12 +1485,12 @@
    "away": "UC Davis",
    "books": {
     "DraftKings": {
-     "spread": 24.5,
+     "spread": 25.5,
      "spreadOpen": 24.5,
-     "overUnder": 62.5,
+     "overUnder": 60.5,
      "overUnderOpen": 62.5,
-     "homeMoneyline": 1180,
-     "awayMoneyline": -4000
+     "homeMoneyline": 1300,
+     "awayMoneyline": -5400
     }
    }
   },
@@ -1481,33 +1506,8 @@
      "spreadOpen": -19.5,
      "overUnder": 56.5,
      "overUnderOpen": 56.5,
-     "homeMoneyline": -1440,
-     "awayMoneyline": 750
-    }
-   }
-  },
-  {
-   "id": 401864494,
-   "week": 1,
-   "start": "2026-08-29T19:00:00.000Z",
-   "home": "USC",
-   "away": "San Jos\u00e9 State",
-   "books": {
-    "DraftKings": {
-     "spread": -38.5,
-     "spreadOpen": -35.5,
-     "overUnder": 61.5,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": 5000
-    },
-    "Bovada": {
-     "spread": -39,
-     "spreadOpen": -35.5,
-     "overUnder": 61.5,
-     "overUnderOpen": 57.5,
-     "homeMoneyline": null,
-     "awayMoneyline": 3500
+     "homeMoneyline": -1760,
+     "awayMoneyline": 830
     }
    }
   },
@@ -1521,7 +1521,7 @@
     "Bovada": {
      "spread": -4,
      "spreadOpen": -3.5,
-     "overUnder": 51.5,
+     "overUnder": 50.5,
      "overUnderOpen": 54.5,
      "homeMoneyline": -145,
      "awayMoneyline": 125
@@ -1529,10 +1529,10 @@
     "DraftKings": {
      "spread": -4,
      "spreadOpen": null,
-     "overUnder": 51.5,
+     "overUnder": 50.5,
      "overUnderOpen": null,
-     "homeMoneyline": -192,
-     "awayMoneyline": 160
+     "homeMoneyline": -185,
+     "awayMoneyline": 154
     }
    }
   },
@@ -1548,8 +1548,8 @@
      "spreadOpen": 14,
      "overUnder": 47.5,
      "overUnderOpen": 47.5,
-     "homeMoneyline": 477,
-     "awayMoneyline": -730
+     "homeMoneyline": 509,
+     "awayMoneyline": -800
     }
    }
   },
@@ -1561,35 +1561,17 @@
    "away": "Eastern Washington",
    "books": {
     "DraftKings": {
-     "spread": -3,
+     "spread": -5.5,
      "spreadOpen": -3,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
-     "homeMoneyline": -165,
-     "awayMoneyline": 132
-    }
-   }
-  },
-  {
-   "id": 401866620,
-   "week": 1,
-   "start": "2026-08-29T21:30:00.000Z",
-   "home": "East Tennessee State",
-   "away": "Campbell",
-   "books": {
-    "DraftKings": {
-     "spread": -7,
-     "spreadOpen": -7,
      "overUnder": 55.5,
-     "overUnderOpen": 55.5,
-     "homeMoneyline": -240,
-     "awayMoneyline": 188
+     "overUnderOpen": 56.5,
+     "homeMoneyline": -242,
+     "awayMoneyline": 189
     }
    }
   },
   {
-    "id": 401864577,
-    "bettingExcluded": true,
+   "id": 401864577,
    "week": 1,
    "start": "2026-08-29T21:30:00.000Z",
    "home": "North Dakota State",
@@ -1604,12 +1586,30 @@
      "awayMoneyline": 265
     },
     "DraftKings": {
-     "spread": -7,
+     "spread": -6.5,
      "spreadOpen": -10,
      "overUnder": 46.5,
      "overUnderOpen": null,
-     "homeMoneyline": -278,
-     "awayMoneyline": 225
+     "homeMoneyline": -265,
+     "awayMoneyline": 215
+    }
+   },
+   "bettingExcluded": true
+  },
+  {
+   "id": 401866620,
+   "week": 1,
+   "start": "2026-08-29T21:30:00.000Z",
+   "home": "East Tennessee State",
+   "away": "Campbell",
+   "books": {
+    "DraftKings": {
+     "spread": -7,
+     "spreadOpen": -7,
+     "overUnder": 56.5,
+     "overUnderOpen": 55.5,
+     "homeMoneyline": -267,
+     "awayMoneyline": 207
     }
    }
   },
@@ -1621,12 +1621,12 @@
    "away": "Morgan State",
    "books": {
     "DraftKings": {
-     "spread": 8.5,
+     "spread": 7,
      "spreadOpen": 8.5,
-     "overUnder": 50.5,
+     "overUnder": 49.5,
      "overUnderOpen": 50.5,
-     "homeMoneyline": 272,
-     "awayMoneyline": -363
+     "homeMoneyline": 210,
+     "awayMoneyline": -270
     }
    }
   },
@@ -1640,10 +1640,10 @@
     "DraftKings": {
      "spread": 4.5,
      "spreadOpen": 4.5,
-     "overUnder": 44.5,
+     "overUnder": 45.5,
      "overUnderOpen": 44.5,
-     "homeMoneyline": 152,
-     "awayMoneyline": -191
+     "homeMoneyline": 153,
+     "awayMoneyline": -192
     }
    }
   },
@@ -1659,8 +1659,8 @@
      "spreadOpen": -2.5,
      "overUnder": 52.5,
      "overUnderOpen": 52.5,
-     "homeMoneyline": -126,
-     "awayMoneyline": 102
+     "homeMoneyline": -143,
+     "awayMoneyline": 115
     }
    }
   },
@@ -1672,12 +1672,12 @@
    "away": "Bucknell",
    "books": {
     "DraftKings": {
-     "spread": -10.5,
+     "spread": -12.5,
      "spreadOpen": -10.5,
-     "overUnder": 49.5,
+     "overUnder": 48.5,
      "overUnderOpen": 49.5,
-     "homeMoneyline": -468,
-     "awayMoneyline": 337
+     "homeMoneyline": -620,
+     "awayMoneyline": 420
     }
    }
   },
@@ -1691,7 +1691,7 @@
     "DraftKings": {
      "spread": -34.5,
      "spreadOpen": -34.5,
-     "overUnder": 60.5,
+     "overUnder": 53.5,
      "overUnderOpen": 60.5,
      "homeMoneyline": null,
      "awayMoneyline": null
@@ -1706,40 +1706,40 @@
    "away": "The Citadel",
    "books": {
     "DraftKings": {
-     "spread": -8.5,
+     "spread": -7.5,
      "spreadOpen": -8.5,
      "overUnder": 45.5,
      "overUnderOpen": 45.5,
-     "homeMoneyline": -357,
-     "awayMoneyline": 268
+     "homeMoneyline": -415,
+     "awayMoneyline": 305
     }
    }
   },
   {
-    "id": 401866408,
-    "bettingExcluded": true,
+   "id": 401866408,
    "week": 1,
    "start": "2026-08-29T22:30:00.000Z",
    "home": "Eastern Michigan",
    "away": "Sacramento State",
    "books": {
-    "DraftKings": {
-     "spread": -9.5,
-     "spreadOpen": -8.5,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -375,
-     "awayMoneyline": 295
-    },
     "Bovada": {
-     "spread": -9.5,
+     "spread": -9,
      "spreadOpen": -8.5,
-     "overUnder": 53.5,
+     "overUnder": 53,
      "overUnderOpen": 52.5,
      "homeMoneyline": -330,
      "awayMoneyline": 265
+    },
+    "DraftKings": {
+     "spread": -8.5,
+     "spreadOpen": -8.5,
+     "overUnder": 52.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -355,
+     "awayMoneyline": 280
     }
-   }
+   },
+   "bettingExcluded": true
   },
   {
    "id": 401858201,
@@ -1748,21 +1748,46 @@
    "home": "Stanford",
    "away": "Hawai'i",
    "books": {
-    "DraftKings": {
-     "spread": -4,
+    "Bovada": {
+     "spread": -5,
      "spreadOpen": -3,
      "overUnder": 48.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -198,
-     "awayMoneyline": 164
-    },
-    "Bovada": {
-     "spread": -4,
-     "spreadOpen": -3,
-     "overUnder": 49,
      "overUnderOpen": 50.5,
      "homeMoneyline": -170,
      "awayMoneyline": 145
+    },
+    "DraftKings": {
+     "spread": -4.5,
+     "spreadOpen": -3,
+     "overUnder": 48.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -205,
+     "awayMoneyline": 170
+    }
+   }
+  },
+  {
+   "id": 401864570,
+   "week": 1,
+   "start": "2026-08-29T23:00:00.000Z",
+   "home": "Florida State",
+   "away": "New Mexico State",
+   "books": {
+    "Bovada": {
+     "spread": -31,
+     "spreadOpen": -29.5,
+     "overUnder": 53.5,
+     "overUnderOpen": 53.5,
+     "homeMoneyline": null,
+     "awayMoneyline": 2800
+    },
+    "DraftKings": {
+     "spread": -31.5,
+     "spreadOpen": -28.5,
+     "overUnder": 53.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -8000,
+     "awayMoneyline": 2200
     }
    }
   },
@@ -1778,8 +1803,8 @@
      "spreadOpen": -8.5,
      "overUnder": 58.5,
      "overUnderOpen": 58.5,
-     "homeMoneyline": -302,
-     "awayMoneyline": 231
+     "homeMoneyline": -340,
+     "awayMoneyline": 257
     }
    }
   },
@@ -1791,12 +1816,12 @@
    "away": "North Carolina Central",
    "books": {
     "DraftKings": {
-     "spread": 11.5,
+     "spread": 10.5,
      "spreadOpen": 11.5,
      "overUnder": 51.5,
      "overUnderOpen": 51.5,
-     "homeMoneyline": 334,
-     "awayMoneyline": -464
+     "homeMoneyline": 328,
+     "awayMoneyline": -453
     }
    }
   },
@@ -1812,8 +1837,8 @@
      "spreadOpen": 7.5,
      "overUnder": 49.5,
      "overUnderOpen": 49.5,
-     "homeMoneyline": 208,
-     "awayMoneyline": -268
+     "homeMoneyline": 232,
+     "awayMoneyline": -303
     }
    }
   },
@@ -1825,12 +1850,12 @@
    "away": "Eastern Kentucky",
    "books": {
     "DraftKings": {
-     "spread": -4.5,
+     "spread": -3,
      "spreadOpen": -4.5,
-     "overUnder": 50.5,
+     "overUnder": 54.5,
      "overUnderOpen": 50.5,
-     "homeMoneyline": -176,
-     "awayMoneyline": 140
+     "homeMoneyline": -152,
+     "awayMoneyline": 122
     }
    }
   },
@@ -1842,12 +1867,12 @@
    "away": "Samford",
    "books": {
     "DraftKings": {
-     "spread": -7.5,
+     "spread": -7,
      "spreadOpen": -7.5,
      "overUnder": 55.5,
      "overUnderOpen": 55.5,
-     "homeMoneyline": -332,
-     "awayMoneyline": 251
+     "homeMoneyline": -313,
+     "awayMoneyline": 239
     }
    }
   },
@@ -1859,12 +1884,12 @@
    "away": "Stephen F. Austin",
    "books": {
     "DraftKings": {
-     "spread": 13.5,
+     "spread": 12.5,
      "spreadOpen": 13.5,
      "overUnder": 49.5,
      "overUnderOpen": 49.5,
-     "homeMoneyline": 373,
-     "awayMoneyline": -530
+     "homeMoneyline": 328,
+     "awayMoneyline": -453
     }
    }
   },
@@ -1876,9 +1901,9 @@
    "away": "Stetson",
    "books": {
     "DraftKings": {
-     "spread": -47.5,
+     "spread": -50.5,
      "spreadOpen": -47.5,
-     "overUnder": 56.5,
+     "overUnder": 58.5,
      "overUnderOpen": 56.5,
      "homeMoneyline": null,
      "awayMoneyline": null
@@ -1893,37 +1918,12 @@
    "away": "East Texas A&M",
    "books": {
     "DraftKings": {
-     "spread": -23.5,
+     "spread": -22.5,
      "spreadOpen": -23.5,
-     "overUnder": 60.5,
+     "overUnder": 57.5,
      "overUnderOpen": 60.5,
-     "homeMoneyline": -4300,
-     "awayMoneyline": 1220
-    }
-   }
-  },
-  {
-   "id": 401864570,
-   "week": 1,
-   "start": "2026-08-29T23:00:00.000Z",
-   "home": "Florida State",
-   "away": "New Mexico State",
-   "books": {
-    "DraftKings": {
-     "spread": -31.5,
-     "spreadOpen": -28.5,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -10000,
-     "awayMoneyline": 3000
-    },
-    "Bovada": {
-     "spread": -32,
-     "spreadOpen": -29.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
-     "homeMoneyline": null,
-     "awayMoneyline": 2800
+     "homeMoneyline": -3200,
+     "awayMoneyline": 1100
     }
    }
   },
@@ -1935,12 +1935,29 @@
    "away": "Alabama A&M",
    "books": {
     "DraftKings": {
-     "spread": -2.5,
+     "spread": -1.5,
      "spreadOpen": -2.5,
      "overUnder": 46.5,
      "overUnderOpen": 46.5,
-     "homeMoneyline": -125,
+     "homeMoneyline": -124,
      "awayMoneyline": 100
+    }
+   }
+  },
+  {
+   "id": 401868194,
+   "week": 1,
+   "start": "2026-08-30T00:30:00.000Z",
+   "home": "Tennessee State",
+   "away": "Jackson State",
+   "books": {
+    "DraftKings": {
+     "spread": 12.5,
+     "spreadOpen": 15.5,
+     "overUnder": 49.5,
+     "overUnderOpen": 49.5,
+     "homeMoneyline": 435,
+     "awayMoneyline": -650
     }
    }
   },
@@ -1952,12 +1969,12 @@
    "away": "Southern Utah",
    "books": {
     "DraftKings": {
-     "spread": -16.5,
+     "spread": -15.5,
      "spreadOpen": -16.5,
-     "overUnder": 58.5,
+     "overUnder": 59.5,
      "overUnderOpen": 58.5,
-     "homeMoneyline": -1000,
-     "awayMoneyline": 597
+     "homeMoneyline": -1080,
+     "awayMoneyline": 620
     }
    }
   },
@@ -1969,12 +1986,12 @@
    "away": "Prairie View A&M",
    "books": {
     "DraftKings": {
-     "spread": -21.5,
+     "spread": -19.5,
      "spreadOpen": -21.5,
      "overUnder": 54.5,
      "overUnderOpen": 54.5,
-     "homeMoneyline": -2400,
-     "awayMoneyline": 970
+     "homeMoneyline": -1540,
+     "awayMoneyline": 770
     }
    }
   },
@@ -1985,21 +2002,21 @@
    "home": "UNLV",
    "away": "Memphis",
    "books": {
-    "DraftKings": {
-     "spread": -4.5,
-     "spreadOpen": -3,
-     "overUnder": 56.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -192,
-     "awayMoneyline": 160
-    },
     "Bovada": {
-     "spread": -4,
+     "spread": -5,
      "spreadOpen": -3,
-     "overUnder": 56.5,
+     "overUnder": 55.5,
      "overUnderOpen": 60.5,
      "homeMoneyline": -170,
      "awayMoneyline": 145
+    },
+    "DraftKings": {
+     "spread": -4,
+     "spreadOpen": -3,
+     "overUnder": 55.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -198,
+     "awayMoneyline": 164
     }
    }
   },
@@ -2011,9 +2028,9 @@
    "away": "Montana State",
    "books": {
     "DraftKings": {
-     "spread": 31.5,
+     "spread": 32.5,
      "spreadOpen": 31.5,
-     "overUnder": 56.5,
+     "overUnder": 57.5,
      "overUnderOpen": 56.5,
      "homeMoneyline": null,
      "awayMoneyline": null
@@ -2030,18 +2047,18 @@
     "Bovada": {
      "spread": -29,
      "spreadOpen": -30.5,
-     "overUnder": 53,
+     "overUnder": 51.5,
      "overUnderOpen": 54.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     },
     "DraftKings": {
-     "spread": -29.5,
+     "spread": -28.5,
      "spreadOpen": -30.5,
-     "overUnder": 52.5,
+     "overUnder": 51.5,
      "overUnderOpen": null,
-     "homeMoneyline": -9000,
-     "awayMoneyline": 2500
+     "homeMoneyline": -8000,
+     "awayMoneyline": 2200
     }
    }
   },
@@ -2063,19 +2080,27 @@
    }
   },
   {
-   "id": 401864425,
+   "id": 401858204,
    "week": 1,
    "start": "2026-09-03T23:00:00.000Z",
-   "home": "Kennesaw State",
-   "away": "West Georgia",
+   "home": "Wake Forest",
+   "away": "Akron",
    "books": {
-    "DraftKings": {
-     "spread": -22.5,
+    "Bovada": {
+     "spread": -24,
      "spreadOpen": -22.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
-     "homeMoneyline": -3600,
-     "awayMoneyline": 1500
+     "overUnder": 48.5,
+     "overUnderOpen": 49.5,
+     "homeMoneyline": -3500,
+     "awayMoneyline": 1100
+    },
+    "DraftKings": {
+     "spread": -24.5,
+     "spreadOpen": -22.5,
+     "overUnder": 48.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -3200,
+     "awayMoneyline": 1400
     }
    }
   },
@@ -2097,6 +2122,23 @@
    }
   },
   {
+   "id": 401864425,
+   "week": 1,
+   "start": "2026-09-03T23:00:00.000Z",
+   "home": "Kennesaw State",
+   "away": "West Georgia",
+   "books": {
+    "DraftKings": {
+     "spread": -23.5,
+     "spreadOpen": -22.5,
+     "overUnder": 51.5,
+     "overUnderOpen": 51.5,
+     "homeMoneyline": -4000,
+     "awayMoneyline": 1600
+    }
+   }
+  },
+  {
    "id": 401866409,
    "week": 1,
    "start": "2026-09-03T23:00:00.000Z",
@@ -2108,33 +2150,8 @@
      "spreadOpen": -24.5,
      "overUnder": 48.5,
      "overUnderOpen": 48.5,
-     "homeMoneyline": -5000,
-     "awayMoneyline": 1800
-    }
-   }
-  },
-  {
-   "id": 401858204,
-   "week": 1,
-   "start": "2026-09-03T23:00:00.000Z",
-   "home": "Wake Forest",
-   "away": "Akron",
-   "books": {
-    "DraftKings": {
-     "spread": -23.5,
-     "spreadOpen": -22.5,
-     "overUnder": 48.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -3600,
-     "awayMoneyline": 1500
-    },
-    "Bovada": {
-     "spread": -24,
-     "spreadOpen": -22.5,
-     "overUnder": 48.5,
-     "overUnderOpen": 49.5,
-     "homeMoneyline": -3500,
-     "awayMoneyline": 1100
+     "homeMoneyline": -6500,
+     "awayMoneyline": 2000
     }
    }
   },
@@ -2156,37 +2173,12 @@
    }
   },
   {
-   "id": 401858422,
-   "week": 1,
-   "start": "2026-09-04T00:00:00.000Z",
-   "home": "Minnesota",
-   "away": "Eastern Illinois",
-   "books": {
-    "DraftKings": {
-     "spread": -43.5,
-     "spreadOpen": -43.5,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
    "id": 401856776,
    "week": 1,
    "start": "2026-09-04T00:00:00.000Z",
    "home": "Georgia Tech",
    "away": "Colorado",
    "books": {
-    "DraftKings": {
-     "spread": -6.5,
-     "spreadOpen": -7,
-     "overUnder": 50.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -258,
-     "awayMoneyline": 210
-    },
     "Bovada": {
      "spread": -6.5,
      "spreadOpen": -7,
@@ -2194,6 +2186,31 @@
      "overUnderOpen": 51.5,
      "homeMoneyline": -290,
      "awayMoneyline": 240
+    },
+    "DraftKings": {
+     "spread": -6.5,
+     "spreadOpen": -7,
+     "overUnder": 50.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -258,
+     "awayMoneyline": 210
+    }
+   }
+  },
+  {
+   "id": 401858422,
+   "week": 1,
+   "start": "2026-09-04T00:00:00.000Z",
+   "home": "Minnesota",
+   "away": "Eastern Illinois",
+   "books": {
+    "DraftKings": {
+     "spread": -42.5,
+     "spreadOpen": -43.5,
+     "overUnder": 51.5,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
     }
    }
   },
@@ -2205,12 +2222,12 @@
    "away": "Idaho",
    "books": {
     "DraftKings": {
-     "spread": -33.5,
+     "spread": -34.5,
      "spreadOpen": -32.5,
-     "overUnder": 56.5,
+     "overUnder": 57.5,
      "overUnderOpen": 56.5,
-     "homeMoneyline": -20000,
-     "awayMoneyline": 3500
+     "homeMoneyline": null,
+     "awayMoneyline": 5000
     }
    }
   },
@@ -2222,20 +2239,20 @@
    "away": "UAB",
    "books": {
     "Bovada": {
-     "spread": -28.5,
+     "spread": -28,
      "spreadOpen": -27.5,
-     "overUnder": 57,
+     "overUnder": 54.5,
      "overUnderOpen": 56.5,
-     "homeMoneyline": null,
-     "awayMoneyline": 2000
+     "homeMoneyline": -8000,
+     "awayMoneyline": 1400
     },
     "DraftKings": {
-     "spread": -28.5,
+     "spread": -27.5,
      "spreadOpen": -27.5,
-     "overUnder": 56.5,
+     "overUnder": 55.5,
      "overUnderOpen": null,
-     "homeMoneyline": -8000,
-     "awayMoneyline": 2200
+     "homeMoneyline": -5000,
+     "awayMoneyline": 1800
     }
    }
   },
@@ -2246,21 +2263,21 @@
    "home": "Eastern Michigan",
    "away": "San Jos\u00e9 State",
    "books": {
-    "DraftKings": {
-     "spread": -4.5,
-     "spreadOpen": -3.5,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -218,
-     "awayMoneyline": 180
-    },
     "Bovada": {
-     "spread": -4.5,
+     "spread": -3,
      "spreadOpen": -3.5,
-     "overUnder": 53.5,
+     "overUnder": 56,
      "overUnderOpen": 53.5,
-     "homeMoneyline": -160,
-     "awayMoneyline": 135
+     "homeMoneyline": -170,
+     "awayMoneyline": 145
+    },
+    "DraftKings": {
+     "spread": -3,
+     "spreadOpen": -3.5,
+     "overUnder": 56.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -155,
+     "awayMoneyline": 130
     }
    }
   },
@@ -2293,50 +2310,8 @@
      "spreadOpen": -28.5,
      "overUnder": 63.5,
      "overUnderOpen": 63.5,
-     "homeMoneyline": -4500,
-     "awayMoneyline": 1700
-    }
-   }
-  },
-  {
-   "id": 401856769,
-   "week": 1,
-   "start": "2026-09-05T00:00:00.000Z",
-   "home": "Kansas",
-   "away": "Long Island University",
-   "books": {
-    "DraftKings": {
-     "spread": -38.5,
-     "spreadOpen": -38.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
-   "id": 401858429,
-   "week": 1,
-   "start": "2026-09-05T00:00:00.000Z",
-   "home": "Michigan State",
-   "away": "Toledo",
-   "books": {
-    "DraftKings": {
-     "spread": -10,
-     "spreadOpen": -10.5,
-     "overUnder": 49.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -395,
-     "awayMoneyline": 310
-    },
-    "Bovada": {
-     "spread": -10,
-     "spreadOpen": -10.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 49.5,
-     "homeMoneyline": -410,
-     "awayMoneyline": 305
+     "homeMoneyline": -6500,
+     "awayMoneyline": 2000
     }
    }
   },
@@ -2348,9 +2323,9 @@
    "away": "UTEP",
    "books": {
     "Bovada": {
-     "spread": -40.5,
+     "spread": -41.5,
      "spreadOpen": -40.5,
-     "overUnder": 50.5,
+     "overUnder": 51,
      "overUnderOpen": 50.5,
      "homeMoneyline": null,
      "awayMoneyline": null
@@ -2366,27 +2341,44 @@
    }
   },
   {
-   "id": 401858436,
+   "id": 401856769,
    "week": 1,
-   "start": "2026-09-05T01:00:00.000Z",
-   "home": "USC",
-   "away": "Fresno State",
+   "start": "2026-09-05T00:00:00.000Z",
+   "home": "Kansas",
+   "away": "Long Island University",
    "books": {
     "DraftKings": {
-     "spread": -23.5,
-     "spreadOpen": -23.5,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -3200,
-     "awayMoneyline": 1400
-    },
-    "Bovada": {
-     "spread": -23.5,
-     "spreadOpen": -23,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
-     "homeMoneyline": -3500,
+     "spread": -40.5,
+     "spreadOpen": -38.5,
+     "overUnder": 53.5,
+     "overUnderOpen": 53.5,
+     "homeMoneyline": null,
      "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401858429,
+   "week": 1,
+   "start": "2026-09-05T00:00:00.000Z",
+   "home": "Michigan State",
+   "away": "Toledo",
+   "books": {
+    "Bovada": {
+     "spread": -9.5,
+     "spreadOpen": -10.5,
+     "overUnder": 47,
+     "overUnderOpen": 49.5,
+     "homeMoneyline": -410,
+     "awayMoneyline": 305
+    },
+    "DraftKings": {
+     "spread": -9.5,
+     "spreadOpen": -10.5,
+     "overUnder": 47.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -395,
+     "awayMoneyline": 310
     }
    }
   },
@@ -2397,63 +2389,121 @@
    "home": "Stanford",
    "away": "Miami",
    "books": {
+    "Bovada": {
+     "spread": 24.5,
+     "spreadOpen": 21.5,
+     "overUnder": 48.5,
+     "overUnderOpen": 48.5,
+     "homeMoneyline": 1100,
+     "awayMoneyline": -3500
+    },
     "DraftKings": {
      "spread": 24.5,
      "spreadOpen": 21.5,
      "overUnder": 47.5,
      "overUnderOpen": null,
-     "homeMoneyline": 1600,
-     "awayMoneyline": -4000
-    },
+     "homeMoneyline": 1500,
+     "awayMoneyline": -3600
+    }
+   }
+  },
+  {
+   "id": 401858436,
+   "week": 1,
+   "start": "2026-09-05T01:00:00.000Z",
+   "home": "USC",
+   "away": "Fresno State",
+   "books": {
     "Bovada": {
-     "spread": 24.5,
-     "spreadOpen": 21.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 48.5,
-     "homeMoneyline": null,
-     "awayMoneyline": -2500
+     "spread": -21.5,
+     "spreadOpen": -23,
+     "overUnder": 52,
+     "overUnderOpen": 51.5,
+     "homeMoneyline": -3500,
+     "awayMoneyline": 1100
+    },
+    "DraftKings": {
+     "spread": -22.5,
+     "spreadOpen": -23.5,
+     "overUnder": 51.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -2800,
+     "awayMoneyline": 1300
     }
    }
   },
   {
-   "id": 401866410,
+   "id": 401856634,
    "week": 1,
    "start": "2026-09-05T16:00:00.000Z",
-   "home": "Bowling Green",
-   "away": "Tarleton State",
+   "home": "Alabama",
+   "away": "East Carolina",
    "books": {
+    "Bovada": {
+     "spread": -28,
+     "spreadOpen": -25.5,
+     "overUnder": 52.5,
+     "overUnderOpen": 53.5,
+     "homeMoneyline": -10000,
+     "awayMoneyline": 1600
+    },
     "DraftKings": {
-     "spread": -2.5,
-     "spreadOpen": -2.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 47.5,
-     "homeMoneyline": -135,
-     "awayMoneyline": 114
-    }
-   }
-  },
-  {
-   "id": 401869960,
-   "week": 1,
-   "start": "2026-09-05T16:00:00.000Z",
-   "home": "James Madison",
-   "away": "Liberty",
-   "books": {
-    "DraftKings": {
-     "spread": -6.5,
-     "spreadOpen": -6,
+     "spread": -27.5,
+     "spreadOpen": -25.5,
      "overUnder": 52.5,
      "overUnderOpen": null,
-     "homeMoneyline": -245,
-     "awayMoneyline": 200
-    },
+     "homeMoneyline": -8000,
+     "awayMoneyline": 2200
+    }
+   }
+  },
+  {
+   "id": 401856778,
+   "week": 1,
+   "start": "2026-09-05T16:00:00.000Z",
+   "home": "Houston",
+   "away": "Oregon State",
+   "books": {
     "Bovada": {
-     "spread": -6.5,
-     "spreadOpen": -6,
-     "overUnder": 53,
-     "overUnderOpen": 50.5,
-     "homeMoneyline": -250,
-     "awayMoneyline": 210
+     "spread": -20.5,
+     "spreadOpen": -18.5,
+     "overUnder": 49.5,
+     "overUnderOpen": 51.5,
+     "homeMoneyline": -1300,
+     "awayMoneyline": 725
+    },
+    "DraftKings": {
+     "spread": -20.5,
+     "spreadOpen": -18.5,
+     "overUnder": 49.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -1800,
+     "awayMoneyline": 1000
+    }
+   }
+  },
+  {
+   "id": 401856780,
+   "week": 1,
+   "start": "2026-09-05T16:00:00.000Z",
+   "home": "West Virginia",
+   "away": "Coastal Carolina",
+   "books": {
+    "Bovada": {
+     "spread": -20.5,
+     "spreadOpen": -17.5,
+     "overUnder": 56,
+     "overUnderOpen": 57.5,
+     "homeMoneyline": -1725,
+     "awayMoneyline": null
+    },
+    "DraftKings": {
+     "spread": -20.5,
+     "spreadOpen": -17.5,
+     "overUnder": 55.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -1350,
+     "awayMoneyline": 800
     }
    }
   },
@@ -2465,12 +2515,79 @@
    "away": "New Hampshire",
    "books": {
     "DraftKings": {
-     "spread": -32.5,
+     "spread": -33.5,
      "spreadOpen": -32.5,
      "overUnder": 55.5,
      "overUnderOpen": 55.5,
      "homeMoneyline": null,
      "awayMoneyline": 5000
+    }
+   }
+  },
+  {
+   "id": 401858425,
+   "week": 1,
+   "start": "2026-09-05T16:00:00.000Z",
+   "home": "Indiana",
+   "away": "North Texas",
+   "books": {
+    "Bovada": {
+     "spread": -40,
+     "spreadOpen": -40.5,
+     "overUnder": 55.5,
+     "overUnderOpen": 55.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    },
+    "DraftKings": {
+     "spread": -40.5,
+     "spreadOpen": -40.5,
+     "overUnder": 55.5,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401858430,
+   "week": 1,
+   "start": "2026-09-05T16:00:00.000Z",
+   "home": "Nebraska",
+   "away": "Ohio",
+   "books": {
+    "Bovada": {
+     "spread": -24,
+     "spreadOpen": -23.5,
+     "overUnder": 46,
+     "overUnderOpen": 47.5,
+     "homeMoneyline": -2800,
+     "awayMoneyline": 1100
+    },
+    "DraftKings": {
+     "spread": -23.5,
+     "spreadOpen": -23.5,
+     "overUnder": 46.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -2400,
+     "awayMoneyline": 1200
+    }
+   }
+  },
+  {
+   "id": 401861962,
+   "week": 1,
+   "start": "2026-09-05T16:00:00.000Z",
+   "home": "UConn",
+   "away": "Lafayette",
+   "books": {
+    "DraftKings": {
+     "spread": -19.5,
+     "spreadOpen": -19.5,
+     "overUnder": 57.5,
+     "overUnderOpen": 58.5,
+     "homeMoneyline": -1350,
+     "awayMoneyline": 800
     }
    }
   },
@@ -2492,144 +2609,44 @@
    }
   },
   {
-   "id": 401861962,
+   "id": 401866410,
    "week": 1,
    "start": "2026-09-05T16:00:00.000Z",
-   "home": "UConn",
-   "away": "Lafayette",
+   "home": "Bowling Green",
+   "away": "Tarleton State",
    "books": {
     "DraftKings": {
-     "spread": -19.5,
-     "spreadOpen": -19.5,
-     "overUnder": 58.5,
-     "overUnderOpen": 58.5,
-     "homeMoneyline": -1100,
-     "awayMoneyline": 700
-    }
-   }
-  },
-  {
-   "id": 401858425,
-   "week": 1,
-   "start": "2026-09-05T16:00:00.000Z",
-   "home": "Indiana",
-   "away": "North Texas",
-   "books": {
-    "DraftKings": {
-     "spread": -40.5,
-     "spreadOpen": -40.5,
-     "overUnder": 55.5,
-     "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    },
-    "Bovada": {
-     "spread": -41,
-     "spreadOpen": -40.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
-   "id": 401856634,
-   "week": 1,
-   "start": "2026-09-05T16:00:00.000Z",
-   "home": "Alabama",
-   "away": "East Carolina",
-   "books": {
-    "DraftKings": {
-     "spread": -28.5,
-     "spreadOpen": -25.5,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -10000,
-     "awayMoneyline": 3000
-    },
-    "Bovada": {
-     "spread": -28.5,
-     "spreadOpen": -25.5,
-     "overUnder": 54,
-     "overUnderOpen": 53.5,
-     "homeMoneyline": -10000,
-     "awayMoneyline": 1600
-    }
-   }
-  },
-  {
-   "id": 401858430,
-   "week": 1,
-   "start": "2026-09-05T16:00:00.000Z",
-   "home": "Nebraska",
-   "away": "Ohio",
-   "books": {
-    "DraftKings": {
-     "spread": -23.5,
-     "spreadOpen": -23.5,
-     "overUnder": 47.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -1800,
-     "awayMoneyline": 1000
-    },
-    "Bovada": {
-     "spread": -24,
-     "spreadOpen": -23.5,
-     "overUnder": 47.5,
+     "spread": -2.5,
+     "spreadOpen": -2.5,
+     "overUnder": 48.5,
      "overUnderOpen": 47.5,
-     "homeMoneyline": -4000,
-     "awayMoneyline": 1200
+     "homeMoneyline": -135,
+     "awayMoneyline": 114
     }
    }
   },
   {
-   "id": 401856778,
+   "id": 401869960,
    "week": 1,
    "start": "2026-09-05T16:00:00.000Z",
-   "home": "Houston",
-   "away": "Oregon State",
+   "home": "James Madison",
+   "away": "Liberty",
    "books": {
     "Bovada": {
-     "spread": -21,
-     "spreadOpen": -18.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
-     "homeMoneyline": -1300,
-     "awayMoneyline": 725
+     "spread": -6.5,
+     "spreadOpen": -6,
+     "overUnder": 50.5,
+     "overUnderOpen": 50.5,
+     "homeMoneyline": -250,
+     "awayMoneyline": 210
     },
     "DraftKings": {
-     "spread": -20.5,
-     "spreadOpen": -18.5,
-     "overUnder": 51.5,
+     "spread": -6.5,
+     "spreadOpen": -6,
+     "overUnder": 50.5,
      "overUnderOpen": null,
-     "homeMoneyline": -1800,
-     "awayMoneyline": 1000
-    }
-   }
-  },
-  {
-   "id": 401856780,
-   "week": 1,
-   "start": "2026-09-05T16:00:00.000Z",
-   "home": "West Virginia",
-   "away": "Coastal Carolina",
-   "books": {
-    "Bovada": {
-     "spread": -21.5,
-     "spreadOpen": -17.5,
-     "overUnder": 56,
-     "overUnderOpen": 57.5,
-     "homeMoneyline": -1725,
-     "awayMoneyline": null
-    },
-    "DraftKings": {
-     "spread": -21.5,
-     "spreadOpen": -17.5,
-     "overUnder": 56.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -1650,
-     "awayMoneyline": 950
+     "homeMoneyline": -258,
+     "awayMoneyline": 210
     }
    }
   },
@@ -2641,9 +2658,9 @@
    "away": "Miami (OH)",
    "books": {
     "Bovada": {
-     "spread": -16,
+     "spread": -16.5,
      "spreadOpen": -16.5,
-     "overUnder": 49.5,
+     "overUnder": 48,
      "overUnderOpen": 50.5,
      "homeMoneyline": -800,
      "awayMoneyline": 525
@@ -2651,7 +2668,7 @@
     "DraftKings": {
      "spread": -16.5,
      "spreadOpen": -16.5,
-     "overUnder": 49.5,
+     "overUnder": 48.5,
      "overUnderOpen": null,
      "homeMoneyline": -850,
      "awayMoneyline": 575
@@ -2693,18 +2710,35 @@
     "Bovada": {
      "spread": -36.5,
      "spreadOpen": -34.5,
-     "overUnder": 53,
+     "overUnder": 53.5,
      "overUnderOpen": 52.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     },
     "DraftKings": {
-     "spread": -36.5,
+     "spread": -35.5,
      "spreadOpen": -33.5,
      "overUnder": 53.5,
      "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": 5000
+    }
+   }
+  },
+  {
+   "id": 401856659,
+   "week": 1,
+   "start": "2026-09-05T17:00:00.000Z",
+   "home": "Kentucky",
+   "away": "Youngstown State",
+   "books": {
+    "DraftKings": {
+     "spread": -23.5,
+     "spreadOpen": -23.5,
+     "overUnder": 62.5,
+     "overUnderOpen": 62.5,
+     "homeMoneyline": -3600,
+     "awayMoneyline": 1500
     }
    }
   },
@@ -2733,29 +2767,12 @@
    "away": "Duquesne",
    "books": {
     "DraftKings": {
-     "spread": -30.5,
+     "spread": -28.5,
      "spreadOpen": -30.5,
      "overUnder": 58.5,
      "overUnderOpen": 58.5,
-     "homeMoneyline": -10000,
-     "awayMoneyline": 3000
-    }
-   }
-  },
-  {
-   "id": 401856659,
-   "week": 1,
-   "start": "2026-09-05T17:00:00.000Z",
-   "home": "Kentucky",
-   "away": "Youngstown State",
-   "books": {
-    "DraftKings": {
-     "spread": -23.5,
-     "spreadOpen": -23.5,
-     "overUnder": 62.5,
-     "overUnderOpen": 62.5,
-     "homeMoneyline": -4000,
-     "awayMoneyline": 1600
+     "homeMoneyline": -50000,
+     "awayMoneyline": 4000
     }
    }
   },
@@ -2767,7 +2784,7 @@
    "away": "Rhode Island",
    "books": {
     "DraftKings": {
-     "spread": -10,
+     "spread": -9.5,
      "spreadOpen": -10,
      "overUnder": 51.5,
      "overUnderOpen": 51.5,
@@ -2784,12 +2801,37 @@
    "away": "Tennessee State",
    "books": {
     "DraftKings": {
-     "spread": -47.5,
+     "spread": -46.5,
      "spreadOpen": -46.5,
-     "overUnder": 55.5,
+     "overUnder": 56.5,
      "overUnderOpen": 56.5,
      "homeMoneyline": null,
      "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401856636,
+   "week": 1,
+   "start": "2026-09-05T19:30:00.000Z",
+   "home": "Auburn",
+   "away": "Baylor",
+   "books": {
+    "Bovada": {
+     "spread": -7,
+     "spreadOpen": -7.5,
+     "overUnder": 58,
+     "overUnderOpen": 58.5,
+     "homeMoneyline": -270,
+     "awayMoneyline": 220
+    },
+    "DraftKings": {
+     "spread": -7.5,
+     "spreadOpen": -6.5,
+     "overUnder": 57.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -298,
+     "awayMoneyline": 240
     }
    }
   },
@@ -2811,27 +2853,144 @@
    }
   },
   {
+   "id": 401856667,
+   "week": 1,
+   "start": "2026-09-05T19:30:00.000Z",
+   "home": "Texas",
+   "away": "Texas State",
+   "books": {
+    "Bovada": {
+     "spread": -29.5,
+     "spreadOpen": -30.5,
+     "overUnder": 60,
+     "overUnderOpen": 59.5,
+     "homeMoneyline": -10000,
+     "awayMoneyline": null
+    },
+    "DraftKings": {
+     "spread": -29.5,
+     "spreadOpen": -30.5,
+     "overUnder": 59.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -9000,
+     "awayMoneyline": 2500
+    }
+   }
+  },
+  {
    "id": 401856777,
    "week": 1,
    "start": "2026-09-05T19:30:00.000Z",
    "home": "Cincinnati",
    "away": "Boston College",
    "books": {
-    "DraftKings": {
-     "spread": -7.5,
-     "spreadOpen": -9.5,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -310,
-     "awayMoneyline": 250
-    },
     "Bovada": {
-     "spread": -7.5,
+     "spread": -7,
      "spreadOpen": -9.5,
-     "overUnder": 52,
+     "overUnder": 49.5,
      "overUnderOpen": 54.5,
      "homeMoneyline": -270,
      "awayMoneyline": 220
+    },
+    "DraftKings": {
+     "spread": -7.5,
+     "spreadOpen": -9.5,
+     "overUnder": 49.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -298,
+     "awayMoneyline": 240
+    }
+   }
+  },
+  {
+   "id": 401858209,
+   "week": 1,
+   "start": "2026-09-05T19:30:00.000Z",
+   "home": "Duke",
+   "away": "Tulane",
+   "books": {
+    "Bovada": {
+     "spread": -7.5,
+     "spreadOpen": -8.5,
+     "overUnder": 51,
+     "overUnderOpen": 53.5,
+     "homeMoneyline": -480,
+     "awayMoneyline": 350
+    },
+    "DraftKings": {
+     "spread": -7.5,
+     "spreadOpen": -8.5,
+     "overUnder": 50.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -310,
+     "awayMoneyline": 250
+    }
+   }
+  },
+  {
+   "id": 401858433,
+   "week": 1,
+   "start": "2026-09-05T19:30:00.000Z",
+   "home": "Oregon",
+   "away": "Boise State",
+   "books": {
+    "Bovada": {
+     "spread": -24.5,
+     "spreadOpen": -24.5,
+     "overUnder": 51,
+     "overUnderOpen": 53.5,
+     "homeMoneyline": -3300,
+     "awayMoneyline": 1100
+    },
+    "DraftKings": {
+     "spread": -24.5,
+     "spreadOpen": -24.5,
+     "overUnder": 51.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -4000,
+     "awayMoneyline": 1600
+    }
+   }
+  },
+  {
+   "id": 401858434,
+   "week": 1,
+   "start": "2026-09-05T19:30:00.000Z",
+   "home": "Penn State",
+   "away": "Marshall",
+   "books": {
+    "Bovada": {
+     "spread": -24,
+     "spreadOpen": -23.5,
+     "overUnder": 52.5,
+     "overUnderOpen": 54.5,
+     "homeMoneyline": -3500,
+     "awayMoneyline": 1100
+    },
+    "DraftKings": {
+     "spread": -24.5,
+     "spreadOpen": -23.5,
+     "overUnder": 52.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -3600,
+     "awayMoneyline": 1500
+    }
+   }
+  },
+  {
+   "id": 401862694,
+   "week": 1,
+   "start": "2026-09-05T19:30:00.000Z",
+   "home": "Charlotte",
+   "away": "The Citadel",
+   "books": {
+    "DraftKings": {
+     "spread": -20.5,
+     "spreadOpen": -15.5,
+     "overUnder": 46.5,
+     "overUnderOpen": 46.5,
+     "homeMoneyline": -1800,
+     "awayMoneyline": 1000
     }
    }
   },
@@ -2845,27 +3004,10 @@
     "DraftKings": {
      "spread": -30.5,
      "spreadOpen": -30.5,
-     "overUnder": 53.5,
+     "overUnder": 52.5,
      "overUnderOpen": 53.5,
-     "homeMoneyline": -9000,
-     "awayMoneyline": 2500
-    }
-   }
-  },
-  {
-   "id": 401862694,
-   "week": 1,
-   "start": "2026-09-05T19:30:00.000Z",
-   "home": "Charlotte",
-   "away": "The Citadel",
-   "books": {
-    "DraftKings": {
-     "spread": -15.5,
-     "spreadOpen": -15.5,
-     "overUnder": 46.5,
-     "overUnderOpen": 46.5,
-     "homeMoneyline": -1100,
-     "awayMoneyline": 700
+     "homeMoneyline": -50000,
+     "awayMoneyline": 4000
     }
    }
   },
@@ -2915,133 +3057,8 @@
      "spreadOpen": -17.5,
      "overUnder": 53.5,
      "overUnderOpen": 53.5,
-     "homeMoneyline": -800,
-     "awayMoneyline": 550
-    }
-   }
-  },
-  {
-   "id": 401858209,
-   "week": 1,
-   "start": "2026-09-05T19:30:00.000Z",
-   "home": "Duke",
-   "away": "Tulane",
-   "books": {
-    "DraftKings": {
-     "spread": -9.5,
-     "spreadOpen": -8.5,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -360,
-     "awayMoneyline": 285
-    },
-    "Bovada": {
-     "spread": -8.5,
-     "spreadOpen": -8.5,
-     "overUnder": 51,
-     "overUnderOpen": 53.5,
-     "homeMoneyline": -480,
-     "awayMoneyline": 350
-    }
-   }
-  },
-  {
-   "id": 401856667,
-   "week": 1,
-   "start": "2026-09-05T19:30:00.000Z",
-   "home": "Texas",
-   "away": "Texas State",
-   "books": {
-    "DraftKings": {
-     "spread": -30.5,
-     "spreadOpen": -30.5,
-     "overUnder": 59.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -10000,
-     "awayMoneyline": 3000
-    },
-    "Bovada": {
-     "spread": -30.5,
-     "spreadOpen": -30.5,
-     "overUnder": 60,
-     "overUnderOpen": 59.5,
-     "homeMoneyline": -10000,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
-   "id": 401858433,
-   "week": 1,
-   "start": "2026-09-05T19:30:00.000Z",
-   "home": "Oregon",
-   "away": "Boise State",
-   "books": {
-    "DraftKings": {
-     "spread": -24.5,
-     "spreadOpen": -24.5,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -4500,
-     "awayMoneyline": 1700
-    },
-    "Bovada": {
-     "spread": -24.5,
-     "spreadOpen": -24.5,
-     "overUnder": 52,
-     "overUnderOpen": 53.5,
-     "homeMoneyline": -10000,
-     "awayMoneyline": 1600
-    }
-   }
-  },
-  {
-   "id": 401856636,
-   "week": 1,
-   "start": "2026-09-05T19:30:00.000Z",
-   "home": "Auburn",
-   "away": "Baylor",
-   "books": {
-    "DraftKings": {
-     "spread": -7,
-     "spreadOpen": -6.5,
-     "overUnder": 59.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -298,
-     "awayMoneyline": 240
-    },
-    "Bovada": {
-     "spread": -7,
-     "spreadOpen": -7.5,
-     "overUnder": 59,
-     "overUnderOpen": 58.5,
-     "homeMoneyline": -270,
-     "awayMoneyline": 220
-    }
-   }
-  },
-  {
-   "id": 401858434,
-   "week": 1,
-   "start": "2026-09-05T19:30:00.000Z",
-   "home": "Penn State",
-   "away": "Marshall",
-   "books": {
-    "Bovada": {
-     "spread": -24.5,
-     "spreadOpen": -23.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
-     "homeMoneyline": -3300,
-     "awayMoneyline": 1100
-    },
-    "DraftKings": {
-     "spread": -24.5,
-     "spreadOpen": -23.5,
-     "overUnder": 54.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -4000,
-     "awayMoneyline": 1600
+     "homeMoneyline": -1050,
+     "awayMoneyline": 675
     }
    }
   },
@@ -3052,20 +3069,20 @@
    "home": "Tulsa",
    "away": "Oklahoma State",
    "books": {
-    "DraftKings": {
-     "spread": 14,
-     "spreadOpen": 11.5,
-     "overUnder": 60.5,
-     "overUnderOpen": null,
-     "homeMoneyline": 470,
-     "awayMoneyline": -650
-    },
     "Bovada": {
-     "spread": 14,
+     "spread": 13,
      "spreadOpen": 11.5,
-     "overUnder": 60.5,
+     "overUnder": 58,
      "overUnderOpen": 61.5,
      "homeMoneyline": 390,
+     "awayMoneyline": -550
+    },
+    "DraftKings": {
+     "spread": 13.5,
+     "spreadOpen": 11.5,
+     "overUnder": 57.5,
+     "overUnderOpen": null,
+     "homeMoneyline": 410,
      "awayMoneyline": -550
     }
    }
@@ -3095,9 +3112,9 @@
    "away": "Northern Illinois",
    "books": {
     "Bovada": {
-     "spread": -32,
+     "spread": -31,
      "spreadOpen": -29.5,
-     "overUnder": 45.5,
+     "overUnder": 44.5,
      "overUnderOpen": 43.5,
      "homeMoneyline": null,
      "awayMoneyline": 2500
@@ -3105,7 +3122,7 @@
     "DraftKings": {
      "spread": -31.5,
      "spreadOpen": -29.5,
-     "overUnder": 45.5,
+     "overUnder": 44.5,
      "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": 5000
@@ -3120,12 +3137,37 @@
    "away": "Alcorn State",
    "books": {
     "DraftKings": {
-     "spread": -21,
+     "spread": -21.5,
      "spreadOpen": -21,
      "overUnder": 50.5,
      "overUnderOpen": 50.5,
-     "homeMoneyline": -2800,
-     "awayMoneyline": 1300
+     "homeMoneyline": -1350,
+     "awayMoneyline": 800
+    }
+   }
+  },
+  {
+   "id": 401860878,
+   "week": 1,
+   "start": "2026-09-05T22:00:00.000Z",
+   "home": "Colorado State",
+   "away": "Wyoming",
+   "books": {
+    "Bovada": {
+     "spread": -3,
+     "spreadOpen": -4,
+     "overUnder": 46.5,
+     "overUnderOpen": 47.5,
+     "homeMoneyline": -180,
+     "awayMoneyline": 155
+    },
+    "DraftKings": {
+     "spread": -3,
+     "spreadOpen": -4,
+     "overUnder": 46.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -162,
+     "awayMoneyline": 136
     }
    }
   },
@@ -3139,7 +3181,7 @@
     "DraftKings": {
      "spread": -41.5,
      "spreadOpen": -41.5,
-     "overUnder": 55.5,
+     "overUnder": 52.5,
      "overUnderOpen": 55.5,
      "homeMoneyline": null,
      "awayMoneyline": null
@@ -3147,27 +3189,44 @@
    }
   },
   {
-   "id": 401860878,
+   "id": 401856668,
    "week": 1,
-   "start": "2026-09-05T22:00:00.000Z",
-   "home": "Colorado State",
-   "away": "Wyoming",
+   "start": "2026-09-05T23:00:00.000Z",
+   "home": "Texas A&M",
+   "away": "Missouri State",
+   "books": {
+    "Bovada": {
+     "spread": -40.5,
+     "spreadOpen": -38.5,
+     "overUnder": 53.5,
+     "overUnderOpen": 52.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    },
+    "DraftKings": {
+     "spread": -40.5,
+     "spreadOpen": -38.5,
+     "overUnder": 53.5,
+     "overUnderOpen": null,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401856669,
+   "week": 1,
+   "start": "2026-09-05T23:00:00.000Z",
+   "home": "Vanderbilt",
+   "away": "Austin Peay",
    "books": {
     "DraftKings": {
-     "spread": -3.5,
-     "spreadOpen": -4,
-     "overUnder": 47.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -170,
-     "awayMoneyline": 142
-    },
-    "Bovada": {
-     "spread": -3.5,
-     "spreadOpen": -4,
-     "overUnder": 47.5,
-     "overUnderOpen": 47.5,
-     "homeMoneyline": -180,
-     "awayMoneyline": 155
+     "spread": -30.5,
+     "spreadOpen": -30.5,
+     "overUnder": 60.5,
+     "overUnderOpen": 61.5,
+     "homeMoneyline": -4500,
+     "awayMoneyline": 1700
     }
    }
   },
@@ -3206,23 +3265,6 @@
    }
   },
   {
-   "id": 401856669,
-   "week": 1,
-   "start": "2026-09-05T23:00:00.000Z",
-   "home": "Vanderbilt",
-   "away": "Austin Peay",
-   "books": {
-    "DraftKings": {
-     "spread": -30.5,
-     "spreadOpen": -30.5,
-     "overUnder": 61.5,
-     "overUnderOpen": 61.5,
-     "homeMoneyline": null,
-     "awayMoneyline": 5000
-    }
-   }
-  },
-  {
    "id": 401860880,
    "week": 1,
    "start": "2026-09-05T23:00:00.000Z",
@@ -3232,27 +3274,77 @@
     "DraftKings": {
      "spread": -12.5,
      "spreadOpen": -11.5,
-     "overUnder": 64.5,
+     "overUnder": 62.5,
      "overUnderOpen": 64.5,
-     "homeMoneyline": -600,
-     "awayMoneyline": 440
+     "homeMoneyline": -575,
+     "awayMoneyline": 425
     }
    }
   },
   {
-   "id": 401868316,
+   "id": 401862695,
    "week": 1,
    "start": "2026-09-05T23:00:00.000Z",
-   "home": "South Alabama",
-   "away": "SE Louisiana",
+   "home": "Memphis",
+   "away": "Arkansas State",
+   "books": {
+    "Bovada": {
+     "spread": -11,
+     "spreadOpen": -10.5,
+     "overUnder": 52,
+     "overUnderOpen": 55.5,
+     "homeMoneyline": -340,
+     "awayMoneyline": 270
+    },
+    "DraftKings": {
+     "spread": -11.5,
+     "spreadOpen": -10.5,
+     "overUnder": 52.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -440,
+     "awayMoneyline": 340
+    }
+   }
+  },
+  {
+   "id": 401862697,
+   "week": 1,
+   "start": "2026-09-05T23:00:00.000Z",
+   "home": "Rice",
+   "away": "Houston Christian",
    "books": {
     "DraftKings": {
-     "spread": -12.5,
+     "spread": -22.5,
+     "spreadOpen": -24.5,
+     "overUnder": 47.5,
+     "overUnderOpen": 47.5,
+     "homeMoneyline": -2100,
+     "awayMoneyline": 1100
+    }
+   }
+  },
+  {
+   "id": 401862699,
+   "week": 1,
+   "start": "2026-09-05T23:00:00.000Z",
+   "home": "South Florida",
+   "away": "Florida International",
+   "books": {
+    "Bovada": {
+     "spread": -14,
+     "spreadOpen": -12.5,
+     "overUnder": 52,
+     "overUnderOpen": 54.5,
+     "homeMoneyline": -460,
+     "awayMoneyline": 340
+    },
+    "DraftKings": {
+     "spread": -14,
      "spreadOpen": -12.5,
      "overUnder": 52.5,
-     "overUnderOpen": 52.5,
-     "homeMoneyline": -600,
-     "awayMoneyline": 440
+     "overUnderOpen": null,
+     "homeMoneyline": -575,
+     "awayMoneyline": 425
     }
    }
   },
@@ -3268,8 +3360,8 @@
      "spreadOpen": -20.5,
      "overUnder": 59.5,
      "overUnderOpen": 59.5,
-     "homeMoneyline": -1650,
-     "awayMoneyline": 950
+     "homeMoneyline": -2100,
+     "awayMoneyline": 1100
     }
    }
   },
@@ -3281,9 +3373,9 @@
    "away": "Eastern Kentucky",
    "books": {
     "DraftKings": {
-     "spread": -19.5,
+     "spread": -20.5,
      "spreadOpen": -19.5,
-     "overUnder": 52.5,
+     "overUnder": 54.5,
      "overUnderOpen": 52.5,
      "homeMoneyline": -2100,
      "awayMoneyline": 1100
@@ -3308,44 +3400,19 @@
    }
   },
   {
-   "id": 401862697,
+   "id": 401868316,
    "week": 1,
    "start": "2026-09-05T23:00:00.000Z",
-   "home": "Rice",
-   "away": "Houston Christian",
+   "home": "South Alabama",
+   "away": "SE Louisiana",
    "books": {
     "DraftKings": {
-     "spread": -24.5,
-     "spreadOpen": -24.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 47.5,
-     "homeMoneyline": -1800,
-     "awayMoneyline": 1000
-    }
-   }
-  },
-  {
-   "id": 401862699,
-   "week": 1,
-   "start": "2026-09-05T23:00:00.000Z",
-   "home": "South Florida",
-   "away": "Florida International",
-   "books": {
-    "Bovada": {
-     "spread": -13,
+     "spread": -12.5,
      "spreadOpen": -12.5,
-     "overUnder": 54,
-     "overUnderOpen": 54.5,
-     "homeMoneyline": -460,
-     "awayMoneyline": 340
-    },
-    "DraftKings": {
-     "spread": -13.5,
-     "spreadOpen": -12.5,
-     "overUnder": 54.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -535,
-     "awayMoneyline": 400
+     "overUnder": 52.5,
+     "overUnderOpen": 52.5,
+     "homeMoneyline": -600,
+     "awayMoneyline": 440
     }
    }
   },
@@ -3359,13 +3426,13 @@
     "Bovada": {
      "spread": -17,
      "spreadOpen": -17,
-     "overUnder": 53,
+     "overUnder": 53.5,
      "overUnderOpen": 50.5,
      "homeMoneyline": -1300,
      "awayMoneyline": 725
     },
     "DraftKings": {
-     "spread": -16.5,
+     "spread": -17.5,
      "spreadOpen": -17.5,
      "overUnder": 53.5,
      "overUnderOpen": null,
@@ -3375,52 +3442,52 @@
    }
   },
   {
-   "id": 401862695,
+   "id": 401856660,
    "week": 1,
-   "start": "2026-09-05T23:00:00.000Z",
-   "home": "Memphis",
-   "away": "Arkansas State",
+   "start": "2026-09-05T23:30:00.000Z",
+   "home": "LSU",
+   "away": "Clemson",
    "books": {
     "Bovada": {
-     "spread": -8.5,
-     "spreadOpen": -10.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
-     "homeMoneyline": -440,
-     "awayMoneyline": 330
+     "spread": -10,
+     "spreadOpen": -11.5,
+     "overUnder": 50.5,
+     "overUnderOpen": 51.5,
+     "homeMoneyline": -480,
+     "awayMoneyline": 350
     },
     "DraftKings": {
-     "spread": -8.5,
-     "spreadOpen": -10.5,
-     "overUnder": 55.5,
+     "spread": -10,
+     "spreadOpen": null,
+     "overUnder": 50.5,
      "overUnderOpen": null,
-     "homeMoneyline": -310,
-     "awayMoneyline": 250
+     "homeMoneyline": -360,
+     "awayMoneyline": 285
     }
    }
   },
   {
-   "id": 401856668,
+   "id": 401856662,
    "week": 1,
-   "start": "2026-09-05T23:00:00.000Z",
-   "home": "Texas A&M",
-   "away": "Missouri State",
+   "start": "2026-09-05T23:30:00.000Z",
+   "home": "Mississippi State",
+   "away": "UL Monroe",
    "books": {
     "Bovada": {
-     "spread": -40.5,
-     "spreadOpen": -38.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
+     "spread": -28.5,
+     "spreadOpen": -28.5,
+     "overUnder": 55,
+     "overUnderOpen": 55.5,
      "homeMoneyline": null,
-     "awayMoneyline": null
+     "awayMoneyline": 2000
     },
     "DraftKings": {
-     "spread": -41.5,
-     "spreadOpen": -38.5,
-     "overUnder": 52.5,
+     "spread": -28.5,
+     "spreadOpen": -28.5,
+     "overUnder": 54.5,
      "overUnderOpen": null,
-     "homeMoneyline": null,
-     "awayMoneyline": null
+     "homeMoneyline": -6500,
+     "awayMoneyline": 2000
     }
    }
   },
@@ -3432,27 +3499,10 @@
    "away": "VMI",
    "books": {
     "DraftKings": {
-     "spread": -50.5,
+     "spread": -56.5,
      "spreadOpen": -50.5,
-     "overUnder": 57.5,
+     "overUnder": 62.5,
      "overUnderOpen": 57.5,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
-   "id": 401869129,
-   "week": 1,
-   "start": "2026-09-05T23:30:00.000Z",
-   "home": "Louisiana Tech",
-   "away": "Northwestern State",
-   "books": {
-    "DraftKings": {
-     "spread": -41.5,
-     "spreadOpen": -41.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3468,68 +3518,35 @@
     "Bovada": {
      "spread": -27.5,
      "spreadOpen": -26.5,
-     "overUnder": 47.5,
+     "overUnder": 48.5,
      "overUnderOpen": 47.5,
-     "homeMoneyline": null,
-     "awayMoneyline": 2200
+     "homeMoneyline": -7000,
+     "awayMoneyline": 1300
     },
     "DraftKings": {
      "spread": -27.5,
      "spreadOpen": -26.5,
-     "overUnder": 47.5,
+     "overUnder": 48.5,
      "overUnderOpen": null,
-     "homeMoneyline": -6500,
-     "awayMoneyline": 2000
+     "homeMoneyline": -5000,
+     "awayMoneyline": 1800
     }
    }
   },
   {
-   "id": 401856662,
+   "id": 401869129,
    "week": 1,
    "start": "2026-09-05T23:30:00.000Z",
-   "home": "Mississippi State",
-   "away": "UL Monroe",
+   "home": "Louisiana Tech",
+   "away": "Northwestern State",
    "books": {
-    "Bovada": {
-     "spread": -28.5,
-     "spreadOpen": -28.5,
+    "DraftKings": {
+     "spread": -44.5,
+     "spreadOpen": -41.5,
      "overUnder": 55.5,
-     "overUnderOpen": 55.5,
+     "overUnderOpen": 52.5,
      "homeMoneyline": null,
-     "awayMoneyline": 2000
-    },
-    "DraftKings": {
-     "spread": -28.5,
-     "spreadOpen": -28.5,
-     "overUnder": 56.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -6500,
-     "awayMoneyline": 2000
-    }
-   }
-  },
-  {
-   "id": 401856660,
-   "week": 1,
-   "start": "2026-09-05T23:30:00.000Z",
-   "home": "LSU",
-   "away": "Clemson",
-   "books": {
-    "Bovada": {
-     "spread": -10.5,
-     "spreadOpen": -11.5,
-     "overUnder": 51,
-     "overUnderOpen": 51.5,
-     "homeMoneyline": -480,
-     "awayMoneyline": 350
-    },
-    "DraftKings": {
-     "spread": -10.5,
-     "spreadOpen": null,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -380,
-     "awayMoneyline": 300
+     "awayMoneyline": null
     }
    }
   },
@@ -3545,7 +3562,7 @@
      "spreadOpen": -25.5,
      "overUnder": 59.5,
      "overUnderOpen": 56.5,
-     "homeMoneyline": -7000,
+     "homeMoneyline": -6500,
      "awayMoneyline": 1300
     },
     "DraftKings": {
@@ -3553,8 +3570,8 @@
      "spreadOpen": -25.5,
      "overUnder": 59.5,
      "overUnderOpen": null,
-     "homeMoneyline": -4000,
-     "awayMoneyline": 1600
+     "homeMoneyline": -5000,
+     "awayMoneyline": 1800
     }
    }
   },
@@ -3566,9 +3583,9 @@
    "away": "Utah Tech",
    "books": {
     "DraftKings": {
-     "spread": -47.5,
+     "spread": -51.5,
      "spreadOpen": -47.5,
-     "overUnder": 54.5,
+     "overUnder": 60.5,
      "overUnderOpen": 54.5,
      "homeMoneyline": null,
      "awayMoneyline": null
@@ -3621,8 +3638,8 @@
      "spreadOpen": -18.5,
      "overUnder": 48.5,
      "overUnderOpen": 48.5,
-     "homeMoneyline": -1000,
-     "awayMoneyline": 650
+     "homeMoneyline": -1200,
+     "awayMoneyline": 750
     }
    }
   },
@@ -3634,12 +3651,12 @@
    "away": "Mercyhurst",
    "books": {
     "DraftKings": {
-     "spread": -24.5,
+     "spread": -28.5,
      "spreadOpen": -24.5,
-     "overUnder": 50.5,
+     "overUnder": 51.5,
      "overUnderOpen": 50.5,
-     "homeMoneyline": -4500,
-     "awayMoneyline": 1700
+     "homeMoneyline": -50000,
+     "awayMoneyline": 4000
     }
    }
   },
@@ -3653,10 +3670,10 @@
     "DraftKings": {
      "spread": -31.5,
      "spreadOpen": -31.5,
-     "overUnder": 56.5,
+     "overUnder": 58.5,
      "overUnderOpen": 56.5,
-     "homeMoneyline": -10000,
-     "awayMoneyline": 3000
+     "homeMoneyline": -8000,
+     "awayMoneyline": 2200
     }
    }
   },
@@ -3670,7 +3687,7 @@
     "DraftKings": {
      "spread": -40.5,
      "spreadOpen": -38.5,
-     "overUnder": 57.5,
+     "overUnder": 62.5,
      "overUnderOpen": 57.5,
      "homeMoneyline": null,
      "awayMoneyline": null
@@ -3685,54 +3702,12 @@
    "away": "Morgan State",
    "books": {
     "DraftKings": {
-     "spread": -41.5,
+     "spread": -43.5,
      "spreadOpen": -41.5,
      "overUnder": 52.5,
      "overUnderOpen": 52.5,
      "homeMoneyline": null,
      "awayMoneyline": null
-    }
-   }
-  },
-  {
-   "id": 401866411,
-   "week": 1,
-   "start": "2026-09-06T02:00:00.000Z",
-   "home": "Sacramento State",
-   "away": "Mississippi Valley State",
-   "books": {
-    "DraftKings": {
-     "spread": -35.5,
-     "spreadOpen": -35.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
-     "homeMoneyline": null,
-     "awayMoneyline": null
-    }
-   }
-  },
-  {
-   "id": 401864498,
-   "week": 1,
-   "start": "2026-09-06T02:00:00.000Z",
-   "home": "New Mexico",
-   "away": "Central Michigan",
-   "books": {
-    "Bovada": {
-     "spread": -10,
-     "spreadOpen": -12.5,
-     "overUnder": 47,
-     "overUnderOpen": 49,
-     "homeMoneyline": -575,
-     "awayMoneyline": 400
-    },
-    "DraftKings": {
-     "spread": -10.5,
-     "spreadOpen": -12.5,
-     "overUnder": 46.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -410,
-     "awayMoneyline": 320
     }
    }
   },
@@ -3746,43 +3721,60 @@
     "Bovada": {
      "spread": 3,
      "spreadOpen": 1.5,
-     "overUnder": 58.5,
+     "overUnder": 57.5,
      "overUnderOpen": 58.5,
-     "homeMoneyline": 105,
-     "awayMoneyline": -125
+     "homeMoneyline": 130,
+     "awayMoneyline": -150
     },
     "DraftKings": {
      "spread": 3,
      "spreadOpen": 1.5,
-     "overUnder": 58.5,
+     "overUnder": 57.5,
      "overUnderOpen": null,
-     "homeMoneyline": 130,
-     "awayMoneyline": -155
+     "homeMoneyline": 124,
+     "awayMoneyline": -148
     }
    }
   },
   {
-   "id": 401864432,
+   "id": 401864498,
    "week": 1,
-   "start": "2026-09-06T02:30:00.000Z",
-   "home": "Nevada",
-   "away": "Western Kentucky",
+   "start": "2026-09-06T02:00:00.000Z",
+   "home": "New Mexico",
+   "away": "Central Michigan",
    "books": {
     "Bovada": {
-     "spread": 2.5,
-     "spreadOpen": 4,
-     "overUnder": 53,
-     "overUnderOpen": 53.5,
-     "homeMoneyline": 120,
-     "awayMoneyline": -140
+     "spread": -10,
+     "spreadOpen": -12.5,
+     "overUnder": 46.5,
+     "overUnderOpen": 49,
+     "homeMoneyline": -575,
+     "awayMoneyline": 400
     },
     "DraftKings": {
-     "spread": 2.5,
-     "spreadOpen": 4.5,
-     "overUnder": 52.5,
+     "spread": -10,
+     "spreadOpen": -12.5,
+     "overUnder": 46.5,
      "overUnderOpen": null,
-     "homeMoneyline": 110,
-     "awayMoneyline": -130
+     "homeMoneyline": -395,
+     "awayMoneyline": 310
+    }
+   }
+  },
+  {
+   "id": 401866411,
+   "week": 1,
+   "start": "2026-09-06T02:00:00.000Z",
+   "home": "Sacramento State",
+   "away": "Mississippi Valley State",
+   "books": {
+    "DraftKings": {
+     "spread": -37.5,
+     "spreadOpen": -35.5,
+     "overUnder": 56.5,
+     "overUnderOpen": 56.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
     }
    }
   },
@@ -3798,16 +3790,41 @@
      "spreadOpen": -3.5,
      "overUnder": 54,
      "overUnderOpen": 53.5,
-     "homeMoneyline": -115,
-     "awayMoneyline": -105
+     "homeMoneyline": 110,
+     "awayMoneyline": -130
     },
     "DraftKings": {
-     "spread": 1.5,
+     "spread": 2.5,
      "spreadOpen": -1.5,
      "overUnder": 53.5,
      "overUnderOpen": null,
-     "homeMoneyline": 100,
-     "awayMoneyline": -120
+     "homeMoneyline": 105,
+     "awayMoneyline": -125
+    }
+   }
+  },
+  {
+   "id": 401864432,
+   "week": 1,
+   "start": "2026-09-06T02:30:00.000Z",
+   "home": "Nevada",
+   "away": "Western Kentucky",
+   "books": {
+    "Bovada": {
+     "spread": 2.5,
+     "spreadOpen": 4,
+     "overUnder": 52.5,
+     "overUnderOpen": 53.5,
+     "homeMoneyline": 120,
+     "awayMoneyline": -140
+    },
+    "DraftKings": {
+     "spread": 2.5,
+     "spreadOpen": 4.5,
+     "overUnder": 51.5,
+     "overUnderOpen": null,
+     "homeMoneyline": 110,
+     "awayMoneyline": -130
     }
    }
   },
@@ -3818,6 +3835,14 @@
    "home": "Washington",
    "away": "Washington State",
    "books": {
+    "Bovada": {
+     "spread": -23,
+     "spreadOpen": -21.5,
+     "overUnder": 51,
+     "overUnderOpen": 50.5,
+     "homeMoneyline": -2200,
+     "awayMoneyline": 1000
+    },
     "DraftKings": {
      "spread": -23.5,
      "spreadOpen": -21.5,
@@ -3825,14 +3850,6 @@
      "overUnderOpen": null,
      "homeMoneyline": -2800,
      "awayMoneyline": 1300
-    },
-    "Bovada": {
-     "spread": -23.5,
-     "spreadOpen": -21.5,
-     "overUnder": 51,
-     "overUnderOpen": 50.5,
-     "homeMoneyline": -2200,
-     "awayMoneyline": 1000
     }
    }
   },
@@ -3844,7 +3861,7 @@
    "away": "Louisville",
    "books": {
     "Bovada": {
-     "spread": -6.5,
+     "spread": -7,
      "spreadOpen": -8.5,
      "overUnder": 55.5,
      "overUnderOpen": 52.5,
@@ -3852,12 +3869,12 @@
      "awayMoneyline": 220
     },
     "DraftKings": {
-     "spread": -6.5,
+     "spread": -7,
      "spreadOpen": null,
      "overUnder": 55.5,
      "overUnderOpen": null,
-     "homeMoneyline": -258,
-     "awayMoneyline": 210
+     "homeMoneyline": -265,
+     "awayMoneyline": 215
     }
    }
   },
@@ -3893,21 +3910,21 @@
    "home": "Florida State",
    "away": "SMU",
    "books": {
-    "DraftKings": {
-     "spread": 2.5,
-     "spreadOpen": null,
-     "overUnder": 52.5,
-     "overUnderOpen": null,
-     "homeMoneyline": 130,
-     "awayMoneyline": -155
-    },
     "Bovada": {
-     "spread": 2,
+     "spread": 3,
      "spreadOpen": 2.5,
      "overUnder": 53,
      "overUnderOpen": 52.5,
-     "homeMoneyline": 120,
-     "awayMoneyline": -140
+     "homeMoneyline": 145,
+     "awayMoneyline": -170
+    },
+    "DraftKings": {
+     "spread": 3,
+     "spreadOpen": null,
+     "overUnder": 53.5,
+     "overUnderOpen": null,
+     "homeMoneyline": 136,
+     "awayMoneyline": -162
     }
    }
   },
@@ -3929,19 +3946,27 @@
    }
   },
   {
-   "id": 401856782,
+   "id": 401856679,
    "week": 2,
    "start": "2026-09-12T16:00:00.000Z",
-   "home": "Oklahoma State",
-   "away": "Oregon",
+   "home": "Michigan",
+   "away": "Oklahoma",
    "books": {
+    "Bovada": {
+     "spread": -2.5,
+     "spreadOpen": -1.5,
+     "overUnder": 45.5,
+     "overUnderOpen": 45.5,
+     "homeMoneyline": -145,
+     "awayMoneyline": 125
+    },
     "DraftKings": {
-     "spread": 18.5,
-     "spreadOpen": 18.5,
-     "overUnder": 60.5,
-     "overUnderOpen": 60.5,
-     "homeMoneyline": 750,
-     "awayMoneyline": -1200
+     "spread": -1.5,
+     "spreadOpen": -1.5,
+     "overUnder": 46.5,
+     "overUnderOpen": 46.5,
+     "homeMoneyline": -112,
+     "awayMoneyline": -108
     }
    }
   },
@@ -3963,27 +3988,19 @@
    }
   },
   {
-   "id": 401856679,
+   "id": 401856782,
    "week": 2,
    "start": "2026-09-12T16:00:00.000Z",
-   "home": "Michigan",
-   "away": "Oklahoma",
+   "home": "Oklahoma State",
+   "away": "Oregon",
    "books": {
     "DraftKings": {
-     "spread": -1.5,
-     "spreadOpen": -1.5,
-     "overUnder": 46.5,
-     "overUnderOpen": 46.5,
-     "homeMoneyline": -112,
-     "awayMoneyline": -108
-    },
-    "Bovada": {
-     "spread": -2.5,
-     "spreadOpen": -1.5,
-     "overUnder": 45.5,
-     "overUnderOpen": 45.5,
-     "homeMoneyline": -145,
-     "awayMoneyline": 125
+     "spread": 18.5,
+     "spreadOpen": 18.5,
+     "overUnder": 60.5,
+     "overUnderOpen": 60.5,
+     "homeMoneyline": 750,
+     "awayMoneyline": -1200
     }
    }
   },
@@ -3994,14 +4011,6 @@
    "home": "Texas",
    "away": "Ohio State",
    "books": {
-    "DraftKings": {
-     "spread": -1.5,
-     "spreadOpen": -1.5,
-     "overUnder": 47.5,
-     "overUnderOpen": null,
-     "homeMoneyline": -118,
-     "awayMoneyline": -102
-    },
     "Bovada": {
      "spread": -1.5,
      "spreadOpen": -2.5,
@@ -4009,6 +4018,14 @@
      "overUnderOpen": 47.5,
      "homeMoneyline": -120,
      "awayMoneyline": 100
+    },
+    "DraftKings": {
+     "spread": -1.5,
+     "spreadOpen": -1.5,
+     "overUnder": 47.5,
+     "overUnderOpen": null,
+     "homeMoneyline": -118,
+     "awayMoneyline": -102
     }
    }
   },
@@ -4092,8 +4109,8 @@
      "spreadOpen": -1.5,
      "overUnder": 56.5,
      "overUnderOpen": 56.5,
-     "homeMoneyline": -112,
-     "awayMoneyline": -108
+     "homeMoneyline": -115,
+     "awayMoneyline": -105
     }
    }
   },
@@ -4105,12 +4122,12 @@
    "away": "Florida",
    "books": {
     "DraftKings": {
-     "spread": -1.5,
+     "spread": 1.5,
      "spreadOpen": -1.5,
      "overUnder": 53.5,
      "overUnderOpen": 53.5,
-     "homeMoneyline": -110,
-     "awayMoneyline": -110
+     "homeMoneyline": -108,
+     "awayMoneyline": -112
     }
    }
   },
@@ -4128,6 +4145,23 @@
      "overUnderOpen": 57.5,
      "homeMoneyline": -130,
      "awayMoneyline": 110
+    }
+   }
+  },
+  {
+   "id": 401856700,
+   "week": 4,
+   "start": "2026-09-26T04:00:00.000Z",
+   "home": "Georgia",
+   "away": "Oklahoma",
+   "books": {
+    "DraftKings": {
+     "spread": -10,
+     "spreadOpen": -10,
+     "overUnder": 52.5,
+     "overUnderOpen": 52.5,
+     "homeMoneyline": -410,
+     "awayMoneyline": 320
     }
    }
   },
@@ -4162,23 +4196,6 @@
      "overUnderOpen": 58.5,
      "homeMoneyline": 195,
      "awayMoneyline": -238
-    }
-   }
-  },
-  {
-   "id": 401856700,
-   "week": 4,
-   "start": "2026-09-26T04:00:00.000Z",
-   "home": "Georgia",
-   "away": "Oklahoma",
-   "books": {
-    "DraftKings": {
-     "spread": -10,
-     "spreadOpen": -10,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
-     "homeMoneyline": -410,
-     "awayMoneyline": 320
     }
    }
   },
@@ -4234,23 +4251,6 @@
    }
   },
   {
-   "id": 401858485,
-   "week": 6,
-   "start": "2026-10-10T04:00:00.000Z",
-   "home": "Penn State",
-   "away": "USC",
-   "books": {
-    "DraftKings": {
-     "spread": -1.5,
-     "spreadOpen": -1.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
-     "homeMoneyline": -120,
-     "awayMoneyline": 100
-    }
-   }
-  },
-  {
    "id": 401856712,
    "week": 6,
    "start": "2026-10-10T04:00:00.000Z",
@@ -4268,6 +4268,23 @@
    }
   },
   {
+   "id": 401858485,
+   "week": 6,
+   "start": "2026-10-10T04:00:00.000Z",
+   "home": "Penn State",
+   "away": "USC",
+   "books": {
+    "DraftKings": {
+     "spread": -1.5,
+     "spreadOpen": -1.5,
+     "overUnder": 56.5,
+     "overUnderOpen": 56.5,
+     "homeMoneyline": -125,
+     "awayMoneyline": 105
+    }
+   }
+  },
+  {
    "id": 401856717,
    "week": 6,
    "start": "2026-10-10T19:30:00.000Z",
@@ -4279,42 +4296,8 @@
      "spreadOpen": 6,
      "overUnder": 48.5,
      "overUnderOpen": 48.5,
-     "homeMoneyline": 185,
-     "awayMoneyline": -225
-    }
-   }
-  },
-  {
-   "id": 401858488,
-   "week": 7,
-   "start": "2026-10-17T04:00:00.000Z",
-   "home": "Indiana",
-   "away": "Ohio State",
-   "books": {
-    "DraftKings": {
-     "spread": 1.5,
-     "spreadOpen": 1.5,
-     "overUnder": 48.5,
-     "overUnderOpen": 48.5,
-     "homeMoneyline": -108,
-     "awayMoneyline": -112
-    }
-   }
-  },
-  {
-   "id": 401858492,
-   "week": 7,
-   "start": "2026-10-17T04:00:00.000Z",
-   "home": "Oregon",
-   "away": "Nebraska",
-   "books": {
-    "DraftKings": {
-     "spread": -21.5,
-     "spreadOpen": -21.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
-     "homeMoneyline": -2800,
-     "awayMoneyline": 1300
+     "homeMoneyline": 180,
+     "awayMoneyline": -218
     }
    }
   },
@@ -4336,6 +4319,23 @@
    }
   },
   {
+   "id": 401856723,
+   "week": 7,
+   "start": "2026-10-17T04:00:00.000Z",
+   "home": "Tennessee",
+   "away": "Alabama",
+   "books": {
+    "DraftKings": {
+     "spread": 1.5,
+     "spreadOpen": 1.5,
+     "overUnder": 56.5,
+     "overUnderOpen": 56.5,
+     "homeMoneyline": 102,
+     "awayMoneyline": -122
+    }
+   }
+  },
+  {
    "id": 401856809,
    "week": 7,
    "start": "2026-10-17T04:00:00.000Z",
@@ -4349,57 +4349,6 @@
      "overUnderOpen": 54.5,
      "homeMoneyline": 350,
      "awayMoneyline": -455
-    }
-   }
-  },
-  {
-   "id": 401858263,
-   "week": 7,
-   "start": "2026-10-17T04:00:00.000Z",
-   "home": "Miami",
-   "away": "Florida State",
-   "books": {
-    "DraftKings": {
-     "spread": -16.5,
-     "spreadOpen": -16.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
-     "homeMoneyline": -1200,
-     "awayMoneyline": 750
-    }
-   }
-  },
-  {
-   "id": 401856723,
-   "week": 7,
-   "start": "2026-10-17T04:00:00.000Z",
-   "home": "Tennessee",
-   "away": "Alabama",
-   "books": {
-    "DraftKings": {
-     "spread": 1.5,
-     "spreadOpen": 1.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
-     "homeMoneyline": 100,
-     "awayMoneyline": -120
-    }
-   }
-  },
-  {
-   "id": 401858490,
-   "week": 7,
-   "start": "2026-10-17T04:00:00.000Z",
-   "home": "Michigan",
-   "away": "Penn State",
-   "books": {
-    "DraftKings": {
-     "spread": -6.5,
-     "spreadOpen": -6.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
-     "homeMoneyline": -265,
-     "awayMoneyline": 210
     }
    }
   },
@@ -4421,6 +4370,23 @@
    }
   },
   {
+   "id": 401858263,
+   "week": 7,
+   "start": "2026-10-17T04:00:00.000Z",
+   "home": "Miami",
+   "away": "Florida State",
+   "books": {
+    "DraftKings": {
+     "spread": -16.5,
+     "spreadOpen": -16.5,
+     "overUnder": 53.5,
+     "overUnderOpen": 53.5,
+     "homeMoneyline": -1200,
+     "awayMoneyline": 750
+    }
+   }
+  },
+  {
    "id": 401858266,
    "week": 7,
    "start": "2026-10-17T04:00:00.000Z",
@@ -4432,8 +4398,59 @@
      "spreadOpen": -4.5,
      "overUnder": 54.5,
      "overUnderOpen": 54.5,
-     "homeMoneyline": -205,
-     "awayMoneyline": 170
+     "homeMoneyline": -225,
+     "awayMoneyline": 185
+    }
+   }
+  },
+  {
+   "id": 401858488,
+   "week": 7,
+   "start": "2026-10-17T04:00:00.000Z",
+   "home": "Indiana",
+   "away": "Ohio State",
+   "books": {
+    "DraftKings": {
+     "spread": 1.5,
+     "spreadOpen": 1.5,
+     "overUnder": 48.5,
+     "overUnderOpen": 48.5,
+     "homeMoneyline": -108,
+     "awayMoneyline": -112
+    }
+   }
+  },
+  {
+   "id": 401858490,
+   "week": 7,
+   "start": "2026-10-17T04:00:00.000Z",
+   "home": "Michigan",
+   "away": "Penn State",
+   "books": {
+    "DraftKings": {
+     "spread": -6.5,
+     "spreadOpen": -6.5,
+     "overUnder": 51.5,
+     "overUnderOpen": 51.5,
+     "homeMoneyline": -265,
+     "awayMoneyline": 215
+    }
+   }
+  },
+  {
+   "id": 401858492,
+   "week": 7,
+   "start": "2026-10-17T04:00:00.000Z",
+   "home": "Oregon",
+   "away": "Nebraska",
+   "books": {
+    "DraftKings": {
+     "spread": -21.5,
+     "spreadOpen": -21.5,
+     "overUnder": 51.5,
+     "overUnderOpen": 51.5,
+     "homeMoneyline": -2800,
+     "awayMoneyline": 1300
     }
    }
   },
@@ -4455,6 +4472,23 @@
    }
   },
   {
+   "id": 401856727,
+   "week": 8,
+   "start": "2026-10-24T04:00:00.000Z",
+   "home": "Alabama",
+   "away": "Texas A&M",
+   "books": {
+    "DraftKings": {
+     "spread": -2.5,
+     "spreadOpen": -2.5,
+     "overUnder": 54.5,
+     "overUnderOpen": 54.5,
+     "homeMoneyline": -135,
+     "awayMoneyline": 114
+    }
+   }
+  },
+  {
    "id": 401856732,
    "week": 8,
    "start": "2026-10-24T04:00:00.000Z",
@@ -4468,6 +4502,23 @@
      "overUnderOpen": 54.5,
      "homeMoneyline": -325,
      "awayMoneyline": 260
+    }
+   }
+  },
+  {
+   "id": 401856837,
+   "week": 8,
+   "start": "2026-10-24T04:00:00.000Z",
+   "home": "Utah",
+   "away": "Houston",
+   "books": {
+    "DraftKings": {
+     "spread": -6.5,
+     "spreadOpen": -6.5,
+     "overUnder": 50.5,
+     "overUnderOpen": 50.5,
+     "homeMoneyline": -265,
+     "awayMoneyline": 215
     }
    }
   },
@@ -4489,36 +4540,19 @@
    }
   },
   {
-   "id": 401856727,
-   "week": 8,
-   "start": "2026-10-24T04:00:00.000Z",
-   "home": "Alabama",
-   "away": "Texas A&M",
+   "id": 401858280,
+   "week": 9,
+   "start": "2026-10-31T04:00:00.000Z",
+   "home": "Florida State",
+   "away": "Clemson",
    "books": {
     "DraftKings": {
-     "spread": -2.5,
-     "spreadOpen": -2.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
-     "homeMoneyline": -135,
-     "awayMoneyline": 114
-    }
-   }
-  },
-  {
-   "id": 401856837,
-   "week": 8,
-   "start": "2026-10-24T04:00:00.000Z",
-   "home": "Utah",
-   "away": "Houston",
-   "books": {
-    "DraftKings": {
-     "spread": -6.5,
-     "spreadOpen": -6.5,
-     "overUnder": 50.5,
-     "overUnderOpen": 50.5,
-     "homeMoneyline": -250,
-     "awayMoneyline": 205
+     "spread": 1.5,
+     "spreadOpen": 1.5,
+     "overUnder": 51.5,
+     "overUnderOpen": 51.5,
+     "homeMoneyline": -108,
+     "awayMoneyline": -112
     }
    }
   },
@@ -4540,23 +4574,6 @@
    }
   },
   {
-   "id": 401858280,
-   "week": 9,
-   "start": "2026-10-31T04:00:00.000Z",
-   "home": "Florida State",
-   "away": "Clemson",
-   "books": {
-    "DraftKings": {
-     "spread": 1.5,
-     "spreadOpen": 1.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
-     "homeMoneyline": -108,
-     "awayMoneyline": -112
-    }
-   }
-  },
-  {
    "id": 401856734,
    "week": 9,
    "start": "2026-10-31T19:30:00.000Z",
@@ -4574,19 +4591,19 @@
    }
   },
   {
-   "id": 401858514,
+   "id": 401856740,
    "week": 10,
    "start": "2026-11-07T05:00:00.000Z",
-   "home": "Ohio State",
-   "away": "Oregon",
+   "home": "LSU",
+   "away": "Alabama",
    "books": {
     "DraftKings": {
-     "spread": -6,
-     "spreadOpen": -6,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
-     "homeMoneyline": -258,
-     "awayMoneyline": 210
+     "spread": -3.5,
+     "spreadOpen": -3.5,
+     "overUnder": 54.5,
+     "overUnderOpen": 54.5,
+     "homeMoneyline": -185,
+     "awayMoneyline": 154
     }
    }
   },
@@ -4604,23 +4621,6 @@
      "overUnderOpen": 55.5,
      "homeMoneyline": 180,
      "awayMoneyline": -218
-    }
-   }
-  },
-  {
-   "id": 401856740,
-   "week": 10,
-   "start": "2026-11-07T05:00:00.000Z",
-   "home": "LSU",
-   "away": "Alabama",
-   "books": {
-    "DraftKings": {
-     "spread": -3.5,
-     "spreadOpen": -3.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
-     "homeMoneyline": -185,
-     "awayMoneyline": 154
     }
    }
   },
@@ -4659,6 +4659,23 @@
    }
   },
   {
+   "id": 401858514,
+   "week": 10,
+   "start": "2026-11-07T05:00:00.000Z",
+   "home": "Ohio State",
+   "away": "Oregon",
+   "books": {
+    "DraftKings": {
+     "spread": -6,
+     "spreadOpen": -6,
+     "overUnder": 52.5,
+     "overUnderOpen": 52.5,
+     "homeMoneyline": -258,
+     "awayMoneyline": 210
+    }
+   }
+  },
+  {
    "id": 401858291,
    "week": 10,
    "start": "2026-11-08T00:30:00.000Z",
@@ -4672,108 +4689,6 @@
      "overUnderOpen": 54.5,
      "homeMoneyline": -238,
      "awayMoneyline": 195
-    }
-   }
-  },
-  {
-   "id": 401858523,
-   "week": 11,
-   "start": "2026-11-14T05:00:00.000Z",
-   "home": "Oregon",
-   "away": "Michigan",
-   "books": {
-    "DraftKings": {
-     "spread": -13.5,
-     "spreadOpen": -13.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
-     "homeMoneyline": -535,
-     "awayMoneyline": 400
-    }
-   }
-  },
-  {
-   "id": 401856885,
-   "week": 11,
-   "start": "2026-11-14T05:00:00.000Z",
-   "home": "LSU",
-   "away": "Texas",
-   "books": {
-    "DraftKings": {
-     "spread": 2.5,
-     "spreadOpen": 2.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
-     "homeMoneyline": 114,
-     "awayMoneyline": -135
-    }
-   }
-  },
-  {
-   "id": 401858518,
-   "week": 11,
-   "start": "2026-11-14T05:00:00.000Z",
-   "home": "Indiana",
-   "away": "USC",
-   "books": {
-    "DraftKings": {
-     "spread": -10,
-     "spreadOpen": -10,
-     "overUnder": 58.5,
-     "overUnderOpen": 58.5,
-     "homeMoneyline": -425,
-     "awayMoneyline": 330
-    }
-   }
-  },
-  {
-   "id": 401858296,
-   "week": 11,
-   "start": "2026-11-14T05:00:00.000Z",
-   "home": "Miami",
-   "away": "Duke",
-   "books": {
-    "DraftKings": {
-     "spread": -21,
-     "spreadOpen": -21,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
-     "homeMoneyline": -1650,
-     "awayMoneyline": 950
-    }
-   }
-  },
-  {
-   "id": 401856888,
-   "week": 11,
-   "start": "2026-11-14T05:00:00.000Z",
-   "home": "Texas A&M",
-   "away": "Tennessee",
-   "books": {
-    "DraftKings": {
-     "spread": -8.5,
-     "spreadOpen": -8.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
-     "homeMoneyline": -395,
-     "awayMoneyline": 310
-    }
-   }
-  },
-  {
-   "id": 401856887,
-   "week": 11,
-   "start": "2026-11-14T05:00:00.000Z",
-   "home": "Oklahoma",
-   "away": "Ole Miss",
-   "books": {
-    "DraftKings": {
-     "spread": -4,
-     "spreadOpen": -4,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
-     "homeMoneyline": -198,
-     "awayMoneyline": 164
     }
    }
   },
@@ -4795,19 +4710,104 @@
    }
   },
   {
-   "id": 401858302,
-   "week": 12,
-   "start": "2026-11-21T05:00:00.000Z",
-   "home": "Miami",
-   "away": "Virginia Tech",
+   "id": 401856885,
+   "week": 11,
+   "start": "2026-11-14T05:00:00.000Z",
+   "home": "LSU",
+   "away": "Texas",
    "books": {
     "DraftKings": {
-     "spread": -16.5,
-     "spreadOpen": -16.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
-     "homeMoneyline": -1000,
-     "awayMoneyline": 650
+     "spread": 2.5,
+     "spreadOpen": 2.5,
+     "overUnder": 54.5,
+     "overUnderOpen": 54.5,
+     "homeMoneyline": 120,
+     "awayMoneyline": -142
+    }
+   }
+  },
+  {
+   "id": 401856887,
+   "week": 11,
+   "start": "2026-11-14T05:00:00.000Z",
+   "home": "Oklahoma",
+   "away": "Ole Miss",
+   "books": {
+    "DraftKings": {
+     "spread": -4,
+     "spreadOpen": -4,
+     "overUnder": 53.5,
+     "overUnderOpen": 53.5,
+     "homeMoneyline": -198,
+     "awayMoneyline": 164
+    }
+   }
+  },
+  {
+   "id": 401856888,
+   "week": 11,
+   "start": "2026-11-14T05:00:00.000Z",
+   "home": "Texas A&M",
+   "away": "Tennessee",
+   "books": {
+    "DraftKings": {
+     "spread": -8.5,
+     "spreadOpen": -8.5,
+     "overUnder": 55.5,
+     "overUnderOpen": 55.5,
+     "homeMoneyline": -380,
+     "awayMoneyline": 300
+    }
+   }
+  },
+  {
+   "id": 401858296,
+   "week": 11,
+   "start": "2026-11-14T05:00:00.000Z",
+   "home": "Miami",
+   "away": "Duke",
+   "books": {
+    "DraftKings": {
+     "spread": -21,
+     "spreadOpen": -21,
+     "overUnder": 55.5,
+     "overUnderOpen": 55.5,
+     "homeMoneyline": -1650,
+     "awayMoneyline": 950
+    }
+   }
+  },
+  {
+   "id": 401858518,
+   "week": 11,
+   "start": "2026-11-14T05:00:00.000Z",
+   "home": "Indiana",
+   "away": "USC",
+   "books": {
+    "DraftKings": {
+     "spread": -10,
+     "spreadOpen": -10,
+     "overUnder": 58.5,
+     "overUnderOpen": 58.5,
+     "homeMoneyline": -455,
+     "awayMoneyline": 350
+    }
+   }
+  },
+  {
+   "id": 401858523,
+   "week": 11,
+   "start": "2026-11-14T05:00:00.000Z",
+   "home": "Oregon",
+   "away": "Michigan",
+   "books": {
+    "DraftKings": {
+     "spread": -13.5,
+     "spreadOpen": -13.5,
+     "overUnder": 53.5,
+     "overUnderOpen": 53.5,
+     "homeMoneyline": -535,
+     "awayMoneyline": 400
     }
    }
   },
@@ -4823,8 +4823,8 @@
      "spreadOpen": -2.5,
      "overUnder": 51.5,
      "overUnderOpen": 51.5,
-     "homeMoneyline": -142,
-     "awayMoneyline": 120
+     "homeMoneyline": -148,
+     "awayMoneyline": 124
     }
    }
   },
@@ -4842,6 +4842,23 @@
      "overUnderOpen": 57.5,
      "homeMoneyline": 102,
      "awayMoneyline": -122
+    }
+   }
+  },
+  {
+   "id": 401858302,
+   "week": 12,
+   "start": "2026-11-21T05:00:00.000Z",
+   "home": "Miami",
+   "away": "Virginia Tech",
+   "books": {
+    "DraftKings": {
+     "spread": -16.5,
+     "spreadOpen": -16.5,
+     "overUnder": 56.5,
+     "overUnderOpen": 56.5,
+     "homeMoneyline": -1000,
+     "awayMoneyline": 650
     }
    }
   },
@@ -4891,8 +4908,8 @@
      "spreadOpen": -14.5,
      "overUnder": 56.5,
      "overUnderOpen": 56.5,
-     "homeMoneyline": -625,
-     "awayMoneyline": 455
+     "homeMoneyline": -700,
+     "awayMoneyline": 500
     }
    }
   },
@@ -4931,6 +4948,23 @@
    }
   },
   {
+   "id": 401856757,
+   "week": 13,
+   "start": "2026-11-28T05:00:00.000Z",
+   "home": "Alabama",
+   "away": "Auburn",
+   "books": {
+    "DraftKings": {
+     "spread": -10,
+     "spreadOpen": -10,
+     "overUnder": 53.5,
+     "overUnderOpen": 53.5,
+     "homeMoneyline": -425,
+     "awayMoneyline": 330
+    }
+   }
+  },
+  {
    "id": 401856764,
    "week": 13,
    "start": "2026-11-28T05:00:00.000Z",
@@ -4944,6 +4978,40 @@
      "overUnderOpen": 53.5,
      "homeMoneyline": -148,
      "awayMoneyline": 124
+    }
+   }
+  },
+  {
+   "id": 401856765,
+   "week": 13,
+   "start": "2026-11-28T05:00:00.000Z",
+   "home": "Vanderbilt",
+   "away": "Tennessee",
+   "books": {
+    "DraftKings": {
+     "spread": 3,
+     "spreadOpen": 3,
+     "overUnder": 57.5,
+     "overUnderOpen": 57.5,
+     "homeMoneyline": 136,
+     "awayMoneyline": -162
+    }
+   }
+  },
+  {
+   "id": 401856873,
+   "week": 13,
+   "start": "2026-11-28T05:00:00.000Z",
+   "home": "Arizona",
+   "away": "Arizona State",
+   "books": {
+    "DraftKings": {
+     "spread": -4.5,
+     "spreadOpen": -4.5,
+     "overUnder": 52.5,
+     "overUnderOpen": 52.5,
+     "homeMoneyline": -205,
+     "awayMoneyline": 170
     }
    }
   },
@@ -4999,23 +5067,6 @@
    }
   },
   {
-   "id": 401856873,
-   "week": 13,
-   "start": "2026-11-28T05:00:00.000Z",
-   "home": "Arizona",
-   "away": "Arizona State",
-   "books": {
-    "DraftKings": {
-     "spread": -4.5,
-     "spreadOpen": -4.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
-     "homeMoneyline": -205,
-     "awayMoneyline": 170
-    }
-   }
-  },
-  {
    "id": 401858541,
    "week": 13,
    "start": "2026-11-28T05:00:00.000Z",
@@ -5027,25 +5078,8 @@
      "spreadOpen": -15.5,
      "overUnder": 54.5,
      "overUnderOpen": 54.5,
-     "homeMoneyline": -625,
-     "awayMoneyline": 455
-    }
-   }
-  },
-  {
-   "id": 401856757,
-   "week": 13,
-   "start": "2026-11-28T05:00:00.000Z",
-   "home": "Alabama",
-   "away": "Auburn",
-   "books": {
-    "DraftKings": {
-     "spread": -10,
-     "spreadOpen": -10,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
-     "homeMoneyline": -425,
-     "awayMoneyline": 330
+     "homeMoneyline": -650,
+     "awayMoneyline": 470
     }
    }
   },
@@ -5063,23 +5097,6 @@
      "overUnderOpen": 55.5,
      "homeMoneyline": 360,
      "awayMoneyline": -470
-    }
-   }
-  },
-  {
-   "id": 401856765,
-   "week": 13,
-   "start": "2026-11-28T05:00:00.000Z",
-   "home": "Vanderbilt",
-   "away": "Tennessee",
-   "books": {
-    "DraftKings": {
-     "spread": 3,
-     "spreadOpen": 3,
-     "overUnder": 57.5,
-     "overUnderOpen": 57.5,
-     "homeMoneyline": 130,
-     "awayMoneyline": -155
     }
    }
   },
@@ -5112,8 +5129,8 @@
      "spreadOpen": 2.5,
      "overUnder": 37.5,
      "overUnderOpen": 37.5,
-     "homeMoneyline": 120,
-     "awayMoneyline": -142
+     "homeMoneyline": 124,
+     "awayMoneyline": -148
     }
    }
   }
