@@ -7,7 +7,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 from scripts.capture_market_snapshot import (fetch_cfbd, flatten, implied, latest_quotes,
-                                             model_probability, publish_finals,
+                                             model_probability,
+                                             moneyline_research_candidate, publish_finals,
                                              quote_key, quote_payload_hash, quote_value,
                                              replay_published_results,
                                              update_weekly_board, weekly_payload)
@@ -123,6 +124,11 @@ class MarketTrackingTests(unittest.TestCase):
     def test_american_implied_probability(self):
         self.assertAlmostEqual(implied(200), 1/3)
         self.assertAlmostEqual(implied(-200), 2/3)
+
+    def test_moneyline_candidate_must_be_more_likely_than_not(self):
+        self.assertFalse(moneyline_research_candidate(.48, .25))
+        self.assertFalse(moneyline_research_candidate(.50, .25))
+        self.assertTrue(moneyline_research_candidate(.51, .30))
 
     def test_model_probability_is_reciprocal_on_neutral_field(self):
         model = {"teams": {"A": [1.0], "B": [-1.0]},

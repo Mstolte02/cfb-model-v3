@@ -467,6 +467,11 @@ def implied(odds: float) -> float:
     return 100.0 / (odds + 100.0) if odds > 0 else -odds / (-odds + 100.0)
 
 
+def moneyline_research_candidate(model_side: float, market_side: float,
+                                 minimum_gap: float = .15) -> bool:
+    return model_side > .50 and model_side - market_side >= minimum_gap
+
+
 def no_vig_home(line: dict) -> float | None:
     h, a = line.get("homeMoneyline"), line.get("awayMoneyline")
     if h is None or a is None:
@@ -643,12 +648,14 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None,
         if model_home is None:
             continue
         gap = model_home - market_home
-        if abs(gap) < .15:
-            continue
         side = "home" if gap >= 0 else "away"
         team = first["home"] if side == "home" else first["away"]
         market_side = market_home if side == "home" else 1-market_home
         model_side = model_home if side == "home" else 1-model_home
+        # A price disagreement is not an outright moneyline pick when the model
+        # still makes that selected team more likely to lose than win.
+        if not moneyline_research_candidate(model_side, market_side):
+            continue
         price = max(float(r[f"{side}Moneyline"]) for r in ml)
         breakeven = implied(price)
         bucket = reliability_bucket(model_side-market_side, price > 0, historical)
