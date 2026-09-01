@@ -54,32 +54,16 @@ def fingerprint_assets(site: Path):
     index = site / "index.html"
     html = index.read_text()
     versions = {}
-
-    # GitHub Pages has twice served this repository's external JavaScript body as
-    # undecoded binary while the source and uploaded artifact both passed
-    # `node --check`. Keep the application in the HTML response, whose delivery is
-    # healthy, so the UI does not depend on that broken asset response path.
-    app = site / "app.js"
-    app_text = app.read_text()
-    if "</script" in app_text.lower():
-        raise RuntimeError("app.js contains a closing script tag and cannot be inlined")
-    app_digest = hashlib.sha256(app.read_bytes()).hexdigest()[:12]
-    app_pattern = r'<script\s+src=["\']app\.js(?:\?v=[^"\']*)?["\']\s*></script>'
-    html, count = re.subn(app_pattern, lambda _: f"<script>\n{app_text}\n</script>", html)
-    if count != 1:
-        raise RuntimeError(f"expected exactly one app.js script tag; found {count}")
-    app.unlink()
-    versions["app.js"] = f"inline:{app_digest}"
-
-    css = site / "style.css"
-    css_digest = hashlib.sha256(css.read_bytes()).hexdigest()[:12]
-    css_target = f"{css.stem}.{css_digest}{css.suffix}"
-    css.rename(site / css_target)
-    css_pattern = re.escape("style.css") + r'(?:\?v=[^"\']*)?'
-    html, count = re.subn(css_pattern, css_target, html)
-    if count != 1:
-        raise RuntimeError(f"expected exactly one style.css reference; found {count}")
-    versions["style.css"] = css_target
+    for name in ("app.js", "style.css"):
+        source = site / name
+        digest = hashlib.sha256(source.read_bytes()).hexdigest()[:12]
+        target_name = f"{source.stem}.{digest}{source.suffix}"
+        source.rename(site / target_name)
+        pattern = re.escape(name) + r'(?:\?v=[^"\']*)?'
+        html, count = re.subn(pattern, target_name, html)
+        if count != 1:
+            raise RuntimeError(f"expected exactly one {name} reference; found {count}")
+        versions[name] = target_name
     index.write_text(html)
     return versions
 
