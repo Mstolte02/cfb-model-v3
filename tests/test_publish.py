@@ -17,17 +17,17 @@ class PublishFingerprintTests(unittest.TestCase):
                 '<script src="app.js?v=27"></script>')
             versions = fingerprint_assets(site)
             html = (site / "index.html").read_text()
-            expected = {
-                "app.js": hashlib.sha256(b"console.log('v4')").hexdigest()[:12],
-                "style.css": hashlib.sha256(b"body { color: white; }").hexdigest()[:12],
-            }
-            for name, digest in expected.items():
-                source = Path(name)
-                target = f"{source.stem}.{digest}{source.suffix}"
-                self.assertEqual(versions[name], target)
-                self.assertIn(target, html)
-                self.assertTrue((site / target).is_file())
-                self.assertFalse((site / name).exists())
+            app_digest = hashlib.sha256(b"console.log('v4')").hexdigest()[:12]
+            self.assertEqual(versions["app.js"], f"inline:{app_digest}")
+            self.assertIn("<script>\nconsole.log('v4')\n</script>", html)
+            self.assertFalse((site / "app.js").exists())
+
+            css_digest = hashlib.sha256(b"body { color: white; }").hexdigest()[:12]
+            css_target = f"style.{css_digest}.css"
+            self.assertEqual(versions["style.css"], css_target)
+            self.assertIn(css_target, html)
+            self.assertTrue((site / css_target).is_file())
+            self.assertFalse((site / "style.css").exists())
             self.assertNotIn("v=old", html)
             self.assertNotIn("v=27", html)
 
