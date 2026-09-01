@@ -5134,5 +5134,11 @@
     }
    }
   }
- ]
+ ],
+ "weekly_lock": {
+  "locked_at": "2026-09-01T11:45:47Z",
+  "cadence": "Monday 12:30 PM ET",
+  "timezone": "America/New_York",
+  "reason": "pre-lock baseline"
+ }
 }
