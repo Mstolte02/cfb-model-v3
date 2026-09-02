@@ -110,6 +110,9 @@ python -m scripts.v4_backtest
 python -m scripts.four_pass_backtest
 python -m scripts.four_pass_initial_backtest
 
+# Re-run the research-only recursive/idempotence rating experiment
+python -m scripts.idempotence_backtest --schedules-dir PATH --rankings-dir PATH
+
 # Re-run pace, game-script/control, and quick-pass/pressure experiments
 python -m scripts.tempo_style_backtest
 
