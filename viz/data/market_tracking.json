@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-09-02T11:27:03Z",
+  "checked_at": "2026-09-02T16:40:13Z",
   "source": "CFBD /lines",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
-  "quote_events": 884,
-  "successful_checks": 70,
-  "changed_quotes_this_check": 9,
-  "games_with_quotes": 214,
+  "quote_events": 919,
+  "successful_checks": 71,
+  "changed_quotes_this_check": 35,
+  "games_with_quotes": 216,
   "books_with_quotes": [
     "Bovada",
     "DraftKings"
