@@ -9,13 +9,19 @@ roster. This is the signal the historical team-level PFSN scores could NOT captu
 """
 from __future__ import annotations
 
+import os
 import re
 import numpy as np
 import pandas as pd
 
 from config import PFF_DIR, TWODEEP_2026, require  # single definition; see config.py
 
-require(PFF_DIR, "the PFF exports", "PFF_DIR")
+# Research CI can replay the currently selected reduced v4 family without the raw
+# PFF exports because that family contains no PFF-lag column. Production keeps the
+# fail-loud contract unless this narrowly named opt-in is set.
+_ALLOW_MISSING_RESEARCH = os.environ.get("CFB_RESEARCH_ALLOW_MISSING_PFF") == "1"
+if not PFF_DIR.exists() and not _ALLOW_MISSING_RESEARCH:
+    require(PFF_DIR, "the PFF exports", "PFF_DIR")
 # Exports now reach back to 2014. 2020 is skipped for the same reason the WAR
 # build skips it: conference-only COVID schedules make that season
 # incomparable to the others.
@@ -297,6 +303,9 @@ def build_lagged_team_talent(weights=PFF_OPT_WEIGHTS) -> dict:
     Returns ``{N: Series(team -> z)}``, where every value for N is constructed only
     from season N-1 data.
     """
+    if not PFF_DIR.exists() and _ALLOW_MISSING_RESEARCH:
+        print("  [research] PFF exports absent; PFF-lag candidates use neutral zero. ")
+        return {}
     g = load_player_grades()
     group_rows = []
     for (season, team, group), room in g.groupby(["season", "team", "group"]):

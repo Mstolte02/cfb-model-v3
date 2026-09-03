@@ -1,0 +1,41 @@
+name: Idempotence v4 research replay
+
+on:
+  push:
+    branches: [research/idempotence-rating]
+    paths:
+      - scripts/idempotence_backtest.py
+      - scripts/idempotence_v4_backtest.py
+      - src/data/pff.py
+      - .github/workflows/idempotence-v4-research.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+      CFB_RESEARCH_ALLOW_MISSING_PFF: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install research dependencies
+        run: pip install numpy pandas scipy scikit-learn requests
+      - name: Verify recursive fixed-point invariants
+        run: python -m unittest tests.test_idempotence -v
+      - name: Rebuild locked historical v4 replay
+        run: python -m scripts.v4_backtest
+      - name: Test recursive features beside locked v4
+        run: python -m scripts.idempotence_v4_backtest
+      - name: Upload comparison artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: idempotence-v4-replay
+          path: |
+            artifacts/v4_backtest.json
+            artifacts/v4_backtest_predictions.csv
+            artifacts/idempotence_v4_backtest.json
+            artifacts/idempotence_v4_backtest_predictions.csv
