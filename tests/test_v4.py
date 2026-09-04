@@ -9,7 +9,7 @@ from scripts.train import projection_returning_raw
 from src import v4 as V4
 from src.data import pff, war
 from war_model import player_production_forecast as PPF
-from src.dynamic import WeeklyRatingState
+from src.dynamic import WeeklyRatingState, update_delta
 
 
 def synthetic_frame():
@@ -46,6 +46,15 @@ class ReciprocalInvariantTests(unittest.TestCase):
 
 
 class WeeklyUpdateTests(unittest.TestCase):
+    def test_robust_margin_update_uses_expected_margin_and_caps_outliers(self):
+        self.assertAlmostEqual(update_delta(.2, 0, .5, 10), 0.0)
+        self.assertAlmostEqual(update_delta(.2, 1000, .5, 10), .5)
+        self.assertAlmostEqual(update_delta(.2, -1000, .5, 10), -.5)
+        # A favorite merely covering its expected margin should not move.
+        expected = .8413447460685429  # +1 normal standard deviation
+        self.assertAlmostEqual(update_delta(.2, 10, expected, 10), 0.0,
+                               places=12)
+
     def test_same_week_order_does_not_change_predictions_or_state(self):
         frame, model = synthetic_frame(), synthetic_model()
         games = pd.DataFrame([

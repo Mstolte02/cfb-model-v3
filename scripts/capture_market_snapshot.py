@@ -99,7 +99,7 @@ def _fetch_cfbd_once(key: str, url: str) -> list[dict]:
                   'header = "Accept: application/json"\nsilent\nshow-error\n'
                   'max-time = 45\nwrite-out = "\\n%{http_code}"\n')
         proc = subprocess.run(["curl.exe", "--config", "-"], input=config, text=True,
-                              capture_output=True, timeout=55)
+                              encoding="utf-8", capture_output=True, timeout=55)
         if proc.returncode or "\n" not in proc.stdout:
             raise RuntimeError(f"CFBD line request failed: {proc.stderr.strip()}")
         body, status = proc.stdout.rsplit("\n", 1)
@@ -340,7 +340,8 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
     history = [{"week": 0, "label": "Preseason", "completed_games": 0,
                 "teams": preseason}]
     completed = 0
-    k = float(dynamic.get("k", 0.15))
+    k = float(dynamic.get("k", 0.20))
+    margin_sigma = float(model["margin"]["sigma"])
     for week in sorted(by_week):
         changes: dict[str, float] = {}
         for game in by_week[week]:
@@ -349,10 +350,11 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
             gap = state[home] - state[away] + model["logistic"]["hfa"] * home_field
             expected = _sigmoid(gap)
             margin = float(game["hp"]) - float(game["ap"])
-            actual = 1.0 if margin > 0 else (0.0 if margin < 0 else 0.5)
-            mov = math.log(abs(margin) + 1.0)
-            damping = 2.2 / (abs(gap) * 0.35 + 2.2)
-            delta = k * mov * damping * (actual - expected)
+            expected_margin = margin_sigma * statistics.NormalDist().inv_cdf(
+                min(max(expected, 0.01), 0.99))
+            margin_score = min(max(
+                (margin - expected_margin) / margin_sigma, -2.5), 2.5)
+            delta = k * margin_score
             changes[home] = changes.get(home, 0.0) + delta
             changes[away] = changes.get(away, 0.0) - delta
         for team, delta in changes.items():
@@ -389,6 +391,8 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
     dynamic["preseason_ratings"] = baseline
     dynamic["ratings"] = {**current, **state}
     dynamic["k"] = k
+    dynamic["update_rule"] = "robust_margin_residual_v1"
+    dynamic["margin_score_cap"] = 2.5
     dynamic["completed_games"] = len(finals)
     dynamic["updated_through_week"] = max(by_week) if by_week else 0
     model["dynamic"] = dynamic

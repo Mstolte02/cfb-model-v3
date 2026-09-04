@@ -56,7 +56,8 @@ def _request(endpoint: str, params: dict, key: str):
                   'silent\nshow-error\nmax-time = 30\n'
                   'write-out = "\\n%{http_code}"\n')
         proc = subprocess.run(["curl.exe", "--config", "-"], input=config,
-                              text=True, capture_output=True, timeout=40)
+                              text=True, encoding="utf-8", capture_output=True,
+                              timeout=40)
         if proc.returncode and not proc.stdout:
             raise RuntimeError(f"CFBD request failed: {proc.stderr.strip()}")
         body, status = proc.stdout.rsplit("\n", 1)

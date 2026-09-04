@@ -1300,7 +1300,11 @@ dependent is worst (offseason regression is linear). No explicit formula adopted
 7. ~~Opponent / strength-of-schedule adjustment (doc §4.4)~~ ✅ **done** (SRS, α=1.0).
 8. ~~Mean-regression formulas (doc §C)~~ ✅ tested — no form helps (kept implicit).
 9. ~~In-season Elo layer core (doc §5.3)~~ ✅ **done** (−9% Brier, MOV updates).
-### Elo parameter tuning (scripts/tune_elo.py)
+### Legacy Elo parameter tuning (scripts/tune_elo.py)
+
+The findings below predate the reciprocal v4 model and are retained only as the
+history of the retired Elo implementation; they are not the live update rule.
+
 - **K-factor: decaying 50→30 over the season is best** (just edges constant K=40).
   The by-week split confirms the intuition: high K helps EARLY (wk1-4: K50 0.1750 vs
   K30 0.1760), low K helps LATE (wk10+: K35 0.1899 vs K50 0.1914 — high K hurts late).
@@ -1309,6 +1313,16 @@ dependent is worst (offseason regression is linear). No explicit formula adopted
 - **Home field: team-specific** beats constant — `HFA = 65 + 25·z(home-minus-away
   margin)`, shrunk. Best combo (K decay + team-HFA) → ~0.1855.
 - No market blend by design (the goal is a market-distinct signal for betting edge).
+
+### Current v4 in-season update
+
+The live updater now scores the difference between observed margin and the margin
+implied by its pregame win probability, in units of the fitted margin sigma. The
+score is capped at ±2.5 and multiplied by `K=.20`. This robust-margin rule improved
+strict 2023-25 Brier by .00250 over the former log-MOV rule. A v4 moving-K follow-up
+preferred decay but improved only .00048 versus constant K, with a confidence
+interval crossing zero, so constant K remains live. Full formulas and results are
+in `audit/INSEASON_UPDATE_EXPERIMENTS.md`.
 
 ## Roadmap (next improvements, in priority order)
 

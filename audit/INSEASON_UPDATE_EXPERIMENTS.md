@@ -2,7 +2,7 @@
 
 ## Question
 
-The shipping update treats the final score as a binary result multiplied by log
+The former shipping update treated the final score as a binary result multiplied by log
 margin of victory. This audit asks whether future-game predictions improve when the
 update instead uses:
 
@@ -20,7 +20,7 @@ has at least one earlier forward-validation season.
 
 ## Baseline and robust margin
 
-The shipping rule is
+The former rule was
 
 ```text
 delta = K * log(abs(margin) + 1)
@@ -108,26 +108,58 @@ monotone across certainty bands:
 The 45-55 group averages a 50.09% home prediction and a 48.62% home win rate. There
 is no evidence of a discontinuity or a useful smooth variance curve around toss-ups.
 
+## Moving K follow-up
+
+The follow-up kept the robust-margin score intact and allowed its learning rate to
+move continuously as game evidence accumulated:
+
+```text
+K(g) = K_open * end_ratio ** (average_prior_games / 11)
+```
+
+An `end_ratio` below one means early games move ratings more than late games. The
+constant rule (`end_ratio = 1`) was included inside the same forward-only search.
+
+| Strict 2023-25 replay | Brier | Log loss | Difference vs constant K |
+|---|---:|---:|---:|
+| Raw robust margin, constant K | .178986 | .531468 | baseline |
+| Raw robust margin, moving K | .178504 | .530170 | −.000482 |
+| CFBD-adjusted margin, constant K | .178644 | .530733 | baseline |
+| CFBD-adjusted margin, moving K | .178377 | .530113 | −.000267 |
+
+Every tunable raw-margin fold selected decay: the opening K was `.20`, `.25`, and
+`.25`, with end-of-season ratios `.50`, `.50`, and `.75` for the 2023-25 holdouts.
+That is directionally coherent with a Bayesian reading—trust each new result less as
+the season sample grows—but the raw-margin improvement's 95% paired bootstrap
+interval is **[−.001096, +.000102]**. It is promising, but it neither excludes zero
+nor clears the project's `.001` complexity threshold. It remains a research
+candidate rather than part of the live rule.
+
 ## Verdict
 
-Adopt the robust raw-margin residual if the production updater is changed. It clears
-the project's materiality threshold and uncertainty interval while remaining simple.
+The robust raw-margin residual is adopted in production with `K=.20`, the trained
+100% dynamic blend, and a 2.5-sigma score cap. It clears the project's materiality
+threshold and uncertainty interval while remaining simple. Both the local weekly
+state updater and the standard-library scheduled-site replay implement the same
+formula.
 
 Keep CFBD postgame expectancy in the research/export path. It is the best point
 estimate and is an excellent game-level diagnostic, but its incremental gain over raw
 robust margin is too small and uncertain to make the live updater externally
 dependent yet. More seasons or a predeclared live shadow test could settle it.
 
-Do not adopt the heteroskedastic curve, toss-up sign/margin blend, or continuous
-surprise overlay. Their fitted extra terms collapse toward no change or reduce
-accuracy.
+Do not adopt the heteroskedastic curve, toss-up sign/margin blend, continuous
+surprise overlay, or moving K yet. Their fitted extra terms either collapse toward
+no change, reduce accuracy, or remain below the adoption bar.
 
 Reproduce with:
 
 ```powershell
 python -m scripts.inseason_evidence_backtest
+python -m scripts.inseason_moving_k_backtest
 ```
 
 Machine-readable results are written to
 `artifacts/inseason_evidence_backtest.json` and per-game predictions to
-`artifacts/inseason_evidence_backtest_predictions.csv`.
+`artifacts/inseason_evidence_backtest_predictions.csv`. The moving-K counterparts
+use the same names with `inseason_moving_k_backtest`.

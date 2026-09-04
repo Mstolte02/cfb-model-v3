@@ -131,7 +131,8 @@ def context_dynamic_predictions(core_model, context_model, frame, part, k, blend
             p_initial = context_model.win_prob(X[i], home_flag[i])
             out[i] = (1.0 - blend) * p_initial + blend * p_dynamic
             dynamic[i] = p_dynamic
-            delta = update_delta(k, margins[i], adjusted_gap, y[i], p_dynamic)
+            delta = update_delta(k, margins[i], p_dynamic,
+                                 context_model.margin_sigma)
             changes[home] = changes.get(home, 0.0) + delta
             changes[away] = changes.get(away, 0.0) - delta
         for team, change in changes.items():

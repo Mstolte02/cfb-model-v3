@@ -254,6 +254,17 @@ def main():
         "probability_scale": model.probability_scale,
         "architecture": "reciprocal_team_difference_v4",
         "dynamic": {"blend": state.dynamic_blend,
+                    "k": state.dynamic_k,
+                    "update_rule": state.update_rule,
+                    "margin_score_cap": 2.5,
+                    # Existing teams must use the exact 136-team frame that seeded
+                    # the live state. Adding newcomer fallback rows can shift
+                    # interaction centering slightly; recomputing every baseline on
+                    # the expanded frame would make the stdlib replay drift.
+                    "preseason_ratings": {
+                        t: round(float(model.team_logit_strength(
+                            frame if t in frame.index else comp, t)), 6)
+                        for t in comp.index},
                     "ratings": {t: round(float(state.ratings[t]), 6)
                                 for t in comp.index}},
         "points": points,

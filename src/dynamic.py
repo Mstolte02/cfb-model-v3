@@ -12,38 +12,50 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy.special import ndtri
 
 from src import v4 as V4
+
+
+UPDATE_RULE = "robust_margin_residual_v1"
 
 
 def _sigmoid(z):
     return float(1.0 / (1.0 + np.exp(-np.clip(z, -40.0, 40.0))))
 
 
-def update_delta(k, margin, rating_gap, actual, expected):
-    """Symmetric MOV-aware update in natural-logit units."""
-    mov = np.log(abs(float(margin)) + 1.0)
-    damping = 2.2 / (abs(float(rating_gap)) * .35 + 2.2)
-    return float(k * mov * damping * (float(actual) - float(expected)))
+def update_delta(k, margin, expected, margin_sigma):
+    """Robust margin-residual update in natural-logit units.
+
+    Translate the pregame win probability to its implied normal-score margin,
+    measure the observed residual in margin standard deviations, then winsorize
+    at 2.5 sigma.  This lets decisive results move ratings materially while one
+    pathological score cannot dominate the season state.
+    """
+    sigma = float(margin_sigma)
+    expected_margin = sigma * float(ndtri(np.clip(float(expected), .01, .99)))
+    score = np.clip((float(margin) - expected_margin) / sigma, -2.5, 2.5)
+    return float(k * score)
 
 
 @dataclass
 class WeeklyRatingState:
     season: int
     ratings: dict[str, float]
-    dynamic_k: float = .15
-    dynamic_blend: float = .75
+    dynamic_k: float = .20
+    dynamic_blend: float = 1.0
     model_version: str = "4.0"
     processed_games: list[str] = field(default_factory=list)
+    update_rule: str = UPDATE_RULE
 
     @classmethod
     def initialize(cls, model: V4.ReciprocalTeamModel, frame: pd.DataFrame,
-                   season: int, dynamic_k=.15, dynamic_blend=.75):
+                   season: int, dynamic_k=.20, dynamic_blend=1.0):
         ratings = {team: model.team_logit_strength(frame, team)
                    for team in frame.index}
         return cls(season=int(season), ratings=ratings,
                    dynamic_k=float(dynamic_k), dynamic_blend=float(dynamic_blend),
-                   model_version=model.version)
+                   model_version=model.version, update_rule=UPDATE_RULE)
 
     @staticmethod
     def game_key(season, week, home, away):
@@ -78,8 +90,8 @@ class WeeklyRatingState:
             pred = self.predict(model, frame, home, away, neutral)
             hp, ap = float(g.home_points), float(g.away_points)
             actual = 1.0 if hp > ap else (0.0 if hp < ap else .5)
-            delta = update_delta(self.dynamic_k, hp - ap, pred["rating_gap"],
-                                 actual, pred["p_dynamic"])
+            delta = update_delta(self.dynamic_k, hp - ap, pred["p_dynamic"],
+                                 model.margin_sigma)
             changes[home] = changes.get(home, 0.0) + delta
             changes[away] = changes.get(away, 0.0) - delta
             predictions.append({"season": self.season, "week": g.week,
@@ -107,12 +119,17 @@ class WeeklyRatingState:
                    "dynamic_k": self.dynamic_k,
                    "dynamic_blend": self.dynamic_blend,
                    "model_version": self.model_version,
-                   "processed_games": self.processed_games}
+                   "processed_games": self.processed_games,
+                   "update_rule": self.update_rule}
         Path(path).write_text(json.dumps(payload, indent=2))
 
     @classmethod
     def load(cls, path):
-        return cls(**json.loads(Path(path).read_text()))
+        payload = json.loads(Path(path).read_text())
+        # States written before the robust updater did not identify their rule.
+        # Mark them legacy so update_v4 can rebuild instead of mixing formulas.
+        payload.setdefault("update_rule", "legacy_log_mov")
+        return cls(**payload)
 
 
 def weekly_replay(model: V4.ReciprocalTeamModel, frame: pd.DataFrame, part,
@@ -133,7 +150,7 @@ def weekly_replay(model: V4.ReciprocalTeamModel, frame: pd.DataFrame, part,
             pstatic = model.win_prob(X[i], is_home)
             out[i] = (1 - blend) * pstatic + blend * pdyn
             dynamic[i] = pdyn
-            delta = update_delta(k, margins[i], gap, y[i], pdyn)
+            delta = update_delta(k, margins[i], pdyn, model.margin_sigma)
             changes[home] = changes.get(home, 0.0) + delta
             changes[away] = changes.get(away, 0.0) - delta
         for team, delta in changes.items():

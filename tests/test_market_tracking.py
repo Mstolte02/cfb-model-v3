@@ -199,6 +199,10 @@ class MarketTrackingTests(unittest.TestCase):
             self.assertEqual(newcomer["conference"], "New League")
             self.assertEqual(newcomer["avg_wins"], 4.5)
             self.assertGreater(json.loads(first_model)["dynamic"]["ratings"]["C"], -1.0)
+            self.assertAlmostEqual(
+                json.loads(first_model)["dynamic"]["ratings"]["C"], 4.0)
+            self.assertEqual(json.loads(first_model)["dynamic"]["update_rule"],
+                             "robust_margin_residual_v1")
 
             self.assertEqual(replay_published_results(
                 schedule, model_path, ratings_path, teams_path, playoff_path), 1)
