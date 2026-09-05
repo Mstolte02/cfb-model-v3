@@ -213,7 +213,7 @@
    "Delaware": -0.043921,
    "Duke": 0.233029,
    "East Carolina": -0.121789,
-   "Eastern Michigan": -1.0841922472486876,
+   "Eastern Michigan": -1.1439825523756846,
    "Florida": 1.508313,
    "Florida Atlantic": -0.658529,
    "Florida International": -1.099782,
@@ -282,7 +282,7 @@
    "Sacramento State": -1.5960597527513123,
    "Sam Houston": -1.306861,
    "San Diego State": -0.113001,
-   "San Jos\u00e9 State": -0.6645968134698235,
+   "San Jos\u00e9 State": -0.6048065083428265,
    "SMU": 0.878953,
    "South Alabama": -0.608683,
    "South Carolina": 1.088616,
@@ -324,7 +324,7 @@
    "Wisconsin": -0.035114,
    "Wyoming": -1.241626
   },
-  "completed_games": 12,
+  "completed_games": 13,
   "updated_through_week": 1
  },
  "points": {
