@@ -340,6 +340,7 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
     history = [{"week": 0, "label": "Preseason", "completed_games": 0,
                 "teams": preseason}]
     completed = 0
+    game_history = []
     k = float(dynamic.get("k", 0.20))
     margin_sigma = float(model["margin"]["sigma"])
     for week in sorted(by_week):
@@ -355,6 +356,15 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
             margin_score = min(max(
                 (margin - expected_margin) / margin_sigma, -2.5), 2.5)
             delta = k * margin_score
+            # Use this slate's starting state, never today's/postgame ratings.
+            pregame_model = {**model, "dynamic": {**dynamic, "ratings": state}}
+            game_history.append({
+                "id": game.get("id"), "week": week, "date": game.get("d"),
+                "home": home, "away": away, "neutral": bool(game.get("n")),
+                "home_score": int(game["hp"]), "away_score": int(game["ap"]),
+                "p_home": model_probability(pregame_model, home, away, bool(game.get("n"))),
+                "home_rating_delta": round(delta, 8),
+            })
             changes[home] = changes.get(home, 0.0) + delta
             changes[away] = changes.get(away, 0.0) - delta
         for team, delta in changes.items():
@@ -384,6 +394,8 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
     updated_rows.sort(key=lambda row: (row.get("rank", 999), row["team"]))
     ratings["teams"] = updated_rows
     ratings["history"] = history
+    ratings["game_history"] = game_history
+    ratings["game_history_basis"] = "Replayed start-of-week model; natural-logit rating changes"
     ratings["updated_through"] = {
         "completed_fbs_games": len(finals),
         "week": max(by_week) if by_week else 0,

@@ -109,7 +109,7 @@
   <section id="view-power-history" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">How the model moves</span><h2>Neutral win rate over the season.</h2>
       <p class="sub">Choose a team to track its power rating after each completed week. The rating is the team's neutral-field win rate against the full FBS model universe.</p></div>
-    <div class="history-toolbar"><label>Team <select id="power-history-team"></select></label></div>
+    <div class="history-toolbar"><label>Team <select id="power-history-team"></select></label><button type="button" id="print-team-card" class="wi-btn">Print / save PDF</button></div>
     <div id="power-history-chart"></div>
   </section>
 
@@ -201,6 +201,7 @@
 </main>
 
 <footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Model probabilities are estimates. Sportsbook prices are dated snapshots, not live quotes. Gamble responsibly.</span></footer>
+<script src="team-card.js"></script>
 <script src="app.js?v=40"></script>
 </body>
 </html>

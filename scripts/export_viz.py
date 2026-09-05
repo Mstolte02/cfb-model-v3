@@ -315,6 +315,10 @@ def main():
     # Schedule (lens-independent) powers the client-side playoff re-simulation.
     export_schedule()
     export_players()
+    # The same local replay used by the scheduled capture keeps the team cards
+    # complete after a full export, without another network call.
+    from scripts.capture_market_snapshot import replay_published_results
+    replay_published_results()
 
     print(f"exported {len(ratings)} rated teams, {len(export['teams'])} sim teams")
     print(f"-> {VIZ / 'ratings.json'}\n-> {VIZ / 'model_v4.json'}")

@@ -2741,48 +2741,59 @@
     const select = document.getElementById("power-history-team");
     if (!host || !select) return;
     fillPowerHistoryTeams();
-    const team = select.value;
-    const snapshots = ratings.history || [];
-    const points = snapshots.map(s => {
-      const rows = Array.isArray(s.teams) ? s.teams : [];
-      const r = rows.find(x => x.team === team);
-      return r ? { label: s.label || (s.week ? "Week " + s.week : "Preseason"),
-                   week: s.week || 0, power: r.power, rank: r.rank,
-                   completed: s.completed_games || 0 } : null;
-    }).filter(Boolean);
-    if (!points.length) {
-      const r = liveRatings().find(x => x.team === team);
-      if (r) points.push({ label: "Current", week: 0, power: r.power, rank: r.rank, completed: 0 });
-    }
-    if (!points.length) { host.innerHTML = `<div class="weekly-empty"><b>No rating history is available.</b></div>`; return; }
-
-    const W = 900, H = 360, L = 70, R = 28, T = 30, B = 58;
-    const vals = points.map(p => p.power);
-    let lo = Math.max(0, Math.min(...vals) - .025), hi = Math.min(1, Math.max(...vals) + .025);
-    if (hi - lo < .08) { const mid = (hi + lo) / 2; lo = Math.max(0, mid - .04); hi = Math.min(1, mid + .04); }
-    const x = i => L + (points.length === 1 ? (W - L - R) / 2 : i * (W - L - R) / (points.length - 1));
-    const y = v => T + (hi - v) * (H - T - B) / Math.max(hi - lo, .001);
-    const ticks = Array.from({ length: 5 }, (_, i) => lo + i * (hi - lo) / 4);
-    const line = points.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.power).toFixed(1)}`).join(" ");
-    const last = points[points.length - 1], first = points[0];
-    const delta = last.power - first.power;
-    host.innerHTML = `<article class="history-panel" style="--team:${color(team)}">
-      <div class="history-summary">
-        <span>${teamMini(team)}</span>
-        <span><small>Current rank</small><b>#${last.rank}</b></span>
-        <span><small>Neutral win rate</small><b>${pct(last.power, 1)}</b></span>
-        <span><small>Since preseason</small><b class="${delta > 0 ? "up" : delta < 0 ? "down" : ""}">${delta > 0 ? "+" : ""}${(delta * 100).toFixed(1)} pts</b></span>
-      </div>
-      <div class="history-svg-wrap"><svg class="history-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(team)} neutral win rate history">
-        ${ticks.map(v => `<line x1="${L}" y1="${y(v)}" x2="${W-R}" y2="${y(v)}" class="history-grid"/><text x="${L-12}" y="${y(v)+4}" text-anchor="end">${pct(v, 0)}</text>`).join("")}
-        <path d="${line}" class="history-line"/>
-        ${points.map((p, i) => `<g><circle cx="${x(i)}" cy="${y(p.power)}" r="6"/><text x="${x(i)}" y="${H-B+28}" text-anchor="middle">${esc(p.label)}</text><text x="${x(i)}" y="${y(p.power)-13}" text-anchor="middle" class="history-value">${pct(p.power, 1)} · #${p.rank}</text></g>`).join("")}
-      </svg></div>
-      <p class="board-note">Each point replays every completed FBS-vs-FBS result through the model's existing weekly update, then recalculates the neutral-field round robin. Games from the same week are applied together.</p>
+    const team = select.value, card = TeamCard.data(team, ratings, schedule);
+    const {points, games, first, last, rankChange} = card;
+    if (!last) { host.innerHTML = `<p>No rating history is available.</p>`; return; }
+    const m = meta[team] || {}, sprite = TeamCard.mascot(team, m);
+    const brand = /^#[0-9a-f]{6}$/i.test(m.color || "") ? m.color : "#164c3c";
+    const ink = m.onColor === "#000000" ? "#111" : "#fff";
+    const signed = (v, digits=1) => `${v > 0 ? "+" : ""}${v.toFixed(digits)}`;
+    const compact=window.matchMedia("(max-width:700px)").matches;
+    const W=compact?480:900, H=compact?280:320, L=68, R=35, T=35, B=55;
+    const vals=points.map(p=>p.power);
+    const lo=Math.max(0, Math.floor((Math.min(...vals)-.04)*10)/10);
+    const hi=Math.min(1, Math.ceil((Math.max(...vals)+.04)*10)/10);
+    const x=i=>L+(points.length===1 ? (W-L-R)/2 : i*(W-L-R)/(points.length-1));
+    const y=v=>T+(hi-v)*(H-T-B)/(hi-lo);
+    const ticks=Array.from({length:5},(_,i)=>lo+i*(hi-lo)/4);
+    const path=points.map((p,i)=>`${i?"L":"M"}${x(i)},${y(p.power)}`).join(" ");
+    const movement=rankChange===null ? "—" : rankChange===0 ? "NO CHANGE" : `${rankChange>0 ? "▲" : "▼"} ${Math.abs(rankChange)} ${Math.abs(rankChange)===1?"PLACE":"PLACES"}`;
+    const graph=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(team)} neutral win rate by week">
+      ${ticks.map(v=>`<line x1="${L}" y1="${y(v)}" x2="${W-R}" y2="${y(v)}" class="retro-grid"/><text x="${L-12}" y="${y(v)+5}" text-anchor="end">${pct(v,0)}</text>`).join("")}
+      ${points.length>1 ? `<path d="${path} L${x(points.length-1)},${H-B} L${x(0)},${H-B} Z" class="retro-area"/>` : ""}
+      <path d="${path}" class="retro-line"/>
+      ${points.map((p,i)=>`<g><circle cx="${x(i)}" cy="${y(p.power)}" r="5"><title>${esc(p.label)}: ${pct(p.power)} · rank ${p.rank}</title></circle>
+        ${(points.length<9 || i===0 || i===points.length-1 || i%2===0) ? `<text x="${x(i)}" y="${H-B+26}" text-anchor="middle">${p.baseline?"PRE":`W${p.week ?? "—"}`}</text>` : ""}
+        ${(i===0 || i===points.length-1) ? `<text x="${x(i)+(i===0?10:-10)}" y="${y(p.power)-15}" text-anchor="${i===0?"start":"end"}">${pct(p.power)}</text>` : ""}</g>`).join("")}</svg>`;
+    host.innerHTML=`<article class="retro-card" style="--brand:${brand};--brand-ink:${ink}">
+      <div class="retro-title"><span>▣ TEAM_TRACKER.EXE</span><span>${ratings.season} / CFB MODEL <i aria-hidden="true">_ □ ×</i></span></div>
+      <div class="retro-menu">File <span>Team</span> Ratings <span>Results</span><b>SEASON TRACKER</b></div>
+      <header class="retro-heading"><p>${esc(conf(team))} // ${ratings.season}</p><h2>${esc(team)}</h2><div>${esc(m.mascot || "Football")} · THE SEASON IN MOTION</div></header>
+      <div class="retro-body">
+        <aside class="retro-identity"><div class="retro-mascot" role="img" aria-label="${esc(m.mascot || team)} inspired football mascot illustration" style="background-image:url('mascots/sheet-${sprite.sheet}.png');background-position:${(sprite.cell%4)*100/3}% ${Math.floor(sprite.cell/4)*100/3}%"></div>
+          <div class="retro-team-badge"><img src="${esc(logoURL(team))}" alt=""/><strong>${esc(abbr(team))}</strong></div>
+          <p>EVERY GAME.<br>EVERY UPDATE.<br>ONE SEASON.</p></aside>
+        <div class="retro-main"><div class="retro-stats">
+          <div><small>MODEL RANK</small><strong>#${last.rank}</strong><span>of ${ratings.teams.length} teams</span></div>
+          <div><small>NEUTRAL WIN RATE</small><strong>${pct(last.power)}</strong><span>against the rated FBS field</span></div>
+          <div><small>SINCE PRESEASON</small><strong class="retro-movement">${movement}</strong><span>${first.baseline ? `Started #${first.rank} · ${signed((last.power-first.power)*100)} pp` : "Preseason snapshot unavailable"}</span></div>
+        </div>
+        <section class="retro-window"><h3>RESULTS LOG <span>${card.wins}–${card.losses}${card.ties?`–${card.ties}`:""}</span></h3>
+          <div class="retro-table-wrap"><table><caption class="sr-only">Completed games, replayed pregame win probability and model rating change</caption><thead><tr><th>WK / OPPONENT</th><th>FINAL</th><th>WIN %¹</th><th>MODEL Δ²</th></tr></thead><tbody>
+          ${games.length ? games.map(g=>`<tr><td><small>W${g.week} · ${g.site}</small> ${esc(g.opponent)}</td><td><b class="retro-${g.result.toLowerCase()}">${g.result}</b> ${g.scored}–${g.allowed}</td><td>${g.probability===null?"—":pct(g.probability)}</td><td>${g.delta===null?"—":signed(g.delta,3)}</td></tr>`).join("") : `<tr><td colspan="4" class="retro-empty">KICKOFF PENDING<br><small>Final scores and model updates appear here as games finish.</small></td></tr>`}
+          </tbody></table></div>
+          <p class="retro-notes">¹ Replayed start-of-week win chance. ² Rating change in model logit units; positive means stronger. Unrated opponents have scores only.</p>
+        </section></div>
+        <section class="retro-window retro-chart"><h3>NEUTRAL WIN RATE <span>${esc(last.label || "Current")}</span></h3>${graph}
+          ${points.length===1?`<p class="retro-notes">The opening rating is set. The line grows as results arrive.</p>`:""}
+          <details><summary>Weekly numbers &amp; chart definition</summary><p>Mean neutral-site win probability against every other rated FBS team. All results in a week use the same start-of-week ratings. Partial weeks update as finals arrive. Rank movement compares with preseason.</p><table><thead><tr><th>Snapshot</th><th>Win rate</th><th>Rank</th></tr></thead><tbody>${points.map(p=>`<tr><td>${esc(p.label)}</td><td>${pct(p.power)}</td><td>#${p.rank}</td></tr>`).join("")}</tbody></table></details></section>
+      </div><footer class="retro-footer"><span>▣ CFB MODEL / ${ratings.season}</span><span>${games.length} FINAL${games.length===1?"":"S"} · ${esc(last.label || "Current").toUpperCase()}</span></footer>
     </article>`;
   }
+  window.matchMedia("(max-width:700px)").addEventListener("change", renderPowerHistory);
   const powerHistorySelect = document.getElementById("power-history-team");
   if (powerHistorySelect) powerHistorySelect.addEventListener("change", renderPowerHistory);
+  document.getElementById("print-team-card")?.addEventListener("click", () => window.print());
 
   let leaderKind = "players";
   function renderLeaders() {

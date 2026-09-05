@@ -4575,5 +4575,152 @@
  "updated_through": {
   "completed_fbs_games": 12,
   "week": 1
- }
+ },
+ "game_history": [
+  {
+   "id": 401856766,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "TCU",
+   "away": "North Carolina",
+   "neutral": true,
+   "home_score": 10,
+   "away_score": 15,
+   "p_home": 0.6338784883572404,
+   "home_rating_delta": -0.12689082
+  },
+  {
+   "id": 401864494,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "USC",
+   "away": "San Jos\u00e9 State",
+   "neutral": false,
+   "home_score": 42,
+   "away_score": 26,
+   "p_home": 0.9243928252630487,
+   "home_rating_delta": -0.09997219
+  },
+  {
+   "id": 401858202,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "Virginia",
+   "away": "NC State",
+   "neutral": false,
+   "home_score": 34,
+   "away_score": 8,
+   "p_home": 0.5264278315637558,
+   "home_rating_delta": 0.29074453
+  },
+  {
+   "id": 401864577,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "North Dakota State",
+   "away": "Jacksonville State",
+   "neutral": false,
+   "home_score": 33,
+   "away_score": 7,
+   "p_home": 0.3495251613367527,
+   "home_rating_delta": 0.38132373
+  },
+  {
+   "id": 401866408,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "Eastern Michigan",
+   "away": "Sacramento State",
+   "neutral": false,
+   "home_score": 28,
+   "away_score": 17,
+   "p_home": 0.6699915708015862,
+   "home_rating_delta": 0.04063875
+  },
+  {
+   "id": 401864570,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "Florida State",
+   "away": "New Mexico State",
+   "neutral": false,
+   "home_score": 34,
+   "away_score": 17,
+   "p_home": 0.9117906087749672,
+   "home_rating_delta": -0.07160152
+  },
+  {
+   "id": 401858201,
+   "week": 1,
+   "date": "2026-08-29",
+   "home": "Stanford",
+   "away": "Hawai'i",
+   "neutral": false,
+   "home_score": 37,
+   "away_score": 27,
+   "p_home": 0.6727168763285059,
+   "home_rating_delta": 0.02743875
+  },
+  {
+   "id": 401862693,
+   "week": 1,
+   "date": "2026-08-30",
+   "home": "UNLV",
+   "away": "Memphis",
+   "neutral": false,
+   "home_score": 21,
+   "away_score": 27,
+   "p_home": 0.3807981027328661,
+   "home_rating_delta": -0.00947751
+  },
+  {
+   "id": 401858423,
+   "week": 1,
+   "date": "2026-09-03",
+   "home": "Rutgers",
+   "away": "Massachusetts",
+   "neutral": false,
+   "home_score": 21,
+   "away_score": 37,
+   "p_home": 0.9468937835679284,
+   "home_rating_delta": -0.5
+  },
+  {
+   "id": 401858204,
+   "week": 1,
+   "date": "2026-09-03",
+   "home": "Wake Forest",
+   "away": "Akron",
+   "neutral": false,
+   "home_score": 38,
+   "away_score": 16,
+   "p_home": 0.8029699339179633,
+   "home_rating_delta": 0.08677798
+  },
+  {
+   "id": 401856776,
+   "week": 1,
+   "date": "2026-09-04",
+   "home": "Georgia Tech",
+   "away": "Colorado",
+   "neutral": false,
+   "home_score": 13,
+   "away_score": 14,
+   "p_home": 0.6552334209096528,
+   "home_rating_delta": -0.09159017
+  },
+  {
+   "id": 401858424,
+   "week": 1,
+   "date": "2026-09-04",
+   "home": "Illinois",
+   "away": "UAB",
+   "neutral": false,
+   "home_score": 42,
+   "away_score": 23,
+   "p_home": 0.7850076360585894,
+   "home_rating_delta": 0.06431261
+  }
+ ],
+ "game_history_basis": "Replayed start-of-week model; natural-logit rating changes"
 }

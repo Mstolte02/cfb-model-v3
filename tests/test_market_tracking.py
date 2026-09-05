@@ -191,6 +191,10 @@ class MarketTrackingTests(unittest.TestCase):
             first_model = model_path.read_text()
             first_ratings = ratings_path.read_text()
             payload = json.loads(first_ratings)
+            event = payload["game_history"][0]
+            self.assertEqual((event["home_score"], event["away_score"]), (7, 35))
+            self.assertAlmostEqual(event["p_home"], 1 / (1 + __import__('math').exp(-2.2)))
+            self.assertAlmostEqual(event["home_rating_delta"], -5.0)
             self.assertEqual([s["label"] for s in payload["history"]],
                              ["Preseason", "Week 1 to date"])
             self.assertEqual(payload["history"][-1]["completed_games"], 1)
