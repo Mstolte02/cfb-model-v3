@@ -2705,9 +2705,12 @@
     return `<img src="${c.mark}" alt="" loading="lazy">`;
   }
 
-  function rankingGrid(rows, label, valueOf) {
+  function rankingGrid(rows, label, valueOf, movementByTeam = null) {
     return `<div class="rank-grid">${rows.map(r => {
       const c = crestOf(r.team);
+      const movement = movementByTeam && movementByTeam.get(r.team);
+      const moveBadge = movement ? `<span class="rank-move ${movement.change > 0 ? "up" : movement.change < 0 ? "down" : "flat"}"
+        title="${movement.change > 0 ? "Up" : movement.change < 0 ? "Down" : "No change"} ${Math.abs(movement.change)} since ${esc(movement.baseline)}">${movement.change > 0 ? "+" : movement.change < 0 ? "−" : ""}${Math.abs(movement.change)}</span>` : "";
       return `<button type="button"
       class="rank-cell team-link${r.rank <= 5 ? " top" : ""}" data-team="${esc(r.team)}"
       style="--plate:${c.plate};--tc:${color(r.team)}">
@@ -2715,15 +2718,18 @@
       <span class="rank-no">${r.rank}</span>
       <span class="rank-name">${esc(r.team)}</span>
       <span class="rank-val"><b>${valueOf(r)}</b><i>${label}</i></span>
+      ${moveBadge}
     </button>`;
     }).join("")}</div>`;
   }
   function renderPower() {
     const neutral = liveRatings().slice().sort((a, b) => b.power - a.power).slice(0, 25)
       .map((r, i) => ({ ...r, rank: i + 1 }));
+    const weeklyMovement = RankingHistory.movement(ratings, "week");
+    const movementByTeam = new Map(weeklyMovement.rows.map(r => [r.team, {...r, baseline: weeklyMovement.baseline.label}]));
     document.getElementById("power-top25").innerHTML =
       rankingGrid(neutral, "Neutral win rate",
-        r => (r.power != null ? pct(r.power, 1) : "—"));
+        r => (r.power != null ? pct(r.power, 1) : "—"), movementByTeam);
 
     wireTeamLinks();
   }
@@ -2759,7 +2765,7 @@
   function renderDeserving() {
     const host=document.getElementById('deserving-top25');
     if(!deservingModel){host.innerHTML='<p class="stock-empty">Résumé model unavailable. Reload to try again.</p>';return;}
-    if(!deservingRows)deservingRows=RankingHistory.deserving(schedule,meta,[...FBS],deservingModel);
+    if(!deservingRows)deservingRows=RankingHistory.deserving(schedule,meta,[...FBS],deservingModel,ratings.teams);
     document.getElementById('deserving-date').textContent=`${ratings.season} finals · ${ratings.history?.at(-1)?.label||'Season to date'}`;
     host.innerHTML=deservingRows.length?rankingGrid(deservingRows.filter(r=>r.rank<=25),'Résumé score',r=>r.score.toFixed(2)):'<p class="stock-empty">The board opens after the first completed FBS matchup.</p>';
     document.getElementById('deserving-ledger').innerHTML=`<div class="stock-table-wrap"><table><thead><tr><th>Rank</th><th>Team</th><th>Record</th><th>Opponent lift contribution</th><th>Score</th></tr></thead><tbody>${deservingRows.map(r=>`<tr><td>${r.rank}</td><td><button class="stock-team" data-history-team="${esc(r.team)}">${esc(r.team)}</button></td><td>${r.wins}–${r.losses}${r.ties?'–'+r.ties:''}</td><td>${signedMove(r.liftContribution,2)}</td><td>${r.score.toFixed(2)}</td></tr>`).join('')}</tbody></table></div>`;

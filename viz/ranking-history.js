@@ -30,8 +30,10 @@
     }
     const x=Array(n).fill(0);for(let i=n-1;i>=0;i--) {let v=a[i][n];for(let j=i+1;j<n;j++)v-=a[i][j]*x[j];x[i]=v/a[i][i];}return x;
   }
-  function deserving(schedule, metadata, fbsNames, model) {
+  function deserving(schedule, metadata, fbsNames, model, powerRatings = []) {
     const fbs=new Set(fbsNames);
+    const powerRank=new Map(powerRatings.map(r=>[r.team,Number.isFinite(r.rank)?r.rank:Infinity]));
+    const powerTie=(a,b)=>(powerRank.get(a.team)??Infinity)-(powerRank.get(b.team)??Infinity)||a.team.localeCompare(b.team);
     const finals=schedule.filter(g=>g.f && Number.isFinite(g.hp) && Number.isFinite(g.ap) && g.st!=='postseason');
     const rated=finals.filter(g=>fbs.has(g.h)&&fbs.has(g.a));
     // Match the audited universe: at least one completed FBS matchup.
@@ -57,13 +59,13 @@
       p4:Number(['SEC','Big Ten','Big 12','ACC','Pac-12','Pac-10'].includes(metadata[team]?.conference)||team==='Notre Dame'),
       wins:wins[i],losses:total[i]-wins[i]-ties[i],ties:ties[i],games:total[i],h2h:0}));
     const score=(r,w)=>Object.entries(w).reduce((s,[k,v])=>s+v*r[k],0);
-    const order=rows.slice().sort((a,b)=>score(b,model.provisional_weights)-score(a,model.provisional_weights)||a.team.localeCompare(b.team));
+    const order=rows.slice().sort((a,b)=>score(b,model.provisional_weights)-score(a,model.provisional_weights)||powerTie(a,b));
     const ranks=new Map(order.map((r,i)=>[r.team,i]));
     const pair=new Map();for(const g of rated)if(g.hp!==g.ap) {const w=g.hp>g.ap?g.h:g.a,l=g.hp>g.ap?g.a:g.h;pair.set(w+'|'+l,1);pair.set(l+'|'+w,-1);}
     for(const r of rows) {for(const o of names)if(Math.abs(ranks.get(r.team)-ranks.get(o))<=model.h2h_within)r.h2h+=pair.get(r.team+'|'+o)||0;
       r.score=score(r,model.weights);r.liftContribution=r.second_pass_lift*model.weights.second_pass_lift;}
-    rows.sort((a,b)=>b.score-a.score||a.team.localeCompare(b.team));
-    rows.forEach((r,i)=>r.rank=i&&Math.abs(r.score-rows[i-1].score)<1e-10?rows[i-1].rank:i+1);
+    rows.sort((a,b)=>Math.abs(b.score-a.score)>=1e-10?b.score-a.score:powerTie(a,b));
+    rows.forEach((r,i)=>r.rank=i+1);
     return rows;
   }
   root.RankingHistory={movement,deserving,z};if(typeof module!=='undefined')module.exports=root.RankingHistory;

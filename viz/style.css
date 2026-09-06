@@ -821,6 +821,10 @@ main { max-width: 1320px; padding-top: 38px; }
   font-variant-numeric: tabular-nums; }
 .rank-val i { display: block; margin-top: 2px; color: var(--muted); font-style: normal;
   font: 700 8px/1.2 var(--sans); text-transform: uppercase; letter-spacing: .09em; }
+.rank-move { position: absolute; right: 8px; bottom: 8px; min-width: 25px; padding: 3px 5px;
+  border: 1px solid currentColor; border-radius: 5px; background: color-mix(in srgb, var(--panel) 88%, transparent);
+  font: 900 10px/1 var(--sans); text-align: center; font-variant-numeric: tabular-nums; }
+.rank-move.up { color: #17704d; }.rank-move.down { color: #a34035; }.rank-move.flat { color: var(--muted); }
 /* The top five carry the poll: give them the first row to themselves at a larger
    size, so the shape of the board says who is at the top before any number is read. */
 .rank-cell.top .rank-crest { aspect-ratio: 1 / .80; }
