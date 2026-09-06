@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-09-06T11:04:22Z",
+  "checked_at": "2026-09-06T15:32:07Z",
   "source": "CFBD /lines",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
-  "quote_events": 1522,
-  "successful_checks": 89,
+  "quote_events": 1528,
+  "successful_checks": 90,
   "changed_quotes_this_check": 6,
   "games_with_quotes": 275,
   "books_with_quotes": [
@@ -144,7 +144,7 @@
   "settlements": 9,
   "qualified_clv_observations": 8,
   "mean_consensus_clv": 0.0013077854813727738,
-  "final_scores_published_this_check": 10,
+  "final_scores_published_this_check": 0,
   "completed_rating_games_replayed": 47,
   "availability": {
     "events": 2,
