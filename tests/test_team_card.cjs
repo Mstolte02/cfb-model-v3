@@ -28,16 +28,14 @@ test('all published teams resolve to valid art and finite snapshots',()=>{
   assert.equal(mascot('Michigan',teams.Michigan).family,'wolverine');
   assert.equal(mascot('Oregon',teams.Oregon).family,'duck');
 });
-test('ranking crests keep team-colour tiles and supply white fallbacks',()=>{
+test('ranking crests keep team-colour tiles and use sourced white assets',()=>{
   const teams=require('../viz/data/teams.json');
   let white=0;
   for(const [team,m] of Object.entries(teams)){
     assert.equal(m.crest.plate,'color',team);
     assert.ok(fs.existsSync(path.join(__dirname,'..','viz',m.crest.mark)),team);
-    if(m.crest.white){
-      white++;
-      assert.equal(m.crest.mark,m.logo,team);
-    }
+    assert.equal(m.crest.white,false,team);
+    if(m.crest.mark.startsWith('logos-white/')) white++;
   }
-  assert.ok(white>0,'expected at least one white fallback');
+  assert.equal(white,47);
 });

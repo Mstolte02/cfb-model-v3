@@ -53,10 +53,10 @@
   "altColor": "#222222",
   "onColor": "#000000",
   "crest": {
-   "mark": "logos/app-state.png",
+   "mark": "logos-white/app-state.png",
    "plate": "color",
    "contrast": 6.83,
-   "white": true
+   "white": false
   }
  },
  "Arizona": {
@@ -98,10 +98,10 @@
   "altColor": "#ffffff",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/arkansas.png",
+   "mark": "logos-white/arkansas.png",
    "plate": "color",
    "contrast": 8.03,
-   "white": true
+   "white": false
   }
  },
  "Arkansas State": {
@@ -113,10 +113,10 @@
   "altColor": "#000000",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/arkansas-state.png",
+   "mark": "logos-white/arkansas-state.png",
    "plate": "color",
    "contrast": 9.25,
-   "white": true
+   "white": false
   }
  },
  "Army": {
@@ -128,10 +128,10 @@
   "altColor": "#231f20",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/army.png",
+   "mark": "logos-white/army.png",
    "plate": "color",
    "contrast": 5.1,
-   "white": true
+   "white": false
   }
  },
  "Auburn": {
@@ -158,10 +158,10 @@
   "altColor": "#ffffff",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/ball-state.png",
+   "mark": "logos-white/ball-state.png",
    "plate": "color",
    "contrast": 5.79,
-   "white": true
+   "white": false
   }
  },
  "Baylor": {
@@ -188,10 +188,10 @@
   "altColor": "#fa4616",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/boise-state.png",
+   "mark": "logos-white/boise-state.png",
    "plate": "color",
    "contrast": 4.2,
-   "white": true
+   "white": false
   }
  },
  "Boston College": {
@@ -203,10 +203,10 @@
   "altColor": "#dbcca6",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/boston-college.png",
+   "mark": "logos-white/boston-college.png",
    "plate": "color",
    "contrast": 5.82,
-   "white": true
+   "white": false
   }
  },
  "Bowling Green": {
@@ -338,10 +338,10 @@
   "altColor": "#876447",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/coastal-carolina.png",
+   "mark": "logos-white/coastal-carolina.png",
    "plate": "color",
    "contrast": 7.18,
-   "white": true
+   "white": false
   }
  },
  "Colorado": {
@@ -353,10 +353,10 @@
   "altColor": "#000000",
   "onColor": "#000000",
   "crest": {
-   "mark": "logos/colorado.png",
+   "mark": "logos-white/colorado.png",
    "plate": "color",
    "contrast": 4.34,
-   "white": true
+   "white": false
   }
  },
  "Colorado State": {
@@ -458,10 +458,10 @@
   "altColor": "#d31245",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/florida-atlantic.png",
+   "mark": "logos-white/florida-atlantic.png",
    "plate": "color",
    "contrast": 4.79,
-   "white": true
+   "white": false
   }
  },
  "Florida International": {
@@ -593,10 +593,10 @@
   "altColor": "#ffffff",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/houston.png",
+   "mark": "logos-white/houston.png",
    "plate": "color",
    "contrast": 6.33,
-   "white": true
+   "white": false
   }
  },
  "Illinois": {
@@ -608,10 +608,10 @@
   "altColor": "#13294b",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/illinois.png",
+   "mark": "logos-white/illinois.png",
    "plate": "color",
    "contrast": 8.78,
-   "white": true
+   "white": false
   }
  },
  "Indiana": {
@@ -668,10 +668,10 @@
   "altColor": "#b5b7ba",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/jacksonville-state.png",
+   "mark": "logos-white/jacksonville-state.png",
    "plate": "color",
    "contrast": 4.97,
-   "white": true
+   "white": false
   }
  },
  "James Madison": {
@@ -728,10 +728,10 @@
   "altColor": "#000000",
   "onColor": "#000000",
   "crest": {
-   "mark": "logos/kennesaw-state.png",
+   "mark": "logos-white/kennesaw-state.png",
    "plate": "color",
    "contrast": 6.24,
-   "white": true
+   "white": false
   }
  },
  "Kent State": {
@@ -788,10 +788,10 @@
   "altColor": "#ffffff",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/louisiana.png",
+   "mark": "logos-white/louisiana.png",
    "plate": "color",
    "contrast": 8.39,
-   "white": true
+   "white": false
   }
  },
  "Louisiana Tech": {
@@ -818,10 +818,10 @@
   "altColor": "#000000",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/louisville.png",
+   "mark": "logos-white/louisville.png",
    "plate": "color",
    "contrast": 4.49,
-   "white": true
+   "white": false
   }
  },
  "LSU": {
@@ -848,10 +848,10 @@
   "altColor": "#be854c",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/marshall.png",
+   "mark": "logos-white/marshall.png",
    "plate": "color",
    "contrast": 7.18,
-   "white": true
+   "white": false
   }
  },
  "Maryland": {
@@ -863,10 +863,10 @@
   "altColor": "#ffcd00",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/maryland.png",
+   "mark": "logos-white/maryland.png",
    "plate": "color",
    "contrast": 4.97,
-   "white": true
+   "white": false
   }
  },
  "Massachusetts": {
@@ -923,10 +923,10 @@
   "altColor": "#f0f0f0",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/miami-oh.png",
+   "mark": "logos-white/miami-oh.png",
    "plate": "color",
    "contrast": 8.96,
-   "white": true
+   "white": false
   }
  },
  "Michigan": {
@@ -968,10 +968,10 @@
   "altColor": "#ffffff",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/middle-tennessee.png",
+   "mark": "logos-white/middle-tennessee.png",
    "plate": "color",
    "contrast": 6.73,
-   "white": true
+   "white": false
   }
  },
  "Minnesota": {
@@ -983,10 +983,10 @@
   "altColor": "#fab41c",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/minnesota.png",
+   "mark": "logos-white/minnesota.png",
    "plate": "color",
    "contrast": 4.79,
-   "white": true
+   "white": false
   }
  },
  "Mississippi State": {
@@ -1058,10 +1058,10 @@
   "altColor": "#ffffff",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/nc-state.png",
+   "mark": "logos-white/nc-state.png",
    "plate": "color",
    "contrast": 7.01,
-   "white": true
+   "white": false
   }
  },
  "Nebraska": {
@@ -1073,10 +1073,10 @@
   "altColor": "#ffffff",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/nebraska.png",
+   "mark": "logos-white/nebraska.png",
    "plate": "color",
    "contrast": 5.52,
-   "white": true
+   "white": false
   }
  },
  "Nevada": {
@@ -1103,10 +1103,10 @@
   "altColor": "#a7a8aa",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/new-mexico.png",
+   "mark": "logos-white/new-mexico.png",
    "plate": "color",
    "contrast": 5.53,
-   "white": true
+   "white": false
   }
  },
  "New Mexico State": {
@@ -1133,10 +1133,10 @@
   "altColor": "#13294b",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/north-carolina.png",
+   "mark": "logos-white/north-carolina.png",
    "plate": "color",
    "contrast": 14.54,
-   "white": true
+   "white": false
   }
  },
  "North Dakota State": {
@@ -1163,10 +1163,10 @@
   "altColor": "#cc0000",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/northern-illinois.png",
+   "mark": "logos-white/northern-illinois.png",
    "plate": "color",
    "contrast": 5.68,
-   "white": true
+   "white": false
   }
  },
  "North Texas": {
@@ -1253,10 +1253,10 @@
   "altColor": "#ffffff",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/oklahoma.png",
+   "mark": "logos-white/oklahoma.png",
    "plate": "color",
    "contrast": 8.28,
-   "white": true
+   "white": false
   }
  },
  "Oklahoma State": {
@@ -1268,10 +1268,10 @@
   "altColor": "#000000",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/oklahoma-state.png",
+   "mark": "logos-white/oklahoma-state.png",
    "plate": "color",
    "contrast": 10.55,
-   "white": true
+   "white": false
   }
  },
  "Old Dominion": {
@@ -1328,10 +1328,10 @@
   "altColor": "#d73f09",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/oregon-state.png",
+   "mark": "logos-white/oregon-state.png",
    "plate": "color",
    "contrast": 6.77,
-   "white": true
+   "white": false
   }
  },
  "Penn State": {
@@ -1403,10 +1403,10 @@
   "altColor": "#ffffff",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/rutgers.png",
+   "mark": "logos-white/rutgers.png",
    "plate": "color",
    "contrast": 6.26,
-   "white": true
+   "white": false
   }
  },
  "Sacramento State": {
@@ -1448,10 +1448,10 @@
   "altColor": "#000000",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/san-diego-state.png",
+   "mark": "logos-white/san-diego-state.png",
    "plate": "color",
    "contrast": 10.71,
-   "white": true
+   "white": false
   }
  },
  "San Jos\u00e9 State": {
@@ -1523,10 +1523,10 @@
   "altColor": "#ffc423",
   "onColor": "#000000",
   "crest": {
-   "mark": "logos/southern-miss.png",
+   "mark": "logos-white/southern-miss.png",
    "plate": "color",
    "contrast": 5.36,
-   "white": true
+   "white": false
   }
  },
  "South Florida": {
@@ -1568,10 +1568,10 @@
   "altColor": "#000e54",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/syracuse.png",
+   "mark": "logos-white/syracuse.png",
    "plate": "color",
    "contrast": 7.11,
-   "white": true
+   "white": false
   }
  },
  "TCU": {
@@ -1613,10 +1613,10 @@
   "altColor": "#58595b",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/tennessee.png",
+   "mark": "logos-white/tennessee.png",
    "plate": "color",
    "contrast": 17.39,
-   "white": true
+   "white": false
   }
  },
  "Texas": {
@@ -1658,10 +1658,10 @@
   "altColor": "#b4975a",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/texas-state.png",
+   "mark": "logos-white/texas-state.png",
    "plate": "color",
    "contrast": 10.33,
-   "white": true
+   "white": false
   }
  },
  "Texas Tech": {
@@ -1673,10 +1673,10 @@
   "altColor": "#000000",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/texas-tech.png",
+   "mark": "logos-white/texas-tech.png",
    "plate": "color",
    "contrast": 7.23,
-   "white": true
+   "white": false
   }
  },
  "Toledo": {
@@ -1718,10 +1718,10 @@
   "altColor": "#468ac9",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/tulane.png",
+   "mark": "logos-white/tulane.png",
    "plate": "color",
    "contrast": 4.86,
-   "white": true
+   "white": false
   }
  },
  "Tulsa": {
@@ -1748,10 +1748,10 @@
   "altColor": "#ffc845",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/uab.png",
+   "mark": "logos-white/uab.png",
    "plate": "color",
    "contrast": 5.81,
-   "white": true
+   "white": false
   }
  },
  "UCF": {
@@ -1763,10 +1763,10 @@
   "altColor": "#000000",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/ucf.png",
+   "mark": "logos-white/ucf.png",
    "plate": "color",
    "contrast": 7.19,
-   "white": true
+   "white": false
   }
  },
  "UCLA": {
@@ -1778,10 +1778,10 @@
   "altColor": "#f2a900",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/ucla.png",
+   "mark": "logos-white/ucla.png",
    "plate": "color",
    "contrast": 5.07,
-   "white": true
+   "white": false
   }
  },
  "UConn": {
@@ -1838,10 +1838,10 @@
   "altColor": "#ffcc00",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/usc.png",
+   "mark": "logos-white/usc.png",
    "plate": "color",
    "contrast": 4.29,
-   "white": true
+   "white": false
   }
  },
  "Utah": {
@@ -1883,10 +1883,10 @@
   "altColor": "#041e42",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/utep.png",
+   "mark": "logos-white/utep.png",
    "plate": "color",
    "contrast": 6.99,
-   "white": true
+   "white": false
   }
  },
  "UTSA": {
@@ -2003,10 +2003,10 @@
   "altColor": "#b3b5b8",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/western-kentucky.png",
+   "mark": "logos-white/western-kentucky.png",
    "plate": "color",
    "contrast": 5.3,
-   "white": true
+   "white": false
   }
  },
  "Western Michigan": {
@@ -2048,10 +2048,10 @@
   "altColor": "#ffffff",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/wisconsin.png",
+   "mark": "logos-white/wisconsin.png",
    "plate": "color",
    "contrast": 6.15,
-   "white": true
+   "white": false
   }
  },
  "Wyoming": {
@@ -2063,10 +2063,10 @@
   "altColor": "#ffc425",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/wyoming.png",
+   "mark": "logos-white/wyoming.png",
    "plate": "color",
    "contrast": 4.8,
-   "white": true
+   "white": false
   }
  }
 }

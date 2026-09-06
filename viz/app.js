@@ -2701,7 +2701,7 @@
   }
 
   function crestMark(c) {
-    return `<img src="${c.mark}" class="${c.white ? "white-logo" : ""}" alt="" loading="lazy">`;
+    return `<img src="${c.mark}" alt="" loading="lazy">`;
   }
 
   function rankingGrid(rows, label, valueOf) {
@@ -2739,7 +2739,7 @@
     const {rows,current,baseline}=RankingHistory.movement(ratings,stockPeriod);
     const host=document.getElementById('stock-boards'),ledger=document.getElementById('stock-ledger');
     document.getElementById('stock-dates').textContent=baseline&&current?`${baseline.label} → ${current.label}`:'Waiting for the first weekly update';
-    const teamButton=r=>`<button class="stock-team" data-history-team="${esc(r.team)}">${crestMark(crestOf(r.team))}<span>${esc(r.team)}<small>#${r.previousRank} → #${r.rank}</small></span></button>`;
+    const teamButton=r=>`<button class="stock-team" data-history-team="${esc(r.team)}"><img src="${logoURL(r.team)}" alt="" loading="lazy"><span>${esc(r.team)}<small>#${r.previousRank} → #${r.rank}</small></span></button>`;
     const card=(title,up)=>{
       const list=rows.filter(r=>up?r.change>0:r.change<0).sort((a,b)=>(up?b.change-a.change:a.change-b.change)||b.powerChange-a.powerChange||a.team.localeCompare(b.team)).slice(0,5);
       return `<article class="stock-board ${up?'stock-up':'stock-down'}"><header><span>${up?'▲ ON THE RISE':'▼ LOSING GROUND'}</span><h3>${title}</h3><small>PLACES ${up?'GAINED':'LOST'}</small></header>${list.length?list.map((r,i)=>`<div class="stock-row"><span class="stock-position">${String(i+1).padStart(2,'0')}</span>${teamButton(r)}<strong>${up?'+':'−'}${Math.abs(r.change)}<small>${signedMove(r.powerChange)} pp</small></strong></div>`).join(''):'<p class="stock-empty">No '+(up?'risers':'fallers')+' in this period.</p>'}</article>`;
