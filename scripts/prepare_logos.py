@@ -22,6 +22,7 @@ import json
 import re
 import sys
 import time
+from io import BytesIO
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -34,7 +35,16 @@ from config import ROOT, LOGO_DIR as FALLBACK_DIR
 
 LOGO_DIR = ROOT / "viz" / "logos"
 DARK_DIR = ROOT / "viz" / "logos-dark"
+WHITE_DIR = ROOT / "viz" / "logos-white"
 VIZ_DATA = ROOT / "viz" / "data"
+
+# These primary marks contain an opaque oval in the standard PNG. A CSS white
+# treatment therefore turns the entire mark into a featureless white pill. ESPN's
+# supplied white artwork preserves the internal Georgia G and Missouri tiger detail.
+WHITE_OVERRIDES = {
+    "Georgia": "https://a.espncdn.com/guid/4351fef8-fe69-53b1-ea57-72684b36ec35/logos/primary_logo_white.png",
+    "Missouri": "https://a.espncdn.com/guid/6bbe4a57-263d-12b2-639a-f1db99afcac9/logos/primary_logo_white.png",
+}
 
 MIN_CONTRAST = 3.0          # WCAG 2.1 non-text contrast for a graphical object
 # FALLBACK_DIR is the last-resort local source for a team ESPN has no usable mark
@@ -147,6 +157,7 @@ def fetch(url: str) -> bytes | None:
 def main(force=False):
     LOGO_DIR.mkdir(parents=True, exist_ok=True)
     DARK_DIR.mkdir(parents=True, exist_ok=True)
+    WHITE_DIR.mkdir(parents=True, exist_ok=True)
     VIZ_DATA.mkdir(parents=True, exist_ok=True)
     teams = json.load(open(ROOT / "data" / "raw" / "teams_2026.json"))
 
@@ -203,8 +214,21 @@ def main(force=False):
         chosen = choose_crest(color, dest, dark_dest)
         if chosen:
             which, contrast, white = chosen
+            white_override = WHITE_OVERRIDES.get(school)
+            if white and white_override:
+                white_dest = WHITE_DIR / fname
+                if not white_dest.exists() or force:
+                    data = fetch(white_override)
+                    if data:
+                        with Image.open(BytesIO(data)) as im:
+                            im.thumbnail((500, 500), Image.Resampling.LANCZOS)
+                            im.convert("RGBA").save(white_dest, optimize=True)
+                if white_dest.exists():
+                    which, white = "white", False
             entry["crest"] = {
-                "mark": f"logos-dark/{fname}" if which == "dark" else f"logos/{fname}",
+                "mark": (f"logos-dark/{fname}" if which == "dark" else
+                         f"logos-white/{fname}" if which == "white" else
+                         f"logos/{fname}"),
                 "plate": "color",
                 "contrast": round(contrast, 2),
                 "white": white,

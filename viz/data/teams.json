@@ -518,10 +518,10 @@
   "altColor": "#000000",
   "onColor": "#ffffff",
   "crest": {
-   "mark": "logos/georgia.png",
+   "mark": "logos-white/georgia.png",
    "plate": "color",
    "contrast": 6.48,
-   "white": true
+   "white": false
   }
  },
  "Georgia Southern": {
@@ -1013,10 +1013,10 @@
   "altColor": "#000000",
   "onColor": "#000000",
   "crest": {
-   "mark": "logos/missouri.png",
+   "mark": "logos-white/missouri.png",
    "plate": "color",
    "contrast": 6.38,
-   "white": true
+   "white": false
   }
  },
  "Missouri State": {
