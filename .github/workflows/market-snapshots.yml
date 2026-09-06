@@ -43,6 +43,11 @@ jobs:
       CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Always capture from the current branch tip. Workflow re-runs otherwise
+          # check out the stale SHA from the original failed attempt.
+          ref: main
+          fetch-depth: 0
       - name: Run market tracking tests
         run: python3 -m unittest tests.test_market_tracking
       - name: Capture timestamped provider prices
@@ -67,8 +72,18 @@ jobs:
           git config user.email "cfb-market-tracker[bot]@users.noreply.github.com"
           git add data/market_snapshots viz/data/odds.json viz/data/market_tracking.json viz/data/schedule.json viz/data/model_v4.json viz/data/ratings.json
           git commit -m "Capture 2026 market snapshot"
-          git push
-          echo "changed=true" >> "$GITHUB_OUTPUT"
+          for attempt in 1 2 3; do
+            if git push; then
+              echo "changed=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              echo "Snapshot push failed after $attempt attempts." >&2
+              exit 1
+            fi
+            git fetch origin main
+            git rebase origin/main
+          done
       - name: Build publishable site
         if: steps.changes.outputs.changed == 'true'
         run: python3 scripts/publish.py
