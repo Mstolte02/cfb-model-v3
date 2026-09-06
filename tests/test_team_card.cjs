@@ -28,14 +28,24 @@ test('all published teams resolve to valid art and finite snapshots',()=>{
   assert.equal(mascot('Michigan',teams.Michigan).family,'wolverine');
   assert.equal(mascot('Oregon',teams.Oregon).family,'duck');
 });
-test('ranking crests keep team-colour tiles and use sourced white assets',()=>{
+test('ranking crests use researched on-primary artwork before fallbacks',()=>{
   const teams=require('../viz/data/teams.json');
-  let white=0;
+  const sources=require('../scripts/crest_logo_sources.json');
+  const priority={primary_logo_on_primary_color:0,primary_logo_white:1,primary_logo_on_secondary_color:2};
+  let researched=0;
   for(const [team,m] of Object.entries(teams)){
-    assert.equal(m.crest.plate,'color',team);
+    assert.ok(['color','alternate'].includes(m.crest.plate),team);
     assert.ok(fs.existsSync(path.join(__dirname,'..','viz',m.crest.mark)),team);
     assert.equal(m.crest.white,false,team);
-    if(m.crest.mark.startsWith('logos-white/')) white++;
+    if(m.crest.mark.startsWith('logos-crest/')) researched++;
   }
-  assert.equal(white,47);
+  assert.equal(researched,47);
+  assert.equal(teams.Georgia.crest.mark,'logos-crest/georgia.png');
+  assert.equal(teams.Missouri.crest.mark,'logos-crest/missouri.png');
+  assert.equal(teams.Missouri.color,'#fdb719');
+  for(const [team,source] of Object.entries(sources)){
+    const rels=source.candidates.map(c=>c.rel);
+    assert.equal(rels[0],'primary_logo_on_primary_color',team);
+    assert.deepEqual(rels,[...rels].sort((a,b)=>priority[a]-priority[b]),team);
+  }
 });

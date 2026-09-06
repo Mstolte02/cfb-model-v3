@@ -2691,13 +2691,14 @@
      mark before its name. So it is drawn the way a released poll is drawn: a numbered
      grid of crests on the team's own colour, five across, with the top five given a
      larger cell of their own. The number under each crest is what ordered it. */
-  /* Keep every ranking tile in the school's own colour. When the standard mark
-     disappears into that colour, the metadata asks for its white presentation
-     rather than swapping the tile to a neutral background. */
+  /* Prefer artwork explicitly supplied for the school's primary colour. White
+     artwork is the next fallback; only then may metadata select the alternate
+     team colour and its matching supplied mark. */
   function crestOf(t) {
     const c = (meta[t] || {}).crest;
     if (!c) return { mark: logoURL(t), plate: rgba(t, 1), white: false };
-    return { mark: c.mark || logoURL(t), plate: rgba(t, 1), white: Boolean(c.white) };
+    const plate = c.plate === "alternate" ? ((meta[t] || {}).altColor || rgba(t, 1)) : rgba(t, 1);
+    return { mark: c.mark || logoURL(t), plate, white: Boolean(c.white) };
   }
 
   function crestMark(c) {

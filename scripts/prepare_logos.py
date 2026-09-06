@@ -11,10 +11,10 @@ Also emits viz/data/teams.json with each team's conference, abbreviation and col
 plus a readable foreground for that color so the UI can tint surfaces without
 guessing at contrast.
 
-It also decides which presentation to use on the team's own colour. ESPN's dark
-variant (logos[1]) is preferred when it gives the primary mark enough contrast.
-When neither supplied mark clears the contrast target, the app presents the primary
-mark in white. Ranking tiles therefore keep the team colour in every case.
+It also decides which presentation to use on a ranking tile. When a standard mark
+does not read on the primary colour, researched assets are tried in brand-safe
+order: the supplied on-primary mark, the supplied white mark, then the supplied
+on-secondary mark on the team's alternate colour.
 
 Run: ./venv/bin/python -m scripts.prepare_logos [--force]
 """
@@ -35,13 +35,13 @@ from config import ROOT, LOGO_DIR as FALLBACK_DIR
 
 LOGO_DIR = ROOT / "viz" / "logos"
 DARK_DIR = ROOT / "viz" / "logos-dark"
-WHITE_DIR = ROOT / "viz" / "logos-white"
+CREST_DIR = ROOT / "viz" / "logos-crest"
 VIZ_DATA = ROOT / "viz" / "data"
 
-# Use ESPN's supplied white/on-primary artwork instead of applying a CSS filter to
-# standard marks. This preserves each logo's intended internal detail and cutouts.
-WHITE_SOURCES = json.loads(
-    (Path(__file__).with_name("white_logo_sources.json")).read_text()
+# Ordered, explicit artwork rather than a CSS filter or recolored standard mark.
+# Each candidate records the background for which the supplied mark was designed.
+CREST_SOURCES = json.loads(
+    (Path(__file__).with_name("crest_logo_sources.json")).read_text()
 )
 
 MIN_CONTRAST = 3.0          # WCAG 2.1 non-text contrast for a graphical object
@@ -155,7 +155,7 @@ def fetch(url: str) -> bytes | None:
 def main(force=False):
     LOGO_DIR.mkdir(parents=True, exist_ok=True)
     DARK_DIR.mkdir(parents=True, exist_ok=True)
-    WHITE_DIR.mkdir(parents=True, exist_ok=True)
+    CREST_DIR.mkdir(parents=True, exist_ok=True)
     VIZ_DATA.mkdir(parents=True, exist_ok=True)
     teams = json.load(open(ROOT / "data" / "raw" / "teams_2026.json"))
 
@@ -212,24 +212,33 @@ def main(force=False):
         chosen = choose_crest(color, dest, dark_dest)
         if chosen:
             which, contrast, white = chosen
-            white_source = WHITE_SOURCES.get(school)
+            crest_source = CREST_SOURCES.get(school)
+            plate = "color"
             if white:
-                if not white_source:
-                    raise RuntimeError(f"No researched white logo source for {school}")
-                white_dest = WHITE_DIR / fname
-                if not white_dest.exists() or force:
-                    data = fetch(white_source["url"])
-                    if not data:
-                        raise RuntimeError(f"Could not download white logo for {school}")
-                    with Image.open(BytesIO(data)) as im:
-                        im.thumbnail((500, 500), Image.Resampling.LANCZOS)
-                        im.convert("RGBA").save(white_dest, optimize=True)
-                which, white = "white", False
+                if not crest_source:
+                    raise RuntimeError(f"No researched crest presentation for {school}")
+                crest_dest = CREST_DIR / fname
+                selected = None
+                if crest_dest.exists() and not force:
+                    selected = crest_source["candidates"][0]
+                else:
+                    for candidate in crest_source["candidates"]:
+                        data = fetch(candidate["url"])
+                        if data:
+                            with Image.open(BytesIO(data)) as im:
+                                im.thumbnail((500, 500), Image.Resampling.LANCZOS)
+                                im.convert("RGBA").save(crest_dest, optimize=True)
+                            selected = candidate
+                            break
+                if not selected:
+                    raise RuntimeError(f"Could not download a brand-safe crest for {school}")
+                which, white = "crest", False
+                plate = selected["plate"]
             entry["crest"] = {
                 "mark": (f"logos-dark/{fname}" if which == "dark" else
-                         f"logos-white/{fname}" if which == "white" else
+                         f"logos-crest/{fname}" if which == "crest" else
                          f"logos/{fname}"),
-                "plate": "color",
+                "plate": plate,
                 "contrast": round(contrast, 2),
                 "white": white,
             }
