@@ -44,7 +44,9 @@
     <button class="tab" data-view="players">Player tables</button>
   </nav>
   <nav class="section-nav" data-hub-nav="rankings">
-    <button class="tab" data-view="power">Power rankings</button>
+    <button class="tab" data-view="power">Power Ratings</button>
+    <button class="tab" data-view="deserving">Most Deserving</button>
+    <button class="tab" data-view="stock-watch">Stock Watch</button>
     <button class="tab" data-view="power-history">Team history</button>
   </nav>
   <nav class="section-nav" data-hub-nav="simulation">
@@ -96,14 +98,20 @@
   </section>
 
   <section id="view-power" class="view">
-    <div class="view-head editorial-head"><span class="eyebrow">Two different questions</span><h2>Best team or best résumé?</h2>
-      <p class="sub">Neutral-field power asks who would win today. Deserving starts with the final 2025 AP poll and will update with 2026 results.</p></div>
-    <div class="rankings-stack">
-      <article class="ranking-board"><div class="board-head"><span>Model</span><h3>Neutral-field Top 25</h3><small>Ordered by neutral win rate — who wins today</small></div><div id="power-top25"></div>
-        <p class="board-note"><b>Neutral win rate</b> is the model’s power rating written as what it actually measures: play a team against each of the other 135 FBS teams on a neutral field, and this is the share of those games it wins. Ohio State at 90.2% beats a randomly drawn FBS opponent about nine times in ten. It is a round-robin average, so it carries no schedule — that is the other board’s job.</p></article>
-      <article class="ranking-board deserving"><div class="board-head"><span>Résumé</span><h3>Deserving Top 25</h3><small>2025 final AP baseline — updates with 2026 results</small></div><div id="deserving-top25"></div>
-        <p class="board-note"><b>AP poll points</b> are the voters’ tally, not a model output: 25 points for a first-place vote down to one for a 25th. This board is still the final 2025 poll and will not move until 2026 results start landing.</p></article>
-    </div>
+    <div class="view-head editorial-head"><span class="eyebrow">The weekly football register</span><h2>Power Ratings</h2><p class="sub">Who wins on a neutral field today? The model's Top 25, wearing the old colors.</p></div>
+    <article class="ranking-board"><div class="board-head"><span>Model</span><h3>Neutral-field Top 25</h3><small>Ordered by neutral win rate</small></div><div id="power-top25"></div><p class="board-note">Neutral win rate is the average chance of beating every other rated FBS team on a neutral field. Historical marks: <a href="https://www.sportslogos.net/" target="_blank" rel="noopener">SportsLogos.Net</a>.</p></article>
+  </section>
+  <section id="view-deserving" class="view">
+    <div class="view-head editorial-head"><span class="eyebrow">The résumé register / results earned</span><h2>Most Deserving</h2><p class="sub">What have you earned this season? Record, opponent quality, schedule and head-to-head, with a second look at your opponents.</p></div>
+    <article class="ranking-board deserving"><div class="board-head"><span>Second-pass opponent lift</span><h3>The earned Top 25</h3><small id="deserving-date"></small></div><div id="deserving-top25"></div><p class="board-note">The second pass checks whether opponents' own scoring results strengthen or weaken a résumé. Rankings use completed results this season. Teams enter after their first completed FBS matchup; identical scores share a rank. Early rankings can move sharply.</p></article>
+    <details class="stock-method"><summary>Inside the résumé score</summary><p>Two passes through capped, home-field-adjusted scoring margins measure opponent lift. The fitted score combines that lift with record, opponent-adjusted quality, schedule strength, conference status and head-to-head against nearby teams. Weights were fitted to 2015–2025 final CFP rankings using the earlier idempotence research. This is an experimental in-season application of a season-end model.</p><div id="deserving-ledger"></div></details>
+  </section>
+  <section id="view-stock-watch" class="view">
+    <div class="view-head editorial-head"><span class="eyebrow">The college football exchange</span><h2>Stock Watch</h2><p class="sub">Every climb. Every slide. Follow the full field through the season.</p></div>
+    <div class="stock-toolbar"><div class="stock-switch" role="group" aria-label="Movement period"><button type="button" class="active" data-stock-period="week" aria-pressed="true">This week</button><button type="button" data-stock-period="season" aria-pressed="false">Since preseason</button></div><span id="stock-dates"></span></div>
+    <div id="stock-boards"></div>
+    <div class="stock-ledger-head"><h3>The full ticker</h3><label>Find a team <input type="search" id="stock-search" placeholder="School name"></label></div><div id="stock-ledger"></div>
+    <p class="board-note">Movement is places gained or lost in published Power Ratings. Rating change is measured in percentage points of neutral win rate. Partial weeks update as finals arrive. Select a team to open its season history.</p>
   </section>
 
   <section id="view-power-history" class="view">
@@ -202,6 +210,7 @@
 
 <footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Model probabilities are estimates. Sportsbook prices are dated snapshots, not live quotes. Gamble responsibly.</span></footer>
 <script src="team-card.js"></script>
-<script src="app.js?v=40"></script>
+<script src="ranking-history.js"></script>
+<script src="app.js?v=41"></script>
 </body>
 </html>

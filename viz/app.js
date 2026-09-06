@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoff, model, odds, editorial, bettingValidation, warValidity, betTracking] = await Promise.all([
+  const [teams, schedule, players, ratings, playoff, model, odds, editorial, bettingValidation, warValidity, betTracking, retroLogos, deservingModel] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -35,6 +35,8 @@
     fetchJSON("data/betting_validation.json").catch(() => ({ markets: {} })),
     fetchJSON("data/war_validity.json").catch(() => ({})),
     fetchJSON("data/bet_tracking.json").catch(() => null),
+    fetchJSON("data/retro-logos.json").catch(() => ({})),
+    fetchJSON("data/deserving-model.json").catch(() => null),
   ]);
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
   // two-deep; it was a knowingly worse backtest kept as an alternative view, and it is
@@ -2698,9 +2700,16 @@
      wherever some mark clears 3:1 on it and a neutral otherwise. */
   const PLATE = { color: null, ink: "var(--navy)", panel: "var(--panel)" };
   function crestOf(t) {
+    const retro = retroLogos[t];
+    if (retro) return {sprite:retro.sprite, x:retro.x, y:retro.y, plate:"var(--panel)"};
     const c = (meta[t] || {}).crest;
     if (!c) return { mark: logoURL(t), plate: "var(--panel)" };   // pre-crest data
     return { mark: c.mark, plate: PLATE[c.plate] || rgba(t, 1) };
+  }
+
+  function crestMark(c) {
+    return c.sprite ? `<span class="retro-mark" role="img" style="--retro-url:url('${c.sprite}');--retro-x:${c.x};--retro-y:${c.y}" aria-hidden="true"></span>`
+      : `<img src="${c.mark}" alt="" loading="lazy">`;
   }
 
   function rankingGrid(rows, label, valueOf) {
@@ -2709,7 +2718,7 @@
       return `<button type="button"
       class="rank-cell team-link${r.rank <= 5 ? " top" : ""}" data-team="${esc(r.team)}"
       style="--plate:${c.plate};--tc:${color(r.team)}">
-      <span class="rank-crest"><img src="${c.mark}" alt="" loading="lazy"></span>
+      <span class="rank-crest">${crestMark(c)}</span>
       <span class="rank-no">${r.rank}</span>
       <span class="rank-name">${esc(r.team)}</span>
       <span class="rank-val"><b>${valueOf(r)}</b><i>${label}</i></span>
@@ -2722,10 +2731,46 @@
     document.getElementById("power-top25").innerHTML =
       rankingGrid(neutral, "Neutral win rate",
         r => (r.power != null ? pct(r.power, 1) : "—"));
-    document.getElementById("deserving-top25").innerHTML =
-      rankingGrid(editorial.prior_final_ap || [], "AP poll points",
-        r => (r.points != null ? r.points.toLocaleString() : "—"));
+
     wireTeamLinks();
+  }
+
+  let stockPeriod = 'week';
+  const signedMove = (v,d=1) => `${v>0?'+':''}${v.toFixed(d)}`;
+  function historyLinks(host) {
+    host.querySelectorAll('[data-history-team]').forEach(b=>b.addEventListener('click',()=>{
+      fillPowerHistoryTeams();document.getElementById('power-history-team').value=b.dataset.historyTeam;
+      activateHub('rankings','power-history');
+    }));
+  }
+  function renderStockWatch() {
+    const {rows,current,baseline}=RankingHistory.movement(ratings,stockPeriod);
+    const host=document.getElementById('stock-boards'),ledger=document.getElementById('stock-ledger');
+    document.getElementById('stock-dates').textContent=baseline&&current?`${baseline.label} → ${current.label}`:'Waiting for the first weekly update';
+    const teamButton=r=>`<button class="stock-team" data-history-team="${esc(r.team)}">${crestMark(crestOf(r.team))}<span>${esc(r.team)}<small>#${r.previousRank} → #${r.rank}</small></span></button>`;
+    const card=(title,up)=>{
+      const list=rows.filter(r=>up?r.change>0:r.change<0).sort((a,b)=>(up?b.change-a.change:a.change-b.change)||b.powerChange-a.powerChange||a.team.localeCompare(b.team)).slice(0,5);
+      return `<article class="stock-board ${up?'stock-up':'stock-down'}"><header><span>${up?'▲ ON THE RISE':'▼ LOSING GROUND'}</span><h3>${title}</h3><small>PLACES ${up?'GAINED':'LOST'}</small></header>${list.length?list.map((r,i)=>`<div class="stock-row"><span class="stock-position">${String(i+1).padStart(2,'0')}</span>${teamButton(r)}<strong>${up?'+':'−'}${Math.abs(r.change)}<small>${signedMove(r.powerChange)} pp</small></strong></div>`).join(''):'<p class="stock-empty">No '+(up?'risers':'fallers')+' in this period.</p>'}</article>`;
+    };
+    host.innerHTML=rows.length?`<div class="stock-grid">${card('Highest risers',true)}${card('Biggest fallers',false)}</div>`:'<p class="stock-empty">A baseline and a weekly snapshot are needed to compare movement.</p>';
+    const query=document.getElementById('stock-search').value.trim().toLowerCase();
+    const filtered=rows.filter(r=>r.team.toLowerCase().includes(query)).sort((a,b)=>b.change-a.change||b.powerChange-a.powerChange||a.team.localeCompare(b.team));
+    ledger.innerHTML=`<div class="stock-table-wrap"><table><thead><tr><th>Team / rank</th><th>Movement</th><th>Win rate</th><th>Rating change</th></tr></thead><tbody>${filtered.map(r=>`<tr><td>${teamButton(r)}</td><td class="${r.change>0?'stock-gain':r.change<0?'stock-loss':''}">${r.change===0?'—':signedMove(r.change,0)}</td><td>${pct(r.power)}</td><td>${signedMove(r.powerChange)} pp</td></tr>`).join('')||'<tr><td colspan="4">No teams to show.</td></tr>'}</tbody></table></div>`;
+    historyLinks(host);historyLinks(ledger);
+  }
+  document.querySelectorAll('[data-stock-period]').forEach(b=>b.addEventListener('click',()=>{
+    stockPeriod=b.dataset.stockPeriod;document.querySelectorAll('[data-stock-period]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});renderStockWatch();
+  }));
+  document.getElementById('stock-search').addEventListener('input',renderStockWatch);
+  let deservingRows=null;
+  function renderDeserving() {
+    const host=document.getElementById('deserving-top25');
+    if(!deservingModel){host.innerHTML='<p class="stock-empty">Résumé model unavailable. Reload to try again.</p>';return;}
+    if(!deservingRows)deservingRows=RankingHistory.deserving(schedule,meta,[...FBS],deservingModel);
+    document.getElementById('deserving-date').textContent=`${ratings.season} finals · ${ratings.history?.at(-1)?.label||'Season to date'}`;
+    host.innerHTML=deservingRows.length?rankingGrid(deservingRows.filter(r=>r.rank<=25),'Résumé score',r=>r.score.toFixed(2)):'<p class="stock-empty">The board opens after the first completed FBS matchup.</p>';
+    document.getElementById('deserving-ledger').innerHTML=`<div class="stock-table-wrap"><table><thead><tr><th>Rank</th><th>Team</th><th>Record</th><th>Opponent lift contribution</th><th>Score</th></tr></thead><tbody>${deservingRows.map(r=>`<tr><td>${r.rank}</td><td><button class="stock-team" data-history-team="${esc(r.team)}">${esc(r.team)}</button></td><td>${r.wins}–${r.losses}${r.ties?'–'+r.ties:''}</td><td>${signedMove(r.liftContribution,2)}</td><td>${r.score.toFixed(2)}</td></tr>`).join('')}</tbody></table></div>`;
+    historyLinks(document.getElementById('deserving-ledger'));wireTeamLinks();
   }
 
   function fillPowerHistoryTeams() {
@@ -3523,6 +3568,8 @@
     else if (view === "ratings") renderRatings();
     else if (view === "players") renderPlayers();
     else if (view === "power") renderPower();
+    else if (view === "deserving") renderDeserving();
+    else if (view === "stock-watch") renderStockWatch();
     else if (view === "power-history") renderPowerHistory();
     else if (view === "market") renderWeeklyLines();
     else if (view === "leaders") renderLeaders();
@@ -3533,7 +3580,7 @@
     fillPowerHistoryTeams();
     renderDash(); renderPlayoff(); renderScenario(); renderMatchup(); renderTeam();
     renderRatings(); renderPlayers(); renderFutures(); renderOutcomeBands();
-    renderPower(); renderPowerHistory(); renderLeaders(); renderWeeklyLines(); renderTracking();
+    renderPower(); renderDeserving(); renderStockWatch(); renderPowerHistory(); renderLeaders(); renderWeeklyLines(); renderTracking();
   }
   // Check the client-side power reproduces the exported column before anyone edits
   // anything. A scenario is only meaningful as a difference from the published

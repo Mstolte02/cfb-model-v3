@@ -1,0 +1,37 @@
+{
+  "weights": {
+    "win_pct": 10.0,
+    "rating_z": 0.6588744886435441,
+    "sos_z": 0.15833979264214645,
+    "p4": 1.6733742054075835,
+    "second_pass_lift": 0.16740690129066235,
+    "h2h": 0.044803724614549144
+  },
+  "provisional_weights": {
+    "win_pct": 10.149141937211416,
+    "rating_z": 0.6488080402642705,
+    "sos_z": 0.16599911905845963,
+    "p4": 1.6588998270828945,
+    "second_pass_lift": 0.17535870525815717
+  },
+  "h2h_within": 10,
+  "seasons": [
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "n": 275,
+  "source_branch": "research/idempotence-rating",
+  "method": "Second-pass opponent lift added to committee-style resume model",
+  "margin_cap": 28,
+  "home_field_points": 2.5,
+  "ridge": 0.25
+}

@@ -348,7 +348,8 @@ def export_schedule():
                "n": 1 if g.get("neutralSite") else 0,
                "w": g.get("week"), "d": (g.get("startDate") or "")[:10],
                "c": 1 if g.get("conferenceGame") else 0,
-               "v": g.get("venue"), "id": g.get("id")}
+               "v": g.get("venue"), "id": g.get("id"),
+               "st": g.get("seasonType", "regular")}
         hp, ap = g.get("homePoints"), g.get("awayPoints")
         if g.get("completed") and hp is not None and ap is not None:
             row.update(f=1, hp=int(hp), ap=int(ap))
