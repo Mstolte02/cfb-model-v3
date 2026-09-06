@@ -11,22 +11,10 @@ Also emits viz/data/teams.json with each team's conference, abbreviation and col
 plus a readable foreground for that color so the UI can tint surfaces without
 guessing at contrast.
 
-It also decides, per team, what to put BEHIND the mark. The ranking boards draw each
-crest on a filled tile, and the obvious fill - the team's own colour - is the one
-colour a school's primary logo is least likely to contrast with. Measured over the
-136 FBS marks, the primary logo on the primary colour clears WCAG 3:1 for only 40
-teams; Texas A&M, Tennessee, Iowa, TCU, Baylor, UCLA and West Virginia come out at
-exactly 1.00, because their mark is a single-colour knockout drawn in the school
-colour and is therefore invisible on it.
-
-ESPN's dark variant (logos[1]) fixes about half of that - it lifts the count to 87 -
-but for 47 teams ESPN serves the identical file, so no variant exists and no amount
-of downloading produces one. So each team gets whichever of the two marks reads best
-on its own colour, and the ~third that still cannot clear the bar fall back to a
-neutral plate - ink or eggshell, whichever their mark prefers. Every team then clears
-3:1 (worst 3.01, 98 of 136 above 4.5) and 89 keep the team-coloured tile. The team
-colour is still on every cell as the rule under the crest, so a neutral plate loses
-the fill, not the identity.
+It also decides which presentation to use on the team's own colour. ESPN's dark
+variant (logos[1]) is preferred when it gives the primary mark enough contrast.
+When neither supplied mark clears the contrast target, the app presents the primary
+mark in white. Ranking tiles therefore keep the team colour in every case.
 
 Run: ./venv/bin/python -m scripts.prepare_logos [--force]
 """
@@ -48,8 +36,6 @@ LOGO_DIR = ROOT / "viz" / "logos"
 DARK_DIR = ROOT / "viz" / "logos-dark"
 VIZ_DATA = ROOT / "viz" / "data"
 
-# The two neutral plates, kept in step with --panel and --navy in viz/style.css.
-PLATES = {"panel": (251, 249, 243), "ink": (13, 27, 42)}
 MIN_CONTRAST = 3.0          # WCAG 2.1 non-text contrast for a graphical object
 # FALLBACK_DIR is the last-resort local source for a team ESPN has no usable mark
 # for. Genuinely optional - a missing logo degrades a picture, not a number - so it
@@ -111,9 +97,9 @@ def mark_luminance(path: Path) -> float | None:
 
 
 def choose_crest(color: str, base: Path, dark: Path | None):
-    """Pick the mark and the plate behind it, preferring the team's own colour.
+    """Pick the supplied mark that works on the team colour, else show it white.
 
-    Returns (relative_mark_path, plate_name, contrast) or None when neither file
+    Returns (relative_mark_path, contrast, white) or None when neither file
     can be read - the caller then leaves the field off and the app falls back.
     """
     marks = {}
@@ -135,12 +121,9 @@ def choose_crest(color: str, base: Path, dark: Path | None):
                       reverse=True)
     if on_color[0][0] >= MIN_CONTRAST:
         c, which = on_color[0]
-        return which, "color", c
+        return which, c, False
 
-    options = [(_contrast(l, _rel_lum(*rgb)), k, plate)
-               for k, l in marks.items() for plate, rgb in PLATES.items()]
-    c, which, plate = max(options)
-    return which, plate, c
+    return "base", _contrast(1.0, team_lum), True
 
 
 def norm_hex(c, default="#666666"):
@@ -168,7 +151,7 @@ def main(force=False):
     teams = json.load(open(ROOT / "data" / "raw" / "teams_2026.json"))
 
     out, got, kept, fell_back, missing = {}, 0, 0, [], []
-    plates, dark_got = {}, 0
+    white_count, dark_got = 0, 0
     for t in teams:
         school = t["school"]
         fname = f"{slug(school)}.png"
@@ -219,13 +202,14 @@ def main(force=False):
         }
         chosen = choose_crest(color, dest, dark_dest)
         if chosen:
-            which, plate, contrast = chosen
+            which, contrast, white = chosen
             entry["crest"] = {
                 "mark": f"logos-dark/{fname}" if which == "dark" else f"logos/{fname}",
-                "plate": plate,
+                "plate": "color",
                 "contrast": round(contrast, 2),
+                "white": white,
             }
-            plates[plate] = plates.get(plate, 0) + 1
+            white_count += int(white)
         out[school] = entry
 
     json.dump(out, open(VIZ_DATA / "teams.json", "w"), indent=1)
@@ -247,7 +231,7 @@ def main(force=False):
     print(f"teams: {len(teams)}   downloaded: {got}   already present: {kept}")
     weak = sorted((v["crest"]["contrast"], s) for s, v in out.items() if v.get("crest"))
     print(f"  dark variants: {dark_got} fetched, {len(used)} used, {dropped} dropped")
-    print(f"  crest plates: " + ", ".join(f"{k}={v}" for k, v in sorted(plates.items())))
+    print(f"  crest presentation: color tiles={len(out)}, white marks={white_count}")
     if weak:
         below = [f"{s} {c}" for c, s in weak if c < MIN_CONTRAST]
         print(f"  crest contrast: min {weak[0][0]} ({weak[0][1]}), "

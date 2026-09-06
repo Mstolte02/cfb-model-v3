@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoff, model, odds, editorial, bettingValidation, warValidity, betTracking, retroLogos, deservingModel] = await Promise.all([
+  const [teams, schedule, players, ratings, playoff, model, odds, editorial, bettingValidation, warValidity, betTracking, deservingModel] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -35,7 +35,6 @@
     fetchJSON("data/betting_validation.json").catch(() => ({ markets: {} })),
     fetchJSON("data/war_validity.json").catch(() => ({})),
     fetchJSON("data/bet_tracking.json").catch(() => null),
-    fetchJSON("data/retro-logos.json").catch(() => ({})),
     fetchJSON("data/deserving-model.json").catch(() => null),
   ]);
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
@@ -2692,24 +2691,17 @@
      mark before its name. So it is drawn the way a released poll is drawn: a numbered
      grid of crests on the team's own colour, five across, with the top five given a
      larger cell of their own. The number under each crest is what ordered it. */
-  /* Which mark to draw and what to put behind it, decided at build time by
-     scripts.prepare_logos from the measured luminance of the mark itself. A school's
-     primary logo is often a knockout drawn in the school colour, so the team's own
-     colour is the one fill it cannot be seen on - Texas A&M's maroon mark on maroon
-     came out at 1.00, which is invisible, not low. The plate is the team colour
-     wherever some mark clears 3:1 on it and a neutral otherwise. */
-  const PLATE = { color: null, ink: "var(--navy)", panel: "var(--panel)" };
+  /* Keep every ranking tile in the school's own colour. When the standard mark
+     disappears into that colour, the metadata asks for its white presentation
+     rather than swapping the tile to a neutral background. */
   function crestOf(t) {
-    const retro = retroLogos[t];
-    if (retro) return {sprite:retro.sprite, x:retro.x, y:retro.y, plate:"var(--panel)"};
     const c = (meta[t] || {}).crest;
-    if (!c) return { mark: logoURL(t), plate: "var(--panel)" };   // pre-crest data
-    return { mark: c.mark, plate: PLATE[c.plate] || rgba(t, 1) };
+    if (!c) return { mark: logoURL(t), plate: rgba(t, 1), white: false };
+    return { mark: c.mark || logoURL(t), plate: rgba(t, 1), white: Boolean(c.white) };
   }
 
   function crestMark(c) {
-    return c.sprite ? `<span class="retro-mark" role="img" style="--retro-url:url('${c.sprite}');--retro-x:${c.x};--retro-y:${c.y}" aria-hidden="true"></span>`
-      : `<img src="${c.mark}" alt="" loading="lazy">`;
+    return `<img src="${c.mark}" class="${c.white ? "white-logo" : ""}" alt="" loading="lazy">`;
   }
 
   function rankingGrid(rows, label, valueOf) {

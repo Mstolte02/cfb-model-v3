@@ -1,5 +1,7 @@
 const {test} = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const {data, mascot} = require('../viz/team-card.js');
 test('away results complement pregame probabilities and reverse rating changes', () => {
   const ratings={teams:[{team:'B',rank:2,power:.6}],history:[
@@ -25,4 +27,17 @@ test('all published teams resolve to valid art and finite snapshots',()=>{
   }
   assert.equal(mascot('Michigan',teams.Michigan).family,'wolverine');
   assert.equal(mascot('Oregon',teams.Oregon).family,'duck');
+});
+test('ranking crests keep team-colour tiles and supply white fallbacks',()=>{
+  const teams=require('../viz/data/teams.json');
+  let white=0;
+  for(const [team,m] of Object.entries(teams)){
+    assert.equal(m.crest.plate,'color',team);
+    assert.ok(fs.existsSync(path.join(__dirname,'..','viz',m.crest.mark)),team);
+    if(m.crest.white){
+      white++;
+      assert.equal(m.crest.mark,m.logo,team);
+    }
+  }
+  assert.ok(white>0,'expected at least one white fallback');
 });
