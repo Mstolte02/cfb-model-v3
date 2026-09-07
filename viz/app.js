@@ -2808,10 +2808,9 @@
     const teamButton=r=>`<button class="stock-team team-link" data-team="${esc(r.team)}"><img src="${logoURL(r.team)}" alt="" loading="lazy"><span>${esc(r.team)}<small>#${r.previousRank} → #${r.rank}</small></span></button>`;
     const card=(title,up)=>{
       const list=rows.filter(r=>up?metric(r)>0:metric(r)<0).sort((a,b)=>(up?metric(b)-metric(a):metric(a)-metric(b))||(up?b.change-a.change:a.change-b.change)||a.team.localeCompare(b.team)).slice(0,5);
-      const mascot=up?'🚶‍♂️ ▂▄▆█':'█▆▄▂ 🚶‍♂️';
       const value=r=>stockMeasure==='rank'?`${up?'+':'−'}${Math.abs(r.change)}`:`${up?'+':'−'}${Math.abs(r.powerChange).toFixed(1)}`;
       const secondary=r=>stockMeasure==='rank'?`${signedMove(r.powerChange)} pp`:`${r.change===0?'No rank change':signedMove(r.change,0)+' places'}`;
-      return `<article class="stock-board ${up?'stock-up':'stock-down'}"><header><span>${up?'▲ ON THE RISE':'▼ LOSING GROUND'}</span><span class="stock-mascot" aria-hidden="true">${mascot}</span><h3>${title}</h3><small>${metricLabel.toUpperCase()} ${up?'GAINED':'LOST'}</small></header>${list.length?list.map((r,i)=>`<div class="stock-row"><span class="stock-position">${String(i+1).padStart(2,'0')}</span>${teamButton(r)}<strong>${value(r)}<small>${secondary(r)}</small></strong></div>`).join(''):'<p class="stock-empty">No '+(up?'risers':'fallers')+' in this period.</p>'}</article>`;
+      return `<article class="stock-board ${up?'stock-up':'stock-down'}"><header><span>${up?'▲ ON THE RISE':'▼ LOSING GROUND'}</span><h3>${title}</h3><small>${metricLabel.toUpperCase()} ${up?'GAINED':'LOST'}</small></header>${list.length?list.map((r,i)=>`<div class="stock-row"><span class="stock-position">${String(i+1).padStart(2,'0')}</span>${teamButton(r)}<strong>${value(r)}<small>${secondary(r)}</small></strong></div>`).join(''):'<p class="stock-empty">No '+(up?'risers':'fallers')+' in this period.</p>'}</article>`;
     };
     host.innerHTML=rows.length?`<div class="stock-grid">${card('Highest risers',true)}${card('Biggest fallers',false)}</div>`:'<p class="stock-empty">A baseline and a weekly snapshot are needed to compare movement.</p>';
     const query=document.getElementById('stock-search').value.trim().toLowerCase();
