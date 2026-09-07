@@ -10,7 +10,7 @@
 <meta property="og:image" content="https://mstolte02.github.io/cfb-model-v3/social-preview.png">
 <meta name="twitter:card" content="summary_large_image">
 <title>CFB Model v4 — 2026 Forecast Lab</title>
-<link rel="stylesheet" href="style.css?v=36">
+<link rel="stylesheet" href="style.css?v=37">
 </head>
 <body>
 <header class="site-header">
@@ -21,9 +21,9 @@
   </div>
   <nav class="hub-nav" aria-label="Primary">
     <button class="hub-tab" data-hub="futures" data-default="dash">Futures</button>
+    <button class="hub-tab" data-hub="rankings" data-default="power">Power Rankings</button>
     <button class="hub-tab active" data-hub="weekly" data-default="market">Weekly</button>
     <button class="hub-tab" data-hub="people" data-default="leaders">Ratings</button>
-    <button class="hub-tab" data-hub="rankings" data-default="power">Power Rankings</button>
     <button class="hub-tab" data-hub="simulation" data-default="scenario">Simulation</button>
   </nav>
 </header>
@@ -108,10 +108,10 @@
   </section>
   <section id="view-stock-watch" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">The college football exchange</span><h2>Stock Watch</h2><p class="sub">Every climb. Every slide. Follow the full field through the season.</p></div>
-    <div class="stock-toolbar"><div class="stock-switch" role="group" aria-label="Movement period"><button type="button" class="active" data-stock-period="week" aria-pressed="true">This week</button><button type="button" data-stock-period="season" aria-pressed="false">Since preseason</button></div><span id="stock-dates"></span></div>
+    <div class="stock-toolbar"><div class="stock-control"><span>Timeframe</span><div class="stock-switch" role="group" aria-label="Movement period"><button type="button" class="active" data-stock-period="week" aria-pressed="true">This week</button><button type="button" data-stock-period="season" aria-pressed="false">Since preseason</button></div></div><div class="stock-control"><span>Measure</span><div class="stock-switch" role="group" aria-label="Movement measure"><button type="button" class="active" data-stock-measure="rank" aria-pressed="true">Rank change</button><button type="button" data-stock-measure="rating" aria-pressed="false">Rating change</button></div></div><span id="stock-dates"></span></div>
     <div id="stock-boards"></div>
     <div class="stock-ledger-head"><h3>The full ticker</h3><label>Find a team <input type="search" id="stock-search" placeholder="School name"></label></div><div id="stock-ledger"></div>
-    <p class="board-note">Movement is places gained or lost in published Power Ratings. Rating change is measured in percentage points of neutral win rate. Partial weeks update as finals arrive. Select a team to open its season history.</p>
+    <p class="board-note">Rank change shows places gained or lost in published Power Ratings. Rating change shows percentage-point movement in neutral win rate. Partial weeks update as finals arrive. Select a team to open its complete team page.</p>
   </section>
 
   <section id="view-power-history" class="view">
@@ -193,7 +193,7 @@
   </section>
 
   <section id="view-team" class="view">
-    <div class="view-head"><span class="eyebrow">Team room</span><h2>Team Breakdown &amp; Depth Chart</h2><p class="sub">Outcome distribution, projected two-deep, player WAR, strengths, weaknesses and schedule—all in one place.</p></div>
+    <div class="view-head"><span class="eyebrow">Team room</span><h2>Team Overview</h2><p class="sub">Depth chart, roster strengths, season outlook, schedule and rating history in one connected team hub.</p></div>
     <div class="team-toolbar"><div class="picker" id="pickerTeam"></div></div><div id="team-body"></div>
   </section>
 
@@ -211,6 +211,6 @@
 <footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Model probabilities are estimates. Sportsbook prices are dated snapshots, not live quotes. Gamble responsibly.</span></footer>
 <script src="team-card.js"></script>
 <script src="ranking-history.js"></script>
-<script src="app.js?v=41"></script>
+<script src="app.js?v=42"></script>
 </body>
 </html>

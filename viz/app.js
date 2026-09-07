@@ -473,7 +473,7 @@
   }
 
   /* ---------- tabs ---------- */
-  function activateHub(hub, view) {
+  function activateHub(hub, view, updateRoute = true) {
     document.querySelectorAll(".hub-tab").forEach(x =>
       x.classList.toggle("active", x.dataset.hub === hub));
     document.querySelectorAll(".section-nav").forEach(x =>
@@ -485,6 +485,11 @@
     document.querySelectorAll(".view").forEach(v =>
       v.classList.toggle("active", v.id === "view-" + view));
     render(view);
+    if (updateRoute) {
+      const route = view === "team" && selT && selT.value
+        ? `team/${encodeURIComponent(selT.value)}` : view;
+      if (location.hash.slice(1) !== route) history.pushState(null, "", `#${route}`);
+    }
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   document.querySelectorAll(".hub-tab").forEach(b => b.addEventListener("click", () =>
@@ -493,6 +498,25 @@
     const nav = b.closest(".section-nav");
     activateHub(nav.dataset.hubNav, b.dataset.view);
   }));
+
+  function hubForView(view) {
+    const tab = document.querySelector(`.tab[data-view="${view}"]`);
+    return tab && tab.closest(".section-nav")?.dataset.hubNav;
+  }
+
+  function openRoute() {
+    const raw = location.hash.slice(1);
+    if (!raw) return;
+    const [view, encodedTeam] = raw.split("/");
+    const hub = hubForView(view);
+    if (!hub) return;
+    if (view === "team" && encodedTeam) {
+      const team = decodeURIComponent(encodedTeam);
+      if (vecOf(team)) selT.value = team;
+    }
+    activateHub(hub, view, false);
+  }
+  window.addEventListener("hashchange", openRoute);
 
   /* =======================================================================
      RATINGS DASHBOARD
@@ -712,7 +736,7 @@
       <div class="round-col">${card(G[10], 10)}
         ${champ ? `<div class="trophy-card" style="--wash:${rgba(champ, .18)}">
           <div class="emoji">🏆</div><img src="${logoURL(champ)}" alt="">
-          <div class="champ-name" style="color:${color(champ)}">${esc(champ)}</div>
+          <button class="champ-name team-link" data-team="${esc(champ)}" style="color:${color(champ)}">${esc(champ)}</button>
           <div class="bye-tag">${trophyNote(champ)}</div></div>` : ""}
       </div>`;
   }
@@ -1233,7 +1257,7 @@
        and what changed about the field - with the way through to the full bracket. */
     const summary = `<div class="sc-summary">
       <span class="sc-sum-champ">${champ
-        ? `<img src="${logoURL(champ)}" alt="" loading="lazy"><b>${esc(champ)}</b>
+        ? `<img src="${logoURL(champ)}" alt="" loading="lazy"><b><button class="team-link" data-team="${esc(champ)}">${esc(champ)}</button></b>
            <span>wins it</span>` : "—"}</span>
       <span class="sc-sum-diff">${diff}</span>
       <button class="sc-goto" data-mode="playoff">See the playoff &rarr;</button>
@@ -1523,7 +1547,7 @@
     document.getElementById("matchup-result").innerHTML = `
       <div class="face-off">
         <div class="side">
-          <img src="${logoURL(a)}" alt=""><div class="name">${esc(a)}</div>
+          <img src="${logoURL(a)}" alt=""><button class="name team-link" data-team="${esc(a)}">${esc(a)}</button>
           <div class="conf">${esc(conf(a))}</div>
           <div class="winp" style="color:${color(a)}">${pAint}%</div>
         </div>
@@ -1532,7 +1556,7 @@
           <div>projected score</div><div class="venue-note">${esc(venueNote)}</div>
         </div>
         <div class="side">
-          <img src="${logoURL(b)}" alt=""><div class="name">${esc(b)}</div>
+          <img src="${logoURL(b)}" alt=""><button class="name team-link" data-team="${esc(b)}">${esc(b)}</button>
           <div class="conf">${esc(conf(b))}</div>
           <div class="winp" style="color:${color(b)}">${100 - pAint}%</div>
         </div>
@@ -1549,6 +1573,7 @@
       ${simPanelHTML(a, b, r)}
       ${roomsPanelHTML(a, b)}`;
     wireSimHover();          // the panel is rewritten on every change, listeners with it
+    wireTeamLinks();
   }
   selA.addEventListener("change", renderMatchup);
   selB.addEventListener("change", renderMatchup);
@@ -1953,6 +1978,19 @@
       }));
   }
 
+  let teamTab = "overview";
+  function teamHistoryPaneHTML(team) {
+    const card = TeamCard.data(team, ratings, schedule);
+    const points = card.points || [], games = card.games || [];
+    const last = points.at(-1), first = points[0];
+    if (!last) return `<p class="sub">No rating history is available for this team.</p>`;
+    const change = first ? first.rank - last.rank : 0;
+    const results = games.length ? games.map(g => `<tr><td>W${g.week}</td><td>${esc(g.site)} <button class="team-link" data-team="${esc(g.opponent)}">${esc(g.opponent)}</button></td><td><b class="${g.result==='W'?'stock-gain':g.result==='L'?'stock-loss':''}">${g.result} ${g.scored}–${g.allowed}</b></td><td>${g.delta==null?'—':signedMove(g.delta,3)}</td></tr>`).join("") : `<tr><td colspan="4">No completed games yet.</td></tr>`;
+    return `<div class="team-history-summary"><div class="hero-stats compact"><div><b>#${last.rank}</b><span>current rank</span></div><div><b>${pct(last.power)}</b><span>neutral win rate</span></div><div><b>${change===0?'—':signedMove(change,0)}</b><span>places since ${esc(first?.label||'opening')}</span></div></div>
+      <div class="mini-wrap"><table class="mini"><thead><tr><th>Week</th><th>Opponent</th><th>Result</th><th>Model Δ</th></tr></thead><tbody>${results}</tbody></table></div>
+      <button type="button" class="wi-btn open-team-history" data-team="${esc(team)}">Open the full season tracker</button></div>`;
+  }
+
   function renderTeam() {
     const t = selT.value;
     const R = ratingRow()[t] || {};
@@ -2015,6 +2053,7 @@
 
     /* ---- player contributions ---- */
     let rosterHTML = `<p class="sub">No WAR projection available for this team.</p>`;
+    let depthPreview = rosterHTML;
     if (roster) {
       const byGroup = roster.byGroup || {};
       const groupRows = groupRankHTML(t, byGroup, tint);
@@ -2022,6 +2061,7 @@
       const offTot = Object.entries(byGroup)
         .filter(([g]) => OFF_GROUPS.has(g)).reduce((s, [, v]) => s + v, 0);
       const defTot = (roster.winsTotal ?? roster.total) - offTot;
+      depthPreview = `${lineupHTML(t, roster, tint)}`;
       rosterHTML = `
         <div class="od-split">
           <div class="od-chip2 off" style="--tint:${tint}">
@@ -2081,8 +2121,11 @@
         </div>
       </div>
 
-      <div class="panel"><h3>Projected win distribution</h3>${distHTML}</div>
-      <div class="panel"><h3>Where the wins come from</h3>${rosterHTML}
+      <div class="team-subnav" role="tablist" aria-label="${esc(t)} information">
+        ${[["overview","Overview"],["depth","Depth chart"],["season","Season outlook"],["schedule","Schedule"],["history","History"]].map(([key,label])=>`<button type="button" role="tab" data-team-tab="${key}" aria-selected="${teamTab===key}" class="${teamTab===key?'active':''}">${label}</button>`).join("")}
+      </div>
+      <section class="team-pane${teamTab==='overview'?' active':''}" data-team-pane="overview"><div class="panel"><h3>Current depth chart</h3>${depthPreview}</div></section>
+      <section class="team-pane${teamTab==='depth'?' active':''}" data-team-pane="depth"><div class="panel"><h3>Where the wins come from</h3>${rosterHTML}
         <div class="wd-foot">${roster && !roster.players ? "Position groups from" :
           "Projected starters from"} the 2026 two-deep, each carrying
           the wins ${roster && !roster.players ? "they add" : "he adds"} over a
@@ -2091,9 +2134,9 @@
           units of wins and applies it at source.${roster && roster.players
             ? ` <span class="tag unproven">?</span> marks a player with no prior FBS
               snaps, whose projection is a positional prior rather than a measurement.`
-            : ""}</div></div>
-      ${tossupHTML(t, tint, S.playoff)}
-      <div class="panel"><h3>2026 schedule
+            : ""}</div></div></section>
+      <section class="team-pane${teamTab==='season'?' active':''}" data-team-pane="season"><div class="panel"><h3>Projected win distribution</h3>${distHTML}</div>${tossupHTML(t, tint, S.playoff)}</section>
+      <section class="team-pane${teamTab==='schedule'?' active':''}" data-team-pane="schedule"><div class="panel"><h3>2026 schedule
         <span class="hint">— projected score, spread and win probability for every game</span></h3>
         <div class="mini-wrap"><table class="mini sched"><thead><tr>
           <th class="num">Wk</th><th class="num">Date</th><th></th><th>Opponent</th>
@@ -2103,21 +2146,34 @@
           <b style="color:${tint}">${expWins.toFixed(1)}</b> expected wins
           (non-FBS opponents counted at 95%). The Monte Carlo mean of
           <b>${(S.avg_wins ?? 0).toFixed(1)}</b> also includes a conference title game.</div>
-      </div>`;
+      </div></section>
+      <section class="team-pane${teamTab==='history'?' active':''}" data-team-pane="history"><div class="panel"><h3>Season movement</h3>${teamHistoryPaneHTML(t)}</div></section>`;
     wireTeamLinks();
     wireTossups();
+    document.querySelectorAll('[data-team-tab]').forEach(button=>button.addEventListener('click',()=>{
+      teamTab=button.dataset.teamTab;
+      document.querySelectorAll('[data-team-tab]').forEach(x=>{x.classList.toggle('active',x===button);x.setAttribute('aria-selected',String(x===button));});
+      document.querySelectorAll('[data-team-pane]').forEach(x=>x.classList.toggle('active',x.dataset.teamPane===teamTab));
+    }));
+    document.querySelector('.open-team-history')?.addEventListener('click',e=>{
+      fillPowerHistoryTeams();document.getElementById('power-history-team').value=e.currentTarget.dataset.team;
+      activateHub('rankings','power-history');
+    });
   }
-  selT.addEventListener("change", renderTeam);
+  selT.addEventListener("change", () => { teamTab="overview"; renderTeam(); history.replaceState(null,"",`#team/${encodeURIComponent(selT.value)}`); });
 
   /* Any team name anywhere jumps to that team's breakdown. */
   function wireTeamLinks() {
     document.querySelectorAll(".team-link").forEach(a =>
-      a.addEventListener("click", e => {
+      !a.dataset.teamWired && a.addEventListener("click", e => {
         const t = e.currentTarget.dataset.team;
         if (!vecOf(t)) return;
+        e.preventDefault();
+        teamTab = "overview";
         selT.value = t;
         activateHub("people", "team");
       }));
+    document.querySelectorAll(".team-link").forEach(a => { a.dataset.teamWired="true"; });
   }
 
   /* ---------- players ----------
@@ -2625,7 +2681,7 @@
     if (futureMarket === "heisman") {
       const ranked = heismanIndex(rows).sort((a, b) => b.index - a.index);
       body = ranked.map((r, i) => `<div class="market-row">
-        <span class="market-rank">${i + 1}</span><div class="market-team"><b>${esc(r.player)}</b><small>${esc(r.team)} · ${r.position} · ${r.war.toFixed(2)} WAR</small></div>
+        <span class="market-rank">${i + 1}</span><div class="market-team"><b>${esc(r.player)}</b><small><button class="team-link" data-team="${esc(r.team)}">${esc(r.team)}</button> · ${r.position} · ${r.war.toFixed(2)} WAR</small></div>
         <div><small>Heisman index</small><b>${r.index.toFixed(0)}</b></div><div><small>${esc(book)}</small><b>${americanOdds(r.odds)}</b></div>
       </div>`).join("");
       note = "Experimental Heisman index: projected player WAR plus team wins, CFP/title equity and a position effect. It ranks this quoted field; it is not a calibrated award probability.";
@@ -2665,9 +2721,10 @@
       note = "Price gap compares the model with raw implied probability; incomplete futures boards are not de-vigged.";
     }
     document.getElementById("future-spotlight").innerHTML = `<article class="market-panel"><div class="market-panel-head"><div><span class="eyebrow">Model vs market</span><h3>${futureMarket.replaceAll("_", " ")}</h3></div>${src ? `<a href="${src.url}" target="_blank" rel="noopener">${esc(book)} · ${src.as_of}</a>` : ""}</div><div class="market-list">${body || `<p class="sub">No quoted market is available.</p>`}</div><div class="market-note">${note}</div></article>`;
+    wireTeamLinks();
   }
   function teamMini(team) {
-    return `<span class="mini-team"><img src="${logoURL(team)}" alt="" loading="lazy"><b>${esc(team)}</b></span>`;
+    return `<button class="mini-team team-link" data-team="${esc(team)}"><img src="${logoURL(team)}" alt="" loading="lazy"><b>${esc(team)}</b></button>`;
   }
   function renderOutcomeBands() {
     const all = liveRatings(), dist = cur().playoff.win_dist || {};
@@ -2734,7 +2791,7 @@
     wireTeamLinks();
   }
 
-  let stockPeriod = 'week';
+  let stockPeriod = 'week', stockMeasure = 'rank';
   const signedMove = (v,d=1) => `${v>0?'+':''}${v.toFixed(d)}`;
   function historyLinks(host) {
     host.querySelectorAll('[data-history-team]').forEach(b=>b.addEventListener('click',()=>{
@@ -2746,19 +2803,27 @@
     const {rows,current,baseline}=RankingHistory.movement(ratings,stockPeriod);
     const host=document.getElementById('stock-boards'),ledger=document.getElementById('stock-ledger');
     document.getElementById('stock-dates').textContent=baseline&&current?`${baseline.label} → ${current.label}`:'Waiting for the first weekly update';
-    const teamButton=r=>`<button class="stock-team" data-history-team="${esc(r.team)}"><img src="${logoURL(r.team)}" alt="" loading="lazy"><span>${esc(r.team)}<small>#${r.previousRank} → #${r.rank}</small></span></button>`;
+    const metric=r=>stockMeasure==='rank'?r.change:r.powerChange;
+    const metricLabel=stockMeasure==='rank'?'places':'rating points';
+    const teamButton=r=>`<button class="stock-team team-link" data-team="${esc(r.team)}"><img src="${logoURL(r.team)}" alt="" loading="lazy"><span>${esc(r.team)}<small>#${r.previousRank} → #${r.rank}</small></span></button>`;
     const card=(title,up)=>{
-      const list=rows.filter(r=>up?r.change>0:r.change<0).sort((a,b)=>(up?b.change-a.change:a.change-b.change)||b.powerChange-a.powerChange||a.team.localeCompare(b.team)).slice(0,5);
-      return `<article class="stock-board ${up?'stock-up':'stock-down'}"><header><span>${up?'▲ ON THE RISE':'▼ LOSING GROUND'}</span><h3>${title}</h3><small>PLACES ${up?'GAINED':'LOST'}</small></header>${list.length?list.map((r,i)=>`<div class="stock-row"><span class="stock-position">${String(i+1).padStart(2,'0')}</span>${teamButton(r)}<strong>${up?'+':'−'}${Math.abs(r.change)}<small>${signedMove(r.powerChange)} pp</small></strong></div>`).join(''):'<p class="stock-empty">No '+(up?'risers':'fallers')+' in this period.</p>'}</article>`;
+      const list=rows.filter(r=>up?metric(r)>0:metric(r)<0).sort((a,b)=>(up?metric(b)-metric(a):metric(a)-metric(b))||(up?b.change-a.change:a.change-b.change)||a.team.localeCompare(b.team)).slice(0,5);
+      const mascot=up?'🚶‍♂️ ▂▄▆█':'█▆▄▂ 🚶‍♂️';
+      const value=r=>stockMeasure==='rank'?`${up?'+':'−'}${Math.abs(r.change)}`:`${up?'+':'−'}${Math.abs(r.powerChange).toFixed(1)}`;
+      const secondary=r=>stockMeasure==='rank'?`${signedMove(r.powerChange)} pp`:`${r.change===0?'No rank change':signedMove(r.change,0)+' places'}`;
+      return `<article class="stock-board ${up?'stock-up':'stock-down'}"><header><span>${up?'▲ ON THE RISE':'▼ LOSING GROUND'}</span><span class="stock-mascot" aria-hidden="true">${mascot}</span><h3>${title}</h3><small>${metricLabel.toUpperCase()} ${up?'GAINED':'LOST'}</small></header>${list.length?list.map((r,i)=>`<div class="stock-row"><span class="stock-position">${String(i+1).padStart(2,'0')}</span>${teamButton(r)}<strong>${value(r)}<small>${secondary(r)}</small></strong></div>`).join(''):'<p class="stock-empty">No '+(up?'risers':'fallers')+' in this period.</p>'}</article>`;
     };
     host.innerHTML=rows.length?`<div class="stock-grid">${card('Highest risers',true)}${card('Biggest fallers',false)}</div>`:'<p class="stock-empty">A baseline and a weekly snapshot are needed to compare movement.</p>';
     const query=document.getElementById('stock-search').value.trim().toLowerCase();
-    const filtered=rows.filter(r=>r.team.toLowerCase().includes(query)).sort((a,b)=>b.change-a.change||b.powerChange-a.powerChange||a.team.localeCompare(b.team));
+    const filtered=rows.filter(r=>r.team.toLowerCase().includes(query)).sort((a,b)=>metric(b)-metric(a)||b.change-a.change||a.team.localeCompare(b.team));
     ledger.innerHTML=`<div class="stock-table-wrap"><table><thead><tr><th>Team / rank</th><th>Movement</th><th>Win rate</th><th>Rating change</th></tr></thead><tbody>${filtered.map(r=>`<tr><td>${teamButton(r)}</td><td class="${r.change>0?'stock-gain':r.change<0?'stock-loss':''}">${r.change===0?'—':signedMove(r.change,0)}</td><td>${pct(r.power)}</td><td>${signedMove(r.powerChange)} pp</td></tr>`).join('')||'<tr><td colspan="4">No teams to show.</td></tr>'}</tbody></table></div>`;
-    historyLinks(host);historyLinks(ledger);
+    wireTeamLinks();
   }
   document.querySelectorAll('[data-stock-period]').forEach(b=>b.addEventListener('click',()=>{
     stockPeriod=b.dataset.stockPeriod;document.querySelectorAll('[data-stock-period]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});renderStockWatch();
+  }));
+  document.querySelectorAll('[data-stock-measure]').forEach(b=>b.addEventListener('click',()=>{
+    stockMeasure=b.dataset.stockMeasure;document.querySelectorAll('[data-stock-measure]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});renderStockWatch();
   }));
   document.getElementById('stock-search').addEventListener('input',renderStockWatch);
   let deservingRows=null;
@@ -2768,8 +2833,8 @@
     if(!deservingRows)deservingRows=RankingHistory.deserving(schedule,meta,[...FBS],deservingModel,ratings.teams);
     document.getElementById('deserving-date').textContent=`${ratings.season} finals · ${ratings.history?.at(-1)?.label||'Season to date'}`;
     host.innerHTML=deservingRows.length?rankingGrid(deservingRows.filter(r=>r.rank<=25),'Résumé score',r=>r.score.toFixed(2)):'<p class="stock-empty">The board opens after the first completed FBS matchup.</p>';
-    document.getElementById('deserving-ledger').innerHTML=`<div class="stock-table-wrap"><table><thead><tr><th>Rank</th><th>Team</th><th>Record</th><th>Opponent lift contribution</th><th>Score</th></tr></thead><tbody>${deservingRows.map(r=>`<tr><td>${r.rank}</td><td><button class="stock-team" data-history-team="${esc(r.team)}">${esc(r.team)}</button></td><td>${r.wins}–${r.losses}${r.ties?'–'+r.ties:''}</td><td>${signedMove(r.liftContribution,2)}</td><td>${r.score.toFixed(2)}</td></tr>`).join('')}</tbody></table></div>`;
-    historyLinks(document.getElementById('deserving-ledger'));wireTeamLinks();
+    document.getElementById('deserving-ledger').innerHTML=`<div class="stock-table-wrap"><table><thead><tr><th>Rank</th><th>Team</th><th>Record</th><th>Opponent lift contribution</th><th>Score</th></tr></thead><tbody>${deservingRows.map(r=>`<tr><td>${r.rank}</td><td><button class="stock-team team-link" data-team="${esc(r.team)}">${esc(r.team)}</button></td><td>${r.wins}–${r.losses}${r.ties?'–'+r.ties:''}</td><td>${signedMove(r.liftContribution,2)}</td><td>${r.score.toFixed(2)}</td></tr>`).join('')}</tbody></table></div>`;
+    wireTeamLinks();
   }
 
   function fillPowerHistoryTeams() {
@@ -2824,7 +2889,7 @@
         </div>
         <section class="retro-window"><h3>RESULTS LOG <span>${card.wins}–${card.losses}${card.ties?`–${card.ties}`:""}</span></h3>
           <div class="retro-table-wrap"><table><caption class="sr-only">Completed games, replayed pregame win probability and model rating change</caption><thead><tr><th>WK / OPPONENT</th><th>FINAL</th><th>WIN %¹</th><th>MODEL Δ²</th></tr></thead><tbody>
-          ${games.length ? games.map(g=>`<tr><td><small>W${g.week} · ${g.site}</small> ${esc(g.opponent)}</td><td><b class="retro-${g.result.toLowerCase()}">${g.result}</b> ${g.scored}–${g.allowed}</td><td>${g.probability===null?"—":pct(g.probability)}</td><td>${g.delta===null?"—":signed(g.delta,3)}</td></tr>`).join("") : `<tr><td colspan="4" class="retro-empty">KICKOFF PENDING<br><small>Final scores and model updates appear here as games finish.</small></td></tr>`}
+          ${games.length ? games.map(g=>`<tr><td><small>W${g.week} · ${g.site}</small> <button class="team-link" data-team="${esc(g.opponent)}">${esc(g.opponent)}</button></td><td><b class="retro-${g.result.toLowerCase()}">${g.result}</b> ${g.scored}–${g.allowed}</td><td>${g.probability===null?"—":pct(g.probability)}</td><td>${g.delta===null?"—":signed(g.delta,3)}</td></tr>`).join("") : `<tr><td colspan="4" class="retro-empty">KICKOFF PENDING<br><small>Final scores and model updates appear here as games finish.</small></td></tr>`}
           </tbody></table></div>
           <p class="retro-notes">¹ Replayed start-of-week win chance. ² Rating change in model logit units; positive means stronger. Unrated opponents have scores only.</p>
         </section></div>
@@ -2833,6 +2898,7 @@
           <details><summary>Weekly numbers &amp; chart definition</summary><p>Mean neutral-site win probability against every other rated FBS team. All results in a week use the same start-of-week ratings. Partial weeks update as finals arrive. Rank movement compares with preseason.</p><table><thead><tr><th>Snapshot</th><th>Win rate</th><th>Rank</th></tr></thead><tbody>${points.map(p=>`<tr><td>${esc(p.label)}</td><td>${pct(p.power)}</td><td>#${p.rank}</td></tr>`).join("")}</tbody></table></details></section>
       </div><footer class="retro-footer"><span>▣ CFB MODEL / ${ratings.season}</span><span>${games.length} FINAL${games.length===1?"":"S"} · ${esc(last.label || "Current").toUpperCase()}</span></footer>
     </article>`;
+    wireTeamLinks();
   }
   window.matchMedia("(max-width:700px)").addEventListener("change", renderPowerHistory);
   const powerHistorySelect = document.getElementById("power-history-team");
@@ -2860,7 +2926,7 @@
         const photo = (editorial.headshots || {})[p.team + "\u0000" + p.n];
         return `<article class="leader-card" style="--team:${color(p.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span>
           <div class="leader-portrait" style="background-image:url('${logoURL(p.team)}')">${photo ? `<img src="${photo}" alt="${esc(p.n)}" loading="lazy" onerror="this.remove()">` : ""}</div>
-          <div class="leader-copy"><span>${p.g} · ${esc(p.team)}</span><h3>${esc(p.n)}</h3></div></article>`;
+          <div class="leader-copy"><span>${p.g} · <button class="team-link" data-team="${esc(p.team)}">${esc(p.team)}</button></span><h3>${esc(p.n)}</h3></div></article>`;
       }).join("");
     } else {
       rows = Object.entries(players).map(([team, r]) => {
@@ -2872,8 +2938,9 @@
         return { team, value };
       })
         .sort((a, b) => b.value - a.value).slice(0, 10);
-      document.getElementById("leader-grid").innerHTML = rows.map((r, i) => `<article class="leader-card team-room" style="--team:${color(r.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span><div class="leader-portrait"><img src="${logoURL(r.team)}" alt=""></div><div class="leader-copy"><span>${group === "ALL" ? "Complete roster" : group === "OFF" ? "Offense" : group === "DEF" ? "Defense" : group + " room"}</span><h3>${esc(r.team)}</h3></div></article>`).join("");
+      document.getElementById("leader-grid").innerHTML = rows.map((r, i) => `<article class="leader-card team-room" style="--team:${color(r.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span><div class="leader-portrait"><img src="${logoURL(r.team)}" alt=""></div><div class="leader-copy"><span>${group === "ALL" ? "Complete roster" : group === "OFF" ? "Offense" : group === "DEF" ? "Defense" : group + " room"}</span><h3><button class="team-link" data-team="${esc(r.team)}">${esc(r.team)}</button></h3></div></article>`).join("");
     }
+    wireTeamLinks();
   }
   function fillLeaderControls() {
     const sel = document.getElementById("leader-group");
@@ -3007,7 +3074,7 @@
     }).join("");
     const side = (team, counts, wins, other) => `<div class="sim-side">
       <div class="sim-side-head"><img src="${logoURL(team)}" alt="" loading="lazy">
-        <span><b>${esc(team)}</b><i>${num(wins)} wins · ${share(wins)}</i></span></div>
+        <span><button class="team-link" data-team="${esc(team)}">${esc(team)}</button><i>${num(wins)} wins · ${share(wins)}</i></span></div>
       ${counts.map((n, i) => `<div class="sim-row" ${segData(team, i, n)}>
         <span class="sim-swatch" style="background:${color(team)};opacity:${FADE[i]}"></span>
         <span class="sim-band">${SIM_BANDS[i].label}</span>
@@ -3112,36 +3179,45 @@
     });
   }
 
-  /* ---------- position group ranks ----------
-     National rank of each room, off the same live WAR the players tab edits, so a
-     what-if that promotes a backup moves these cards too. The rank is over every team
-     that fields the group. */
+  /* ---------- matchup trenches and rooms ----------
+     Compare the units that actually meet on Saturday rather than placing two copies
+     of the same position beside one another. Rank percentile makes OT-vs-EDGE and
+     IOL-vs-DT honest even when a group is missing from a published depth chart. */
   function roomsPanelHTML(a, b) {
     const war = trGroupWar();
     if (!war[a] || !war[b]) return "";
     const teams = Object.keys(war);
-    const KEYS = [
-      { k: "__all", label: "Whole roster", sum: true },
-      { k: "__off", label: "Offense", sum: true },
-      { k: "__def", label: "Defense", sum: true },
-      ...GROUP_ORDER.map(g => ({ k: g, label: g })),
-    ];
-    const cards = KEYS.map(({ k, label, sum }) => {
-      const pool = teams.filter(t => war[t][k] != null)
-                        .sort((x, y) => war[y][k] - war[x][k]);
-      const rank = t => pool.indexOf(t) + 1;
-      const ra = rank(a), rb = rank(b);
-      if (!ra || !rb) return "";
-      const winner = ra < rb ? a : rb < ra ? b : null;
-      const row = (t, rk) => `<div class="room-row${winner === t ? " win" : ""}" style="--t:${color(t)}">
-        <img src="${logoURL(t)}" alt="" loading="lazy">
-        <b>#${rk}</b><i>${war[t][k].toFixed(2)}</i></div>`;
-      return `<article class="room-card${sum ? " sum" : ""}"${winner ? ` style="--edge:${color(winner)}"` : ""}>
-        <span class="room-g">${esc(label)}</span>${row(a, ra)}${row(b, rb)}
-        <span class="room-n">of ${pool.length}</span></article>`;
-    }).join("");
-    return `<div class="rooms-panel"><div class="section-intro"><div><span class="eyebrow">Roster</span><h3>Position group ranks</h3></div><p>Where each room sits nationally by projected WAR, and how much of it the group is worth. The stripe marks the side that holds the edge.</p></div>
-      <div class="room-grid">${cards}</div></div>`;
+    const ranked = k => teams.filter(t => war[t][k] != null)
+      .sort((x, y) => war[y][k] - war[x][k]);
+    const side = (team, key, label, winner) => {
+      const pool = ranked(key), rank = pool.indexOf(team) + 1;
+      if (!rank) return "";
+      return `<button class="battle-side team-link${winner === team ? " win" : ""}" data-team="${esc(team)}" style="--t:${color(team)}">
+        <img src="${logoURL(team)}" alt="" loading="lazy"><span><small>${esc(label)}</small><b>#${rank}</b><i>${war[team][key].toFixed(2)} WAR</i></span></button>`;
+    };
+    const battle = (leftTeam, leftKey, leftLabel, rightTeam, rightKey, rightLabel, title, featured = false) => {
+      const lp = ranked(leftKey), rp = ranked(rightKey);
+      const lr = lp.indexOf(leftTeam) + 1, rr = rp.indexOf(rightTeam) + 1;
+      if (!lr || !rr) return "";
+      const lScore = 1 - (lr - 1) / Math.max(1, lp.length - 1);
+      const rScore = 1 - (rr - 1) / Math.max(1, rp.length - 1);
+      const winner = Math.abs(lScore-rScore)<.0001 ? null : lScore>rScore ? leftTeam : rightTeam;
+      return `<article class="battle-card${featured ? " featured" : ""}"${winner ? ` style="--edge:${color(winner)}"` : ""}>
+        <h4>${esc(title)}</h4><div class="battle-pair">${side(leftTeam,leftKey,leftLabel,winner)}<span class="battle-vs">VS</span>${side(rightTeam,rightKey,rightLabel,winner)}</div></article>`;
+    };
+    const direct = [
+      battle(a,"__all","Overall",b,"__all","Overall","Overall roster",true),
+      battle(a,"QB","QB",b,"QB","QB","Quarterbacks",true),
+    ].join("");
+    const lane = (off, def) => [
+      battle(off,"__off","Offense",def,"__def","Defense",`${abbr(off)} offense vs ${abbr(def)} defense`,true),
+      battle(off,"OT","OT",def,"EDGE","EDGE","Edge protection"),
+      battle(off,"IOL","IOL",def,"DT","DT","Interior line"),
+      battle(off,"RB","RB",def,"LB","LB","Run game"),
+      battle(off,"WR","WR",def,"CB","CB","Passing targets"),
+    ].join("");
+    return `<div class="rooms-panel"><div class="section-intro"><div><span class="eyebrow">Roster matchups</span><h3>Who actually faces whom</h3></div><p>National projected-WAR rank for each unit. The highlighted side owns the stronger national percentile.</p></div>
+      <div class="battle-direct">${direct}</div><div class="battle-lanes"><section><h3>${esc(a)} ball</h3>${lane(a,b)}</section><section><h3>${esc(b)} ball</h3>${lane(b,a)}</section></div></div>`;
   }
 
   /* The board's universe: FBS vs FBS, with a line posted. Everything downstream -
@@ -3327,6 +3403,7 @@
         : profit === 0 ? " push" : "";
       return `<div class="weekly-row${resultClass}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<span class="bet-tag">BET</span><b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
     }).join("")}</div>`;
+    wireTeamLinks();
   }
 
   /* One action-oriented filter. The board's own validated gate decides the count,
@@ -3498,6 +3575,7 @@
       // the right number and hiding it would be the misleading answer
       host.innerHTML = `<div class="tk-panel"><h3>2026</h3>${tileRow(t, [...new Set(live.map(b => b.market))])}
         <div class="tk-list">${rows}</div></div>`;
+      wireTeamLinks();
       return;
     }
 
@@ -3586,4 +3664,5 @@
   // baseline, so if the baseline does not agree the whole panel is theatre.
   if (WI.enabled()) verifyPower();
   renderAll();
+  openRoute();
 })();
