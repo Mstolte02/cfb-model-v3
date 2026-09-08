@@ -929,6 +929,20 @@ labels current differences **model gaps**, not betting edges, and shows this res
 beside the boards. CFBD does not timestamp its snapshot as a true closing line, so the
 audit does not call it one.
 
+**The projected margin follows the in-season ratings (8 September 2026).** The published
+win probability is the static/dynamic blend and the 2026 state runs `dynamic_blend = 1.0`,
+but `pred_margin` was the preseason ridge and never saw a current-season result. The two
+therefore named different winners on 8.2% of the 2026 board and 15.3% of 2022-25 games:
+Oklahoma 58% at Michigan, with Michigan -0.9 printed beside it and the scoreline
+force-flipped to 23-22 to cover the gap. The margin is now `sigma * inverse-Phi(p)`, the
+same link the ensemble already uses to read a margin as a probability and `update_delta`
+uses to read a probability as an expected margin. On the untouched 2025 holdout this cuts
+margin MAE 14.17 to 12.64 and lifts winner accuracy 65.2% to 73.6%; a control arm sending
+the static probability through the same link gains nothing, so the improvement is the
+in-season evidence rather than the transform. It does **not** help against the spread:
+about two thirds of flagged spread bets stop clearing gate 8 and the survivors are no
+better. Full study in `audit/DYNAMIC_MARGIN_EXPERIMENTS.md`.
+
 **Totals are off the bet list (8 September 2026).** The over/under market no longer
 produces a flagged bet. Its gap curve crosses the -110 break-even in both directions
 across the whole range (53.1% at a 2-point gap, 52.3% at 6, 51.3% at 10), so no gate on

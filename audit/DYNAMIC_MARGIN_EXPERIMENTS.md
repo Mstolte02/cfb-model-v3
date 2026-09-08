@@ -100,18 +100,36 @@ better ones. Neither arm clears the 52.4% break-even on the holdout. This does n
 contradict `BET_THRESHOLD_CALIBRATION.md`; it restates its finding on a new margin — the
 spread flag was a coin before this change and is a coin after it, on a smaller sample.
 
-## Reading
+## Reading — adopted 8 September 2026
 
 The margin should follow the probability. Describing the game is the model's job and the
 dynamic margin does it better by a point and a half of MAE and eight points of winner
-accuracy on untouched data, while removing a contradiction that the site currently
-resolves by silently overriding the scoreline. The betting consequence is a smaller
+accuracy on untouched data, while removing a contradiction the site used to resolve by
+silently overriding the scoreline. The betting consequence is a smaller
 spread board with no measured edge either way, which is what the spread market already
 was.
 
-The change is a one-line substitution in two places — `WeeklyRatingState.predict` in
-`src/dynamic.py` and `predict()` in `viz/app.js` — plus the score split that reads it.
-Nothing about the probability, the ratings or the update rule moves.
+**Shipped.** `implied_margin` in `src/dynamic.py` and `impliedMargin` in `viz/app.js`
+now produce the published margin; `pred_margin_static` keeps the preseason ridge's own
+number for the research harnesses and for diagnosing where the two part. Nothing about
+the probability, the ratings or the update rule moved, and the backtest scripts still
+grade the static model against `V4.pred_margin` directly.
+
+The force-flip in `displayScore()` went with it. It existed to make the projected winner
+agree with the probability, which on Oklahoma at Michigan meant turning a one-point loss
+into a one-point win while printing Michigan's spread underneath — hiding the split
+rather than rounding it. The only correction left is the genuine pick'em, because
+football has no ties.
+
+`tests/test_dynamic_margin.py` pins the invariant the defect violated: the sign of the
+margin and the sign of `p_home - .5` can never part. It also pins antisymmetry, the
+finite cap, and the fact that the static number stays put.
+`tests/test_dynamic_margin.cjs` checks the browser's `normInv` against
+`scipy.special.ndtri` and checks that the two probability clips match, so the port cannot
+drift from the model it claims to be.
+
+Oklahoma at Michigan now reads Oklahoma 58%, **OU -3.6**, projected score 23-20, total
+43.3 — one model, four numbers that agree.
 
 ## What would change the answer
 

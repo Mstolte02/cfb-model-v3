@@ -19,9 +19,37 @@ from src import v4 as V4
 
 UPDATE_RULE = "robust_margin_residual_v1"
 
+# Phi^-1 is unbounded, so a probability of exactly 1 would ask for an infinite spread.
+# .001/.999 caps the implied margin near +-3.1 sigma, about 53 points at the fitted
+# sigma, which is past any real college scoreline - the cap binds on nothing that
+# happens. This is deliberately NOT the .01/.99 clip inside update_delta: that one
+# limits how far one result may move a rating, which is a different job.
+MARGIN_P_CLIP = .001
+
 
 def _sigmoid(z):
     return float(1.0 / (1.0 + np.exp(-np.clip(z, -40.0, 40.0))))
+
+
+def implied_margin(p, margin_sigma):
+    """Points of margin implied by a win probability.
+
+    The ensemble already relates the two in the other direction - it reads a margin as
+    a probability through `Phi(pred_margin / sigma)` - and `update_delta` already reads
+    a probability as an expected margin through this exact expression. Publishing the
+    margin this way is what keeps the projected spread, the projected scoreline and the
+    win probability descriptions of one model rather than two.
+
+    It used to be `model.pred_margin`, the preseason ridge, while the probability came
+    from the in-season blend. Those disagreed about the winner on 15.3% of 2022-25 games
+    and 8.2% of the 2026 board. audit/DYNAMIC_MARGIN_EXPERIMENTS.md measures the
+    replacement: pooled margin MAE 13.65 -> 12.63, and on the untouched 2025 holdout
+    14.17 -> 12.64 with winner accuracy 65.2% -> 73.6%. A control arm sending the STATIC
+    probability through the same link gains nothing, so the improvement is the in-season
+    evidence and not this transform.
+    """
+    z = float(ndtri(np.clip(float(p), MARGIN_P_CLIP, 1 - MARGIN_P_CLIP)))
+    return float(margin_sigma) * z
 
 
 def update_delta(k, margin, expected, margin_sigma):
@@ -73,7 +101,11 @@ class WeeklyRatingState:
         blended = (1.0 - self.dynamic_blend) * static + self.dynamic_blend * dynamic
         return {"p_home": float(blended), "p_static": float(static),
                 "p_dynamic": float(dynamic),
-                "pred_margin": model.pred_margin(x, is_home),
+                "pred_margin": implied_margin(blended, model.margin_sigma),
+                # The preseason ridge's own number, kept because the research harnesses
+                # grade the static model against it and a diagnostic that cannot see
+                # both halves cannot show where they parted.
+                "pred_margin_static": model.pred_margin(x, is_home),
                 "rating_gap": float(gap)}
 
     def update_week(self, model: V4.ReciprocalTeamModel, frame: pd.DataFrame,

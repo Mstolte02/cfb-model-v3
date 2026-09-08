@@ -314,6 +314,37 @@
     return s * y;
   }
   const normCdf = x => 0.5 * (1 + erf(x / Math.SQRT2));
+  /* Inverse of normCdf (Acklam), the JS side of scipy's ndtri. Error is under 1e-9 in
+     z, which is a millionth of a point once multiplied by sigma, so the port and the
+     Python model agree to far more places than a spread is ever read to. */
+  function normInv(p) {
+    const a = [-3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02,
+               1.383577518672690e+02, -3.066479806614716e+01, 2.506628277459239e+00];
+    const b = [-5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02,
+               6.680131188771972e+01, -1.328068155288572e+01];
+    const c = [-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00,
+               -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
+    const d = [7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00,
+               3.754408661907416e+00];
+    const lo = 0.02425;
+    if (p < lo) {
+      const q = Math.sqrt(-2 * Math.log(p));
+      return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
+             ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+    }
+    if (p > 1 - lo) {
+      const q = Math.sqrt(-2 * Math.log(1 - p));
+      return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
+              ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+    }
+    const q = p - 0.5, r = q * q;
+    return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5]) * q /
+           (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+  }
+  // Mirrors MARGIN_P_CLIP in src/dynamic.py; see the note there.
+  const MARGIN_P_CLIP = .001;
+  const impliedMargin = (p, sigma) =>
+    sigma * normInv(Math.min(1 - MARGIN_P_CLIP, Math.max(MARGIN_P_CLIP, p)));
   const dot = (c, v) => c.reduce((s, x, i) => s + x * v[i], 0);
   function winpFromDiff(x, homeA) {
     const M = cur().model, L = M.logistic, G = M.margin;
@@ -362,20 +393,25 @@
     return P2.intercept + x.reduce((sum, v, i) => sum + v * P2.coef[i], 0);
   }
 
+  /* THE MARGIN COMES FROM THE PROBABILITY, not from the preseason ridge. It used to
+     come from the ridge while the probability came from the in-season blend, and with
+     that blend at 1.0 the two were simply different models: the spread and the win
+     probability named different winners on 8.2% of the 2026 board, and the projected
+     scoreline had to be force-flipped to hide it. `impliedMargin` inverts the same
+     probit link the ensemble uses to read a margin as a probability, which is also how
+     `update_delta` reads a probability as an expected margin. Measured in
+     audit/DYNAMIC_MARGIN_EXPERIMENTS.md: 2025 holdout margin MAE 14.17 -> 12.64 and
+     winner accuracy 65.2% -> 73.6%. This must stay in step with
+     `WeeklyRatingState.predict` in src/dynamic.py - the page is a port of that model,
+     not a second opinion about it. */
   function predict(a, b, venue) {
     const A = vecOf(a), B = vecOf(b), M = cur().model;
     if (!A || !B) return null;
     const homeA = venue === "A" ? 1 : 0, homeB = venue === "B" ? 1 : 0;
-    let pA, marginA;
-    if (homeB) {
-      const xb = diffVec(B, A);
-      pA = 1 - winpTeams(b, a, 1);
-      marginA = -(M.margin.intercept + dot(M.margin.coef, xb) + M.margin.hfa);
-    } else {
-      const x = diffVec(A, B);
-      pA = winpTeams(a, b, homeA);
-      marginA = M.margin.intercept + dot(M.margin.coef, x) + homeA * M.margin.hfa;
-    }
+    const pA = homeB ? 1 - winpTeams(b, a, 1) : winpTeams(a, b, homeA);
+    // Antisymmetric for free: pA(b,a) = 1 - pA(a,b) and normInv is odd about .5, so
+    // swapping the teams negates the margin exactly rather than nearly.
+    const marginA = impliedMargin(pA, M.margin.sigma);
     const ptsA = sidePoints(a, b, A, B, homeA);
     const ptsB = sidePoints(b, a, B, A, homeB);
     const total = ptsA + ptsB;
@@ -392,19 +428,20 @@
      spread printed beside it disagreed about the same game. The spread is the
      number people read, so the scoreline defers to it.
 
-     The winner still has to agree with the win probability. Those two can diverge on
-     a near-coin-flip, because pA blends the logistic with the margin model while the
-     score comes from the margin alone: a 51% favourite can carry a margin of -0.2.
-     Left alone that put a team in the championship game after losing its semifinal on
-     the scoreboard. Football has no ties either, so a level game gives the favourite
-     the extra point. */
+     There used to be a second correction here, forcing the winner to agree with the
+     win probability. It was needed because the two came from different models - the
+     probability from the in-season blend, the margin from the preseason ridge - and it
+     was doing real work: on a 58% team with a margin of -0.9 it turned a one-point loss
+     into a one-point win and printed the losing side's spread underneath. That was the
+     symptom being hidden, not a rounding fix. The margin now comes from the probability
+     itself, so the two cannot name different winners and the override has nothing left
+     to correct. Football still has no ties, which is the one case left. */
   const SHAPE = cur().model.shape || null;
-  function displayScore(r, winnerIsA) {
-    if (winnerIsA === undefined) winnerIsA = r.pA >= 0.5;
-    let a = Math.max(0, Math.round(r.scoreA));
-    let b = Math.max(0, Math.round(r.scoreB));
-    if (winnerIsA && a <= b) a = b + 1;
-    else if (!winnerIsA && b <= a) b = a + 1;
+  function displayScore(r) {
+    const a = Math.max(0, Math.round(r.scoreA));
+    const b = Math.max(0, Math.round(r.scoreB));
+    // scoreA - scoreB IS the margin, so these can only round level, never cross.
+    if (a === b) return r.margin >= 0 ? [a + 1, b] : [a, b + 1];
     return [a, b];
   }
 
