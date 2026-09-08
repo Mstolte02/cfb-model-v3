@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-09-08T12:48:12Z",
+  "checked_at": "2026-09-08T16:42:48Z",
   "source": "CFBD /lines",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
-  "quote_events": 1838,
-  "successful_checks": 99,
-  "changed_quotes_this_check": 0,
+  "quote_events": 1901,
+  "successful_checks": 100,
+  "changed_quotes_this_check": 63,
   "games_with_quotes": 287,
   "books_with_quotes": [
     "Bovada",
@@ -16,7 +16,7 @@
     "uncertainty_gate": "80% Jeffreys lower bound > best-price break-even + 1pp",
     "status": "forward research; never an automatic bet"
   },
-  "weekly_board_updated_this_check": true,
+  "weekly_board_updated_this_check": false,
   "weekly_board_lock": {
     "locked_at": "2026-09-08T12:48:12Z",
     "cadence": "Monday 12:30 PM ET",
