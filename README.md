@@ -929,6 +929,17 @@ labels current differences **model gaps**, not betting edges, and shows this res
 beside the boards. CFBD does not timestamp its snapshot as a true closing line, so the
 audit does not call it one.
 
+**Totals are off the bet list (8 September 2026).** The over/under market no longer
+produces a flagged bet. Its gap curve crosses the -110 break-even in both directions
+across the whole range (53.1% at a 2-point gap, 52.3% at 6, 51.3% at 10), so no gate on
+it is a defensible choice, and picking one anyway was the weakest thing the board did.
+The Market tab still projects every total and prints its gap to the book; it just does
+not call one a bet. `BET_RULES.total` in `viz/app.js` keeps `minGap: 2` and adds
+`trackedThrough: 1`, which is the mechanism: weeks up to that number keep their flags
+and settled results, later weeks show the number only. The 2022-25 backtest record and
+the week-1 2026 bets therefore stay in the Tracking tab, marked *retired*. Spread,
+moneyline and win totals are unchanged.
+
 **Availability history is append-only.** New injuries, returns and starter changes go
 into `war_model/availability_events_2026.csv` with observation/effective times and a
 source reference. `materialize_availability.py` produces the compact current-state CSV

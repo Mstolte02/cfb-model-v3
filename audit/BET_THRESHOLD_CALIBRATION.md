@@ -100,13 +100,24 @@ forward observation against a stated rule instead of an untracked placeholder:
 |---|---|---|
 | spread | gap 8.0 | the only positive region (+1.1%, P=.64) — a coin, tracked deliberately |
 | moneyline | gap .20 | observed best (+16.1%); sits barely above its null on 223 bets |
-| total | gap 2.0 | flattest positive point (+1.31%), indistinguishable from zero |
+| total | **retired from the bet list (2026-09-08)** | flattest positive point (+1.31%) was indistinguishable from zero; see below |
 | win totals | 0.5-win model gap | strongest signal found; interval clears zero, still below its selection null |
 | playoff / conference | unchanged (50%-model screen) | untestable, no price history |
 
 The win-total flag also keeps its price screen: the 0.5-win gap is the calibration
 study's own quantity (model expected wins vs posted line), applied alongside the
 existing de-vigged-price gate rather than instead of it.
+
+**Totals were retired from the bet list on 8 September 2026.** Nothing new was
+measured; the reading above is the reason. The gap curve crosses break-even in both
+directions across its whole range - 53.1% and +1.31% at gap 2, 52.3% at 6, 51.3% and
+-1.97% at 10, against 52.4% break-even at -110 - so there is no threshold to pick and
+no side of the market to be on. A gate chosen from a curve like that is a decision the
+data did not make. The board now publishes the model's projected total and its gap to
+the book and flags nothing, which is what the evidence supports saying. `BET_RULES.total`
+keeps `minGap: 2` and gains `trackedThrough: 1`: the 2,207-bet 2022-25 record and the 30
+week-1 2026 totals stay in the Tracking tab as the settled history of a rule that ran,
+and no total after week 1 earns a flag.
 
 ## What would change the answer
 

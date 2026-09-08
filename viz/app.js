@@ -2606,14 +2606,20 @@
     // also be more likely than not in the model; being less pessimistic than the
     // market is not enough to call a team the outright winner.
     spread:    { minModelP: 0,   minGap: 8 },
-    // Raising this gate to 10 was considered and rejected on the evidence. Over
-    // 2022-25 the model's totals go 53.1% and +1.31% ROI at this 2-point gate, 52.3%
-    // at 6, and 51.3% and -1.97% at 10: a higher bar takes fewer, more extreme
-    // disagreements and they are not better ones. Break-even at -110 is 52.4% and the
-    // curve crosses it in both directions across the range, so no threshold here is a
-    // demonstrated edge - 2 is kept because it is where the sample is largest, not
-    // because it is proven. The Tracking tab plots the whole curve.
-    total:     { minModelP: 0,   minGap: 2 },
+    // TOTALS ARE NO LONGER FLAGGED AS BETS (2026-09-08). No gate on this market is a
+    // demonstrated edge. Over 2022-25 the model's totals go 53.1% and +1.31% ROI at a
+    // 2-point gap, 52.3% at 6, and 51.3% and -1.97% at 10; break-even at -110 is
+    // 52.4%, so the curve crosses it in both directions and no part of the range is a
+    // stable side. Raising the bar only takes fewer, more extreme disagreements, and
+    // they are not better ones. So the board now says what the model thinks the game
+    // totals - the projected number and its gap to the book - and stops there.
+    //
+    // `trackedThrough` is the last week that still earns a flag. Week 1 is settled and
+    // its total bets keep their tags, their results and their place in the live 2026
+    // record; week 2 onward shows the model number with no bet. minGap stays 2 because
+    // the 2022-25 half of the Tracking tab is a record of what that gate did, and
+    // rewriting it would erase a settled history rather than stop a future bet.
+    total:     { minModelP: 0,   minGap: 2, trackedThrough: 1 },
     moneyline: { minModelP: .50, minGap: .20 }
   };
   const quantileFromCounts = (counts, q) => {
@@ -3349,6 +3355,11 @@
     const RULE = BET_RULES[market];
     if (g.bettingExcluded) return null;
     if (g.gap == null || g.marketValue == null) return null;
+    // A market can be retired from the bet list without losing what it already did:
+    // weeks up to `trackedThrough` keep their flags and their settled results, and
+    // every later week shows the model's number with no bet against it.
+    if (RULE.trackedThrough != null && (g.week == null || g.week > RULE.trackedThrough))
+      return null;
     const flip = picksOtherSide(g, market);
     if (!flip && Math.abs(g.gap) < RULE.minGap) return null;
     if (market === "total") return `${g.gap >= 0 ? "Over" : "Under"} ${Number(g.marketValue).toFixed(1)}`;
@@ -3384,9 +3395,14 @@
       return;
     }
     if (betsOnly && !betRows.length) {
+      const through = BET_RULES[market].trackedThrough;
       document.getElementById("weekly-lines").innerHTML = `<div class="weekly-empty">
-        <b>No ${marketLabel.toLowerCase()} bets clear the model's gate ${week == null ? "right now" : "in week " + week}.</b>
-        <small>Turn off the bet filter to compare every posted line.</small></div>`;
+        <b>${through == null
+          ? `No ${marketLabel.toLowerCase()} bets clear the model's gate ${week == null ? "right now" : "in week " + week}.`
+          : `${marketLabel} is not on the bet list.`}</b>
+        <small>${through == null
+          ? "Turn off the bet filter to compare every posted line."
+          : `The model still prints its own number for every game and its gap to the book; it just does not call one a bet. Bets flagged through week ${through} keep their results in the Tracking tab.`}</small></div>`;
       return;
     }
     const visibleRows = betsOnly ? betRows : rows;
@@ -3597,7 +3613,12 @@
       const s = bt.markets[m];
       if (!s) return "";
       const flat = hasPriced110([m]);
-      return `<tr class="${picked.includes(m) ? "" : "dim"}"><td>${MKT_LABEL[m]}</td><td class="num">gap ≥ ${s.min_gap}</td>
+      // The gate a settled record was produced under, plus a word when that market is
+      // no longer flagged going forward - the history stands, the bet stops.
+      const gate = BET_RULES[m] && BET_RULES[m].trackedThrough != null
+        ? `gap ≥ ${s.min_gap} · retired`
+        : `gap ≥ ${s.min_gap}`;
+      return `<tr class="${picked.includes(m) ? "" : "dim"}"><td>${MKT_LABEL[m]}</td><td class="num">${gate}</td>
         <td class="num">${s.bets}</td><td class="num">${s.won}–${s.lost}${s.push ? `–${s.push}` : ""}</td>
         <td class="num${flat && s.hit_rate != null ? (s.hit_rate > BREAK_EVEN_110 ? " good" : " bad") : ""}">${s.hit_rate == null ? "—" : (s.hit_rate * 100).toFixed(1) + "%"}</td>
         <td class="num ${s.profit > 0 ? "good" : s.profit < 0 ? "bad" : ""}">${money(s.profit)}</td>
