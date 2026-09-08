@@ -217,7 +217,7 @@
    "Florida": 1.7532549051364845,
    "Florida Atlantic": -0.9034709051364846,
    "Florida International": -1.0586616370153268,
-   "Florida State": 0.9101224841276954,
+   "Florida State": 0.8275005082865652,
    "Fresno State": -1.004208605842702,
    "Georgia": 1.984324,
    "Georgia Southern": -1.117777,
@@ -283,7 +283,7 @@
    "Sam Houston": -1.254973104543188,
    "San Diego State": -0.113001,
    "San Jos\u00e9 State": -0.6048065083428265,
-   "SMU": 0.878953,
+   "SMU": 0.9615749758411302,
    "South Alabama": -0.608683,
    "South Carolina": 1.4405003806809253,
    "Southern Miss": -0.573899,
@@ -324,7 +324,7 @@
    "Wisconsin": -0.07092529228956893,
    "Wyoming": -1.426300179382468
   },
-  "completed_games": 50,
+  "completed_games": 51,
   "updated_through_week": 1
  },
  "points": {
