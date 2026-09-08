@@ -46,5 +46,22 @@ const clip = src.match(/const MARGIN_P_CLIP = (\.\d+);/);
 assert(clip, 'MARGIN_P_CLIP not found in viz/app.js');
 assert.equal(Number(clip[1]), 0.001, 'MARGIN_P_CLIP drifted from src/dynamic.py');
 
-console.log('Dynamic margin: normInv matches scipy ndtri, stays antisymmetric, '
-  + 'and shares its probability clip with src/dynamic.py');
+/* Weeks already played must keep the margin they were graded on. Recomputing them on
+   the current model reads their own results back out of the in-season ratings: applied
+   to week 1 it turned a settled 10-4-2 spread record into 14-0-1. These are checks on
+   the source rather than on behaviour, because the guarantee is a historical boundary
+   that is easy to delete by accident and impossible to notice once it is gone. */
+assert(/const MARGIN_BASIS_FROM_WEEK = 2;/.test(src),
+  'MARGIN_BASIS_FROM_WEEK is gone or moved: completed weeks would be regraded');
+assert(/function predict\(a, b, venue, week\)/.test(src),
+  'predict lost its week argument, so nothing can ask for the graded margin');
+assert(/week != null && week < MARGIN_BASIS_FROM_WEEK/.test(src),
+  'the frozen-margin branch is gone from predict');
+assert(/predict\(g\.home, g\.away, "A", g\.week\)/.test(src),
+  'marketRows stopped passing the week, so the bet board would regrade played weeks');
+assert(/predict\(t, opp, venue, g\.w\)/.test(src),
+  'the team schedule stopped passing the week, so it would disagree with the board');
+
+console.log('Dynamic margin: normInv matches scipy ndtri, stays antisymmetric, shares '
+  + 'its probability clip with src/dynamic.py, and played weeks stay on the margin they '
+  + 'were graded on');

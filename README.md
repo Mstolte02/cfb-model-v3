@@ -943,6 +943,13 @@ in-season evidence rather than the transform. It does **not** help against the s
 about two thirds of flagged spread bets stop clearing gate 8 and the survivors are no
 better. Full study in `audit/DYNAMIC_MARGIN_EXPERIMENTS.md`.
 
+Played weeks are excluded from the change. The ratings behind the new margin are moved by
+the results of those weeks, so regrading them reads their own scoreboard: week 1's settled
+10-4-2 spread record became 14-0-1 with six of sixteen bets swapped. `MARGIN_BASIS_FROM_WEEK`
+holds weeks before 2 on the margin they were graded under, and does not advance as weeks
+finish. A played game's probability is still recomputed from current ratings - the same
+defect, older, and left alone because fixing it would rewrite the settled moneyline record.
+
 **Totals are off the bet list (8 September 2026).** The over/under market no longer
 produces a flagged bet. Its gap curve crosses the -110 break-even in both directions
 across the whole range (53.1% at a 2-point gap, 52.3% at 6, 51.3% at 10), so no gate on

@@ -404,14 +404,37 @@
      winner accuracy 65.2% -> 73.6%. This must stay in step with
      `WeeklyRatingState.predict` in src/dynamic.py - the page is a port of that model,
      not a second opinion about it. */
-  function predict(a, b, venue) {
+  /* WEEKS ALREADY PLAYED KEEP THE MARGIN THEY WERE GRADED ON. The definition changed
+     on 2026-09-08 and the in-season ratings behind the new one are moved BY the results
+     of those weeks, so recomputing a played game reads its own scoreboard: applied to
+     week 1 it turned a settled 10-4-2 spread record into 14-0-1 and swapped six of the
+     sixteen bets for five different ones. A record a later model change can rewrite is
+     not a record. This constant is a historical boundary, not a tuning knob - it does
+     not advance as weeks finish, because a week that flips basis the moment it is
+     played would be the same rewrite on a delay. Week 2 onward is the current model.
+
+     Only the margin is frozen. The probability for a completed game is still recomputed
+     from today's ratings, which is a separate and older instance of the same problem;
+     `game_history` in ratings.json carries the true start-of-week number that would fix
+     it, and changing it now would rewrite the settled moneyline record. */
+  const MARGIN_BASIS_FROM_WEEK = 2;
+  function gradedMargin(A, B, M, homeA, homeB) {
+    if (homeB) {
+      return -(M.margin.intercept + dot(M.margin.coef, diffVec(B, A)) + M.margin.hfa);
+    }
+    return M.margin.intercept + dot(M.margin.coef, diffVec(A, B)) + homeA * M.margin.hfa;
+  }
+
+  function predict(a, b, venue, week) {
     const A = vecOf(a), B = vecOf(b), M = cur().model;
     if (!A || !B) return null;
     const homeA = venue === "A" ? 1 : 0, homeB = venue === "B" ? 1 : 0;
     const pA = homeB ? 1 - winpTeams(b, a, 1) : winpTeams(a, b, homeA);
     // Antisymmetric for free: pA(b,a) = 1 - pA(a,b) and normInv is odd about .5, so
     // swapping the teams negates the margin exactly rather than nearly.
-    const marginA = impliedMargin(pA, M.margin.sigma);
+    const marginA = (week != null && week < MARGIN_BASIS_FROM_WEEK)
+      ? gradedMargin(A, B, M, homeA, homeB)
+      : impliedMargin(pA, M.margin.sigma);
     const ptsA = sidePoints(a, b, A, B, homeA);
     const ptsB = sidePoints(b, a, B, A, homeB);
     const total = ptsA + ptsB;
@@ -1869,7 +1892,7 @@
       const known = !!vecOf(opp);
       const venue = g.n ? "N" : (home ? "A" : "B");
       out.push({ opp, home, neutral: !!g.n, week: g.w, date: g.d, conf: g.c,
-                 known, r: known ? predict(t, opp, venue) : null });
+                 known, r: known ? predict(t, opp, venue, g.w) : null });
     }
     out.sort((a, b) => (a.week || 0) - (b.week || 0));
     return out;
@@ -3318,7 +3341,7 @@
     const median = a => { const x = a.slice().sort((u, v) => u-v), n = x.length; return n % 2 ? x[(n-1)/2] : (x[n/2-1] + x[n/2]) / 2; };
     return games.filter(g => combined || g.books[book]).map(g => {
       let line = combined ? null : g.books[book];
-      const r = predict(g.home, g.away, "A");
+      const r = predict(g.home, g.away, "A", g.week);
       if (!r) return { ...g, line, r: null, gap: null };
       if (combined) {
         const available = Object.values(g.books || {});

@@ -131,6 +131,34 @@ drift from the model it claims to be.
 Oklahoma at Michigan now reads Oklahoma 58%, **OU -3.6**, projected score 23-20, total
 43.3 — one model, four numbers that agree.
 
+### Played weeks keep the margin they were graded on
+
+The new margin must not reach backwards. The in-season ratings behind it are moved *by*
+the results of the weeks already played, so recomputing a played game reads its own
+scoreboard. Applied to week 1 the effect was not subtle:
+
+| week 1 spread record | bets | W-L-P | units |
+|---|---|---|---|
+| as graded at the time | 16 | 10-4-2 | +5.09 |
+| recomputed on the new margin | 15 | **14-0-1** | +12.73 |
+
+Six of the sixteen bets disappeared and five different ones took their place. A 14-0
+week is not a result, it is hindsight.
+
+`MARGIN_BASIS_FROM_WEEK = 2` in `viz/app.js` keeps weeks before it on the preseason
+ridge margin they were flagged and settled under, and `predict()` takes the week so the
+board and the team schedule both ask for the right basis. It is a historical boundary,
+not a knob, and deliberately does **not** advance as weeks finish - a week that changed
+basis the moment it was played would be the same rewrite on a delay. The live 2026 record
+is back to its pre-change value: 51 bets, 26-23-2, +5.39 units.
+
+**Still outstanding.** Only the margin is frozen. A completed game's *probability* is
+still recomputed from today's ratings, which is the same defect and older than this
+change - it is why the moneyline board can restate a played week. `game_history` in
+`ratings.json` already carries the true start-of-week `p_home` for every completed game
+and would fix it, but switching to it would itself rewrite the settled moneyline record,
+so it is left alone and written down here instead.
+
 ## What would change the answer
 
 The dynamic margin's advantage is in-season information, so it is worth nothing in week
