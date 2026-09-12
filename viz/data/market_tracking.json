@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-09-11T21:01:58Z",
+  "checked_at": "2026-09-12T04:42:18Z",
   "source": "CFBD /lines",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
-  "quote_events": 2405,
-  "successful_checks": 113,
-  "changed_quotes_this_check": 72,
+  "quote_events": 2508,
+  "successful_checks": 114,
+  "changed_quotes_this_check": 103,
   "games_with_quotes": 361,
   "books_with_quotes": [
     "Bovada",
@@ -84,11 +84,11 @@
   ],
   "entries": 14,
   "new_entries_this_check": 0,
-  "settlements": 10,
-  "qualified_clv_observations": 9,
-  "mean_consensus_clv": 0.0023463714611624675,
-  "final_scores_published_this_check": 0,
-  "completed_rating_games_replayed": 51,
+  "settlements": 11,
+  "qualified_clv_observations": 10,
+  "mean_consensus_clv": 0.0037906355966483953,
+  "final_scores_published_this_check": 5,
+  "completed_rating_games_replayed": 53,
   "availability": {
     "events": 2,
     "last_event_at": "2026-08-03T14:47:00Z"

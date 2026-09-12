@@ -198,7 +198,7 @@
    "Ball State": -1.9575332190777424,
    "Baylor": 0.43970452576956426,
    "Boise State": 0.13256819102871226,
-   "Boston College": -0.7714656870283179,
+   "Boston College": -0.6624048805012972,
    "Bowling Green": -1.397667,
    "Buffalo": -1.389579,
    "BYU": 1.402589,
@@ -231,7 +231,7 @@
    "Iowa State": -0.118583,
    "Jacksonville State": -1.0380607316597972,
    "James Madison": -0.17633971696303918,
-   "Kansas": 0.286106,
+   "Kansas": 0.21510474215988235,
    "Kansas State": 0.478611,
    "Kennesaw State": -0.690779,
    "Kent State": -1.7756813806809253,
@@ -252,7 +252,7 @@
    "Middle Tennessee": -0.991036,
    "Minnesota": 0.409144,
    "Mississippi State": 0.6783914784175692,
-   "Missouri": 1.602056,
+   "Missouri": 1.6730572578401175,
    "Missouri State": -1.393125150579737,
    "Navy": -0.593719,
    "NC State": 0.10491947318129691,
@@ -278,7 +278,7 @@
    "Pittsburgh": 0.6211801418668983,
    "Purdue": -0.290168,
    "Rice": -1.104712,
-   "Rutgers": -0.27659100000000003,
+   "Rutgers": -0.3856518065270207,
    "Sacramento State": -1.5960597527513123,
    "Sam Houston": -1.254973104543188,
    "San Diego State": -0.113001,
@@ -324,8 +324,8 @@
    "Wisconsin": -0.07092529228956893,
    "Wyoming": -1.426300179382468
   },
-  "completed_games": 51,
-  "updated_through_week": 1
+  "completed_games": 53,
+  "updated_through_week": 2
  },
  "points": {
   "coef": [
