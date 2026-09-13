@@ -1080,8 +1080,6 @@
     "DraftKings": {
      "spread": -2.5,
      "spreadOpen": null,
-     "overUnder": 46.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1098,8 +1096,6 @@
     "DraftKings": {
      "spread": 4.5,
      "spreadOpen": null,
-     "overUnder": 50.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1116,8 +1112,6 @@
     "DraftKings": {
      "spread": -30.5,
      "spreadOpen": null,
-     "overUnder": 57.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1134,8 +1128,6 @@
     "DraftKings": {
      "spread": -4.5,
      "spreadOpen": null,
-     "overUnder": 49.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1152,8 +1144,6 @@
     "DraftKings": {
      "spread": -14.5,
      "spreadOpen": null,
-     "overUnder": 59.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1170,8 +1160,6 @@
     "DraftKings": {
      "spread": -7.5,
      "spreadOpen": null,
-     "overUnder": 45.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1188,8 +1176,6 @@
     "DraftKings": {
      "spread": 3.5,
      "spreadOpen": null,
-     "overUnder": 50.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1206,8 +1192,6 @@
     "DraftKings": {
      "spread": -24.5,
      "spreadOpen": null,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1224,8 +1208,6 @@
     "DraftKings": {
      "spread": -28.5,
      "spreadOpen": null,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1242,8 +1224,6 @@
     "DraftKings": {
      "spread": 19.5,
      "spreadOpen": null,
-     "overUnder": 55.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1260,8 +1240,6 @@
     "DraftKings": {
      "spread": -3,
      "spreadOpen": null,
-     "overUnder": 50.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1278,8 +1256,6 @@
     "DraftKings": {
      "spread": -27.5,
      "spreadOpen": null,
-     "overUnder": 44.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1296,8 +1272,6 @@
     "DraftKings": {
      "spread": 20.5,
      "spreadOpen": 20.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": 890,
      "awayMoneyline": -1960
     }
@@ -1314,8 +1288,6 @@
     "DraftKings": {
      "spread": 8.5,
      "spreadOpen": 10,
-     "overUnder": 55.5,
-     "overUnderOpen": 50.5,
      "homeMoneyline": 242,
      "awayMoneyline": -318
     }
@@ -1332,8 +1304,6 @@
     "DraftKings": {
      "spread": -12.5,
      "spreadOpen": -11.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 50.5,
      "homeMoneyline": -700,
      "awayMoneyline": 462
     }
@@ -1350,8 +1320,6 @@
     "DraftKings": {
      "spread": -2.5,
      "spreadOpen": 1.5,
-     "overUnder": 46.5,
-     "overUnderOpen": 44.5,
      "homeMoneyline": -145,
      "awayMoneyline": 116
     }
@@ -1368,8 +1336,6 @@
     "DraftKings": {
      "spread": 10,
      "spreadOpen": 11.5,
-     "overUnder": 46.5,
-     "overUnderOpen": 45.5,
      "homeMoneyline": 268,
      "awayMoneyline": -357
     }
@@ -1386,8 +1352,6 @@
     "DraftKings": {
      "spread": -3,
      "spreadOpen": -3.5,
-     "overUnder": 50.5,
-     "overUnderOpen": 49.5,
      "homeMoneyline": -161,
      "awayMoneyline": 129
     }
@@ -1404,8 +1368,6 @@
     "DraftKings": {
      "spread": 5.5,
      "spreadOpen": 3.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": 172,
      "awayMoneyline": -219
     }
@@ -1422,8 +1384,6 @@
     "DraftKings": {
      "spread": -7.5,
      "spreadOpen": null,
-     "overUnder": 46.5,
-     "overUnderOpen": null,
      "homeMoneyline": -310,
      "awayMoneyline": 250
     }
@@ -1450,8 +1410,6 @@
     "DraftKings": {
      "spread": -5.5,
      "spreadOpen": -5.5,
-     "overUnder": 40.5,
-     "overUnderOpen": 39.5,
      "homeMoneyline": -223,
      "awayMoneyline": 176
     }
@@ -1468,8 +1426,6 @@
     "DraftKings": {
      "spread": -21.5,
      "spreadOpen": -22.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": -3900,
      "awayMoneyline": 1180
     }
@@ -1481,13 +1437,11 @@
    "week": 1,
    "start": "2026-08-29T19:00:00.000Z",
    "home": "USC",
-   "away": "San Jos\u00e9 State",
+   "away": "San José State",
    "books": {
     "DraftKings": {
      "spread": -37.5,
      "spreadOpen": -35.5,
-     "overUnder": 61.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": 5000
     }
@@ -1514,8 +1468,6 @@
     "DraftKings": {
      "spread": 25.5,
      "spreadOpen": 24.5,
-     "overUnder": 60.5,
-     "overUnderOpen": 62.5,
      "homeMoneyline": 1300,
      "awayMoneyline": -5400
     }
@@ -1532,8 +1484,6 @@
     "DraftKings": {
      "spread": -19.5,
      "spreadOpen": -19.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -1760,
      "awayMoneyline": 830
     }
@@ -1550,8 +1500,6 @@
     "DraftKings": {
      "spread": -4,
      "spreadOpen": null,
-     "overUnder": 50.5,
-     "overUnderOpen": null,
      "homeMoneyline": -185,
      "awayMoneyline": 154
     }
@@ -1578,8 +1526,6 @@
     "DraftKings": {
      "spread": 14,
      "spreadOpen": 14,
-     "overUnder": 47.5,
-     "overUnderOpen": 47.5,
      "homeMoneyline": 509,
      "awayMoneyline": -800
     }
@@ -1596,8 +1542,6 @@
     "DraftKings": {
      "spread": -5.5,
      "spreadOpen": -3,
-     "overUnder": 55.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -242,
      "awayMoneyline": 189
     }
@@ -1614,8 +1558,6 @@
     "DraftKings": {
      "spread": -6.5,
      "spreadOpen": -10,
-     "overUnder": 46.5,
-     "overUnderOpen": null,
      "homeMoneyline": -265,
      "awayMoneyline": 215
     }
@@ -1643,8 +1585,6 @@
     "DraftKings": {
      "spread": -7,
      "spreadOpen": -7,
-     "overUnder": 56.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": -267,
      "awayMoneyline": 207
     }
@@ -1661,8 +1601,6 @@
     "DraftKings": {
      "spread": 7,
      "spreadOpen": 8.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 50.5,
      "homeMoneyline": 210,
      "awayMoneyline": -270
     }
@@ -1679,8 +1617,6 @@
     "DraftKings": {
      "spread": 4.5,
      "spreadOpen": 4.5,
-     "overUnder": 45.5,
-     "overUnderOpen": 44.5,
      "homeMoneyline": 153,
      "awayMoneyline": -192
     }
@@ -1697,8 +1633,6 @@
     "DraftKings": {
      "spread": -2.5,
      "spreadOpen": -2.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": -143,
      "awayMoneyline": 115
     }
@@ -1715,8 +1649,6 @@
     "DraftKings": {
      "spread": -12.5,
      "spreadOpen": -10.5,
-     "overUnder": 48.5,
-     "overUnderOpen": 49.5,
      "homeMoneyline": -620,
      "awayMoneyline": 420
     }
@@ -1733,8 +1665,6 @@
     "DraftKings": {
      "spread": -34.5,
      "spreadOpen": -34.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 60.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1751,8 +1681,6 @@
     "DraftKings": {
      "spread": -7.5,
      "spreadOpen": -8.5,
-     "overUnder": 45.5,
-     "overUnderOpen": 45.5,
      "homeMoneyline": -415,
      "awayMoneyline": 305
     }
@@ -1769,8 +1697,6 @@
     "DraftKings": {
      "spread": -8.5,
      "spreadOpen": -8.5,
-     "overUnder": 52.5,
-     "overUnderOpen": null,
      "homeMoneyline": -355,
      "awayMoneyline": 280
     }
@@ -1798,8 +1724,6 @@
     "DraftKings": {
      "spread": -4.5,
      "spreadOpen": -3,
-     "overUnder": 48.5,
-     "overUnderOpen": null,
      "homeMoneyline": -205,
      "awayMoneyline": 170
     }
@@ -1826,8 +1750,6 @@
     "DraftKings": {
      "spread": -31.5,
      "spreadOpen": -28.5,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
      "homeMoneyline": -8000,
      "awayMoneyline": 2200
     }
@@ -1854,8 +1776,6 @@
     "DraftKings": {
      "spread": -8.5,
      "spreadOpen": -8.5,
-     "overUnder": 58.5,
-     "overUnderOpen": 58.5,
      "homeMoneyline": -340,
      "awayMoneyline": 257
     }
@@ -1872,8 +1792,6 @@
     "DraftKings": {
      "spread": 10.5,
      "spreadOpen": 11.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": 328,
      "awayMoneyline": -453
     }
@@ -1890,8 +1808,6 @@
     "DraftKings": {
      "spread": 7.5,
      "spreadOpen": 7.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 49.5,
      "homeMoneyline": 232,
      "awayMoneyline": -303
     }
@@ -1908,8 +1824,6 @@
     "DraftKings": {
      "spread": -3,
      "spreadOpen": -4.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 50.5,
      "homeMoneyline": -152,
      "awayMoneyline": 122
     }
@@ -1926,8 +1840,6 @@
     "DraftKings": {
      "spread": -7,
      "spreadOpen": -7.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": -313,
      "awayMoneyline": 239
     }
@@ -1944,8 +1856,6 @@
     "DraftKings": {
      "spread": 12.5,
      "spreadOpen": 13.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 49.5,
      "homeMoneyline": 328,
      "awayMoneyline": -453
     }
@@ -1962,8 +1872,6 @@
     "DraftKings": {
      "spread": -50.5,
      "spreadOpen": -47.5,
-     "overUnder": 58.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -1980,8 +1888,6 @@
     "DraftKings": {
      "spread": -22.5,
      "spreadOpen": -23.5,
-     "overUnder": 57.5,
-     "overUnderOpen": 60.5,
      "homeMoneyline": -3200,
      "awayMoneyline": 1100
     }
@@ -1998,8 +1904,6 @@
     "DraftKings": {
      "spread": -1.5,
      "spreadOpen": -2.5,
-     "overUnder": 46.5,
-     "overUnderOpen": 46.5,
      "homeMoneyline": -124,
      "awayMoneyline": 100
     }
@@ -2016,8 +1920,6 @@
     "DraftKings": {
      "spread": 12.5,
      "spreadOpen": 15.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 49.5,
      "homeMoneyline": 435,
      "awayMoneyline": -650
     }
@@ -2034,8 +1936,6 @@
     "DraftKings": {
      "spread": -15.5,
      "spreadOpen": -16.5,
-     "overUnder": 59.5,
-     "overUnderOpen": 58.5,
      "homeMoneyline": -1080,
      "awayMoneyline": 620
     }
@@ -2052,8 +1952,6 @@
     "DraftKings": {
      "spread": -19.5,
      "spreadOpen": -21.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": -1540,
      "awayMoneyline": 770
     }
@@ -2070,8 +1968,6 @@
     "DraftKings": {
      "spread": -4,
      "spreadOpen": -3,
-     "overUnder": 55.5,
-     "overUnderOpen": null,
      "homeMoneyline": -198,
      "awayMoneyline": 164
     }
@@ -2098,8 +1994,6 @@
     "DraftKings": {
      "spread": 32.5,
      "spreadOpen": 31.5,
-     "overUnder": 57.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -2116,8 +2010,6 @@
     "DraftKings": {
      "spread": -29.5,
      "spreadOpen": -30.5,
-     "overUnder": 54.5,
-     "overUnderOpen": null,
      "homeMoneyline": -8000,
      "awayMoneyline": 2200
     }
@@ -2144,8 +2036,6 @@
     "DraftKings": {
      "spread": -43.5,
      "spreadOpen": -41.5,
-     "overUnder": 58.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -2162,8 +2052,6 @@
     "DraftKings": {
      "spread": -27.5,
      "spreadOpen": -22.5,
-     "overUnder": 50.5,
-     "overUnderOpen": null,
      "homeMoneyline": -3600,
      "awayMoneyline": 1500
     }
@@ -2190,8 +2078,6 @@
     "DraftKings": {
      "spread": -31.5,
      "spreadOpen": -28.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": -8000,
      "awayMoneyline": 2200
     }
@@ -2208,8 +2094,6 @@
     "DraftKings": {
      "spread": -22.5,
      "spreadOpen": -22.5,
-     "overUnder": 50.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -3600,
      "awayMoneyline": 1500
     }
@@ -2226,8 +2110,6 @@
     "DraftKings": {
      "spread": -18.5,
      "spreadOpen": -24.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 48.5,
      "homeMoneyline": -1000,
      "awayMoneyline": 650
     }
@@ -2244,8 +2126,6 @@
     "DraftKings": {
      "spread": -4,
      "spreadOpen": -4,
-     "overUnder": 50.5,
-     "overUnderOpen": 50.5,
      "homeMoneyline": -189,
      "awayMoneyline": 150
     }
@@ -2262,8 +2142,6 @@
     "DraftKings": {
      "spread": 20.5,
      "spreadOpen": 24.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 49.5,
      "homeMoneyline": 730,
      "awayMoneyline": -1400
     }
@@ -2280,8 +2158,6 @@
     "DraftKings": {
      "spread": -55.5,
      "spreadOpen": -54.5,
-     "overUnder": 62.5,
-     "overUnderOpen": 60.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -2298,8 +2174,6 @@
     "DraftKings": {
      "spread": -6.5,
      "spreadOpen": -7,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
      "homeMoneyline": -238,
      "awayMoneyline": 195
     }
@@ -2326,8 +2200,6 @@
     "DraftKings": {
      "spread": -42.5,
      "spreadOpen": -43.5,
-     "overUnder": 52.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -2344,8 +2216,6 @@
     "DraftKings": {
      "spread": -37.5,
      "spreadOpen": -32.5,
-     "overUnder": 60.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": null,
      "awayMoneyline": 5000
     }
@@ -2362,8 +2232,6 @@
     "DraftKings": {
      "spread": -25.5,
      "spreadOpen": -27.5,
-     "overUnder": 54.5,
-     "overUnderOpen": null,
      "homeMoneyline": -3600,
      "awayMoneyline": 1500
     }
@@ -2385,13 +2253,11 @@
    "week": 1,
    "start": "2026-09-04T22:30:00.000Z",
    "home": "Eastern Michigan",
-   "away": "San Jos\u00e9 State",
+   "away": "San José State",
    "books": {
     "DraftKings": {
      "spread": -1.5,
      "spreadOpen": -3.5,
-     "overUnder": 55.5,
-     "overUnderOpen": null,
      "homeMoneyline": -115,
      "awayMoneyline": -105
     }
@@ -2418,8 +2284,6 @@
     "DraftKings": {
      "spread": -34.5,
      "spreadOpen": -34.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -2436,8 +2300,6 @@
     "DraftKings": {
      "spread": -28.5,
      "spreadOpen": -28.5,
-     "overUnder": 58.5,
-     "overUnderOpen": 63.5,
      "homeMoneyline": -4000,
      "awayMoneyline": 1600
     }
@@ -2454,8 +2316,6 @@
     "DraftKings": {
      "spread": -40.5,
      "spreadOpen": -40.5,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -2482,8 +2342,6 @@
     "DraftKings": {
      "spread": -44.5,
      "spreadOpen": -38.5,
-     "overUnder": 57.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -2500,8 +2358,6 @@
     "DraftKings": {
      "spread": -10,
      "spreadOpen": -10.5,
-     "overUnder": 48.5,
-     "overUnderOpen": null,
      "homeMoneyline": -410,
      "awayMoneyline": 320
     }
@@ -2528,8 +2384,6 @@
     "DraftKings": {
      "spread": 24.5,
      "spreadOpen": 21.5,
-     "overUnder": 46.5,
-     "overUnderOpen": null,
      "homeMoneyline": 1600,
      "awayMoneyline": -4000
     }
@@ -2556,8 +2410,6 @@
     "DraftKings": {
      "spread": -21.5,
      "spreadOpen": -23.5,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
      "homeMoneyline": -1800,
      "awayMoneyline": 1000
     }
@@ -2584,8 +2436,6 @@
     "DraftKings": {
      "spread": -27.5,
      "spreadOpen": -25.5,
-     "overUnder": 52.5,
-     "overUnderOpen": null,
      "homeMoneyline": -5000,
      "awayMoneyline": 1800
     }
@@ -2612,8 +2462,6 @@
     "DraftKings": {
      "spread": -21,
      "spreadOpen": -18.5,
-     "overUnder": 50.5,
-     "overUnderOpen": null,
      "homeMoneyline": -1450,
      "awayMoneyline": 850
     }
@@ -2640,8 +2488,6 @@
     "DraftKings": {
      "spread": -21,
      "spreadOpen": -17.5,
-     "overUnder": 54.5,
-     "overUnderOpen": null,
      "homeMoneyline": -1450,
      "awayMoneyline": 850
     }
@@ -2668,8 +2514,6 @@
     "DraftKings": {
      "spread": -35.5,
      "spreadOpen": -32.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": null,
      "awayMoneyline": 5000
     }
@@ -2686,8 +2530,6 @@
     "DraftKings": {
      "spread": -39.5,
      "spreadOpen": -40.5,
-     "overUnder": 56.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -2714,8 +2556,6 @@
     "DraftKings": {
      "spread": -23.5,
      "spreadOpen": -23.5,
-     "overUnder": 47.5,
-     "overUnderOpen": null,
      "homeMoneyline": -2100,
      "awayMoneyline": 1100
     }
@@ -2742,8 +2582,6 @@
     "DraftKings": {
      "spread": -21.5,
      "spreadOpen": -19.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 58.5,
      "homeMoneyline": -1800,
      "awayMoneyline": 1000
     }
@@ -2760,8 +2598,6 @@
     "DraftKings": {
      "spread": -37.5,
      "spreadOpen": -36.5,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -2778,8 +2614,6 @@
     "DraftKings": {
      "spread": -1.5,
      "spreadOpen": -2.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 47.5,
      "homeMoneyline": -120,
      "awayMoneyline": 100
     }
@@ -2796,8 +2630,6 @@
     "DraftKings": {
      "spread": -6.5,
      "spreadOpen": -7,
-     "overUnder": 42.5,
-     "overUnderOpen": 41.5,
      "homeMoneyline": -226,
      "awayMoneyline": 178
     }
@@ -2814,8 +2646,6 @@
     "DraftKings": {
      "spread": -6,
      "spreadOpen": -6,
-     "overUnder": 50.5,
-     "overUnderOpen": null,
      "homeMoneyline": -225,
      "awayMoneyline": 185
     }
@@ -2842,8 +2672,6 @@
     "DraftKings": {
      "spread": -16.5,
      "spreadOpen": -16.5,
-     "overUnder": 47.5,
-     "overUnderOpen": null,
      "homeMoneyline": -850,
      "awayMoneyline": 575
     }
@@ -2870,8 +2698,6 @@
     "DraftKings": {
      "spread": -49.5,
      "spreadOpen": -49.5,
-     "overUnder": 55.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -2898,8 +2724,6 @@
     "DraftKings": {
      "spread": 22.5,
      "spreadOpen": 20.5,
-     "overUnder": 46.5,
-     "overUnderOpen": 49.5,
      "homeMoneyline": 870,
      "awayMoneyline": -1920
     }
@@ -2916,8 +2740,6 @@
     "DraftKings": {
      "spread": -35.5,
      "spreadOpen": -33.5,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
      "homeMoneyline": -50000,
      "awayMoneyline": 4000
     }
@@ -2944,8 +2766,6 @@
     "DraftKings": {
      "spread": -22.5,
      "spreadOpen": -23.5,
-     "overUnder": 61.5,
-     "overUnderOpen": 62.5,
      "homeMoneyline": -1600,
      "awayMoneyline": 900
     }
@@ -2962,8 +2782,6 @@
     "DraftKings": {
      "spread": -29.5,
      "spreadOpen": -29.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": -9000,
      "awayMoneyline": 2500
     }
@@ -2980,8 +2798,6 @@
     "DraftKings": {
      "spread": -31.5,
      "spreadOpen": -30.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 58.5,
      "homeMoneyline": -6500,
      "awayMoneyline": 2000
     }
@@ -2998,8 +2814,6 @@
     "DraftKings": {
      "spread": -4.5,
      "spreadOpen": -4.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 47.5,
      "homeMoneyline": -185,
      "awayMoneyline": 147
     }
@@ -3016,8 +2830,6 @@
     "DraftKings": {
      "spread": -8.5,
      "spreadOpen": -7,
-     "overUnder": 50.5,
-     "overUnderOpen": 47.5,
      "homeMoneyline": -300,
      "awayMoneyline": 230
     }
@@ -3034,8 +2846,6 @@
     "DraftKings": {
      "spread": -14.5,
      "spreadOpen": -10,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -700,
      "awayMoneyline": 500
     }
@@ -3052,8 +2862,6 @@
     "DraftKings": {
      "spread": -12.5,
      "spreadOpen": -15.5,
-     "overUnder": 58.5,
-     "overUnderOpen": 58.5,
      "homeMoneyline": -640,
      "awayMoneyline": 432
     }
@@ -3070,8 +2878,6 @@
     "DraftKings": {
      "spread": -49.5,
      "spreadOpen": -46.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3088,8 +2894,6 @@
     "DraftKings": {
      "spread": -35.5,
      "spreadOpen": -34.5,
-     "overUnder": 60.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3106,8 +2910,6 @@
     "DraftKings": {
      "spread": -6.5,
      "spreadOpen": -6.5,
-     "overUnder": 58.5,
-     "overUnderOpen": null,
      "homeMoneyline": -270,
      "awayMoneyline": 220
     }
@@ -3134,8 +2936,6 @@
     "DraftKings": {
      "spread": -49.5,
      "spreadOpen": -46.5,
-     "overUnder": 66.5,
-     "overUnderOpen": 66.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3152,8 +2952,6 @@
     "DraftKings": {
      "spread": -29.5,
      "spreadOpen": -30.5,
-     "overUnder": 60.5,
-     "overUnderOpen": null,
      "homeMoneyline": -9000,
      "awayMoneyline": 2500
     }
@@ -3180,8 +2978,6 @@
     "DraftKings": {
      "spread": -7,
      "spreadOpen": -9.5,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
      "homeMoneyline": -278,
      "awayMoneyline": 225
     }
@@ -3208,8 +3004,6 @@
     "DraftKings": {
      "spread": -9.5,
      "spreadOpen": -8.5,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
      "homeMoneyline": -380,
      "awayMoneyline": 300
     }
@@ -3236,8 +3030,6 @@
     "DraftKings": {
      "spread": -24.5,
      "spreadOpen": -24.5,
-     "overUnder": 52.5,
-     "overUnderOpen": null,
      "homeMoneyline": -2800,
      "awayMoneyline": 1300
     }
@@ -3264,8 +3056,6 @@
     "DraftKings": {
      "spread": -23.5,
      "spreadOpen": -23.5,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
      "homeMoneyline": -1800,
      "awayMoneyline": 1000
     }
@@ -3292,8 +3082,6 @@
     "DraftKings": {
      "spread": -20.5,
      "spreadOpen": -15.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 46.5,
      "homeMoneyline": -1650,
      "awayMoneyline": 950
     }
@@ -3310,8 +3098,6 @@
     "DraftKings": {
      "spread": -31.5,
      "spreadOpen": -30.5,
-     "overUnder": 50.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": null,
      "awayMoneyline": 5000
     }
@@ -3328,8 +3114,6 @@
     "DraftKings": {
      "spread": -28.5,
      "spreadOpen": -28.5,
-     "overUnder": 59.5,
-     "overUnderOpen": 59.5,
      "homeMoneyline": -6500,
      "awayMoneyline": 2000
     }
@@ -3346,8 +3130,6 @@
     "DraftKings": {
      "spread": -41.5,
      "spreadOpen": -39.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3364,8 +3146,6 @@
     "DraftKings": {
      "spread": 4,
      "spreadOpen": 4,
-     "overUnder": 68.5,
-     "overUnderOpen": 67.5,
      "homeMoneyline": 147,
      "awayMoneyline": -184
     }
@@ -3382,8 +3162,6 @@
     "DraftKings": {
      "spread": -20.5,
      "spreadOpen": -17.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": -1450,
      "awayMoneyline": 850
     }
@@ -3400,8 +3178,6 @@
     "DraftKings": {
      "spread": 13.5,
      "spreadOpen": 11.5,
-     "overUnder": 57.5,
-     "overUnderOpen": null,
      "homeMoneyline": 410,
      "awayMoneyline": -550
     }
@@ -3428,8 +3204,6 @@
     "DraftKings": {
      "spread": -28.5,
      "spreadOpen": -27.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3446,8 +3220,6 @@
     "DraftKings": {
      "spread": -40.5,
      "spreadOpen": -40.5,
-     "overUnder": 63.5,
-     "overUnderOpen": 63.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3464,8 +3236,6 @@
     "DraftKings": {
      "spread": -31.5,
      "spreadOpen": -29.5,
-     "overUnder": 44.5,
-     "overUnderOpen": null,
      "homeMoneyline": -10000,
      "awayMoneyline": 3000
     }
@@ -3492,8 +3262,6 @@
     "DraftKings": {
      "spread": -19.5,
      "spreadOpen": -21,
-     "overUnder": 51.5,
-     "overUnderOpen": 50.5,
      "homeMoneyline": -1600,
      "awayMoneyline": 900
     }
@@ -3510,8 +3278,6 @@
     "DraftKings": {
      "spread": -2.5,
      "spreadOpen": -4,
-     "overUnder": 46.5,
-     "overUnderOpen": null,
      "homeMoneyline": -142,
      "awayMoneyline": 120
     }
@@ -3538,8 +3304,6 @@
     "DraftKings": {
      "spread": 32.5,
      "spreadOpen": 31.5,
-     "overUnder": 58.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3556,8 +3320,6 @@
     "DraftKings": {
      "spread": -9.5,
      "spreadOpen": -10,
-     "overUnder": 54.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -348,
      "awayMoneyline": 262
     }
@@ -3574,8 +3336,6 @@
     "DraftKings": {
      "spread": -41.5,
      "spreadOpen": -41.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3592,8 +3352,6 @@
     "DraftKings": {
      "spread": 22.5,
      "spreadOpen": 26.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": 1160,
      "awayMoneyline": -3700
     }
@@ -3610,8 +3368,6 @@
     "DraftKings": {
      "spread": -22.5,
      "spreadOpen": -21.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -2100,
      "awayMoneyline": 920
     }
@@ -3628,8 +3384,6 @@
     "DraftKings": {
      "spread": 10.5,
      "spreadOpen": 10.5,
-     "overUnder": 48.5,
-     "overUnderOpen": 49.5,
      "homeMoneyline": 358,
      "awayMoneyline": -504
     }
@@ -3646,8 +3400,6 @@
     "DraftKings": {
      "spread": 14,
      "spreadOpen": 14.5,
-     "overUnder": 43.5,
-     "overUnderOpen": 45.5,
      "homeMoneyline": 453,
      "awayMoneyline": -680
     }
@@ -3664,8 +3416,6 @@
     "DraftKings": {
      "spread": -38.5,
      "spreadOpen": -38.5,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3692,8 +3442,6 @@
     "DraftKings": {
      "spread": -28.5,
      "spreadOpen": -30.5,
-     "overUnder": 57.5,
-     "overUnderOpen": 61.5,
      "homeMoneyline": -6500,
      "awayMoneyline": 2000
     }
@@ -3710,8 +3458,6 @@
     "DraftKings": {
      "spread": -45.5,
      "spreadOpen": -42.5,
-     "overUnder": 60.5,
-     "overUnderOpen": 59.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3728,8 +3474,6 @@
     "DraftKings": {
      "spread": -41.5,
      "spreadOpen": -40.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3746,8 +3490,6 @@
     "DraftKings": {
      "spread": -15.5,
      "spreadOpen": -11.5,
-     "overUnder": 59.5,
-     "overUnderOpen": 64.5,
      "homeMoneyline": -650,
      "awayMoneyline": 470
     }
@@ -3764,8 +3506,6 @@
     "DraftKings": {
      "spread": -10.5,
      "spreadOpen": -10.5,
-     "overUnder": 52.5,
-     "overUnderOpen": null,
      "homeMoneyline": -395,
      "awayMoneyline": 310
     }
@@ -3792,8 +3532,6 @@
     "DraftKings": {
      "spread": -22.5,
      "spreadOpen": -24.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 47.5,
      "homeMoneyline": -2400,
      "awayMoneyline": 1200
     }
@@ -3810,8 +3548,6 @@
     "DraftKings": {
      "spread": -14.5,
      "spreadOpen": -12.5,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
      "homeMoneyline": -650,
      "awayMoneyline": 470
     }
@@ -3838,8 +3574,6 @@
     "DraftKings": {
      "spread": -45.5,
      "spreadOpen": -44.5,
-     "overUnder": 61.5,
-     "overUnderOpen": 61.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -3856,8 +3590,6 @@
     "DraftKings": {
      "spread": -22.5,
      "spreadOpen": -20.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 59.5,
      "homeMoneyline": -1800,
      "awayMoneyline": 1000
     }
@@ -3874,8 +3606,6 @@
     "DraftKings": {
      "spread": -7.5,
      "spreadOpen": -7.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": -296,
      "awayMoneyline": 227
     }
@@ -3892,8 +3622,6 @@
     "DraftKings": {
      "spread": -7,
      "spreadOpen": -6.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": -280,
      "awayMoneyline": 216
     }
@@ -3910,8 +3638,6 @@
     "DraftKings": {
      "spread": -22.5,
      "spreadOpen": -19.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": -2100,
      "awayMoneyline": 1100
     }
@@ -3928,8 +3654,6 @@
     "DraftKings": {
      "spread": -28.5,
      "spreadOpen": -25.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -5000,
      "awayMoneyline": 1800
     }
@@ -3946,8 +3670,6 @@
     "DraftKings": {
      "spread": -13.5,
      "spreadOpen": -12.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": -575,
      "awayMoneyline": 425
     }
@@ -3964,8 +3686,6 @@
     "DraftKings": {
      "spread": -16.5,
      "spreadOpen": -17.5,
-     "overUnder": 52.5,
-     "overUnderOpen": null,
      "homeMoneyline": -850,
      "awayMoneyline": 575
     }
@@ -3992,8 +3712,6 @@
     "DraftKings": {
      "spread": -10,
      "spreadOpen": null,
-     "overUnder": 48.5,
-     "overUnderOpen": null,
      "homeMoneyline": -410,
      "awayMoneyline": 320
     }
@@ -4020,8 +3738,6 @@
     "DraftKings": {
      "spread": -28.5,
      "spreadOpen": -28.5,
-     "overUnder": 54.5,
-     "overUnderOpen": null,
      "homeMoneyline": -4000,
      "awayMoneyline": 1600
     }
@@ -4048,8 +3764,6 @@
     "DraftKings": {
      "spread": -54.5,
      "spreadOpen": -50.5,
-     "overUnder": 60.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -4066,8 +3780,6 @@
     "DraftKings": {
      "spread": -27.5,
      "spreadOpen": -26.5,
-     "overUnder": 49.5,
-     "overUnderOpen": null,
      "homeMoneyline": -6500,
      "awayMoneyline": 2000
     }
@@ -4094,8 +3806,6 @@
     "DraftKings": {
      "spread": -44.5,
      "spreadOpen": -41.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -4112,8 +3822,6 @@
     "DraftKings": {
      "spread": -25.5,
      "spreadOpen": -25.5,
-     "overUnder": 59.5,
-     "overUnderOpen": null,
      "homeMoneyline": -2400,
      "awayMoneyline": 1200
     }
@@ -4140,8 +3848,6 @@
     "DraftKings": {
      "spread": -50.5,
      "spreadOpen": -47.5,
-     "overUnder": 61.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -4158,8 +3864,6 @@
     "DraftKings": {
      "spread": -45.5,
      "spreadOpen": -45.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -4176,8 +3880,6 @@
     "DraftKings": {
      "spread": -14,
      "spreadOpen": -12.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 46.5,
      "homeMoneyline": -600,
      "awayMoneyline": 440
     }
@@ -4194,8 +3896,6 @@
     "DraftKings": {
      "spread": 20.5,
      "spreadOpen": 23.5,
-     "overUnder": 58.5,
-     "overUnderOpen": 59.5,
      "homeMoneyline": 990,
      "awayMoneyline": -2500
     }
@@ -4212,8 +3912,6 @@
     "DraftKings": {
      "spread": 20.5,
      "spreadOpen": 20.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": 920,
      "awayMoneyline": -2100
     }
@@ -4230,8 +3928,6 @@
     "DraftKings": {
      "spread": -14.5,
      "spreadOpen": -14.5,
-     "overUnder": 58.5,
-     "overUnderOpen": 58.5,
      "homeMoneyline": -820,
      "awayMoneyline": 520
     }
@@ -4248,8 +3944,6 @@
     "DraftKings": {
      "spread": -23.5,
      "spreadOpen": -25.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -3300,
      "awayMoneyline": 1100
     }
@@ -4266,8 +3960,6 @@
     "DraftKings": {
      "spread": -20.5,
      "spreadOpen": -18.5,
-     "overUnder": 48.5,
-     "overUnderOpen": 48.5,
      "homeMoneyline": -1200,
      "awayMoneyline": 750
     }
@@ -4284,8 +3976,6 @@
     "DraftKings": {
      "spread": -45.5,
      "spreadOpen": -45.5,
-     "overUnder": 59.5,
-     "overUnderOpen": 59.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -4302,8 +3992,6 @@
     "DraftKings": {
      "spread": -29.5,
      "spreadOpen": -24.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 50.5,
      "homeMoneyline": -8000,
      "awayMoneyline": 2200
     }
@@ -4320,8 +4008,6 @@
     "DraftKings": {
      "spread": -32.5,
      "spreadOpen": -31.5,
-     "overUnder": 59.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -6500,
      "awayMoneyline": 2000
     }
@@ -4338,8 +4024,6 @@
     "DraftKings": {
      "spread": -38.5,
      "spreadOpen": -38.5,
-     "overUnder": 62.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -4356,8 +4040,6 @@
     "DraftKings": {
      "spread": -43.5,
      "spreadOpen": -41.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -4374,8 +4056,6 @@
     "DraftKings": {
      "spread": 3,
      "spreadOpen": 1.5,
-     "overUnder": 55.5,
-     "overUnderOpen": null,
      "homeMoneyline": 120,
      "awayMoneyline": -142
     }
@@ -4402,8 +4082,6 @@
     "DraftKings": {
      "spread": -10.5,
      "spreadOpen": -12.5,
-     "overUnder": 47.5,
-     "overUnderOpen": null,
      "homeMoneyline": -440,
      "awayMoneyline": 340
     }
@@ -4430,8 +4108,6 @@
     "DraftKings": {
      "spread": -37.5,
      "spreadOpen": -35.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -4448,8 +4124,6 @@
     "DraftKings": {
      "spread": 14.5,
      "spreadOpen": 15.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": 509,
      "awayMoneyline": -800
     }
@@ -4466,8 +4140,6 @@
     "DraftKings": {
      "spread": 2.5,
      "spreadOpen": -1.5,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
      "homeMoneyline": 120,
      "awayMoneyline": -142
     }
@@ -4494,8 +4166,6 @@
     "DraftKings": {
      "spread": 1.5,
      "spreadOpen": 4.5,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
      "homeMoneyline": -108,
      "awayMoneyline": -112
     }
@@ -4522,8 +4192,6 @@
     "DraftKings": {
      "spread": -10.5,
      "spreadOpen": -10.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": -483,
      "awayMoneyline": 345
     }
@@ -4540,8 +4208,6 @@
     "DraftKings": {
      "spread": 19.5,
      "spreadOpen": 17.5,
-     "overUnder": 54.5,
-     "overUnderOpen": null,
      "homeMoneyline": 740,
      "awayMoneyline": -1420
     }
@@ -4558,8 +4224,6 @@
     "DraftKings": {
      "spread": -23.5,
      "spreadOpen": -21.5,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
      "homeMoneyline": -2800,
      "awayMoneyline": 1300
     }
@@ -4586,8 +4250,6 @@
     "DraftKings": {
      "spread": -6.5,
      "spreadOpen": null,
-     "overUnder": 55.5,
-     "overUnderOpen": null,
      "homeMoneyline": -258,
      "awayMoneyline": 210
     }
@@ -4614,8 +4276,6 @@
     "DraftKings": {
      "spread": -21,
      "spreadOpen": null,
-     "overUnder": 46.5,
-     "overUnderOpen": 47.5,
      "homeMoneyline": -1800,
      "awayMoneyline": 1000
     }
@@ -4642,8 +4302,6 @@
     "DraftKings": {
      "spread": 3,
      "spreadOpen": null,
-     "overUnder": 54.5,
-     "overUnderOpen": null,
      "homeMoneyline": 130,
      "awayMoneyline": -155
     }
@@ -4670,8 +4328,6 @@
     "DraftKings": {
      "spread": -55.5,
      "spreadOpen": -55.5,
-     "overUnder": 61.5,
-     "overUnderOpen": 62.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -4688,8 +4344,6 @@
     "DraftKings": {
      "spread": -36.5,
      "spreadOpen": -36.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -4706,8 +4360,6 @@
     "DraftKings": {
      "spread": -44.5,
      "spreadOpen": -44.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -4724,8 +4376,6 @@
     "DraftKings": {
      "spread": -30.5,
      "spreadOpen": -30.5,
-     "overUnder": 48.5,
-     "overUnderOpen": 48.5,
      "homeMoneyline": -8000,
      "awayMoneyline": 2200
     }
@@ -4742,8 +4392,6 @@
     "DraftKings": {
      "spread": -3,
      "spreadOpen": -3.5,
-     "overUnder": 54.5,
-     "overUnderOpen": null,
      "homeMoneyline": -170,
      "awayMoneyline": 142
     }
@@ -4770,8 +4418,6 @@
     "DraftKings": {
      "spread": 5.5,
      "spreadOpen": 7,
-     "overUnder": 50.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": 180,
      "awayMoneyline": -218
     }
@@ -4798,8 +4444,6 @@
     "DraftKings": {
      "spread": 5.5,
      "spreadOpen": -1.5,
-     "overUnder": 43.5,
-     "overUnderOpen": 46.5,
      "homeMoneyline": 180,
      "awayMoneyline": -218
     }
@@ -4826,8 +4470,6 @@
     "DraftKings": {
      "spread": -14.5,
      "spreadOpen": -14.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -625,
      "awayMoneyline": 455
     }
@@ -4854,8 +4496,6 @@
     "DraftKings": {
      "spread": -18.5,
      "spreadOpen": -16.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -1200,
      "awayMoneyline": 750
     }
@@ -4882,8 +4522,6 @@
     "DraftKings": {
      "spread": 22.5,
      "spreadOpen": 18.5,
-     "overUnder": 57.5,
-     "overUnderOpen": 60.5,
      "homeMoneyline": 1100,
      "awayMoneyline": -2100
     }
@@ -4910,8 +4548,6 @@
     "DraftKings": {
      "spread": -18.5,
      "spreadOpen": -14,
-     "overUnder": 51.5,
-     "overUnderOpen": null,
      "homeMoneyline": -1200,
      "awayMoneyline": 750
     }
@@ -4938,8 +4574,6 @@
     "DraftKings": {
      "spread": 4,
      "spreadOpen": 3.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 49.5,
      "homeMoneyline": 154,
      "awayMoneyline": -185
     }
@@ -4966,8 +4600,6 @@
     "DraftKings": {
      "spread": 23.5,
      "spreadOpen": 21.5,
-     "overUnder": 49.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": 1400,
      "awayMoneyline": -3200
     }
@@ -4994,8 +4626,6 @@
     "DraftKings": {
      "spread": -3.5,
      "spreadOpen": -1.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": -185,
      "awayMoneyline": 154
     }
@@ -5022,8 +4652,6 @@
     "DraftKings": {
      "spread": -7.5,
      "spreadOpen": -11.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -325,
      "awayMoneyline": 260
     }
@@ -5050,8 +4678,6 @@
     "DraftKings": {
      "spread": -40.5,
      "spreadOpen": -35.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -5078,8 +4704,6 @@
     "DraftKings": {
      "spread": 10.5,
      "spreadOpen": 10.5,
-     "overUnder": 49.5,
-     "overUnderOpen": null,
      "homeMoneyline": 320,
      "awayMoneyline": -410
     }
@@ -5106,8 +4730,6 @@
     "DraftKings": {
      "spread": 1.5,
      "spreadOpen": -2.5,
-     "overUnder": 55.5,
-     "overUnderOpen": null,
      "homeMoneyline": 100,
      "awayMoneyline": -120
     }
@@ -5134,8 +4756,6 @@
     "DraftKings": {
      "spread": -7,
      "spreadOpen": -8.5,
-     "overUnder": 57.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -270,
      "awayMoneyline": 220
     }
@@ -5162,8 +4782,6 @@
     "DraftKings": {
      "spread": -7.5,
      "spreadOpen": -6.5,
-     "overUnder": 50.5,
-     "overUnderOpen": null,
      "homeMoneyline": -285,
      "awayMoneyline": 230
     }
@@ -5190,8 +4808,6 @@
     "DraftKings": {
      "spread": -3.5,
      "spreadOpen": 1.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": -166,
      "awayMoneyline": 140
     }
@@ -5218,8 +4834,6 @@
     "DraftKings": {
      "spread": -6,
      "spreadOpen": -8.5,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
      "homeMoneyline": -230,
      "awayMoneyline": 190
     }
@@ -5246,8 +4860,6 @@
     "DraftKings": {
      "spread": -17.5,
      "spreadOpen": -15.5,
-     "overUnder": 50.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -850,
      "awayMoneyline": 575
     }
@@ -5274,8 +4886,6 @@
     "DraftKings": {
      "spread": 12.5,
      "spreadOpen": 12.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": 380,
      "awayMoneyline": -500
     }
@@ -5302,8 +4912,6 @@
     "DraftKings": {
      "spread": -26.5,
      "spreadOpen": -24.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -4000,
      "awayMoneyline": 1600
     }
@@ -5330,8 +4938,6 @@
     "DraftKings": {
      "spread": -44.5,
      "spreadOpen": -44.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -5358,8 +4964,6 @@
     "DraftKings": {
      "spread": -1.5,
      "spreadOpen": -1.5,
-     "overUnder": 64.5,
-     "overUnderOpen": null,
      "homeMoneyline": -118,
      "awayMoneyline": -102
     }
@@ -5386,8 +4990,6 @@
     "DraftKings": {
      "spread": -10.5,
      "spreadOpen": -7.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": -410,
      "awayMoneyline": 320
     }
@@ -5414,8 +5016,6 @@
     "DraftKings": {
      "spread": 3.5,
      "spreadOpen": 6.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 61.5,
      "homeMoneyline": 154,
      "awayMoneyline": -185
     }
@@ -5442,8 +5042,6 @@
     "DraftKings": {
      "spread": -20.5,
      "spreadOpen": -21.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": -1600,
      "awayMoneyline": 900
     }
@@ -5470,8 +5068,6 @@
     "DraftKings": {
      "spread": -8.5,
      "spreadOpen": -6.5,
-     "overUnder": 54.5,
-     "overUnderOpen": null,
      "homeMoneyline": -355,
      "awayMoneyline": 280
     }
@@ -5498,8 +5094,6 @@
     "DraftKings": {
      "spread": -10.5,
      "spreadOpen": -10.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -440,
      "awayMoneyline": 340
     }
@@ -5526,8 +5120,6 @@
     "DraftKings": {
      "spread": -3,
      "spreadOpen": -2.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 48.5,
      "homeMoneyline": -135,
      "awayMoneyline": 114
     }
@@ -5554,8 +5146,6 @@
     "DraftKings": {
      "spread": 12.5,
      "spreadOpen": 8.5,
-     "overUnder": 55.5,
-     "overUnderOpen": null,
      "homeMoneyline": 380,
      "awayMoneyline": -500
     }
@@ -5582,8 +5172,6 @@
     "DraftKings": {
      "spread": -28.5,
      "spreadOpen": -25.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 48.5,
      "homeMoneyline": -8000,
      "awayMoneyline": 2200
     }
@@ -5610,8 +5198,6 @@
     "DraftKings": {
      "spread": 13.5,
      "spreadOpen": 10.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": 410,
      "awayMoneyline": -550
     }
@@ -5638,8 +5224,6 @@
     "DraftKings": {
      "spread": -9.5,
      "spreadOpen": -10,
-     "overUnder": 49.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": -375,
      "awayMoneyline": 295
     }
@@ -5666,8 +5250,6 @@
     "DraftKings": {
      "spread": -9.5,
      "spreadOpen": -9.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 50.5,
      "homeMoneyline": -340,
      "awayMoneyline": 270
     }
@@ -5694,8 +5276,6 @@
     "DraftKings": {
      "spread": -14,
      "spreadOpen": -17.5,
-     "overUnder": 58.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": -600,
      "awayMoneyline": 440
     }
@@ -5722,8 +5302,6 @@
     "DraftKings": {
      "spread": -11.5,
      "spreadOpen": -8.5,
-     "overUnder": 53.5,
-     "overUnderOpen": null,
      "homeMoneyline": -470,
      "awayMoneyline": 360
     }
@@ -5750,8 +5328,6 @@
     "DraftKings": {
      "spread": -1.5,
      "spreadOpen": -1.5,
-     "overUnder": 48.5,
-     "overUnderOpen": null,
      "homeMoneyline": -122,
      "awayMoneyline": 102
     }
@@ -5778,8 +5354,6 @@
     "DraftKings": {
      "spread": 26.5,
      "spreadOpen": 27.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 49.5,
      "homeMoneyline": 1500,
      "awayMoneyline": -3600
     }
@@ -5806,8 +5380,6 @@
     "DraftKings": {
      "spread": -14.5,
      "spreadOpen": -11.5,
-     "overUnder": 41.5,
-     "overUnderOpen": 41.5,
      "homeMoneyline": -650,
      "awayMoneyline": 470
     }
@@ -5834,8 +5406,6 @@
     "DraftKings": {
      "spread": -20.5,
      "spreadOpen": -26.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": -1350,
      "awayMoneyline": 800
     }
@@ -5862,8 +5432,6 @@
     "DraftKings": {
      "spread": 4.5,
      "spreadOpen": 6.5,
-     "overUnder": 59.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": 180,
      "awayMoneyline": -218
     }
@@ -5890,8 +5458,6 @@
     "DraftKings": {
      "spread": -35.5,
      "spreadOpen": -31.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": -50000,
      "awayMoneyline": 4000
     }
@@ -5918,8 +5484,6 @@
     "DraftKings": {
      "spread": -33.5,
      "spreadOpen": -29.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": -9000,
      "awayMoneyline": 2500
     }
@@ -5946,8 +5510,6 @@
     "DraftKings": {
      "spread": -47.5,
      "spreadOpen": -46.5,
-     "overUnder": 61.5,
-     "overUnderOpen": 61.5,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -5974,8 +5536,6 @@
     "DraftKings": {
      "spread": 2.5,
      "spreadOpen": 6.5,
-     "overUnder": 47.5,
-     "overUnderOpen": 49.5,
      "homeMoneyline": 114,
      "awayMoneyline": -135
     }
@@ -6002,8 +5562,6 @@
     "DraftKings": {
      "spread": -11.5,
      "spreadOpen": -9.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": -470,
      "awayMoneyline": 360
     }
@@ -6030,8 +5588,6 @@
     "DraftKings": {
      "spread": -18.5,
      "spreadOpen": -18.5,
-     "overUnder": 45.5,
-     "overUnderOpen": 48.5,
      "homeMoneyline": -950,
      "awayMoneyline": 625
     }
@@ -6058,8 +5614,6 @@
     "DraftKings": {
      "spread": -31.5,
      "spreadOpen": -28.5,
-     "overUnder": 60.5,
-     "overUnderOpen": 63.5,
      "homeMoneyline": -20000,
      "awayMoneyline": 3500
     }
@@ -6086,8 +5640,6 @@
     "DraftKings": {
      "spread": -9.5,
      "spreadOpen": -11.5,
-     "overUnder": 50.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -380,
      "awayMoneyline": 300
     }
@@ -6114,8 +5666,6 @@
     "DraftKings": {
      "spread": -13.5,
      "spreadOpen": -13.5,
-     "overUnder": null,
-     "overUnderOpen": null,
      "homeMoneyline": null,
      "awayMoneyline": null
     }
@@ -6142,8 +5692,6 @@
     "DraftKings": {
      "spread": -15.5,
      "spreadOpen": -15.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": -600,
      "awayMoneyline": 440
     }
@@ -6170,8 +5718,6 @@
     "DraftKings": {
      "spread": -1.5,
      "spreadOpen": -1.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -115,
      "awayMoneyline": -105
     }
@@ -6198,8 +5744,6 @@
     "DraftKings": {
      "spread": 1.5,
      "spreadOpen": -1.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": -108,
      "awayMoneyline": -112
     }
@@ -6226,8 +5770,6 @@
     "DraftKings": {
      "spread": -1.5,
      "spreadOpen": -1.5,
-     "overUnder": 57.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": -130,
      "awayMoneyline": 110
     }
@@ -6254,8 +5796,6 @@
     "DraftKings": {
      "spread": -10,
      "spreadOpen": -10,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": -395,
      "awayMoneyline": 310
     }
@@ -6282,8 +5822,6 @@
     "DraftKings": {
      "spread": -3,
      "spreadOpen": -3,
-     "overUnder": 56.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": -155,
      "awayMoneyline": 130
     }
@@ -6310,8 +5848,6 @@
     "DraftKings": {
      "spread": 5.5,
      "spreadOpen": 5.5,
-     "overUnder": 58.5,
-     "overUnderOpen": 58.5,
      "homeMoneyline": 195,
      "awayMoneyline": -238
     }
@@ -6338,8 +5874,6 @@
     "DraftKings": {
      "spread": 6.5,
      "spreadOpen": 6.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": 220,
      "awayMoneyline": -270
     }
@@ -6366,8 +5900,6 @@
     "DraftKings": {
      "spread": 7,
      "spreadOpen": 7,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": 260,
      "awayMoneyline": -325
     }
@@ -6394,8 +5926,6 @@
     "DraftKings": {
      "spread": 23.5,
      "spreadOpen": 23.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": 1100,
      "awayMoneyline": -2100
     }
@@ -6422,8 +5952,6 @@
     "DraftKings": {
      "spread": 3,
      "spreadOpen": 3,
-     "overUnder": 50.5,
-     "overUnderOpen": 50.5,
      "homeMoneyline": 136,
      "awayMoneyline": -162
     }
@@ -6450,8 +5978,6 @@
     "DraftKings": {
      "spread": -1.5,
      "spreadOpen": -1.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -125,
      "awayMoneyline": 105
     }
@@ -6478,8 +6004,6 @@
     "DraftKings": {
      "spread": 6,
      "spreadOpen": 6,
-     "overUnder": 48.5,
-     "overUnderOpen": 48.5,
      "homeMoneyline": 180,
      "awayMoneyline": -218
     }
@@ -6506,8 +6030,6 @@
     "DraftKings": {
      "spread": -16.5,
      "spreadOpen": -16.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": -1200,
      "awayMoneyline": 750
     }
@@ -6534,8 +6056,6 @@
     "DraftKings": {
      "spread": 1.5,
      "spreadOpen": 1.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": 100,
      "awayMoneyline": -120
     }
@@ -6562,8 +6082,6 @@
     "DraftKings": {
      "spread": 10,
      "spreadOpen": 10,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": 340,
      "awayMoneyline": -440
     }
@@ -6590,8 +6108,6 @@
     "DraftKings": {
      "spread": -7.5,
      "spreadOpen": -7.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": -290,
      "awayMoneyline": 235
     }
@@ -6618,8 +6134,6 @@
     "DraftKings": {
      "spread": -16.5,
      "spreadOpen": -16.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": -1200,
      "awayMoneyline": 750
     }
@@ -6646,8 +6160,6 @@
     "DraftKings": {
      "spread": -4.5,
      "spreadOpen": -4.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": -225,
      "awayMoneyline": 185
     }
@@ -6674,8 +6186,6 @@
     "DraftKings": {
      "spread": -1.5,
      "spreadOpen": 1.5,
-     "overUnder": 48.5,
-     "overUnderOpen": 48.5,
      "homeMoneyline": -110,
      "awayMoneyline": -110
     }
@@ -6702,8 +6212,6 @@
     "DraftKings": {
      "spread": -6.5,
      "spreadOpen": -6.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -270,
      "awayMoneyline": 220
     }
@@ -6730,8 +6238,6 @@
     "DraftKings": {
      "spread": -21.5,
      "spreadOpen": -21.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -3600,
      "awayMoneyline": 1500
     }
@@ -6758,8 +6264,6 @@
     "DraftKings": {
      "spread": -6.5,
      "spreadOpen": -6.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": -278,
      "awayMoneyline": 225
     }
@@ -6786,8 +6290,6 @@
     "DraftKings": {
      "spread": -2.5,
      "spreadOpen": -2.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": -142,
      "awayMoneyline": 120
     }
@@ -6814,8 +6316,6 @@
     "DraftKings": {
      "spread": -8.5,
      "spreadOpen": -8.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": -310,
      "awayMoneyline": 250
     }
@@ -6842,8 +6342,6 @@
     "DraftKings": {
      "spread": -6.5,
      "spreadOpen": -6.5,
-     "overUnder": 50.5,
-     "overUnderOpen": 50.5,
      "homeMoneyline": -258,
      "awayMoneyline": 210
     }
@@ -6870,8 +6368,6 @@
     "DraftKings": {
      "spread": 6,
      "spreadOpen": 6,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": 210,
      "awayMoneyline": -258
     }
@@ -6898,8 +6394,6 @@
     "DraftKings": {
      "spread": 1.5,
      "spreadOpen": 1.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -108,
      "awayMoneyline": -112
     }
@@ -6926,8 +6420,6 @@
     "DraftKings": {
      "spread": 7.5,
      "spreadOpen": 7.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": 260,
      "awayMoneyline": -325
     }
@@ -6954,8 +6446,6 @@
     "DraftKings": {
      "spread": -12.5,
      "spreadOpen": -12.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": -550,
      "awayMoneyline": 410
     }
@@ -6982,8 +6472,6 @@
     "DraftKings": {
      "spread": -3.5,
      "spreadOpen": -3.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": -185,
      "awayMoneyline": 154
     }
@@ -7010,8 +6498,6 @@
     "DraftKings": {
      "spread": 4.5,
      "spreadOpen": 4.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": 180,
      "awayMoneyline": -218
     }
@@ -7038,8 +6524,6 @@
     "DraftKings": {
      "spread": -3,
      "spreadOpen": -3,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -142,
      "awayMoneyline": 120
     }
@@ -7066,8 +6550,6 @@
     "DraftKings": {
      "spread": -16.5,
      "spreadOpen": -16.5,
-     "overUnder": 50.5,
-     "overUnderOpen": 50.5,
      "homeMoneyline": -950,
      "awayMoneyline": 625
     }
@@ -7094,8 +6576,6 @@
     "DraftKings": {
      "spread": -6,
      "spreadOpen": -6,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": -258,
      "awayMoneyline": 210
     }
@@ -7122,8 +6602,6 @@
     "DraftKings": {
      "spread": -6.5,
      "spreadOpen": -6.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": -238,
      "awayMoneyline": 195
     }
@@ -7150,8 +6628,6 @@
     "DraftKings": {
      "spread": 15.5,
      "spreadOpen": 15.5,
-     "overUnder": 61.5,
-     "overUnderOpen": 61.5,
      "homeMoneyline": 500,
      "awayMoneyline": -700
     }
@@ -7178,8 +6654,6 @@
     "DraftKings": {
      "spread": 2.5,
      "spreadOpen": 2.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": 120,
      "awayMoneyline": -142
     }
@@ -7206,8 +6680,6 @@
     "DraftKings": {
      "spread": -4,
      "spreadOpen": -4,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": -198,
      "awayMoneyline": 164
     }
@@ -7234,8 +6706,6 @@
     "DraftKings": {
      "spread": -8.5,
      "spreadOpen": -8.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": -360,
      "awayMoneyline": 285
     }
@@ -7262,8 +6732,6 @@
     "DraftKings": {
      "spread": -21,
      "spreadOpen": -21,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": -1800,
      "awayMoneyline": 1000
     }
@@ -7290,8 +6758,6 @@
     "DraftKings": {
      "spread": -10,
      "spreadOpen": -10,
-     "overUnder": 58.5,
-     "overUnderOpen": 58.5,
      "homeMoneyline": -455,
      "awayMoneyline": 350
     }
@@ -7318,8 +6784,6 @@
     "DraftKings": {
      "spread": -13.5,
      "spreadOpen": -13.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": -600,
      "awayMoneyline": 440
     }
@@ -7346,8 +6810,6 @@
     "DraftKings": {
      "spread": -2.5,
      "spreadOpen": -2.5,
-     "overUnder": 51.5,
-     "overUnderOpen": 51.5,
      "homeMoneyline": -142,
      "awayMoneyline": 120
     }
@@ -7374,8 +6836,6 @@
     "DraftKings": {
      "spread": 1.5,
      "spreadOpen": 1.5,
-     "overUnder": 57.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": 100,
      "awayMoneyline": -120
     }
@@ -7402,8 +6862,6 @@
     "DraftKings": {
      "spread": -16.5,
      "spreadOpen": -16.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -1050,
      "awayMoneyline": 675
     }
@@ -7430,8 +6888,6 @@
     "DraftKings": {
      "spread": -17.5,
      "spreadOpen": -17.5,
-     "overUnder": 56.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -1200,
      "awayMoneyline": 750
     }
@@ -7458,8 +6914,6 @@
     "DraftKings": {
      "spread": -16.5,
      "spreadOpen": -16.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": -950,
      "awayMoneyline": 625
     }
@@ -7486,8 +6940,6 @@
     "DraftKings": {
      "spread": -14.5,
      "spreadOpen": -14.5,
-     "overUnder": 57.5,
-     "overUnderOpen": 56.5,
      "homeMoneyline": -600,
      "awayMoneyline": 440
     }
@@ -7514,8 +6966,6 @@
     "DraftKings": {
      "spread": 4.5,
      "spreadOpen": 4.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": 170,
      "awayMoneyline": -205
     }
@@ -7542,8 +6992,6 @@
     "DraftKings": {
      "spread": 2.5,
      "spreadOpen": 2.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": 120,
      "awayMoneyline": -142
     }
@@ -7570,8 +7018,6 @@
     "DraftKings": {
      "spread": -10,
      "spreadOpen": -10,
-     "overUnder": 52.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": -425,
      "awayMoneyline": 330
     }
@@ -7598,8 +7044,6 @@
     "DraftKings": {
      "spread": -3,
      "spreadOpen": -3,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": -162,
      "awayMoneyline": 136
     }
@@ -7626,8 +7070,6 @@
     "DraftKings": {
      "spread": 3,
      "spreadOpen": 3,
-     "overUnder": 57.5,
-     "overUnderOpen": 57.5,
      "homeMoneyline": 136,
      "awayMoneyline": -162
     }
@@ -7654,8 +7096,6 @@
     "DraftKings": {
      "spread": -4.5,
      "spreadOpen": -4.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": -218,
      "awayMoneyline": 180
     }
@@ -7682,8 +7122,6 @@
     "DraftKings": {
      "spread": 1.5,
      "spreadOpen": 1.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": -102,
      "awayMoneyline": -118
     }
@@ -7710,8 +7148,6 @@
     "DraftKings": {
      "spread": -1.5,
      "spreadOpen": -1.5,
-     "overUnder": 53.5,
-     "overUnderOpen": 53.5,
      "homeMoneyline": -125,
      "awayMoneyline": 105
     }
@@ -7738,8 +7174,6 @@
     "DraftKings": {
      "spread": 3.5,
      "spreadOpen": 3.5,
-     "overUnder": 52.5,
-     "overUnderOpen": 52.5,
      "homeMoneyline": 145,
      "awayMoneyline": -175
     }
@@ -7766,8 +7200,6 @@
     "DraftKings": {
      "spread": -15.5,
      "spreadOpen": -15.5,
-     "overUnder": 54.5,
-     "overUnderOpen": 54.5,
      "homeMoneyline": -700,
      "awayMoneyline": 500
     }
@@ -7794,8 +7226,6 @@
     "DraftKings": {
      "spread": 10.5,
      "spreadOpen": 10.5,
-     "overUnder": 55.5,
-     "overUnderOpen": 55.5,
      "homeMoneyline": 360,
      "awayMoneyline": -470
     }
@@ -7822,8 +7252,6 @@
     "DraftKings": {
      "spread": -13.5,
      "spreadOpen": -13.5,
-     "overUnder": 46.5,
-     "overUnderOpen": 46.5,
      "homeMoneyline": -575,
      "awayMoneyline": 425
     }
@@ -7850,8 +7278,6 @@
     "DraftKings": {
      "spread": 2.5,
      "spreadOpen": 2.5,
-     "overUnder": 37.5,
-     "overUnderOpen": 37.5,
      "homeMoneyline": 120,
      "awayMoneyline": -142
     }

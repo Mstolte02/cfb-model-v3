@@ -176,7 +176,7 @@ def main():
         state.ratings.setdefault(team, model.team_logit_strength(comp, team))
     power = current_power_ratings(model, comp, state).set_index("team")
     playoff = {r["team"]: r for r in
-               json.loads((VIZ / "playoff.json").read_text())["teams"]}
+               json.loads((VIZ / "playoff_current.json").read_text())["teams"]}
 
     # Strength of schedule from the real 2026 slate: the mean rating of everyone a
     # team actually plays, so the dashboard can separate a good record from a good
@@ -219,7 +219,7 @@ def main():
             # The dashboard IS the odds table now, so it needs the full run of rounds
             # rather than the three headline numbers it used to show alongside the
             # O/D/talent columns. Teams the simulation never selected are absent from
-            # playoff.json entirely and legitimately read 0.
+            # playoff_current.json entirely and legitimately read 0.
             "conf_champ": po.get("conf_champ", 0.0),
             "playoff": po.get("playoff", 0.0),
             "bye": po.get("bye", 0.0),
@@ -416,7 +416,7 @@ def export_players():
     #
     # scale stays in the payload at 1.0 rather than being deleted, because the app
     # reads it and a missing key would silently become undefined in the arithmetic.
-    sim_path = VIZ / "playoff.json"
+    sim_path = VIZ / "playoff_current.json"
     proj_wins, proj_games = {}, {}
     if sim_path.exists():
         for r in json.loads(sim_path.read_text())["teams"]:

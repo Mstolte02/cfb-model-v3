@@ -23,25 +23,28 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoff, model, odds, editorial, bettingValidation, warValidity, betTracking, deservingModel] = await Promise.all([
+  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
     fetchJSON("data/ratings.json"),
-    fetchJSON("data/playoff.json"),
+    fetchJSON("data/playoff_current.json"),
+    fetchJSON("data/playoff_preseason.json"),
     fetchJSON("data/model_v4.json"),
     fetchJSON("data/odds.json").catch(() => ({ markets: {}, weekly: [], sources: {} })),
     fetchJSON("data/editorial.json").catch(() => ({ prior_final_ap: [], headshots: {} })),
     fetchJSON("data/betting_validation.json").catch(() => ({ markets: {} })),
     fetchJSON("data/war_validity.json").catch(() => ({})),
     fetchJSON("data/bet_tracking.json").catch(() => null),
+    fetchJSON("data/locked_results_2026.json").catch(() => ({ bets: [] })),
     fetchJSON("data/deserving-model.json").catch(() => null),
   ]);
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
   // two-deep; it was a knowingly worse backtest kept as an alternative view, and it is
   // gone too. Talent is a PFF / recruiting / WAR blend whose weights are swept jointly
   // under leave-one-season-out and exported, not written in here.
-  const DATA = { ratings, playoff, model };
+  let playoffVersion = "current";
+  const DATA = { ratings, playoff: playoffCurrent, model };
   const cur = () => DATA;
 
   if (model.schema_version !== 4 ||
@@ -802,10 +805,13 @@
 
   function renderPlayoff() {
     const playoff = cur().playoff;
+    const snapshot = playoffVersion === "preseason"
+      ? "Preseason snapshot — permanently locked"
+      : "Current projection — updates with completed games";
     document.getElementById("playoff-meta").innerHTML =
-      `Monte Carlo over the full 2026 schedule — <b>${playoff.n_sims.toLocaleString()}
-       simulations</b>. Rules: ${esc(playoff.rules)}. Committee ranking modelled on
-       every published CFP committee ranking since 2014 (${esc(playoff.committee_proxy || "")}).
+      `<b>${snapshot}</b>. ${esc(playoff.engine || "Season Monte Carlo")} over the full 2026 schedule — <b>${playoff.n_sims.toLocaleString()}
+       simulations</b>. Rules: ${esc(playoff.rules)}. Ranking input:
+       ${esc(playoff.committee_proxy || "model power order")}.
 `;
 
     const P = playoff.teams;
@@ -814,7 +820,7 @@
 
     if (!br) {
       document.getElementById("bracket").innerHTML =
-        `<p class="sub">No bracket in this export — re-run <code>scripts.simulate_playoff</code>.</p>`;
+        `<p class="sub">No bracket in this export — re-run <code>scripts/simulate_playoff.R</code>.</p>`;
     } else {
       const G = resolveBracket(br.games, br.feeds);
       document.getElementById("bracket").innerHTML = bracketHTML(G, br.seeds,
@@ -1626,7 +1632,7 @@
       </div>
       <div class="stat-row">
         <span><b>${esc(abbr(fav))} −${spread.toFixed(1)}</b> spread</span>
-        <span><b>${r.total.toFixed(1)}</b> total (O/U)</span>
+        <span><b>${r.total.toFixed(1)}</b> projected points</span>
         <span><b>${sa}–${sb}</b> projected score</span>
       </div>
       ${simPanelHTML(a, b, r)}
@@ -2661,24 +2667,10 @@
     // plus the calibration study's own quantity: the model's expected wins must
     // clear the posted line by minWinGap before a row earns the flag.
     win_total: { minModelP: .50, minGap: .20, minWinGap: .5 },
-    // Weekly gates are in points of spread and total. A moneyline selection must
+    // Weekly spread gates are in points. A moneyline selection must
     // also be more likely than not in the model; being less pessimistic than the
     // market is not enough to call a team the outright winner.
     spread:    { minModelP: 0,   minGap: 8 },
-    // TOTALS ARE NO LONGER FLAGGED AS BETS (2026-09-08). No gate on this market is a
-    // demonstrated edge. Over 2022-25 the model's totals go 53.1% and +1.31% ROI at a
-    // 2-point gap, 52.3% at 6, and 51.3% and -1.97% at 10; break-even at -110 is
-    // 52.4%, so the curve crosses it in both directions and no part of the range is a
-    // stable side. Raising the bar only takes fewer, more extreme disagreements, and
-    // they are not better ones. So the board now says what the model thinks the game
-    // totals - the projected number and its gap to the book - and stops there.
-    //
-    // `trackedThrough` is the last week that still earns a flag. Week 1 is settled and
-    // its total bets keep their tags, their results and their place in the live 2026
-    // record; week 2 onward shows the model number with no bet. minGap stays 2 because
-    // the 2022-25 half of the Tracking tab is a record of what that gate did, and
-    // rewriting it would erase a settled history rather than stop a future bet.
-    total:     { minModelP: 0,   minGap: 2, trackedThrough: 1 },
     moneyline: { minModelP: .50, minGap: .20 }
   };
   const quantileFromCounts = (counts, q) => {
@@ -3348,9 +3340,6 @@
           marketValue: r.pA >= marketHome ? line.homeMoneyline : line.awayMoneyline,
           modelValue: r.pA >= marketHome ? r.pA : 1-r.pA, marketHomeP: marketHome };
       }
-      if (market === "total") return { ...g, line, r,
-        gap: line.overUnder == null ? null : r.total - line.overUnder,
-        marketValue: line.overUnder, modelValue: r.total };
       const modelSpread = -r.margin;
       return { ...g, line, r, modelSpread, consensus: line.spread,
         gap: line.spread == null ? null : line.spread - modelSpread,
@@ -3379,17 +3368,14 @@
   /* The bet the board would print, or null for no bet. This IS the rule - both the
      board's flag and the tracker's record come from this one function. */
   function betToPlace(g, market) {
+    const locked = g.week === 1 && (lockedResults.bets || []).find(
+      b => b.game_id === g.id && b.market === market);
+    if (locked) return locked.bet;
     const RULE = BET_RULES[market];
     if (g.bettingExcluded) return null;
     if (g.gap == null || g.marketValue == null) return null;
-    // A market can be retired from the bet list without losing what it already did:
-    // weeks up to `trackedThrough` keep their flags and their settled results, and
-    // every later week shows the model's number with no bet against it.
-    if (RULE.trackedThrough != null && (g.week == null || g.week > RULE.trackedThrough))
-      return null;
     const flip = picksOtherSide(g, market);
     if (!flip && Math.abs(g.gap) < RULE.minGap) return null;
-    if (market === "total") return `${g.gap >= 0 ? "Over" : "Under"} ${Number(g.marketValue).toFixed(1)}`;
     const home = g.gap >= 0, side = home ? g.home : g.away;
     if (market === "moneyline") {
       if (g.modelValue == null || g.modelValue <= RULE.minModelP) return null;
@@ -3411,7 +3397,7 @@
     const betRows = rows.filter(g => betToPlace(g, market));
     renderBetFilter(betRows.length, rows.length, week);
 
-    const marketLabel = market === "moneyline" ? "Moneyline" : market === "total" ? "Total" : "Spread";
+    const marketLabel = market === "moneyline" ? "Moneyline" : "Spread";
     const bookLabel = "DraftKings";
     if (!rows.length) {
       document.getElementById("weekly-lines").innerHTML = `<div class="weekly-empty">
@@ -3420,22 +3406,17 @@
       return;
     }
     if (betsOnly && !betRows.length) {
-      const through = BET_RULES[market].trackedThrough;
       document.getElementById("weekly-lines").innerHTML = `<div class="weekly-empty">
-        <b>${through == null
-          ? `No ${marketLabel.toLowerCase()} bets clear the model's gate ${week == null ? "right now" : "in week " + week}.`
-          : `${marketLabel} is not on the bet list.`}</b>
-        <small>${through == null
-          ? "Turn off the bet filter to compare every posted line."
-          : `The model still prints its own number for every game and its gap to the book; it just does not call one a bet. Bets flagged through week ${through} keep their results in the Tracking tab.`}</small></div>`;
+        <b>No ${marketLabel.toLowerCase()} bets clear the model's gate ${week == null ? "right now" : "in week " + week}.</b>
+        <small>Turn off the bet filter to compare every posted line.</small></div>`;
       return;
     }
     const visibleRows = betsOnly ? betRows : rows;
     document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span><span>Bet to place</span></div>${visibleRows.map(g => {
-      const lean = market === "total" ? (g.gap >= 0 ? "Over" : "Under") : (g.gap >= 0 ? g.home : g.away);
-      const marketText = g.marketValue == null ? "—" : market === "moneyline" ? americanOdds(g.marketValue) : `${g.marketValue > 0 && market !== "total" ? "+" : ""}${Number(g.marketValue).toFixed(1)}`;
+      const lean = g.gap >= 0 ? g.home : g.away;
+      const marketText = g.marketValue == null ? "—" : market === "moneyline" ? americanOdds(g.marketValue) : `${g.marketValue > 0 ? "+" : ""}${Number(g.marketValue).toFixed(1)}`;
       const modelText = g.modelValue == null ? "—" : market === "moneyline" ? pct(g.modelValue, 1) : `${g.modelValue > 0 && market === "spread" ? "+" : ""}${g.modelValue.toFixed(1)}`;
-      const gapText = g.gap == null ? "—" : `${esc(market === "total" ? lean : abbr(lean))} ${market === "moneyline" ? pct(Math.abs(g.gap), 1) : Math.abs(g.gap).toFixed(1)}`;
+      const gapText = g.gap == null ? "—" : `${esc(abbr(lean))} ${market === "moneyline" ? pct(Math.abs(g.gap), 1) : Math.abs(g.gap).toFixed(1)}`;
       const bet = betToPlace(g, market);
       const final = bet ? finals.get(g.id) : null;
       const profit = final ? settleBet(g, market, final.home, final.away) : null;
@@ -3486,6 +3467,13 @@
     document.querySelectorAll("#weekly-market .seg-btn").forEach(x => x.classList.toggle("active", x === b));
     renderWeeklyLines();
   }));
+  document.querySelectorAll("#playoff-version .seg-btn").forEach(b => b.addEventListener("click", () => {
+    playoffVersion = b.dataset.version === "preseason" ? "preseason" : "current";
+    DATA.playoff = playoffVersion === "preseason" ? playoffPreseason : playoffCurrent;
+    document.querySelectorAll("#playoff-version .seg-btn").forEach(x =>
+      x.classList.toggle("active", x === b));
+    renderPlayoff();
+  }));
 
   /* ---------- boot ---------- */
   /* =======================================================================
@@ -3499,7 +3487,7 @@
      bet. Pushes return the stake, so they are not risked capital and sit outside both
      the hit rate and the ROI denominator - counting them as bets flatters everything.
 
-     Spreads and totals settle at -110, which is what the board's prices are quoted at;
+     Spreads settle at -110, which is what the board's prices are quoted at;
      moneylines settle at the price actually shown. Break-even at -110 is 52.38%, and
      that line is drawn on the tab because a 51% record reads like a win until you see
      it. */
@@ -3511,16 +3499,14 @@
      Returns null when the game has no final score yet. */
   function settleBet(g, market, home, away) {
     if (g.marketValue == null || g.gap == null) return null;
-    const margin = home - away, total = home + away;
+    const margin = home - away;
     if (market === "moneyline") {
       const takeHome = g.gap >= 0;
       if (margin === 0) return 0;
       const won = takeHome ? margin > 0 : margin < 0;
       return won ? americanProfit(g.marketValue) : -1;
     }
-    const edge = market === "total"
-      ? (g.gap >= 0 ? total - g.marketValue : g.marketValue - total)
-      : (g.gap >= 0 ? margin + g.marketValue : -margin - g.marketValue);
+    const edge = g.gap >= 0 ? margin + g.marketValue : -margin - g.marketValue;
     return edge > 0 ? 100 / 110 : edge < 0 ? -1 : 0;
   }
 
@@ -3533,8 +3519,11 @@
   /* The live record: flag with betToPlace, settle with the final score. Same rows
      the board draws, so the two can never disagree. */
   function liveBets(market) {
-    const played = marketGames.filter(g => finals.has(g.id));
-    return marketRows(played, market).map(g => {
+    const frozen = (lockedResults.bets || []).filter(b => b.market === market).map(b => ({
+      ...b, id: b.game_id, profit: b.profit_units, played: { week: b.week }
+    }));
+    const played = marketGames.filter(g => g.week !== 1 && finals.has(g.id));
+    const later = marketRows(played, market).map(g => {
       const bet = betToPlace(g, market);
       if (!bet) return null;
       const f = finals.get(g.id);
@@ -3542,6 +3531,7 @@
       if (profit == null) return null;
       return { ...g, market, bet, profit, score: `${f.away}–${f.home}`, played: f };
     }).filter(Boolean);
+    return frozen.concat(later);
   }
 
   function tally(bets) {
@@ -3559,8 +3549,8 @@
   const money = v => `${v < 0 ? "−" : ""}$${Math.abs(v).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
   const signedPct = v => v == null ? "—" : `${v >= 0 ? "+" : "−"}${(Math.abs(v) * 100).toFixed(1)}%`;
 
-  /* THE 52.4% BREAK-EVEN ONLY APPLIES WHERE THE PRICE IS -110, which is spreads and
-     totals. A moneyline settles at its own number, and the break-even moves with it:
+  /* THE 52.4% BREAK-EVEN ONLY APPLIES WHERE THE PRICE IS -110, which is spreads.
+     A moneyline settles at its own number, and the break-even moves with it:
      a -330 favourite needs 76.7% to be worth taking and a +265 dog needs 27.4%. So a
      selection that includes moneylines gets no break-even line and no colour against
      one - a 35.9% hit rate is not a failing grade there, it is what backing priced
@@ -3582,8 +3572,8 @@
   }
 
   let trackMarket = "all", trackPeriod = "current";
-  const MKTS = ["spread", "total", "moneyline"];
-  const MKT_LABEL = { spread: "Spread", total: "Over / under", moneyline: "Moneyline" };
+  const MKTS = ["spread", "moneyline"];
+  const MKT_LABEL = { spread: "Spread", moneyline: "Moneyline" };
 
   function renderTracking() {
     const picked = trackMarket === "all" ? MKTS : [trackMarket];
@@ -3609,9 +3599,7 @@
           <div><small>Final</small><b>${b.score}</b></div>
           <div class="tk-pl"><small>${b.profit > 0 ? "Won" : b.profit < 0 ? "Lost" : "Push"}</small><b>${money(b.profit * UNIT)}</b></div>
         </div>`).join("");
-      // the break-even line follows the bets actually settled, not the filter: with
-      // "All markets" selected and only spread and total bets on the board, -110 is
-      // the right number and hiding it would be the misleading answer
+      // The break-even line follows the bets actually settled, not only the filter.
       host.innerHTML = `<div class="tk-panel"><h3>2026</h3>${tileRow(t, [...new Set(live.map(b => b.market))])}
         <div class="tk-list">${rows}</div></div>`;
       wireTeamLinks();
@@ -3641,11 +3629,7 @@
       const s = bt.markets[m];
       if (!s) return "";
       const flat = hasPriced110([m]);
-      // The gate a settled record was produced under, plus a word when that market is
-      // no longer flagged going forward - the history stands, the bet stops.
-      const gate = BET_RULES[m] && BET_RULES[m].trackedThrough != null
-        ? `gap ≥ ${s.min_gap} · retired`
-        : `gap ≥ ${s.min_gap}`;
+      const gate = `gap ≥ ${s.min_gap}`;
       return `<tr class="${picked.includes(m) ? "" : "dim"}"><td>${MKT_LABEL[m]}</td><td class="num">${gate}</td>
         <td class="num">${s.bets}</td><td class="num">${s.won}–${s.lost}${s.push ? `–${s.push}` : ""}</td>
         <td class="num${flat && s.hit_rate != null ? (s.hit_rate > BREAK_EVEN_110 ? " good" : " bad") : ""}">${s.hit_rate == null ? "—" : (s.hit_rate * 100).toFixed(1) + "%"}</td>

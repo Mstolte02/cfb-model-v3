@@ -28,6 +28,10 @@ class BettingBacktestTests(unittest.TestCase):
         self.assertEqual(line["spread"], -3)
         self.assertEqual(select_line({"lines": [game["lines"][0]]}), (None, None))
 
+    def test_game_total_is_not_a_supported_historical_market(self):
+        with self.assertRaises(ValueError):
+            settle_games(pd.DataFrame(), "total", 2.0)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -535,7 +535,7 @@ def main(n_sims=20000, seed=2026):
     }
     viz = ROOT / "viz" / "data"
     viz.mkdir(parents=True, exist_ok=True)
-    (viz / "playoff.json").write_text(json.dumps(result, indent=1))
+    (viz / "playoff_current.json").write_text(json.dumps(result, indent=1))
 
     print(f"\n=== 2026-27 CFP odds ({n_sims:,} sims) — top 20 ===")
     print(f"{'team':<20}{'conf':<18}{'W':>5}{'CC%':>7}{'CFP%':>7}"
@@ -544,7 +544,7 @@ def main(n_sims=20000, seed=2026):
         print(f"{r['team']:<20}{r['conference']:<18}{r['avg_wins']:>5.1f}"
               f"{100*r['conf_champ']:>6.1f}%{100*r['playoff']:>6.1f}%"
               f"{100*r['bye']:>6.1f}%{100*r['champ']:>7.1f}%")
-    print(f"\n-> {viz / 'playoff.json'}")
+    print(f"\n-> {viz / 'playoff_current.json'}")
 
 
 if __name__ == "__main__":

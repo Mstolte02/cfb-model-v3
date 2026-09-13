@@ -6,7 +6,7 @@ The LIVE half is graded in the browser, from the same `predict()` and `BET_RULES
 Market board flags with, so a bet can never appear in the tracker that the board did
 not show or vice versa. Nothing in this file feeds it.
 
-This file is the BACKTEST half: the same three rules applied to the expanding-window
+This file is the BACKTEST half: the spread and moneyline rules applied to the expanding-window
 v4 backtest over 2022-25, which is the only place a settled record exists at all. It is
 NOT a live record and the tab says so - 2026 has not played a game yet.
 
@@ -15,8 +15,8 @@ viz/app.js and is parsed out of it, because a second copy in Python is a copy th
 stale the first time someone tunes a gate. If the parse fails the build fails.
 
 Stake is flat - `UNIT` dollars a bet, win or lose - because a flat stake is the only
-one that makes ROI mean "return per dollar risked". Spreads and totals are priced at
--110 throughout; moneylines settle at the archived price for the side taken, which is
+one that makes ROI mean "return per dollar risked". Spreads are priced at -110
+throughout; moneylines settle at the archived price for the side taken, which is
 why no single break-even number is reported for them.
 
 Run:  venv/Scripts/python -m scripts.export_bet_tracking
@@ -52,7 +52,7 @@ def app_bet_rules() -> dict:
         raise SystemExit("could not find BET_RULES in viz/app.js")
     body = m.group(1)
     rules = {}
-    for market in ("spread", "total", "moneyline"):
+    for market in ("spread", "moneyline"):
         r = re.search(rf"^\s*{market}:\s*\{{([^}}]*)\}}", body, re.M)
         if not r:
             raise SystemExit(f"BET_RULES has no {market} row")
@@ -97,7 +97,7 @@ def main() -> None:
                            "by_season": [
                                {"season": int(s), **summarise(g)}
                                for s, g in sorted(z.groupby("season"))]}
-        line = np.where(market == "total", z.get("overUnder"), z.get("spread"))
+        line = z.get("price") if market == "moneyline" else z.get("spread")
         for r, ln in zip(z.itertuples(), line):
             bets.append({
                 "market": market, "season": int(r.season), "week": int(r.week),
@@ -112,7 +112,7 @@ def main() -> None:
     out = {
         "unit": UNIT,
         "line_source": "DraftKings",
-        "price_note": "spreads and totals settle at -110; moneylines at the archived price",
+        "price_note": "spreads settle at -110; moneylines at the archived price",
         "rules": rules,
         "backtest": {
             "seasons": sorted(int(s) for s in d.season.unique()),

@@ -41,14 +41,13 @@ SCHEDULE = ROOT / "viz" / "data" / "schedule.json"
 MODEL = ROOT / "viz" / "data" / "model_v4.json"
 RATINGS = ROOT / "viz" / "data" / "ratings.json"
 TEAMS = ROOT / "viz" / "data" / "teams.json"
-PLAYOFF = ROOT / "viz" / "data" / "playoff.json"
+PLAYOFF = ROOT / "viz" / "data" / "playoff_current.json"
 HISTORICAL = ROOT / "audit" / "book_shopping_backtest.json"
 AVAILABILITY = ROOT / "war_model" / "availability_events_2026.csv"
 
 PROVIDER_ALIAS = {"Draft Kings": "DraftKings"}
 BOARD_PROVIDER = "DraftKings"
-QUOTE_FIELDS = ("spread", "spreadOpen", "overUnder", "overUnderOpen",
-                "homeMoneyline", "awayMoneyline")
+QUOTE_FIELDS = ("spread", "spreadOpen", "homeMoneyline", "awayMoneyline")
 
 # These lines were not available to the model as a ready, forward-looking Week 0
 # board. Both games also involved a first-year FBS team with only the newcomer

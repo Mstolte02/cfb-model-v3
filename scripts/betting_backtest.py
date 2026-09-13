@@ -1,7 +1,7 @@
-"""Leakage-safe validation of futures, spreads, moneylines and totals.
+"""Leakage-safe validation of futures, spreads and moneylines.
 
-The model predictions are the expanding-window v4 backtest.  A season is never used
-to fit its own probabilities, margins, or totals.  Betting thresholds are chosen on
+The model predictions are the expanding-window v4 backtest. A season is never used
+to fit its own probabilities or margins. Betting thresholds are chosen on
 2022-24 and reported on the untouched 2025 holdout.  CFBD's archived posted lines are
 not represented as true closing lines; that timestamp is not present in the feed.
 
@@ -21,11 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 import pandas as pd
 
-from config import ARTIFACTS, GAME_YEARS, OPP_ADJ_ALPHA, ROOT
-from scripts.train import load_bundle
-from src import oppadj as OA
-from src import spread as SP
-from src import v4 as V4
+from config import ARTIFACTS, ROOT
 
 PREDICTIONS = ARTIFACTS / "v4_backtest_predictions.csv"
 OUT_CSV = ARTIFACTS / "betting_backtest_predictions.csv"
@@ -62,30 +58,7 @@ def select_line(game: dict) -> tuple[str | None, dict | None]:
     return (LINE_PROVIDER, line) if line is not None else (None, None)
 
 
-def point_totals() -> dict[tuple[int, int, str, str], float]:
-    """Expanding-window total predictions from entering-season O/D only."""
-    std, talent, ret, games, _ = load_bundle()
-    od = OA.build_od_by_year(std, games, OPP_ADJ_ALPHA)
-    frames = {y: V4.build_frame(y, std, talent, ret, od) for y in GAME_YEARS}
-    out = {}
-    for test in range(2022, 2026):
-        train = [y for y in GAME_YEARS if y < test and frames.get(y) is not None]
-        X = np.vstack([SP.build_points_rows(frames[y], games[y])[0] for y in train])
-        target = np.concatenate([SP.build_points_rows(frames[y], games[y])[1]
-                                 for y in train])
-        model, _ = SP.fit(X, target)
-        fr = frames[test]
-        for g in games[test].itertuples():
-            if g.home_team not in fr.index or g.away_team not in fr.index:
-                continue
-            total = SP.game(model, fr, g.home_team, g.away_team,
-                            bool(g.neutral_site))["total"]
-            out[(test, int(g.week), g.home_team, g.away_team)] = total
-    return out
-
-
 def game_market_rows(pred: pd.DataFrame) -> pd.DataFrame:
-    totals = point_totals()
     lookup = {(int(r.season), int(r.week), r.home_team, r.away_team): r
               for r in pred.itertuples()}
     rows = []
@@ -102,20 +75,21 @@ def game_market_rows(pred: pd.DataFrame) -> pd.DataFrame:
                 continue
             row = {"season": year, "week": key[1], "home": key[2], "away": key[3],
                    "book": book, "home_score": hp, "away_score": ap,
-                   "actual_margin": hp - ap, "actual_total": hp + ap,
+                   "actual_margin": hp - ap,
                    "model_home_p": float(p.p_dynamic),
                    "model_margin": float(p.pred_margin),
-                   "model_total": totals.get(key), **line}
+                   "spread": line.get("spread"),
+                   "homeMoneyline": line.get("homeMoneyline"),
+                   "awayMoneyline": line.get("awayMoneyline")}
             rows.append(row)
     d = pd.DataFrame(rows)
-    # Directional model-minus-market gaps. Positive always means bet the home/over.
+    # Directional model-minus-market gaps. Positive always means bet the home team.
     d["spread_gap"] = d["spread"] + d["model_margin"]
     both_ml = d.homeMoneyline.notna() & d.awayMoneyline.notna()
     ih = d.homeMoneyline.map(lambda x: implied(x) if pd.notna(x) else np.nan)
     ia = d.awayMoneyline.map(lambda x: implied(x) if pd.notna(x) else np.nan)
     d["market_home_p"] = np.where(both_ml, ih / (ih + ia), np.nan)
     d["moneyline_gap"] = d.model_home_p - d.market_home_p
-    d["total_gap"] = d.model_total - d.overUnder
     return d
 
 
@@ -213,16 +187,11 @@ def settle_games(d: pd.DataFrame, market: str, threshold: float) -> pd.DataFrame
         home = z.moneyline_gap >= 0
         won = np.where(home, z.actual_margin > 0, z.actual_margin < 0)
         odds = np.where(home, z.homeMoneyline, z.awayMoneyline)
+        z["price"] = odds
         z["profit"] = [roi_result(bool(w), float(o)) for w, o in zip(won, odds)]
         z["won"] = won
     else:
-        z = d.dropna(subset=["overUnder", "total_gap"]).copy()
-        z = z[z.total_gap.abs() >= threshold]
-        over = z.total_gap >= 0
-        result = np.where(over, z.actual_total - z.overUnder,
-                          z.overUnder - z.actual_total)
-        z["profit"] = np.where(result > 0, 100/110, np.where(result < 0, -1, 0))
-        z["won"] = result > 0
+        raise ValueError(f"unsupported weekly market: {market}")
     return z
 
 
@@ -277,13 +246,12 @@ def main():
         "method": {"prediction_contract": "strict expanding window",
                    "threshold_contract": "selected on 2022-24; 2025 untouched holdout",
                    "weekly_lines": "DraftKings via CFBD; not asserted closing",
-                   "spread_and_total_price": "-110 assumed where side prices absent",
+                   "spread_price": "-110 assumed where side prices absent",
                    "futures_source": FUTURES_URL},
         "coverage": {"weekly_games": len(weekly), "futures_team_seasons": len(futures)},
         "markets": {
             "spread": validate(weekly, "spread", [0, 1, 1.5, 2, 2.5, 3, 4, 5, 6]),
             "moneyline": validate(weekly, "moneyline", [0, .02, .03, .04, .05, .06, .08, .1]),
-            "total": validate(weekly, "total", [0, 1, 1.5, 2, 2.5, 3, 4, 5, 6]),
             "win_total": validate(futures, "win_total", [0, .5, 1, 1.5, 2], futures=True),
         }}
     shopping = ROOT / "audit" / "book_shopping_backtest.json"

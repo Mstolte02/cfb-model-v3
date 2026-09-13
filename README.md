@@ -121,9 +121,9 @@ python -m scripts.facet_matchup_backtest
 python -m scripts.update_v4
 python -m scripts.rank
 
-# Rebuild season/CFP simulation and browser data from v4
-python -m scripts.simulate_playoff 20000
+# Rebuild browser data, then both full-season CFP projections
 python -m scripts.export_viz
+Rscript scripts/simulate_playoff.R 2000
 
 # Temporal, reciprocity, selection, and weekly-order invariants
 python -m unittest discover -s tests -v
@@ -925,8 +925,8 @@ configured and republishes the site only when tracked state changes.
 **Betting validation (August 2026).** `scripts.betting_backtest` joins the strict
 expanding-window v4 predictions to 2,872 archived CFBD posted lines and 342 historical
 DraftKings team win totals. Thresholds are selected on 2022-24 and evaluated once on
-2025. No market survived that holdout: spread -6.5% ROI (709 bets), moneyline -8.4%
-(237), total -5.5% (707), and season win totals -8.7% (127). The website therefore
+2025. No displayed game market survived that holdout: spread -6.5% ROI (709 bets),
+moneyline -8.4% (237), and season win totals -8.7% (127). The website therefore
 labels current differences **model gaps**, not betting edges, and shows this result
 beside the boards. CFBD does not timestamp its snapshot as a true closing line, so the
 audit does not call it one.
@@ -955,16 +955,10 @@ rows are reconstructed from `ratings.game_history`'s start-of-week predictions, 
 a game's own result nor another result from the same slate can leak into its displayed
 number.
 
-**Totals are off the bet list (8 September 2026).** The over/under market no longer
-produces a flagged bet. Its gap curve crosses the -110 break-even in both directions
-across the whole range (53.1% at a 2-point gap, 52.3% at 6, 51.3% at 10), so no gate on
-it is a defensible choice, and picking one anyway was the weakest thing the board did.
-The Market tab still projects every total and prints its gap to the book; it just does
-not call one a bet. `BET_RULES.total` in `viz/app.js` keeps `minGap: 2` and adds
-`trackedThrough: 1`, which is the mechanism: weeks up to that number keep their flags
-and settled results, later weeks show the number only. The 2022-25 backtest record and
-the week-1 2026 bets therefore stay in the Tracking tab, marked *retired*. Spread,
-moneyline and win totals are unchanged.
+**Game totals were removed (13 September 2026).** The Market and Tracking tabs expose
+only spreads and moneylines. Game-total prices, flags, and current/historical results
+are omitted from the public payloads and from the tracking exporter. Season win-total
+futures are a separate market and remain unchanged.
 
 **Availability history is append-only.** New injuries, returns and starter changes go
 into `war_model/availability_events_2026.csv` with observation/effective times and a
@@ -991,9 +985,9 @@ evidence and limitations are in `war_model/war_validity_audit.json`.
 ```bash
 ./venv/bin/python -m scripts.train                       # retrain (WAR blended in)
 ./venv/bin/python -m scripts.rank                        # 2026 power ratings
-./venv/bin/python -m scripts.simulate_playoff 20000      # CFP odds + bracket + win dists
 ./venv/bin/python -m scripts.prepare_logos               # ESPN basic logos + teams.json
 ./venv/bin/python -m scripts.export_viz                  # data for the web app
+Rscript scripts/simulate_playoff.R 2000                  # frozen preseason + current CFP projections
 ./venv/bin/python -m scripts.export_site_data            # odds, poll + player imagery
 ./venv/bin/python -m scripts.export_diagnostics          # Method tab — must run last
 python3 -m http.server 8642 -d viz                       # http://localhost:8642
@@ -1038,22 +1032,21 @@ retuning, MOV sample weighting. Bug fix: Air Force & Navy were silently dropped
 ```bash
 ./venv/bin/python -m scripts.train             # retrain (now saves margin model too)
 ./venv/bin/python -m scripts.rank              # 2026 power ratings
-./venv/bin/python -m scripts.simulate_playoff  # 20k-sim Monte Carlo -> CFP odds
+Rscript scripts/simulate_playoff.R 2000        # preseason + current full-season CFP odds
 ./venv/bin/python -m scripts.prepare_logos     # map/download team logos
 ./venv/bin/python -m scripts.export_viz        # export data for the web app
 ./venv/bin/python -m scripts.export_site_data  # odds, poll + player imagery
 python3 -m http.server 8642 -d viz             # open http://localhost:8642
 ```
 
-**Playoff Monte Carlo (`scripts/simulate_playoff.py`):** simulates all 761
-FBS-vs-FBS games on the real 2026 schedule + CCGs, then applies the confirmed
-**2026-27 CFP format**: 12 teams; auto-bids for ACC/Big 12/Big Ten/SEC champs
-(any ranking) + the highest-ranked Group of 6 team (champ or not); 7 at-large;
-straight seeding, top-4 byes, first round at the higher seed, fixed bracket.
-The committee ranking is proxied by
-`10·win% + 0.24·rating_z + 0.71·SOS_z + 1.12·power_conf + 0.056·head_to_head`,
-weights fit by `scripts/fit_committee.py` against every published committee ranking
-from 2014-2025 (leave-one-season-out Spearman ρ = 0.913).
+**Playoff simulation (`scripts/simulate_playoff.R`):** calls
+`cfbseedR::cfb_simulations()` with a custom results function driven by this model's
+matchup probabilities. It plays the remaining schedule week by week, resolves
+conference standings with cfbseedR's season-scoped tiebreakers, applies the 2026
+autobid policy, and simulates the fixed 12-team bracket. The script writes two public
+artifacts: `playoff_preseason.json` clears every result and ignores the in-season
+rating layer; `playoff_current.json` locks completed scores and uses current ratings.
+The preseason view uses a fixed seed and is labeled permanently locked.
 
 **Roster-weighted lens (July 2026):** a second rating variant that leans on the
 2026 roster instead of 2025 results — 70% two-deep PFF talent (vs 50%) and full

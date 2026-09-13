@@ -57,6 +57,26 @@ class MarketTrackingTests(unittest.TestCase):
         self.assertEqual(list(rows[0]["books"]), ["DraftKings"])
         self.assertEqual(rows[0]["books"]["DraftKings"]["spread"], -3)
 
+    def test_weekly_payload_omits_game_totals(self):
+        rows = weekly_payload({
+            (1, "DraftKings"): {"game_id": 1, "provider": "DraftKings", "week": 1,
+                "start": "2026-09-05T00:00:00Z", "home": "A", "away": "B",
+                "spread": -3, "overUnder": 51.5, "overUnderOpen": 50.0},
+        })
+        line = rows[0]["books"]["DraftKings"]
+        self.assertNotIn("overUnder", line)
+        self.assertNotIn("overUnderOpen", line)
+
+    def test_week_one_results_are_locked_and_include_tulsa_moneyline(self):
+        root = Path(__file__).resolve().parents[1]
+        ledger = json.loads((root / "viz/data/locked_results_2026.json").read_text())
+        self.assertTrue(ledger["locked"])
+        self.assertEqual(set(ledger["markets"]), {"spread", "moneyline"})
+        self.assertEqual(len(ledger["bets"]), 22)
+        tulsa = [b for b in ledger["bets"] if b["market"] == "moneyline"
+                 and b["selection"] == "Tulsa"]
+        self.assertEqual([(b["line"], b["profit_units"]) for b in tulsa], [(410, 4.1)])
+
     def test_published_ratings_cover_both_2026_fbs_newcomers(self):
         root = Path(__file__).resolve().parents[1]
         ratings = json.loads((root / "viz/data/ratings.json").read_text())
