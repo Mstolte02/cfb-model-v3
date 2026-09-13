@@ -484,7 +484,7 @@ def implied(odds: float) -> float:
 
 
 def moneyline_research_candidate(model_side: float, market_side: float,
-                                 minimum_gap: float = .15) -> bool:
+                                 minimum_gap: float = .20) -> bool:
     return model_side > .50 and model_side - market_side >= minimum_gap
 
 
@@ -880,7 +880,7 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None,
         "quote_events": len(events), "successful_checks": len(checks),
         "changed_quotes_this_check": len(changed), "games_with_quotes": check["games"],
         "books_with_quotes": sorted({r["provider"] for r in current}),
-        "watchlist_rule": {"minimum_gap": .15, "minimum_books": 2,
+        "watchlist_rule": {"minimum_gap": .20, "minimum_books": 2,
             "uncertainty_gate": "80% Jeffreys lower bound > best-price break-even + 1pp",
             "status": "forward research; never an automatic bet"},
         "weekly_board_updated_this_check": board_updated,

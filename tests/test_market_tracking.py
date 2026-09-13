@@ -67,15 +67,20 @@ class MarketTrackingTests(unittest.TestCase):
         self.assertNotIn("overUnder", line)
         self.assertNotIn("overUnderOpen", line)
 
-    def test_week_one_results_are_locked_and_include_tulsa_moneyline(self):
+    def test_week_one_results_are_locked_and_only_include_eligible_original_bets(self):
         root = Path(__file__).resolve().parents[1]
         ledger = json.loads((root / "viz/data/locked_results_2026.json").read_text())
         self.assertTrue(ledger["locked"])
         self.assertEqual(set(ledger["markets"]), {"spread", "moneyline"})
-        self.assertEqual(len(ledger["bets"]), 22)
+        self.assertEqual(len(ledger["bets"]), 18)
         tulsa = [b for b in ledger["bets"] if b["market"] == "moneyline"
                  and b["selection"] == "Tulsa"]
         self.assertEqual([(b["line"], b["profit_units"]) for b in tulsa], [(410, 4.1)])
+        excluded = {(b["game_id"], b["market"]) for b in ledger["bets"]}
+        self.assertNotIn((401864577, "spread"), excluded)     # NDSU was not rated yet
+        self.assertNotIn((401864577, "moneyline"), excluded)
+        self.assertNotIn((401858429, "moneyline"), excluded)  # Toledo model P <= 50%
+        self.assertNotIn((401870763, "moneyline"), excluded)  # Sam Houston P <= 50%
 
     def test_published_ratings_cover_both_2026_fbs_newcomers(self):
         root = Path(__file__).resolve().parents[1]
@@ -250,7 +255,8 @@ class MarketTrackingTests(unittest.TestCase):
     def test_moneyline_candidate_must_be_more_likely_than_not(self):
         self.assertFalse(moneyline_research_candidate(.48, .25))
         self.assertFalse(moneyline_research_candidate(.50, .25))
-        self.assertTrue(moneyline_research_candidate(.51, .30))
+        self.assertFalse(moneyline_research_candidate(.51, .32))
+        self.assertTrue(moneyline_research_candidate(.51, .31))
 
     def test_model_probability_is_reciprocal_on_neutral_field(self):
         model = {"teams": {"A": [1.0], "B": [-1.0]},

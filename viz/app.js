@@ -3347,12 +3347,14 @@
     });
   }
 
-  /* Outright disagreement: the model and the market pick different winners. A gap
+  /* For spreads, outright disagreement means the model and the market pick
+     different winners. A gap
      threshold alone misses these. A model that has the home team at 52% against a
      market at 45% is calling the other side of the game on a 7-point gap, which no
      sensible spread or moneyline gate would pass, and that is the strongest kind of
-     disagreement the board can show. It clears the gap gate, but the selected side
-     must still pass that market's probability floor. */
+     disagreement the board can show. It clears the spread gap gate. Moneylines do
+     not receive this exception: they must clear both their edge and probability
+     floors. */
   function picksOtherSide(g, market) {
     if (market === "moneyline") {
       if (g.modelValue == null || g.marketHomeP == null) return false;
@@ -3370,12 +3372,16 @@
   function betToPlace(g, market) {
     const locked = g.week === 1 && (lockedResults.bets || []).find(
       b => b.game_id === g.id && b.market === market);
-    if (locked) return locked.bet;
+    // Week 1 is an authoritative historical ledger. If a row is absent, it was
+    // not a bet at the time; never let today's rule/model manufacture it later.
+    if (g.week === 1) return locked ? locked.bet : null;
     const RULE = BET_RULES[market];
     if (g.bettingExcluded) return null;
     if (g.gap == null || g.marketValue == null) return null;
     const flip = picksOtherSide(g, market);
-    if (!flip && Math.abs(g.gap) < RULE.minGap) return null;
+    // Moneylines always need BOTH gates: >50% model probability and the full
+    // probability edge. Outright disagreement only waives the gap for spreads.
+    if ((market === "moneyline" || !flip) && Math.abs(g.gap) < RULE.minGap) return null;
     const home = g.gap >= 0, side = home ? g.home : g.away;
     if (market === "moneyline") {
       if (g.modelValue == null || g.modelValue <= RULE.minModelP) return null;
