@@ -1,17 +1,17 @@
 {
-  "checked_at": "2026-09-13T22:46:30Z",
+  "checked_at": "2026-09-13T23:03:31Z",
   "source": "CFBD /lines",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
-  "quote_events": 3004,
-  "successful_checks": 123,
-  "changed_quotes_this_check": 89,
+  "quote_events": 3010,
+  "successful_checks": 124,
+  "changed_quotes_this_check": 6,
   "games_with_quotes": 405,
   "books_with_quotes": [
     "Bovada",
     "DraftKings"
   ],
   "watchlist_rule": {
-    "minimum_gap": 0.15,
+    "minimum_gap": 0.2,
     "minimum_books": 2,
     "uncertainty_gate": "80% Jeffreys lower bound > best-price break-even + 1pp",
     "status": "forward research; never an automatic bet"
