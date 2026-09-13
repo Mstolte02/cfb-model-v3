@@ -6,7 +6,7 @@
 # current run locks completed scores and uses the current dynamic ratings. Both use
 # the model's own matchup probabilities through cfbseedR's compute_results contract.
 #
-# Run: Rscript scripts/simulate_playoff.R [simulations]
+# Run: Rscript scripts/simulate_playoff.R [simulations] [both|preseason|current]
 
 suppressPackageStartupMessages({
   library(cfbseedR)
@@ -18,6 +18,10 @@ if (utils::packageVersion("cfbseedR") < "0.2.0") {
 
 args <- commandArgs(trailingOnly = TRUE)
 n_sims <- if (length(args) && grepl("^[0-9]+$", args[[1]])) as.integer(args[[1]]) else 2000L
+mode_arg <- if (length(args) >= 2L) args[[2]] else "both"
+if (!mode_arg %in% c("both", "preseason", "current")) {
+  stop("mode must be one of: both, preseason, current")
+}
 root <- normalizePath(file.path(dirname(sub("^--file=", "", grep("^--file=", commandArgs(), value = TRUE)[1])), ".."))
 viz <- file.path(root, "viz", "data")
 
@@ -257,6 +261,6 @@ export_run <- function(mode) {
           round(as.numeric(difftime(Sys.time(), started, units = "mins")), 1), " minutes")
 }
 
-export_run("preseason")
-export_run("current")
+if (mode_arg %in% c("both", "preseason")) export_run("preseason")
+if (mode_arg %in% c("both", "current")) export_run("current")
 future::plan(future::sequential)

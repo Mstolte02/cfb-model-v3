@@ -33,10 +33,27 @@ jobs:
         with:
           r-version: release
           use-public-rspm: true
-      - name: Install season simulator
-        run: Rscript -e 'install.packages(c("cfbseedR", "jsonlite"))'
-      - name: Build preseason and current CFP projections
-        run: Rscript scripts/simulate_playoff.R 2000
+      - name: Install cached season simulator
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::cfbseedR
+            any::jsonlite
+          cache-version: 1
+      # Generate the locked cfbseedR preseason projection once, then restore that
+      # exact file on future deploys. A cache miss safely rebuilds both versions.
+      - id: preseason-cache
+        uses: actions/cache@v4
+        with:
+          path: viz/data/playoff_preseason.json
+          key: cfbseedr-preseason-2026-v1
+      - name: Build CFP projections
+        env:
+          PRESEASON_CACHE_HIT: ${{ steps.preseason-cache.outputs.cache-hit }}
+        run: |
+          mode=current
+          if [ "$PRESEASON_CACHE_HIT" != "true" ]; then mode=both; fi
+          Rscript scripts/simulate_playoff.R 500 "$mode"
       - name: Build dist/
         run: python3 scripts/publish.py
       - uses: actions/configure-pages@v6

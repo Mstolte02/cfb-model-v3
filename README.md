@@ -123,7 +123,7 @@ python -m scripts.rank
 
 # Rebuild browser data, then both full-season CFP projections
 python -m scripts.export_viz
-Rscript scripts/simulate_playoff.R 2000
+Rscript scripts/simulate_playoff.R 500 current
 
 # Temporal, reciprocity, selection, and weekly-order invariants
 python -m unittest discover -s tests -v
@@ -987,7 +987,7 @@ evidence and limitations are in `war_model/war_validity_audit.json`.
 ./venv/bin/python -m scripts.rank                        # 2026 power ratings
 ./venv/bin/python -m scripts.prepare_logos               # ESPN basic logos + teams.json
 ./venv/bin/python -m scripts.export_viz                  # data for the web app
-Rscript scripts/simulate_playoff.R 2000                  # frozen preseason + current CFP projections
+Rscript scripts/simulate_playoff.R 500 current            # refresh current CFP projection; preseason stays locked
 ./venv/bin/python -m scripts.export_site_data            # odds, poll + player imagery
 ./venv/bin/python -m scripts.export_diagnostics          # Method tab — must run last
 python3 -m http.server 8642 -d viz                       # http://localhost:8642
@@ -1032,7 +1032,7 @@ retuning, MOV sample weighting. Bug fix: Air Force & Navy were silently dropped
 ```bash
 ./venv/bin/python -m scripts.train             # retrain (now saves margin model too)
 ./venv/bin/python -m scripts.rank              # 2026 power ratings
-Rscript scripts/simulate_playoff.R 2000        # preseason + current full-season CFP odds
+Rscript scripts/simulate_playoff.R 500 current  # current full-season CFP odds; committed preseason stays locked
 ./venv/bin/python -m scripts.prepare_logos     # map/download team logos
 ./venv/bin/python -m scripts.export_viz        # export data for the web app
 ./venv/bin/python -m scripts.export_site_data  # odds, poll + player imagery
