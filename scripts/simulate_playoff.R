@@ -120,7 +120,23 @@ make_inputs <- function(mode) {
   list(games = games, teams = teams, rankings = rankings, analytics = analytics, spec = spec)
 }
 
-safe_mean <- function(x) if (length(x)) mean(x) else 0
+safe_mean <- function(x) {
+  x <- x[is.finite(x)]
+  if (length(x)) mean(x) else 0
+}
+
+# Per-simulation seed is NA when a team misses the playoff. That is a FALSE event,
+# not missing information. Using mean(st$seed == seed) directly turns every seed
+# probability into NA as soon as a team misses once.
+event_rate <- function(x) {
+  if (!length(x)) return(0)
+  mean(replace(x, is.na(x), FALSE))
+}
+
+row_number <- function(row, key, fallback = 0) {
+  value <- row[[key]]
+  if (!length(value) || is.na(value[[1]]) || !is.finite(value[[1]])) fallback else as.numeric(value[[1]])
+}
 
 build_bracket <- function(rows) {
   p4 <- c("ACC", "Big 12", "Big Ten", "SEC")
@@ -131,18 +147,28 @@ build_bracket <- function(rows) {
   }
   for (conference in p4) {
     pool <- rows[vapply(rows, function(x) identical(x$conference, conference), logical(1))]
-    if (length(pool)) take(pool[[which.max(vapply(pool, `[[`, numeric(1), "conf_champ"))]]$team)
+    if (length(pool)) {
+      score <- vapply(pool, row_number, numeric(1), key = "conf_champ")
+      take(pool[[which.max(score)]]$team)
+    }
   }
   pool <- rows[vapply(rows, function(x) x$conference %in% g6, logical(1))]
-  if (length(pool)) take(pool[[which.max(vapply(pool, `[[`, numeric(1), "playoff"))]]$team)
-  ordered <- rows[order(-vapply(rows, `[[`, numeric(1), "playoff"))]
+  if (length(pool)) {
+    score <- vapply(pool, row_number, numeric(1), key = "playoff")
+    take(pool[[which.max(score)]]$team)
+  }
+  ordered <- rows[order(-vapply(rows, row_number, numeric(1), key = "playoff"),
+                        vapply(rows, row_number, numeric(1), key = "power_rank", fallback = Inf))]
   for (row in ordered) if (length(chosen) < 12) take(row$team)
   field <- rows[vapply(rows, function(x) x$team %in% chosen[seq_len(min(12, length(chosen)))], logical(1))]
+  if (length(field) < 12) stop("cannot build a 12-team bracket: only ", length(field), " teams selected")
   seeds <- rep(NA_character_, 12)
   remaining <- field
   for (seed in seq_len(12)) {
     if (!length(remaining)) break
-    pick <- which.max(vapply(remaining, function(x) x$seeds[[seed]], numeric(1)))
+    score <- vapply(remaining, function(x) row_number(list(value = x$seeds[[seed]]), "value", -Inf), numeric(1))
+    pick <- which.max(score)
+    if (!length(pick)) pick <- 1L
     seeds[[seed]] <- remaining[[pick]]$team
     remaining <- remaining[-pick]
   }
@@ -179,20 +205,20 @@ export_run <- function(mode) {
   rows <- lapply(fbs, function(team) {
     st <- standings[standings$team == team, ]
     base <- old[[team]] %||% list(team = team, conference = team_meta[[team]]$conference)
-    seeds <- vapply(seq_len(12), function(seed) safe_mean(st$seed == seed), numeric(1))
+    seeds <- vapply(seq_len(12), function(seed) event_rate(st$seed == seed), numeric(1))
     base$team <- team
     base$conference <- team_meta[[team]]$conference %||% "FBS Independents"
     base$power_rank <- input$rankings$rank[match(team, input$rankings$team)]
     base$rating <- round(input$analytics$rating[match(team, input$analytics$team)], 3)
     base$avg_wins <- round(mean(st$wins), 2)
     base$avg_losses <- round(mean(st$losses), 2)
-    base$conf_champ <- round(mean(st$conf_champ), 4)
-    base$playoff <- round(mean(!is.na(st$seed)), 4)
-    base$bye <- round(mean(!is.na(st$seed) & st$seed <= 4), 4)
-    base$qf <- round(mean(st$exit >= 2), 4)
-    base$sf <- round(mean(st$exit >= 3), 4)
-    base$final <- round(mean(st$exit >= 4), 4)
-    base$champ <- round(mean(st$exit == max_exit), 4)
+    base$conf_champ <- round(event_rate(st$conf_champ), 4)
+    base$playoff <- round(event_rate(!is.na(st$seed)), 4)
+    base$bye <- round(event_rate(!is.na(st$seed) & st$seed <= 4), 4)
+    base$qf <- round(event_rate(st$exit >= 2), 4)
+    base$sf <- round(event_rate(st$exit >= 3), 4)
+    base$final <- round(event_rate(st$exit >= 4), 4)
+    base$champ <- round(event_rate(st$exit == max_exit), 4)
     base$seeds <- as.list(round(seeds, 4))
     base
   })
