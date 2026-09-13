@@ -903,7 +903,9 @@ returning / pythag / SOS on `ratings*.json`.
 headshot IDs without feeding any market number back into the trained model.
 
 **Forward market ledger (12 August 2026).** `scripts.capture_market_snapshot` now owns
-weekly prices. Every successful CFBD retrieval is timestamped in
+weekly prices. The public Market Board and its live results use DraftKings only; other
+provider observations remain in the append-only research ledger and never price or grade
+a displayed bet. Every successful CFBD retrieval is timestamped in
 `data/market_snapshots/checks_2026.jsonl`; a provider quote is appended to
 `lines_2026.jsonl` only when one of its price fields changes. This distinction matters:
 CFBD supplies open/current fields but no quote timestamp, so the ledger says only when
@@ -947,8 +949,11 @@ Played weeks are excluded from the change. The ratings behind the new margin are
 the results of those weeks, so regrading them reads their own scoreboard: week 1's settled
 10-4-2 spread record became 14-0-1 with six of sixteen bets swapped. `MARGIN_BASIS_FROM_WEEK`
 holds weeks before 2 on the margin they were graded under, and does not advance as weeks
-finish. A played game's probability is still recomputed from current ratings - the same
-defect, older, and left alone because fixing it would rewrite the settled moneyline record.
+finish. Market Board rows now persist the model probability, margin, and both teams' power
+ratings at the board lock. Completed rows are immutable across later Monday locks, and old
+rows are reconstructed from `ratings.game_history`'s start-of-week predictions, so neither
+a game's own result nor another result from the same slate can leak into its displayed
+number.
 
 **Totals are off the bet list (8 September 2026).** The over/under market no longer
 produces a flagged bet. Its gap curve crosses the -110 break-even in both directions

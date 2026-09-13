@@ -33,8 +33,7 @@ OUT_JSON = ARTIFACTS / "betting_backtest.json"
 SITE_JSON = ROOT / "viz" / "data" / "betting_validation.json"
 FUTURES_URL = ("https://www.sportsbettingdime.com/college-football/futures/"
                "win-totals-best-odds/past-seasons/")
-BOOK_ORDER = ["DraftKings", "ESPN Bet", "Bovada", "Caesars Sportsbook",
-              "Caesars", "consensus", "teamrankings"]
+LINE_PROVIDER = "DraftKings"
 ALIASES = {"Appalachian State": "App State", "Hawaii": "Hawai'i",
            "Miami": "Miami (FL)", "Louisiana State": "LSU"}
 
@@ -59,10 +58,8 @@ def select_line(game: dict) -> tuple[str | None, dict | None]:
     by_book = {}
     for line in game.get("lines") or []:
         by_book[normalize_book(line.get("provider") or "")] = line
-    for book in BOOK_ORDER:
-        if book in by_book:
-            return book, by_book[book]
-    return next(iter(by_book.items()), (None, None))
+    line = by_book.get(LINE_PROVIDER)
+    return (LINE_PROVIDER, line) if line is not None else (None, None)
 
 
 def point_totals() -> dict[tuple[int, int, str, str], float]:
@@ -279,7 +276,7 @@ def main():
     result = {
         "method": {"prediction_contract": "strict expanding window",
                    "threshold_contract": "selected on 2022-24; 2025 untouched holdout",
-                   "weekly_lines": "CFBD archived posted line; not asserted closing",
+                   "weekly_lines": "DraftKings via CFBD; not asserted closing",
                    "spread_and_total_price": "-110 assumed where side prices absent",
                    "futures_source": FUTURES_URL},
         "coverage": {"weekly_games": len(weekly), "futures_team_seasons": len(futures)},

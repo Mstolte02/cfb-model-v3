@@ -46,6 +46,7 @@ HISTORICAL = ROOT / "audit" / "book_shopping_backtest.json"
 AVAILABILITY = ROOT / "war_model" / "availability_events_2026.csv"
 
 PROVIDER_ALIAS = {"Draft Kings": "DraftKings"}
+BOARD_PROVIDER = "DraftKings"
 QUOTE_FIELDS = ("spread", "spreadOpen", "overUnder", "overUnderOpen",
                 "homeMoneyline", "awayMoneyline")
 
@@ -524,6 +525,115 @@ def model_probability(model: dict, home: str, away: str, neutral=False) -> float
     return p
 
 
+def _static_margin(model: dict, home: str, away: str, neutral=False) -> float | None:
+    """Pregame margin from the season-fixed team frame (the Week 1 basis)."""
+    a, b = model.get("teams", {}).get(home), model.get("teams", {}).get(away)
+    if a is None or b is None:
+        return None
+    margin = model["margin"]
+    return (float(margin.get("intercept", 0.0))
+            + sum(float(c) * (float(x) - float(y))
+                  for c, x, y in zip(margin["coef"], a, b))
+            + (0.0 if neutral else 1.0) * float(margin["hfa"]))
+
+
+def _margin_from_probability(model: dict, probability: float) -> float:
+    """Mirror the Market Board's probability-to-margin link."""
+    clipped = min(max(float(probability), .001), .999)
+    return float(model["margin"]["sigma"]) * statistics.NormalDist().inv_cdf(clipped)
+
+
+def _rating_snapshot_for_week(ratings: dict, week: int | None) -> dict[str, dict]:
+    """Return the latest rating table that existed before ``week`` began."""
+    candidates = [row for row in ratings.get("history", [])
+                  if int(row.get("week") or 0) < int(week or 0)]
+    source = max(candidates, key=lambda row: int(row.get("week") or 0), default=None)
+    rows = source.get("teams", []) if source else ratings.get("teams", [])
+    return {row["team"]: row for row in rows}
+
+
+def _model_at_start_of_week(model: dict, ratings: dict, week: int) -> dict:
+    """Rebuild the raw dynamic state using results strictly before ``week``.
+
+    This matters during a partially completed slate: the published current state may
+    already contain Saturday finals, but a Sunday game from the same week must still
+    use the common start-of-week ratings.
+    """
+    dynamic = model.get("dynamic") or {}
+    state = dict(dynamic.get("preseason_ratings") or dynamic.get("ratings") or {})
+    for event in ratings.get("game_history", []):
+        if int(event.get("week") or 0) >= week:
+            continue
+        home, away = event.get("home"), event.get("away")
+        delta = event.get("home_rating_delta")
+        if home not in state or away not in state or delta is None:
+            continue
+        state[home] += float(delta)
+        state[away] -= float(delta)
+    return {**model, "dynamic": {**dynamic, "ratings": state}}
+
+
+def _snapshot_fingerprint(model: dict) -> str:
+    payload = json.dumps(model, sort_keys=True, separators=(",", ":"),
+                         allow_nan=False).encode()
+    return hashlib.sha256(payload).hexdigest()[:16]
+
+
+def freeze_weekly_model_snapshots(odds: dict, model: dict, ratings: dict,
+                                  captured_at: str) -> int:
+    """Attach one immutable, point-in-time rating prediction to every board game.
+
+    A completed game's exact start-of-week probability is recoverable from
+    ``ratings.game_history``. Upcoming games use the current published state. Once a
+    row has a snapshot this function never rewrites it; a later scheduled board lock
+    may replace only games that have not kicked off yet.
+    """
+    history = {int(row["id"]): row for row in ratings.get("game_history", [])
+               if row.get("id") is not None}
+    current_power = {row["team"]: row for row in ratings.get("teams", [])}
+    fingerprint = _snapshot_fingerprint(model)
+    added = 0
+    for game in odds.get("weekly", []):
+        if game.get("modelSnapshot"):
+            continue
+        home, away = game.get("home"), game.get("away")
+        if home not in model.get("teams", {}) or away not in model.get("teams", {}):
+            continue
+        week = int(game.get("week") or 0)
+        event = history.get(int(game["id"])) if game.get("id") is not None else None
+        if event is not None:
+            probability = float(event["p_home"])
+            power = _rating_snapshot_for_week(ratings, week)
+            basis = "replayed start-of-week ratings"
+        else:
+            pregame_model = _model_at_start_of_week(model, ratings, week)
+            probability = model_probability(
+                pregame_model, home, away, bool(game.get("neutral")))
+            power = _rating_snapshot_for_week(ratings, week) or current_power
+            basis = "latest eligible start-of-week ratings"
+        if probability is None:
+            continue
+        # Week 1 was graded on the original season-fixed margin. Week 2 onward uses
+        # the margin implied by the same frozen probability shown by the board.
+        margin = (_static_margin(model, home, away, bool(game.get("neutral")))
+                  if week < 2 else _margin_from_probability(model, probability))
+        if margin is None:
+            continue
+        h_power, a_power = power.get(home, {}), power.get(away, {})
+        game["modelSnapshot"] = {
+            "lockedAt": min(captured_at, game.get("start") or captured_at),
+            "recordedAt": captured_at,
+            "basis": basis,
+            "modelFingerprint": fingerprint,
+            "homeWinProbability": round(probability, 12),
+            "homeMargin": round(float(margin), 8),
+            "homePower": h_power.get("power"),
+            "awayPower": a_power.get("power"),
+        }
+        added += 1
+    return added
+
+
 def model_fingerprint() -> str:
     return hashlib.sha256(MODEL.read_bytes()).hexdigest()[:16]
 
@@ -546,12 +656,19 @@ def group_games(quotes: dict[tuple, dict]) -> dict[int, list[dict]]:
 def weekly_payload(quotes: dict[tuple, dict]) -> list[dict]:
     out = []
     for _, lines in group_games(quotes).items():
+        # Raw observations from other providers remain in the append-only research
+        # ledger, but the public board and the results graded from it are DraftKings
+        # only. Mixing books here would make the posted bet impossible to reproduce.
+        lines = [row for row in lines if row.get("provider") == BOARD_PROVIDER]
+        if not lines:
+            continue
         first = lines[0]
         books = {row["provider"]: {field: row.get(field) for field in QUOTE_FIELDS}
                  for row in lines}
         row = {"id": first["game_id"], "week": first.get("week"),
                "start": first.get("start"), "home": first.get("home"),
-               "away": first.get("away"), "books": books}
+               "away": first.get("away"), "neutral": bool(first.get("neutral")),
+               "books": books}
         if int(first["game_id"]) in BET_EXCLUDED_GAME_IDS:
             row["bettingExcluded"] = True
         out.append(row)
@@ -575,7 +692,21 @@ def update_weekly_board(odds: dict, quotes: dict[tuple, dict], captured_at: str,
             "reason": "pre-lock baseline",
         })
         return False
-    odds["weekly"] = weekly_payload(quotes)
+    replacement = weekly_payload(quotes)
+    # A later Monday lock may refresh games that have not started, but it must never
+    # rewrite a line or model snapshot after kickoff. Preserve started rows even when
+    # the provider stops returning them in its current payload.
+    cutoff = parse_time(captured_at)
+    existing = {int(row["id"]): row for row in odds.get("weekly", [])
+                if row.get("id") is not None}
+    incoming = {int(row["id"]): row for row in replacement
+                if row.get("id") is not None}
+    for game_id, row in existing.items():
+        start = row.get("start")
+        if start and parse_time(start) <= cutoff:
+            incoming[game_id] = row
+    odds["weekly"] = sorted(incoming.values(), key=lambda row: (
+        row.get("week") or 99, row.get("start") or ""))
     odds["weekly_lock"] = {
         "locked_at": captured_at,
         "cadence": "Monday 12:30 PM ET",
@@ -583,7 +714,7 @@ def update_weekly_board(odds: dict, quotes: dict[tuple, dict], captured_at: str,
         "reason": "scheduled" if lock_weekly_board else "initial bootstrap",
     }
     odds.setdefault("sources", {})["cfbd_lines"] = {
-        "book": "Multiple", "as_of": captured_at, "url": BASE + "/",
+        "book": BOARD_PROVIDER, "as_of": captured_at, "url": BASE + "/",
         "timestamp_semantics": "weekly board lock; Monday 12:30 PM ET"}
     return True
 
@@ -640,6 +771,12 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None,
     append_jsonl(CHECKS, [check])
     checks = read_jsonl(CHECKS)
 
+    # Results are part of the information set for future games, so replay them before
+    # creating this capture's candidates or frozen board snapshots. Candidate games
+    # below are required to have a kickoff after ``now``; completed rows already own
+    # an immutable snapshot and cannot be regraded by this update.
+    finals_published = publish_finals(games) if games is not None else 0
+    ratings_replayed = replay_published_results()
     model = json.loads(MODEL.read_text())
     historical = json.loads(HISTORICAL.read_text()) if HISTORICAL.exists() else {}
     current_quotes = {quote_key(r): r for r in current}
@@ -728,10 +865,12 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None,
     odds = json.loads(ODDS.read_text()) if ODDS.exists() else {"markets": {}, "sources": {}}
     board_updated = update_weekly_board(
         odds, current_quotes, captured_at, lock_weekly_board)
+    published_ratings = (json.loads(RATINGS.read_text())
+                         if RATINGS.exists() else {"teams": []})
+    frozen_model_snapshots = freeze_weekly_model_snapshots(
+        odds, model, published_ratings, captured_at)
     ODDS.write_text(json.dumps(odds, indent=1, allow_nan=False))
 
-    finals_published = publish_finals(games) if games is not None else 0
-    ratings_replayed = replay_published_results()
     previous_tracking = (json.loads(TRACKING.read_text())
                          if TRACKING.exists() else {})
     displayed_candidates = (sorted(candidates, key=lambda r: (-r["gap"], r["start"]))
@@ -747,6 +886,7 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None,
             "status": "forward research; never an automatic bet"},
         "weekly_board_updated_this_check": board_updated,
         "weekly_board_lock": odds.get("weekly_lock"),
+        "frozen_model_snapshots_this_check": frozen_model_snapshots,
         "current_candidates": displayed_candidates,
         "entries": len(all_entries), "new_entries_this_check": len(new_entries),
         "settlements": len(settlements), "qualified_clv_observations": len(qualified_clv),

@@ -413,10 +413,9 @@
      not advance as weeks finish, because a week that flips basis the moment it is
      played would be the same rewrite on a delay. Week 2 onward is the current model.
 
-     Only the margin is frozen. The probability for a completed game is still recomputed
-     from today's ratings, which is a separate and older instance of the same problem;
-     `game_history` in ratings.json carries the true start-of-week number that would fix
-     it, and changing it now would rewrite the settled moneyline record. */
+     Market Board rows now carry their own point-in-time probability and margin in
+     odds.json. This boundary remains only for old Week 1's grading basis; the frozen
+     row, rather than today's ratings, owns the displayed value for every board game. */
   const MARGIN_BASIS_FROM_WEEK = 2;
   function gradedMargin(A, B, M, homeA, homeB) {
     if (homeB) {
@@ -3289,16 +3288,7 @@
      the book list, the week list and the bet-filter count - is derived from this one
      list so the strip cannot report a game the table refuses to show. */
   const marketGames = (odds.weekly || []).filter(g =>
-    g.books && Object.keys(g.books).length && isFBS(g.home) && isFBS(g.away));
-
-  function fillWeeklyBooks() {
-    const sel = document.getElementById("weekly-book");
-    if (sel.options.length) return;
-    const books = [...new Set(marketGames.flatMap(g => Object.keys(g.books || {})))].sort();
-    sel.add(new Option("Consensus + best price", "__consensus_best"));
-    books.forEach(b => sel.add(new Option(b, b)));
-    sel.value = "__consensus_best";
-  }
+    g.books && g.books.DraftKings && isFBS(g.home) && isFBS(g.away));
 
   /* Which week is "now". Weeks run Tuesday to Monday in practice, but the only
      calendar the page has is the kickoff times themselves, so the current week is
@@ -3336,43 +3326,20 @@
      DRAWS. The tracker's whole claim is that it settles the bets the board flagged,
      and a second copy of this arithmetic is a second answer waiting to disagree with
      the first - the tab would go on reporting a record for bets nobody was shown. */
-  function marketRows(games, market, book) {
-    const combined = book === "__consensus_best";
-    const median = a => { const x = a.slice().sort((u, v) => u-v), n = x.length; return n % 2 ? x[(n-1)/2] : (x[n/2-1] + x[n/2]) / 2; };
-    return games.filter(g => combined || g.books[book]).map(g => {
-      let line = combined ? null : g.books[book];
-      const r = predict(g.home, g.away, "A", g.week);
+  function marketRows(games, market) {
+    return games.filter(g => g.books.DraftKings).map(g => {
+      const line = g.books.DraftKings;
+      const live = predict(g.home, g.away, g.neutral ? "N" : "A", g.week);
+      const frozen = g.modelSnapshot;
+      // Market rows are point-in-time records. Current ratings still power every
+      // forward-looking view, but they may not re-grade a game after its kickoff.
+      const r = live && frozen && Number.isFinite(frozen.homeWinProbability)
+        && Number.isFinite(frozen.homeMargin)
+        ? { ...live, pA: frozen.homeWinProbability, margin: frozen.homeMargin,
+            scoreA: (live.total + frozen.homeMargin) / 2,
+            scoreB: (live.total - frozen.homeMargin) / 2 }
+        : live;
       if (!r) return { ...g, line, r: null, gap: null };
-      if (combined) {
-        const available = Object.values(g.books || {});
-        if (market === "moneyline") {
-          const pairs = available.filter(x => x.homeMoneyline != null && x.awayMoneyline != null);
-          if (!pairs.length) return { ...g, line: {}, r, gap: null };
-          const marketHome = median(pairs.map(x => {
-            const ih = implied(x.homeMoneyline), ia = implied(x.awayMoneyline);
-            return ih / (ih + ia);
-          }));
-          const home = r.pA >= marketHome;
-          const best = Math.max(...pairs.map(x => home ? x.homeMoneyline : x.awayMoneyline));
-          return { ...g, line: {}, r, gap: r.pA - marketHome, marketValue: best,
-            modelValue: home ? r.pA : 1-r.pA, marketHomeP: marketHome,
-            combined: true, booksUsed: pairs.length };
-        }
-        if (market === "total") {
-          const lines = available.map(x => x.overUnder).filter(x => x != null);
-          if (!lines.length) return { ...g, line: {}, r, gap: null };
-          const consensus = median(lines), gap = r.total - consensus;
-          return { ...g, line: {}, r, gap,
-            marketValue: gap >= 0 ? Math.min(...lines) : Math.max(...lines),
-            modelValue: r.total, combined: true, booksUsed: lines.length };
-        }
-        const lines = available.map(x => x.spread).filter(x => x != null);
-        if (!lines.length) return { ...g, line: {}, r, gap: null };
-        const consensus = median(lines), modelSpread = -r.margin, gap = consensus - modelSpread;
-        return { ...g, line: {}, r, modelSpread, gap, consensus,
-          marketValue: gap >= 0 ? Math.max(...lines) : Math.min(...lines),
-          modelValue: modelSpread, combined: true, booksUsed: lines.length };
-      }
       if (market === "moneyline") {
         const ih = line.homeMoneyline == null ? null : implied(line.homeMoneyline);
         const ia = line.awayMoneyline == null ? null : implied(line.awayMoneyline);
@@ -3435,23 +3402,21 @@
   let weeklyMarket = "spread";
   let betsOnly = false;
   function renderWeeklyLines() {
-    const book = document.getElementById("weekly-book").value;
     const market = weeklyMarket;
     const weekSel = document.getElementById("weekly-week").value;
     const week = weekSel === "__all" ? null : Number(weekSel);
-    const combined = book === "__consensus_best";
     const inWeek = marketGames.filter(g => week == null || g.week === week);
-    const rows = marketRows(inWeek, market, book)
+    const rows = marketRows(inWeek, market)
       .sort((a, b) => (a.week || 99) - (b.week || 99) || String(a.start).localeCompare(String(b.start)));
     const betRows = rows.filter(g => betToPlace(g, market));
     renderBetFilter(betRows.length, rows.length, week);
 
     const marketLabel = market === "moneyline" ? "Moneyline" : market === "total" ? "Total" : "Spread";
-    const bookLabel = combined ? "Best price" : book;
+    const bookLabel = "DraftKings";
     if (!rows.length) {
       document.getElementById("weekly-lines").innerHTML = `<div class="weekly-empty">
-        <b>No FBS game in ${week == null ? "the schedule" : "week " + week} has a line at ${combined ? "any book" : esc(book)}.</b>
-        <small>Try another week or another sportsbook. Later weeks post prices as the season gets closer.</small></div>`;
+        <b>No FBS game in ${week == null ? "the schedule" : "week " + week} has a DraftKings line.</b>
+        <small>Later weeks post prices as the season gets closer.</small></div>`;
       return;
     }
     if (betsOnly && !betRows.length) {
@@ -3476,7 +3441,7 @@
       const profit = final ? settleBet(g, market, final.home, final.away) : null;
       const resultClass = profit > 0 ? " win" : profit < 0 ? " loss"
         : profit === 0 ? " push" : "";
-      return `<div class="weekly-row${resultClass}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}${g.combined ? ` · ${g.booksUsed} book${g.booksUsed === 1 ? "" : "s"}` : ""}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<span class="bet-tag">BET</span><b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
+      return `<div class="weekly-row${resultClass}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<span class="bet-tag">BET</span><b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
     }).join("")}</div>`;
     wireTeamLinks();
   }
@@ -3515,7 +3480,6 @@
   document.getElementById("leader-group").addEventListener("change", renderLeaders);
   document.getElementById("leader-class").addEventListener("change", renderLeaders);
   document.getElementById("leader-team").addEventListener("change", renderLeaders);
-  document.getElementById("weekly-book").addEventListener("change", renderWeeklyLines);
   document.getElementById("weekly-week").addEventListener("change", renderWeeklyLines);
   document.querySelectorAll("#weekly-market .seg-btn").forEach(b => b.addEventListener("click", () => {
     weeklyMarket = b.dataset.market;
@@ -3570,7 +3534,7 @@
      the board draws, so the two can never disagree. */
   function liveBets(market) {
     const played = marketGames.filter(g => finals.has(g.id));
-    return marketRows(played, market, "__consensus_best").map(g => {
+    return marketRows(played, market).map(g => {
       const bet = betToPlace(g, market);
       if (!bet) return null;
       const f = finals.get(g.id);
@@ -3655,7 +3619,11 @@
     }
 
     // ---- historical -----------------------------------------------------------
-    if (!betTracking) { host.innerHTML = ""; return; }
+    if (!betTracking || betTracking.line_source !== "DraftKings") {
+      host.innerHTML = `<div class="tk-empty"><b>DraftKings-only historical results are rebuilding.</b>
+        <small>The prior mixed-sportsbook record is hidden so it cannot be mistaken for this board's results.</small></div>`;
+      return;
+    }
     const bt = betTracking.backtest;
     const sel = picked.map(m => bt.markets[m]).filter(Boolean);
     const agg = sel.reduce((a, s) => ({
@@ -3733,7 +3701,7 @@
   }
   function renderAll() {
     fillConfSelect(); fillPlayerSelects(); fillRatingSelects();
-    fillScenarioSelects(); fillLeaderControls(); fillWeeklyBooks(); fillWeeklyWeeks();
+    fillScenarioSelects(); fillLeaderControls(); fillWeeklyWeeks();
     fillPowerHistoryTeams();
     renderDash(); renderPlayoff(); renderScenario(); renderMatchup(); renderTeam();
     renderRatings(); renderPlayers(); renderFutures(); renderOutcomeBands();

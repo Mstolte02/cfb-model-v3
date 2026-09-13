@@ -2,7 +2,7 @@ import unittest
 
 import pandas as pd
 
-from scripts.betting_backtest import implied, settle_games
+from scripts.betting_backtest import implied, select_line, settle_games
 
 
 class BettingBacktestTests(unittest.TestCase):
@@ -17,6 +17,16 @@ class BettingBacktestTests(unittest.TestCase):
         ])
         result = settle_games(games, "spread", 1.0)
         self.assertEqual(result.won.tolist(), [True, False])
+
+    def test_historical_market_uses_draftkings_only(self):
+        game = {"lines": [
+            {"provider": "Bovada", "spread": -7},
+            {"provider": "Draft Kings", "spread": -3},
+        ]}
+        book, line = select_line(game)
+        self.assertEqual(book, "DraftKings")
+        self.assertEqual(line["spread"], -3)
+        self.assertEqual(select_line({"lines": [game["lines"][0]]}), (None, None))
 
 
 if __name__ == "__main__":

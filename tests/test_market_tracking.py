@@ -11,6 +11,7 @@ from scripts.capture_market_snapshot import (fetch_cfbd, flatten, implied, lates
                                              moneyline_research_candidate, publish_finals,
                                              quote_key, quote_payload_hash, quote_value,
                                              replay_published_results,
+                                             freeze_weekly_model_snapshots,
                                              update_weekly_board, weekly_payload)
 from war_model.materialize_availability import current_rows
 
@@ -18,19 +19,43 @@ from war_model.materialize_availability import current_rows
 class MarketTrackingTests(unittest.TestCase):
     def test_newcomer_week_zero_games_are_excluded_from_bets(self):
         rows = weekly_payload({
-            (401864577, "Book"): {"game_id": 401864577, "provider": "Book",
+            (401864577, "DraftKings"): {"game_id": 401864577, "provider": "DraftKings",
                 "week": 1, "start": "2026-08-29T21:30:00Z",
                 "home": "North Dakota State", "away": "Jacksonville State"},
-            (401866408, "Book"): {"game_id": 401866408, "provider": "Book",
+            (401866408, "DraftKings"): {"game_id": 401866408, "provider": "DraftKings",
                 "week": 1, "start": "2026-08-29T22:30:00Z",
                 "home": "Eastern Michigan", "away": "Sacramento State"},
-            (99, "Book"): {"game_id": 99, "provider": "Book", "week": 1,
+            (99, "DraftKings"): {"game_id": 99, "provider": "DraftKings", "week": 1,
                 "start": "2026-09-05T00:00:00Z", "home": "A", "away": "B"},
         })
         by_id = {row["id"]: row for row in rows}
         self.assertTrue(by_id[401864577]["bettingExcluded"])
         self.assertTrue(by_id[401866408]["bettingExcluded"])
         self.assertNotIn("bettingExcluded", by_id[99])
+
+    def test_weekly_payload_preserves_neutral_site(self):
+        rows = weekly_payload({
+            (1, "DraftKings"): {"game_id": 1, "provider": "DraftKings", "week": 1,
+                "start": "2026-09-05T00:00:00Z", "home": "A", "away": "B",
+                "neutral": True, "spread": -3},
+        })
+        self.assertTrue(rows[0]["neutral"])
+
+    def test_weekly_payload_is_draftkings_only(self):
+        rows = weekly_payload({
+            (1, "DraftKings"): {"game_id": 1, "provider": "DraftKings", "week": 1,
+                "start": "2026-09-05T00:00:00Z", "home": "A", "away": "B",
+                "spread": -3},
+            (1, "Bovada"): {"game_id": 1, "provider": "Bovada", "week": 1,
+                "start": "2026-09-05T00:00:00Z", "home": "A", "away": "B",
+                "spread": -7},
+            (2, "Bovada"): {"game_id": 2, "provider": "Bovada", "week": 1,
+                "start": "2026-09-06T00:00:00Z", "home": "C", "away": "D",
+                "spread": -2},
+        })
+        self.assertEqual([row["id"] for row in rows], [1])
+        self.assertEqual(list(rows[0]["books"]), ["DraftKings"])
+        self.assertEqual(rows[0]["books"]["DraftKings"]["spread"], -3)
 
     def test_published_ratings_cover_both_2026_fbs_newcomers(self):
         root = Path(__file__).resolve().parents[1]
@@ -88,9 +113,9 @@ class MarketTrackingTests(unittest.TestCase):
         sleep.assert_called_once_with(1)
 
     def test_weekly_board_stays_frozen_between_monday_locks(self):
-        old = [{"id": 1, "books": {"Book": {"spread": -3}}}]
+        old = [{"id": 1, "books": {"DraftKings": {"spread": -3}}}]
         odds = {"weekly": old, "sources": {"cfbd_lines": {"as_of": "old"}}}
-        quotes = {(1, "Book"): {"game_id": 1, "provider": "Book", "week": 1,
+        quotes = {(1, "DraftKings"): {"game_id": 1, "provider": "DraftKings", "week": 1,
             "start": "2026-09-05T00:00:00Z", "home": "A", "away": "B",
             "spread": -7}}
         self.assertFalse(update_weekly_board(
@@ -102,7 +127,7 @@ class MarketTrackingTests(unittest.TestCase):
 
     def test_monday_lock_replaces_board_and_records_timestamp(self):
         odds = {"weekly": [{"id": 99}], "sources": {}}
-        quotes = {(1, "Book"): {"game_id": 1, "provider": "Book", "week": 1,
+        quotes = {(1, "DraftKings"): {"game_id": 1, "provider": "DraftKings", "week": 1,
             "start": "2026-09-05T00:00:00Z", "home": "A", "away": "B",
             "spread": -7}}
         self.assertTrue(update_weekly_board(
@@ -110,6 +135,83 @@ class MarketTrackingTests(unittest.TestCase):
         self.assertEqual([row["id"] for row in odds["weekly"]], [1])
         self.assertEqual(odds["weekly_lock"]["locked_at"], "2026-09-07T16:30:00Z")
         self.assertEqual(odds["weekly_lock"]["cadence"], "Monday 12:30 PM ET")
+
+    def test_later_lock_preserves_started_game_and_refreshes_future_game(self):
+        old = [
+            {"id": 1, "week": 1, "start": "2026-09-05T00:00:00Z",
+             "home": "A", "away": "B", "books": {"DraftKings": {"spread": -3}},
+             "modelSnapshot": {"homeWinProbability": .60, "homeMargin": 3.0}},
+            {"id": 2, "week": 2, "start": "2026-09-12T00:00:00Z",
+             "home": "C", "away": "D", "books": {"DraftKings": {"spread": -2}},
+             "modelSnapshot": {"homeWinProbability": .55, "homeMargin": 2.0}},
+        ]
+        odds = {"weekly": old, "sources": {}}
+        quotes = {
+            (1, "DraftKings"): {"game_id": 1, "provider": "DraftKings", "week": 1,
+                "start": "2026-09-05T00:00:00Z", "home": "A", "away": "B",
+                "spread": -10},
+            (2, "DraftKings"): {"game_id": 2, "provider": "DraftKings", "week": 2,
+                "start": "2026-09-12T00:00:00Z", "home": "C", "away": "D",
+                "spread": -7},
+        }
+        update_weekly_board(odds, quotes, "2026-09-07T16:30:00Z", True)
+        by_id = {row["id"]: row for row in odds["weekly"]}
+        self.assertEqual(by_id[1], old[0])
+        self.assertEqual(by_id[2]["books"]["DraftKings"]["spread"], -7)
+        self.assertNotIn("modelSnapshot", by_id[2])
+
+    def test_model_snapshot_uses_replayed_pregame_rating_and_is_immutable(self):
+        odds = {"weekly": [{"id": 1, "week": 2,
+            "start": "2026-09-05T00:00:00Z", "home": "A", "away": "B",
+            "books": {"DraftKings": {"spread": -3}}}]}
+        model = {"teams": {"A": [1.0], "B": [-1.0]},
+            "logistic": {"coef": [.5], "hfa": .2, "intercept": 0},
+            "margin": {"coef": [3.0], "hfa": 2.0, "intercept": 0,
+                       "sigma": 10},
+            "ens_w": .5, "probability_scale": 1.0,
+            "dynamic": {"blend": 1.0, "ratings": {"A": 9.0, "B": -9.0}}}
+        ratings = {"teams": [{"team": "A", "power": .99},
+                              {"team": "B", "power": .01}],
+            "history": [
+                {"week": 0, "teams": [{"team": "A", "power": .60},
+                                       {"team": "B", "power": .40}]},
+                {"week": 1, "teams": [{"team": "A", "power": .65},
+                                       {"team": "B", "power": .35}]},
+            ],
+            "game_history": [{"id": 1, "week": 2, "p_home": .61}]}
+        self.assertEqual(freeze_weekly_model_snapshots(
+            odds, model, ratings, "2026-09-06T00:00:00Z"), 1)
+        frozen = dict(odds["weekly"][0]["modelSnapshot"])
+        self.assertEqual(frozen["homeWinProbability"], .61)
+        self.assertEqual((frozen["homePower"], frozen["awayPower"]), (.65, .35))
+        model["dynamic"]["ratings"] = {"A": -9.0, "B": 9.0}
+        self.assertEqual(freeze_weekly_model_snapshots(
+            odds, model, ratings, "2026-09-07T00:00:00Z"), 0)
+        self.assertEqual(odds["weekly"][0]["modelSnapshot"], frozen)
+
+    def test_unplayed_game_does_not_read_same_week_result(self):
+        odds = {"weekly": [{"id": 1, "week": 2,
+            "start": "2026-09-06T20:00:00Z", "home": "A", "away": "B",
+            "books": {"DraftKings": {"spread": -3}}}]}
+        model = {"teams": {"A": [0.0], "B": [0.0], "C": [0.0]},
+            "logistic": {"coef": [0.0], "hfa": 0.0, "intercept": 0.0},
+            "margin": {"coef": [0.0], "hfa": 0.0, "intercept": 0.0,
+                       "sigma": 10.0},
+            "ens_w": 1.0, "probability_scale": 1.0,
+            "dynamic": {"blend": 1.0,
+                "preseason_ratings": {"A": 0.0, "B": 0.0, "C": 0.0},
+                # Current state already contains a Week 2 result involving A.
+                "ratings": {"A": 5.0, "B": 0.0, "C": -5.0}}}
+        ratings = {"teams": [{"team": "A", "power": .99},
+                              {"team": "B", "power": .50}],
+            "history": [{"week": 1, "teams": [
+                {"team": "A", "power": .50}, {"team": "B", "power": .50}]}],
+            "game_history": [{"id": 99, "week": 2, "home": "A", "away": "C",
+                              "home_rating_delta": 5.0, "p_home": .50}]}
+        freeze_weekly_model_snapshots(
+            odds, model, ratings, "2026-09-06T18:00:00Z")
+        self.assertEqual(odds["weekly"][0]["modelSnapshot"][
+            "homeWinProbability"], .5)
 
     def test_removed_quote_tombstone_does_not_remain_current(self):
         row = {"game_id": 1, "provider": "Bovada", "captured_at": "2026-08-01T00:00:00Z"}

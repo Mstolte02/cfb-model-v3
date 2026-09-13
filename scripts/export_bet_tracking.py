@@ -111,11 +111,12 @@ def main() -> None:
 
     out = {
         "unit": UNIT,
+        "line_source": "DraftKings",
         "price_note": "spreads and totals settle at -110; moneylines at the archived price",
         "rules": rules,
         "backtest": {
             "seasons": sorted(int(s) for s in d.season.unique()),
-            "source": "expanding-window v4 backtest; no season fits its own predictions",
+            "source": "DraftKings lines; expanding-window v4 backtest; no season fits its own predictions",
             "overall": summarise(allz),
             "markets": markets,
         },
