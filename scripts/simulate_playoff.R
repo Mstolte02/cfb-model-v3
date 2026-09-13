@@ -21,6 +21,13 @@ n_sims <- if (length(args) && grepl("^[0-9]+$", args[[1]])) as.integer(args[[1]]
 root <- normalizePath(file.path(dirname(sub("^--file=", "", grep("^--file=", commandArgs(), value = TRUE)[1])), ".."))
 viz <- file.path(root, "viz", "data")
 
+# cfbseedR splits work into chunks but deliberately leaves execution sequential
+# unless the caller selects a future plan. Use the runner's available cores while
+# capping workers to avoid exhausting memory on the full FBS schedule.
+workers <- max(1L, min(4L, as.integer(future::availableCores())))
+if (workers > 1L) future::plan(future::multisession, workers = workers)
+message("Simulation workers: ", workers, "; runs per projection: ", n_sims)
+
 read_json <- function(path) jsonlite::fromJSON(path, simplifyVector = FALSE)
 model <- read_json(file.path(viz, "model_v4.json"))
 team_meta <- read_json(file.path(viz, "teams.json"))
@@ -187,6 +194,8 @@ build_bracket <- function(rows) {
 }
 
 export_run <- function(mode) {
+  started <- Sys.time()
+  message("starting ", mode, " projection")
   input <- make_inputs(mode)
   set.seed(if (mode == "preseason") 20260825L else 20260913L)
   sim <- cfb_simulations(
@@ -195,7 +204,7 @@ export_run <- function(mode) {
     simulations = n_sims, playoff_seeds = 12L, sim_include = "POST",
     rankings = input$rankings, autobid = "2026",
     tiebreaker_data = list(analytics_ratings = input$analytics),
-    chunks = min(4L, n_sims), verbosity = "NONE"
+    chunks = min(max(4L, workers * 2L), n_sims), verbosity = "NONE"
   )
   template_path <- file.path(viz, paste0("playoff_", mode, ".json"))
   template <- if (file.exists(template_path)) read_json(template_path) else list(teams = list())
@@ -244,8 +253,10 @@ export_run <- function(mode) {
   out$tossups <- list()
   out$win_dist <- win_dist
   write_json(out, template_path, auto_unbox = TRUE, pretty = TRUE, digits = 8, null = "null")
-  message("wrote ", template_path)
+  message("wrote ", template_path, " in ",
+          round(as.numeric(difftime(Sys.time(), started, units = "mins")), 1), " minutes")
 }
 
 export_run("preseason")
 export_run("current")
+future::plan(future::sequential)
