@@ -2682,14 +2682,49 @@
     }
     return counts.length - 1;
   };
+  /* ---------- THE FUTURES BOARD IS A PRESEASON BOARD ----------
+     Every price on this tab was posted in July or August and none of these bets can
+     be placed now - a national-title ticket is bought before the season, and the
+     board exists to record whether the model disagreed with that price AT THE TIME.
+     So the model's side of the comparison has to be its preseason number too.
+
+     It was not. The market probabilities are already frozen - `odds.sources` dates
+     every futures book to July/August and the weekly snapshot job only refreshes
+     `cfbd_lines` - but the model column read the LIVE simulation, and worse, it
+     followed whatever the Playoff tab's version toggle was set to, so a control on
+     another tab silently changed what this one claimed the edge was. Between the
+     preseason run and 18 September 2026 Ohio State's title probability moved .1127
+     to .1782 and its playoff probability .7554 to .8239. Against a price from
+     10 August that is a manufactured edge: the model is being credited for knowing
+     things it learned in the three weeks after the bet.
+
+     preseasonSim and preseasonPredict are therefore the ONLY model source this tab
+     reads. Both come from payload fields that already exist and already describe
+     themselves as the preseason snapshot - playoff_preseason.json carries
+     `locked: true` and `basis: "Preseason model snapshot"`, and
+     model_v4.json.dynamic.preseason_ratings holds the week-0 rating for all 138
+     teams. Nothing here is recomputed and nothing here moves again. */
+  const preseasonSim = () =>
+    Object.fromEntries((playoffPreseason.teams || []).map(t => [t.team, t]));
+  const preseasonRating = t => ((cur().model.dynamic || {}).preseason_ratings || {})[t];
+
+  /* Week-0 win probability for one matchup, from the week-0 ratings. Mirrors the
+     dynamic half of winpTeams; the futures board never used the static blend, and
+     the shipped blend is 1.0, so the dynamic rating IS the model here. */
+  function preseasonPredict(home, away, neutral) {
+    const rh = preseasonRating(home), ra = preseasonRating(away);
+    if (rh == null || ra == null) return null;
+    return sigmoid(rh - ra + (neutral ? 0 : cur().model.logistic.hfa));
+  }
+
   function regularWinDist(team) {
     let dist = [1];
     for (const g of schedule) {
       if (g.h !== team && g.a !== team) continue;
       let p;
-      if (vecOf(g.h) && vecOf(g.a)) {
-        const r = predict(g.h, g.a, g.n ? "N" : "A");
-        p = g.h === team ? r.pA : 1 - r.pA;
+      const r = preseasonPredict(g.h, g.a, !!g.n);
+      if (r != null) {
+        p = g.h === team ? r : 1 - r;
       } else p = vecOf(team) ? FCS_WIN_P : 1 - FCS_WIN_P;
       const next = Array(dist.length + 1).fill(0);
       dist.forEach((v, i) => { next[i] += v * (1 - p); next[i + 1] += v * p; });
@@ -2713,14 +2748,17 @@
     sel.innerHTML = books.map(b => `<option${b === old ? " selected" : ""}>${esc(b)}</option>`).join("");
   }
   function heismanIndex(rows) {
-    const byTeam = ratingRow(), sim = simRow();
+    // Preseason on both inputs, for the same reason as the rest of the tab: the
+    // Heisman price is an August price. avg_wins comes from the preseason
+    // simulation rather than ratings.json, whose avg_wins is the live projection.
+    const sim = preseasonSim();
     const pos = { QB: .55, WR: .20, RB: .12, TE: -.08 };
     const scored = rows.map(row => {
       const roster = (players[row.team] && players[row.team].players) || [];
       const player = roster.find(p => p.n === row.player);
       const war = player ? player.raw || 0 : 0;
-      const rt = byTeam[row.team] || {}, po = sim[row.team] || {};
-      const score = 1.65 * war + .75 * ((rt.avg_wins || 6) / 12) +
+      const po = sim[row.team] || {};
+      const score = 1.65 * war + .75 * ((po.avg_wins || 6) / 12) +
         .55 * (po.playoff || 0) + .35 * (po.champ || 0) + (pos[row.position] || 0);
       return { ...row, war, score };
     });
@@ -2732,7 +2770,9 @@
     setFutureBooks();
     const book = document.getElementById("future-book").value;
     const rows = ((((odds || {}).markets || {})[futureMarket] || {})[book] || []).slice();
-    const sim = simRow();
+    // preseasonSim, NOT simRow: simRow follows DATA.playoff, which the Playoff tab's
+    // version toggle rewrites. See the note above regularWinDist.
+    const sim = preseasonSim();
     const src = marketSource(futureMarket, book);
     let body = "", note = "";
     if (futureMarket === "heisman") {
@@ -2760,7 +2800,7 @@
         <div><small>Model</small><b>${pct(sideP, 0)}</b></div><div class="edge"><small>vs no-vig price</small><b>+${pct(r.edge, 1)}</b></div>
       </div>`;
       }).join("");
-      note = `Regular-season win distributions are rebuilt game by game so conference championships never leak into sportsbook win-total comparisons. A flag also needs the model's expected wins to clear the line by ${BET_RULES.win_total.minWinGap}.`;
+      note = `Preseason numbers throughout: the win distribution is rebuilt game by game from the week-0 ratings, so conference championships never leak into a sportsbook win-total comparison and nothing here moves once the season starts. A flag also needs the model's expected wins to clear the line by ${BET_RULES.win_total.minWinGap}.`;
     } else {
       const key = futureMarket === "make_cfp" ? "playoff"
         : futureMarket === "conference_title" ? "conf_champ" : "champ";
@@ -2775,7 +2815,7 @@
         <div><small>Model</small><b>${pct(r.modelP, 1)}</b></div><div class="edge ${r.edge < 0 ? "negative" : ""}"><small>Model gap</small><b>${r.edge >= 0 ? "+" : ""}${pct(r.edge, 1)}</b></div>
       </div>`;
       }).join("");
-      note = "Price gap compares the model with raw implied probability; incomplete futures boards are not de-vigged.";
+      note = "Price gap compares the preseason model with raw implied probability; incomplete futures boards are not de-vigged. Both sides are dated to before week 1 and neither is updated as the season is played.";
     }
     document.getElementById("future-spotlight").innerHTML = `<article class="market-panel"><div class="market-panel-head"><div><span class="eyebrow">Model vs market</span><h3>${futureMarket.replaceAll("_", " ")}</h3></div>${src ? `<a href="${src.url}" target="_blank" rel="noopener">${esc(book)} · ${src.as_of}</a>` : ""}</div><div class="market-list">${body || `<p class="sub">No quoted market is available.</p>`}</div><div class="market-note">${note}</div></article>`;
     wireTeamLinks();

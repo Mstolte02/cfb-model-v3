@@ -104,9 +104,36 @@ def load_qb_volume(years) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def fit_season_values(dfy: pd.DataFrame):
-    """Ridge on QB + opponent one-hot -> opponent-adjusted per-play QB values.
-    Returns (DataFrame[id, qb_value, n_games], chosen alpha)."""
+def fit_season_values(dfy: pd.DataFrame, prior: dict | pd.Series | None = None,
+                      alpha: float | None = None):
+    """Ridge on player + opponent one-hot -> opponent-adjusted per-play values.
+
+    `prior` MOVES WHAT THE SHRINKAGE SHRINKS TOWARD. A ridge penalises the size of
+    each coefficient, so with no prior every player is pulled toward zero, which is
+    the league mean - the right answer when nothing is known about him and the wrong
+    one when something is. Passing a per-id prior fits the ridge on the residual
+    `ppa - prior[id]` and adds the prior back, which penalises the DEPARTURE from
+    each player's own expectation instead. That is the exact Gaussian posterior,
+
+        posterior = (n/sigma^2 * observed + 1/tau^2 * prior) / (n/sigma^2 + 1/tau^2)
+
+    with `alpha = sigma^2 / tau^2`, so a returning starter with two games is pulled
+    back toward what he was rather than toward an average of everybody.
+
+    It matters most exactly where this is most useful: early in a season. Measured in
+    scripts/player_prior_stabilisation.py, a QB's own prior still deserves about half
+    the weight seven games in, so shrinking him to the league mean in week 3 throws
+    away the better of the two channels.
+
+    DEFAULT IS None, WHICH IS THE ORIGINAL BEHAVIOUR, byte for byte. build_qb_values
+    feeds artifacts/qb_values.csv, which feeds the preseason WAR build and therefore
+    the shipped model; changing what that produces would move the live ratings as a
+    side effect of a research change. Callers opt in.
+
+    `alpha` skips the cross-validated search, which is what an in-season caller wants
+    when it is refitting at every week and needs the shrinkage scale to be the same
+    one each time rather than a quantity that jumps around with the sample.
+    """
     encq = OneHotEncoder(handle_unknown="ignore")
     Q = encq.fit_transform(dfy[["id"]])
     enco = OneHotEncoder(handle_unknown="ignore")
@@ -114,12 +141,29 @@ def fit_season_values(dfy: pd.DataFrame):
     X = sparse.hstack([Q, O]).tocsr()
     y = dfy["ppa"].to_numpy()
 
-    alpha = max(ALPHA_GRID, key=lambda a: cross_val_score(
-        Ridge(alpha=a), X, y, cv=5, scoring="neg_mean_squared_error").mean())
-    m = Ridge(alpha=alpha).fit(X, y)
+    offset = np.zeros(len(dfy))
+    if prior is not None:
+        # A player absent from the prior gets zero, which is the league mean - the
+        # same default the no-prior fit gives everybody.
+        offset = dfy["id"].map(lambda i: float((prior or {}).get(i, 0.0))
+                               if isinstance(prior, dict)
+                               else float(prior.get(i, 0.0))).to_numpy()
+    target = y - offset
 
-    val = pd.DataFrame({"id": encq.categories_[0],
-                        "qb_value": m.coef_[:Q.shape[1]]})
+    if alpha is None:
+        alpha = max(ALPHA_GRID, key=lambda a: cross_val_score(
+            Ridge(alpha=a), X, target, cv=5,
+            scoring="neg_mean_squared_error").mean())
+    m = Ridge(alpha=alpha).fit(X, target)
+
+    ids = encq.categories_[0]
+    value = m.coef_[:Q.shape[1]]
+    if prior is not None:
+        get = (prior.get if isinstance(prior, dict)
+               else (lambda i, d=0.0: float(prior.get(i, d))))
+        value = value + np.array([float(get(i, 0.0) or 0.0) for i in ids])
+
+    val = pd.DataFrame({"id": ids, "qb_value": value})
     ng = dfy.groupby("id").size().rename("n_games")
     return val.merge(ng, on="id"), alpha
 
