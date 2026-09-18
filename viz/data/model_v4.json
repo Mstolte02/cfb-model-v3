@@ -275,7 +275,7 @@
    "Oregon": 1.9443893019940632,
    "Oregon State": -0.36762718593353616,
    "Penn State": 1.1796730605667514,
-   "Pittsburgh": 0.5837820903092399,
+   "Pittsburgh": 0.5796251012689666,
    "Purdue": -0.27697544883443054,
    "Rice": -1.2986578911789426,
    "Rutgers": -0.3856518065270207,
@@ -289,7 +289,7 @@
    "Southern Miss": -0.7430759251773122,
    "South Florida": -0.05618061567823851,
    "Stanford": -0.4621741610629657,
-   "Syracuse": -0.5208160981038538,
+   "Syracuse": -0.5166591090635805,
    "TCU": 0.3092241817562301,
    "Temple": -0.6170887378252398,
    "Tennessee": 1.7004686522566361,
@@ -324,8 +324,8 @@
    "Wisconsin": -0.07092529228956893,
    "Wyoming": -1.426300179382468
   },
-  "completed_games": 100,
-  "updated_through_week": 2
+  "completed_games": 101,
+  "updated_through_week": 3
  },
  "points": {
   "coef": [
