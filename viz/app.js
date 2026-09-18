@@ -3318,19 +3318,27 @@
      DRAWS. The tracker's whole claim is that it settles the bets the board flagged,
      and a second copy of this arithmetic is a second answer waiting to disagree with
      the first - the tab would go on reporting a record for bets nobody was shown. */
+  /* The model's numbers for one scheduled game, or null when either team is
+     unrated. Market rows are point-in-time records: current ratings still power
+     every forward-looking view, but they may not re-grade a game after its kickoff,
+     so once odds.json has recorded a snapshot that snapshot owns the row. Lifted out
+     for the same reason marketRows was - the board, the tracker and the Pick'Em
+     export all have to print the one number. */
+  function boardPredict(g) {
+    const live = predict(g.home, g.away, g.neutral ? "N" : "A", g.week);
+    const frozen = g.modelSnapshot;
+    return live && frozen && Number.isFinite(frozen.homeWinProbability)
+      && Number.isFinite(frozen.homeMargin)
+      ? { ...live, pA: frozen.homeWinProbability, margin: frozen.homeMargin,
+          scoreA: (live.total + frozen.homeMargin) / 2,
+          scoreB: (live.total - frozen.homeMargin) / 2 }
+      : live;
+  }
+
   function marketRows(games, market) {
     return games.filter(g => g.books.DraftKings).map(g => {
       const line = g.books.DraftKings;
-      const live = predict(g.home, g.away, g.neutral ? "N" : "A", g.week);
-      const frozen = g.modelSnapshot;
-      // Market rows are point-in-time records. Current ratings still power every
-      // forward-looking view, but they may not re-grade a game after its kickoff.
-      const r = live && frozen && Number.isFinite(frozen.homeWinProbability)
-        && Number.isFinite(frozen.homeMargin)
-        ? { ...live, pA: frozen.homeWinProbability, margin: frozen.homeMargin,
-            scoreA: (live.total + frozen.homeMargin) / 2,
-            scoreB: (live.total - frozen.homeMargin) / 2 }
-        : live;
+      const r = boardPredict(g);
       if (!r) return { ...g, line, r: null, gap: null };
       if (market === "moneyline") {
         const ih = line.homeMoneyline == null ? null : implied(line.homeMoneyline);
@@ -3347,14 +3355,13 @@
     });
   }
 
-  /* For spreads, outright disagreement means the model and the market pick
-     different winners. A gap
-     threshold alone misses these. A model that has the home team at 52% against a
-     market at 45% is calling the other side of the game on a 7-point gap, which no
-     sensible spread or moneyline gate would pass, and that is the strongest kind of
-     disagreement the board can show. It clears the spread gap gate. Moneylines do
-     not receive this exception: they must clear both their edge and probability
-     floors. */
+  /* Outright disagreement: the model and the book name different winners. For a
+     spread the two numbers sit on opposite sides of zero; for a moneyline the model
+     has one team over 50% while the de-vigged price has the other. A gap threshold
+     alone misses these. A model that has the home team at 52% against a market at
+     45% is calling the other side of the game on a 7-point gap, which no sensible
+     spread or moneyline gate would pass, and that is the strongest kind of
+     disagreement the board can show. It waives the gap gate in both markets. */
   function picksOtherSide(g, market) {
     if (market === "moneyline") {
       if (g.modelValue == null || g.marketHomeP == null) return false;
@@ -3367,6 +3374,36 @@
     return false;
   }
 
+  /* When the model and the book name different outright winners, the moneyline on
+     the model's side is a bet even though the probability edge is under the .20
+     gate. The gate is there to screen small, noisy disagreements, and naming the
+     other winner of the game is not a small disagreement - it is also the only case
+     where the side we want is priced as a dog, which is where the payout is.
+
+     This one has more behind it than the rest of BET_RULES does. On the 2022-25
+     expanding-window backtest the rows this ADDS - outright moneyline disagreements
+     the .20 gate turned away - went 115-131 at their archived prices for +3.43% ROI,
+     and were positive in all four seasons (2022 +3.45%, 2023 +3.69%, 2024 +3.67%,
+     2025 +2.92%), the 2025 holdout included. The same four seasons put the gate's own
+     selections at 56-85 and -2.76%, negative in two of them.
+
+     IT IS STILL NOT A VALIDATED EDGE, and nothing here should be read as one. A
+     moneyline's profit swings by more than a unit, so 246 bets buys a block-bootstrap
+     95% interval of [-9.6%, +16.1%] - it contains zero, like every other interval in
+     audit/BET_THRESHOLD_CALIBRATION.md. What is unusual is the sign consistency: four
+     seasons the same way, on a rule nobody chose off a grid. That makes it the
+     least-unsupported reading available, and the flags it produces are forward
+     observations in the ledger like every other flag on this board.
+     Measured by scripts/moneyline_flip_backtest.py.
+
+     FROM WEEK 3 ONWARD, AND THE BOUNDARY DOES NOT ADVANCE, for the same reason
+     MARGIN_BASIS_FROM_WEEK does not: weeks 1 and 2 are settled ledgers, and a rule
+     that adds bets to a week already graded rewrites a record after the fact. Week 3
+     had one completed game when this shipped (Pittsburgh-Syracuse, model 79.9% home
+     against a de-vigged 78.2%) and it is not an outright disagreement, so no graded
+     row moves. */
+  const ML_FLIP_FROM_WEEK = 3;
+
   /* The bet the board would print, or null for no bet. This IS the rule - both the
      board's flag and the tracker's record come from this one function. */
   function betToPlace(g, market) {
@@ -3378,10 +3415,12 @@
     const RULE = BET_RULES[market];
     if (g.bettingExcluded) return null;
     if (g.gap == null || g.marketValue == null) return null;
-    const flip = picksOtherSide(g, market);
-    // Moneylines always need BOTH gates: >50% model probability and the full
-    // probability edge. Outright disagreement only waives the gap for spreads.
-    if ((market === "moneyline" || !flip) && Math.abs(g.gap) < RULE.minGap) return null;
+    // Outright disagreement waives the GAP gate only. A moneyline still has to clear
+    // minModelP below, which a flip does by construction: if the book's favourite is
+    // not the model's, the model's side is over 50% by definition.
+    const flip = picksOtherSide(g, market) &&
+      (market !== "moneyline" || g.week >= ML_FLIP_FROM_WEEK);
+    if (!flip && Math.abs(g.gap) < RULE.minGap) return null;
     const home = g.gap >= 0, side = home ? g.home : g.away;
     if (market === "moneyline") {
       if (g.modelValue == null || g.modelValue <= RULE.minModelP) return null;
@@ -3521,6 +3560,54 @@
      tell a played game from an upcoming one. */
   const finals = new Map(schedule.filter(g => g.f && g.id != null)
     .map(g => [g.id, { home: g.hp, away: g.ap, week: g.w, d: g.d }]));
+
+  /* ---------- CFBD Model Pick'Em export ----------
+     The Pick'Em importer takes four columns - id,home,away,predicted - keyed on the
+     ESPN game id that odds.json already carries under `id`, so the names are there
+     to be read rather than matched and no alias table is needed.
+
+     `predicted` IS THE SPREAD FROM THE HOME SIDE, not a margin: negative when the
+     model favours the home team, positive when it favours the visitor. That is
+     exactly the modelSpread the board prints in its Model column, which is why this
+     takes its number from boardPredict rather than working one out again.
+
+     Every game the odds feed lists for the week is a row, not only the ones the
+     board draws. The board is FBS-vs-FBS on purpose - the model does not rate FCS
+     teams and will not price them - but the Pick'Em slate contains those games too,
+     and a row missing from the file is a game left unpicked rather than a game
+     skipped. Those rows carry an empty `predicted`, which is the same thing the
+     site's own export writes for a game with no number. Played games are left out:
+     their pick window has closed. */
+  const csvCell = v => {
+    const s = String(v == null ? "" : v);
+    return /[",\r\n]/.test(s) ? `"${s.replaceAll('"', '""')}"` : s;
+  };
+  function pickemCSV(week) {
+    const games = (odds.weekly || [])
+      .filter(g => g.id != null && (week == null || g.week === week) && !finals.has(g.id))
+      .sort((a, b) => (a.week || 99) - (b.week || 99)
+        || String(a.start).localeCompare(String(b.start)));
+    const rows = games.map(g => {
+      const r = boardPredict(g);
+      return [g.id, csvCell(g.home), csvCell(g.away),
+        r ? (-r.margin).toFixed(1) : ""].join(",");
+    });
+    return ["id,home,away,predicted", ...rows].join("\n") + "\n";
+  }
+  function downloadText(name, text) {
+    const url = URL.createObjectURL(new Blob([text], { type: "text/csv;charset=utf-8" }));
+    const a = Object.assign(document.createElement("a"), { href: url, download: name });
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+  document.getElementById("pickem-export").addEventListener("click", () => {
+    const sel = document.getElementById("weekly-week").value;
+    const week = sel === "__all" ? null : Number(sel);
+    downloadText(`cfb-model-pickem-2026-${week == null ? "all-weeks" : "week" + week}.csv`,
+      pickemCSV(week));
+  });
 
   /* The live record: flag with betToPlace, settle with the final score. Same rows
      the board draws, so the two can never disagree. */

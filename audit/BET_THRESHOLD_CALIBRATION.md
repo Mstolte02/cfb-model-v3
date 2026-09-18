@@ -119,6 +119,56 @@ keeps `minGap: 2` and gains `trackedThrough: 1`: the 2,207-bet 2022-25 record an
 week-1 2026 totals stay in the Tracking tab as the settled history of a rule that ran,
 and no total after week 1 earns a flag.
 
+## Outright disagreement is a different question from gap size
+
+Added 18 September 2026. Everything above sweeps ONE knob: how big a gap has to be
+before it is worth backing. That framing has a blind spot, because it treats a
+moneyline where the model and the book merely differ in degree the same as one where
+they name different winners of the football game. The second is not a large version of
+the first. It is the only case where the model says the favourite is wrong, and it is
+the only case where the side we want is priced as a dog.
+
+Splitting the 2022-25 backtest on that line, with the app's own gates read out of
+`viz/app.js`:
+
+| set | bets | record | hit | ROI | 95% block bootstrap |
+| --- | ---: | :--- | ---: | ---: | :--- |
+| what the .20 gate takes | 141 | 56-85-0 | 39.7% | **-2.76%** | [-19.8%, +15.0%] |
+| outright disagreements the gate refuses | 246 | 115-131-0 | 46.7% | **+3.43%** | [-9.6%, +16.1%] |
+| both together | 387 | 171-216-0 | 44.2% | **+1.17%** | [-9.3%, +11.9%] |
+
+By season, the added rows are +3.45% (2022), +3.69% (2023), +3.67% (2024) and +2.92%
+(2025). The gate's own selections are -17.03%, -5.47%, +8.11% and +1.96% over the same
+years.
+
+**This is not a validated edge and the interval says so** - it contains zero, exactly
+like every interval in the sections above, and 246 moneylines is a small sample of a
+high-variance bet. Two things still separate it from the grid searches this document
+spends most of its length rejecting. The sign does not move: four seasons the same way,
+including the 2025 holdout, where the gate that was *chosen* off a grid flips sign
+between years. And the rule was not selected from a curve at all - there is no
+threshold here to tune, so there is no best-of-N selection penalty to pay.
+
+Shipped as a waiver of the gap gate, not a replacement for it: an outright
+disagreement is flagged whatever its size, and everything else still needs the full
+.20 edge. The probability floor is untouched and needs no exception, because a flip
+puts the model's side over 50% by construction. `BET_RULES.moneyline` is unchanged,
+which is what keeps `scripts.export_bet_tracking` honest.
+
+**It applies from week 3 of 2026 and the boundary does not advance.** Weeks 1 and 2
+are settled ledgers and a rule that adds bets to a graded week is a retroactive
+rewrite, the same defect `MARGIN_BASIS_FROM_WEEK` exists to prevent. The one week-3
+game already complete when this shipped, Pittsburgh-Syracuse, is not an outright
+disagreement (model 79.9% home against a de-vigged 78.2%), so no graded row moved: the
+live ledger was 33 bets, 18-14-1, +6.29 units before and after the change.
+
+The backtest half of the Tracking tab is NOT regenerated for this. It reports the pure
+gap gate applied to 2022-25, which is the settled record of what that gate did, and
+`scripts.export_bet_tracking` still measures exactly that. The live half and the
+backtest half now differ by the flip waiver in moneylines, as they already did by the
+flip waiver in spreads. Recording the divergence here is the fix; re-grading four
+seasons is not.
+
 ## What would change the answer
 
 More seasons is the only real fix; four is not enough to resolve a 2–3 point edge
@@ -135,3 +185,12 @@ python -m scripts.threshold_calibration
 
 Artifact: `artifacts/threshold_calibration.json`, with the full ROI surface, per
 threshold intervals and selection nulls for every market.
+
+The outright-disagreement split is its own script, because it asks a different
+question and reads the shipped gates rather than sweeping a grid:
+
+```powershell
+python -m scripts.moneyline_flip_backtest
+```
+
+Artifact: `artifacts/moneyline_flip_backtest.json`.

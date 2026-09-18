@@ -740,6 +740,13 @@ main { max-width: 1320px; padding-top: 38px; }
 .market-toolbar .seg-btn.active, .leader-controls .seg-btn.active { color: #fff; background: var(--navy); }
 .market-source { color: var(--muted); font-size: .82rem; letter-spacing: .02em; }
 .market-source b { color: var(--ink); }
+.csv-btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px;
+  border: 1px solid var(--line2); border-radius: 9px; background: var(--panel);
+  color: var(--ink); cursor: pointer; font: 750 12px/1 var(--sans);
+  transition: border-color .12s, background .12s, color .12s; }
+.csv-btn::before { content: "\2193"; font-weight: 900; color: var(--accent); }
+.csv-btn:hover { border-color: var(--navy); background: var(--navy); color: #fff; }
+.csv-btn:hover::before { color: var(--bet); }
 .market-panel { overflow: hidden; border: 1px solid #23384b; border-radius: 16px; color: #eef4f8;
   background: var(--navy); box-shadow: 0 18px 50px rgba(13,27,42,.14); }
 .market-panel-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 15px;
