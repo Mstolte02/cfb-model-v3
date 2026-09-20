@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-09-19T20:47:54Z",
+  "checked_at": "2026-09-20T04:59:34Z",
   "source": "CFBD /lines",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
-  "quote_events": 3652,
-  "successful_checks": 148,
-  "changed_quotes_this_check": 63,
-  "games_with_quotes": 478,
+  "quote_events": 3701,
+  "successful_checks": 149,
+  "changed_quotes_this_check": 49,
+  "games_with_quotes": 481,
   "books_with_quotes": [
     "Bovada",
     "DraftKings"
@@ -85,11 +85,11 @@
   ],
   "entries": 17,
   "new_entries_this_check": 0,
-  "settlements": 15,
-  "qualified_clv_observations": 14,
-  "mean_consensus_clv": 0.004575545811283337,
-  "final_scores_published_this_check": 13,
-  "completed_rating_games_replayed": 115,
+  "settlements": 16,
+  "qualified_clv_observations": 15,
+  "mean_consensus_clv": 0.003924605653437207,
+  "final_scores_published_this_check": 51,
+  "completed_rating_games_replayed": 152,
   "availability": {
     "events": 2,
     "last_event_at": "2026-08-03T14:47:00Z"
