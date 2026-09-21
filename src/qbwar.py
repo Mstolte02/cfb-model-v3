@@ -57,7 +57,7 @@ def fbs_set(year: int) -> set:
 def load_player_games(years, positions) -> pd.DataFrame:
     """Per-player-per-game EPA/play (FBS vs FBS) for the given positions. Same
     cached game files as QB — CFBD credits ball-touchers (QB/RB/WR/TE) and
-    box-score defenders; OL / non-targeted coverage never appear (CFBD can't
+    no defenders; OL / non-targeted coverage never appear (CFBD can't
     value them — that's where PFF stays)."""
     positions = set(positions)
     rows = []
@@ -120,10 +120,9 @@ def fit_season_values(dfy: pd.DataFrame, prior: dict | pd.Series | None = None,
     with `alpha = sigma^2 / tau^2`, so a returning starter with two games is pulled
     back toward what he was rather than toward an average of everybody.
 
-    It matters most exactly where this is most useful: early in a season. Measured in
-    scripts/player_prior_stabilisation.py, a QB's own prior still deserves about half
-    the weight seven games in, so shrinking him to the league mean in week 3 throws
-    away the better of the two channels.
+    The validated policy is personal priors for WR throughout the season and QB
+    only through week 4. RB/TE retain league-mean shrinkage. See
+    audit/BAYESIAN_UPDATING_RESEARCH.md and src/player_updates.py.
 
     DEFAULT IS None, WHICH IS THE ORIGINAL BEHAVIOUR, byte for byte. build_qb_values
     feeds artifacts/qb_values.csv, which feeds the preseason WAR build and therefore

@@ -260,3 +260,29 @@ Artifacts: `inseason_kalman_backtest.json`, `inseason_refit_backtest.json`,
   <https://bigten.org/fb/availability-reports/>
 - ACC availability reports,
   <https://www.espn.com/college-football/story/_/id/45794684/acc-start-releasing-injury-reports-conference-games>
+
+## Implementation — 21 September 2026
+
+The supported player estimator now lives in `src/player_updates.py`, invoked by
+`python -m scripts.update_player_values`. It uses alpha 10, a prior fitted on the
+immediately preceding season, WR personal priors throughout and QB personal priors
+through week 4. RB/TE and IDs absent from prior data retain league-mean shrinkage.
+The minimum fit population matches the research: 20 observations and five players.
+
+Only completed regular-season FBS-vs-FBS game IDs enter the fit. The default export
+uses the last fully completed scheduled week; `--through-week` supports explicit
+historical cutoffs. Current-season API caches refresh; prior-season inputs reuse
+cache. Stable IDs carry priors across transfers. Unobserved players receive no
+fabricated current-season value. Insufficient data leaves the previous export intact.
+
+A Monday workflow publishes `viz/data/player_values.json` and deploys the site.
+Team Overview displays estimates, sample sizes, cutoff and prior type separately
+from preseason WAR. This implements the measured **player-estimation** improvement;
+it does not claim a validated team-prediction gain or convert EPA/play into WAR.
+The audit did not estimate that conversion, and the production dynamic blend of 1
+would ignore a change made only to the static WAR feature. A team-level overlay
+therefore still needs a forward-only incremental test before adoption.
+
+The remaining findings retain their original decisions: no Kalman/moving-K change,
+no efficiency-refit replacement, and no availability scraping. Second-pass opponent
+lift is already implemented in Most Deserving (see `DESERVING_RANKINGS.md`).
