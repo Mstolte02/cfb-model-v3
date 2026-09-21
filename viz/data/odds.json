@@ -33,7 +33,7 @@
   },
   "cfbd_lines": {
    "book": "DraftKings",
-   "as_of": "2026-09-14T20:24:08Z",
+   "as_of": "2026-09-21T20:29:53Z",
    "url": "https://api.collegefootballdata.com/",
    "timestamp_semantics": "weekly board lock; Monday 12:30 PM ET"
   }
@@ -6807,6 +6807,22 @@
    }
   },
   {
+   "id": 401858455,
+   "week": 3,
+   "start": "2026-09-19T02:30:00.000Z",
+   "home": "Oregon",
+   "away": "Portland State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -58.5,
+     "spreadOpen": -57.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
    "id": 401869940,
    "week": 3,
    "start": "2026-09-19T15:30:00.000Z",
@@ -6934,6 +6950,22 @@
     "homeMargin": 2.64271962,
     "homePower": 0.557295,
     "awayPower": 0.563318
+   }
+  },
+  {
+   "id": 401858228,
+   "week": 3,
+   "start": "2026-09-19T16:00:00.000Z",
+   "home": "Georgia Tech",
+   "away": "Mercer",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -38.5,
+     "spreadOpen": -38.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
    }
   },
   {
@@ -7067,6 +7099,86 @@
    }
   },
   {
+   "id": 401867805,
+   "week": 3,
+   "start": "2026-09-19T16:00:00.000Z",
+   "home": "New Haven",
+   "away": "Brown",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 10,
+     "spreadOpen": 9.5,
+     "homeMoneyline": 311,
+     "awayMoneyline": -425
+    }
+   }
+  },
+  {
+   "id": 401867817,
+   "week": 3,
+   "start": "2026-09-19T16:00:00.000Z",
+   "home": "Columbia",
+   "away": "Lafayette",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -3,
+     "spreadOpen": -2.5,
+     "homeMoneyline": -170,
+     "awayMoneyline": 136
+    }
+   }
+  },
+  {
+   "id": 401867834,
+   "week": 3,
+   "start": "2026-09-19T16:00:00.000Z",
+   "home": "Lehigh",
+   "away": "Dartmouth",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -17.5,
+     "spreadOpen": -16.5,
+     "homeMoneyline": -960,
+     "awayMoneyline": 577
+    }
+   }
+  },
+  {
+   "id": 401867908,
+   "week": 3,
+   "start": "2026-09-19T16:00:00.000Z",
+   "home": "Long Island University",
+   "away": "Villanova",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 18.5,
+     "spreadOpen": 18.5,
+     "homeMoneyline": 830,
+     "awayMoneyline": -1740
+    }
+   }
+  },
+  {
+   "id": 401868242,
+   "week": 3,
+   "start": "2026-09-19T16:00:00.000Z",
+   "home": "East Tennessee State",
+   "away": "West Georgia",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -16.5,
+     "spreadOpen": -16.5,
+     "homeMoneyline": -680,
+     "awayMoneyline": 450
+    }
+   }
+  },
+  {
    "id": 401858460,
    "week": 3,
    "start": "2026-09-19T16:30:00.000Z",
@@ -7145,6 +7257,198 @@
    }
   },
   {
+   "id": 401866638,
+   "week": 3,
+   "start": "2026-09-19T17:00:00.000Z",
+   "home": "Bryant",
+   "away": "Princeton",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 2.5,
+     "spreadOpen": 3,
+     "homeMoneyline": 121,
+     "awayMoneyline": -150
+    }
+   }
+  },
+  {
+   "id": 401866639,
+   "week": 3,
+   "start": "2026-09-19T17:00:00.000Z",
+   "home": "New Hampshire",
+   "away": "Harvard",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 14.5,
+     "spreadOpen": 15.5,
+     "homeMoneyline": 554,
+     "awayMoneyline": -900
+    }
+   }
+  },
+  {
+   "id": 401867686,
+   "week": 3,
+   "start": "2026-09-19T17:00:00.000Z",
+   "home": "Butler",
+   "away": "Chicago State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -20.5,
+     "spreadOpen": -19.5,
+     "homeMoneyline": -1700,
+     "awayMoneyline": 820
+    }
+   }
+  },
+  {
+   "id": 401867826,
+   "week": 3,
+   "start": "2026-09-19T17:00:00.000Z",
+   "home": "Colgate",
+   "away": "Cornell",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -12.5,
+     "spreadOpen": -12.5,
+     "homeMoneyline": -551,
+     "awayMoneyline": 384
+    }
+   }
+  },
+  {
+   "id": 401867857,
+   "week": 3,
+   "start": "2026-09-19T17:00:00.000Z",
+   "home": "Indiana State",
+   "away": "Valparaiso",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -22.5,
+     "spreadOpen": -22.5,
+     "homeMoneyline": -2900,
+     "awayMoneyline": 1060
+    }
+   }
+  },
+  {
+   "id": 401868397,
+   "week": 3,
+   "start": "2026-09-19T17:00:00.000Z",
+   "home": "Davidson",
+   "away": "VMI",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 4,
+     "spreadOpen": 3,
+     "homeMoneyline": 125,
+     "awayMoneyline": -156
+    }
+   }
+  },
+  {
+   "id": 401858227,
+   "week": 3,
+   "start": "2026-09-19T18:00:00.000Z",
+   "home": "Boston College",
+   "away": "Maine",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -37.5,
+     "spreadOpen": -38.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401858448,
+   "week": 3,
+   "start": "2026-09-19T18:00:00.000Z",
+   "home": "Illinois",
+   "away": "Southern Illinois",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -34.5,
+     "spreadOpen": -41.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401868023,
+   "week": 3,
+   "start": "2026-09-19T18:00:00.000Z",
+   "home": "Holy Cross",
+   "away": "Yale",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 21,
+     "spreadOpen": 18.5,
+     "homeMoneyline": 800,
+     "awayMoneyline": -1640
+    }
+   }
+  },
+  {
+   "id": 401868159,
+   "week": 3,
+   "start": "2026-09-19T18:00:00.000Z",
+   "home": "St. Thomas (MN)",
+   "away": "Southern Utah",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 12.5,
+     "spreadOpen": 14,
+     "homeMoneyline": 294,
+     "awayMoneyline": -398
+    }
+   }
+  },
+  {
+   "id": 401866634,
+   "week": 3,
+   "start": "2026-09-19T18:30:00.000Z",
+   "home": "Stony Brook",
+   "away": "Rhode Island",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 9.5,
+     "spreadOpen": 13.5,
+     "homeMoneyline": 260,
+     "awayMoneyline": -346
+    }
+   }
+  },
+  {
+   "id": 401868275,
+   "week": 3,
+   "start": "2026-09-19T18:30:00.000Z",
+   "home": "Western Carolina",
+   "away": "Presbyterian",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -33.5,
+     "spreadOpen": -28.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
    "id": 401862774,
    "week": 3,
    "start": "2026-09-19T19:00:00.000Z",
@@ -7168,6 +7472,54 @@
     "homeMargin": 6.9687868,
     "homePower": 0.466418,
     "awayPower": 0.39093
+   }
+  },
+  {
+   "id": 401867846,
+   "week": 3,
+   "start": "2026-09-19T19:00:00.000Z",
+   "home": "Illinois State",
+   "away": "Eastern Illinois",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -29.5,
+     "spreadOpen": -29.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401867898,
+   "week": 3,
+   "start": "2026-09-19T19:00:00.000Z",
+   "home": "Montana State",
+   "away": "Central Connecticut",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -41.5,
+     "spreadOpen": -38.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401867991,
+   "week": 3,
+   "start": "2026-09-19T19:00:00.000Z",
+   "home": "Bucknell",
+   "away": "Pennsylvania",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 3.5,
+     "spreadOpen": 3,
+     "homeMoneyline": 155,
+     "awayMoneyline": -195
+    }
    }
   },
   {
@@ -7301,6 +7653,22 @@
    }
   },
   {
+   "id": 401858233,
+   "week": 3,
+   "start": "2026-09-19T19:30:00.000Z",
+   "home": "California",
+   "away": "Wagner",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -58.5,
+     "spreadOpen": -58.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
    "id": 401858450,
    "week": 3,
    "start": "2026-09-19T19:30:00.000Z",
@@ -7350,6 +7718,70 @@
     "homeMargin": -15.98816519,
     "homePower": 0.437018,
     "awayPower": 0.768968
+   }
+  },
+  {
+   "id": 401860890,
+   "week": 3,
+   "start": "2026-09-19T19:30:00.000Z",
+   "home": "Washington State",
+   "away": "Duquesne",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -38.5,
+     "spreadOpen": -37.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401866424,
+   "week": 3,
+   "start": "2026-09-19T19:30:00.000Z",
+   "home": "Massachusetts",
+   "away": "Stonehill",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -30.5,
+     "spreadOpen": -33.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401866635,
+   "week": 3,
+   "start": "2026-09-19T19:30:00.000Z",
+   "home": "UAlbany",
+   "away": "Monmouth",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 2.5,
+     "spreadOpen": -1.5,
+     "homeMoneyline": 121,
+     "awayMoneyline": -150
+    }
+   }
+  },
+  {
+   "id": 401868018,
+   "week": 3,
+   "start": "2026-09-19T19:30:00.000Z",
+   "home": "Richmond",
+   "away": "Georgetown",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -15.5,
+     "spreadOpen": -12.5,
+     "homeMoneyline": -575,
+     "awayMoneyline": 397
+    }
    }
   },
   {
@@ -7405,6 +7837,22 @@
    }
   },
   {
+   "id": 401858471,
+   "week": 3,
+   "start": "2026-09-19T20:00:00.000Z",
+   "home": "Iowa",
+   "away": "Northern Iowa",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -37.5,
+     "spreadOpen": -40.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
    "id": 401866422,
    "week": 3,
    "start": "2026-09-19T20:00:00.000Z",
@@ -7428,6 +7876,22 @@
     "homeMargin": 14.45643745,
     "homePower": 0.347217,
     "awayPower": 0.167061
+   }
+  },
+  {
+   "id": 401866641,
+   "week": 3,
+   "start": "2026-09-19T20:00:00.000Z",
+   "home": "Norfolk State",
+   "away": "Hampton",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -5.5,
+     "spreadOpen": -8.5,
+     "homeMoneyline": -279,
+     "awayMoneyline": 216
+    }
    }
   },
   {
@@ -7457,6 +7921,22 @@
    }
   },
   {
+   "id": 401868051,
+   "week": 3,
+   "start": "2026-09-19T20:00:00.000Z",
+   "home": "Idaho",
+   "away": "Abilene Christian",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 1.5,
+     "spreadOpen": 1.5,
+     "homeMoneyline": -109,
+     "awayMoneyline": -114
+    }
+   }
+  },
+  {
    "id": 401856691,
    "week": 3,
    "start": "2026-09-19T20:15:00.000Z",
@@ -7480,6 +7960,22 @@
     "homeMargin": 7.92237995,
     "homePower": 0.768654,
     "awayPower": 0.696008
+   }
+  },
+  {
+   "id": 401868317,
+   "week": 3,
+   "start": "2026-09-19T20:30:00.000Z",
+   "home": "UL Monroe",
+   "away": "SE Louisiana",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -9.5,
+     "spreadOpen": -10.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
    }
   },
   {
@@ -7558,6 +8054,118 @@
     "homeMargin": 11.76318999,
     "homePower": 0.384945,
     "awayPower": 0.233554
+   }
+  },
+  {
+   "id": 401866636,
+   "week": 3,
+   "start": "2026-09-19T22:00:00.000Z",
+   "home": "Campbell",
+   "away": "North Carolina A&T",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -20.5,
+     "spreadOpen": -18.5,
+     "homeMoneyline": -1520,
+     "awayMoneyline": 770
+    }
+   }
+  },
+  {
+   "id": 401866637,
+   "week": 3,
+   "start": "2026-09-19T22:00:00.000Z",
+   "home": "Elon",
+   "away": "Sacred Heart",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -12.5,
+     "spreadOpen": -15.5,
+     "homeMoneyline": -517,
+     "awayMoneyline": 365
+    }
+   }
+  },
+  {
+   "id": 401866640,
+   "week": 3,
+   "start": "2026-09-19T22:00:00.000Z",
+   "home": "Towson",
+   "away": "Morgan State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -8.5,
+     "spreadOpen": -10,
+     "homeMoneyline": -400,
+     "awayMoneyline": 295
+    }
+   }
+  },
+  {
+   "id": 401867979,
+   "week": 3,
+   "start": "2026-09-19T22:00:00.000Z",
+   "home": "Gardner-Webb",
+   "away": "North Carolina Central",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -7,
+     "spreadOpen": -3.5,
+     "homeMoneyline": -309,
+     "awayMoneyline": 236
+    }
+   }
+  },
+  {
+   "id": 401868009,
+   "week": 3,
+   "start": "2026-09-19T22:00:00.000Z",
+   "home": "William & Mary",
+   "away": "Fordham",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -16.5,
+     "spreadOpen": -19.5,
+     "homeMoneyline": -1560,
+     "awayMoneyline": 780
+    }
+   }
+  },
+  {
+   "id": 401868142,
+   "week": 3,
+   "start": "2026-09-19T22:00:00.000Z",
+   "home": "Eastern Kentucky",
+   "away": "Dayton",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -11.5,
+     "spreadOpen": -10,
+     "homeMoneyline": -436,
+     "awayMoneyline": 317
+    }
+   }
+  },
+  {
+   "id": 401868337,
+   "week": 3,
+   "start": "2026-09-19T22:00:00.000Z",
+   "home": "Chattanooga",
+   "away": "Wofford",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -1.5,
+     "spreadOpen": -1.5,
+     "homeMoneyline": -137,
+     "awayMoneyline": 110
+    }
    }
   },
   {
@@ -7665,6 +8273,22 @@
    }
   },
   {
+   "id": 401856803,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "Oklahoma State",
+   "away": "Murray State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -56.5,
+     "spreadOpen": -56.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
    "id": 401861963,
    "week": 3,
    "start": "2026-09-19T23:00:00.000Z",
@@ -7691,6 +8315,22 @@
    }
   },
   {
+   "id": 401862772,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "Memphis",
+   "away": "UT Martin",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -33.5,
+     "spreadOpen": -34.5,
+     "homeMoneyline": -50000,
+     "awayMoneyline": 4000
+    }
+   }
+  },
+  {
    "id": 401862773,
    "week": 3,
    "start": "2026-09-19T23:00:00.000Z",
@@ -7714,6 +8354,22 @@
     "homeMargin": -11.02716141,
     "homePower": 0.26497,
     "awayPower": 0.520036
+   }
+  },
+  {
+   "id": 401862777,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "South Florida",
+   "away": "Delaware State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -36.5,
+     "spreadOpen": -36.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
    }
   },
   {
@@ -7769,6 +8425,150 @@
    }
   },
   {
+   "id": 401867896,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "South Dakota State",
+   "away": "Youngstown State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -9.5,
+     "spreadOpen": -10,
+     "homeMoneyline": -361,
+     "awayMoneyline": 271
+    }
+   }
+  },
+  {
+   "id": 401867984,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "Furman",
+   "away": "South Carolina State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 4.5,
+     "spreadOpen": 10,
+     "homeMoneyline": 177,
+     "awayMoneyline": -225
+    }
+   }
+  },
+  {
+   "id": 401868062,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "West Florida",
+   "away": "Austin Peay",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 10.5,
+     "spreadOpen": 6.5,
+     "homeMoneyline": 284,
+     "awayMoneyline": -382
+    }
+   }
+  },
+  {
+   "id": 401868133,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "Southeast Missouri State",
+   "away": "Central Arkansas",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -4,
+     "spreadOpen": -3,
+     "homeMoneyline": -189,
+     "awayMoneyline": 151
+    }
+   }
+  },
+  {
+   "id": 401868151,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "North Alabama",
+   "away": "Alcorn State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -13.5,
+     "spreadOpen": -13.5,
+     "homeMoneyline": -510,
+     "awayMoneyline": 361
+    }
+   }
+  },
+  {
+   "id": 401868196,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "Florida A&M",
+   "away": "Tennessee State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -3,
+     "spreadOpen": -4.5,
+     "homeMoneyline": -154,
+     "awayMoneyline": 123
+    }
+   }
+  },
+  {
+   "id": 401868205,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "Western Illinois",
+   "away": "Morehead State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -20.5,
+     "spreadOpen": -18.5,
+     "homeMoneyline": -1900,
+     "awayMoneyline": 870
+    }
+   }
+  },
+  {
+   "id": 401868237,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "Tarleton State",
+   "away": "Merrimack",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -32.5,
+     "spreadOpen": -34.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401869147,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "Incarnate Word",
+   "away": "Houston Christian",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -14,
+     "spreadOpen": -14,
+     "homeMoneyline": -680,
+     "awayMoneyline": 450
+    }
+   }
+  },
+  {
    "id": 401869948,
    "week": 3,
    "start": "2026-09-19T23:00:00.000Z",
@@ -7792,6 +8592,54 @@
     "homeMargin": 4.00675474,
     "homePower": 0.320092,
     "awayPower": 0.302374
+   }
+  },
+  {
+   "id": 401870764,
+   "week": 3,
+   "start": "2026-09-19T23:00:00.000Z",
+   "home": "Sam Houston",
+   "away": "Nicholls",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -21,
+     "spreadOpen": -17.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401858452,
+   "week": 3,
+   "start": "2026-09-19T23:15:00.000Z",
+   "home": "Nebraska",
+   "away": "North Dakota",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -27.5,
+     "spreadOpen": -24.5,
+     "homeMoneyline": -2800,
+     "awayMoneyline": 1300
+    }
+   }
+  },
+  {
+   "id": 401858459,
+   "week": 3,
+   "start": "2026-09-19T23:15:00.000Z",
+   "home": "Washington",
+   "away": "Eastern Washington",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -42.5,
+     "spreadOpen": -42.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
    }
   },
   {
@@ -8055,6 +8903,22 @@
    }
   },
   {
+   "id": 401862775,
+   "week": 3,
+   "start": "2026-09-20T00:00:00.000Z",
+   "home": "Tulsa",
+   "away": "East Texas A&M",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -41.5,
+     "spreadOpen": -42.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
    "id": 401862776,
    "week": 3,
    "start": "2026-09-20T00:00:00.000Z",
@@ -8081,6 +8945,102 @@
    }
   },
   {
+   "id": 401868075,
+   "week": 3,
+   "start": "2026-09-20T00:00:00.000Z",
+   "home": "Cal Poly",
+   "away": "San Diego",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -17.5,
+     "spreadOpen": -18.5,
+     "homeMoneyline": -810,
+     "awayMoneyline": 515
+    }
+   }
+  },
+  {
+   "id": 401868124,
+   "week": 3,
+   "start": "2026-09-20T00:00:00.000Z",
+   "home": "Utah Tech",
+   "away": "Northern Arizona",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 16.5,
+     "spreadOpen": 21.5,
+     "homeMoneyline": 640,
+     "awayMoneyline": -1140
+    }
+   }
+  },
+  {
+   "id": 401868168,
+   "week": 3,
+   "start": "2026-09-20T00:00:00.000Z",
+   "home": "Weber State",
+   "away": "Northwestern State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -35.5,
+     "spreadOpen": -34.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   }
+  },
+  {
+   "id": 401868247,
+   "week": 3,
+   "start": "2026-09-20T00:00:00.000Z",
+   "home": "UT Rio Grande Valley",
+   "away": "McNeese",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -5.5,
+     "spreadOpen": -5.5,
+     "homeMoneyline": -204,
+     "awayMoneyline": 162
+    }
+   }
+  },
+  {
+   "id": 401868307,
+   "week": 3,
+   "start": "2026-09-20T00:00:00.000Z",
+   "home": "Prairie View A&M",
+   "away": "Stephen F. Austin",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 16.5,
+     "spreadOpen": 17.5,
+     "homeMoneyline": 610,
+     "awayMoneyline": -1060
+    }
+   }
+  },
+  {
+   "id": 401860885,
+   "week": 3,
+   "start": "2026-09-20T02:00:00.000Z",
+   "home": "Boise State",
+   "away": "South Dakota",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -28.5,
+     "spreadOpen": -23.5,
+     "homeMoneyline": -3200,
+     "awayMoneyline": 1400
+    }
+   }
+  },
+  {
    "id": 401860887,
    "week": 3,
    "start": "2026-09-20T02:00:00.000Z",
@@ -8104,6 +9064,22 @@
     "homeMargin": 2.33140429,
     "homePower": 0.467101,
     "awayPower": 0.47917
+   }
+  },
+  {
+   "id": 401868164,
+   "week": 3,
+   "start": "2026-09-20T02:00:00.000Z",
+   "home": "UC Davis",
+   "away": "Stetson",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -47.5,
+     "spreadOpen": -47.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
    }
   },
   {
@@ -8185,6 +9161,22 @@
    }
   },
   {
+   "id": 401860886,
+   "week": 3,
+   "start": "2026-09-20T03:00:00.000Z",
+   "home": "Oregon State",
+   "away": "Montana",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -17.5,
+     "spreadOpen": -17.5,
+     "homeMoneyline": -850,
+     "awayMoneyline": 575
+    }
+   }
+  },
+  {
    "id": 401860888,
    "week": 3,
    "start": "2026-09-20T03:00:00.000Z",
@@ -8211,81 +9203,133 @@
    }
   },
   {
-   "id": 401856700,
+   "id": 401869941,
    "week": 4,
-   "start": "2026-09-26T04:00:00.000Z",
-   "home": "Georgia",
-   "away": "Oklahoma",
+   "start": "2026-09-24T23:30:00.000Z",
+   "home": "Coastal Carolina",
+   "away": "Liberty",
    "neutral": false,
    "books": {
     "DraftKings": {
-     "spread": -10,
-     "spreadOpen": -10,
-     "homeMoneyline": -395,
-     "awayMoneyline": 310
+     "spread": 2.5,
+     "spreadOpen": -1.5,
+     "homeMoneyline": 114,
+     "awayMoneyline": -135
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.658396994485,
-    "homeMargin": 6.98045083,
-    "homePower": 0.863818,
-    "awayPower": 0.822349
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.476611891332,
+    "homeMargin": -1.00336571,
+    "homePower": 0.324657,
+    "awayPower": 0.395229
    }
   },
   {
-   "id": 401856702,
+   "id": 401862779,
    "week": 4,
-   "start": "2026-09-26T04:00:00.000Z",
-   "home": "LSU",
-   "away": "Texas A&M",
+   "start": "2026-09-25T20:00:00.000Z",
+   "home": "Temple",
+   "away": "Army",
    "neutral": false,
    "books": {
     "DraftKings": {
-     "spread": -3,
-     "spreadOpen": -3,
-     "homeMoneyline": -155,
-     "awayMoneyline": 130
+     "spread": 3,
+     "spreadOpen": 3,
+     "homeMoneyline": 136,
+     "awayMoneyline": -162
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.562495035292,
-    "homeMargin": 2.69059698,
-    "homePower": 0.87444,
-    "awayPower": 0.876886
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.511450138862,
+    "homeMargin": 0.49100458,
+    "homePower": 0.40374,
+    "awayPower": 0.4497
    }
   },
   {
-   "id": 401858469,
+   "id": 401862778,
    "week": 4,
-   "start": "2026-09-26T04:00:00.000Z",
-   "home": "USC",
-   "away": "Oregon",
+   "start": "2026-09-25T23:00:00.000Z",
+   "home": "UAB",
+   "away": "Navy",
    "neutral": false,
    "books": {
     "DraftKings": {
-     "spread": 5.5,
-     "spreadOpen": 5.5,
-     "homeMoneyline": 195,
-     "awayMoneyline": -238
+     "spread": 7,
+     "spreadOpen": 11.5,
+     "homeMoneyline": 225,
+     "awayMoneyline": -278
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.44420146653,
-    "homeMargin": -2.40027698,
-    "homePower": 0.768968,
-    "awayPower": 0.833398
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.506133318408,
+    "homeMargin": 0.26298306,
+    "homePower": 0.327889,
+    "awayPower": 0.375684
+   }
+  },
+  {
+   "id": 401858461,
+   "week": 4,
+   "start": "2026-09-26T00:00:00.000Z",
+   "home": "Indiana",
+   "away": "Northwestern",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -21,
+     "spreadOpen": -23.5,
+     "homeMoneyline": -1800,
+     "awayMoneyline": 1000
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.845416515989,
+    "homeMargin": 17.39538376,
+    "homePower": 0.829073,
+    "awayPower": 0.608439
+   }
+  },
+  {
+   "id": 401858234,
+   "week": 4,
+   "start": "2026-09-26T02:30:00.000Z",
+   "home": "California",
+   "away": "Clemson",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 1.5,
+     "spreadOpen": 1.5,
+     "homeMoneyline": -110,
+     "awayMoneyline": -110
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.41903539917,
+    "homeMargin": -3.49562537,
+    "homePower": 0.459884,
+    "awayPower": 0.579432
    }
   },
   {
@@ -8297,21 +9341,1373 @@
    "neutral": false,
    "books": {
     "DraftKings": {
-     "spread": 6.5,
+     "spread": 5.5,
      "spreadOpen": 6.5,
+     "homeMoneyline": 180,
+     "awayMoneyline": -218
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.402916716376,
+    "homeMargin": -4.20450976,
+    "homePower": 0.810575,
+    "awayPower": 0.882776
+   }
+  },
+  {
+   "id": 401856805,
+   "week": 4,
+   "start": "2026-09-26T16:00:00.000Z",
+   "home": "Texas Tech",
+   "away": "Sam Houston",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -34.5,
+     "spreadOpen": -37.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.966836284091,
+    "homeMargin": 31.40843077,
+    "homePower": 0.817108,
+    "awayPower": 0.268477
+   }
+  },
+  {
+   "id": 401856813,
+   "week": 4,
+   "start": "2026-09-26T16:00:00.000Z",
+   "home": "Baylor",
+   "away": "Colorado",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -10,
+     "spreadOpen": -8.5,
+     "homeMoneyline": -380,
+     "awayMoneyline": 300
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.714381523497,
+    "homeMargin": 9.685424,
+    "homePower": 0.610121,
+    "awayPower": 0.485178
+   }
+  },
+  {
+   "id": 401858242,
+   "week": 4,
+   "start": "2026-09-26T16:00:00.000Z",
+   "home": "Boston College",
+   "away": "Virginia Tech",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 14,
+     "spreadOpen": 14,
+     "homeMoneyline": 440,
+     "awayMoneyline": -600
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.266688351588,
+    "homeMargin": -10.65406808,
+    "homePower": 0.381271,
+    "awayPower": 0.633403
+   }
+  },
+  {
+   "id": 401858243,
+   "week": 4,
+   "start": "2026-09-26T16:00:00.000Z",
+   "home": "Louisville",
+   "away": "Wake Forest",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -12.5,
+     "spreadOpen": -13.5,
+     "homeMoneyline": -500,
+     "awayMoneyline": 380
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.73487993519,
+    "homeMargin": 10.73582636,
+    "homePower": 0.713838,
+    "awayPower": 0.581301
+   }
+  },
+  {
+   "id": 401858465,
+   "week": 4,
+   "start": "2026-09-26T16:00:00.000Z",
+   "home": "Ohio State",
+   "away": "Illinois",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -27.5,
+     "spreadOpen": -27.5,
+     "homeMoneyline": -4000,
+     "awayMoneyline": 1600
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.954504343084,
+    "homeMargin": 28.9108687,
+    "homePower": 0.92261,
+    "awayPower": 0.548715
+   }
+  },
+  {
+   "id": 401860893,
+   "week": 4,
+   "start": "2026-09-26T16:00:00.000Z",
+   "home": "Toledo",
+   "away": "San Diego State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -3,
+     "spreadOpen": 1.5,
+     "homeMoneyline": -148,
+     "awayMoneyline": 124
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.594750731668,
+    "homeMargin": 4.10150728,
+    "homePower": 0.450931,
+    "awayPower": 0.429796
+   }
+  },
+  {
+   "id": 401860896,
+   "week": 4,
+   "start": "2026-09-26T16:00:00.000Z",
+   "home": "UTSA",
+   "away": "Colorado State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -12.5,
+     "spreadOpen": -11.5,
+     "homeMoneyline": -500,
+     "awayMoneyline": 380
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.741629968162,
+    "homeMargin": 11.09057167,
+    "homePower": 0.519845,
+    "awayPower": 0.366081
+   }
+  },
+  {
+   "id": 401864512,
+   "week": 4,
+   "start": "2026-09-26T16:00:00.000Z",
+   "home": "Akron",
+   "away": "UNLV",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 13.5,
+     "spreadOpen": 14,
+     "homeMoneyline": 410,
+     "awayMoneyline": -550
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.534207910564,
+    "homeMargin": 1.46850332,
+    "homePower": 0.274152,
+    "awayPower": 0.298532
+   }
+  },
+  {
+   "id": 401866425,
+   "week": 4,
+   "start": "2026-09-26T16:00:00.000Z",
+   "home": "Kent State",
+   "away": "Ball State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -3,
+     "spreadOpen": -4.5,
+     "homeMoneyline": -162,
+     "awayMoneyline": 136
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.62756830464,
+    "homeMargin": 5.56633263,
+    "homePower": 0.16749,
+    "awayPower": 0.138707
+   }
+  },
+  {
+   "id": 401864576,
+   "week": 4,
+   "start": "2026-09-26T16:45:00.000Z",
+   "home": "Kentucky",
+   "away": "South Alabama",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -20.5,
+     "spreadOpen": -19.5,
+     "homeMoneyline": -1600,
+     "awayMoneyline": 900
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.839532270282,
+    "homeMargin": 16.9774352,
+    "homePower": 0.661116,
+    "awayPower": 0.394082
+   }
+  },
+  {
+   "id": 401858462,
+   "week": 4,
+   "start": "2026-09-26T17:30:00.000Z",
+   "home": "Maryland",
+   "away": "UCLA",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 1.5,
+     "spreadOpen": 1.5,
+     "homeMoneyline": 105,
+     "awayMoneyline": -125
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.494679736865,
+    "homeMargin": -0.22811883,
+    "homePower": 0.547926,
+    "awayPower": 0.605524
+   }
+  },
+  {
+   "id": 401858467,
+   "week": 4,
+   "start": "2026-09-26T18:00:00.000Z",
+   "home": "Purdue",
+   "away": "Notre Dame",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 27.5,
+     "spreadOpen": 27.5,
+     "homeMoneyline": 1600,
+     "awayMoneyline": -4000
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.06634860366,
+    "homeMargin": -25.71835363,
+    "homePower": 0.449066,
+    "awayPower": 0.897356
+   }
+  },
+  {
+   "id": 401864511,
+   "week": 4,
+   "start": "2026-09-26T18:00:00.000Z",
+   "home": "Georgia State",
+   "away": "Northern Illinois",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -10,
+     "spreadOpen": -8.5,
+     "homeMoneyline": -375,
+     "awayMoneyline": 295
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.760738383202,
+    "homeMargin": 12.12202675,
+    "homePower": 0.368539,
+    "awayPower": 0.216628
+   }
+  },
+  {
+   "id": 401864510,
+   "week": 4,
+   "start": "2026-09-26T19:00:00.000Z",
+   "home": "Wyoming",
+   "away": "Hawai'i",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 3,
+     "spreadOpen": 5.5,
+     "homeMoneyline": 136,
+     "awayMoneyline": -162
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.419569570196,
+    "homeMargin": -3.47224217,
+    "homePower": 0.228608,
+    "awayPower": 0.331213
+   }
+  },
+  {
+   "id": 401856699,
+   "week": 4,
+   "start": "2026-09-26T19:30:00.000Z",
+   "home": "Florida",
+   "away": "Ole Miss",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -3,
+     "spreadOpen": -1.5,
+     "homeMoneyline": -148,
+     "awayMoneyline": 124
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.549471427015,
+    "homeMargin": 2.12660703,
+    "homePower": 0.814987,
+    "awayPower": 0.824611
+   }
+  },
+  {
+   "id": 401856700,
+   "week": 4,
+   "start": "2026-09-26T19:30:00.000Z",
+   "home": "Georgia",
+   "away": "Oklahoma",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -13.5,
+     "spreadOpen": -10,
+     "homeMoneyline": -575,
+     "awayMoneyline": 425
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.721002089794,
+    "homeMargin": 10.02051722,
+    "homePower": 0.87601,
+    "awayPower": 0.801004
+   }
+  },
+  {
+   "id": 401856815,
+   "week": 4,
+   "start": "2026-09-26T19:30:00.000Z",
+   "home": "UCF",
+   "away": "TCU",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 3,
+     "spreadOpen": 3,
+     "homeMoneyline": 136,
+     "awayMoneyline": -162
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.518706358392,
+    "homeMargin": 0.80234959,
+    "homePower": 0.549636,
+    "awayPower": 0.588927
+   }
+  },
+  {
+   "id": 401856816,
+   "week": 4,
+   "start": "2026-09-26T19:30:00.000Z",
+   "home": "Iowa State",
+   "away": "Utah",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 7.5,
+     "spreadOpen": 11.5,
+     "homeMoneyline": 270,
+     "awayMoneyline": -340
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.254374135286,
+    "homeMargin": -11.30283457,
+    "homePower": 0.574651,
+    "awayPower": 0.798519
+   }
+  },
+  {
+   "id": 401858463,
+   "week": 4,
+   "start": "2026-09-26T19:30:00.000Z",
+   "home": "Michigan",
+   "away": "Iowa",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -5.5,
+     "spreadOpen": -4.5,
+     "homeMoneyline": -218,
+     "awayMoneyline": 180
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.764387453375,
+    "homeMargin": 12.32399374,
+    "homePower": 0.778725,
+    "awayPower": 0.632584
+   }
+  },
+  {
+   "id": 401860897,
+   "week": 4,
+   "start": "2026-09-26T19:30:00.000Z",
+   "home": "Western Michigan",
+   "away": "Boise State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 7,
+     "spreadOpen": 7.5,
      "homeMoneyline": 220,
      "awayMoneyline": -270
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.381551594764,
-    "homeMargin": -5.1556138,
-    "homePower": 0.803807,
-    "awayPower": 0.885533
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.493473909195,
+    "homeMargin": -0.27982572,
+    "homePower": 0.508772,
+    "awayPower": 0.568601
+   }
+  },
+  {
+   "id": 401861970,
+   "week": 4,
+   "start": "2026-09-26T19:30:00.000Z",
+   "home": "Miami (OH)",
+   "away": "UConn",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -3.5,
+     "spreadOpen": -3,
+     "homeMoneyline": -180,
+     "awayMoneyline": 150
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.494189375166,
+    "homeMargin": -0.24914567,
+    "homePower": 0.306076,
+    "awayPower": 0.361809
+   }
+  },
+  {
+   "id": 401864579,
+   "week": 4,
+   "start": "2026-09-26T19:30:00.000Z",
+   "home": "New Mexico State",
+   "away": "New Mexico",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 11.5,
+     "spreadOpen": 12.5,
+     "homeMoneyline": 350,
+     "awayMoneyline": -455
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.289145878223,
+    "homeMargin": -9.50840256,
+    "homePower": 0.301945,
+    "awayPower": 0.530533
+   }
+  },
+  {
+   "id": 401856806,
+   "week": 4,
+   "start": "2026-09-26T20:00:00.000Z",
+   "home": "Georgia Southern",
+   "away": "Houston",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 18.5,
+     "spreadOpen": 19.5,
+     "homeMoneyline": 675,
+     "awayMoneyline": -1050
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.155365646724,
+    "homeMargin": -17.33923136,
+    "homePower": 0.3025,
+    "awayPower": 0.679548
+   }
+  },
+  {
+   "id": 401856698,
+   "week": 4,
+   "start": "2026-09-26T20:15:00.000Z",
+   "home": "Auburn",
+   "away": "Vanderbilt",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -9.5,
+     "spreadOpen": -8.5,
+     "homeMoneyline": -355,
+     "awayMoneyline": 280
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.654009145857,
+    "homeMargin": 6.77647278,
+    "homePower": 0.748728,
+    "awayPower": 0.691322
+   }
+  },
+  {
+   "id": 401858464,
+   "week": 4,
+   "start": "2026-09-26T21:00:00.000Z",
+   "home": "Michigan State",
+   "away": "Nebraska",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 5.5,
+     "spreadOpen": 5.5,
+     "homeMoneyline": 180,
+     "awayMoneyline": -218
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.326358608638,
+    "homeMargin": -7.6971271,
+    "homePower": 0.531698,
+    "awayPower": 0.714862
+   }
+  },
+  {
+   "id": 401858466,
+   "week": 4,
+   "start": "2026-09-26T21:00:00.000Z",
+   "home": "Penn State",
+   "away": "Wisconsin",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -10,
+     "spreadOpen": -11.5,
+     "homeMoneyline": -375,
+     "awayMoneyline": 295
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.796180563868,
+    "homeMargin": 14.16396494,
+    "homePower": 0.753109,
+    "awayPower": 0.563752
+   }
+  },
+  {
+   "id": 401862785,
+   "week": 4,
+   "start": "2026-09-26T21:00:00.000Z",
+   "home": "Bowling Green",
+   "away": "South Florida",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 17.5,
+     "spreadOpen": 15.5,
+     "homeMoneyline": 625,
+     "awayMoneyline": -950
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.156740115701,
+    "homeMargin": -17.24100665,
+    "homePower": 0.16113,
+    "awayPower": 0.501554
+   }
+  },
+  {
+   "id": 401858239,
+   "week": 4,
+   "start": "2026-09-26T22:00:00.000Z",
+   "home": "Virginia",
+   "away": "Delaware",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -19.5,
+     "spreadOpen": -20.5,
+     "homeMoneyline": -1450,
+     "awayMoneyline": 850
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.649757859476,
+    "homeMargin": 6.57975831,
+    "homePower": 0.57139,
+    "awayPower": 0.504313
+   }
+  },
+  {
+   "id": 401869961,
+   "week": 4,
+   "start": "2026-09-26T22:00:00.000Z",
+   "home": "Old Dominion",
+   "away": "James Madison",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 6,
+     "spreadOpen": 4.5,
+     "homeMoneyline": 185,
+     "awayMoneyline": -225
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.363558853965,
+    "homeMargin": -5.96902733,
+    "homePower": 0.348342,
+    "awayPower": 0.513333
+   }
+  },
+  {
+   "id": 401858238,
+   "week": 4,
+   "start": "2026-09-26T22:30:00.000Z",
+   "home": "Miami",
+   "away": "Central Michigan",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -41.5,
+     "spreadOpen": -42.5,
+     "homeMoneyline": null,
+     "awayMoneyline": null
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.978933118302,
+    "homeMargin": 34.76089271,
+    "homePower": 0.884597,
+    "awayPower": 0.29827
+   }
+  },
+  {
+   "id": 401862780,
+   "week": 4,
+   "start": "2026-09-26T22:30:00.000Z",
+   "home": "Charlotte",
+   "away": "Louisiana",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 10,
+     "spreadOpen": 14.5,
+     "homeMoneyline": 320,
+     "awayMoneyline": -410
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.404916585077,
+    "homeMargin": -4.11618897,
+    "homePower": 0.246923,
+    "awayPower": 0.364527
+   }
+  },
+  {
+   "id": 401856696,
+   "week": 4,
+   "start": "2026-09-26T23:00:00.000Z",
+   "home": "Alabama",
+   "away": "South Carolina",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -11.5,
+     "spreadOpen": -11.5,
+     "homeMoneyline": -500,
+     "awayMoneyline": 380
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.779383379937,
+    "homeMargin": 13.17283684,
+    "homePower": 0.86557,
+    "awayPower": 0.741369
+   }
+  },
+  {
+   "id": 401856814,
+   "week": 4,
+   "start": "2026-09-26T23:00:00.000Z",
+   "home": "Cincinnati",
+   "away": "Kansas State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 6.5,
+     "spreadOpen": 6,
+     "homeMoneyline": 195,
+     "awayMoneyline": -238
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.396681584293,
+    "homeMargin": -4.48060628,
+    "homePower": 0.499891,
+    "awayPower": 0.634449
+   }
+  },
+  {
+   "id": 401856881,
+   "week": 4,
+   "start": "2026-09-26T23:00:00.000Z",
+   "home": "West Virginia",
+   "away": "Oklahoma State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -1.5,
+     "spreadOpen": 2.5,
+     "homeMoneyline": -125,
+     "awayMoneyline": 105
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.597367167504,
+    "homeMargin": 4.21705604,
+    "homePower": 0.517351,
+    "awayPower": 0.494035
+   }
+  },
+  {
+   "id": 401862784,
+   "week": 4,
+   "start": "2026-09-26T23:00:00.000Z",
+   "home": "Tulane",
+   "away": "Southern Miss",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -18.5,
+     "spreadOpen": -17.5,
+     "homeMoneyline": -1050,
+     "awayMoneyline": 675
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.737751957518,
+    "homeMargin": 10.88619151,
+    "homePower": 0.432391,
+    "awayPower": 0.28932
+   }
+  },
+  {
+   "id": 401869931,
+   "week": 4,
+   "start": "2026-09-26T23:00:00.000Z",
+   "home": "Arkansas State",
+   "away": "Kennesaw State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -5.5,
+     "spreadOpen": -5.5,
+     "homeMoneyline": -218,
+     "awayMoneyline": 180
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.522693067451,
+    "homeMargin": 0.97351526,
+    "homePower": 0.287895,
+    "awayPower": 0.321225
+   }
+  },
+  {
+   "id": 401871048,
+   "week": 4,
+   "start": "2026-09-26T23:00:00.000Z",
+   "home": "Jacksonville State",
+   "away": "Middle Tennessee",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -7,
+     "spreadOpen": -9.5,
+     "homeMoneyline": -298,
+     "awayMoneyline": 240
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.540317887041,
+    "homeMargin": 1.73162646,
+    "homePower": 0.319991,
+    "awayPower": 0.341418
+   }
+  },
+  {
+   "id": 401856702,
+   "week": 4,
+   "start": "2026-09-26T23:30:00.000Z",
+   "home": "LSU",
+   "away": "Texas A&M",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -8.5,
+     "spreadOpen": -3,
+     "homeMoneyline": -340,
+     "awayMoneyline": 270
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.621392367145,
+    "homeMargin": 5.28786047,
+    "homePower": 0.861023,
+    "awayPower": 0.837589
+   }
+  },
+  {
+   "id": 401856804,
+   "week": 4,
+   "start": "2026-09-26T23:30:00.000Z",
+   "home": "Washington State",
+   "away": "Arizona",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 10,
+     "spreadOpen": 13.5,
+     "homeMoneyline": 310,
+     "awayMoneyline": -395
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.332281205037,
+    "homeMargin": -7.41715365,
+    "homePower": 0.428255,
+    "awayPower": 0.619672
+   }
+  },
+  {
+   "id": 401858469,
+   "week": 4,
+   "start": "2026-09-26T23:30:00.000Z",
+   "home": "USC",
+   "away": "Oregon",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 3,
+     "spreadOpen": 5.5,
+     "homeMoneyline": 136,
+     "awayMoneyline": -162
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.418430140021,
+    "homeMargin": -3.52212832,
+    "homePower": 0.752193,
+    "awayPower": 0.832659
+   }
+  },
+  {
+   "id": 401860894,
+   "week": 4,
+   "start": "2026-09-26T23:30:00.000Z",
+   "home": "Utah State",
+   "away": "Troy",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -3,
+     "spreadOpen": -2.5,
+     "homeMoneyline": -155,
+     "awayMoneyline": 130
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.587407803071,
+    "homeMargin": 3.77820342,
+    "homePower": 0.382899,
+    "awayPower": 0.36829
+   }
+  },
+  {
+   "id": 401864572,
+   "week": 4,
+   "start": "2026-09-26T23:30:00.000Z",
+   "home": "NC State",
+   "away": "App State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -14,
+     "spreadOpen": -14,
+     "homeMoneyline": -600,
+     "awayMoneyline": 440
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.770796866357,
+    "homeMargin": 12.68297016,
+    "homePower": 0.553977,
+    "awayPower": 0.368885
+   }
+  },
+  {
+   "id": 401856703,
+   "week": 4,
+   "start": "2026-09-26T23:45:00.000Z",
+   "home": "Mississippi State",
+   "away": "Missouri",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -6.5,
+     "spreadOpen": -1.5,
+     "homeMoneyline": -238,
+     "awayMoneyline": 195
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.489367144332,
+    "homeMargin": -0.45594924,
+    "homePower": 0.722652,
+    "awayPower": 0.770957
+   }
+  },
+  {
+   "id": 401856697,
+   "week": 4,
+   "start": "2026-09-27T00:00:00.000Z",
+   "home": "Arkansas",
+   "away": "Tulsa",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -7,
+     "spreadOpen": -8.5,
+     "homeMoneyline": -270,
+     "awayMoneyline": 220
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.741207891975,
+    "homeMargin": 11.06825086,
+    "homePower": 0.547824,
+    "awayPower": 0.393915
+   }
+  },
+  {
+   "id": 401862782,
+   "week": 4,
+   "start": "2026-09-27T00:00:00.000Z",
+   "home": "UL Monroe",
+   "away": "Florida Atlantic",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 13.5,
+     "spreadOpen": 13.5,
+     "homeMoneyline": 410,
+     "awayMoneyline": -550
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.425454472728,
+    "homeMargin": -3.21505115,
+    "homePower": 0.253642,
+    "awayPower": 0.356314
+   }
+  },
+  {
+   "id": 401858241,
+   "week": 4,
+   "start": "2026-09-27T01:00:00.000Z",
+   "home": "SMU",
+   "away": "Missouri State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -34.5,
+     "spreadOpen": -34.5,
+     "homeMoneyline": -9000,
+     "awayMoneyline": 2500
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.930044934312,
+    "homeMargin": 25.24925551,
+    "homePower": 0.679532,
+    "awayPower": 0.245044
+   }
+  },
+  {
+   "id": 401860895,
+   "week": 4,
+   "start": "2026-09-27T01:00:00.000Z",
+   "home": "UTEP",
+   "away": "Oregon State",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 10.5,
+     "spreadOpen": 12.5,
+     "homeMoneyline": 330,
+     "awayMoneyline": -425
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.255351555494,
+    "homeMargin": -11.25075402,
+    "homePower": 0.200939,
+    "awayPower": 0.439315
+   }
+  },
+  {
+   "id": 401866429,
+   "week": 4,
+   "start": "2026-09-27T01:00:00.000Z",
+   "home": "Sacramento State",
+   "away": "Massachusetts",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 4.5,
+     "spreadOpen": 6,
+     "homeMoneyline": 170,
+     "awayMoneyline": -205
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.492733112791,
+    "homeMargin": -0.31159292,
+    "homePower": 0.141239,
+    "awayPower": 0.178454
+   }
+  },
+  {
+   "id": 401860891,
+   "week": 4,
+   "start": "2026-09-27T02:00:00.000Z",
+   "home": "Fresno State",
+   "away": "Rice",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -13.5,
+     "spreadOpen": -13.5,
+     "homeMoneyline": -550,
+     "awayMoneyline": 410
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.763719569956,
+    "homeMargin": 12.28690019,
+    "homePower": 0.441642,
+    "awayPower": 0.273421
+   }
+  },
+  {
+   "id": 401858240,
+   "week": 4,
+   "start": "2026-09-27T02:30:00.000Z",
+   "home": "Stanford",
+   "away": "Georgia Tech",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 3.5,
+     "spreadOpen": 4.5,
+     "homeMoneyline": 145,
+     "awayMoneyline": -175
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.340857338397,
+    "homeMargin": -7.01521278,
+    "homePower": 0.382909,
+    "awayPower": 0.568484
+   }
+  },
+  {
+   "id": 401864509,
+   "week": 4,
+   "start": "2026-09-27T02:30:00.000Z",
+   "home": "Nevada",
+   "away": "Air Force",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": 5.5,
+     "spreadOpen": 4.5,
+     "homeMoneyline": 180,
+     "awayMoneyline": -218
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.675787559539,
+    "homeMargin": 7.79908814,
+    "homePower": 0.360083,
+    "awayPower": 0.277169
+   }
+  },
+  {
+   "id": 401858470,
+   "week": 4,
+   "start": "2026-09-27T03:00:00.000Z",
+   "home": "Washington",
+   "away": "Minnesota",
+   "neutral": false,
+   "books": {
+    "DraftKings": {
+     "spread": -10,
+     "spreadOpen": -9.5,
+     "homeMoneyline": -395,
+     "awayMoneyline": 310
+    }
+   },
+   "modelSnapshot": {
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
+    "basis": "latest eligible start-of-week ratings",
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.670128346123,
+    "homeMargin": 7.53081425,
+    "homePower": 0.659767,
+    "awayPower": 0.57983
    }
   },
   {
@@ -8330,14 +10726,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.125686375823,
-    "homeMargin": -19.61989857,
-    "homePower": 0.57749,
-    "awayPower": 0.891958
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.137560571827,
+    "homeMargin": -18.66754648,
+    "homePower": 0.579432,
+    "awayPower": 0.884597
    }
   },
   {
@@ -8356,14 +10752,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.079232103671,
-    "homeMargin": -24.12254162,
-    "homePower": 0.517439,
-    "awayPower": 0.908429
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.088478913811,
+    "homeMargin": -23.09496511,
+    "homePower": 0.511378,
+    "awayPower": 0.897356
    }
   },
   {
@@ -8382,14 +10778,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.585198444385,
-    "homeMargin": 3.68119576,
-    "homePower": 0.870326,
-    "awayPower": 0.863818
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.542221836927,
+    "homeMargin": 1.81370001,
+    "homePower": 0.86557,
+    "awayPower": 0.87601
    }
   },
   {
@@ -8408,14 +10804,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.503631259719,
-    "homeMargin": 0.15569636,
-    "homePower": 0.729665,
-    "awayPower": 0.768968
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.570454023572,
+    "homeMargin": 3.03666885,
+    "homePower": 0.753109,
+    "awayPower": 0.752193
    }
   },
   {
@@ -8434,14 +10830,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.417432635753,
-    "homeMargin": -3.56582531,
-    "homePower": 0.822349,
-    "awayPower": 0.885533
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.385067908782,
+    "homeMargin": -4.99805846,
+    "homePower": 0.801004,
+    "awayPower": 0.882776
    }
   },
   {
@@ -8460,14 +10856,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.759150376836,
-    "homeMargin": 12.03466119,
-    "homePower": 0.863818,
-    "awayPower": 0.756757
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.789491587963,
+    "homeMargin": 13.76374985,
+    "homePower": 0.87601,
+    "awayPower": 0.748728
    }
   },
   {
@@ -8486,14 +10882,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.421337593889,
-    "homeMargin": -3.39489342,
-    "homePower": 0.803807,
-    "awayPower": 0.870326
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.447372638285,
+    "homeMargin": -2.26304006,
+    "homePower": 0.810575,
+    "awayPower": 0.86557
    }
   },
   {
@@ -8512,14 +10908,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.25400932224,
-    "homeMargin": -11.32230001,
-    "homePower": 0.761335,
-    "awayPower": 0.908429
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.279544850902,
+    "homeMargin": -9.99268996,
+    "homePower": 0.758285,
+    "awayPower": 0.897356
    }
   },
   {
@@ -8538,14 +10934,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.675973360417,
-    "homeMargin": 7.80792824,
-    "homePower": 0.643942,
-    "awayPower": 0.557295
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.684127697004,
+    "homeMargin": 8.19800069,
+    "homePower": 0.634449,
+    "awayPower": 0.539924
    }
   },
   {
@@ -8564,14 +10960,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.879314893276,
-    "homeMargin": 20.03978318,
-    "homePower": 0.891958,
-    "awayPower": 0.671395
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.865093270854,
+    "homeMargin": 18.87532765,
+    "homePower": 0.884597,
+    "awayPower": 0.677135
    }
   },
   {
@@ -8590,14 +10986,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.652104989214,
-    "homeMargin": 6.68825484,
-    "homePower": 0.586394,
-    "awayPower": 0.517439
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.698697432687,
+    "homeMargin": 8.9058965,
+    "homePower": 0.620496,
+    "awayPower": 0.511378
    }
   },
   {
@@ -8616,14 +11012,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.339773947101,
-    "homeMargin": -7.06577067,
-    "homePower": 0.818286,
-    "awayPower": 0.909448
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.319381824945,
+    "homeMargin": -8.02960754,
+    "homePower": 0.829073,
+    "awayPower": 0.92261
    }
   },
   {
@@ -8642,14 +11038,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.64185789762,
-    "homeMargin": 6.21648904,
-    "homePower": 0.775014,
-    "awayPower": 0.729665
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.611898297791,
+    "homeMargin": 4.86246383,
+    "homePower": 0.778725,
+    "awayPower": 0.753109
    }
   },
   {
@@ -8668,14 +11064,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
+    "modelFingerprint": "8c81d88de7f80db6",
     "homeWinProbability": 0.7547727732,
     "homeMargin": 11.79542981,
-    "homePower": 0.833398,
-    "awayPower": 0.716664
+    "homePower": 0.832659,
+    "awayPower": 0.714862
    }
   },
   {
@@ -8694,14 +11090,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.605242307047,
-    "homeMargin": 4.56603054,
-    "homePower": 0.614816,
-    "awayPower": 0.586394
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.50474456115,
+    "homeMargin": 0.20343301,
+    "homePower": 0.57139,
+    "awayPower": 0.620496
    }
   },
   {
@@ -8720,14 +11116,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.551796029038,
-    "homeMargin": 2.22708742,
-    "homePower": 0.870326,
-    "awayPower": 0.876886
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.631977953444,
+    "homeMargin": 5.76606541,
+    "homePower": 0.86557,
+    "awayPower": 0.837589
    }
   },
   {
@@ -8746,14 +11142,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.730253878049,
-    "homeMargin": 10.49535457,
-    "homePower": 0.885533,
-    "awayPower": 0.809157
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.697223441839,
+    "homeMargin": 8.83360311,
+    "homePower": 0.882776,
+    "awayPower": 0.824611
    }
   },
   {
@@ -8772,14 +11168,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.7518940302,
-    "homeMargin": 11.63936071,
-    "homePower": 0.784806,
-    "awayPower": 0.653377
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.742534534518,
+    "homeMargin": 11.13847194,
+    "homePower": 0.798519,
+    "awayPower": 0.679548
    }
   },
   {
@@ -8798,14 +11194,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.486666982681,
-    "homeMargin": -0.57177408,
-    "homePower": 0.775014,
-    "awayPower": 0.818286
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.471383244015,
+    "homeMargin": -1.22802865,
+    "homePower": 0.778725,
+    "awayPower": 0.829073
    }
   },
   {
@@ -8824,14 +11220,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.687049623265,
-    "homeMargin": 8.33880793,
-    "homePower": 0.671395,
-    "awayPower": 0.57749
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.692134583667,
+    "homeMargin": 8.58521272,
+    "homePower": 0.677135,
+    "awayPower": 0.579432
    }
   },
   {
@@ -8850,14 +11246,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.261526052948,
-    "homeMargin": -10.92412361,
-    "homePower": 0.768968,
-    "awayPower": 0.909448
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.208721045581,
+    "homeMargin": -13.86994711,
+    "homePower": 0.752193,
+    "awayPower": 0.92261
    }
   },
   {
@@ -8876,14 +11272,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.679836081873,
-    "homeMargin": 7.99218769,
-    "homePower": 0.863818,
-    "awayPower": 0.810489
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.698331299495,
+    "homeMargin": 8.88792432,
+    "homePower": 0.87601,
+    "awayPower": 0.814987
    }
   },
   {
@@ -8902,14 +11298,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.579548725644,
-    "homeMargin": 3.43365998,
-    "homePower": 0.87444,
-    "awayPower": 0.870326
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.557817112523,
+    "homeMargin": 2.48771382,
+    "homePower": 0.861023,
+    "awayPower": 0.86557
    }
   },
   {
@@ -8928,14 +11324,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.448057954057,
-    "homeMargin": -2.23340149,
-    "homePower": 0.809157,
-    "awayPower": 0.863818
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.448872151444,
+    "homeMargin": -2.19819775,
+    "homePower": 0.824611,
+    "awayPower": 0.87601
    }
   },
   {
@@ -8954,14 +11350,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.609329363281,
-    "homeMargin": 4.74788473,
-    "homePower": 0.784806,
-    "awayPower": 0.761335
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.638007086331,
+    "homeMargin": 6.040436,
+    "homePower": 0.798519,
+    "awayPower": 0.758285
    }
   },
   {
@@ -8980,14 +11376,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.859258248538,
-    "homeMargin": 18.42205165,
-    "homePower": 0.775014,
-    "awayPower": 0.505387
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.846004336721,
+    "homeMargin": 17.43770781,
+    "homePower": 0.778725,
+    "awayPower": 0.531698
    }
   },
   {
@@ -9006,14 +11402,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.748660535633,
-    "homeMargin": 11.46520613,
-    "homePower": 0.909448,
-    "awayPower": 0.833398
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.782617856933,
+    "homeMargin": 13.36018194,
+    "homePower": 0.92261,
+    "awayPower": 0.832659
    }
   },
   {
@@ -9032,14 +11428,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.619199572014,
-    "homeMargin": 5.18932762,
-    "homePower": 0.908429,
-    "awayPower": 0.891958
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.605300003351,
+    "homeMargin": 4.56859411,
+    "homePower": 0.897356,
+    "awayPower": 0.884597
    }
   },
   {
@@ -9058,14 +11454,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.142905753847,
-    "homeMargin": -18.25719907,
-    "homePower": 0.495784,
-    "awayPower": 0.836891
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.16376956103,
+    "homeMargin": -16.74729184,
+    "homePower": 0.494035,
+    "awayPower": 0.817108
    }
   },
   {
@@ -9084,14 +11480,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.538731824323,
-    "homeMargin": 1.66328657,
-    "homePower": 0.87444,
-    "awayPower": 0.885533
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.512565577193,
+    "homeMargin": 0.5388519,
+    "homePower": 0.861023,
+    "awayPower": 0.882776
    }
   },
   {
@@ -9110,14 +11506,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.595086291612,
-    "homeMargin": 4.11631593,
-    "homePower": 0.822349,
-    "awayPower": 0.809157
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.522101030338,
+    "homeMargin": 0.94809094,
+    "homePower": 0.801004,
+    "awayPower": 0.824611
    }
   },
   {
@@ -9136,14 +11532,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.719508638387,
-    "homeMargin": 9.94459571,
-    "homePower": 0.876886,
-    "awayPower": 0.803807
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.623223064477,
+    "homeMargin": 5.37025699,
+    "homePower": 0.837589,
+    "awayPower": 0.810575
    }
   },
   {
@@ -9162,14 +11558,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.920458800679,
-    "homeMargin": 24.08677032,
-    "homePower": 0.891958,
-    "awayPower": 0.586394
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.897879019588,
+    "homeMargin": 21.71590394,
+    "homePower": 0.884597,
+    "awayPower": 0.620496
    }
   },
   {
@@ -9188,14 +11584,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.657304955149,
-    "homeMargin": 6.92959344,
-    "homePower": 0.818286,
-    "awayPower": 0.768968
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.701320671733,
+    "homeMargin": 9.03495159,
+    "homePower": 0.829073,
+    "awayPower": 0.752193
    }
   },
   {
@@ -9214,14 +11610,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.676206604748,
-    "homeMargin": 7.81902858,
-    "homePower": 0.833398,
-    "awayPower": 0.775014
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.668286744956,
+    "homeMargin": 7.44391467,
+    "homePower": 0.832659,
+    "awayPower": 0.778725
    }
   },
   {
@@ -9240,14 +11636,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.44096028665,
-    "homeMargin": -2.54070352,
-    "homePower": 0.822349,
-    "awayPower": 0.876886
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.494274571326,
+    "homeMargin": -0.24549241,
+    "homePower": 0.801004,
+    "awayPower": 0.837589
    }
   },
   {
@@ -9266,14 +11662,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.410802456933,
-    "homeMargin": -3.85687567,
-    "homePower": 0.803807,
-    "awayPower": 0.87444
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.458584437722,
+    "homeMargin": -1.77893895,
+    "homePower": 0.810575,
+    "awayPower": 0.861023
    }
   },
   {
@@ -9292,14 +11688,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.908760890403,
-    "homeMargin": 22.80387044,
-    "homePower": 0.891958,
-    "awayPower": 0.614853
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.891279852939,
+    "homeMargin": 21.09678102,
+    "homePower": 0.884597,
+    "awayPower": 0.633403
    }
   },
   {
@@ -9318,14 +11714,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.887002202122,
-    "homeMargin": 20.70978596,
-    "homePower": 0.908429,
-    "awayPower": 0.694306
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.880206704805,
+    "homeMargin": 20.1159336,
+    "homePower": 0.897356,
+    "awayPower": 0.679532
    }
   },
   {
@@ -9344,14 +11740,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.874727514193,
-    "homeMargin": 19.65419834,
-    "homePower": 0.836891,
-    "awayPower": 0.575655
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.845865541539,
+    "homeMargin": 17.42770471,
+    "homePower": 0.817108,
+    "awayPower": 0.588927
    }
   },
   {
@@ -9370,14 +11766,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.740477615289,
-    "homeMargin": 11.0296758,
-    "homePower": 0.809157,
-    "awayPower": 0.696008
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.732502466865,
+    "homeMargin": 10.61197876,
+    "homePower": 0.824611,
+    "awayPower": 0.722652
    }
   },
   {
@@ -9396,14 +11792,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.343395846929,
-    "homeMargin": -6.89698864,
-    "homePower": 0.671395,
-    "awayPower": 0.810489
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.34362673214,
+    "homeMargin": -6.8862522,
+    "homePower": 0.677135,
+    "awayPower": 0.814987
    }
   },
   {
@@ -9422,14 +11818,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.54525109014,
-    "homeMargin": 1.9443689,
-    "homePower": 0.876886,
-    "awayPower": 0.885533
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.458189740695,
+    "homeMargin": -1.79595466,
+    "homePower": 0.837589,
+    "awayPower": 0.882776
    }
   },
   {
@@ -9448,14 +11844,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.771115554002,
-    "homeMargin": 12.70096441,
-    "homePower": 0.870326,
-    "awayPower": 0.756757
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.770934801581,
+    "homeMargin": 12.69075675,
+    "homePower": 0.86557,
+    "awayPower": 0.748728
    }
   },
   {
@@ -9474,14 +11870,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.300640883012,
-    "homeMargin": -8.93840122,
-    "homePower": 0.57749,
-    "awayPower": 0.768654
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.343270018,
+    "homeMargin": -6.90284098,
+    "homePower": 0.579432,
+    "awayPower": 0.741369
    }
   },
   {
@@ -9500,14 +11896,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.410031067928,
-    "homeMargin": -3.89080897,
-    "homePower": 0.710414,
-    "awayPower": 0.803807
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.370799995741,
+    "homeMargin": -5.64014975,
+    "homePower": 0.691322,
+    "awayPower": 0.810575
    }
   },
   {
@@ -9526,14 +11922,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.638580173083,
-    "homeMargin": 6.06659568,
-    "homePower": 0.61908,
-    "awayPower": 0.563318
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.623850870452,
+    "homeMargin": 5.39854208,
+    "homePower": 0.619672,
+    "awayPower": 0.576373
    }
   },
   {
@@ -9552,14 +11948,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.546552602099,
-    "homeMargin": 2.00054492,
-    "homePower": 0.517439,
-    "awayPower": 0.535538
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.515498037419,
+    "homeMargin": 0.66466243,
+    "homePower": 0.511378,
+    "awayPower": 0.553977
    }
   },
   {
@@ -9578,14 +11974,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.568995960966,
-    "homeMargin": 2.97318065,
-    "homePower": 0.614853,
-    "awayPower": 0.614816
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.647057693235,
+    "homeMargin": 6.45526891,
+    "homePower": 0.633403,
+    "awayPower": 0.57139
    }
   },
   {
@@ -9604,14 +12000,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.552101747857,
-    "homeMargin": 2.24030769,
-    "homePower": 0.537224,
-    "awayPower": 0.550747
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.642875372093,
+    "homeMargin": 6.26311581,
+    "homePower": 0.608439,
+    "awayPower": 0.548715
    }
   },
   {
@@ -9630,14 +12026,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
+    "modelFingerprint": "8c81d88de7f80db6",
     "homeWinProbability": 0.809838429206,
     "homeMargin": 15.00630828,
-    "homePower": 0.833398,
-    "awayPower": 0.661837
+    "homePower": 0.832659,
+    "awayPower": 0.659767
    }
   },
   {
@@ -9656,14 +12052,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.325133456241,
-    "homeMargin": -7.75529841,
-    "homePower": 0.59977,
-    "awayPower": 0.768968
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.358143359461,
+    "homeMargin": -6.21643147,
+    "homePower": 0.605524,
+    "awayPower": 0.752193
    }
   },
   {
@@ -9682,14 +12078,14 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
-    "homeWinProbability": 0.824959549927,
-    "homeMargin": 15.98354451,
-    "homePower": 0.909448,
-    "awayPower": 0.775014
+    "modelFingerprint": "8c81d88de7f80db6",
+    "homeWinProbability": 0.846040440638,
+    "homeMargin": 17.44031083,
+    "homePower": 0.92261,
+    "awayPower": 0.778725
    }
   },
   {
@@ -9708,19 +12104,19 @@
     }
    },
    "modelSnapshot": {
-    "lockedAt": "2026-09-14T20:24:08Z",
-    "recordedAt": "2026-09-14T20:24:08Z",
+    "lockedAt": "2026-09-21T20:29:53Z",
+    "recordedAt": "2026-09-21T20:29:53Z",
     "basis": "latest eligible start-of-week ratings",
-    "modelFingerprint": "8a16f96d5952055e",
+    "modelFingerprint": "8c81d88de7f80db6",
     "homeWinProbability": 0.657753633008,
     "homeMargin": 6.95048139,
-    "homePower": 0.451115,
-    "awayPower": 0.376384
+    "homePower": 0.4497,
+    "awayPower": 0.375684
    }
   }
  ],
  "weekly_lock": {
-  "locked_at": "2026-09-14T20:24:08Z",
+  "locked_at": "2026-09-21T20:29:53Z",
   "cadence": "Monday 12:30 PM ET",
   "timezone": "America/New_York",
   "reason": "scheduled"
