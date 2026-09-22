@@ -24,21 +24,23 @@ on:
     - cron: "30 16 * 7-10 1"
     - cron: "30 17 * 1,11-12 1"
 
+# This job does not publish the site itself. It used to, but its own copy of the
+# build skipped the R playoff simulation, so every capture put the committed (stale)
+# playoff_current.json back on the site. It now hands off to the Deploy site
+# workflow, the one build that runs simulate_playoff.R. A workflow_dispatch made with
+# GITHUB_TOKEN is the documented exception that does start another workflow.
 permissions:
   contents: write
-  pages: write
-  id-token: write
+  actions: write
 
+# Its own group: a capture never waits behind, or holds up, a site deploy.
 concurrency:
-  group: pages
+  group: market-capture
   cancel-in-progress: false
 
 jobs:
   capture:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     env:
       CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
     steps:
@@ -84,16 +86,8 @@ jobs:
             git fetch origin main
             git rebase origin/main
           done
-      - name: Build publishable site
+      - name: Deploy the site through the full build
         if: steps.changes.outputs.changed == 'true'
-        run: python3 scripts/publish.py
-      - uses: actions/configure-pages@v6
-        if: steps.changes.outputs.changed == 'true'
-      - uses: actions/upload-pages-artifact@v5
-        if: steps.changes.outputs.changed == 'true'
-        with:
-          path: dist
-          include-hidden-files: true
-      - id: deploy
-        uses: actions/deploy-pages@v5
-        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
