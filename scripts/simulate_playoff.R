@@ -68,6 +68,8 @@ legacy_probability <- function(home, away, neutral, spec) {
 # logistic stack over [prior_level, elo_change, dO, dD, hfa], averaged unweighted.
 # Games with a team outside the ensemble (FCS opponents) keep the v4 formula.
 ensemble_tables <- function(ensemble) {
+  # v5.1: a PFF table in the state switches every member to its PFF stack.
+  pff <- ensemble$state$pff
   lapply(ensemble$members, function(m) {
     init <- unlist(m$initial)
     r <- unlist(ensemble$state$ratings[[m$name]])[names(init)]
@@ -78,8 +80,14 @@ ensemble_tables <- function(ensemble) {
       D[t] <- form[[t]][[2]]
       n[t] <- form[[t]][[3]]
     }
-    list(init = init, r = r, O = O, D = D, n = n, columns = unlist(m$columns),
-         scale = unlist(m$scale), coef = unlist(m$coef))
+    Op <- Dp <- setNames(rep(0, length(init)), names(init))
+    for (t in intersect(names(pff), names(init))) {
+      Op[t] <- pff[[t]][[1]]
+      Dp[t] <- pff[[t]][[2]]
+    }
+    st <- if (!is.null(pff) && !is.null(m$stack_pff)) m$stack_pff else m
+    list(init = init, r = r, O = O, D = D, n = n, Op = Op, Dp = Dp,
+         columns = unlist(st$columns), scale = unlist(st$scale), coef = unlist(st$coef))
   })
 }
 
@@ -100,7 +108,9 @@ probability <- function(home, away, neutral, spec) {
               elo_change = (m$r[h] - m$init[h]) - (m$r[a] - m$init[a]),
               dO = ifelse(have, m$O[h] - m$O[a], 0),
               dD = ifelse(have, m$D[h] - m$D[a], 0),
-              hfa = hfa)
+              hfa = hfa,
+              pff_O_diff = m$Op[h] - m$Op[a],
+              pff_D_diff = m$Dp[h] - m$Dp[a])
     z <- 0
     for (k in seq_along(m$columns)) z <- z + m$coef[k] * x[[m$columns[k]]] / m$scale[k]
     total <- total + plogis(z)

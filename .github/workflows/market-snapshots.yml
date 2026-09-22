@@ -43,6 +43,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+      # Optional: without it the capture keeps the committed PFF table and v5.1
+      # falls back to the base stacks for any week that table does not cover.
+      PFF_API_KEY: ${{ secrets.PFF_API_KEY }}
     steps:
       - uses: actions/checkout@v7
         with:

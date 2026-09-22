@@ -48,9 +48,9 @@
   const DATA = { ratings, playoff: playoffCurrent, model };
   const cur = () => DATA;
 
-  // Schema 5 is the v5 live ensemble beside the frozen v4 blocks. A cached v4 page
+  // Schema 6 is the v5.1 live ensemble (PFF stacks) beside the frozen v4 blocks. A cached page
   // must refuse it rather than read the frozen blocks as if they were still live.
-  if (model.schema_version !== 5 ||
+  if (model.schema_version !== 6 ||
       model.architecture !== "equal_ensemble_expanded_war_score_innovation_ewma" ||
       !model.ensemble || !model.ensemble.state || !Array.isArray(model.ensemble.members) ||
       !Array.isArray(model.features) || model.features.length !== model.logistic.coef.length) {
@@ -380,6 +380,10 @@
   function ensembleWinp(a, b, homeA) {
     const E = liveEnsemble();
     if (!E) return null;
+    // v5.1: PFF's season-to-date offence/defence composites. null means no PFF table
+    // is in play and every member uses its base stack, exactly as the runtime does.
+    const P = E.state.pff == null ? null : E.state.pff;
+    const pv = (t, i) => (P && P[t] ? P[t][i] : 0);
     let sum = 0;
     for (const m of E.members) {
       const ia = m.initial[a], ib = m.initial[b];
@@ -388,9 +392,11 @@
       const fa = form[a], fb = form[b];
       const have = !!(fa && fb && fa[2] >= E.min_form_games && fb[2] >= E.min_form_games);
       const x = { prior_level: ia - ib, elo_change: (r[a] - ia) - (r[b] - ib),
-                  dO: have ? fa[0] - fb[0] : 0, dD: have ? fa[1] - fb[1] : 0, hfa: homeA };
+                  dO: have ? fa[0] - fb[0] : 0, dD: have ? fa[1] - fb[1] : 0, hfa: homeA,
+                  pff_O_diff: pv(a, 0) - pv(b, 0), pff_D_diff: pv(a, 1) - pv(b, 1) };
+      const st = P !== null && m.stack_pff ? m.stack_pff : m;
       let z = 0;
-      m.columns.forEach((c, i) => { z += m.coef[i] * x[c] / m.scale[i]; });
+      st.columns.forEach((c, i) => { z += st.coef[i] * x[c] / st.scale[i]; });
       sum += sigmoid(Math.max(-40, Math.min(40, z)));
     }
     return sum / E.members.length;

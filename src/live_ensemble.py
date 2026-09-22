@@ -78,6 +78,9 @@ def ensemble_block(manifest: dict, frame: pd.DataFrame, comp: pd.DataFrame) -> d
             "current_halflife": entry["current_halflife"],
             "hfa_coef": float(model.hfa_coef),
             "margin_sigma": float(model.margin_sigma), "initial": initial,
+            # v5.1: the same stack plus PFF's season-to-date offence/defence
+            # composites; used whenever the week's PFF table is in play.
+            "stack_pff": entry.get("stack_pff"),
         })
     return {
         "model_version": manifest["model_version"],
@@ -88,5 +91,6 @@ def ensemble_block(manifest: dict, frame: pd.DataFrame, comp: pd.DataFrame) -> d
         "form_table": f"data/live/game_advanced_{PROJECTION_YEAR}.json",
         "min_form_games": 2,
         "margin_sigma": float(np.mean([m["margin_sigma"] for m in members])),
+        "pff_form_table": f"data/live/pff_form_{PROJECTION_YEAR}.json",
         "members": members,
     }

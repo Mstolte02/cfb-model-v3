@@ -51,6 +51,8 @@ HISTORICAL = ROOT / "audit" / "book_shopping_backtest.json"
 AVAILABILITY = ROOT / "war_model" / "availability_events_2026.csv"
 # Per-team game advanced stats, the current-form input of the v5 live ensemble.
 FORM = ROOT / "data" / "live" / f"game_advanced_{YEAR}.json"
+# PFF season-to-date offence/defence composites per cutoff week (v5.1).
+PFF_FORM = ROOT / "data" / "live" / f"pff_form_{YEAR}.json"
 
 PROVIDER_ALIAS = {"Draft Kings": "DraftKings"}
 BOARD_PROVIDER = "DraftKings"
@@ -192,6 +194,90 @@ def form_missing_finals(games: list[dict], now: datetime,
         if (game.get("week"), game.get("homeTeam"), game.get("awayTeam")) not in covered:
             out.append(int(game["id"]))
     return out
+
+
+def _fetch_json(url: str, key: str, timeout: int = 60) -> dict:
+    """GET with a bearer key. Windows goes through curl, as the CFBD fetch does."""
+    if os.name == "nt":
+        config = (f'url = "{url}"\nheader = "Authorization: Bearer {key}"\n'
+                  'header = "Accept: application/json"\nsilent\nshow-error\n'
+                  f'max-time = {timeout}\nwrite-out = "\\n%{{http_code}}"\n')
+        proc = subprocess.run(["curl.exe", "--config", "-"], input=config, text=True,
+                              encoding="utf-8", capture_output=True, timeout=timeout + 10)
+        if proc.returncode or "\n" not in proc.stdout:
+            raise RuntimeError(f"request failed: {proc.stderr.strip()}")
+        body, status = proc.stdout.rsplit("\n", 1)
+        if not status.startswith("2"):
+            raise RuntimeError(f"request returned HTTP {status}")
+        return json.loads(body)
+    request = urllib.request.Request(url, headers={
+        "Authorization": f"Bearer {key}", "Accept": "application/json",
+        "User-Agent": "cfb-model-v3-market-capture/1.0"})
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        return json.load(response)
+
+
+def _pff_get(key: str, path: str, params: dict) -> dict:
+    return _fetch_json(f"{ER.PFF_BASE}{path}?{urllib.parse.urlencode(params)}", key)
+
+
+def publish_pff_form(key: str, games: list[dict], now: datetime, teams,
+                     path: Path = PFF_FORM, max_requests: int = 12,
+                     fetch=None) -> list[int]:
+    """Stage PFF's season-to-date table through every week with a completed game.
+
+    A cutoff is re-pulled on every capture until the next week's first kickoff, so
+    games PFF charts late still land before that week is predicted, and it is frozen
+    after that kickoff: a table never changes once the games it prices have started.
+    Returns the cutoffs fetched this run. ``fetch`` replaces the network in tests.
+    """
+    get = fetch or (lambda p, params: _pff_get(key, p, params))
+    payload = (json.loads(path.read_text(encoding="utf-8")) if path.exists()
+               else {"season": YEAR, "cutoffs": {}, "frozen": [], "fetched_at": {}})
+    regular = [g for g in games if g.get("seasonType", "regular") == "regular"]
+    done = sorted({int(g["week"]) for g in regular if g.get("completed")
+                   and g.get("week") is not None})
+    starts: dict[int, datetime] = {}
+    for g in regular:
+        if g.get("week") is not None and g.get("startDate"):
+            w, t = int(g["week"]), parse_time(g["startDate"])
+            starts[w] = min(starts.get(w, t), t)
+    frozen = set(payload.get("frozen", []))
+    fetched, requests = [], 0
+    for cutoff in done:
+        if cutoff in frozen:
+            continue
+        nxt = starts.get(cutoff + 1)
+        if str(cutoff) in payload["cutoffs"] and nxt is not None and now >= nxt:
+            frozen.add(cutoff)
+            continue
+        if requests + 3 > max_requests:
+            break
+        if "directory" not in payload:
+            payload["directory"] = [
+                {"franchise_id": r.get("franchiseId", r.get("franchise_id")),
+                 "city": r.get("city")}
+                for r in get("/v2/ncaa/teams", {"season": YEAR}).get("rows", [])]
+            requests += 1
+        ids = ",".join(str(w) for w in ER.pff_week_ids(YEAR, cutoff))
+        tables = [get("/v2/ncaa/teams/stats",
+                      {"season": YEAR, "category": c, "weekIds": ids}).get("rows", [])
+                  for c in ER.PFF_CATEGORIES]
+        requests += len(tables)
+        composite = ER.pff_composite(payload["directory"], *tables, teams)
+        if composite:
+            payload["cutoffs"][str(cutoff)] = composite
+            payload["fetched_at"][str(cutoff)] = iso(now)
+            fetched.append(cutoff)
+        if nxt is not None and now >= nxt:
+            frozen.add(cutoff)
+    payload["frozen"] = sorted(frozen)
+    payload["source"] = ("PFF /v2/ncaa/teams/stats offense- and defense-overall-success, "
+                         "season to date through each CFBD week")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=1, sort_keys=True, allow_nan=False),
+                    encoding="utf-8")
+    return fetched
 
 
 def publish_finals(games: list[dict], schedule_path: Path = SCHEDULE) -> int:
@@ -358,7 +444,7 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
                              ratings_path: Path = RATINGS,
                              teams_path: Path | None = TEAMS,
                              playoff_path: Path | None = PLAYOFF,
-                             form_path: Path = FORM) -> int:
+                             form_path: Path = FORM, pff_path: Path = PFF_FORM) -> int:
     """Replay every published final from the preseason baseline, grouped by week.
 
     Rebuilding from the baseline on every capture makes the operation idempotent and
@@ -372,7 +458,7 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
     ratings = json.loads(ratings_path.read_text(encoding="utf-8"))
     if model.get("ensemble"):
         return _replay_ensemble(schedule, model, ratings, model_path, ratings_path,
-                                teams_path, playoff_path, form_path)
+                                teams_path, playoff_path, form_path, pff_path)
     dynamic = model.get("dynamic") or {}
     current = dynamic.get("ratings") or {}
     # The compact model is the authoritative FBS universe. This deliberately does
@@ -498,7 +584,7 @@ def _merge_rating_rows(ratings: dict, model: dict, names: list[str], current_row
 
 
 def _replay_ensemble(schedule, model, ratings, model_path, ratings_path,
-                     teams_path, playoff_path, form_path) -> int:
+                     teams_path, playoff_path, form_path, pff_path=None) -> int:
     """v5: replay every published final into all ensemble members from week 0.
 
     Like the v4 path this rebuilds from the preseason baseline on every capture, so
@@ -511,7 +597,8 @@ def _replay_ensemble(schedule, model, ratings, model_path, ratings_path,
         return 0
     finals = _ensemble_finals(schedule, set(names))
     rows = ER.form_rows(ER.load_form_payload(form_path), names)
-    result = ER.replay(ensemble, finals, rows)
+    pff = ER.load_form_payload(pff_path) if pff_path is not None else None
+    result = ER.replay(ensemble, finals, rows, pff=pff)
 
     history = [{"week": 0, "label": "Preseason", "completed_games": 0,
                 "teams": ER.power_table(ensemble, ER.initial_state(ensemble), names)}]
@@ -552,6 +639,7 @@ def _replay_ensemble(schedule, model, ratings, model_path, ratings_path,
         "completed_games": len(finals),
         "form_rows": len(rows),
         "updated_through_slate": max((e["slate"] for e in result["events"]), default=0),
+        "pff_cutoffs": sorted(int(k) for k in ((pff or {}).get("cutoffs") or {})),
     }
     model["ensemble"] = ensemble
     model_path.write_text(json.dumps(model, indent=1, allow_nan=False), encoding="utf-8")
@@ -706,7 +794,7 @@ def _rating_snapshot_for_week(ratings: dict, week: int | None) -> dict[str, dict
 
 def _model_at_start_of_week(model: dict, ratings: dict, week: int,
                             season_type: str = "regular",
-                            form_path: Path = FORM) -> dict:
+                            form_path: Path = FORM, pff_path: Path = PFF_FORM) -> dict:
     """Rebuild the raw dynamic state using results strictly before ``week``.
 
     This matters during a partially completed slate: the published current state may
@@ -725,7 +813,8 @@ def _model_at_start_of_week(model: dict, ratings: dict, week: int,
                   if e.get("home_score") is not None and e.get("away_score") is not None]
         rows = ER.form_rows(ER.load_form_payload(form_path), names)
         state = ER.replay(ensemble, finals, rows,
-                          stop_before=ER.slate_key(week, season_type))["state"]
+                          stop_before=ER.slate_key(week, season_type),
+                          pff=ER.load_form_payload(pff_path))["state"]
         return {**model, "ensemble": {**ensemble, "state": state}}
     dynamic = model.get("dynamic") or {}
     state = dict(dynamic.get("preseason_ratings") or dynamic.get("ratings") or {})
@@ -748,7 +837,8 @@ def _snapshot_fingerprint(model: dict) -> str:
 
 
 def freeze_weekly_model_snapshots(odds: dict, model: dict, ratings: dict,
-                                  captured_at: str, form_path: Path = FORM) -> int:
+                                  captured_at: str, form_path: Path = FORM,
+                                  pff_path: Path = PFF_FORM) -> int:
     """Attach one immutable, point-in-time rating prediction to every board game.
 
     A completed game's exact start-of-week probability is recoverable from
@@ -775,7 +865,8 @@ def freeze_weekly_model_snapshots(odds: dict, model: dict, ratings: dict,
             basis = "replayed start-of-week ratings"
         else:
             pregame_model = _model_at_start_of_week(model, ratings, week,
-                                                    form_path=form_path)
+                                                    form_path=form_path,
+                                                    pff_path=pff_path)
             probability = model_probability(
                 pregame_model, home, away, bool(game.get("neutral")))
             power = _rating_snapshot_for_week(ratings, week) or current_power
@@ -1098,6 +1189,17 @@ def main() -> None:
         except (urllib.error.URLError, TimeoutError, subprocess.TimeoutExpired,
                 RuntimeError) as exc:
             print(f"Advanced stats unavailable ({exc}); using the committed form table.")
+    pff_key = os.environ.get("PFF_API_KEY")
+    if pff_key:
+        try:
+            teams = list(json.loads(MODEL.read_text())["teams"])
+            got = publish_pff_form(pff_key, games, now, teams)
+            print(f"PFF form cutoffs refreshed: {got or 'none needed'}")
+        except (urllib.error.URLError, TimeoutError, subprocess.TimeoutExpired,
+                RuntimeError, KeyError, ValueError) as exc:
+            print(f"PFF form unavailable ({exc}); using the committed table.")
+    else:
+        print("PFF_API_KEY not configured; PFF form not refreshed.")
     tracking = run(lines, now, games, args.lock_weekly_board)
     print(f"Market check {tracking['checked_at']}: {tracking['games_with_quotes']} games, "
           f"{tracking['changed_quotes_this_check']} changed quotes, "

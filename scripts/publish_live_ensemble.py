@@ -47,7 +47,7 @@ def attach(model_path: Path = MODEL) -> dict:
     if missing:
         raise ValueError(f"fitted frame has teams the site does not: {sorted(missing)}")
     model["ensemble"] = LE.ensemble_block(manifest, frame, comp_frame(frame, teams))
-    model["schema_version"] = 5
+    model["schema_version"] = 6
     model["architecture"] = model["ensemble"]["architecture"]
     dynamic = model.get("dynamic") or {}
     dynamic["role"] = ("frozen v4 reference: preseason_ratings are the futures "

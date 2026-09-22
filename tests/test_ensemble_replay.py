@@ -242,5 +242,93 @@ class FormRefreshRule(unittest.TestCase):
                              [1, 2, 3])
 
 
+class PffForm(unittest.TestCase):
+    """v5.1: PFF season-to-date composites in the stdlib runtime."""
+
+    def test_stdlib_composite_matches_pandas_builder(self):
+        from src import pff_form
+        season, thru = 2024, 6
+        paths = [pff_form.WEEKLY / f"{c.replace('-', '_')}_{season}_thru_w{thru:02d}.csv"
+                 for c in ER.PFF_CATEGORIES]
+        directory = pff_form.SEASON / f"team_directory_{season}.csv"
+        if not all(p.exists() for p in [*paths, directory]):
+            self.skipTest("staged PFF tables are not on this machine")
+        teams = json.loads((Path(__file__).resolve().parents[1] / "viz" / "data" /
+                            "model_v4.json").read_text())["teams"]
+        want = pff_form.load_through(season, thru, list(teams))
+        got = ER.pff_composite(
+            pd.read_csv(directory)[["franchise_id", "city"]].to_dict("records"),
+            *[pd.read_csv(p).to_dict("records") for p in paths], list(teams))
+        for team, (o, d) in got.items():
+            wo = np.nanmean([want.at[team, c] if team in want.index else np.nan
+                             for c in ("pff_off_epa_per_play", "pff_off_success_rate")])
+            self.assertAlmostEqual(o, (np.nan_to_num(want.at[team, "pff_off_epa_per_play"])
+                                       + np.nan_to_num(want.at[team, "pff_off_success_rate"])) / 2,
+                                   places=8)
+            self.assertAlmostEqual(d, -(np.nan_to_num(want.at[team, "pff_def_epa_per_play_allowed"])
+                                        + np.nan_to_num(want.at[team, "pff_def_success_rate_allowed"])) / 2,
+                                   places=8)
+        self.assertGreater(len(got), 120)
+
+    def test_week_ids_add_conference_championships_once_played(self):
+        self.assertEqual(ER.pff_week_ids(2024, 3), [0, 1, 2, 3])
+        self.assertEqual(ER.pff_week_ids(2023, 14)[-1], 17)
+        self.assertNotIn(17, ER.pff_week_ids(2024, 14))
+
+    def test_missing_table_falls_back_to_the_base_stack(self):
+        ensemble = synthetic_ensemble()
+        for m in ensemble["members"]:
+            m["stack_pff"] = {"columns": [*m["columns"], "pff_O_diff", "pff_D_diff"],
+                              "scale": [*m["scale"], 1.0, 1.0],
+                              "coef": [*(2 * c for c in m["coef"]), 5.0, 5.0]}
+        state = ER.initial_state(ensemble)
+        state["form"] = {m["name"]: None for m in ensemble["members"]}
+        base = ER.probability(ensemble, {**state, "pff": None}, "A", "B", 1.0)
+        week1 = ER.probability(ensemble, {**state, "pff": {}}, "A", "B", 1.0)
+        tilted = ER.probability(ensemble, {**state, "pff": {"A": [1.0, 0.0]}}, "A", "B", 1.0)
+        plain = synthetic_ensemble()
+        self.assertAlmostEqual(base, ER.probability(plain, {**state, "pff": None},
+                                                    "A", "B", 1.0), places=12)
+        self.assertNotAlmostEqual(base, week1, places=6)   # PFF stack, zero columns
+        self.assertGreater(tilted, week1)                   # home PFF offence helps home
+        self.assertIsNone(ER.pff_table({"cutoffs": {"2": {}}}, 4))
+        self.assertEqual(ER.pff_table({"cutoffs": {"3": {"A": [1, 1]}}}, 4), {"A": [1, 1]})
+        self.assertEqual(ER.pff_table({"cutoffs": {}}, 1), {})
+
+    def test_publish_freezes_a_cutoff_once_the_next_week_kicks_off(self):
+        from datetime import datetime, timezone
+        from scripts import capture_market_snapshot as CAP
+        calls = []
+
+        def fake(path, params):
+            calls.append((path, params.get("weekIds")))
+            if path.endswith("/teams"):
+                return {"rows": [{"franchiseId": 1, "city": "A"},
+                                 {"franchiseId": 2, "city": "B"}]}
+            key = "epaPerPlay" if "offense" in params["category"] else "epaPerPlayAllowed"
+            sr = "successRate" if "offense" in params["category"] else "successRateAllowed"
+            return {"rows": [{"teamId": 1, key: .2, sr: .5}, {"teamId": 2, key: -.1, sr: .4}]}
+        games = [{"week": 1, "completed": True, "startDate": "2026-09-05T20:00:00Z"},
+                 {"week": 2, "completed": True, "startDate": "2026-09-12T20:00:00Z"},
+                 {"week": 3, "completed": False, "startDate": "2026-09-19T20:00:00Z"}]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "pff.json"
+            now = datetime(2026, 9, 14, tzinfo=timezone.utc)   # before week 3
+            self.assertEqual(CAP.publish_pff_form("k", games, now, ["A", "B"], path,
+                                                  fetch=fake), [1, 2])
+            payload = json.loads(path.read_text())
+            self.assertEqual(payload["frozen"], [1])            # week 2 already kicked off
+            self.assertEqual(payload["cutoffs"]["2"]["A"][0], 1.0)
+            calls.clear()
+            self.assertEqual(CAP.publish_pff_form("k", games, now, ["A", "B"], path,
+                                                  fetch=fake), [2])   # re-pulled, not frozen
+            later = datetime(2026, 9, 20, tzinfo=timezone.utc)  # week 3 under way
+            calls.clear()
+            self.assertEqual(CAP.publish_pff_form("k", games, later, ["A", "B"], path,
+                                                  fetch=fake), [])
+            self.assertEqual(calls, [])
+            self.assertEqual(json.loads(path.read_text())["frozen"], [1, 2])
+
+
 if __name__ == "__main__":
     unittest.main()

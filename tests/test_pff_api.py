@@ -105,6 +105,36 @@ class PffApiTests(unittest.TestCase):
                          [{"player_id": 1, "team_name": "Ohio State",
                            "player_game_count": 2}])
 
+    def test_weekly_team_stats_request_pregame_weeks_and_resume(self):
+        from scripts.sync_pff_api import pregame_week_ids, sync_team_stats_weekly
+        self.assertEqual(pregame_week_ids(2024, 1), [0, 1])
+        self.assertEqual(pregame_week_ids(2024, 14), list(range(15)))
+        # 2021-2023 conference championships (PFF week 17) are CFBD week 14.
+        self.assertEqual(pregame_week_ids(2023, 14), [*range(15), 17])
+        payload = {"weekIds": "0,1", "rows": [{"teamId": 1, "name": "A",
+                                               "epaPerPassPlay": 0.1}]}
+        session = Session([Response(payload=payload)])
+        client = PffClient("secret", session=session)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            existing = root / "team_stats_weekly" / "offense_passing_2024_thru_w02.csv"
+            existing.parent.mkdir()
+            existing.write_text("sentinel\n", encoding="utf-8")
+            result = sync_team_stats_weekly(client, [2024], root,
+                                            categories=["offense-passing"],
+                                            first_week=2, last_week=3, pause=0)
+            self.assertEqual([p.name for p in result["written"]],
+                             ["offense_passing_2024_thru_w01.csv"])
+            self.assertEqual([p.name for p in result["skipped"]], [existing.name])
+            self.assertEqual(existing.read_text(encoding="utf-8"), "sentinel\n")
+            self.assertEqual(len(session.calls), 1)
+            self.assertEqual(session.calls[0][1]["params"],
+                             {"season": 2024, "category": "offense-passing",
+                              "weekIds": "0,1"})
+            written = (root / "team_stats_weekly" /
+                       "offense_passing_2024_thru_w01.csv").read_text(encoding="utf-8")
+            self.assertTrue(written.startswith("team_id,name,epa_per_pass_play"))
+
     def test_errors_never_include_the_credential(self):
         payload = {"error": {"code": "forbidden",
                              "message": "do-not-print is not entitled",

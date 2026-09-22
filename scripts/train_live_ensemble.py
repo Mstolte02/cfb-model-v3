@@ -34,6 +34,19 @@ from src.data import player_production
 SPECS = ["full_new_war", "full_new_war_curvature",
          "full_new_war_production", "full_new_war_curvature_production"]
 ARM = "ewma_elo_nodecay"
+# PFF season-to-date offence and defence composites (src/pff_form.py). Each member
+# carries a second stack with them; the runtime uses it whenever the week's PFF table
+# exists, and the base stack otherwise. See audit/V5_EXTENSION_EXPERIMENTS.md.
+PFF_COLUMNS = ["pff_O_diff", "pff_D_diff"]
+KEYS = ["season", "week", "home_team", "away_team"]
+
+
+def pff_features(parts_by_spec) -> pd.DataFrame:
+    from src import pff_form
+    games = pd.concat([part[4].assign(season=year)[KEYS]
+                       for year, part in parts_by_spec[SPECS[0]].items()],
+                      ignore_index=True)
+    return pff_form.build_pff_form(games)[KEYS + PFF_COLUMNS]
 
 
 def attach_extra(frames: dict[int, pd.DataFrame]) -> None:
@@ -68,7 +81,8 @@ def build(include_projection: bool = True, backtest_scaling: bool = False):
     return frames, parts_by_spec, raw, projection_meta
 
 
-def fit_member(spec: str, frames, parts, raw, pool: list[int]) -> tuple[V4.ReciprocalTeamModel, dict]:
+def fit_member(spec: str, frames, parts, raw, pool: list[int],
+               pff: pd.DataFrame | None = None) -> tuple[V4.ReciprocalTeamModel, dict]:
     names = PD.SPEC_FEATURES[spec]
     knobs, knob_trace = BT.tune(parts, pool, names)
     score_k, k_trace = PD.tune_k(parts, frames, pool, names, knobs)
@@ -80,10 +94,18 @@ def fit_member(spec: str, frames, parts, raw, pool: list[int]) -> tuple[V4.Recip
     (current_half, prior_half, c), decay_trace = PD.select_decay(
         contexts, raw, ARM, score_k)
     designs = [PD.season_design(model, old_frame, part, raw[year], current_half,
-                                prior_half, score_k)
+                                prior_half, score_k).assign(season=year)
                for year, (model, old_frame, part) in contexts.items()]
-    scaler, stack = PD.fit_stack(pd.concat(designs, ignore_index=True),
-                                 PD.ARM_COLUMNS[ARM], c)
+    pooled = pd.concat(designs, ignore_index=True)
+    scaler, stack = PD.fit_stack(pooled, PD.ARM_COLUMNS[ARM], c)
+    stack_pff = None
+    if pff is not None:
+        with_pff = pooled.merge(pff, on=KEYS, how="left").fillna(
+            {col: 0.0 for col in PFF_COLUMNS})
+        cols = [*PD.ARM_COLUMNS[ARM], *PFF_COLUMNS]
+        s2, m2 = PD.fit_stack(with_pff, cols, c)
+        stack_pff = {"columns": cols, "scale": s2.scale_.tolist(),
+                     "coef": m2.coef_[0].tolist(), "C": float(c)}
     X, y, h, margins = BT.stack(parts, pool)
     final = V4.fit(X, y, h, margins, names, **knobs)
     entry = {
@@ -92,6 +114,7 @@ def fit_member(spec: str, frames, parts, raw, pool: list[int]) -> tuple[V4.Recip
         "current_halflife": None if not np.isfinite(current_half) else float(current_half),
         "stack": {"columns": PD.ARM_COLUMNS[ARM], "scale": scaler.scale_.tolist(),
                   "coef": stack.coef_[0].tolist(), "C": float(c)},
+        "stack_pff": stack_pff,
         "selection": {"training_seasons": list(pool), "model_tuning": knob_trace,
                       "score_k_tuning": k_trace, "current_form_tuning": decay_trace},
     }
@@ -101,9 +124,10 @@ def fit_member(spec: str, frames, parts, raw, pool: list[int]) -> tuple[V4.Recip
 
 
 def fit_manifest(frames, parts_by_spec, raw, pool, projection_meta=None) -> dict:
-    members = [fit_member(spec, frames, parts_by_spec[spec], raw, pool)[1]
+    pff = pff_features(parts_by_spec)
+    members = [fit_member(spec, frames, parts_by_spec[spec], raw, pool, pff)[1]
                for spec in SPECS]
-    return {"schema_version": 2, "model_version": "5.0",
+    return {"schema_version": 3, "model_version": "5.1",
             "architecture": "equal_ensemble_expanded_war_score_innovation_ewma",
             "training_seasons": list(pool),
             "temporal_contract": "pregame only; current-season transforms use prior weeks",
@@ -152,6 +176,44 @@ def check(season: int, backtest_scaling: bool = False) -> None:
     y = joined.y.to_numpy(float)
     print(f"  Brier backtest={np.mean((joined.expanded_equal_ensemble - y) ** 2):.6f}"
           f"  runtime={np.mean((joined.p_runtime - y) ** 2):.6f}")
+
+    # v5.1: the same replay with PFF, the table built by the CI's stdlib composite
+    # from the staged weekly CSVs, against the harness's pandas-built predictions.
+    pff = staged_pff_payload(season, list(frame.index))
+    events = ER.replay(block, finals, rows, pff=pff)["events"]
+    got = pd.DataFrame([{"week": e["week"], "home_team": e["home"],
+                         "away_team": e["away"], "p_runtime": e["p_home"]}
+                        for e in events])
+    from config import ARTIFACTS
+    harness = pd.read_csv(ARTIFACTS / "v5_extension_predictions.csv")
+    harness = harness[(harness.variant == "pff_outcome_composite") &
+                      (harness.season == season)]
+    if harness.empty:
+        print("  (run v5_extension_backtest --only pff_outcome_composite to compare PFF)")
+        return
+    joined = harness.merge(got, on=["week", "home_team", "away_team"], how="inner")
+    diff = (joined.p - joined.p_runtime).abs()
+    print(f"{season} with PFF: {len(joined)} of {len(harness)} harness games matched; "
+          f"max |p_harness - p_runtime| = {diff.max():.3e}")
+    y = joined.y.to_numpy(float)
+    print(f"  Brier harness={np.mean((joined.p - y) ** 2):.6f}"
+          f"  runtime={np.mean((joined.p_runtime - y) ** 2):.6f}")
+
+
+def staged_pff_payload(season: int, teams) -> dict:
+    """{cutoffs: {W: {team: [O, D]}}} from the staged weekly tables, via the CI code."""
+    from src import pff_form
+    directory = pd.read_csv(pff_form.SEASON / f"team_directory_{season}.csv",
+                            low_memory=False)[["franchise_id", "city"]].to_dict("records")
+    cutoffs = {}
+    for thru in range(1, 16):
+        paths = [pff_form.WEEKLY / f"{c.replace('-', '_')}_{season}_thru_w{thru:02d}.csv"
+                 for c in ER.PFF_CATEGORIES]
+        if not all(p.exists() for p in paths):
+            continue
+        tables = [pd.read_csv(p, low_memory=False).to_dict("records") for p in paths]
+        cutoffs[str(thru)] = ER.pff_composite(directory, *tables, teams)
+    return {"season": season, "cutoffs": cutoffs}
 
 
 def main():

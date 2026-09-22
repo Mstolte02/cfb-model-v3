@@ -122,6 +122,13 @@ difference, the change the walk has made since week 0, opponent-adjusted season-
 offense and defense form, and home field. The published probability is the mean of the
 four. The spread is that probability read through the ensemble's margin sigma.
 
+**v5.1 (from 22 September 2026)** adds PFF's season-to-date offence and defence
+composites as two more stack columns in every member, used whenever PFF's table
+through the previous week exists and falling back to the v5 stack when it does not.
+On the 2023–25 replay it is −.001225 Brier against v5, better in all three seasons.
+See [V5_EXTENSION_EXPERIMENTS.md](audit/V5_EXTENSION_EXPERIMENTS.md), which also records
+what did not help: pace, game control, scheme clashes and last-week availability.
+
 **What v5 did not change.** Week 1 is graded on the v4 season-fixed margin, the
 futures board is held to the v4 week-0 ratings, and every Market board row keeps the
 model snapshot it was locked with; those v4 blocks ship unchanged beside the ensemble.
