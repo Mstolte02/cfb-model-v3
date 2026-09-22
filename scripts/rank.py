@@ -12,14 +12,24 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+import json
+
 import pandas as pd
 
-from config import ARTIFACTS, PROJECTION_YEAR
+from config import ARTIFACTS, PROJECTION_YEAR, ROOT
 from src import v4 as V4
 from src.dynamic import WeeklyRatingState, current_power_ratings
 
 
 def main():
+    published = json.loads((ROOT / "viz" / "data" / "model_v4.json").read_text())
+    if (published.get("ensemble") or {}).get("state"):
+        # v5: ratings.json is written by the ensemble replay itself.
+        teams = json.loads((ROOT / "viz" / "data" / "ratings.json").read_text())["teams"]
+        print(f"\n=== {PROJECTION_YEAR} v5 ensemble Power Ratings (top 25) ===")
+        for row in teams[:25]:
+            print(f"  {row['rank']:>3}. {row['team']:<24} power={row['power']:.3f}")
+        return
     model_path = ARTIFACTS / "model_v4.json"
     frame_path = ARTIFACTS / f"{PROJECTION_YEAR}_v4_team_frame.csv"
     state_path = ARTIFACTS / f"{PROJECTION_YEAR}_dynamic_state.json"

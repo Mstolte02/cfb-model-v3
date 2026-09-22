@@ -8,40 +8,62 @@
   "CB-S_tackle",
   "CB_catch_rate",
   "CB_coverage",
+  "CB_coverage_snaps_per_target",
+  "CB_forced_incompletion_rate",
   "CB_pass_break_ups",
   "CB_qb_rating_against",
   "CB_yards",
   "CB_yards_after_catch",
+  "CB_yards_per_coverage_snap",
   "DI-ED_defense_penalty",
   "DI-ED_tackle",
   "DI_pass_rush",
   "DI_run",
   "DI_sacks",
+  "DI_stop_pct",
   "DI_stops",
   "DI_total_pressures",
+  "DI_true_pass_set_pass_rush",
+  "DI_true_pass_set_pass_rush_win_rate",
   "ED_hurries",
   "ED_pass_rush",
   "ED_qb_rating_against",
   "ED_run",
   "ED_sacks",
+  "ED_stop_pct",
   "ED_total_pressures",
+  "ED_true_pass_set_pass_rush",
+  "ED_true_pass_set_pass_rush_win_rate",
+  "IOL_gap_run_block",
   "IOL_pass_block",
   "IOL_penalties",
   "IOL_pressures_allowed",
   "IOL_run_block",
   "IOL_sacks_allowed",
+  "IOL_true_pass_set_pass_block",
+  "IOL_true_pass_set_pbwr",
+  "IOL_true_pass_set_pressure_rate_allowed",
+  "IOL_zone_run_block",
+  "LB_avg_depth_of_tackle",
   "LB_coverage",
   "LB_missed_tackle_rate",
   "LB_pass_rush",
+  "LB_pass_rush_win_rate",
   "LB_run",
+  "LB_stop_pct",
   "LB_stops",
   "LB_tackle",
   "LB_tackles",
+  "OT_gap_run_block",
   "OT_pass_block",
   "OT_penalties",
   "OT_pressures_allowed",
   "OT_run_block",
   "OT_sacks_allowed",
+  "OT_true_pass_set_pass_block",
+  "OT_true_pass_set_pbwr",
+  "OT_true_pass_set_pressure_rate_allowed",
+  "OT_zone_run_block",
   "QB-RB-TE-WR_offense_penalty",
   "QB_accuracy_pct",
   "QB_btt_rate",
@@ -66,7 +88,9 @@
   "RB_ypa",
   "S_catch_rate",
   "S_coverage",
+  "S_forced_incompletion_rate",
   "S_yards",
+  "S_yards_per_coverage_snap",
   "TE_first_downs",
   "TE_hands_drop",
   "TE_pass_block",
@@ -603,6 +627,101 @@
    "kind": "rate"
   },
   {
+   "name": "OT_true_pass_set_pass_block",
+   "metric": "pblk__true_pass_set_grades_pass_block",
+   "denominator": "pblk__true_pass_set_snap_counts_pass_block",
+   "positions": [
+    "T"
+   ],
+   "kind": "skill"
+  },
+  {
+   "name": "IOL_true_pass_set_pass_block",
+   "metric": "pblk__true_pass_set_grades_pass_block",
+   "denominator": "pblk__true_pass_set_snap_counts_pass_block",
+   "positions": [
+    "G",
+    "C"
+   ],
+   "kind": "skill"
+  },
+  {
+   "name": "OT_true_pass_set_pbwr",
+   "metric": "pblk__true_pass_set_pbwr",
+   "denominator": "pblk__true_pass_set_snap_counts_pass_block",
+   "positions": [
+    "T"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "IOL_true_pass_set_pbwr",
+   "metric": "pblk__true_pass_set_pbwr",
+   "denominator": "pblk__true_pass_set_snap_counts_pass_block",
+   "positions": [
+    "G",
+    "C"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "OT_true_pass_set_pressure_rate_allowed",
+   "metric": "pblk__true_pass_set_pressure_rate_allowed",
+   "denominator": "pblk__true_pass_set_snap_counts_pass_block",
+   "positions": [
+    "T"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "IOL_true_pass_set_pressure_rate_allowed",
+   "metric": "pblk__true_pass_set_pressure_rate_allowed",
+   "denominator": "pblk__true_pass_set_snap_counts_pass_block",
+   "positions": [
+    "G",
+    "C"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "OT_zone_run_block",
+   "metric": "rblk__zone_grades_run_block",
+   "denominator": "rblk__zone_snap_counts_run_block",
+   "positions": [
+    "T"
+   ],
+   "kind": "skill"
+  },
+  {
+   "name": "IOL_zone_run_block",
+   "metric": "rblk__zone_grades_run_block",
+   "denominator": "rblk__zone_snap_counts_run_block",
+   "positions": [
+    "G",
+    "C"
+   ],
+   "kind": "skill"
+  },
+  {
+   "name": "OT_gap_run_block",
+   "metric": "rblk__gap_grades_run_block",
+   "denominator": "rblk__gap_snap_counts_run_block",
+   "positions": [
+    "T"
+   ],
+   "kind": "skill"
+  },
+  {
+   "name": "IOL_gap_run_block",
+   "metric": "rblk__gap_grades_run_block",
+   "denominator": "rblk__gap_snap_counts_run_block",
+   "positions": [
+    "G",
+    "C"
+   ],
+   "kind": "skill"
+  },
+  {
    "name": "DI_pass_rush",
    "metric": "def__grades_pass_rush_defense",
    "denominator": "def__snap_counts_pass_rush",
@@ -694,6 +813,51 @@
    "kind": "rate"
   },
   {
+   "name": "DI_true_pass_set_pass_rush",
+   "metric": "prsh__true_pass_set_grades_pass_rush_defense",
+   "denominator": "prsh__true_pass_set_snap_counts_pass_rush",
+   "positions": [
+    "DI"
+   ],
+   "kind": "skill"
+  },
+  {
+   "name": "ED_true_pass_set_pass_rush",
+   "metric": "prsh__true_pass_set_grades_pass_rush_defense",
+   "denominator": "prsh__true_pass_set_snap_counts_pass_rush",
+   "positions": [
+    "ED"
+   ],
+   "kind": "skill"
+  },
+  {
+   "name": "DI_true_pass_set_pass_rush_win_rate",
+   "metric": "prsh__true_pass_set_pass_rush_win_rate",
+   "denominator": "prsh__true_pass_set_snap_counts_pass_rush",
+   "positions": [
+    "DI"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "ED_true_pass_set_pass_rush_win_rate",
+   "metric": "prsh__true_pass_set_pass_rush_win_rate",
+   "denominator": "prsh__true_pass_set_snap_counts_pass_rush",
+   "positions": [
+    "ED"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "LB_pass_rush_win_rate",
+   "metric": "prsh__pass_rush_win_rate",
+   "denominator": "prsh__snap_counts_pass_rush",
+   "positions": [
+    "LB"
+   ],
+   "kind": "rate"
+  },
+  {
    "name": "DI_run",
    "metric": "def__grades_run_defense",
    "denominator": "def__snap_counts_run_defense",
@@ -743,6 +907,42 @@
    "name": "LB_stops",
    "metric": "def__stops",
    "denominator": "def__snap_counts_run_defense",
+   "positions": [
+    "LB"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "DI_stop_pct",
+   "metric": "rdef__stop_percent",
+   "denominator": "rdef__snap_counts_run",
+   "positions": [
+    "DI"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "ED_stop_pct",
+   "metric": "rdef__stop_percent",
+   "denominator": "rdef__snap_counts_run",
+   "positions": [
+    "ED"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "LB_stop_pct",
+   "metric": "rdef__stop_percent",
+   "denominator": "rdef__snap_counts_run",
+   "positions": [
+    "LB"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "LB_avg_depth_of_tackle",
+   "metric": "rdef__avg_depth_of_tackle",
+   "denominator": "rdef__snap_counts_run",
    "positions": [
     "LB"
    ],
@@ -843,6 +1043,51 @@
    "name": "CB_qb_rating_against",
    "metric": "def__qb_rating_against",
    "denominator": "def__targets",
+   "positions": [
+    "CB"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "CB_forced_incompletion_rate",
+   "metric": "cov__forced_incompletion_rate",
+   "denominator": "cov__targets",
+   "positions": [
+    "CB"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "S_forced_incompletion_rate",
+   "metric": "cov__forced_incompletion_rate",
+   "denominator": "cov__targets",
+   "positions": [
+    "S"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "CB_yards_per_coverage_snap",
+   "metric": "cov__yards_per_coverage_snap",
+   "denominator": "cov__snap_counts_coverage",
+   "positions": [
+    "CB"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "S_yards_per_coverage_snap",
+   "metric": "cov__yards_per_coverage_snap",
+   "denominator": "cov__snap_counts_coverage",
+   "positions": [
+    "S"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "CB_coverage_snaps_per_target",
+   "metric": "cov__coverage_snaps_per_target",
+   "denominator": "cov__snap_counts_coverage",
    "positions": [
     "CB"
    ],

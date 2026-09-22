@@ -10,9 +10,12 @@ Three rules hold across the whole build:
 
 - **A forecast uses only what was known before the game.** Every feature and every
   number in the model is selected inside expanding forward folds.
-- **A feature ships only if it earns its place.** It must clear a predeclared
-  accuracy bar in consecutive selection windows. Most tested features do not, and the
-  evidence for each one stays in [`audit/`](audit/).
+- **A feature ships only if it earns its place in forward loss.** Candidates are
+  compared in outer season folds, weak signals are regularized or averaged rather than
+  zeroed by a significance threshold, and uncertainty is reported beside the point
+  estimate. Leakage and consistent out-of-sample losses still reject a feature. The
+  evidence for each one stays in [`audit/`](audit/); the policy is in
+  [ACCURACY_RECOVERY_REVIEW.md](audit/ACCURACY_RECOVERY_REVIEW.md).
 - **Team A against Team B gives the same answer as Team B against Team A.** The
   reciprocal result comes from the structure, not from a correction.
 
@@ -20,6 +23,24 @@ Three rules hold across the whole build:
 
 The model replays each season from the start, week by week, and predicts every game
 from the state before that week.
+
+**The live model since 2026-09-22 is v5**, the equal average of four expanded-WAR
+preseason models, each updated by score innovation and opponent-adjusted form. It was
+selected on a strict outer replay of 2023–25, where every current-season transform is
+recomputed from earlier weeks only:
+
+| Strict outer replay, 2023–25 | Games | Brier |
+|---|---:|---:|
+| v4: preseason model + score update | 2,189 | .178986 |
+| **v5: four-member expanded-WAR ensemble** | **2,189** | **.177832** |
+| CFBD pregame Elo, same games | 2,189 | .184959 |
+
+v5 is better in each of the three seasons. The pooled difference is −.001154 Brier with
+a season-week bootstrap interval of [−.002409, +.000099]: a 96.4% probability of
+improvement, not a certainty. See
+[ACCURACY_RECOVERY_REVIEW.md](audit/ACCURACY_RECOVERY_REVIEW.md).
+
+The v4 replay the site launched with:
 
 | Strict expanding replay, 2022–25 | Games | Brier | Log loss | Accuracy |
 |---|---:|---:|---:|---:|
@@ -41,10 +62,13 @@ pip install -r requirements.txt
 
 # The CFBD key goes in .env at the repository root (gitignored):
 #     CFBD_API_KEY=your_key_here
+# Keep the PFF key in the operating-system environment, never in the repo:
+#     setx PFF_API_KEY "your_key_here"
 
-python -m scripts.train_v4      # select, fit, and publish the model
-python -m scripts.rank          # 2026 power ratings
-python -m scripts.export_viz    # write the data the web app reads
+python -m scripts.train_v4              # the v4 preseason model and site data
+python -m scripts.export_viz            # write the data the web app reads
+python -m scripts.train_live_ensemble   # fit the four v5 members
+python -m scripts.publish_live_ensemble # attach v5 to the site data and replay 2026
 python -m http.server 8642 -d viz
 ```
 
@@ -55,18 +79,22 @@ path and every environment variable that overrides one.
 
 ## Weekly workflow
 
-Run this after a week of games is complete. `update_v4` records its predictions
-before it applies a result, and it ignores a game it has already processed.
+Nothing is required. The **Capture market snapshot** workflow runs every six hours:
+it pulls prices, final scores and CFBD's regular-season `/stats/game/advanced`
+(committed to `data/live/`), replays the whole season from week 0 through the v5
+ensemble with `scripts/ensemble_replay.py`, and commits `viz/data/model_v4.json` and
+`ratings.json`. Its Monday 12:30 PM ET run locks the week's betting board, freezing a
+point-in-time model snapshot into every row. A push to `main` rebuilds the CFP
+projection with `scripts/simulate_playoff.R` and deploys the site.
+
+To do the same thing by hand:
 
 ```powershell
-python -m scripts.update_v4                      # apply completed games
-python -m scripts.rank                           # publish current ratings
-python -m scripts.export_viz                     # rebuild the app data
+python -m scripts.update_v4                      # finals + form -> replay (v5 path)
+python -m scripts.rank                           # print current ratings
 Rscript scripts/simulate_playoff.R 500 current   # CFP projection
 python -m unittest discover -s tests -v          # invariants
 ```
-
-A push to `main` deploys the site with the Pages workflow.
 
 ## How it works
 
@@ -85,12 +113,22 @@ opponent-adjusted defense, recruiting talent, returning production, and the rost
 projected player WAR. Recruiting enters once, as a single principal component, and
 talent is orthogonalised against it.
 
-**The weekly update.** The updater scores the difference between the observed margin
-and the margin its own pregame probability implied, in units of the fitted margin
-sigma. The score is capped at ±2.5 and multiplied by K = .20.
+**The in-season model (v5).** Four preseason models share the reduced feature set and
+the expanded, PFF-API-enriched WAR; two add talent curvature, two add
+production-informed WAR. Each keeps its own rating walk: the observed margin minus the
+margin its pregame probability implied, in units of its margin sigma, capped at ±2.5
+and multiplied by K = .25. A logistic stack then combines the week-0 rating
+difference, the change the walk has made since week 0, opponent-adjusted season-to-date
+offense and defense form, and home field. The published probability is the mean of the
+four. The spread is that probability read through the ensemble's margin sigma.
+
+**What v5 did not change.** Week 1 is graded on the v4 season-fixed margin, the
+futures board is held to the v4 week-0 ratings, and every Market board row keeps the
+model snapshot it was locked with; those v4 blocks ship unchanged beside the ensemble.
+v5 prices the board from the week 5 lock on.
 
 **Player WAR.** `war_model/` builds a wins figure for every FBS player in five
-stages: 87<!--live:n_facets--> facets measure the jobs a player does, a regression
+stages: 106<!--live:n_facets--> facets measure the jobs a player does, a regression
 against the following season's wins prices each facet, a Massey rating turns the team
 total into wins, replacement credit turns wins above average into wins above
 replacement, and a projection carries it forward to 2026. See
@@ -106,7 +144,7 @@ one build and one set of numbers.
 |---|---|
 | [`src/`](src/) | The model: features, opponent adjustment, rating, prediction, spreads, totals |
 | [`src/data/`](src/data/) | Loaders for CFBD, PFF, TruMedia, plays, coaches and WAR |
-| [`scripts/`](scripts/) | Entry points. `train_v4`, `update_v4`, `rank`, `export_viz`, and one backtest per experiment |
+| [`scripts/`](scripts/) | Entry points. `train_v4`, `train_live_ensemble`, `publish_live_ensemble`, `update_v4`, `rank`, `export_viz`, the stdlib live runtime `ensemble_replay`, and one backtest per experiment |
 | [`war_model/`](war_model/) | The player WAR build, its rosters, and its own README |
 | [`viz/`](viz/) | The published web app |
 | [`audit/`](audit/) | One write-up per experiment, with the decision it produced |
@@ -120,7 +158,7 @@ one build and one set of numbers.
 | Source | Used for |
 |---|---|
 | CollegeFootballData.com | Games, advanced season stats, recruiting, returning production, drives |
-| PFF exports | Player grades and snap counts, the base of every WAR facet |
+| PFF exports/API | Player grades and snap counts, the base of every WAR facet; API additions are staged and tested before promotion |
 | TruMedia | Supporting team and player measures |
 | thetwodeep.com | 2026 depth charts for all 138 FBS teams. Ourlads is the fallback |
 | EA CFB 27 ratings | Ordering players with under 300 prior snaps, who have no record to rank them by |
@@ -128,6 +166,28 @@ one build and one set of numbers.
 
 Injuries are manual, in `war_model/availability_2026.csv`. The one depth-chart source
 with an injury feed prohibits automated access.
+
+### PFF API staging
+
+PFF API downloads go to `source-data/pff_api`, outside Git and separate from the
+hand-verified legacy exports. A sync never changes the production model merely
+because a credential or downloaded file is present.
+
+```powershell
+python -m scripts.sync_pff_api --seasons 2025 --validate-legacy
+python -m scripts.sync_pff_api --seasons 2014-2019,2021-2025 --position-reports pass-blocking,run-blocking,pass-rush,run-defense,coverage
+python -m scripts.sync_pff_api --seasons 2020-2025 --team-stats
+```
+
+The richer WAR reports are opt-in for experiments with
+`PFF_API_WAR_REPORTS=all` or a comma-separated subset such as
+`PFF_API_WAR_REPORTS=rblk,rdef,cov`. See
+[`audit/PFF_API_EXPERIMENTS.md`](audit/PFF_API_EXPERIMENTS.md) for the promotion
+decision and forward-test results.
+
+The combined expanded-WAR/EWMA experiment is reproduced with
+`python -m scripts.prior_decay_backtest`. Its selection-policy review and results are
+in [`audit/ACCURACY_RECOVERY_REVIEW.md`](audit/ACCURACY_RECOVERY_REVIEW.md).
 
 ## Documentation
 

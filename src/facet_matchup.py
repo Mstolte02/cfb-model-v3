@@ -74,6 +74,27 @@ CFBD_CONCEPTS = {
     "cfbd_tackle_lb": "tackling",
 }
 
+# The PFF API position-report facets (war_model/candidates.py, 2026-09-22) arrived
+# after concepts.json too, and their names state the job the same way. The WAR build
+# weights them as their own concepts; this map only files each into its room.
+API_CONCEPTS = {
+    "OT_true_pass_set_pass_block": "pass_protection",
+    "OT_true_pass_set_pbwr": "pass_protection",
+    "OT_true_pass_set_pressure_rate_allowed": "pass_protection",
+    "IOL_true_pass_set_pbwr": "pass_protection",
+    "OT_gap_run_block": "run_blocking", "IOL_gap_run_block": "run_blocking",
+    "DI_true_pass_set_pass_rush": "pass_rush",
+    "DI_true_pass_set_pass_rush_win_rate": "pass_rush",
+    "ED_true_pass_set_pass_rush": "pass_rush",
+    "ED_true_pass_set_pass_rush_win_rate": "pass_rush",
+    "DI_stop_pct": "run_defense", "ED_stop_pct": "run_defense",
+    "LB_stop_pct": "run_defense", "LB_avg_depth_of_tackle": "run_defense",
+    "CB_coverage_snaps_per_target": "coverage",
+    "CB_forced_incompletion_rate": "coverage",
+    "CB_yards_per_coverage_snap": "coverage",
+    "S_forced_incompletion_rate": "coverage", "S_yards_per_coverage_snap": "coverage",
+}
+
 # unit -> (side, [(concept, position group), ...]). Cells with negligible mass are
 # folded into the neighbouring room that does the same job, so no unit rests on a
 # handful of players. Every populated cell in the export lands in exactly one unit.
@@ -158,6 +179,7 @@ def concept_map() -> dict[str, str]:
     out = {f: name for name, members in concepts.items() for f in members}
     out.update({name: meta["concept"] for name, meta in consolidated.items()})
     out.update(CFBD_CONCEPTS)
+    out.update(API_CONCEPTS)
     return out
 
 

@@ -26,6 +26,11 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+try:  # imported as scripts.capture_market_snapshot by the exporter and the tests
+    from scripts import ensemble_replay as ER
+except ImportError:  # run directly as scripts/capture_market_snapshot.py in CI
+    import ensemble_replay as ER
+
 ROOT = Path(__file__).resolve().parents[1]
 YEAR = 2026
 BASE = "https://api.collegefootballdata.com"
@@ -44,6 +49,8 @@ TEAMS = ROOT / "viz" / "data" / "teams.json"
 PLAYOFF = ROOT / "viz" / "data" / "playoff_current.json"
 HISTORICAL = ROOT / "audit" / "book_shopping_backtest.json"
 AVAILABILITY = ROOT / "war_model" / "availability_events_2026.csv"
+# Per-team game advanced stats, the current-form input of the v5 live ensemble.
+FORM = ROOT / "data" / "live" / f"game_advanced_{YEAR}.json"
 
 PROVIDER_ALIAS = {"Draft Kings": "DraftKings"}
 BOARD_PROVIDER = "DraftKings"
@@ -142,6 +149,49 @@ def fetch_games(key: str) -> list[dict]:
     """
     return fetch_cfbd(key, "/games", {
         "year": YEAR, "seasonType": "regular", "division": "fbs"})
+
+
+def fetch_advanced(key: str) -> list[dict]:
+    """Regular-season team-game advanced stats, garbage time excluded as in training."""
+    return fetch_cfbd(key, "/stats/game/advanced", {
+        "year": YEAR, "excludeGarbageTime": "true", "seasonType": "regular"})
+
+
+def publish_form(raw: list[dict], form_path: Path = FORM) -> int:
+    """Write the committed form table; returns the number of team-game rows."""
+    payload = ER.compact_form_payload(raw, YEAR)
+    form_path.parent.mkdir(parents=True, exist_ok=True)
+    text = json.dumps(payload, separators=(",", ":"), allow_nan=False)
+    if not form_path.exists() or form_path.read_text(encoding="utf-8") != text:
+        form_path.write_text(text, encoding="utf-8")
+    return len(payload["rows"])
+
+
+def form_missing_finals(games: list[dict], now: datetime,
+                        form_path: Path = FORM, window_days: float = 4.0) -> list[int]:
+    """Recent completed regular-season games the committed form table lacks.
+
+    CFBD's free tier is a monthly call budget, so the advanced-stats pull runs only
+    when a final from the last few days is not in the table yet. The window keeps a
+    game CFBD never processes from triggering a pull on every capture forever.
+    """
+    payload = ER.load_form_payload(form_path)
+    covered = set()
+    if payload:
+        fields = payload.get("fields", ER.FORM_FIELDS)
+        for values in payload.get("rows", []):
+            row = dict(zip(fields, values))
+            covered.add((row.get("week"), row.get("team"), row.get("opponent")))
+    out = []
+    for game in games:
+        if not game.get("completed") or game.get("seasonType", "regular") != "regular":
+            continue
+        start = game.get("startDate")
+        if payload and start and (now - parse_time(start)).total_seconds() > window_days * 86400:
+            continue
+        if (game.get("week"), game.get("homeTeam"), game.get("awayTeam")) not in covered:
+            out.append(int(game["id"]))
+    return out
 
 
 def publish_finals(games: list[dict], schedule_path: Path = SCHEDULE) -> int:
@@ -307,7 +357,8 @@ def _rating_shell(team: str, model: dict, old_rows: list[dict],
 def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = MODEL,
                              ratings_path: Path = RATINGS,
                              teams_path: Path | None = TEAMS,
-                             playoff_path: Path | None = PLAYOFF) -> int:
+                             playoff_path: Path | None = PLAYOFF,
+                             form_path: Path = FORM) -> int:
     """Replay every published final from the preseason baseline, grouped by week.
 
     Rebuilding from the baseline on every capture makes the operation idempotent and
@@ -319,6 +370,9 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
     schedule = json.loads(schedule_path.read_text(encoding="utf-8"))
     model = json.loads(model_path.read_text(encoding="utf-8"))
     ratings = json.loads(ratings_path.read_text(encoding="utf-8"))
+    if model.get("ensemble"):
+        return _replay_ensemble(schedule, model, ratings, model_path, ratings_path,
+                                teams_path, playoff_path, form_path)
     dynamic = model.get("dynamic") or {}
     current = dynamic.get("ratings") or {}
     # The compact model is the authoritative FBS universe. This deliberately does
@@ -413,6 +467,98 @@ def replay_published_results(schedule_path: Path = SCHEDULE, model_path: Path = 
     return len(finals)
 
 
+def _ensemble_finals(schedule: list[dict], names: set[str]) -> list[dict]:
+    return [{"id": g.get("id"), "week": int(g.get("w") or 0),
+             "season_type": g.get("st", "regular"), "date": g.get("d"),
+             "home": g["h"], "away": g["a"], "neutral": bool(g.get("n")),
+             "home_score": int(g["hp"]), "away_score": int(g["ap"])}
+            for g in schedule
+            if g.get("f") and g.get("hp") is not None and g.get("ap") is not None
+            and g.get("h") in names and g.get("a") in names]
+
+
+def _merge_rating_rows(ratings: dict, model: dict, names: list[str], current_rows,
+                       schedule, teams_path, playoff_path) -> list[dict]:
+    by_team = {row["team"]: row for row in current_rows}
+    old_rows = ratings.get("teams", [])
+    old_by_team = {row["team"]: row for row in old_rows}
+    team_meta = _read_optional_json(teams_path, {})
+    playoff_rows = _read_optional_json(playoff_path, {}).get("teams", [])
+    playoff = {row["team"]: row for row in playoff_rows}
+    strengths = _schedule_strength(model, names, schedule)
+    updated_rows = []
+    for team in names:
+        old = old_by_team.get(team) or _rating_shell(
+            team, model, old_rows, team_meta, playoff, strengths)
+        new = by_team[team]
+        updated_rows.append({**old, "rank": new["rank"], "power": new["power"],
+                             "vs_average": new["vs_average"]})
+    updated_rows.sort(key=lambda row: (row.get("rank", 999), row["team"]))
+    return updated_rows
+
+
+def _replay_ensemble(schedule, model, ratings, model_path, ratings_path,
+                     teams_path, playoff_path, form_path) -> int:
+    """v5: replay every published final into all ensemble members from week 0.
+
+    Like the v4 path this rebuilds from the preseason baseline on every capture, so
+    it is idempotent and never lets a same-week result reach a same-week prediction.
+    """
+    ensemble = model["ensemble"]
+    names = [team for team in model.get("teams", {})
+             if team in ensemble["members"][0]["initial"]]
+    if len(names) < 2:
+        return 0
+    finals = _ensemble_finals(schedule, set(names))
+    rows = ER.form_rows(ER.load_form_payload(form_path), names)
+    result = ER.replay(ensemble, finals, rows)
+
+    history = [{"week": 0, "label": "Preseason", "completed_games": 0,
+                "teams": ER.power_table(ensemble, ER.initial_state(ensemble), names)}]
+    completed = 0
+    for key, snapshot in result["snapshots"]:
+        slate = [e for e in result["events"] if e["slate"] == key]
+        completed += len(slate)
+        week = slate[0]["week"]
+        postseason = slate[0]["season_type"] == "postseason"
+        unfinished = any(int(g.get("w") or 0) == week and not g.get("f")
+                         and (g.get("st") == "postseason") == postseason
+                         for g in schedule)
+        label = ("Postseason week " if postseason else "Week ") + str(week)
+        history.append({"week": key, "label": label + (" to date" if unfinished else ""),
+                        "completed_games": completed,
+                        "teams": ER.power_table(ensemble, snapshot, names)})
+    game_history = [{
+        "id": e.get("id"), "week": e["week"], "season_type": e["season_type"],
+        "date": e.get("date"), "home": e["home"], "away": e["away"],
+        "neutral": e["neutral"], "home_score": e["home_score"],
+        "away_score": e["away_score"], "p_home": e["p_home"],
+        "home_rating_delta": round(e["home_rating_delta"], 8)}
+        for e in result["events"]]
+
+    ratings["teams"] = _merge_rating_rows(ratings, model, names, history[-1]["teams"],
+                                          schedule, teams_path, playoff_path)
+    ratings["history"] = history
+    ratings["game_history"] = game_history
+    ratings["game_history_basis"] = (
+        "Replayed start-of-week v5 ensemble; mean member rating change in logit units")
+    ratings["updated_through"] = {
+        "completed_fbs_games": len(finals),
+        "week": max((e["week"] for e in result["events"]
+                     if e["season_type"] != "postseason"), default=0),
+    }
+    ensemble["state"] = {
+        **ER.compact_state(result["state"]),
+        "completed_games": len(finals),
+        "form_rows": len(rows),
+        "updated_through_slate": max((e["slate"] for e in result["events"]), default=0),
+    }
+    model["ensemble"] = ensemble
+    model_path.write_text(json.dumps(model, indent=1, allow_nan=False), encoding="utf-8")
+    ratings_path.write_text(json.dumps(ratings, indent=1, allow_nan=False), encoding="utf-8")
+    return len(finals)
+
+
 def flatten(raw: list[dict], captured_at: str) -> list[dict]:
     # CFBD can return both an old and new spelling for the same provider/game.
     # Collapse those aliases before downstream identity and hashing logic sees them.
@@ -502,6 +648,10 @@ def sigmoid(value: float) -> float:
 
 
 def model_probability(model: dict, home: str, away: str, neutral=False) -> float | None:
+    ensemble = model.get("ensemble")
+    if ensemble and ensemble.get("state"):
+        return ER.probability(ensemble, ensemble["state"], home, away,
+                              0.0 if neutral else 1.0)
     a, b = model.get("teams", {}).get(home), model.get("teams", {}).get(away)
     if a is None or b is None:
         return None
@@ -539,7 +689,10 @@ def _static_margin(model: dict, home: str, away: str, neutral=False) -> float | 
 def _margin_from_probability(model: dict, probability: float) -> float:
     """Mirror the Market Board's probability-to-margin link."""
     clipped = min(max(float(probability), .001), .999)
-    return float(model["margin"]["sigma"]) * statistics.NormalDist().inv_cdf(clipped)
+    ensemble = model.get("ensemble")
+    sigma = (ensemble["margin_sigma"] if ensemble and ensemble.get("state")
+             else model["margin"]["sigma"])
+    return float(sigma) * statistics.NormalDist().inv_cdf(clipped)
 
 
 def _rating_snapshot_for_week(ratings: dict, week: int | None) -> dict[str, dict]:
@@ -551,13 +704,29 @@ def _rating_snapshot_for_week(ratings: dict, week: int | None) -> dict[str, dict
     return {row["team"]: row for row in rows}
 
 
-def _model_at_start_of_week(model: dict, ratings: dict, week: int) -> dict:
+def _model_at_start_of_week(model: dict, ratings: dict, week: int,
+                            season_type: str = "regular",
+                            form_path: Path = FORM) -> dict:
     """Rebuild the raw dynamic state using results strictly before ``week``.
 
     This matters during a partially completed slate: the published current state may
     already contain Saturday finals, but a Sunday game from the same week must still
     use the common start-of-week ratings.
     """
+    ensemble = model.get("ensemble")
+    if ensemble and ensemble.get("state"):
+        names = list(ensemble["members"][0]["initial"])
+        finals = [{"week": int(e.get("week") or 0),
+                   "season_type": e.get("season_type", "regular"),
+                   "home": e["home"], "away": e["away"],
+                   "neutral": bool(e.get("neutral")),
+                   "home_score": e["home_score"], "away_score": e["away_score"]}
+                  for e in ratings.get("game_history", [])
+                  if e.get("home_score") is not None and e.get("away_score") is not None]
+        rows = ER.form_rows(ER.load_form_payload(form_path), names)
+        state = ER.replay(ensemble, finals, rows,
+                          stop_before=ER.slate_key(week, season_type))["state"]
+        return {**model, "ensemble": {**ensemble, "state": state}}
     dynamic = model.get("dynamic") or {}
     state = dict(dynamic.get("preseason_ratings") or dynamic.get("ratings") or {})
     for event in ratings.get("game_history", []):
@@ -579,7 +748,7 @@ def _snapshot_fingerprint(model: dict) -> str:
 
 
 def freeze_weekly_model_snapshots(odds: dict, model: dict, ratings: dict,
-                                  captured_at: str) -> int:
+                                  captured_at: str, form_path: Path = FORM) -> int:
     """Attach one immutable, point-in-time rating prediction to every board game.
 
     A completed game's exact start-of-week probability is recoverable from
@@ -605,7 +774,8 @@ def freeze_weekly_model_snapshots(odds: dict, model: dict, ratings: dict,
             power = _rating_snapshot_for_week(ratings, week)
             basis = "replayed start-of-week ratings"
         else:
-            pregame_model = _model_at_start_of_week(model, ratings, week)
+            pregame_model = _model_at_start_of_week(model, ratings, week,
+                                                    form_path=form_path)
             probability = model_probability(
                 pregame_model, home, away, bool(game.get("neutral")))
             power = _rating_snapshot_for_week(ratings, week) or current_power
@@ -917,7 +1087,18 @@ def main() -> None:
             return
         raise RuntimeError("CFBD_API_KEY is not configured")
     now = utcnow()
-    tracking = run(fetch_lines(key), now, fetch_games(key), args.lock_weekly_board)
+    lines, games = fetch_lines(key), fetch_games(key)
+    missing = form_missing_finals(games, now)
+    if missing:
+        # Non-fatal: a failed pull replays on the committed table, and the next
+        # capture asks again because the finals are still missing from it.
+        try:
+            rows = publish_form(fetch_advanced(key))
+            print(f"Form table refreshed for {len(missing)} missing finals: {rows} rows.")
+        except (urllib.error.URLError, TimeoutError, subprocess.TimeoutExpired,
+                RuntimeError) as exc:
+            print(f"Advanced stats unavailable ({exc}); using the committed form table.")
+    tracking = run(lines, now, games, args.lock_weekly_board)
     print(f"Market check {tracking['checked_at']}: {tracking['games_with_quotes']} games, "
           f"{tracking['changed_quotes_this_check']} changed quotes, "
           f"{len(tracking['current_candidates'])} research candidates, "

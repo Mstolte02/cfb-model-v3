@@ -11,10 +11,12 @@ Five stages, each reading the one before it:
 
 1. **facets** — `facets.py`, `candidates.py`, `cfbd_facets.py`. A facet is one job
    measured one way: a grade or rate over its own denominator, standardized within
-   season and multiplied by volume, so an average snap is worth zero. 103 of them —
-   91 generated from the PFF exports, 12 from CFBD play value. `consolidate.py` then
-   merges the near-duplicate clusters onto their first principal component, which
-   leaves **87**.
+   season and multiplied by volume, so an average snap is worth zero. 127 of them —
+   91 generated from the PFF exports, 24 from the PFF API position reports (true
+   pass sets, zone/gap run blocking, pass-rush win rate, run-stop rate, coverage
+   efficiency), 12 from CFBD play value. `consolidate.py` then merges the
+   near-duplicate clusters onto their first principal component, which leaves
+   **106**.
    Standardization is role-relative (`WAR_ROLE_NORM=partial`): a receiver is scored
    against the pooled distribution with his depth-chart tier's mean removed, so a
    fifth receiver is not charged for being a fifth receiver.
@@ -59,6 +61,24 @@ trade here. The win predictor is downstream in the parent repo and blends this i
 40% of one of six inputs; what WAR is *for* is saying who was worth what.
 
 Set `WAR_WEIGHTS=nonneg` to get the old behaviour back.
+
+### PFF API reports are in the production build
+
+Since 2026-09-22 the build reads five PFF API position-report families beside the
+legacy exports: `pblk` (true-pass-set blocking), `rblk` (zone/gap run blocking),
+`prsh` (pass rush), `rdef` (run defense) and `cov` (coverage). They are staged under
+`source-data/pff_api/position_reports` by `scripts/sync_pff_api.py`, and the loader
+refuses to run unless every historical season is present, so a partial download
+cannot silently impute early seasons to zero. `PFF_API_WAR_REPORTS` narrows the set
+for ablations: unset means all five, a list such as `rblk,rdef,cov` means those
+families, and an empty string rebuilds the legacy-only facet set.
+
+The trade is recorded, not hidden. The expanded facets lift next-season team
+correlation (.527 → .553) and the preseason team-WAR projection in every season
+2021-25, and they make the game model better out of sample; they cost player-level
+ranking (projection holdout r .592 → .581) and same-season Massey fit (.702 → .683).
+The evidence is in [`../audit/PFF_API_EXPERIMENTS.md`](../audit/PFF_API_EXPERIMENTS.md)
+and [`../audit/ACCURACY_RECOVERY_REVIEW.md`](../audit/ACCURACY_RECOVERY_REVIEW.md).
 
 ### The line is two groups
 
@@ -230,15 +250,15 @@ compares the counts below against the live files and complains when they drift.
 
 | | |
 |---|---|
-| facets, after consolidation | 87<!--live:n_facets--> (from 103) |
-| blocks × groups | 34 concepts in 33 groups |
-| weighted facet total vs this season's wins | r = .847 |
-| ...vs next season's wins | r = .527 |
-| Massey rating vs adjusted win pct | r = .702 |
-| de-attenuation k | 0.954 |
-| player-seasons / total WAR | 89,893 / 6,069 |
-| projection holdout, 2025, ex-ante features and all-roster population | r = .592<!--live:holdout_r--> |
-| ...against the carry-forward baseline it has to beat | .523<!--live:carry_r--> |
+| facets, after consolidation | 106<!--live:n_facets--> (from 127) |
+| blocks × groups | 53 concepts in 44 groups |
+| weighted facet total vs this season's wins | r = .852 |
+| ...vs next season's wins | r = .553 |
+| Massey rating vs adjusted win pct | r = .683 |
+| de-attenuation k | 0.976 |
+| player-seasons / total WAR | 89,941 / 6,068 |
+| projection holdout, 2025, ex-ante features and all-roster population | r = .581<!--live:holdout_r--> |
+| ...against the carry-forward baseline it has to beat | .492<!--live:carry_r--> |
 
 The all-roster holdout is deliberately harder than the former target-snap-selected
 population: 55% of historical roster rows record no target-season snap. The earlier

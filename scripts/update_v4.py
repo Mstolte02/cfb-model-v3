@@ -28,8 +28,21 @@ PREDICTIONS_PATH = ARTIFACTS / f"{PROJECTION_YEAR}_v4_predictions.csv"
 RATINGS_PATH = ARTIFACTS / f"{PROJECTION_YEAR}_power_ratings.csv"
 
 
+def published_ensemble() -> dict | None:
+    """The live v5 ensemble block, when the published model carries one."""
+    model = json.loads((ROOT / "viz" / "data" / "model_v4.json").read_text())
+    ensemble = model.get("ensemble")
+    return ensemble if ensemble and ensemble.get("state") else None
+
+
 def main():
     load.require_key()
+    if published_ensemble() is not None:
+        # v5 is live. Its only in-season state is the published ensemble block,
+        # updated by the same stdlib replay the scheduled capture runs.
+        from scripts.publish_live_ensemble import refresh
+        refresh()
+        return
     if not MODEL_PATH.exists() or not FRAME_PATH.exists() or not STATE_PATH.exists():
         raise FileNotFoundError("v4 production artifacts are missing; run "
                                 "python -m scripts.train_v4 first")

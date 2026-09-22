@@ -83,6 +83,20 @@ def _blend(model, z, m):
     return 1.0 / (1.0 + np.exp(-model.probability_scale * np.log(p / (1 - p))))
 
 
+def ensemble_probs(ensemble, teams):
+    """v5 matrices from the published ensemble state, via the stdlib runtime."""
+    from scripts import ensemble_replay as ER
+    state = ensemble["state"]
+    n = len(teams)
+    p_neutral, p_home = np.full((n, n), .5), np.full((n, n), .5)
+    for i, a in enumerate(teams):
+        for j, b in enumerate(teams):
+            if i != j:
+                p_neutral[i, j] = ER.probability(ensemble, state, a, b, 0.0)
+                p_home[i, j] = ER.probability(ensemble, state, a, b, 1.0)
+    return p_neutral, p_home
+
+
 def pairwise_probs(model, comp, state=None):
     """Win-probability matrices for every ordered team pair."""
     teams = list(comp.index)
@@ -191,6 +205,12 @@ def main(n_sims=20000, seed=2026):
     rating = (rating - rating.mean()) / rating.std()
 
     p_neutral, p_home = pairwise_probs(model, comp, state)
+    published = json.load(open(ROOT / "viz" / "data" / "model_v4.json"))
+    ensemble = published.get("ensemble")
+    if ensemble and ensemble.get("state"):
+        p_neutral, p_home = ensemble_probs(ensemble, fbs)
+        rating = p_neutral.sum(axis=1) - .5
+        rating = (rating - rating.mean()) / rating.std()
 
     # ---- schedule ------------------------------------------------------------
     sched = json.load(open(ROOT / "data" / "raw" / "schedule_2026.json"))

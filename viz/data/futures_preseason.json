@@ -1,0 +1,26 @@
+{
+ "basis": "viz/data/players.json as published before week 1 (commit 642e2d6, 2026-08-29)",
+ "why": "The futures board is frozen at the preseason. players.json now follows the in-season WAR build, so the Heisman index reads its WAR input from here instead.",
+ "heisman_war": {
+  "Alabama|Austin Mack": 0.445,
+  "Alabama|Keelon Russell": 0.183,
+  "Auburn|Byrum Brown": 0.916,
+  "Georgia|Gunner Stockton": 0.813,
+  "Indiana|Josh Hoover": 0.857,
+  "LSU|Sam Leavitt": 0.829,
+  "Miami|Darian Mensah": 0.949,
+  "Miami|Malachi Toney": 0.403,
+  "Michigan|Bryce Underwood": 0.524,
+  "Notre Dame|CJ Carr": 0.956,
+  "Ohio State|Jeremiah Smith": 0.495,
+  "Ohio State|Julian Sayin": 1.186,
+  "Oklahoma|John Mateer": 0.646,
+  "Ole Miss|Trinidad Chambliss": 1.103,
+  "Oregon|Dante Moore": 0.963,
+  "South Carolina|LaNorris Sellers": 0.639,
+  "Texas A&M|Marcel Reed": 0.798,
+  "Texas Tech|Will Hammond": 0.524,
+  "Texas|Arch Manning": 0.927,
+  "USC|Jayden Maiava": 1.097
+ }
+}

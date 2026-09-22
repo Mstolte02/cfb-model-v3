@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel] = await Promise.all([
+  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel, futuresPreseason] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -38,6 +38,7 @@
     fetchJSON("data/bet_tracking.json").catch(() => null),
     fetchJSON("data/locked_results_2026.json").catch(() => ({ bets: [] })),
     fetchJSON("data/deserving-model.json").catch(() => null),
+    fetchJSON("data/futures_preseason.json").catch(() => ({ heisman_war: {} })),
   ]);
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
   // two-deep; it was a knowingly worse backtest kept as an alternative view, and it is
@@ -47,8 +48,11 @@
   const DATA = { ratings, playoff: playoffCurrent, model };
   const cur = () => DATA;
 
-  if (model.schema_version !== 4 ||
-      model.architecture !== "reciprocal_team_difference_v4" ||
+  // Schema 5 is the v5 live ensemble beside the frozen v4 blocks. A cached v4 page
+  // must refuse it rather than read the frozen blocks as if they were still live.
+  if (model.schema_version !== 5 ||
+      model.architecture !== "equal_ensemble_expanded_war_score_innovation_ewma" ||
+      !model.ensemble || !model.ensemble.state || !Array.isArray(model.ensemble.members) ||
       !Array.isArray(model.features) || model.features.length !== model.logistic.coef.length) {
     document.querySelector("main").innerHTML = `<section class="view active">
       <h2>Model assets are out of sync</h2>
@@ -361,8 +365,43 @@
   // V4 is a true team-difference model. Swapping teams negates this vector and makes
   // neutral probabilities exact complements.
   const diffVec = (a, b) => a.map((x, i) => x - b[i]);
+
+  /* THE v5 LIVE ENSEMBLE. Four expanded-WAR preseason models, each walked forward by
+     game margins and by opponent-adjusted EWMA form, then averaged. model_v4.json
+     carries each member's week-0 strengths and stack, and `ensemble.state` carries
+     its current ratings and form, rewritten by the scheduled capture after every
+     result. This is a port of scripts/ensemble_replay.probability, term for term;
+     tests/test_ensemble_replay.py pins the Python side and the page must follow it.
+     Null when either team is unrated, which sends the caller to the v4 fallback. */
+  const liveEnsemble = () => {
+    const E = cur().model.ensemble;
+    return E && E.state ? E : null;
+  };
+  function ensembleWinp(a, b, homeA) {
+    const E = liveEnsemble();
+    if (!E) return null;
+    let sum = 0;
+    for (const m of E.members) {
+      const ia = m.initial[a], ib = m.initial[b];
+      if (ia == null || ib == null) return null;
+      const r = E.state.ratings[m.name], form = E.state.form[m.name] || {};
+      const fa = form[a], fb = form[b];
+      const have = !!(fa && fb && fa[2] >= E.min_form_games && fb[2] >= E.min_form_games);
+      const x = { prior_level: ia - ib, elo_change: (r[a] - ia) - (r[b] - ib),
+                  dO: have ? fa[0] - fb[0] : 0, dD: have ? fa[1] - fb[1] : 0, hfa: homeA };
+      let z = 0;
+      m.columns.forEach((c, i) => { z += m.coef[i] * x[c] / m.scale[i]; });
+      sum += sigmoid(Math.max(-40, Math.min(40, z)));
+    }
+    return sum / E.members.length;
+  }
+  /* The spread's sigma follows the model that made the probability it inverts. */
+  const liveSigma = () => { const E = liveEnsemble(); return E ? E.margin_sigma : cur().model.margin.sigma; };
+
   function winpTeams(a, b, homeA) {
     const M = cur().model;
+    const pEnsemble = ensembleWinp(a, b, homeA);
+    if (pEnsemble != null) return pEnsemble;
     const pStatic = winpFromDiff(diffVec(vecOf(a), vecOf(b)), homeA);
     const D = M.dynamic, ra = D && D.ratings && D.ratings[a];
     const rb = D && D.ratings && D.ratings[b];
@@ -436,7 +475,7 @@
     // swapping the teams negates the margin exactly rather than nearly.
     const marginA = (week != null && week < MARGIN_BASIS_FROM_WEEK)
       ? gradedMargin(A, B, M, homeA, homeB)
-      : impliedMargin(pA, M.margin.sigma);
+      : impliedMargin(pA, liveSigma());
     const ptsA = sidePoints(a, b, A, B, homeA);
     const ptsB = sidePoints(b, a, B, A, homeB);
     const total = ptsA + ptsB;
@@ -512,7 +551,7 @@
   const REPLAY_SD = 13.49;
   function replayRow(row) {
     if (!row) return null;
-    const P = SHAPE.margin_pmf, sigma = cur().model.margin.sigma;
+    const P = SHAPE.margin_pmf, sigma = liveSigma();
     let s = 0, mu = 0;
     for (let j = 0; j < row.length; j++) { s += row[j]; mu += row[j] * (P.margin_lo + j); }
     if (!s) return row;
@@ -2750,13 +2789,17 @@
   function heismanIndex(rows) {
     // Preseason on both inputs, for the same reason as the rest of the tab: the
     // Heisman price is an August price. avg_wins comes from the preseason
-    // simulation rather than ratings.json, whose avg_wins is the live projection.
+    // simulation rather than ratings.json, whose avg_wins is the live projection,
+    // and WAR comes from futures_preseason.json rather than players.json, which
+    // follows the in-season WAR build.
     const sim = preseasonSim();
+    const frozenWar = (futuresPreseason && futuresPreseason.heisman_war) || {};
     const pos = { QB: .55, WR: .20, RB: .12, TE: -.08 };
     const scored = rows.map(row => {
       const roster = (players[row.team] && players[row.team].players) || [];
       const player = roster.find(p => p.n === row.player);
-      const war = player ? player.raw || 0 : 0;
+      const key = `${row.team}|${row.player}`;
+      const war = key in frozenWar ? frozenWar[key] : (player ? player.raw || 0 : 0);
       const po = sim[row.team] || {};
       const score = 1.65 * war + .75 * ((po.avg_wins || 6) / 12) +
         .55 * (po.playoff || 0) + .35 * (po.champ || 0) + (pos[row.position] || 0);
@@ -3196,7 +3239,7 @@
     const wideNote = `<p class="sim-note">Replayed like this the margin carries a
       standard deviation of about ${REPLAY_SD.toFixed(1)} points, measured on teams
       that actually met twice in a season. To bet a single meeting you want the wider
-      ${cur().model.margin.sigma.toFixed(0)} the model is graded against, which also
+      ${liveSigma().toFixed(0)} the model is graded against, which also
       carries what it may have wrong about these two.</p>`;
     return `<div class="sim-panel"><div class="section-intro"><div><span class="eyebrow">20,000 simulations</span><h3>If these two played 20,000 times</h3></div><p>The same matchup replayed, both teams held at the strength the model gives them today — not 20,000 fresh guesses about who they are. Margins come from the distribution of real results, so 3 and 7 stay lumpy where a normal curve would smooth them, narrowed to the spread teams actually produce when they meet twice in one season. How often each side wins is held to the win probability above.</p></div>
       <div class="sim-body">

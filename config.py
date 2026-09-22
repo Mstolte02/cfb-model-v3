@@ -27,6 +27,10 @@ _DEFAULT_EXTERNAL = (_SIBLING_EXTERNAL if _SIBLING_EXTERNAL.exists()
                      else Path.home() / "Downloads")
 CFB_EXTERNAL = Path(os.environ.get("CFB_EXTERNAL", _DEFAULT_EXTERNAL))
 PFF_DIR = Path(os.environ.get("PFF_DIR", CFB_EXTERNAL / "pff_exports"))
+# API downloads are staged separately from the hand-verified legacy exports.  A
+# caller can point PFF_DIR here after validation, but a sync never overwrites the
+# model's current source data merely because an API credential is present.
+PFF_API_DIR = Path(os.environ.get("PFF_API_DIR", CFB_EXTERNAL / "pff_api"))
 GAMES_CSV = Path(os.environ.get(
     "CFB_GAMES_CSV", CFB_EXTERNAL / "CFB_Data" / "data" / "games.csv"))
 TWODEEP_2026 = Path(os.environ.get(

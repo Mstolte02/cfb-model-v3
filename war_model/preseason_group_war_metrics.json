@@ -2,7 +2,7 @@
   "contract": "all season-roster players predicted from N-1 and earlier; top K per team/position room selected by the prediction",
   "reconciles_with": "preseason_team_war.csv (group sums equal team totals)",
   "slot_counts": {
-    "CB": 6,
+    "CB": 5,
     "DT": 4,
     "EDGE": 4,
     "IOL": 6,
@@ -43,7 +43,7 @@
       ],
       "n_teams": 132,
       "n_groups": 11,
-      "team_total": 348.1299501864543
+      "team_total": 331.68025407891713
     },
     {
       "season": 2021,
@@ -56,7 +56,7 @@
       ],
       "n_teams": 135,
       "n_groups": 11,
-      "team_total": 197.64224813340974
+      "team_total": 158.0773691944695
     },
     {
       "season": 2022,
@@ -69,7 +69,7 @@
       ],
       "n_teams": 137,
       "n_groups": 11,
-      "team_total": 335.67780104818735
+      "team_total": 309.3193641244916
     },
     {
       "season": 2023,
@@ -83,7 +83,7 @@
       ],
       "n_teams": 137,
       "n_groups": 11,
-      "team_total": 365.35148270240404
+      "team_total": 343.8973570793483
     },
     {
       "season": 2024,
@@ -98,7 +98,7 @@
       ],
       "n_teams": 137,
       "n_groups": 11,
-      "team_total": 360.6274578092563
+      "team_total": 340.1392569974811
     },
     {
       "season": 2025,
@@ -114,7 +114,7 @@
       ],
       "n_teams": 137,
       "n_groups": 11,
-      "team_total": 318.32811297050284
+      "team_total": 296.3774449910677
     }
   ]
 }

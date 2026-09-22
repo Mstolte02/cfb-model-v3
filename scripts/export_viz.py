@@ -315,6 +315,10 @@ def main():
     # Schedule (lens-independent) powers the client-side playoff re-simulation.
     export_schedule()
     export_players()
+    from src import live_ensemble as LE
+    if LE.MANIFEST_PATH.exists():
+        from scripts.publish_live_ensemble import attach
+        attach()
     # The same local replay used by the scheduled capture keeps the team cards
     # complete after a full export, without another network call.
     from scripts.capture_market_snapshot import replay_published_results

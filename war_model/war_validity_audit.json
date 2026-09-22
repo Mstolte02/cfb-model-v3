@@ -13,11 +13,11 @@
   },
   "projection_holdout_2025": {
     "players": 12073,
-    "correlation": 0.592,
-    "mae_wins": 0.0411,
-    "carry_forward_correlation": 0.523,
-    "no_prior_snap_players": 6657,
-    "no_prior_snap_correlation": 0.216,
+    "correlation": 0.581,
+    "mae_wins": 0.0401,
+    "carry_forward_correlation": 0.492,
+    "no_prior_snap_players": 6652,
+    "no_prior_snap_correlation": 0.211,
     "ex_ante_only": true
   },
   "intrinsic_vs_role_holdout_2025": {
@@ -215,18 +215,18 @@
     {
       "season": 2024,
       "brier_gain_vs_clean_core": 0.002133761096039688,
-      "selected": true
+      "selected": false
     },
     {
       "season": 2025,
       "brier_gain_vs_clean_core": 0.002322754595985077,
-      "selected": true
+      "selected": false
     }
   ],
   "independent_ea_convergent_validity": {
-    "matched_players": 3475,
-    "war_ea_correlation": 0.545326277366762,
-    "partial_after_playing_time": 0.3692897481589167,
+    "matched_players": 3481,
+    "war_ea_correlation": 0.5607278612201851,
+    "partial_after_playing_time": 0.35109872984862195,
     "note": "EA is an independent opinion, not ground truth."
   },
   "limitations": [

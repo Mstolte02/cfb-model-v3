@@ -21,10 +21,12 @@ every facet to whoever was on the field most.
 Run: ./rbenv/bin/python candidates.py
 """
 import json, os
+from pathlib import Path
 import numpy as np
 import pandas as pd
 
 from facets import YEARS, PFF_DIR, POS_GROUP
+from paths import PFF_API_DIR
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -57,8 +59,48 @@ GROUPS = {
 OFFENSE = {"QB", "RB", "WR", "TE", "OT", "IOL"}
 
 # Which export each prefix comes from, matching build_massey.SOURCES.
-SOURCES = {"pass": "passing", "rush": "rushing", "recv": "receiving",
-           "blk": "blocking", "def": "defense"}
+SOURCES = {
+    "pass": (PFF_DIR, "passing"), "rush": (PFF_DIR, "rushing"),
+    "recv": (PFF_DIR, "receiving"), "blk": (PFF_DIR, "blocking"),
+    "def": (PFF_DIR, "defense"),
+}
+
+# These richer reports are API-only.  The validated production build uses all of
+# them; PFF_API_WAR_REPORTS remains an explicit override for reproducibility and
+# ablations.  Every historical season must be staged, preventing a partial download
+# from silently imputing early seasons to zero.
+API_SOURCES = {
+    "pblk": "pass_blocking", "rblk": "run_blocking",
+    "prsh": "pass_rush", "rdef": "run_defense", "cov": "coverage",
+}
+_position_dir = PFF_API_DIR / "position_reports"
+_requested_api = {
+    token.strip().lower()
+    for token in os.environ.get("PFF_API_WAR_REPORTS", "all").split(",")
+    if token.strip()
+}
+if "all" in _requested_api:
+    _requested_api = set(API_SOURCES)
+_unknown_api = _requested_api - set(API_SOURCES)
+if _unknown_api:
+    raise ValueError(
+        "Unknown PFF_API_WAR_REPORTS value(s): "
+        + ", ".join(sorted(_unknown_api))
+    )
+_selected_api = {prefix: API_SOURCES[prefix] for prefix in _requested_api}
+if _selected_api:
+    missing = [
+        _position_dir / f"{name}_{year}.csv"
+        for name in _selected_api.values() for year in YEARS
+        if not (_position_dir / f"{name}_{year}.csv").exists()
+    ]
+    if missing:
+        raise FileNotFoundError(
+            f"PFF API WAR experiment is missing {len(missing)} staged report(s); "
+            f"first missing file: {missing[0]}"
+        )
+    SOURCES.update({prefix: (_position_dir, name)
+                    for prefix, name in _selected_api.items()})
 
 # ------------------------------------------------------------------- the catalogue
 # metric -> (denominator, groups it is defined for). A metric only becomes a
@@ -137,6 +179,28 @@ CATALOGUE = [
     ("blk__penalties",          "blk__snap_counts_offense",    ("T",),          RATE),
     ("blk__penalties",          "blk__snap_counts_offense",    ("G", "C"),      RATE),
 
+    # ---- API-only pass/run blocking -------------------------------------------
+    ("pblk__true_pass_set_grades_pass_block",
+     "pblk__true_pass_set_snap_counts_pass_block", ("T",), SKILL),
+    ("pblk__true_pass_set_grades_pass_block",
+     "pblk__true_pass_set_snap_counts_pass_block", ("G", "C"), SKILL),
+    ("pblk__true_pass_set_pbwr",
+     "pblk__true_pass_set_snap_counts_pass_block", ("T",), RATE),
+    ("pblk__true_pass_set_pbwr",
+     "pblk__true_pass_set_snap_counts_pass_block", ("G", "C"), RATE),
+    ("pblk__true_pass_set_pressure_rate_allowed",
+     "pblk__true_pass_set_snap_counts_pass_block", ("T",), RATE),
+    ("pblk__true_pass_set_pressure_rate_allowed",
+     "pblk__true_pass_set_snap_counts_pass_block", ("G", "C"), RATE),
+    ("rblk__zone_grades_run_block", "rblk__zone_snap_counts_run_block",
+     ("T",), SKILL),
+    ("rblk__zone_grades_run_block", "rblk__zone_snap_counts_run_block",
+     ("G", "C"), SKILL),
+    ("rblk__gap_grades_run_block", "rblk__gap_snap_counts_run_block",
+     ("T",), SKILL),
+    ("rblk__gap_grades_run_block", "rblk__gap_snap_counts_run_block",
+     ("G", "C"), SKILL),
+
     # ---- pass rush ------------------------------------------------------------
     ("def__grades_pass_rush_defense", "def__snap_counts_pass_rush", ("DI",), SKILL),
     ("def__grades_pass_rush_defense", "def__snap_counts_pass_rush", ("ED",), SKILL),
@@ -148,6 +212,15 @@ CATALOGUE = [
     ("def__sacks",                    "def__snap_counts_pass_rush", ("ED",), RATE),
     ("def__hurries",                  "def__snap_counts_pass_rush", ("ED",), RATE),
     ("def__qb_rating_against",        "def__snap_counts_pass_rush", ("ED",), RATE),
+    ("prsh__true_pass_set_grades_pass_rush_defense",
+     "prsh__true_pass_set_snap_counts_pass_rush", ("DI",), SKILL),
+    ("prsh__true_pass_set_grades_pass_rush_defense",
+     "prsh__true_pass_set_snap_counts_pass_rush", ("ED",), SKILL),
+    ("prsh__true_pass_set_pass_rush_win_rate",
+     "prsh__true_pass_set_snap_counts_pass_rush", ("DI",), RATE),
+    ("prsh__true_pass_set_pass_rush_win_rate",
+     "prsh__true_pass_set_snap_counts_pass_rush", ("ED",), RATE),
+    ("prsh__pass_rush_win_rate", "prsh__snap_counts_pass_rush", ("LB",), RATE),
 
     # ---- run defence ----------------------------------------------------------
     ("def__grades_run_defense", "def__snap_counts_run_defense", ("DI",), SKILL),
@@ -156,6 +229,10 @@ CATALOGUE = [
     ("def__grades_run_defense", "def__snap_counts_run_defense", ("CB", "S"), SKILL),
     ("def__stops",              "def__snap_counts_run_defense", ("DI",), RATE),
     ("def__stops",              "def__snap_counts_run_defense", ("LB",), RATE),
+    ("rdef__stop_percent",      "rdef__snap_counts_run", ("DI",), RATE),
+    ("rdef__stop_percent",      "rdef__snap_counts_run", ("ED",), RATE),
+    ("rdef__stop_percent",      "rdef__snap_counts_run", ("LB",), RATE),
+    ("rdef__avg_depth_of_tackle", "rdef__snap_counts_run", ("LB",), RATE),
 
     # ---- coverage -------------------------------------------------------------
     ("def__grades_coverage_defense", "def__snap_counts_coverage", ("CB",), SKILL),
@@ -169,6 +246,11 @@ CATALOGUE = [
     ("def__interceptions",           "def__targets",             ("CB", "S"), RATE),
     ("def__pass_break_ups",          "def__targets",             ("CB",), RATE),
     ("def__qb_rating_against",       "def__targets",             ("CB",), RATE),
+    ("cov__forced_incompletion_rate", "cov__targets", ("CB",), RATE),
+    ("cov__forced_incompletion_rate", "cov__targets", ("S",), RATE),
+    ("cov__yards_per_coverage_snap", "cov__snap_counts_coverage", ("CB",), RATE),
+    ("cov__yards_per_coverage_snap", "cov__snap_counts_coverage", ("S",), RATE),
+    ("cov__coverage_snaps_per_target", "cov__snap_counts_coverage", ("CB",), RATE),
 
     # ---- tackling -------------------------------------------------------------
     ("def__grades_tackle",     "def__snap_counts_defense", ("DI", "ED"), SKILL),
@@ -194,6 +276,8 @@ LOWER_IS_BETTER = {
     "blk__penalties", "def__catch_rate", "def__yards_per_coverage_snap",
     "def__qb_rating_against", "def__missed_tackle_rate",
     "def__yards", "def__yards_after_catch",
+    "pblk__true_pass_set_pressure_rate_allowed",
+    "rdef__avg_depth_of_tackle", "cov__yards_per_coverage_snap",
 }
 
 # Volume floors. A rate computed on four targets is noise dressed as a measurement,
@@ -232,10 +316,10 @@ def build_catalogue():
 def load_players():
     """Merged player-team-season frame, one row per player per team per season."""
     frames = []
-    for pref, fname in SOURCES.items():
+    for pref, (root, fname) in SOURCES.items():
         parts = []
         for y in YEARS:
-            d = pd.read_csv(f"{PFF_DIR}/{fname}_{y}.csv", low_memory=False)
+            d = pd.read_csv(Path(root) / f"{fname}_{y}.csv", low_memory=False)
             d["season"] = y
             parts.append(d)
         d = pd.concat(parts, ignore_index=True)
@@ -382,6 +466,8 @@ def team_matrix(fv, team_map=None):
     team_map = team_map or json.load(open(f"{HERE}/team_map.json"))
     fv = fv.copy()
     fv["team"] = fv.team_name.map(team_map)
+    canonical = set(team_map.values())
+    fv.loc[fv.team.isna() & fv.team_name.isin(canonical), "team"] = fv.team_name
     names = sorted(fv.facet.unique())
     tot = (fv.groupby(["season", "team", "facet"], as_index=False)["value"].sum()
              .pivot(index=["season", "team"], columns="facet", values="value")

@@ -3,8 +3,9 @@
 # Build both public CFP projections with cfbseedR's full-season simulator.
 #
 # The preseason run ignores completed scores and the in-season rating layer. The
-# current run locks completed scores and uses the current dynamic ratings. Both use
-# the model's own matchup probabilities through cfbseedR's compute_results contract.
+# current run locks completed scores and uses the live v5 ensemble state (the v4
+# dynamic ratings on an older payload). Both use the model's own matchup
+# probabilities through cfbseedR's compute_results contract.
 #
 # Run: Rscript scripts/simulate_playoff.R [simulations] [both|preseason|current]
 
@@ -46,7 +47,7 @@ static_logit <- drop(vectors %*% logit_coef) + model$logistic$intercept
 static_margin <- drop(vectors %*% margin_coef) + model$margin$intercept
 names(static_logit) <- names(static_margin) <- fbs
 
-probability <- function(home, away, neutral, spec) {
+legacy_probability <- function(home, away, neutral, spec) {
   hfa_logit <- ifelse(neutral, 0, model$logistic$hfa)
   hfa_margin <- ifelse(neutral, 0, model$margin$hfa)
   z <- spec$logit[home] - spec$logit[away] + hfa_logit
@@ -62,6 +63,51 @@ probability <- function(home, away, neutral, spec) {
 }
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
+
+# The v5 live ensemble, a port of scripts/ensemble_replay.probability: each member's
+# logistic stack over [prior_level, elo_change, dO, dD, hfa], averaged unweighted.
+# Games with a team outside the ensemble (FCS opponents) keep the v4 formula.
+ensemble_tables <- function(ensemble) {
+  lapply(ensemble$members, function(m) {
+    init <- unlist(m$initial)
+    r <- unlist(ensemble$state$ratings[[m$name]])[names(init)]
+    form <- ensemble$state$form[[m$name]]
+    O <- D <- n <- setNames(rep(NA_real_, length(init)), names(init))
+    for (t in intersect(names(form), names(init))) {
+      O[t] <- form[[t]][[1]]
+      D[t] <- form[[t]][[2]]
+      n[t] <- form[[t]][[3]]
+    }
+    list(init = init, r = r, O = O, D = D, n = n, columns = unlist(m$columns),
+         scale = unlist(m$scale), coef = unlist(m$coef))
+  })
+}
+
+probability <- function(home, away, neutral, spec) {
+  p <- legacy_probability(home, away, neutral, spec)
+  if (is.null(spec$ensemble)) return(p)
+  known <- names(spec$ensemble[[1]]$init)
+  rated <- home %in% known & away %in% known
+  if (!any(rated)) return(p)
+  h <- home[rated]
+  a <- away[rated]
+  hfa <- ifelse(neutral[rated], 0, 1)
+  total <- 0
+  for (m in spec$ensemble) {
+    have <- !is.na(m$n[h]) & !is.na(m$n[a]) &
+      m$n[h] >= spec$min_form & m$n[a] >= spec$min_form
+    x <- list(prior_level = m$init[h] - m$init[a],
+              elo_change = (m$r[h] - m$init[h]) - (m$r[a] - m$init[a]),
+              dO = ifelse(have, m$O[h] - m$O[a], 0),
+              dD = ifelse(have, m$D[h] - m$D[a], 0),
+              hfa = hfa)
+    z <- 0
+    for (k in seq_along(m$columns)) z <- z + m$coef[k] * x[[m$columns[k]]] / m$scale[k]
+    total <- total + plogis(z)
+  }
+  p[rated] <- unname(pmin(1 - 1e-6, pmax(1e-6, total / length(spec$ensemble))))
+  p
+}
 round_away <- function(x) as.integer(ifelse(x < 0, floor(x), ceiling(x)))
 
 model_results <- function(teams, games, week_num, spec) {
@@ -71,8 +117,9 @@ model_results <- function(teams, games, week_num, spec) {
   away <- games$away_team[fill]
   neutral <- !is.na(games$neutral[fill]) & games$neutral[fill] == 1
   p <- probability(home, away, neutral, spec)
-  mean_margin <- qnorm(p) * model$margin$sigma
-  result <- round_away(rnorm(length(p), mean_margin, model$margin$sigma))
+  sigma <- spec$sigma %||% model$margin$sigma
+  mean_margin <- qnorm(p) * sigma
+  result <- round_away(rnorm(length(p), mean_margin, sigma))
   post <- games$game_type[fill] != "REG"
   tied <- post & result == 0L
   if (any(tied)) result[tied] <- ifelse(runif(sum(tied)) < p[tied], 3L, -3L)
@@ -125,7 +172,14 @@ make_inputs <- function(mode) {
     spec$dynamic <- dynamic
     spec$blend <- model$dynamic$blend %||% 0
   }
-  rating <- if (mode == "current" && !is.null(spec$dynamic)) spec$dynamic[fbs] else spec$logit[fbs]
+  if (mode == "current" && !is.null(model$ensemble$state)) {
+    spec$ensemble <- ensemble_tables(model$ensemble)
+    spec$min_form <- model$ensemble$min_form_games %||% 2
+    spec$sigma <- model$ensemble$margin_sigma
+  }
+  rating <- if (!is.null(spec$ensemble)) {
+    Reduce(`+`, lapply(spec$ensemble, function(m) m$r[fbs])) / length(spec$ensemble)
+  } else if (mode == "current" && !is.null(spec$dynamic)) spec$dynamic[fbs] else spec$logit[fbs]
   rankings <- data.frame(team = fbs, rank = rank(-rating, ties.method = "first"))
   analytics <- data.frame(team = fbs, rating = as.numeric(rating))
   list(games = games, teams = teams, rankings = rankings, analytics = analytics, spec = spec)

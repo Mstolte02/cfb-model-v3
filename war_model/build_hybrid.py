@@ -73,6 +73,10 @@ def unified_facets():
         p = pd.read_parquet(f"{HERE}/facet_values.parquet")
         print(f"feature set: {p.facet.nunique()} hand-built facets")
     p["team"] = p.team_name.map(TEAM_MAP)
+    # API-only position reports are normalized to the model's canonical CFBD team
+    # name.  Legacy exports still use PFF abbreviations and follow TEAM_MAP above.
+    canonical = set(TEAM_MAP.values())
+    p.loc[p.team.isna() & p.team_name.isin(canonical), "team"] = p.team_name
     p["key"] = p.player.map(norm_name)
     p["uid"] = p.player_id.astype(str)
     p["source"] = "pff"
