@@ -220,12 +220,12 @@ def player_ppa_season(year: int) -> list:
                 f"ppa_players_season_{year}.json")
 
 
-def player_ppa_games(year: int, week: int) -> list:
+def player_ppa_games(year: int, week: int, refresh=False) -> list:
     """Per-player, per-game PPA. Carries `opponent`, so it powers the opponent
     adjustment. Scoped by week (the endpoint 400s without a team/week bound)."""
     return _get("/ppa/players/games",
                 {"year": year, "week": week, "excludeGarbageTime": "true"},
-                f"ppa_players_games_{year}_wk{week}.json")
+                f"ppa_players_games_{year}_wk{week}.json", refresh=refresh)
 
 
 def player_season_stats(year: int, category: str) -> list:

@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel] = await Promise.all([
+  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel, playerValues] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -38,6 +38,7 @@
     fetchJSON("data/bet_tracking.json").catch(() => null),
     fetchJSON("data/locked_results_2026.json").catch(() => ({ bets: [] })),
     fetchJSON("data/deserving-model.json").catch(() => null),
+    fetchJSON("data/player_values.json").catch(() => null),
   ]);
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
   // two-deep; it was a knowingly worse backtest kept as an alternative view, and it is
@@ -2065,6 +2066,15 @@
     const roster = players[t];
     const sched = teamSchedule(t);
 
+    const currentPlayers = (playerValues?.season === ratings.season ? playerValues.players || [] : [])
+      .filter(p => p.team === t).sort((a, b) => a.position.localeCompare(b.position) || b.value - a.value);
+    const playerFormHTML = currentPlayers.length ? `<div class="panel"><h3>In-season player performance</h3>
+      <p class="sub">${playerValues.season} through week ${playerValues.through_week}. Opponent-adjusted EPA/play above positional average; higher is better.
+      These estimates do not change team forecasts or preseason WAR.</p>
+      <div class="mini-wrap"><table class="mini"><thead><tr><th>Player</th><th>Pos</th><th class="num">Games</th><th class="num">EPA/play</th><th>Prior</th></tr></thead>
+      <tbody>${currentPlayers.map(p => `<tr><td>${esc(p.name)}</td><td>${esc(p.position)}</td><td class="num">${p.games}</td><td class="num">${p.value.toFixed(3)}</td><td>${p.shrinkage === 'personal' ? 'Previous season' : 'Position average'}</td></tr>`).join('')}</tbody></table></div>
+      <p class="wd-foot">Receivers shrink toward their previous-season estimate; quarterbacks do so through week 4. Running backs and tight ends shrink toward their position average. FBS opponents only; no defensive or offensive-line estimates. Games count appearances with available PPA, not snaps.</p></div>` : `<div class="panel"><h3>In-season player performance</h3><p class="sub">No current-season estimates available for this team yet.</p></div>`;
+
     /* ---- win distribution ---- */
     let distHTML = `<p class="sub">No simulated distribution for this team.</p>`;
     if (dist) {
@@ -2189,7 +2199,7 @@
       <div class="team-subnav" role="tablist" aria-label="${esc(t)} information">
         ${[["overview","Overview"],["depth","Depth chart"],["season","Season outlook"],["schedule","Schedule"],["history","History"]].map(([key,label])=>`<button type="button" role="tab" data-team-tab="${key}" aria-selected="${teamTab===key}" class="${teamTab===key?'active':''}">${label}</button>`).join("")}
       </div>
-      <section class="team-pane${teamTab==='overview'?' active':''}" data-team-pane="overview"><div class="panel"><h3>Current depth chart</h3>${depthPreview}</div></section>
+      <section class="team-pane${teamTab==='overview'?' active':''}" data-team-pane="overview"><div class="panel"><h3>Current depth chart</h3>${depthPreview}</div>${playerFormHTML}</section>
       <section class="team-pane${teamTab==='depth'?' active':''}" data-team-pane="depth"><div class="panel"><h3>Where the wins come from</h3>${rosterHTML}
         <div class="wd-foot">${roster && !roster.players ? "Position groups from" :
           "Projected starters from"} the 2026 two-deep, each carrying

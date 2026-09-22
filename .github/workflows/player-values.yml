@@ -1,0 +1,55 @@
+name: Refresh in-season player estimates
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 10 * 9-12 1'
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install player estimator dependencies
+        run: pip install numpy pandas scipy scikit-learn requests
+      - uses: actions/cache@v4
+        with:
+          path: data/raw
+          key: player-priors-2025-v1
+      - name: Verify player policy and cutoffs
+        run: python -m unittest tests.test_player_updates -v
+      - name: Refresh completed player observations
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: python -m scripts.update_player_values
+      - name: Commit current estimates
+        run: |
+          git add viz/data/player_values.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'cfb-player-updater[bot]'
+          git config user.email 'cfb-player-updater[bot]@users.noreply.github.com'
+          git commit -m 'Refresh in-season player estimates'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Build publishable site
+        run: python3 scripts/publish.py
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+          include-hidden-files: true
+      - id: deploy
+        uses: actions/deploy-pages@v5

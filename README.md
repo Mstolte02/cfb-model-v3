@@ -61,6 +61,7 @@ before it applies a result, and it ignores a game it has already processed.
 ```powershell
 python -m scripts.update_v4                      # apply completed games
 python -m scripts.rank                           # publish current ratings
+python -m scripts.update_player_values           # current player estimates
 python -m scripts.export_viz                     # rebuild the app data
 Rscript scripts/simulate_playoff.R 500 current   # CFP projection
 python -m unittest discover -s tests -v          # invariants
