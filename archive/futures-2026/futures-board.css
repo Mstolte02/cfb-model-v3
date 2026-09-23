@@ -1,0 +1,54 @@
+/* Futures hub rules removed from viz/style.css. Each block says where it went. */
+
+/* ---- Under "ratings dashboard", after th.sorted. The #playoff-table half of the last two rules is still in style.css. ---- */
+table.dash td { padding: 6px 10px; }
+#dash-table, #playoff-table { overflow-x: auto; }
+#dash-table table, #playoff-table table { min-width: 1080px; }
+
+/* ---- After .csv-btn:hover::before. .mini-team stayed in style.css between .bet-flag and .market-note. ---- */
+.market-panel { overflow: hidden; border: 1px solid #23384b; border-radius: 16px; color: #eef4f8;
+  background: var(--navy); box-shadow: 0 18px 50px rgba(13,27,42,.14); }
+.market-panel-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 15px;
+  padding: 20px 24px; border-bottom: 1px solid #294054; }
+.market-panel-head h3 { font-size: 25px; text-transform: capitalize; }
+.market-panel-head a { color: #b7c6d4; font: 600 11px/1 var(--sans); }
+.market-list { display: grid; grid-template-columns: repeat(2, 1fr); }
+.market-row { display: grid; grid-template-columns: 28px minmax(150px,1fr) 90px 110px;
+  align-items: center; gap: 10px; min-height: 68px; padding: 10px 20px; border-bottom: 1px solid #263d50; }
+.market-row:nth-child(odd) { border-right: 1px solid #263d50; }
+.market-row:hover { background: #14283b; }
+.market-rank { color: #697f93; font: 800 11px/1 var(--sans); }
+.market-team { min-width: 0; }
+.market-team > small, .market-row > div > small { display: block; color: #8fa3b5; font: 600 10px/1.4 var(--sans); }
+.market-row > div > b { color: #fff; font: 800 15px/1 var(--sans); }
+.market-row .edge b { color: #7ed49a; }
+.market-row .edge.negative b { color: #e88f80; }
+.bet-flag { display: inline-block; margin-left: 9px; padding: 3px 6px; border-radius: 4px;
+  background: var(--bet); color: #10202f; font: 800 9px/1 var(--sans); letter-spacing: .1em; }
+.market-note { padding: 13px 22px; color: #8fa3b5; background: #091724; font: 11px/1.5 var(--sans); }
+
+.range-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.range-card { display: grid; grid-template-columns: 1fr 130px; gap: 8px 16px; padding: 14px;
+  border: 1px solid var(--line); border-radius: 11px; background: rgba(255,255,255,.4); text-decoration: none; }
+.range-card:hover { border-color: var(--line2); background: var(--panel); text-decoration: none; color: inherit; }
+.range-team { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.range-team img { width: 25px; height: 25px; object-fit: contain; }
+.range-values { display: flex; align-items: baseline; justify-content: space-between; font-family: var(--sans); }
+.range-values b { font-size: 17px; }.range-values i { color: var(--muted); font-size: 10px; font-style: normal; }
+.range-track { grid-column: 1 / -1; position: relative; display: block; height: 7px; border: 1px solid var(--line2);
+  border-radius: 99px; background: var(--panel2); overflow: hidden; }
+.range-track i { position: absolute; top: 0; bottom: 0; border-radius: 99px; }
+.range-card small { grid-column: 1 / -1; color: var(--muted); font: 10px/1 var(--sans); }
+#dash-table { border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.35); }
+
+/* ---- In @media (max-width: 980px), after the .section-bar line. ---- */
+  .market-list { grid-template-columns: 1fr; }.market-row:nth-child(odd) { border-right: 0; }
+  .range-grid { grid-template-columns: repeat(2,1fr); }
+
+/* ---- In @media (max-width: 700px), after the .market-toolbar line. .leader-grid still has its own rule. ---- */
+  .market-row { grid-template-columns: 22px 1fr 70px 82px; padding-inline: 10px; }
+  .range-grid, .leader-grid { grid-template-columns: 1fr; }
+
+/* ---- In @media (max-width: 700px), on the footer line. ---- */
+  footer { flex-direction: column; }.market-panel-head { align-items: flex-start; flex-direction: column; }
+

@@ -130,8 +130,9 @@ See [V5_EXTENSION_EXPERIMENTS.md](audit/V5_EXTENSION_EXPERIMENTS.md), which also
 what did not help: pace, game control, scheme clashes and last-week availability.
 
 **What v5 did not change.** Week 1 is graded on the v4 season-fixed margin, the
-futures board is held to the v4 week-0 ratings, and every Market board row keeps the
-model snapshot it was locked with; those v4 blocks ship unchanged beside the ensemble.
+futures board (now archived) was held to the v4 week-0 ratings, and every Market board
+row keeps the model snapshot it was locked with; those v4 blocks ship unchanged beside
+the ensemble.
 v5 prices the board from the week 5 lock on.
 
 **Player WAR.** `war_model/` builds a wins figure for every FBS player in five
@@ -141,9 +142,11 @@ total into wins, replacement credit turns wins above average into wins above
 replacement, and a projection carries it forward to 2026. See
 [war_model/README.md](war_model/README.md).
 
-**The web app.** `viz/` is a static site with five hubs — Futures, Power Rankings,
-Weekly, Ratings, and Simulation. It reads the JSON that `export_viz` writes. There is
-one build and one set of numbers.
+**The web app.** `viz/` is a static site with four hubs — Power Rankings, Weekly,
+Ratings, and Simulation. It reads the JSON that `export_viz` writes. There is one build
+and one set of numbers. The Futures hub was taken off the site on 23 September 2026;
+its code and the steps to put it back are in
+[archive/futures-2026/](archive/futures-2026/README.md).
 
 ## Repository layout
 

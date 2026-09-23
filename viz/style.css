@@ -141,9 +141,8 @@ tbody tr:hover { background: var(--panel2); }
 th.sortable { cursor: pointer; user-select: none; }
 th.sortable:hover { color: var(--text); }
 th.sorted { color: var(--accent); }
-table.dash td { padding: 6px 10px; }
-#dash-table, #playoff-table { overflow-x: auto; }
-#dash-table table, #playoff-table table { min-width: 1080px; }
+#playoff-table { overflow-x: auto; }
+#playoff-table table { min-width: 1080px; }
 
 /* ---------- bracket ---------- */
 .bracket-title { margin: 26px 0 12px; font-size: 17px; }
@@ -747,42 +746,8 @@ main { max-width: 1320px; padding-top: 38px; }
 .csv-btn::before { content: "\2193"; font-weight: 900; color: var(--accent); }
 .csv-btn:hover { border-color: var(--navy); background: var(--navy); color: #fff; }
 .csv-btn:hover::before { color: var(--bet); }
-.market-panel { overflow: hidden; border: 1px solid #23384b; border-radius: 16px; color: #eef4f8;
-  background: var(--navy); box-shadow: 0 18px 50px rgba(13,27,42,.14); }
-.market-panel-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 15px;
-  padding: 20px 24px; border-bottom: 1px solid #294054; }
-.market-panel-head h3 { font-size: 25px; text-transform: capitalize; }
-.market-panel-head a { color: #b7c6d4; font: 600 11px/1 var(--sans); }
-.market-list { display: grid; grid-template-columns: repeat(2, 1fr); }
-.market-row { display: grid; grid-template-columns: 28px minmax(150px,1fr) 90px 110px;
-  align-items: center; gap: 10px; min-height: 68px; padding: 10px 20px; border-bottom: 1px solid #263d50; }
-.market-row:nth-child(odd) { border-right: 1px solid #263d50; }
-.market-row:hover { background: #14283b; }
-.market-rank { color: #697f93; font: 800 11px/1 var(--sans); }
-.market-team { min-width: 0; }
-.market-team > small, .market-row > div > small { display: block; color: #8fa3b5; font: 600 10px/1.4 var(--sans); }
-.market-row > div > b { color: #fff; font: 800 15px/1 var(--sans); }
-.market-row .edge b { color: #7ed49a; }
-.market-row .edge.negative b { color: #e88f80; }
-.bet-flag { display: inline-block; margin-left: 9px; padding: 3px 6px; border-radius: 4px;
-  background: var(--bet); color: #10202f; font: 800 9px/1 var(--sans); letter-spacing: .1em; }
 .mini-team { display: inline-flex; align-items: center; gap: 8px; }
 .mini-team img { width: 24px; height: 24px; object-fit: contain; }
-.market-note { padding: 13px 22px; color: #8fa3b5; background: #091724; font: 11px/1.5 var(--sans); }
-
-.range-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.range-card { display: grid; grid-template-columns: 1fr 130px; gap: 8px 16px; padding: 14px;
-  border: 1px solid var(--line); border-radius: 11px; background: rgba(255,255,255,.4); text-decoration: none; }
-.range-card:hover { border-color: var(--line2); background: var(--panel); text-decoration: none; color: inherit; }
-.range-team { display: flex; align-items: center; gap: 8px; font-weight: 700; }
-.range-team img { width: 25px; height: 25px; object-fit: contain; }
-.range-values { display: flex; align-items: baseline; justify-content: space-between; font-family: var(--sans); }
-.range-values b { font-size: 17px; }.range-values i { color: var(--muted); font-size: 10px; font-style: normal; }
-.range-track { grid-column: 1 / -1; position: relative; display: block; height: 7px; border: 1px solid var(--line2);
-  border-radius: 99px; background: var(--panel2); overflow: hidden; }
-.range-track i { position: absolute; top: 0; bottom: 0; border-radius: 99px; }
-.range-card small { grid-column: 1 / -1; color: var(--muted); font: 10px/1 var(--sans); }
-#dash-table { border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.35); }
 
 /* Two boards, stacked rather than side by side. Each one is now a five-across grid
    of crests, which needs the full column width to stay legible; at half width the
@@ -1052,8 +1017,6 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
   .site-header { grid-template-columns: 1fr; gap: 0; padding: 0 18px; }
   .site-header .brand { padding: 11px 0; }.hub-nav { justify-content: stretch; overflow-x: auto; }
   .hub-tab { min-width: 128px; padding: 12px; }.section-bar { top: 115px; padding-inline: 18px; }
-  .market-list { grid-template-columns: 1fr; }.market-row:nth-child(odd) { border-right: 0; }
-  .range-grid { grid-template-columns: repeat(2,1fr); }
   .rank-grid { grid-template-columns: repeat(4, 1fr); }
   .weekly-head, .weekly-row { grid-template-columns: minmax(260px,1fr) 92px 88px 96px 120px; }
 }
@@ -1061,8 +1024,7 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
   main { padding-inline: 12px; }.section-bar { position: static; overflow-x: auto; }.section-nav { flex-wrap: nowrap; overflow-x: auto; }
   .section-nav .tab { white-space: nowrap; }.editorial-head h2 { font-size: 39px; }
   .market-toolbar .seg { width: 100%; overflow-x: auto; }.market-toolbar .seg-btn { white-space: nowrap; }
-  .market-row { grid-template-columns: 22px 1fr 70px 82px; padding-inline: 10px; }
-  .range-grid, .leader-grid { grid-template-columns: 1fr; }
+  .leader-grid { grid-template-columns: 1fr; }
   .rank-grid { grid-template-columns: repeat(3, 1fr); gap: 7px; padding: 12px; }
   .history-summary { grid-template-columns: repeat(2, 1fr); }
   .history-summary > span:first-child { grid-column: 1 / -1; }
@@ -1073,7 +1035,7 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
   .weekly-board { overflow-x: auto; }
   .validation-strip { grid-template-columns: 1fr; }
   .weekly-head, .weekly-row { min-width: 820px; }.section-intro { align-items: flex-start; flex-direction: column; }
-  footer { flex-direction: column; }.market-panel-head { align-items: flex-start; flex-direction: column; }
+  footer { flex-direction: column; }
 }
 .weekly-empty { padding: 34px 22px; border: 1px dashed var(--line2); border-radius: 12px;
   background: var(--panel); text-align: center; }
