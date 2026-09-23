@@ -105,7 +105,8 @@ def load_qb_volume(years) -> pd.DataFrame:
 
 
 def fit_season_values(dfy: pd.DataFrame, prior: dict | pd.Series | None = None,
-                      alpha: float | None = None):
+                      alpha: float | None = None, strength: dict | None = None,
+                      sample_weight: np.ndarray | None = None):
     """Ridge on player + opponent one-hot -> opponent-adjusted per-play values.
 
     `prior` MOVES WHAT THE SHRINKAGE SHRINKS TOWARD. A ridge penalises the size of
@@ -133,9 +134,25 @@ def fit_season_values(dfy: pd.DataFrame, prior: dict | pd.Series | None = None,
     `alpha` skips the cross-validated search, which is what an in-season caller wants
     when it is refitting at every week and needs the shrinkage scale to be the same
     one each time rather than a quantity that jumps around with the sample.
+
+    `strength` MAKES THE PRIOR STIFFER FOR PLAYERS WE KNOW MORE ABOUT. It is a per-id
+    multiplier on `alpha`: that player's departure from his prior is penalised by
+    `alpha * strength[id]`, so a player whose prior rests on a full season needs more
+    games to move than one whose prior rests on four. Missing ids get 1.0. It is done
+    by scaling each player's column by 1/sqrt(strength), which is the same penalty in
+    closed form. Measured in scripts/player_prior_sample_size.py.
+
+    `sample_weight` passes per-row weights to the ridge (a recency decay, say).
+
+    Both default to None, which leaves the fit exactly as it was.
     """
     encq = OneHotEncoder(handle_unknown="ignore")
     Q = encq.fit_transform(dfy[["id"]])
+    col_scale = None
+    if strength is not None:
+        col_scale = 1.0 / np.sqrt(np.array(
+            [float(strength.get(i, 1.0)) for i in encq.categories_[0]]))
+        Q = (Q @ sparse.diags(col_scale)).tocsr()
     enco = OneHotEncoder(handle_unknown="ignore")
     O = enco.fit_transform(dfy[["opponent"]])
     X = sparse.hstack([Q, O]).tocsr()
@@ -154,10 +171,12 @@ def fit_season_values(dfy: pd.DataFrame, prior: dict | pd.Series | None = None,
         alpha = max(ALPHA_GRID, key=lambda a: cross_val_score(
             Ridge(alpha=a), X, target, cv=5,
             scoring="neg_mean_squared_error").mean())
-    m = Ridge(alpha=alpha).fit(X, target)
+    m = Ridge(alpha=alpha).fit(X, target, sample_weight=sample_weight)
 
     ids = encq.categories_[0]
     value = m.coef_[:Q.shape[1]]
+    if col_scale is not None:
+        value = value * col_scale
     if prior is not None:
         get = (prior.get if isinstance(prior, dict)
                else (lambda i, d=0.0: float(prior.get(i, d))))
