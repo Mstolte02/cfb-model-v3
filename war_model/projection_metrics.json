@@ -1,16 +1,16 @@
 {
  "build": "hybrid",
  "holdout_n": 12073,
- "holdout_r": 0.581,
- "holdout_mae": 0.0401,
+ "holdout_r": 0.62,
+ "holdout_mae": 0.0376,
  "carry_r": 0.492,
  "carry_mae": 0.0421,
  "posmean_r": 0.2,
  "nohist_n": 6652,
- "nohist_r": 0.211,
- "nohist_mae": 0.0162,
+ "nohist_r": 0.18,
+ "nohist_mae": 0.0167,
  "nohist_base_mae": 0.0398,
- "nohist_pred_mean": 0.0052,
+ "nohist_pred_mean": 0.0057,
  "nohist_actual_mean": 0.0107,
  "train_rows": 107338,
  "never_played_rows": 71881,
@@ -29,7 +29,9 @@
   "stars",
   "rating",
   "team_massey",
-  "group_code"
+  "group_code",
+  "kal_m",
+  "kal_sd"
  ],
  "ex_ante_only": true
 }

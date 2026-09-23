@@ -38,7 +38,22 @@ ARM = "ewma_elo_nodecay"
 # carries a second stack with them; the runtime uses it whenever the week's PFF table
 # exists, and the base stack otherwise. See audit/V5_EXTENSION_EXPERIMENTS.md.
 PFF_COLUMNS = ["pff_O_diff", "pff_D_diff"]
+# v5.2: in-season player WAR (src/inseason_war.py), the team's summed change in
+# player WAR per week from PFF grades, at cuts 3/6/9. A third stack per member.
+WAR_COLUMNS = ["war_delta_diff"]
 KEYS = ["season", "week", "home_team", "away_team"]
+
+
+def war_features(parts_by_spec) -> pd.DataFrame | None:
+    from src import inseason_war as IW
+    if not IW.TEAM_HISTORY.exists():
+        print("  [warn] no in-season WAR history; members get no WAR stack")
+        return None
+    games = pd.concat([part[4].assign(season=year)[KEYS]
+                       for year, part in parts_by_spec[SPECS[0]].items()],
+                      ignore_index=True)
+    deltas = pd.read_csv(IW.TEAM_HISTORY)
+    return games.assign(war_delta_diff=IW.game_war_column(games, deltas))
 
 
 def pff_features(parts_by_spec) -> pd.DataFrame:
@@ -82,7 +97,8 @@ def build(include_projection: bool = True, backtest_scaling: bool = False):
 
 
 def fit_member(spec: str, frames, parts, raw, pool: list[int],
-               pff: pd.DataFrame | None = None) -> tuple[V4.ReciprocalTeamModel, dict]:
+               pff: pd.DataFrame | None = None,
+               war: pd.DataFrame | None = None) -> tuple[V4.ReciprocalTeamModel, dict]:
     names = PD.SPEC_FEATURES[spec]
     knobs, knob_trace = BT.tune(parts, pool, names)
     score_k, k_trace = PD.tune_k(parts, frames, pool, names, knobs)
@@ -106,6 +122,15 @@ def fit_member(spec: str, frames, parts, raw, pool: list[int],
         s2, m2 = PD.fit_stack(with_pff, cols, c)
         stack_pff = {"columns": cols, "scale": s2.scale_.tolist(),
                      "coef": m2.coef_[0].tolist(), "C": float(c)}
+    stack_war = None
+    if pff is not None and war is not None:
+        with_war = (pooled.merge(pff, on=KEYS, how="left")
+                    .merge(war, on=KEYS, how="left")
+                    .fillna({col: 0.0 for col in [*PFF_COLUMNS, *WAR_COLUMNS]}))
+        cols = [*PD.ARM_COLUMNS[ARM], *PFF_COLUMNS, *WAR_COLUMNS]
+        s3, m3 = PD.fit_stack(with_war, cols, c)
+        stack_war = {"columns": cols, "scale": s3.scale_.tolist(),
+                     "coef": m3.coef_[0].tolist(), "C": float(c)}
     X, y, h, margins = BT.stack(parts, pool)
     final = V4.fit(X, y, h, margins, names, **knobs)
     entry = {
@@ -115,6 +140,7 @@ def fit_member(spec: str, frames, parts, raw, pool: list[int],
         "stack": {"columns": PD.ARM_COLUMNS[ARM], "scale": scaler.scale_.tolist(),
                   "coef": stack.coef_[0].tolist(), "C": float(c)},
         "stack_pff": stack_pff,
+        "stack_war": stack_war,
         "selection": {"training_seasons": list(pool), "model_tuning": knob_trace,
                       "score_k_tuning": k_trace, "current_form_tuning": decay_trace},
     }
@@ -125,9 +151,10 @@ def fit_member(spec: str, frames, parts, raw, pool: list[int],
 
 def fit_manifest(frames, parts_by_spec, raw, pool, projection_meta=None) -> dict:
     pff = pff_features(parts_by_spec)
-    members = [fit_member(spec, frames, parts_by_spec[spec], raw, pool, pff)[1]
+    war = war_features(parts_by_spec)
+    members = [fit_member(spec, frames, parts_by_spec[spec], raw, pool, pff, war)[1]
                for spec in SPECS]
-    return {"schema_version": 3, "model_version": "5.1",
+    return {"schema_version": 3, "model_version": "5.2" if war is not None else "5.1",
             "architecture": "equal_ensemble_expanded_war_score_innovation_ewma",
             "training_seasons": list(pool),
             "temporal_contract": "pregame only; current-season transforms use prior weeks",

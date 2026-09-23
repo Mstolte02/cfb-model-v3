@@ -70,6 +70,8 @@ legacy_probability <- function(home, away, neutral, spec) {
 ensemble_tables <- function(ensemble) {
   # v5.1: a PFF table in the state switches every member to its PFF stack.
   pff <- ensemble$state$pff
+  # v5.2: in-season player WAR; with a PFF table it switches members to stack_war.
+  war <- ensemble$state$war
   lapply(ensemble$members, function(m) {
     init <- unlist(m$initial)
     r <- unlist(ensemble$state$ratings[[m$name]])[names(init)]
@@ -85,8 +87,11 @@ ensemble_tables <- function(ensemble) {
       Op[t] <- pff[[t]][[1]]
       Dp[t] <- pff[[t]][[2]]
     }
-    st <- if (!is.null(pff) && !is.null(m$stack_pff)) m$stack_pff else m
-    list(init = init, r = r, O = O, D = D, n = n, Op = Op, Dp = Dp,
+    Wv <- setNames(rep(0, length(init)), names(init))
+    for (t in intersect(names(war), names(init))) Wv[t] <- war[[t]]
+    st <- if (!is.null(pff) && !is.null(war) && !is.null(m$stack_war)) m$stack_war
+          else if (!is.null(pff) && !is.null(m$stack_pff)) m$stack_pff else m
+    list(init = init, r = r, O = O, D = D, n = n, Op = Op, Dp = Dp, Wv = Wv,
          columns = unlist(st$columns), scale = unlist(st$scale), coef = unlist(st$coef))
   })
 }
@@ -110,7 +115,8 @@ probability <- function(home, away, neutral, spec) {
               dD = ifelse(have, m$D[h] - m$D[a], 0),
               hfa = hfa,
               pff_O_diff = m$Op[h] - m$Op[a],
-              pff_D_diff = m$Dp[h] - m$Dp[a])
+              pff_D_diff = m$Dp[h] - m$Dp[a],
+              war_delta_diff = m$Wv[h] - m$Wv[a])
     z <- 0
     for (k in seq_along(m$columns)) z <- z + m$coef[k] * x[[m$columns[k]]] / m$scale[k]
     total <- total + plogis(z)

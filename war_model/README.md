@@ -257,7 +257,7 @@ compares the counts below against the live files and complains when they drift.
 | Massey rating vs adjusted win pct | r = .683 |
 | de-attenuation k | 0.976 |
 | player-seasons / total WAR | 89,941 / 6,068 |
-| projection holdout, 2025, ex-ante features and all-roster population | r = .581<!--live:holdout_r--> |
+| projection holdout, 2025, ex-ante features and all-roster population | r = .620<!--live:holdout_r--> |
 | ...against the carry-forward baseline it has to beat | .492<!--live:carry_r--> |
 
 The all-roster holdout is deliberately harder than the former target-snap-selected

@@ -60,7 +60,7 @@ OUT = ARTIFACTS / "war_inseason_backtest.json"
 SEASONS_ALL = [y for y in range(2014, 2026) if y != 2020]
 TEST = [2022, 2023, 2024, 2025]
 GRADED = [2023, 2024, 2025]
-CUTS = {3: ((1, 3), (4, 16)), 6: ((1, 6), (7, 16))}
+CUTS = {3: ((1, 3), (4, 16)), 6: ((1, 6), (7, 16)), 9: ((1, 9), (10, 16))}
 MIN_WINDOW = 20
 MIN_TARGET = 100
 PREFIX = {"passing": "pass", "rushing": "rush", "receiving": "recv",

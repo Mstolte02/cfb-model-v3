@@ -29,7 +29,9 @@
     "stars",
     "rating",
     "team_massey",
-    "group_code"
+    "group_code",
+    "kal_m",
+    "kal_sd"
   ],
   "folds": [
     {
@@ -43,8 +45,8 @@
       ],
       "n_roster_players": 11995,
       "n_teams": 130,
-      "team_war_r": 0.6071885780820537,
-      "team_war_z_mae": 0.7019320209500498,
+      "team_war_r": 0.5721559679909795,
+      "team_war_z_mae": 0.7114115672733416,
       "roster_players_with_target_snaps": 5385,
       "roster_players_without_target_snaps": 6610
     },
@@ -59,8 +61,8 @@
       ],
       "n_roster_players": 12609,
       "n_teams": 131,
-      "team_war_r": 0.7491263987292278,
-      "team_war_z_mae": 0.557750132211295,
+      "team_war_r": 0.7366272009774208,
+      "team_war_z_mae": 0.5820360511650112,
       "roster_players_with_target_snaps": 5453,
       "roster_players_without_target_snaps": 7156
     },
@@ -76,8 +78,8 @@
       ],
       "n_roster_players": 12490,
       "n_teams": 133,
-      "team_war_r": 0.8239877627560179,
-      "team_war_z_mae": 0.48186147661142725,
+      "team_war_r": 0.8139444420458445,
+      "team_war_z_mae": 0.49149278024813253,
       "roster_players_with_target_snaps": 5620,
       "roster_players_without_target_snaps": 6870
     },
@@ -94,8 +96,8 @@
       ],
       "n_roster_players": 12595,
       "n_teams": 134,
-      "team_war_r": 0.8006900536227958,
-      "team_war_z_mae": 0.49088018442324094,
+      "team_war_r": 0.7903831730559006,
+      "team_war_z_mae": 0.5161091561816946,
       "roster_players_with_target_snaps": 5813,
       "roster_players_without_target_snaps": 6782
     },
@@ -113,8 +115,8 @@
       ],
       "n_roster_players": 12073,
       "n_teams": 136,
-      "team_war_r": 0.7829633410062765,
-      "team_war_z_mae": 0.5160664426988655,
+      "team_war_r": 0.7748337600226328,
+      "team_war_z_mae": 0.5024907990767126,
       "roster_players_with_target_snaps": 6151,
       "roster_players_without_target_snaps": 5922
     }

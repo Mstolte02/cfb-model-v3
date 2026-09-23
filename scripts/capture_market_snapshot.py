@@ -53,6 +53,10 @@ AVAILABILITY = ROOT / "war_model" / "availability_events_2026.csv"
 FORM = ROOT / "data" / "live" / f"game_advanced_{YEAR}.json"
 # PFF season-to-date offence/defence composites per cutoff week (v5.1).
 PFF_FORM = ROOT / "data" / "live" / f"pff_form_{YEAR}.json"
+# v5.2 in-season player WAR by team and cut. Built on Mark's machine by
+# scripts/update_inseason_war.py (it needs the local PFF files); the capture only
+# reads it. Missing file = the PFF stack, i.e. v5.1.
+WAR_TEAM = ROOT / "data" / "live" / f"inseason_war_team_{YEAR}.json"
 
 PROVIDER_ALIAS = {"Draft Kings": "DraftKings"}
 BOARD_PROVIDER = "DraftKings"
@@ -598,7 +602,8 @@ def _replay_ensemble(schedule, model, ratings, model_path, ratings_path,
     finals = _ensemble_finals(schedule, set(names))
     rows = ER.form_rows(ER.load_form_payload(form_path), names)
     pff = ER.load_form_payload(pff_path) if pff_path is not None else None
-    result = ER.replay(ensemble, finals, rows, pff=pff)
+    war = ER.load_form_payload(WAR_TEAM)
+    result = ER.replay(ensemble, finals, rows, pff=pff, war=war)
 
     history = [{"week": 0, "label": "Preseason", "completed_games": 0,
                 "teams": ER.power_table(ensemble, ER.initial_state(ensemble), names)}]
@@ -640,6 +645,7 @@ def _replay_ensemble(schedule, model, ratings, model_path, ratings_path,
         "form_rows": len(rows),
         "updated_through_slate": max((e["slate"] for e in result["events"]), default=0),
         "pff_cutoffs": sorted(int(k) for k in ((pff or {}).get("cutoffs") or {})),
+        "war_cutoffs": sorted(int(k) for k in ((war or {}).get("cutoffs") or {})),
     }
     model["ensemble"] = ensemble
     model_path.write_text(json.dumps(model, indent=1, allow_nan=False), encoding="utf-8")
@@ -814,7 +820,8 @@ def _model_at_start_of_week(model: dict, ratings: dict, week: int,
         rows = ER.form_rows(ER.load_form_payload(form_path), names)
         state = ER.replay(ensemble, finals, rows,
                           stop_before=ER.slate_key(week, season_type),
-                          pff=ER.load_form_payload(pff_path))["state"]
+                          pff=ER.load_form_payload(pff_path),
+                          war=ER.load_form_payload(WAR_TEAM))["state"]
         return {**model, "ensemble": {**ensemble, "state": state}}
     dynamic = model.get("dynamic") or {}
     state = dict(dynamic.get("preseason_ratings") or dynamic.get("ratings") or {})

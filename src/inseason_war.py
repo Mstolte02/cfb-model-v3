@@ -108,6 +108,74 @@ def canonical_team(names, team_map) -> str | None:
     return None
 
 
+# ---------------------------------------------------------------- team signal (v5.2)
+# The live ensemble's in-season WAR column. For a game in week w it reads the latest
+# cut c < w and takes D(home) - D(away), where D is the team's summed change in player
+# WAR per week: k * (updated rate - calibrated prior) * snaps per week / 1000, over
+# players with MIN_SNAPS+ snaps in weeks 1..c. Measured as a stack column in
+# scripts/inseason_war_team_backtest.py.
+MODEL_CUTS = (3, 6, 9)
+TEAM_HISTORY = ROOT / "data" / "live" / "inseason_war_team_history.csv"
+
+
+def team_payload_path(season: int) -> Path:
+    return ROOT / "data" / "live" / f"inseason_war_team_{season}.json"
+
+
+def window_rows(season: int, cut: int, priors: pd.DataFrame, mu: dict,
+                weight_season: int | None = None) -> pd.DataFrame:
+    """Per player for weeks 1..cut: obs rate, prior mean, snaps, canonical team."""
+    import sys
+    sys.path.insert(0, str(ROOT))
+    from scripts import war_inseason_backtest as B
+    from src import war_window as ww
+    team_map = json.load(open(ROOT / "war_model" / "team_map.json"))
+    d = B.window_dir(season, 1, cut)
+    files = {B.PREFIX[n]: d / f"{n}.csv" for n in (*B.LEGACY, *B.POSITION)}
+    pl = ww.load_players_from(files, season)
+    fc = ww.facet_contrib(pl, season, weight_season=weight_season)
+    teams = (pl.assign(player_id=pl.player_id.astype(str)).groupby("player_id")
+             .team_name.agg(lambda x: canonical_team(list(dict.fromkeys(x.dropna())),
+                                                     team_map)))
+    fc["team"] = fc.player_id.map(teams)
+    fc = fc[fc.group.notna() & (fc.snaps >= MIN_SNAPS) & fc.team.notna()].copy()
+    fc["obs"] = fc.fc / fc.snaps * 1000.0
+    fc = fc.merge(priors[["player_id", "group", "m"]], on=["player_id", "group"],
+                  how="left")
+    fc["m"] = fc.m.fillna(fc.group.map(mu))
+    return fc.assign(season=season, cut=cut)
+
+
+def team_deltas(rows: pd.DataFrame, rule: dict, k: dict) -> pd.DataFrame:
+    """(season, cut, team, D) from window_rows output."""
+    out = []
+    for (g, c), d in rows.groupby(["group", "cut"]):
+        p = rule.get(g, {}).get(str(int(c)))
+        if p is None:
+            continue
+        upd = p["a"] + p["b"] * ((1 - p["lam"]) * d.m + p["lam"] * d.obs)
+        base = p["a_p"] + p["b_p"] * d.m
+        out.append(d.assign(D=k[g] * (upd - base) * (d.snaps / c) / 1000.0))
+    x = pd.concat(out)
+    return x.groupby(["season", "cut", "team"], as_index=False).D.sum()
+
+
+def game_war_column(games: pd.DataFrame, deltas: pd.DataFrame) -> pd.Series:
+    """war_delta_diff per (season, week, home_team, away_team) row, regular season."""
+    lookup = {(int(r.season), int(r.cut), r.team): float(r.D) for r in deltas.itertuples()}
+    cuts = {s: sorted(int(c) for c in g.cut.unique()) for s, g in deltas.groupby("season")}
+    vals = []
+    for g in games.itertuples(index=False):
+        usable = [c for c in cuts.get(int(g.season), []) if c < int(g.week)]
+        if not usable:
+            vals.append(0.0)
+            continue
+        c = max(usable)
+        vals.append(lookup.get((int(g.season), c, g.home_team), 0.0)
+                    - lookup.get((int(g.season), c, g.away_team), 0.0))
+    return pd.Series(vals, index=games.index, name="war_delta_diff")
+
+
 def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
           priors: pd.DataFrame, params: dict, roster: pd.DataFrame) -> dict:
     """Assemble the site payload.

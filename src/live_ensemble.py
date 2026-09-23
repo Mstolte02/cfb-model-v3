@@ -92,6 +92,9 @@ def ensemble_block(manifest: dict, frame: pd.DataFrame, comp: pd.DataFrame) -> d
             # v5.1: the same stack plus PFF's season-to-date offence/defence
             # composites; used whenever the week's PFF table is in play.
             "stack_pff": entry.get("stack_pff"),
+            # v5.2: the PFF stack plus in-season player WAR; used when the PFF
+            # table and the WAR payload are both in play.
+            "stack_war": entry.get("stack_war"),
         })
     return {
         "model_version": manifest["model_version"],
@@ -103,6 +106,7 @@ def ensemble_block(manifest: dict, frame: pd.DataFrame, comp: pd.DataFrame) -> d
         "min_form_games": 2,
         "margin_sigma": float(np.mean([m["margin_sigma"] for m in members])),
         "pff_form_table": f"data/live/pff_form_{PROJECTION_YEAR}.json",
+        "war_team_table": f"data/live/inseason_war_team_{PROJECTION_YEAR}.json",
         # Display only; see team_war(). The scheduled capture keeps it as it is.
         "war_projected": team_war(comp),
         "members": members,

@@ -47,5 +47,50 @@ class InseasonWarTests(unittest.TestCase):
         self.assertEqual(set(row), {"sn", "war", "d"})
 
 
+class WarRuntimeTests(unittest.TestCase):
+    """scripts/ensemble_replay's v5.2 WAR column: cut choice and stack fallback."""
+
+    def setUp(self):
+        from scripts import ensemble_replay as ER
+        self.ER = ER
+        self.payload = {"cutoffs": {"3": {"A": .02, "B": -.01}, "6": {"A": .03}}}
+
+    def test_war_table_reads_latest_cut_strictly_before_the_slate(self):
+        wt = self.ER.war_table
+        self.assertIsNone(wt(None, 5))
+        self.assertEqual(wt(self.payload, 1), {})      # before the first cut: zeros
+        self.assertEqual(wt(self.payload, 3), {})      # cut 3 is not before week 3
+        self.assertEqual(wt(self.payload, 4), {"A": .02, "B": -.01})
+        self.assertEqual(wt(self.payload, 7), {"A": .03})
+        self.assertEqual(wt(self.payload, self.ER.POSTSEASON_OFFSET + 1), {"A": .03})
+
+    def _member(self):
+        base = ["prior_level", "elo_change", "dO", "dD", "hfa"]
+        return {"initial": {"A": .5, "B": .1},
+                "columns": base, "scale": [1] * 5, "coef": [1, 1, 0, 0, .1],
+                "stack_pff": {"columns": base + ["pff_O_diff", "pff_D_diff"],
+                              "scale": [1] * 7, "coef": [1, 1, 0, 0, .1, .2, .2]},
+                "stack_war": {"columns": base + ["pff_O_diff", "pff_D_diff",
+                                                 "war_delta_diff"],
+                              "scale": [1] * 8, "coef": [1, 1, 0, 0, .1, .2, .2, 5.0]}}
+
+    def test_stack_fallback_and_war_effect(self):
+        ER, m = self.ER, self._member()
+        ratings = {"A": .5, "B": .1}
+        pff = {"A": [.1, 0], "B": [0, 0]}
+        war = {"A": .02, "B": -.01}
+        base = ER.member_probability(m, ratings, None, "A", "B", 1.0)
+        p_pff = ER.member_probability(m, ratings, None, "A", "B", 1.0, pff)
+        p_nowar = ER.member_probability(m, ratings, None, "A", "B", 1.0, pff, None)
+        p_war = ER.member_probability(m, ratings, None, "A", "B", 1.0, pff, war)
+        p_zero = ER.member_probability(m, ratings, None, "A", "B", 1.0, pff, {})
+        self.assertEqual(p_pff, p_nowar)              # no WAR payload = exactly v5.1
+        self.assertNotEqual(base, p_pff)
+        self.assertGreater(p_war, p_zero)             # A's WAR rose, B's fell
+        # WAR without PFF never switches stacks: base stack
+        self.assertEqual(ER.member_probability(m, ratings, None, "A", "B", 1.0, None, war),
+                         base)
+
+
 if __name__ == "__main__":
     unittest.main()

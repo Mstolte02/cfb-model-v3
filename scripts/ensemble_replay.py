@@ -21,6 +21,13 @@ a second stack, ``stack_pff``, over the same columns plus [pff_O_diff, pff_D_dif
 A slate uses it when PFF's table through the previous week exists (week 1 reads an
 empty table, as the backtest did), and the base stack when it does not, so a missing
 PFF pull degrades to v5 rather than to a stack fed zeros it never saw.
+
+v5.2 adds in-season player WAR (src/inseason_war.py): each team's summed change in
+player WAR per week, from PFF grades through cuts 3, 6 and 9. A third stack,
+``stack_war``, is the PFF stack plus [war_delta_diff]. A slate uses it when a PFF
+table is in play and the WAR payload exists; before the first cut the column is zero,
+exactly as the stack was trained. With no WAR payload the slate falls back to
+``stack_pff``, so a missing file degrades to v5.1.
 """
 from __future__ import annotations
 
@@ -123,7 +130,8 @@ def form_before(rows: list[dict], week: int, halflife: float) -> dict | None:
 
 # ---------------------------------------------------------------- prediction
 def _features(member: dict, ratings: dict, form: dict | None,
-              home: str, away: str, hfa: float, pff: dict | None = None) -> dict:
+              home: str, away: str, hfa: float, pff: dict | None = None,
+              war: dict | None = None) -> dict:
     initial = member["initial"]
     fh = form.get(home) if form else None
     fa = form.get(away) if form else None
@@ -136,7 +144,8 @@ def _features(member: dict, ratings: dict, form: dict | None,
             "dD": fh[1] - fa[1] if have else 0.0,
             "hfa": float(hfa),
             "pff_O_diff": _pff(pff, home, 0) - _pff(pff, away, 0),
-            "pff_D_diff": _pff(pff, home, 1) - _pff(pff, away, 1)}
+            "pff_D_diff": _pff(pff, home, 1) - _pff(pff, away, 1),
+            "war_delta_diff": _war(war, home) - _war(war, away)}
 
 
 def _pff(table: dict | None, team: str, i: int) -> float:
@@ -144,9 +153,20 @@ def _pff(table: dict | None, team: str, i: int) -> float:
     return float(value[i]) if value else 0.0
 
 
-def _stack(member: dict, pff: dict | None) -> tuple[list, list, list]:
-    """The member's PFF stack when a PFF table is in play, else its base stack."""
-    stack = member.get("stack_pff") if pff is not None else None
+def _war(table: dict | None, team: str) -> float:
+    value = (table or {}).get(team)
+    return float(value) if value is not None else 0.0
+
+
+def _stack(member: dict, pff: dict | None,
+           war: dict | None = None) -> tuple[list, list, list]:
+    """WAR stack when PFF and the WAR payload are in play, else the PFF stack when
+    PFF is, else the base stack."""
+    stack = None
+    if pff is not None and war is not None:
+        stack = member.get("stack_war")
+    if not stack and pff is not None:
+        stack = member.get("stack_pff")
     if stack:
         return stack["columns"], stack["scale"], stack["coef"]
     return member["columns"], member["scale"], member["coef"]
@@ -154,9 +174,9 @@ def _stack(member: dict, pff: dict | None) -> tuple[list, list, list]:
 
 def member_probability(member: dict, ratings: dict, form: dict | None,
                        home: str, away: str, hfa: float,
-                       pff: dict | None = None) -> float:
-    x = _features(member, ratings, form, home, away, hfa, pff)
-    columns, scale, coef = _stack(member, pff)
+                       pff: dict | None = None, war: dict | None = None) -> float:
+    x = _features(member, ratings, form, home, away, hfa, pff, war)
+    columns, scale, coef = _stack(member, pff, war)
     return expit(sum(c * x[col] / s for col, s, c in zip(columns, scale, coef)))
 
 
@@ -166,9 +186,9 @@ def probability(ensemble: dict, state: dict, home: str, away: str,
     members = ensemble["members"]
     if any(home not in m["initial"] or away not in m["initial"] for m in members):
         return None
-    pff = state.get("pff")
+    pff, war = state.get("pff"), state.get("war")
     values = [member_probability(m, state["ratings"][m["name"]],
-                                 state["form"].get(m["name"]), home, away, hfa, pff)
+                                 state["form"].get(m["name"]), home, away, hfa, pff, war)
               for m in members]
     return sum(values) / len(values)
 
@@ -206,8 +226,25 @@ def pff_table(pff: dict | None, slate: int) -> dict | None:
     return cutoffs.get(slate - 1)
 
 
+def war_table(war: dict | None, slate: int) -> dict | None:
+    """In-season WAR a slate may read: the latest cut strictly before it.
+
+    ``war`` is the committed payload {"cutoffs": {"3": {team: D}, ...}}. Before the
+    first cut the table is empty (zeros, WAR stack), as in training; a postseason
+    slate reads the last cut. None means no payload: the PFF stack.
+    """
+    if war is None:
+        return None
+    cutoffs = {int(k): v for k, v in (war.get("cutoffs") or {}).items()}
+    if slate >= POSTSEASON_OFFSET:
+        return cutoffs[max(cutoffs)] if cutoffs else {}
+    usable = [c for c in cutoffs if c < slate]
+    return cutoffs[max(usable)] if usable else {}
+
+
 def replay(ensemble: dict, finals: list[dict], rows: list[dict],
-           stop_before: int | None = None, pff: dict | None = None) -> dict:
+           stop_before: int | None = None, pff: dict | None = None,
+           war: dict | None = None) -> dict:
     """Walk completed games slate by slate from the week-0 ratings.
 
     ``finals`` rows are {home, away, neutral, home_score, away_score, week, season_type,
@@ -226,6 +263,7 @@ def replay(ensemble: dict, finals: list[dict], rows: list[dict],
             break
         state["form"] = _forms(ensemble, rows, key, cache)
         state["pff"] = pff_table(pff, key)
+        state["war"] = war_table(war, key)
         changes = {m["name"]: {} for m in ensemble["members"]}
         for game in by_slate[key]:
             home, away = game["home"], game["away"]
@@ -253,11 +291,13 @@ def replay(ensemble: dict, finals: list[dict], rows: list[dict],
         snapshots.append((key, {"ratings": {n: dict(r) for n, r in
                                             state["ratings"].items()},
                                 "form": _forms(ensemble, rows, key + 1, cache),
-                                "pff": pff_table(pff, key + 1)}))
+                                "pff": pff_table(pff, key + 1),
+                                "war": war_table(war, key + 1)}))
     end = stop_before if stop_before is not None else (
         max(by_slate) + 1 if by_slate else 1)
     state["form"] = _forms(ensemble, rows, end, cache)
     state["pff"] = pff_table(pff, end)
+    state["war"] = war_table(war, end)
     return {"events": events, "snapshots": snapshots, "state": state}
 
 
@@ -289,6 +329,9 @@ def power_table(ensemble: dict, state: dict, names: list[str]) -> list[dict]:
     pff = state.get("pff")
     rated = [pff[t] for t in names if pff and t in pff]
     pff_mean = [statistics.fmean(v[i] for v in rated) if rated else 0.0 for i in (0, 1)]
+    war = state.get("war")
+    war_rated = [war[t] for t in names if war and t in war]
+    war_mean = statistics.fmean(war_rated) if war_rated else 0.0
     rows = []
     for team in names:
         values = []
@@ -303,8 +346,9 @@ def power_table(ensemble: dict, state: dict, names: list[str]) -> list[dict]:
                  "dO": f[0] - a["O"] if have else 0.0,
                  "dD": f[1] - a["D"] if have else 0.0, "hfa": 0.0,
                  "pff_O_diff": _pff(pff, team, 0) - pff_mean[0],
-                 "pff_D_diff": _pff(pff, team, 1) - pff_mean[1]}
-            columns, scale, coef = _stack(member, pff)
+                 "pff_D_diff": _pff(pff, team, 1) - pff_mean[1],
+                 "war_delta_diff": _war(war, team) - war_mean}
+            columns, scale, coef = _stack(member, pff, war)
             values.append(expit(sum(c * x[col] / s
                                     for col, s, c in zip(columns, scale, coef))))
         rows.append({"team": team,
@@ -325,13 +369,16 @@ def compact_state(state: dict, digits: int = 8) -> dict:
             return {}
         return {t: [round(v[0], digits), round(v[1], digits), int(v[2])]
                 for t, v in value.items()}
-    pff = state.get("pff")
+    pff, war = state.get("pff"), state.get("war")
     return {"ratings": {n: {t: round(v, digits) for t, v in r.items()}
                         for n, r in state["ratings"].items()},
             "form": {n: form(f) for n, f in state["form"].items()},
             # None = no PFF table in play (base stacks); {} = week 1 (PFF stacks, zeros)
             "pff": (None if pff is None else
-                    {t: [round(v[0], digits), round(v[1], digits)] for t, v in pff.items()})}
+                    {t: [round(v[0], digits), round(v[1], digits)] for t, v in pff.items()}),
+            # None = no WAR payload (PFF stacks); {} = before the first cut (zeros)
+            "war": (None if war is None else
+                    {t: round(float(v), digits) for t, v in war.items()})}
 
 
 # ---------------------------------------------------------------- PFF form

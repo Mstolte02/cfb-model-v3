@@ -391,6 +391,10 @@
     // is in play and every member uses its base stack, exactly as the runtime does.
     const P = E.state.pff == null ? null : E.state.pff;
     const pv = (t, i) => (P && P[t] ? P[t][i] : 0);
+    // v5.2: in-season player WAR by team. null means no WAR payload (PFF stack);
+    // {} means before the first cut (WAR stack, zeros), as scripts/ensemble_replay.
+    const W = E.state.war == null ? null : E.state.war;
+    const wv = t => (W && W[t] != null ? W[t] : 0);
     let sum = 0;
     for (const m of E.members) {
       const ia = m.initial[a], ib = m.initial[b];
@@ -400,8 +404,10 @@
       const have = !!(fa && fb && fa[2] >= E.min_form_games && fb[2] >= E.min_form_games);
       const x = { prior_level: ia - ib, elo_change: (r[a] - ia) - (r[b] - ib),
                   dO: have ? fa[0] - fb[0] : 0, dD: have ? fa[1] - fb[1] : 0, hfa: homeA,
-                  pff_O_diff: pv(a, 0) - pv(b, 0), pff_D_diff: pv(a, 1) - pv(b, 1) };
-      const st = P !== null && m.stack_pff ? m.stack_pff : m;
+                  pff_O_diff: pv(a, 0) - pv(b, 0), pff_D_diff: pv(a, 1) - pv(b, 1),
+                  war_delta_diff: wv(a) - wv(b) };
+      const st = (P !== null && W !== null && m.stack_war) ? m.stack_war
+               : (P !== null && m.stack_pff ? m.stack_pff : m);
       let z = 0;
       st.columns.forEach((c, i) => { z += st.coef[i] * x[c] / st.scale[i]; });
       sum += sigmoid(Math.max(-40, Math.min(40, z)));
@@ -2068,7 +2074,7 @@
             <b>${(roster.winsTotal ?? roster.total).toFixed(2)}</b><span>wins above replacement</span></div>
           ${inseason && INS[t] ? (() => {
             const d = Object.values(INS[t]).reduce((s, p) => s + (p.d || 0), 0);
-            return `<div class="od-chip2" style="--tint:${tint}" title="Preseason roster WAR plus the change this season's PFF grades make to each player. Display only: the ratings do not read it.">
+            return `<div class="od-chip2" style="--tint:${tint}" title="Preseason roster WAR plus the change this season's PFF grades make to each player. The model reads the team's in-season WAR change from week 4 on.">
               <b>${((roster.winsTotal ?? roster.total) + d).toFixed(2)}</b><span>in-season WAR, thru wk ${inseason.through_week} (${d >= 0 ? "+" : ""}${d.toFixed(2)})</span></div>`;
           })() : ""}
         </div>
@@ -2326,7 +2332,7 @@
         <td class="num"><input class="wi-in pl-in" type="number" step="0.05"
           data-team="${esc(r.t)}" data-player="${esc(r.n)}"
           value="${plWar(r).toFixed(3)}" aria-label="Expected role-adjusted WAR for ${esc(r.n)}"
-          ${WI.enabled() ? "" : "disabled title=\"Read-only: roster WAR feeds the v5.1 model only through the preseason level, which is fixed at week 0\""}></td>
+          ${WI.enabled() ? "" : "disabled title=\"Read-only: the model reads roster WAR through the week-0 preseason level and, from v5.2, through in-season WAR built from PFF grades - not from this field\""}></td>
         <td class="num">${r.sn26 == null ? "—" : r.sn26.toLocaleString()}</td>
         <td class="num">${r.win == null ? "—" : r.win.toFixed(3)}</td>
         <td class="num ${r.dwin > 0.0005 ? "pos" : r.dwin < -0.0005 ? "neg" : ""}">${
@@ -2337,8 +2343,9 @@
     const insNote = inseason ? `<div class="wd-foot"><b>In-season WAR</b> is through week
         ${inseason.through_week}, from PFF grades. It moves each player's per-snap value
         by what this season shows, and moves players with long records less. It keeps
-        the preseason playing time and does not change the model's ratings or picks.
-        A dash means PFF has not charted him this season.</div>` : "";
+        the preseason playing time. Each team's total of these changes is an input to
+        the live model from week 4 on (Team tables → Model inputs). A dash means PFF
+        has not charted him this season.</div>` : "";
     document.getElementById("pl-table").innerHTML =
       `<div class="mini-wrap pl-scroll"><table class="mini pl-table"><thead><tr>${head}</tr></thead>
        <tbody>${body}</tbody></table></div>` +
@@ -2425,7 +2432,7 @@
 
      Two column sets, because they are two different kinds of number and averaging
      them into one table would invite adding a z-score to a win. Roster WAR is in
-     wins; the model inputs are what the live v5.1 ensemble reads for each team. */
+     wins; the model inputs are what the live ensemble reads for each team. */
   const TR_OFF = GROUP_ORDER.filter(g => OFF_GROUPS.has(g));
   const TR_DEF = GROUP_ORDER.filter(g => !OFF_GROUPS.has(g));
 
@@ -2459,11 +2466,12 @@
       label: "Roster WAR by position",
       note: `Projected wins above replacement contributed by each position group,
         summed over that group's slots in the 2026 two-deep. Roster WAR reaches the
-        v5.1 model through the preseason level: each team's projected roster WAR,
-        standardised, is one of the inputs its four preseason models were fitted on,
-        and it is the <b>WAR</b> column under Model inputs. It is fixed at week 0, so
-        these figures are read-only: the page cannot refit those models, and an edit
-        here would not move any rating.`,
+        model in two ways. Each team's projected roster WAR, standardised, is one of
+        the inputs its four preseason models were fitted on (the <b>WAR</b> column under
+        Model inputs), fixed at week 0. From v5.2, the team's in-season WAR change -
+        what this season's PFF grades do to its players' per-snap value - is a stack
+        input from week 4 on (<b>In-season WAR</b> under Model inputs). Both are built
+        from PFF, not from this table, so these figures are read-only.`,
       fmt: v => v.toFixed(2),
       cols: () => [
         ...GROUP_ORDER.map(g => ({ k: g, h: g,
@@ -2497,12 +2505,15 @@
         table through the latest week is not in yet, because the model then falls back
         to its stack without PFF. <b>WAR</b> is the
         standardised projected roster WAR the preseason models were fitted on, fixed
-        for the season. <b>Schedule</b> is the mean Power of every opponent on the slate
+        for the season. <b>In-season WAR</b> is the team's summed change in player WAR
+        per week from this season's PFF grades, at the latest of weeks 3, 6 and 9 the
+        model has reached; it is 0 before week 4. <b>Schedule</b> is the mean Power of every opponent on the slate
         (an FCS opponent counts as ${(100 * (1 - FCS_WIN_P)).toFixed(0)}), so a high
         number is a hard season, not a good team.`,
       fmt: (v, k) => v == null ? "—"
         : k === "power" || k === "sos" ? (100 * v).toFixed(1)
         : k === "change" ? (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(2)
+        : k === "warIn" ? (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(3)
         : v.toFixed(2),
       cols: () => [
         { k: "power",  h: "Power",     cls: "tr-sum" },
@@ -2514,6 +2525,7 @@
         { k: "pffO",   h: "PFF off",   cls: "tr-off" },
         { k: "pffD",   h: "PFF def",   cls: "tr-def" },
         { k: "war",    h: "WAR" },
+        { k: "warIn",  h: "In-season WAR" },
         { k: "sos",    h: "Schedule" },
       ],
       val: (t, k) => { const r = liveInputs().rows[t]; return r && r[k] != null ? r[k] : null; },
@@ -2555,6 +2567,7 @@
         formD: forms.length === members.length ? mean(forms.map(f => f[1])) : null,
         pffO: pff ? pff[0] : null, pffD: pff ? pff[1] : null,
         war: E.war_projected && E.war_projected[t] != null ? E.war_projected[t] : null,
+        warIn: S.war == null ? null : (S.war[t] != null ? S.war[t] : 0),
         sos: opp[t] && opp[t].length ? mean(opp[t]) : null,
       };
     }

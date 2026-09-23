@@ -79,7 +79,28 @@ CFBD_TO_GROUP = {
 # things on the two sides of the model is the defect being removed.
 FEATURES = ["war_lag1", "war_lag2", "war_lag3", "snaps_lag1", "snaps_lag2",
             "rate_lag1", "share_lag1", "prior_rank", "prior_seasons", "class_num",
-            "is_transfer", "stars", "rating", "team_massey", "group_code"]
+            "is_transfer", "stars", "rating", "team_massey", "group_code",
+            # The sample-size prior (sample_size_prior.py): a season counts by its
+            # snaps, so a long, heavy record is hard to move. The tree had the lags
+            # and snaps but did not learn this on its own; with it, holdout MAE fell
+            # 11-16% in 2023-25 (scripts/war_projection_prior_test.py).
+            "kal_m", "kal_sd"]
+
+
+def add_prior(frame, season_col="target_season", group_col="group"):
+    """Join kal_m / kal_sd by PFF id and position group for each target season.
+
+    A row with no PFF id, or no earlier PFF season, gets NaN, which the tree handles
+    as missing - the same as a player with no lag history.
+    """
+    from sample_size_prior import COLUMNS, table
+    t = table().rename(columns={"group": group_col, "target_season": season_col})
+    f = frame.drop(columns=[c for c in COLUMNS if c in frame.columns])
+    f = f.assign(_pid=f.player_id.astype("string"))
+    t = t.assign(_pid=t.player_id.astype("string")).drop(columns="player_id")
+    out = f.merge(t, on=["_pid", group_col, season_col], how="left").drop(columns="_pid")
+    out.index = frame.index
+    return out
 
 MAX_RANK = 8.0   # beyond this a player is a name on the list, not a rotation slot
 
@@ -259,7 +280,7 @@ def make_training(pop, w, ratings, rec, rosters, S, seasons):
     r = ratings[["season", "team", "massey"]].copy()
     r["season"] += 1
     tr = tr.merge(r.rename(columns={"massey": "team_massey"}), on=["season", "team"], how="left")
-    return tr
+    return add_prior(tr.reset_index(drop=True))
 
 
 def fit(seed=0):
@@ -406,6 +427,8 @@ def main():
     if "stars" not in r or r.stars.isna().all():
         r = r.merge(rec[["key", "stars", "rating"]].drop_duplicates("key"), on="key", how="left")
 
+    r = add_prior(r.assign(target_season=PROJECTION_YEAR, group=r.broad_group).reset_index(drop=True))
+    print(f"  sample-size prior on {r.kal_m.notna().sum()} of {len(r)} 2026 slots")
     r["proj_war"] = final.predict(r[FEATURES])
     r["imputed"] = ~r.has_history
     r.to_csv(f"{HERE}/projections_2026_v2.csv", index=False)

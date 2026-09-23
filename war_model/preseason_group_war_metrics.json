@@ -29,7 +29,9 @@
     "stars",
     "rating",
     "team_massey",
-    "group_code"
+    "group_code",
+    "kal_m",
+    "kal_sd"
   ],
   "folds": [
     {
@@ -43,7 +45,7 @@
       ],
       "n_teams": 132,
       "n_groups": 11,
-      "team_total": 331.68025407891713
+      "team_total": 84.37183557781941
     },
     {
       "season": 2021,
@@ -56,7 +58,7 @@
       ],
       "n_teams": 135,
       "n_groups": 11,
-      "team_total": 158.0773691944695
+      "team_total": 282.0187732538702
     },
     {
       "season": 2022,
@@ -69,7 +71,7 @@
       ],
       "n_teams": 137,
       "n_groups": 11,
-      "team_total": 309.3193641244916
+      "team_total": 366.7774637791861
     },
     {
       "season": 2023,
@@ -83,7 +85,7 @@
       ],
       "n_teams": 137,
       "n_groups": 11,
-      "team_total": 343.8973570793483
+      "team_total": 390.9542135443155
     },
     {
       "season": 2024,
@@ -98,7 +100,7 @@
       ],
       "n_teams": 137,
       "n_groups": 11,
-      "team_total": 340.1392569974811
+      "team_total": 384.29076424436875
     },
     {
       "season": 2025,
@@ -114,7 +116,7 @@
       ],
       "n_teams": 137,
       "n_groups": 11,
-      "team_total": 296.3774449910677
+      "team_total": 346.67510669786384
     }
   ]
 }

@@ -72,7 +72,49 @@ def refit_params():
     return params
 
 
-def main(week: int | None, refit: bool, skip_pull: bool):
+def write_team_tables(params: dict, week: int, history: bool, skip_pull: bool):
+    """The v5.2 model column's inputs: team WAR change per week at cuts 3/6/9.
+
+    ``history`` rebuilds data/live/inseason_war_team_history.csv (2022-25, the
+    training rows) from the staged windows. The 2026 payload is rewritten every run
+    with every model cut already reached; the latest cut is re-pulled by main(), and
+    an earlier cut's window is pulled once if it is missing and then left alone.
+    """
+    from scripts import sync_pff_war_windows as SW
+    from scripts import war_inseason_backtest as B
+    hist = B.history()
+    rule, k = params["rule"], params["k"]
+    if history:
+        parts = []
+        for s in (2022, 2023, 2024, 2025):
+            pr = B.priors(hist, s)
+            mu = pr.groupby("group").mu.first().to_dict()
+            for c in IW.MODEL_CUTS:
+                parts.append(IW.window_rows(s, c, pr, mu))
+        D = IW.team_deltas(pd.concat(parts, ignore_index=True), rule, k)
+        D.to_csv(IW.TEAM_HISTORY, index=False)
+        print(f"-> {IW.TEAM_HISTORY} ({len(D)} team-cuts)")
+    pr = B.priors(hist, SEASON)
+    mu = pr.groupby("group").mu.first().to_dict()
+    cutoffs = {}
+    for c in IW.MODEL_CUTS:
+        if c > week:
+            break
+        d = SW.window_dir(SEASON, 1, c)
+        if not skip_pull and len(list(d.glob("*.csv"))) < 10:
+            SW.main([SEASON], [(1, c)])
+        rows = IW.window_rows(SEASON, c, pr, mu, weight_season=SEASON - 1)
+        D = IW.team_deltas(rows, rule, k)
+        cutoffs[str(c)] = {r.team: round(float(r.D), 8) for r in D.itertuples()}
+    payload = {"season": SEASON, "through_week": int(week),
+               "definition": "sum over players of k*(updated rate - calibrated prior)"
+                             "*snaps per week/1000, weeks 1..cut; src/inseason_war.py",
+               "cutoffs": cutoffs}
+    IW.team_payload_path(SEASON).write_text(json.dumps(payload, indent=1))
+    print(f"-> {IW.team_payload_path(SEASON)} (cuts {sorted(int(c) for c in cutoffs)})")
+
+
+def main(week: int | None, refit: bool, skip_pull: bool, history: bool = False):
     ensure_key()
     week = week if week is not None else last_completed_week()
     if week < 1:
@@ -103,6 +145,7 @@ def main(week: int | None, refit: bool, skip_pull: bool):
     print(f"-> {IW.OUT}: through week {week}, {payload['matched_players']} of "
           f"{payload['roster_players']} two-deep players matched to "
           f"{payload['pff_players']} PFF players")
+    write_team_tables(params, week, history, skip_pull)
 
 
 if __name__ == "__main__":
@@ -110,5 +153,7 @@ if __name__ == "__main__":
     ap.add_argument("--week", type=int)
     ap.add_argument("--refit-params", action="store_true")
     ap.add_argument("--skip-pull", action="store_true")
+    ap.add_argument("--team-history", action="store_true",
+                    help="also rebuild the 2022-25 team WAR history the trainer reads")
     a = ap.parse_args()
-    main(a.week, a.refit_params, a.skip_pull)
+    main(a.week, a.refit_params, a.skip_pull, a.team_history)
