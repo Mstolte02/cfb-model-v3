@@ -1,0 +1,53 @@
+<!-- Futures hub markup removed from viz/index.html. Each block says where it went. -->
+
+<!-- Hub tab. It was the first button inside <nav class="hub-nav">, before the Power Rankings button. -->
+    <button class="hub-tab" data-hub="futures" data-default="dash">Futures</button>
+
+<!-- Section nav. It was the first <nav> inside <div class="section-bar">, before the Weekly nav. -->
+  <nav class="section-nav" data-hub-nav="futures">
+    <button class="tab" data-view="dash">Futures board</button>
+    <button class="tab" data-view="playoff">Playoff projection</button>
+  </nav>
+
+<!-- The board itself. It was the first <section> inside <main>, before <section id="view-playoff">. -->
+  <section id="view-dash" class="view">
+    <div class="view-head editorial-head">
+      <span class="eyebrow">Season-long markets</span>
+      <h2>Find the gap between the forecast and the price.</h2>
+      <p class="sub">Twenty thousand simulated seasons, team-specific outcome bands,
+        and dated sportsbook snapshots. Prices are context—not model inputs.</p>
+      <p class="sub"><b>This board is frozen at the preseason.</b> Season-long tickets
+        are bought before week 1, so both sides of every comparison here are dated to
+        then: the sportsbook snapshots are the July and August prices shown beside each
+        market, and the model column is the preseason simulation and the week-0
+        ratings. Neither moves as the season is played. Current model numbers live on
+        the Power rankings, Simulation and Market board tabs.</p>
+    </div>
+    <div class="market-toolbar">
+      <div class="seg" id="future-market">
+        <button class="seg-btn active" data-market="national_title">National title</button>
+        <button class="seg-btn" data-market="make_cfp">Make CFP</button>
+        <button class="seg-btn" data-market="conference_title">Conference title</button>
+        <button class="seg-btn" data-market="win_totals">Win totals</button>
+        <button class="seg-btn" data-market="heisman">Heisman</button>
+      </div>
+      <label>Sportsbook <select id="future-book"></select></label>
+    </div>
+    <div id="future-spotlight" class="future-spotlight"></div>
+    <div class="section-intro"><div><span class="eyebrow">Range of outcomes</span><h3>Floor, ceiling, and volatility</h3></div>
+      <p>Each floor and ceiling comes from that team’s own 10th and 90th percentile simulated win total.</p></div>
+    <div id="outcome-bands"></div>
+    <div class="section-intro"><div><span class="eyebrow">All 136</span><h3>Season forecast table</h3></div></div>
+    <div class="dash-toolbar">
+      <input type="search" id="dash-search" placeholder="Search teams…">
+      <select id="dash-conf"><option value="">All conferences</option></select>
+      <select id="dash-tier"><option value="">All teams</option><option value="p4">Power 4 only</option><option value="g6">Group of 6 only</option></select>
+      <span class="spacer"></span><span id="dash-count" class="dash-count"></span>
+    </div>
+    <div id="dash-table"></div>
+  </section>
+
+
+<!-- The social-card description used to open with "Futures value". -->
+<meta property="og:description" content="Futures value, weekly matchup edges, player rankings and build-your-own playoff scenarios.">
+

@@ -177,6 +177,45 @@ class PublishedReplay(unittest.TestCase):
             # The frozen v4 blocks are untouched by the v5 replay.
             self.assertEqual(model["dynamic"]["ratings"], {t: 0.0 for t in TEAMS})
 
+    def test_replay_keeps_the_display_war_block(self):
+        """The Team tables page reads ensemble.war_projected from the file the capture
+        rewrites. The capture cannot rebuild it (the fitted frame is not in git), so
+        it must carry it forward exactly, while the state beside it moves."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            _, model = self._write(root)
+            war = {t: round(.25 * i - .5, 6) for i, t in enumerate(TEAMS)}
+            model["ensemble"]["war_projected"] = war
+            (root / "model.json").write_text(json.dumps(model))
+            args = (root / "schedule.json", root / "model.json", root / "ratings.json",
+                    None, None, root / "form.json")
+            self.assertEqual(replay_published_results(*args), 9)
+            out = json.loads((root / "model.json").read_text())
+            self.assertEqual(out["ensemble"]["war_projected"], war)
+            self.assertEqual(out["ensemble"]["state"]["completed_games"], 9)
+
+    def test_attach_war_writes_only_the_war_block(self):
+        from scripts import publish_live_ensemble as PLE
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._write(root)
+            args = (root / "schedule.json", root / "model.json", root / "ratings.json",
+                    None, None, root / "form.json")
+            replay_published_results(*args)
+            before = json.loads((root / "model.json").read_text())
+            # "F" is missing from the fitted frame, as the 2026 FBS newcomers are.
+            frame = pd.DataFrame({"team": TEAMS[:-1],
+                                  "war_projected": [1.5, -.25, .75, 0.0, -1.0]})
+            frame.to_csv(root / "frame.csv", index=False)
+            PLE.attach_war(root / "model.json", root / "frame.csv")
+            after = json.loads((root / "model.json").read_text())
+            war = after["ensemble"].pop("war_projected")
+            self.assertEqual(after, before)
+            self.assertEqual(war["A"], 1.5)
+            self.assertAlmostEqual(war["F"], float(frame.war_projected.quantile(.05)), 6)
+            keys = list(json.loads((root / "model.json").read_text())["ensemble"])
+            self.assertEqual(keys.index("war_projected") + 1, keys.index("members"))
+
     def test_upcoming_snapshot_uses_start_of_week_state(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

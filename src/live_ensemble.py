@@ -57,6 +57,17 @@ def save_manifest(payload: dict, path: Path = MANIFEST_PATH) -> None:
     Path(path).write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
+def team_war(comp: pd.DataFrame) -> dict:
+    """Each team's standardised ``war_projected``, keyed by team.
+
+    This is the roster-WAR input every member's preseason model was fitted on, and it
+    is fixed for the season. It changes no probability: ``initial`` already holds its
+    effect. It ships so the Team tables page can show the live model's own WAR input
+    rather than the frozen v4 frame's, which the ensemble does not read.
+    """
+    return {team: round(float(comp.loc[team, "war_projected"]), 6) for team in comp.index}
+
+
 def ensemble_block(manifest: dict, frame: pd.DataFrame, comp: pd.DataFrame) -> dict:
     """The published, stateless half of the live ensemble.
 
@@ -92,5 +103,7 @@ def ensemble_block(manifest: dict, frame: pd.DataFrame, comp: pd.DataFrame) -> d
         "min_form_games": 2,
         "margin_sigma": float(np.mean([m["margin_sigma"] for m in members])),
         "pff_form_table": f"data/live/pff_form_{PROJECTION_YEAR}.json",
+        # Display only; see team_war(). The scheduled capture keeps it as it is.
+        "war_projected": team_war(comp),
         "members": members,
     }
