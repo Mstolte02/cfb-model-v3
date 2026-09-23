@@ -2908,830 +2908,830 @@
    "teams": [
     {
      "team": "Ohio State",
-     "power": 0.904286,
-     "vs_average": 0.930863,
+     "power": 0.887342,
+     "vs_average": 0.911493,
      "rank": 1
     },
     {
      "team": "Oregon",
-     "power": 0.894148,
-     "vs_average": 0.922672,
+     "power": 0.876764,
+     "vs_average": 0.902295,
      "rank": 2
     },
     {
      "team": "Notre Dame",
-     "power": 0.874401,
-     "vs_average": 0.906285,
+     "power": 0.856413,
+     "vs_average": 0.884215,
      "rank": 3
     },
     {
      "team": "Texas A&M",
-     "power": 0.866038,
-     "vs_average": 0.89878,
+     "power": 0.847965,
+     "vs_average": 0.876265,
      "rank": 4
     },
     {
      "team": "Miami",
-     "power": 0.86571,
-     "vs_average": 0.898504,
+     "power": 0.847597,
+     "vs_average": 0.875926,
      "rank": 5
     },
     {
      "team": "Texas",
-     "power": 0.854959,
-     "vs_average": 0.888882,
+     "power": 0.836803,
+     "vs_average": 0.865787,
      "rank": 6
     },
     {
      "team": "Georgia",
-     "power": 0.841118,
-     "vs_average": 0.875983,
+     "power": 0.822992,
+     "vs_average": 0.852409,
      "rank": 7
     },
     {
      "team": "Texas Tech",
-     "power": 0.839535,
-     "vs_average": 0.874664,
+     "power": 0.821253,
+     "vs_average": 0.85083,
      "rank": 8
     },
     {
      "team": "Alabama",
-     "power": 0.832281,
-     "vs_average": 0.868176,
+     "power": 0.813972,
+     "vs_average": 0.843968,
      "rank": 9
     },
     {
      "team": "LSU",
-     "power": 0.824958,
-     "vs_average": 0.861181,
+     "power": 0.806673,
+     "vs_average": 0.836755,
      "rank": 10
     },
     {
      "team": "Oklahoma",
-     "power": 0.821821,
-     "vs_average": 0.858046,
+     "power": 0.803624,
+     "vs_average": 0.833654,
      "rank": 11
     },
     {
      "team": "Ole Miss",
-     "power": 0.79885,
-     "vs_average": 0.835325,
+     "power": 0.78096,
+     "vs_average": 0.810694,
      "rank": 12
     },
     {
      "team": "Florida",
-     "power": 0.795277,
-     "vs_average": 0.831732,
+     "power": 0.777482,
+     "vs_average": 0.80713,
      "rank": 13
     },
     {
      "team": "Michigan",
-     "power": 0.795188,
-     "vs_average": 0.831679,
+     "power": 0.777383,
+     "vs_average": 0.807045,
      "rank": 14
     },
     {
      "team": "Indiana",
-     "power": 0.784087,
-     "vs_average": 0.820191,
+     "power": 0.766513,
+     "vs_average": 0.795664,
      "rank": 15
     },
     {
      "team": "Missouri",
-     "power": 0.770251,
-     "vs_average": 0.805895,
+     "power": 0.753008,
+     "vs_average": 0.78152,
      "rank": 16
     },
     {
      "team": "Tennessee",
-     "power": 0.769968,
-     "vs_average": 0.805598,
+     "power": 0.752735,
+     "vs_average": 0.781232,
      "rank": 17
     },
     {
      "team": "USC",
-     "power": 0.765656,
-     "vs_average": 0.801048,
+     "power": 0.748544,
+     "vs_average": 0.776774,
      "rank": 18
     },
     {
      "team": "Auburn",
-     "power": 0.74228,
-     "vs_average": 0.775858,
+     "power": 0.725992,
+     "vs_average": 0.752458,
      "rank": 19
     },
     {
      "team": "Utah",
-     "power": 0.738928,
-     "vs_average": 0.772154,
+     "power": 0.722759,
+     "vs_average": 0.7489,
      "rank": 20
     },
     {
      "team": "BYU",
-     "power": 0.725543,
-     "vs_average": 0.757178,
+     "power": 0.709921,
+     "vs_average": 0.734662,
      "rank": 21
     },
     {
      "team": "Vanderbilt",
-     "power": 0.7147,
-     "vs_average": 0.745193,
+     "power": 0.699548,
+     "vs_average": 0.723267,
      "rank": 22
     },
     {
      "team": "South Carolina",
-     "power": 0.713152,
-     "vs_average": 0.743552,
+     "power": 0.698063,
+     "vs_average": 0.721678,
      "rank": 23
     },
     {
      "team": "Washington",
-     "power": 0.699716,
-     "vs_average": 0.728231,
+     "power": 0.685275,
+     "vs_average": 0.707316,
      "rank": 24
     },
     {
      "team": "Florida State",
-     "power": 0.690768,
-     "vs_average": 0.718057,
+     "power": 0.676767,
+     "vs_average": 0.697771,
      "rank": 25
     },
     {
      "team": "SMU",
-     "power": 0.682882,
-     "vs_average": 0.709097,
+     "power": 0.669346,
+     "vs_average": 0.689489,
      "rank": 26
     },
     {
      "team": "Louisville",
-     "power": 0.681863,
-     "vs_average": 0.707827,
+     "power": 0.668362,
+     "vs_average": 0.688299,
      "rank": 27
     },
     {
      "team": "Penn State",
-     "power": 0.670149,
-     "vs_average": 0.694214,
+     "power": 0.657266,
+     "vs_average": 0.675647,
      "rank": 28
     },
     {
      "team": "Clemson",
-     "power": 0.646863,
-     "vs_average": 0.666972,
+     "power": 0.635411,
+     "vs_average": 0.650669,
      "rank": 29
     },
     {
      "team": "Nebraska",
-     "power": 0.642775,
-     "vs_average": 0.662216,
+     "power": 0.631551,
+     "vs_average": 0.646281,
      "rank": 30
     },
     {
      "team": "Houston",
-     "power": 0.639667,
-     "vs_average": 0.658083,
+     "power": 0.628595,
+     "vs_average": 0.642525,
      "rank": 31
     },
     {
      "team": "Kentucky",
-     "power": 0.616258,
-     "vs_average": 0.630353,
+     "power": 0.606651,
+     "vs_average": 0.617196,
      "rank": 32
     },
     {
      "team": "Arkansas",
-     "power": 0.615701,
-     "vs_average": 0.62962,
+     "power": 0.60612,
+     "vs_average": 0.616525,
      "rank": 33
     },
     {
      "team": "Arizona",
-     "power": 0.605045,
-     "vs_average": 0.616887,
+     "power": 0.596196,
+     "vs_average": 0.605014,
      "rank": 34
     },
     {
      "team": "Iowa",
-     "power": 0.601629,
-     "vs_average": 0.612629,
+     "power": 0.592967,
+     "vs_average": 0.601119,
      "rank": 35
     },
     {
      "team": "Kansas State",
-     "power": 0.600002,
-     "vs_average": 0.610897,
+     "power": 0.591493,
+     "vs_average": 0.599581,
      "rank": 36
     },
     {
      "team": "Virginia Tech",
-     "power": 0.597003,
-     "vs_average": 0.607211,
+     "power": 0.58869,
+     "vs_average": 0.59625,
      "rank": 37
     },
     {
      "team": "NC State",
-     "power": 0.592579,
-     "vs_average": 0.601866,
+     "power": 0.584562,
+     "vs_average": 0.591413,
      "rank": 38
     },
     {
      "team": "Georgia Tech",
-     "power": 0.590955,
-     "vs_average": 0.599785,
+     "power": 0.583039,
+     "vs_average": 0.589537,
      "rank": 39
     },
     {
      "team": "Baylor",
-     "power": 0.582966,
-     "vs_average": 0.590315,
+     "power": 0.575626,
+     "vs_average": 0.580999,
      "rank": 40
     },
     {
      "team": "TCU",
-     "power": 0.581139,
-     "vs_average": 0.588194,
+     "power": 0.573946,
+     "vs_average": 0.579104,
      "rank": 41
     },
     {
      "team": "Arizona State",
-     "power": 0.575858,
-     "vs_average": 0.581679,
+     "power": 0.569016,
+     "vs_average": 0.573226,
      "rank": 42
     },
     {
      "team": "Minnesota",
-     "power": 0.573748,
-     "vs_average": 0.579292,
+     "power": 0.56708,
+     "vs_average": 0.571089,
      "rank": 43
     },
     {
      "team": "Kansas",
-     "power": 0.572766,
-     "vs_average": 0.578071,
+     "power": 0.566166,
+     "vs_average": 0.569993,
      "rank": 44
     },
     {
      "team": "Wake Forest",
-     "power": 0.570742,
-     "vs_average": 0.57546,
+     "power": 0.56426,
+     "vs_average": 0.567631,
      "rank": 45
     },
     {
      "team": "Pittsburgh",
-     "power": 0.565448,
-     "vs_average": 0.569209,
+     "power": 0.55937,
+     "vs_average": 0.562023,
      "rank": 46
     },
     {
      "team": "Virginia",
-     "power": 0.563357,
-     "vs_average": 0.566809,
+     "power": 0.557455,
+     "vs_average": 0.559883,
      "rank": 47
     },
     {
      "team": "Duke",
-     "power": 0.555359,
-     "vs_average": 0.556948,
+     "power": 0.550013,
+     "vs_average": 0.551018,
      "rank": 48
     },
     {
      "team": "Mississippi State",
-     "power": 0.552319,
-     "vs_average": 0.553298,
+     "power": 0.547192,
+     "vs_average": 0.547735,
      "rank": 49
     },
     {
      "team": "Maryland",
-     "power": 0.547296,
-     "vs_average": 0.547352,
+     "power": 0.542567,
+     "vs_average": 0.542421,
      "rank": 50
     },
     {
      "team": "Rutgers",
-     "power": 0.542401,
-     "vs_average": 0.541235,
+     "power": 0.538003,
+     "vs_average": 0.536921,
      "rank": 51
     },
     {
      "team": "Northwestern",
-     "power": 0.541417,
-     "vs_average": 0.540242,
+     "power": 0.537129,
+     "vs_average": 0.536052,
      "rank": 52
     },
     {
      "team": "Colorado",
-     "power": 0.539932,
-     "vs_average": 0.53817,
+     "power": 0.535713,
+     "vs_average": 0.534177,
      "rank": 53
     },
     {
      "team": "Illinois",
-     "power": 0.538751,
-     "vs_average": 0.53685,
+     "power": 0.534631,
+     "vs_average": 0.532995,
      "rank": 54
     },
     {
      "team": "UCLA",
-     "power": 0.534055,
-     "vs_average": 0.531479,
+     "power": 0.530329,
+     "vs_average": 0.5282,
      "rank": 55
     },
     {
      "team": "James Madison",
-     "power": 0.521799,
-     "vs_average": 0.515967,
+     "power": 0.518891,
+     "vs_average": 0.514257,
      "rank": 56
     },
     {
      "team": "UCF",
-     "power": 0.519016,
-     "vs_average": 0.513003,
+     "power": 0.516387,
+     "vs_average": 0.511643,
      "rank": 57
     },
     {
      "team": "Wisconsin",
-     "power": 0.518939,
-     "vs_average": 0.513065,
+     "power": 0.516335,
+     "vs_average": 0.511705,
      "rank": 58
     },
     {
      "team": "South Florida",
-     "power": 0.514107,
-     "vs_average": 0.506981,
+     "power": 0.511835,
+     "vs_average": 0.506243,
      "rank": 59
     },
     {
      "team": "California",
-     "power": 0.513431,
-     "vs_average": 0.50627,
+     "power": 0.511224,
+     "vs_average": 0.505612,
      "rank": 60
     },
     {
      "team": "Texas State",
-     "power": 0.504222,
-     "vs_average": 0.495353,
+     "power": 0.502756,
+     "vs_average": 0.49586,
      "rank": 61
     },
     {
      "team": "North Carolina",
-     "power": 0.501746,
-     "vs_average": 0.492233,
+     "power": 0.500446,
+     "vs_average": 0.493055,
      "rank": 62
     },
     {
      "team": "Delaware",
-     "power": 0.499045,
-     "vs_average": 0.48882,
+     "power": 0.49794,
+     "vs_average": 0.489988,
      "rank": 63
     },
     {
      "team": "Cincinnati",
-     "power": 0.497295,
-     "vs_average": 0.486888,
+     "power": 0.496342,
+     "vs_average": 0.488274,
      "rank": 64
     },
     {
      "team": "East Carolina",
-     "power": 0.494085,
-     "vs_average": 0.482917,
+     "power": 0.493358,
+     "vs_average": 0.484707,
      "rank": 65
     },
     {
      "team": "Iowa State",
-     "power": 0.493499,
-     "vs_average": 0.48219,
+     "power": 0.492819,
+     "vs_average": 0.484057,
      "rank": 66
     },
     {
      "team": "Toledo",
-     "power": 0.491064,
-     "vs_average": 0.479106,
+     "power": 0.490547,
+     "vs_average": 0.481282,
      "rank": 67
     },
     {
      "team": "UTSA",
-     "power": 0.487494,
-     "vs_average": 0.47508,
+     "power": 0.487291,
+     "vs_average": 0.477697,
      "rank": 68
     },
     {
      "team": "Memphis",
-     "power": 0.486171,
-     "vs_average": 0.473503,
+     "power": 0.486073,
+     "vs_average": 0.476287,
      "rank": 69
     },
     {
      "team": "West Virginia",
-     "power": 0.48569,
-     "vs_average": 0.472804,
+     "power": 0.485612,
+     "vs_average": 0.475651,
      "rank": 70
     },
     {
      "team": "Army",
-     "power": 0.484385,
-     "vs_average": 0.471653,
+     "power": 0.484433,
+     "vs_average": 0.474587,
      "rank": 71
     },
     {
      "team": "Boise State",
-     "power": 0.481806,
-     "vs_average": 0.468315,
+     "power": 0.482056,
+     "vs_average": 0.471643,
      "rank": 72
     },
     {
      "team": "Purdue",
-     "power": 0.479223,
-     "vs_average": 0.465221,
+     "power": 0.479668,
+     "vs_average": 0.468869,
      "rank": 73
     },
     {
      "team": "San Diego State",
-     "power": 0.471528,
-     "vs_average": 0.456078,
+     "power": 0.472581,
+     "vs_average": 0.46065,
      "rank": 74
     },
     {
      "team": "New Mexico",
-     "power": 0.457903,
-     "vs_average": 0.439816,
+     "power": 0.460012,
+     "vs_average": 0.446085,
      "rank": 75
     },
     {
      "team": "Washington State",
-     "power": 0.455432,
-     "vs_average": 0.437014,
+     "power": 0.457749,
+     "vs_average": 0.443551,
      "rank": 76
     },
     {
      "team": "Western Kentucky",
-     "power": 0.453848,
-     "vs_average": 0.435141,
+     "power": 0.456292,
+     "vs_average": 0.44188,
      "rank": 77
     },
     {
      "team": "Western Michigan",
-     "power": 0.451859,
-     "vs_average": 0.433022,
+     "power": 0.454482,
+     "vs_average": 0.439958,
      "rank": 78
     },
     {
      "team": "Louisiana Tech",
-     "power": 0.444788,
-     "vs_average": 0.424404,
+     "power": 0.447936,
+     "vs_average": 0.432237,
      "rank": 79
     },
     {
      "team": "Tulane",
-     "power": 0.444096,
-     "vs_average": 0.423552,
+     "power": 0.447291,
+     "vs_average": 0.431475,
      "rank": 80
     },
     {
      "team": "Stanford",
-     "power": 0.442775,
-     "vs_average": 0.422056,
+     "power": 0.446085,
+     "vs_average": 0.430135,
      "rank": 81
     },
     {
      "team": "Oklahoma State",
-     "power": 0.436463,
-     "vs_average": 0.414939,
+     "power": 0.440317,
+     "vs_average": 0.423759,
      "rank": 82
     },
     {
      "team": "Syracuse",
-     "power": 0.432285,
-     "vs_average": 0.409958,
+     "power": 0.436448,
+     "vs_average": 0.419269,
      "rank": 83
     },
     {
      "team": "Kennesaw State",
-     "power": 0.429742,
-     "vs_average": 0.40688,
+     "power": 0.433995,
+     "vs_average": 0.416332,
      "rank": 84
     },
     {
      "team": "Michigan State",
-     "power": 0.429059,
-     "vs_average": 0.406147,
+     "power": 0.43347,
+     "vs_average": 0.415831,
      "rank": 85
     },
     {
      "team": "Oregon State",
-     "power": 0.411107,
-     "vs_average": 0.385237,
+     "power": 0.416896,
+     "vs_average": 0.396927,
      "rank": 86
     },
     {
      "team": "Marshall",
-     "power": 0.408784,
-     "vs_average": 0.382852,
+     "power": 0.414788,
+     "vs_average": 0.394749,
      "rank": 87
     },
     {
      "team": "Ohio",
-     "power": 0.405587,
-     "vs_average": 0.378808,
+     "power": 0.41178,
+     "vs_average": 0.391064,
      "rank": 88
     },
     {
      "team": "Jacksonville State",
-     "power": 0.399343,
-     "vs_average": 0.371717,
+     "power": 0.40604,
+     "vs_average": 0.384668,
      "rank": 89
     },
     {
      "team": "North Texas",
-     "power": 0.397933,
-     "vs_average": 0.370148,
+     "power": 0.404741,
+     "vs_average": 0.383249,
      "rank": 90
     },
     {
      "team": "Navy",
-     "power": 0.396357,
-     "vs_average": 0.368519,
+     "power": 0.403292,
+     "vs_average": 0.381756,
      "rank": 91
     },
     {
      "team": "Boston College",
-     "power": 0.391763,
-     "vs_average": 0.363162,
+     "power": 0.399067,
+     "vs_average": 0.376921,
      "rank": 92
     },
     {
      "team": "Southern Miss",
-     "power": 0.390867,
-     "vs_average": 0.362167,
+     "power": 0.398203,
+     "vs_average": 0.375932,
      "rank": 93
     },
     {
      "team": "Old Dominion",
-     "power": 0.387713,
-     "vs_average": 0.358521,
+     "power": 0.395258,
+     "vs_average": 0.372602,
      "rank": 94
     },
     {
      "team": "South Alabama",
-     "power": 0.387275,
-     "vs_average": 0.358144,
+     "power": 0.394911,
+     "vs_average": 0.372307,
      "rank": 95
     },
     {
      "team": "Temple",
-     "power": 0.385313,
-     "vs_average": 0.355819,
+     "power": 0.393101,
+     "vs_average": 0.37023,
      "rank": 96
     },
     {
      "team": "San Jos\u00e9 State",
-     "power": 0.363614,
-     "vs_average": 0.33146,
+     "power": 0.372989,
+     "vs_average": 0.347882,
      "rank": 97
     },
     {
      "team": "App State",
-     "power": 0.361118,
-     "vs_average": 0.328719,
+     "power": 0.370723,
+     "vs_average": 0.345445,
      "rank": 98
     },
     {
      "team": "Florida Atlantic",
-     "power": 0.360408,
-     "vs_average": 0.328065,
+     "power": 0.370118,
+     "vs_average": 0.344906,
      "rank": 99
     },
     {
      "team": "Utah State",
-     "power": 0.357563,
-     "vs_average": 0.324864,
+     "power": 0.367459,
+     "vs_average": 0.341927,
      "rank": 100
     },
     {
      "team": "Hawai'i",
-     "power": 0.354574,
-     "vs_average": 0.321534,
+     "power": 0.364685,
+     "vs_average": 0.338866,
      "rank": 101
     },
     {
      "team": "Tulsa",
-     "power": 0.351005,
-     "vs_average": 0.317617,
+     "power": 0.361395,
+     "vs_average": 0.335293,
      "rank": 102
     },
     {
      "team": "Miami (OH)",
-     "power": 0.350652,
-     "vs_average": 0.317182,
+     "power": 0.361022,
+     "vs_average": 0.334826,
      "rank": 103
     },
     {
      "team": "Liberty",
-     "power": 0.349814,
-     "vs_average": 0.316289,
+     "power": 0.360282,
+     "vs_average": 0.334057,
      "rank": 104
     },
     {
      "team": "Fresno State",
-     "power": 0.348205,
-     "vs_average": 0.31452,
+     "power": 0.358789,
+     "vs_average": 0.332426,
      "rank": 105
     },
     {
      "team": "Troy",
-     "power": 0.345552,
-     "vs_average": 0.311592,
+     "power": 0.356304,
+     "vs_average": 0.329687,
      "rank": 106
     },
     {
      "team": "UAB",
-     "power": 0.335298,
-     "vs_average": 0.300581,
+     "power": 0.346806,
+     "vs_average": 0.319495,
      "rank": 107
     },
     {
      "team": "Central Michigan",
-     "power": 0.333844,
-     "vs_average": 0.298886,
+     "power": 0.345478,
+     "vs_average": 0.318002,
      "rank": 108
     },
     {
      "team": "UNLV",
-     "power": 0.330141,
-     "vs_average": 0.294883,
+     "power": 0.342031,
+     "vs_average": 0.314284,
      "rank": 109
     },
     {
      "team": "UConn",
-     "power": 0.329263,
-     "vs_average": 0.293922,
+     "power": 0.341195,
+     "vs_average": 0.313356,
      "rank": 110
     },
     {
      "team": "Colorado State",
-     "power": 0.32773,
-     "vs_average": 0.292276,
+     "power": 0.339763,
+     "vs_average": 0.31181,
      "rank": 111
     },
     {
      "team": "Arkansas State",
-     "power": 0.327638,
-     "vs_average": 0.292171,
+     "power": 0.339683,
+     "vs_average": 0.311728,
      "rank": 112
     },
     {
      "team": "New Mexico State",
-     "power": 0.327218,
-     "vs_average": 0.291788,
+     "power": 0.339245,
+     "vs_average": 0.311291,
      "rank": 113
     },
     {
      "team": "UL Monroe",
-     "power": 0.325281,
-     "vs_average": 0.289662,
+     "power": 0.337458,
+     "vs_average": 0.309333,
      "rank": 114
     },
     {
      "team": "Louisiana",
-     "power": 0.325139,
-     "vs_average": 0.289659,
+     "power": 0.337381,
+     "vs_average": 0.309382,
      "rank": 115
     },
     {
      "team": "Georgia State",
-     "power": 0.323438,
-     "vs_average": 0.287664,
+     "power": 0.335777,
+     "vs_average": 0.307535,
      "rank": 116
     },
     {
      "team": "Middle Tennessee",
-     "power": 0.322775,
-     "vs_average": 0.286958,
+     "power": 0.335152,
+     "vs_average": 0.306866,
      "rank": 117
     },
     {
      "team": "Akron",
-     "power": 0.315922,
-     "vs_average": 0.279894,
+     "power": 0.328777,
+     "vs_average": 0.300227,
      "rank": 118
     },
     {
      "team": "Coastal Carolina",
-     "power": 0.310846,
-     "vs_average": 0.274278,
+     "power": 0.324031,
+     "vs_average": 0.29501,
      "rank": 119
     },
     {
      "team": "Florida International",
-     "power": 0.304432,
-     "vs_average": 0.267489,
+     "power": 0.318065,
+     "vs_average": 0.288687,
      "rank": 120
     },
     {
      "team": "Nevada",
-     "power": 0.304056,
-     "vs_average": 0.267104,
+     "power": 0.317707,
+     "vs_average": 0.288312,
      "rank": 121
     },
     {
      "team": "Rice",
-     "power": 0.302826,
-     "vs_average": 0.265821,
+     "power": 0.316557,
+     "vs_average": 0.287097,
      "rank": 122
     },
     {
      "team": "Georgia Southern",
-     "power": 0.302338,
-     "vs_average": 0.26532,
+     "power": 0.316089,
+     "vs_average": 0.28661,
      "rank": 123
     },
     {
      "team": "Missouri State",
-     "power": 0.294546,
-     "vs_average": 0.257186,
+     "power": 0.308804,
+     "vs_average": 0.27896,
      "rank": 124
     },
     {
      "team": "Eastern Michigan",
-     "power": 0.291293,
-     "vs_average": 0.253821,
+     "power": 0.305783,
+     "vs_average": 0.275801,
      "rank": 125
     },
     {
      "team": "Air Force",
-     "power": 0.291017,
-     "vs_average": 0.253437,
+     "power": 0.305556,
+     "vs_average": 0.275524,
      "rank": 126
     },
     {
      "team": "Wyoming",
-     "power": 0.286667,
-     "vs_average": 0.249059,
+     "power": 0.30141,
+     "vs_average": 0.271247,
      "rank": 127
     },
     {
      "team": "Sam Houston",
-     "power": 0.271022,
-     "vs_average": 0.233009,
+     "power": 0.286754,
+     "vs_average": 0.256044,
      "rank": 128
     },
     {
      "team": "Buffalo",
-     "power": 0.258519,
-     "vs_average": 0.220509,
+     "power": 0.274918,
+     "vs_average": 0.243989,
      "rank": 129
     },
     {
      "team": "Northern Illinois",
-     "power": 0.256738,
-     "vs_average": 0.218656,
+     "power": 0.273267,
+     "vs_average": 0.242261,
      "rank": 130
     },
     {
      "team": "Bowling Green",
-     "power": 0.252419,
-     "vs_average": 0.214411,
+     "power": 0.269158,
+     "vs_average": 0.23813,
      "rank": 131
     },
     {
      "team": "Kent State",
-     "power": 0.247655,
-     "vs_average": 0.209572,
+     "power": 0.264701,
+     "vs_average": 0.233549,
      "rank": 132
     },
     {
      "team": "UTEP",
-     "power": 0.245998,
-     "vs_average": 0.208057,
+     "power": 0.263079,
+     "vs_average": 0.231991,
      "rank": 133
     },
     {
      "team": "Charlotte",
-     "power": 0.236031,
-     "vs_average": 0.19819,
+     "power": 0.253652,
+     "vs_average": 0.222474,
      "rank": 134
     },
     {
      "team": "North Dakota State",
-     "power": 0.214593,
-     "vs_average": 0.177808,
+     "power": 0.233126,
+     "vs_average": 0.202357,
      "rank": 135
     },
     {
      "team": "Sacramento State",
-     "power": 0.214593,
-     "vs_average": 0.177808,
+     "power": 0.233126,
+     "vs_average": 0.202357,
      "rank": 136
     },
     {
      "team": "Ball State",
-     "power": 0.198099,
-     "vs_average": 0.162236,
+     "power": 0.217218,
+     "vs_average": 0.186866,
      "rank": 137
     },
     {
      "team": "Massachusetts",
-     "power": 0.120741,
-     "vs_average": 0.094109,
+     "power": 0.140642,
+     "vs_average": 0.116254,
      "rank": 138
     }
    ]

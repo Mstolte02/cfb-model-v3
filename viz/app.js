@@ -2877,7 +2877,7 @@
           <div class="retro-table-wrap"><table><caption class="sr-only">Completed games, replayed pregame win probability and model rating change</caption><thead><tr><th>WK / OPPONENT</th><th>FINAL</th><th>WIN %¹</th><th>MODEL Δ²</th></tr></thead><tbody>
           ${games.length ? games.map(g=>`<tr><td><small>W${g.week} · ${g.site}</small> <button class="team-link" data-team="${esc(g.opponent)}">${esc(g.opponent)}</button></td><td><b class="retro-${g.result.toLowerCase()}">${g.result}</b> ${g.scored}–${g.allowed}</td><td>${g.probability===null?"—":pct(g.probability)}</td><td>${g.delta===null?"—":signed(g.delta,3)}</td></tr>`).join("") : `<tr><td colspan="4" class="retro-empty">KICKOFF PENDING<br><small>Final scores and model updates appear here as games finish.</small></td></tr>`}
           </tbody></table></div>
-          <p class="retro-notes">¹ Replayed start-of-week win chance. ² Rating change in model logit units; positive means stronger. Unrated opponents have scores only.</p>
+          <p class="retro-notes">¹ Replayed start-of-week win chance. ² Rating change from the score alone, in model logit units; positive means stronger. The win rate also moves with season-to-date form, PFF numbers, in-season WAR and every other team's results, so these do not add up to the change since preseason. Unrated opponents have scores only.</p>
         </section></div>
         <section class="retro-window retro-chart"><h3>NEUTRAL WIN RATE <span>${esc(last.label || "Current")}</span></h3>${graph}
           ${points.length===1?`<p class="retro-notes">The opening rating is set. The line grows as results arrive.</p>`:""}

@@ -605,8 +605,18 @@ def _replay_ensemble(schedule, model, ratings, model_path, ratings_path,
     war = ER.load_form_payload(WAR_TEAM)
     result = ER.replay(ensemble, finals, rows, pff=pff, war=war)
 
+    # The preseason row is drawn with the stack week 1 was actually predicted with:
+    # week 1 reads an empty PFF table ({} -> PFF stack, zeros) and, with the WAR
+    # payload present, an empty WAR table ({} -> WAR stack). initial_state alone
+    # leaves both None, the base stack, whose heavier prior_level weight put every
+    # strong team 1-2pp higher at week 0 than any later week could be compared with,
+    # so "since preseason" read a stack switch as a decline (Ole Miss -1.7pp that was
+    # +0.1pp like for like).
+    preseason = ER.initial_state(ensemble)
+    preseason["pff"] = ER.pff_table(pff, 1)
+    preseason["war"] = ER.war_table(war, 1)
     history = [{"week": 0, "label": "Preseason", "completed_games": 0,
-                "teams": ER.power_table(ensemble, ER.initial_state(ensemble), names)}]
+                "teams": ER.power_table(ensemble, preseason, names)}]
     completed = 0
     for key, snapshot in result["snapshots"]:
         slate = [e for e in result["events"] if e["slate"] == key]
