@@ -13,3 +13,6 @@ dist/
 # Excel lock files, created whenever a workbook in war_model/ea is open.
 # One got swept into a commit by git add -A and had to be removed again.
 ~$*
+
+# Fourth & Jev generated historical states / ledgers
+artifacts/fourth_jev/
