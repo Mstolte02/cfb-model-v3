@@ -2,6 +2,7 @@
 
     python -m scripts.publish_live_ensemble            # attach the fitted ensemble
     python -m scripts.publish_live_ensemble --refresh  # re-pull finals + form, replay
+    python -m scripts.publish_live_ensemble --war-only # rewrite ensemble.war_projected only
 
 Attaching adds an ``ensemble`` block beside the frozen v4 blocks and replays every
 published 2026 final through it with the same stdlib code the scheduled capture
@@ -58,6 +59,31 @@ def attach(model_path: Path = MODEL) -> dict:
     return model
 
 
+def attach_war(model_path: Path = MODEL, frame_path: Path = LE.FRAME_PATH) -> dict:
+    """Write ``ensemble.war_projected`` into the published block and touch nothing else.
+
+    ``attach`` rebuilds the whole block and drops the live state, so a payload that only
+    lacks the display WAR would otherwise need a full re-attach and replay. This keeps
+    ``members`` and ``state`` byte-for-byte and places the field where ``ensemble_block``
+    puts it. The scheduled capture carries it forward unchanged.
+    """
+    frame = pd.read_csv(frame_path, index_col="team")
+    model = json.loads(model_path.read_text(encoding="utf-8"))
+    ensemble = model["ensemble"]
+    teams = list(ensemble["members"][0]["initial"])
+    war = LE.team_war(comp_frame(frame, teams))
+    rebuilt = {}
+    for key, value in ensemble.items():
+        if key == "war_projected":
+            continue
+        if key == "members":
+            rebuilt["war_projected"] = war
+        rebuilt[key] = value
+    model["ensemble"] = rebuilt
+    model_path.write_text(json.dumps(model, indent=1, allow_nan=False), encoding="utf-8")
+    return model
+
+
 def refresh() -> int:
     """Pull finals and form from CFBD, then replay - the capture without lines."""
     CAP.load_env()
@@ -75,7 +101,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--refresh", action="store_true",
                         help="re-pull finals and form and replay the live ensemble")
+    parser.add_argument("--war-only", action="store_true",
+                        help="rewrite ensemble.war_projected from the fitted frame only")
     args = parser.parse_args()
+    if args.war_only:
+        attach_war()
+        print(f"ensemble.war_projected written -> {MODEL}")
+        return
     if not args.refresh:
         attach()
         print(f"ensemble attached -> {MODEL}")

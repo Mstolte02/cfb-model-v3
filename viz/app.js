@@ -2300,7 +2300,7 @@
         <td class="num"><input class="wi-in pl-in" type="number" step="0.05"
           data-team="${esc(r.t)}" data-player="${esc(r.n)}"
           value="${plWar(r).toFixed(3)}" aria-label="Expected role-adjusted WAR for ${esc(r.n)}"
-          ${WI.enabled() ? "" : "disabled title=\"Read-only: current-roster WAR is not a validated v4 win-probability input\""}></td>
+          ${WI.enabled() ? "" : "disabled title=\"Read-only: roster WAR feeds the v5.1 model only through the preseason level, which is fixed at week 0\""}></td>
       </tr>`;
     }).join("");
 
@@ -2389,7 +2389,7 @@
 
      Two column sets, because they are two different kinds of number and averaging
      them into one table would invite adding a z-score to a win. Roster WAR is in
-     wins; the model inputs are the standardised features the coefficients multiply. */
+     wins; the model inputs are what the live v5.1 ensemble reads for each team. */
   const TR_OFF = GROUP_ORDER.filter(g => OFF_GROUPS.has(g));
   const TR_DEF = GROUP_ORDER.filter(g => !OFF_GROUPS.has(g));
 
@@ -2422,9 +2422,12 @@
     war: {
       label: "Roster WAR by position",
       note: `Projected wins above replacement contributed by each position group,
-        summed over that group's slots in the 2026 two-deep. V4 shows this roster
-        layer as read-only: it does not alter win probability until dated historical
-        roster snapshots support a leakage-free validation.`,
+        summed over that group's slots in the 2026 two-deep. Roster WAR reaches the
+        v5.1 model through the preseason level: each team's projected roster WAR,
+        standardised, is one of the inputs its four preseason models were fitted on,
+        and it is the <b>WAR</b> column under Model inputs. It is fixed at week 0, so
+        these figures are read-only: the page cannot refit those models, and an edit
+        here would not move any rating.`,
       fmt: v => v.toFixed(2),
       cols: () => [
         ...GROUP_ORDER.map(g => ({ k: g, h: g,
@@ -2436,27 +2439,94 @@
       val: (t, k) => (trGroupWar()[t] || {})[k] ?? 0,
       has: t => !!trGroupWar()[t],
     },
+    /* The LIVE model's per-team numbers, not the frozen v4 frame. Until v5.1 this set
+       showed the v4 features (O, D, talent, returning, v4 schedule strength), which
+       the live ensemble has not read since v5. Every column below comes from a file
+       the six-hourly capture rewrites - ratings.json for Power, the ensemble block of
+       model_v4.json for the rest, schedule.json for who plays whom - so the table
+       moves on every update. The one exception is WAR, a week-0 input that the
+       capture carries forward unchanged (see src/live_ensemble.team_war). */
     inputs: {
       label: "Model inputs",
-      note: `The standardised features the trained coefficients actually multiply.
-        <b>Power</b> is the output &mdash; mean neutral-site win probability against
-        the rest of FBS &mdash; and the five underneath are what produce it. Schedule
-        strength is the mean rating of everyone on the slate, so a high number is a
-        hard season, not a good team.`,
-      fmt: (v, k) => k === "power" ? (100 * v).toFixed(1) : v.toFixed(2),
+      note: () => `What the live v${esc(liveInputs().version)} model reads for each team,
+        from the files the six-hourly update rewrites. <b>Power</b> is the output: mean
+        neutral-site win probability against the rest of FBS. <b>Rating</b> is the
+        team's current strength in logit units, averaged over the four ensemble
+        members; it is <b>Preseason</b>, the week-0 level from the expanded-WAR
+        preseason models, plus <b>Change</b>, what results have moved it since.
+        <b>Form</b> is opponent-adjusted season-to-date offence and defence in standard
+        deviations; it is blank until a team has ${liveInputs().minForm} games with
+        advanced stats, because the model does not use it before then. <b>PFF</b> is
+        PFF's season-to-date offence and defence composites; it is blank when PFF's
+        table through the latest week is not in yet, because the model then falls back
+        to its stack without PFF. <b>WAR</b> is the
+        standardised projected roster WAR the preseason models were fitted on, fixed
+        for the season. <b>Schedule</b> is the mean Power of every opponent on the slate
+        (an FCS opponent counts as ${(100 * (1 - FCS_WIN_P)).toFixed(0)}), so a high
+        number is a hard season, not a good team.`,
+      fmt: (v, k) => v == null ? "—"
+        : k === "power" || k === "sos" ? (100 * v).toFixed(1)
+        : k === "change" ? (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(2)
+        : v.toFixed(2),
       cols: () => [
-        { k: "power",     h: "Power",     cls: "tr-sum" },
-        { k: "O",         h: "Offense",   cls: "tr-off" },
-        { k: "D",         h: "Defense",   cls: "tr-def" },
-        { k: "talent",    h: "Talent" },
-        { k: "returning", h: "Returning" },
-        { k: "sos",       h: "Schedule" },
+        { k: "power",  h: "Power",     cls: "tr-sum" },
+        { k: "rating", h: "Rating" },
+        { k: "pre",    h: "Preseason" },
+        { k: "change", h: "Change" },
+        { k: "formO",  h: "Form off",  cls: "tr-off" },
+        { k: "formD",  h: "Form def",  cls: "tr-def" },
+        { k: "pffO",   h: "PFF off",   cls: "tr-off" },
+        { k: "pffD",   h: "PFF def",   cls: "tr-def" },
+        { k: "war",    h: "WAR" },
+        { k: "sos",    h: "Schedule" },
       ],
-      val: (t, k) => { const r = trRow()[t]; return r && r[k] != null ? r[k] : 0; },
-      has: t => !!trRow()[t],
+      val: (t, k) => { const r = liveInputs().rows[t]; return r && r[k] != null ? r[k] : null; },
+      has: t => !!liveInputs().rows[t],
     },
   };
-  const trRow = () => ratingRow();
+
+  /* One row per team from the live ensemble. Cached on the objects it reads, which
+     are replaced wholesale when the data changes, so a stale cache cannot survive. */
+  let liveInputsCache = null;
+  function liveInputs() {
+    const E = cur().model.ensemble, rows = liveRatings();
+    if (liveInputsCache && liveInputsCache.E === E && liveInputsCache.src === rows) {
+      return liveInputsCache;
+    }
+    const S = E.state, members = E.members, minForm = E.min_form_games;
+    const mean = xs => xs.reduce((x, y) => x + y, 0) / xs.length;
+    const power = Object.fromEntries(rows.map(r => [r.team, r.power]));
+    const fcsPower = 1 - FCS_WIN_P;
+    const opp = {};
+    for (const g of schedule) {
+      for (const [t, o] of [[g.h, g.a], [g.a, g.h]]) {
+        if (power[t] == null) continue;
+        (opp[t] || (opp[t] = [])).push(power[o] != null ? power[o] : fcsPower);
+      }
+    }
+    const out = {};
+    for (const r of rows) {
+      const t = r.team;
+      if (members.some(m => m.initial[t] == null)) continue;
+      const pre = mean(members.map(m => m.initial[t]));
+      const rating = mean(members.map(m => S.ratings[m.name][t]));
+      const forms = members.map(m => (S.form[m.name] || {})[t])
+        .filter(f => f && f[2] >= minForm);
+      const pff = S.pff && S.pff[t];
+      out[t] = {
+        power: r.power, rating, pre, change: rating - pre,
+        formO: forms.length === members.length ? mean(forms.map(f => f[0])) : null,
+        formD: forms.length === members.length ? mean(forms.map(f => f[1])) : null,
+        pffO: pff ? pff[0] : null, pffD: pff ? pff[1] : null,
+        war: E.war_projected && E.war_projected[t] != null ? E.war_projected[t] : null,
+        sos: opp[t] && opp[t].length ? mean(opp[t]) : null,
+      };
+    }
+    liveInputsCache = { E, src: rows, rows: out, minForm,
+      version: E.model_version || "5.1", games: S.completed_games,
+      week: (cur().ratings.updated_through || {}).week };
+    return liveInputsCache;
+  }
   let trSet = "war", trSort = "__all", trDesc = true;
 
   function trRows() {
@@ -2483,20 +2553,25 @@
     // Ranked over every team in the set, not the filtered view: filtering to one
     // conference should tell you where its teams sit in FBS, not renumber them 1-16.
     const all = liveRatings().filter(r => S.has(r.team));
+    // A missing value (no form yet, say) sorts last whichever way the column runs,
+    // and takes no rank: it is not the worst team, it is not measured.
+    const cmp = (a, b, desc) => {
+      const x = S.val(a.team, trSort), y = S.val(b.team, trSort);
+      if (x == null || y == null) return (x == null) - (y == null);
+      return desc ? y - x : x - y;
+    };
     const rank = {};
-    all.slice().sort((a, b) => S.val(b.team, trSort) - S.val(a.team, trSort))
-       .forEach((r, i) => { rank[r.team] = i + 1; });
+    all.slice().sort((a, b) => cmp(a, b, true))
+       .forEach((r, i) => { if (S.val(r.team, trSort) != null) rank[r.team] = i + 1; });
 
     // The sorted column is the only one that gets a fill. Thirteen bars in one row
     // would be a heat map nobody asked for; one bar says "this is the column you are
     // ranking by" and stays legible.
-    const vals = all.map(r => S.val(r.team, trSort));
+    const vals = all.map(r => S.val(r.team, trSort)).filter(v => v != null);
     const lo = Math.min(...vals), hi = Math.max(...vals);
     const span = (hi - lo) || 1;
 
-    const rows = trRows().slice()
-      .sort((a, b) => trDesc ? S.val(b.team, trSort) - S.val(a.team, trSort)
-                             : S.val(a.team, trSort) - S.val(b.team, trSort));
+    const rows = trRows().slice().sort((a, b) => cmp(a, b, trDesc));
     document.getElementById("tr-count").textContent =
       `${rows.length} of ${all.length} teams`;
 
@@ -2509,15 +2584,15 @@
       const cells = cols.map(c => {
         const v = S.val(t, c.k);
         const fig = S.fmt(v, c.k);
-        if (c.k !== trSort) {
-          return `<td class="num ${c.cls || ""}">${fig}</td>`;
+        if (c.k !== trSort || v == null) {
+          return `<td class="num ${c.cls || ""}${c.k === trSort ? " sorted" : ""}">${fig}</td>`;
         }
         return `<td class="num ${c.cls || ""} sorted"><div class="bar-wrap">
           <span class="pct">${fig}</span>
           <div class="bar"><i style="width:${100 * (v - lo) / span}%;
             background:${tint}"></i></div></div></td>`;
       }).join("");
-      return `<tr><td class="rank num">${rank[t]}</td>
+      return `<tr><td class="rank num">${rank[t] ?? "—"}</td>
         <td><div class="team-cell sm">
           <span class="team-stripe" style="background:${tint}"></span>
           <img src="${logoURL(t)}" alt="" loading="lazy">
@@ -2525,10 +2600,16 @@
             <div class="conf">${esc(r.conference)}</div></div></div></td>${cells}</tr>`;
     }).join("");
 
+    // The inputs set says which model and which update it is showing, from the
+    // payload itself, so a reader can see it move when the six-hourly update lands.
+    const L = trSet === "inputs" ? liveInputs() : null;
+    const caption = L ? `<div class="tr-caption"><b>Live v${esc(L.version)} model</b>
+      &middot; ${L.week ? `through week ${L.week}` : "preseason"} &middot;
+      ${L.games} completed FBS games &middot; refreshed by the six-hourly update</div>` : "";
     host.innerHTML =
-      `<div class="mini-wrap tr-scroll"><table class="mini tr-table">
+      `${caption}<div class="mini-wrap tr-scroll"><table class="mini tr-table">
          <thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>
-       <div class="wd-foot">${S.note}</div>`;
+       <div class="wd-foot">${typeof S.note === "function" ? S.note() : S.note}</div>`;
 
     host.querySelectorAll("th.sortable").forEach(th =>
       th.addEventListener("click", () => {
@@ -2541,6 +2622,8 @@
   }
 
   function fillRatingSelects() {
+    const opt = document.querySelector('#tr-set option[value="inputs"]');
+    if (opt) opt.textContent = `Model inputs (v${liveInputs().version})`;
     const sel = document.getElementById("tr-conf");
     if (!sel || sel.options.length > 1) return;
     [...new Set(cur().ratings.teams.map(t => t.conference))].sort()
@@ -2552,7 +2635,7 @@
   document.getElementById("tr-set").addEventListener("change", e => {
     trSet = e.target.value;
     // Each set has its own natural default: total roster wins, or the power rating
-    // the other five inputs feed. Carrying a sort key across sets is impossible
+    // the other inputs feed. Carrying a sort key across sets is impossible
     // anyway - they share no column names.
     trSort = trSet === "war" ? "__all" : "power";
     trDesc = true;
