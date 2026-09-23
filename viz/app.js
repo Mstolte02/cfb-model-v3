@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel] = await Promise.all([
+  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel, inseason] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -38,7 +38,15 @@
     fetchJSON("data/bet_tracking.json").catch(() => null),
     fetchJSON("data/locked_results_2026.json").catch(() => ({ bets: [] })),
     fetchJSON("data/deserving-model.json").catch(() => null),
+    // In-season player WAR (scripts/update_inseason_war.py). Optional: display only,
+    // nothing the ratings or bets read, so a missing file just hides the columns.
+    fetchJSON("data/players_inseason.json").catch(() => null),
   ]);
+  /* In-season WAR joins by team and player name, the key the exporter writes. A
+     player PFF has not charted this season (injured, redshirting, not yet on the
+     field) has no entry and shows "—" rather than a number that was never measured. */
+  const INS = (inseason && inseason.players) || {};
+  const insOf = (t, n) => (INS[t] && INS[t][n]) || null;
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
   // two-deep; it was a knowingly worse backtest kept as an alternative view, and it is
   // gone too. Talent is a PFF / recruiting / WAR blend whose weights are swept jointly
@@ -2058,6 +2066,11 @@
             <b>${defTot.toFixed(2)}</b><span>wins from defense</span></div>
           <div class="od-chip2" style="--tint:${tint}">
             <b>${(roster.winsTotal ?? roster.total).toFixed(2)}</b><span>wins above replacement</span></div>
+          ${inseason && INS[t] ? (() => {
+            const d = Object.values(INS[t]).reduce((s, p) => s + (p.d || 0), 0);
+            return `<div class="od-chip2" style="--tint:${tint}" title="Preseason roster WAR plus the change this season's PFF grades make to each player. Display only: the ratings do not read it.">
+              <b>${((roster.winsTotal ?? roster.total) + d).toFixed(2)}</b><span>in-season WAR, thru wk ${inseason.through_week} (${d >= 0 ? "+" : ""}${d.toFixed(2)})</span></div>`;
+          })() : ""}
         </div>
         ${lineupHTML(t, roster, tint)}
         <h4 style="margin-top:22px">Every position group, against the rest of the country
@@ -2175,7 +2188,11 @@
     const rows = [];
     for (const [t, r] of Object.entries(players)) {
       if (!r || !r.players) continue;
-      for (const p of r.players) rows.push({ t, conf: conf(t), ...p });
+      for (const p of r.players) {
+        const s = insOf(t, p.n);
+        rows.push({ t, conf: conf(t), ...p,
+                    sn26: s ? s.sn : null, win: s ? s.war : null, dwin: s ? s.d : null });
+      }
     }
     return rows;
   })();
@@ -2224,6 +2241,12 @@
     { k: "q",    h: "Value WAR", n: true, v: r => plQuality(r) },
     { k: "role", h: "Role range", v: r => r.opp || 0 },
     { k: "war",  h: "Expected WAR", n: true, v: r => plWar(r) },
+    { k: "sn26", h: "2026 snaps", n: true, v: r => r.sn26,
+      t: "Snaps PFF has charted for him this season" },
+    { k: "win",  h: "In-season WAR", n: true, v: r => r.win,
+      t: "Expected WAR after this season's PFF grades. The more past snaps behind a player, the less a few weeks move him. Playing time stays at the preseason projection." },
+    { k: "dwin", h: "Change", n: true, v: r => r.dwin,
+      t: "In-season WAR minus preseason Expected WAR" },
   ];
   // Ranks sort smallest-first; every other numeric column sorts largest-first.
   const PL_ASC = new Set(["n", "t", "conf", "c", "rk", "prk"]);
@@ -2258,6 +2281,9 @@
     const val = col.v;
     return rows.slice().sort((a, b) => {
       const x = val(a), y = val(b);
+      // Players with no in-season number sort last in either direction, so a
+      // descending sort does not open on a page of blanks read as zero.
+      if (x == null || y == null) return (x == null) - (y == null);
       if (typeof x === "string") return plDesc ? y.localeCompare(x) : x.localeCompare(y);
       return plDesc ? y - x : x - y;
     });
@@ -2272,7 +2298,7 @@
     document.getElementById("pl-reset").disabled = !WI.enabled() || !WI.count();
 
     const head = PL_COLS.map(c => `<th class="${c.n ? "num" : ""} sortable${
-      c.k === plSort ? " sorted" : ""}" data-k="${c.k}">${c.h}${
+      c.k === plSort ? " sorted" : ""}" data-k="${c.k}"${c.t ? ` title="${esc(c.t)}"` : ""}>${c.h}${
       c.k === plSort ? (plDesc ? " ▾" : " ▴") : ""}</th>`).join("");
 
     const RK = plRanks();
@@ -2301,14 +2327,24 @@
           data-team="${esc(r.t)}" data-player="${esc(r.n)}"
           value="${plWar(r).toFixed(3)}" aria-label="Expected role-adjusted WAR for ${esc(r.n)}"
           ${WI.enabled() ? "" : "disabled title=\"Read-only: roster WAR feeds the v5.1 model only through the preseason level, which is fixed at week 0\""}></td>
+        <td class="num">${r.sn26 == null ? "—" : r.sn26.toLocaleString()}</td>
+        <td class="num">${r.win == null ? "—" : r.win.toFixed(3)}</td>
+        <td class="num ${r.dwin > 0.0005 ? "pos" : r.dwin < -0.0005 ? "neg" : ""}">${
+          r.dwin == null ? "—" : (r.dwin > 0 ? "+" : "") + r.dwin.toFixed(3)}</td>
       </tr>`;
     }).join("");
 
+    const insNote = inseason ? `<div class="wd-foot"><b>In-season WAR</b> is through week
+        ${inseason.through_week}, from PFF grades. It moves each player's per-snap value
+        by what this season shows, and moves players with long records less. It keeps
+        the preseason playing time and does not change the model's ratings or picks.
+        A dash means PFF has not charted him this season.</div>` : "";
     document.getElementById("pl-table").innerHTML =
       `<div class="mini-wrap pl-scroll"><table class="mini pl-table"><thead><tr>${head}</tr></thead>
        <tbody>${body}</tbody></table></div>` +
       (all.length > PL_LIMIT ? `<div class="wd-foot">Showing the top ${PL_LIMIT} by the
-        current sort. Narrow with the filters or the search box to see the rest.</div>` : "");
+        current sort. Narrow with the filters or the search box to see the rest.</div>` : "") +
+      insNote;
     wirePlayers();
   }
 

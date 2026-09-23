@@ -92,7 +92,19 @@ def main(no_players: bool = False):
     # several complete builds at one point, each with its own players*.json, and
     # stripping only the first published the licensed rows under the other name while
     # reporting success. The glob costs nothing and cannot forget a file.
-    rosters = sorted((DIST / "data").glob("players*.json"))
+    # players_inseason.json matches the glob but is not a roster: it is keyed by
+    # schema/season/players, not by team, and every row in it is a per-player PFF
+    # figure. So --no-players removes it outright, and it is never handed to the
+    # roster loop below, which would fail on its shape.
+    inseason = DIST / "data" / "players_inseason.json"
+    rosters = sorted(p for p in (DIST / "data").glob("players*.json") if p != inseason)
+    if inseason.exists():
+        if no_players:
+            inseason.unlink()
+            print(f"  {inseason.name}: removed (per-player PFF rows)")
+        else:
+            n = sum(len(v) for v in json.loads(inseason.read_text())["players"].values())
+            print(f"  {inseason.name}: {n:,} players included")
     if not rosters:
         print("  [warn] no players*.json in dist/")
     for players in rosters:
