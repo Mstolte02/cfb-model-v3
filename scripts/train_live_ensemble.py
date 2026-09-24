@@ -42,6 +42,20 @@ PFF_COLUMNS = ["pff_O_diff", "pff_D_diff"]
 # player WAR per week from PFF grades, at cuts 3/6/9. A third stack per member.
 WAR_COLUMNS = ["war_delta_diff"]
 KEYS = ["season", "week", "home_team", "away_team"]
+# v5.3: ONE MEASURE PER SIDE ONCE PFF IS IN PLAY. CFBD form and PFF form are near
+# duplicates (offence r .81, defence r .70; scripts/stack_collinearity.py), and a
+# stack given both split the credit arbitrarily - Ole Miss's +2.0 SD offence cost it
+# 0.9pp through a negative dO weight. Forward-tested one column at a time
+# (scripts/stack_overlap_backtest.py): dropping CFBD offence helps (-.000237), dropping
+# PFF offence hurts (+.0011); dropping CFBD defence hurts (+.0006), dropping PFF
+# defence helps a little (-.00006); neither interaction helps. So offence comes from
+# PFF and defence from CFBD: -.000265 Brier together, 95% [-.00050, -.00005], and no
+# column above VIF 2.7. The base stack (no PFF) keeps CFBD offence, its only offence.
+DROP_WITH_PFF = ("dO", "pff_D_diff")
+
+
+def _lean(cols):
+    return [c for c in cols if c not in DROP_WITH_PFF]
 
 
 def war_features(parts_by_spec) -> pd.DataFrame | None:
@@ -118,7 +132,7 @@ def fit_member(spec: str, frames, parts, raw, pool: list[int],
     if pff is not None:
         with_pff = pooled.merge(pff, on=KEYS, how="left").fillna(
             {col: 0.0 for col in PFF_COLUMNS})
-        cols = [*PD.ARM_COLUMNS[ARM], *PFF_COLUMNS]
+        cols = _lean([*PD.ARM_COLUMNS[ARM], *PFF_COLUMNS])
         s2, m2 = PD.fit_stack(with_pff, cols, c)
         stack_pff = {"columns": cols, "scale": s2.scale_.tolist(),
                      "coef": m2.coef_[0].tolist(), "C": float(c)}
@@ -127,7 +141,7 @@ def fit_member(spec: str, frames, parts, raw, pool: list[int],
         with_war = (pooled.merge(pff, on=KEYS, how="left")
                     .merge(war, on=KEYS, how="left")
                     .fillna({col: 0.0 for col in [*PFF_COLUMNS, *WAR_COLUMNS]}))
-        cols = [*PD.ARM_COLUMNS[ARM], *PFF_COLUMNS, *WAR_COLUMNS]
+        cols = _lean([*PD.ARM_COLUMNS[ARM], *PFF_COLUMNS, *WAR_COLUMNS])
         s3, m3 = PD.fit_stack(with_war, cols, c)
         stack_war = {"columns": cols, "scale": s3.scale_.tolist(),
                      "coef": m3.coef_[0].tolist(), "C": float(c)}
@@ -154,7 +168,7 @@ def fit_manifest(frames, parts_by_spec, raw, pool, projection_meta=None) -> dict
     war = war_features(parts_by_spec)
     members = [fit_member(spec, frames, parts_by_spec[spec], raw, pool, pff, war)[1]
                for spec in SPECS]
-    return {"schema_version": 3, "model_version": "5.2" if war is not None else "5.1",
+    return {"schema_version": 3, "model_version": "5.3" if war is not None else "5.1",
             "architecture": "equal_ensemble_expanded_war_score_innovation_ewma",
             "training_seasons": list(pool),
             "temporal_contract": "pregame only; current-season transforms use prior weeks",

@@ -2503,7 +2503,10 @@
         advanced stats, because the model does not use it before then. <b>PFF</b> is
         PFF's season-to-date offence and defence composites; it is blank when PFF's
         table through the latest week is not in yet, because the model then falls back
-        to its stack without PFF. <b>WAR</b> is the
+        to its stack without PFF. The two form measures overlap heavily, so since v5.3
+        the model reads one per side when PFF is in: <b>PFF off</b> for offence and
+        <b>Form def</b> for defence. <b>Form off</b> and <b>PFF def</b> are shown for
+        reference and are read only by the no-PFF fallback. <b>WAR</b> is the
         standardised projected roster WAR the preseason models were fitted on, fixed
         for the season. <b>In-season WAR</b> is the team's summed change in player WAR
         per week from this season's PFF grades, at the latest of weeks 3, 6 and 9 the
