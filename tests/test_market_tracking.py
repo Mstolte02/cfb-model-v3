@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.capture_market_snapshot import (fetch_cfbd, flatten, implied, latest_quotes,
+from scripts.capture_market_snapshot import (fetch_cfbd, fetch_espn_games, flatten, implied, latest_quotes,
                                              model_probability,
                                              moneyline_research_candidate, publish_finals,
                                              quote_key, quote_payload_hash, quote_value,
@@ -283,6 +283,83 @@ class MarketTrackingTests(unittest.TestCase):
             self.assertEqual(rows[0], {
                 "id": 1, "h": "UNLV", "a": "Memphis", "f": 1, "hp": 21, "ap": 27})
             self.assertNotIn("f", rows[1])
+
+    def test_espn_scores_arrive_in_cfbd_shape_with_our_team_names(self):
+        def event(game_id, home, away, name, completed):
+            return {"id": str(game_id), "date": "2026-09-25T23:00Z", "competitions": [{
+                "status": {"type": {"name": name, "completed": completed}},
+                "competitors": [
+                    {"homeAway": "home", "score": home, "team": {"location": "ESPN name"}},
+                    {"homeAway": "away", "score": away, "team": {"location": "ESPN name"}}]}]}
+        requested = []
+
+        def fetch(url):
+            requested.append(url)
+            return {"events": [event(1, "24", "20", "STATUS_FINAL", True),
+                               event(2, "7", "3", "STATUS_IN_PROGRESS", False),
+                               event(99, "1", "0", "STATUS_FINAL", True)]}
+        with tempfile.TemporaryDirectory() as tmp:
+            schedule = Path(tmp) / "schedule.json"
+            schedule.write_text(json.dumps([
+                {"id": 1, "h": "UAB", "a": "Navy", "w": 4, "d": "2026-09-25"},
+                {"id": 2, "h": "A", "a": "B", "w": 4, "d": "2026-09-26"},
+                {"id": 3, "h": "C", "a": "D", "w": 9, "d": "2026-10-24"},
+            ]))
+            now = datetime(2026, 9, 26, 12, tzinfo=timezone.utc)
+            games = fetch_espn_games(now, schedule, fetch=fetch)
+            # Week 9 is weeks away, so only week 4 is requested.
+            self.assertEqual(len(requested), 1)
+            self.assertIn("week=4", requested[0])
+            by_id = {g["id"]: g for g in games}
+            self.assertEqual(set(by_id), {1, 2})  # event 99 is not on our schedule
+            self.assertEqual(by_id[1], {
+                "id": 1, "week": 4, "seasonType": "regular",
+                "startDate": "2026-09-25T23:00Z", "homeTeam": "UAB", "awayTeam": "Navy",
+                "completed": True, "homePoints": 24, "awayPoints": 20})
+            self.assertFalse(by_id[2]["completed"])
+            self.assertIsNone(by_id[2]["homePoints"])
+            self.assertEqual(publish_finals(games, schedule), 1)
+            rows = json.loads(schedule.read_text())
+            self.assertEqual((rows[0]["f"], rows[0]["hp"], rows[0]["ap"]), (1, 24, 20))
+            self.assertNotIn("f", rows[1])
+
+    def test_results_publish_when_the_line_fetch_fails(self):
+        import scripts.capture_market_snapshot as cms
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            ledger = root / "ledger"
+            quotes, checks = ledger / "lines.jsonl", ledger / "checks.jsonl"
+            ledger.mkdir()
+            prior = {"captured_at": "2026-09-22T00:00:00Z", "game_id": 1,
+                     "provider": "DraftKings", "spread": -3, "spreadOpen": -3,
+                     "homeMoneyline": -150, "awayMoneyline": 130}
+            quotes.write_text(json.dumps(prior) + "\n")
+            checks.write_text(json.dumps({"checked_at": "2026-09-22T00:00:00Z"}) + "\n")
+            odds = root / "odds.json"
+            odds.write_text(json.dumps({"weekly": [{"id": 1}], "markets": {}, "sources": {}}))
+            model = root / "model.json"
+            model.write_text(json.dumps({"teams": {}}))
+            paths = {"LEDGER_DIR": ledger, "QUOTES": quotes, "CHECKS": checks,
+                     "ENTRIES": ledger / "w.jsonl", "SETTLEMENTS": ledger / "s.jsonl",
+                     "STATUS": ledger / "status.json", "ODDS": odds, "MODEL": model,
+                     "TRACKING": root / "tracking.json",
+                     "HISTORICAL": root / "missing.json", "RATINGS": root / "missing.json"}
+            games = [{"id": 1, "completed": True, "homePoints": 24, "awayPoints": 20}]
+            with patch.multiple(cms, **paths), \
+                 patch.object(cms, "publish_finals", return_value=1) as finals, \
+                 patch.object(cms, "replay_published_results", return_value=0), \
+                 patch.object(cms, "freeze_weekly_model_snapshots", return_value=0):
+                tracking = cms.run(None, datetime(2026, 9, 26, tzinfo=timezone.utc),
+                                   games, lock_weekly_board=True)
+            finals.assert_called_once_with(games)
+            # No tombstones, no failed check logged, no board lock on stale quotes.
+            self.assertEqual(quotes.read_text().count("\n"), 1)
+            self.assertEqual(checks.read_text().count("\n"), 1)
+            self.assertFalse((ledger / "status.json").exists())
+            self.assertFalse(tracking["weekly_board_updated_this_check"])
+            self.assertFalse(tracking["lines_checked_this_check"])
+            self.assertEqual(tracking["final_scores_published_this_check"], 1)
+            self.assertEqual(json.loads(odds.read_text())["weekly"], [{"id": 1}])
 
     def test_completed_results_replay_is_idempotent_and_exports_history(self):
         with tempfile.TemporaryDirectory() as tmp:

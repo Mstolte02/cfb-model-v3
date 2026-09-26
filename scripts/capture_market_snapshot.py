@@ -34,6 +34,8 @@ except ImportError:  # run directly as scripts/capture_market_snapshot.py in CI
 ROOT = Path(__file__).resolve().parents[1]
 YEAR = 2026
 BASE = "https://api.collegefootballdata.com"
+ESPN_SCOREBOARD = ("https://site.api.espn.com/apis/site/v2/sports/football/"
+                   "college-football/scoreboard")
 LEDGER_DIR = ROOT / "data" / "market_snapshots"
 QUOTES = LEDGER_DIR / f"lines_{YEAR}.jsonl"
 CHECKS = LEDGER_DIR / f"checks_{YEAR}.jsonl"
@@ -161,6 +163,64 @@ def fetch_advanced(key: str) -> list[dict]:
     """Regular-season team-game advanced stats, garbage time excluded as in training."""
     return fetch_cfbd(key, "/stats/game/advanced", {
         "year": YEAR, "excludeGarbageTime": "true", "seasonType": "regular"})
+
+
+def _fetch_public_json(url: str, timeout: int = 45) -> dict:
+    """GET a keyless JSON endpoint. Windows goes through curl, as the CFBD fetch does."""
+    if os.name == "nt":
+        proc = subprocess.run(["curl.exe", "-s", "-S", "-m", str(timeout), url],
+                              capture_output=True, timeout=timeout + 10)
+        if proc.returncode:
+            raise RuntimeError(f"request failed: {proc.stderr.decode(errors='replace').strip()}")
+        return json.loads(proc.stdout.decode("utf-8"))
+    request = urllib.request.Request(url, headers={
+        "Accept": "application/json", "User-Agent": "cfb-model-v3-market-capture/1.0"})
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        return json.load(response)
+
+
+def fetch_espn_games(now: datetime, schedule_path: Path = SCHEDULE,
+                     fetch=None) -> list[dict]:
+    """Final scores from ESPN's public scoreboard, in the shape of CFBD /games.
+
+    Scores must not depend on the CFBD call budget: when that runs out mid-month the
+    lines stop, but results still have to reach the schedule so bets are graded and
+    ratings replay. CFBD's game ids are ESPN's event ids and ESPN's regular-season
+    week numbers are the schedule's, so a game is matched by id alone. Team names,
+    week and season type come from our own schedule, so every downstream reader sees
+    the same spellings it saw from CFBD. Only weeks that have started (or start
+    within eight days, for the PFF freeze) are requested. ``fetch`` replaces the
+    network in tests.
+    """
+    get = fetch or _fetch_public_json
+    schedule = json.loads(schedule_path.read_text(encoding="utf-8"))
+    horizon = now.date().toordinal() + 8
+    weeks = sorted({int(r["w"]) for r in schedule
+                    if r.get("w") is not None and r.get("d")
+                    and datetime.fromisoformat(r["d"]).date().toordinal() <= horizon})
+    by_id = {int(r["id"]): r for r in schedule if r.get("id") is not None}
+    out = []
+    for week in weeks:
+        query = {"dates": YEAR, "seasontype": 2, "week": week, "groups": 80, "limit": 500}
+        payload = get(f"{ESPN_SCOREBOARD}?{urllib.parse.urlencode(query)}")
+        for event in payload.get("events", []):
+            row = by_id.get(int(event["id"]))
+            if row is None:
+                continue
+            comp = (event.get("competitions") or [{}])[0]
+            status = (comp.get("status") or event.get("status") or {}).get("type", {})
+            sides = {c.get("homeAway"): c for c in comp.get("competitors", [])}
+            completed = bool(status.get("completed")) and status.get("name") == "STATUS_FINAL"
+            points = {}
+            for side in ("home", "away"):
+                score = (sides.get(side) or {}).get("score")
+                points[side] = int(score) if completed and score not in (None, "") else None
+            out.append({"id": int(event["id"]), "week": int(row["w"]),
+                        "seasonType": "regular", "startDate": event.get("date"),
+                        "homeTeam": row["h"], "awayTeam": row["a"],
+                        "completed": completed and None not in points.values(),
+                        "homePoints": points["home"], "awayPoints": points["away"]})
+    return out
 
 
 def publish_form(raw: list[dict], form_path: Path = FORM) -> int:
@@ -1020,11 +1080,16 @@ def availability_summary() -> dict:
             "last_event_at": max((r.get("observed_at") or "" for r in rows), default=None)}
 
 
-def run(raw: list[dict], now: datetime, games: list[dict] | None = None,
+def run(raw: list[dict] | None, now: datetime, games: list[dict] | None = None,
         lock_weekly_board: bool = False) -> dict:
+    """One capture. ``raw`` is None when the line fetch failed this time: nothing is
+    appended to the quote ledger or the check log (a failed check is not evidence a
+    book pulled its price), the board cannot lock, and only results are processed."""
     LEDGER_DIR.mkdir(parents=True, exist_ok=True)
     captured_at = iso(now)
-    current = flatten(raw, captured_at)
+    lines_checked = raw is not None
+    lock_weekly_board = lock_weekly_board and lines_checked
+    current = flatten(raw, captured_at) if lines_checked else []
     prior_events = read_jsonl(QUOTES)
     prior = latest_quotes(prior_events, include_removed=True)
     changed = [row for row in current
@@ -1032,7 +1097,7 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None,
                or quote_value(row) != quote_value(prior[quote_key(row)])]
     current_keys = {quote_key(row) for row in current}
     for key, old in prior.items():
-        if key in current_keys or old.get("removed"):
+        if not lines_checked or key in current_keys or old.get("removed"):
             continue
         tombstone = dict(old)
         tombstone.update({field: None for field in QUOTE_FIELDS})
@@ -1045,7 +1110,8 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None,
              "timestamp_semantics": "retrieval time, not sportsbook quote time",
              "games": len({r["game_id"] for r in current}), "quotes": len(current),
              "changed_quotes": len(changed), "payload_hash": payload_hash}
-    append_jsonl(CHECKS, [check])
+    if lines_checked:
+        append_jsonl(CHECKS, [check])
     checks = read_jsonl(CHECKS)
 
     # Results are part of the information set for future games, so replay them before
@@ -1110,7 +1176,7 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None,
 
     existing_settlements = {(int(s["game_id"]), s["side"])
                             for s in read_jsonl(SETTLEMENTS)}
-    result_rows = games if games is not None else raw
+    result_rows = games if games is not None else (raw or [])
     raw_by_id = {int(g["id"]): g for g in result_rows}
     new_settlements = []
     for entry in all_entries:
@@ -1153,11 +1219,18 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None,
     displayed_candidates = (sorted(candidates, key=lambda r: (-r["gap"], r["start"]))
                             if board_updated
                             else previous_tracking.get("current_candidates", []))
+    last_check = checks[-1] if checks else {}
     tracking = {"checked_at": captured_at, "source": "CFBD /lines",
         "timestamp_semantics": "retrieval time, not sportsbook quote time",
+        "results_source": "ESPN scoreboard" if games is not None else "CFBD /lines",
+        "lines_checked_this_check": lines_checked,
+        "lines_last_checked_at": last_check.get("checked_at"),
         "quote_events": len(events), "successful_checks": len(checks),
-        "changed_quotes_this_check": len(changed), "games_with_quotes": check["games"],
-        "books_with_quotes": sorted({r["provider"] for r in current}),
+        "changed_quotes_this_check": len(changed),
+        "games_with_quotes": (check["games"] if lines_checked
+                              else previous_tracking.get("games_with_quotes")),
+        "books_with_quotes": (sorted({r["provider"] for r in current}) if lines_checked
+                              else previous_tracking.get("books_with_quotes", [])),
         "watchlist_rule": {"minimum_gap": .20, "minimum_books": 2,
             "uncertainty_gate": "80% Jeffreys lower bound > best-price break-even + 1pp",
             "status": "forward research; never an automatic bet"},
@@ -1172,7 +1245,8 @@ def run(raw: list[dict], now: datetime, games: list[dict] | None = None,
         "completed_rating_games_replayed": ratings_replayed,
         "availability": availability_summary()}
     TRACKING.write_text(json.dumps(tracking, indent=2, allow_nan=False))
-    STATUS.write_text(json.dumps(check, indent=2))
+    if lines_checked:
+        STATUS.write_text(json.dumps(check, indent=2))
     return tracking
 
 
@@ -1189,14 +1263,29 @@ def main() -> None:
     args = parser.parse_args()
     load_env()
     key = os.environ.get("CFBD_API_KEY")
-    if not key:
-        if args.allow_missing_key:
-            print("CFBD_API_KEY is not configured; market capture skipped.")
-            return
+    if not key and not args.allow_missing_key:
         raise RuntimeError("CFBD_API_KEY is not configured")
     now = utcnow()
-    lines, games = fetch_lines(key), fetch_games(key)
-    missing = form_missing_finals(games, now)
+    # Scores come from ESPN, so a spent CFBD budget never stops bets being graded.
+    # CFBD /games is the fallback only if ESPN itself is down.
+    try:
+        games = fetch_espn_games(now)
+    except (urllib.error.URLError, TimeoutError, subprocess.TimeoutExpired,
+            RuntimeError, KeyError, ValueError) as exc:
+        if not key:
+            raise
+        print(f"ESPN scoreboard unavailable ({exc}); final scores from CFBD /games.")
+        games = fetch_games(key)
+    lines = None
+    if key:
+        try:
+            lines = fetch_lines(key)
+        except (urllib.error.URLError, TimeoutError, subprocess.TimeoutExpired,
+                RuntimeError) as exc:
+            print(f"CFBD lines unavailable ({exc}); publishing results only.")
+    else:
+        print("CFBD_API_KEY is not configured; publishing results only.")
+    missing = form_missing_finals(games, now) if key else []
     if missing:
         # Non-fatal: a failed pull replays on the committed table, and the next
         # capture asks again because the finals are still missing from it.
@@ -1225,6 +1314,8 @@ def main() -> None:
           f"{tracking['completed_rating_games_replayed']} rating results replayed.")
     print("Weekly board " + ("locked." if tracking["weekly_board_updated_this_check"]
                              else "unchanged; background capture only."))
+    if args.lock_weekly_board and lines is None:
+        print("::warning::Weekly board NOT locked: CFBD lines were unavailable.")
     print(f"-> {QUOTES}\n-> {TRACKING}")
 
 
