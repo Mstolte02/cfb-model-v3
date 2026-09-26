@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-09-26T16:29:26Z",
+  "checked_at": "2026-09-26T21:16:05Z",
   "source": "CFBD /lines",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
   "results_source": "ESPN scoreboard",
@@ -88,11 +88,11 @@
   ],
   "entries": 20,
   "new_entries_this_check": 0,
-  "settlements": 18,
+  "settlements": 19,
   "qualified_clv_observations": 15,
   "mean_consensus_clv": 0.003924605653437207,
-  "final_scores_published_this_check": 0,
-  "completed_rating_games_replayed": 162,
+  "final_scores_published_this_check": 16,
+  "completed_rating_games_replayed": 176,
   "availability": {
     "events": 2,
     "last_event_at": "2026-08-03T14:47:00Z"
