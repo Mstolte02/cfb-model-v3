@@ -234,11 +234,12 @@ def publish_form(raw: list[dict], form_path: Path = FORM) -> int:
 
 
 def form_missing_finals(games: list[dict], now: datetime,
-                        form_path: Path = FORM, window_days: float = 4.0) -> list[int]:
+                        form_path: Path = FORM, window_days: float = 7.0) -> list[int]:
     """Recent completed regular-season games the committed form table lacks.
 
     CFBD's free tier is a monthly call budget, so the advanced-stats pull runs only
-    when a final from the last few days is not in the table yet. The window keeps a
+    when a final from the last week is not in the table yet. This allows recovery
+    after a midweek API-budget reset. The window keeps a
     game CFBD never processes from triggering a pull on every capture forever.
     """
     payload = ER.load_form_payload(form_path)
