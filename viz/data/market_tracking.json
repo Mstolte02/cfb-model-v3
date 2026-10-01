@@ -1,13 +1,13 @@
 {
-  "checked_at": "2026-10-01T13:28:41Z",
+  "checked_at": "2026-10-01T13:39:27Z",
   "source": "CFBD /lines",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
   "results_source": "ESPN scoreboard",
   "lines_checked_this_check": true,
-  "lines_last_checked_at": "2026-10-01T13:28:41Z",
-  "quote_events": 4405,
-  "successful_checks": 161,
-  "changed_quotes_this_check": 15,
+  "lines_last_checked_at": "2026-10-01T13:39:27Z",
+  "quote_events": 4406,
+  "successful_checks": 162,
+  "changed_quotes_this_check": 1,
   "games_with_quotes": 649,
   "books_with_quotes": [
     "Bovada",
