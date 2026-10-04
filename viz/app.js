@@ -2961,6 +2961,39 @@
   document.getElementById("print-team-card")?.addEventListener("click", () => window.print());
 
   let leaderKind = "players";
+  /* Top 10 studio. No. 1 gets a feature card; 2-10 are ranked rows whose bar is scaled
+     to the leader, so the gap at the top is visible without reading numbers. */
+  function leaderBoardHTML(rows) {
+    if (!rows.length) return `<div class="lb-empty">No players match these filters.</div>`;
+    const top = Math.max(...rows.map(r => r.value), 1e-9);
+    const sign = v => (v > 0 ? "+" : "") + v.toFixed(3);
+    const change = (r, small) => `<span class="lb-change ${r.change > .0005 ? "pos" : r.change < -.0005 ? "neg" : ""}"
+      title="Change in WAR since the start of the season">${sign(r.change)}${small ? "" : " <small>since start</small>"}</span>`;
+    const team = r => r.player
+      ? `<span class="lb-team"><img src="${logoURL(r.team)}" alt="" loading="lazy">
+          <span>${esc(r.label)} · <button class="team-link" data-team="${esc(r.team)}">${esc(r.team)}</button></span></span>`
+      : `<span class="lb-team"><span>${esc(r.label)}${r.leader ? ` · led by ${esc(r.leader)}` : ""}</span></span>`;
+    const title = r => r.player ? esc(r.name)
+      : `<button class="team-link" data-team="${esc(r.team)}">${esc(r.name)}</button>`;
+    const [lead, ...rest] = rows;
+    const media = lead.photo
+      ? `<div class="lb-hero-media"><img src="${lead.photo}" alt="${esc(lead.name)}" onerror="this.remove()"></div>`
+      : `<div class="lb-hero-media logo"><img src="${logoURL(lead.team)}" alt=""></div>`;
+    const hero = `<article class="lb-hero" style="--team:${color(lead.team)};--logo:url('${logoURL(lead.team)}')">${media}
+      <div class="lb-hero-copy"><span class="lb-kicker"><b>No. 1</b> ${esc(lead.label)}</span>
+        <h3>${title(lead)}${lead.tag}</h3>${team(lead)}
+        <div class="lb-hero-stats"><span class="lb-big"><b>${lead.value.toFixed(lead.digits)}</b><span>WAR</span></span>${change(lead)}${rest.length
+          ? `<span class="lb-gap"><b>+${(lead.value - rest[0].value).toFixed(lead.digits)}</b><span>Lead over No. 2</span></span>` : ""}</div></div></article>`;
+    const list = rest.map((r, i) => `<article class="lb-row" style="--team:${color(r.team)};--logo:url('${logoURL(r.team)}')">
+      <span class="lb-rank">${i + 2}</span>
+      <span class="lb-face${r.photo ? "" : " logo"}">${r.photo ? `<img src="${r.photo}" alt="" loading="lazy" onerror="this.remove()">`
+        : `<img src="${logoURL(r.team)}" alt="" loading="lazy">`}</span>
+      <div class="lb-who"><h4>${title(r)}${r.tag}</h4>${team(r)}
+        <div class="lb-bar"><i style="width:${Math.max(2, 100 * Math.max(0, r.value) / top).toFixed(1)}%"></i></div></div>
+      <div class="lb-val"><b>${r.value.toFixed(r.digits)}</b>${change(r, true)}</div></article>`).join("");
+    return `<div class="leader-board">${hero}<div class="lb-list">${list}</div></div>`;
+  }
+
   function renderLeaders() {
     const group = document.getElementById("leader-group").value;
     const cls = document.getElementById("leader-class").value;
@@ -2977,26 +3010,27 @@
         rows.push({ team, ...currentPlayer(team, p) });
       }
       rows.sort((a, b) => plQuality(b) - plQuality(a));
-      document.getElementById("leader-grid").innerHTML = rows.slice(0, 10).map((p, i) => {
-        const photo = (editorial.headshots || {})[p.team + "\u0000" + p.n];
-        return `<article class="leader-card" style="--team:${color(p.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span>
-          <div class="leader-portrait" style="background-image:url('${logoURL(p.team)}')">${photo ? `<img src="${photo}" alt="${esc(p.n)}" loading="lazy" onerror="this.remove()">` : ""}</div>
-          <div class="leader-copy"><span>${p.g} · <button class="team-link" data-team="${esc(p.team)}">${esc(p.team)}</button></span><h3>${esc(p.n)}</h3>
-            <div class="leader-metric"><b>${plQuality(p).toFixed(3)}</b> WAR <em class="${p.dwin >= 0 ? "pos" : "neg"}">${p.dwin >= 0 ? "+" : ""}${(p.dwin || 0).toFixed(3)} since start</em></div></div></article>`;
-      }).join("");
+      rows = rows.slice(0, 10).map(p => ({
+        team: p.team, name: p.n, value: plQuality(p), digits: 3, change: p.dwin || 0,
+        label: p.g, tag: injTag(p), player: true,
+        photo: (editorial.headshots || {})[p.team + "\u0000" + p.n] || null }));
     } else {
-      rows = Object.entries(players).map(([team, r]) => {
-        const live = liveRoster(team) || r;
-        const by = live.byGroup || {};
-        const value = group === "ALL" ? live.total
-          : group === "OFF" ? Object.entries(by).reduce((s, [g, v]) => s + (OFF_GROUPS.has(g) ? v : 0), 0)
-          : group === "DEF" ? Object.entries(by).reduce((s, [g, v]) => s + (!OFF_GROUPS.has(g) ? v : 0), 0)
-          : (by[group] || 0);
-        return { team, value };
-      })
-        .sort((a, b) => b.value - a.value).slice(0, 10);
-      document.getElementById("leader-grid").innerHTML = rows.map((r, i) => `<article class="leader-card team-room" style="--team:${color(r.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span><div class="leader-portrait"><img src="${logoURL(r.team)}" alt=""></div><div class="leader-copy"><span>${group === "ALL" ? "Complete roster" : group === "OFF" ? "Offense" : group === "DEF" ? "Defense" : group + " room"}</span><h3><button class="team-link" data-team="${esc(r.team)}">${esc(r.team)}</button></h3><div class="leader-metric"><b>${r.value.toFixed(2)}</b> WAR</div></div></article>`).join("");
+      const inGroup = g => group === "ALL" || (group === "OFF" ? OFF_GROUPS.has(g)
+        : group === "DEF" ? !OFF_GROUPS.has(g) : g === group);
+      const label = group === "ALL" ? "Complete roster" : group === "OFF" ? "Offense"
+        : group === "DEF" ? "Defense" : group + " room";
+      rows = Object.keys(players).map(team => {
+        const live = liveRoster(team) || players[team];
+        const ps = (live.players || []).filter(p => inGroup(p.g));
+        const value = live.players ? ps.reduce((s, p) => s + (p.w || 0), 0)
+          : Object.entries(live.byGroup || {}).reduce((s, [g, v]) => s + (inGroup(g) ? v : 0), 0);
+        const change = ps.reduce((s, p) => s + (p.dwin || 0), 0);
+        const best = ps.reduce((b, p) => (!b || (p.w || 0) > (b.w || 0) ? p : b), null);
+        return { team, name: team, value, digits: 2, change, label, tag: "", photo: null,
+                 leader: best && best.n };
+      }).sort((a, b) => b.value - a.value).slice(0, 10);
     }
+    document.getElementById("leader-grid").innerHTML = leaderBoardHTML(rows);
     wireTeamLinks();
   }
   function fillLeaderControls() {
