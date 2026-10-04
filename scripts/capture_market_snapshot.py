@@ -67,7 +67,8 @@ QUOTE_FIELDS = ("spread", "spreadOpen", "homeMoneyline", "awayMoneyline")
 # These lines were not available to the model as a ready, forward-looking Week 0
 # board. Both games also involved a first-year FBS team with only the newcomer
 # fallback prior, so they are retained as results but excluded from every bet output.
-BET_EXCLUDED_GAME_IDS = {401864577, 401866408}
+# Delaware–Liberty (Week 5): Mark voided the bet for an injury identified before kickoff.
+BET_EXCLUDED_GAME_IDS = {401864577, 401866408, 401871050}
 
 
 def utcnow() -> datetime:

@@ -11804,7 +11804,9 @@
     "homeMargin": 2.23840855,
     "homePower": 0.426608,
     "awayPower": 0.448585
-   }
+   },
+   "bettingExcluded": true,
+   "bettingExclusionReason": "Voided by Mark: injury identified before the game."
   },
   {
    "id": 401858476,
