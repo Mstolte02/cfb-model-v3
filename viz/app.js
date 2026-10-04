@@ -53,8 +53,13 @@
     const s = insOf(t, p.n);
     return {...p, w: s ? s.war : p.w, st: s && s.st != null ? s.st : p.st,
       out: s && s.out != null ? s.out : p.out, sn26: s ? s.sn : null,
-      dwin: s ? s.d : 0, win: s ? s.war : p.w};
+      dwin: s ? s.d : 0, win: s ? s.war : p.w, inj: s ? s.inj : null};
   };
+  // Injury-report tag. Out zeroes the player; doubtful and questionable scale his WAR
+  // to the expected share of the next game (src/inseason_war.AVAIL_SHARE).
+  const injTag = p => p.out
+    ? ` <span class="tag out" title="Out on the latest injury report or a team announcement — his WAR is zero until he returns">OUT</span>`
+    : p.inj ? ` <span class="tag inj" title="${p.inj === "doubtful" ? "Doubtful — WAR counted at 25%" : "Questionable — WAR counted at 50%"}">${p.inj === "doubtful" ? "D" : "Q"}</span>` : "";
   function liveRoster(t) {
     const base = players[t];
     if (!base || !base.players) return base;
@@ -2028,7 +2033,7 @@
     const movers = ps.filter(p => Math.abs(p.dwin || 0) >= .0005);
     const moverList = (positive) => movers.slice().sort((a, b) => positive
       ? (b.dwin || 0) - (a.dwin || 0) : (a.dwin || 0) - (b.dwin || 0)).slice(0, 4)
-      .map(p => `<li><span><b>${esc(p.n)}</b><small>${esc(p.g)}${p.out ? " · OUT" : ""}</small></span>
+      .map(p => `<li><span><b>${esc(p.n)}</b><small>${esc(p.g)}${p.out ? " · OUT" : p.inj ? " · " + p.inj.toUpperCase() : ""}</small></span>
         <strong class="${p.dwin >= 0 ? "pos" : "neg"}">${p.dwin > 0 ? "+" : ""}${p.dwin.toFixed(3)}</strong></li>`).join("") ||
         `<li class="empty">No measured movement yet</li>`;
 
@@ -2387,8 +2392,7 @@
         <td class="rank num">${RK.overall.get(plKey(r))}</td>
         <td><div class="team-cell sm"><span class="team-stripe" style="background:${tint}"></span>
           <span class="pl-name">${esc(r.n)}</span>${r.i
-            ? ` <span class="tag unproven" title="No prior FBS snaps — this projection is a positional prior, not a measurement">?</span>` : ""}${r.out
-            ? ` <span class="tag out" title="Out for the season — his snaps go to whoever replaces him, so his WAR is zero by construction">OUT</span>` : ""}</div></td>
+            ? ` <span class="tag unproven" title="No prior FBS snaps — this projection is a positional prior, not a measurement">?</span>` : ""}${injTag(r)}</div></td>
         <td><div class="team-cell sm"><img src="${logoURL(r.t)}" alt="" loading="lazy">
           <button class="team-link" data-team="${esc(r.t)}">${esc(r.t)}</button></div></td>
         <td class="pl-conf">${esc(r.conf)}</td>

@@ -146,6 +146,10 @@ def apply_availability(d, path=AVAILABILITY):
         elif r.status == "starter":
             d.loc[m, ["is_starter", "pinned_starter"]] = True
             notes.append(f"STARTER  {r.team:<16}{r.player:<22}{r.note}")
+        elif r.status in ("doubtful", "questionable"):
+            # Game-to-game report grades. They scale live WAR in src/inseason_war.py
+            # and have no meaning for the preseason roster.
+            continue
         else:
             notes.append(f"[warn] unknown status {r.status!r} for {r.player}; ignored")
     return d, notes

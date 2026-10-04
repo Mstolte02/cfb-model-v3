@@ -103,6 +103,8 @@ tbody tr:hover { background: var(--panel2); }
 .tag.out { background: rgba(190,52,52,.18); color: #be3434; font-weight: 700;
   cursor: help; }
 @media (prefers-color-scheme: dark) { .tag.out { color: #ff7b72; } }
+.tag.inj { background: rgba(183,121,31,.18); color: #9a6514; font-weight: 700; }
+@media (prefers-color-scheme: dark) { .tag.inj { color: #e3b05a; } }
 .tag.conf-tag { background: rgba(47,96,150,.14); color: var(--blue); }
 /* Transferred in for 2026. Muted rather than coloured: it is context on where the
    player came from, not a warning about the number next to it. */

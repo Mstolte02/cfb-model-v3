@@ -36,6 +36,12 @@ LAM_GRID = np.linspace(0, 1, 21)
 # MIN_WINDOW). Below that the rule is untested, so those players are not moved.
 MIN_SNAPS = 20
 AVAILABILITY = ROOT / "war_model" / "availability_2026.csv"
+# Expected share of the next game a reported status leaves a player. Out is a hard
+# zero; the report grades between keep his contribution continuous rather than
+# forcing a play/sit call (scripts/sync_injury_reports.py uses the same scale).
+AVAIL_SHARE = {"out": 0.0, "doubtful": 0.25, "questionable": 0.5}
+# Regular-season games a preseason proj_war is spread over (see availability_team_deltas).
+SEASON_GAMES = 12
 STARTERS = {"QB": 1, "RB": 1, "WR": 3, "TE": 1, "OT": 2, "IOL": 3,
             "DT": 2, "EDGE": 2, "LB": 2, "CB": 3, "SAF": 2}
 
@@ -129,6 +135,11 @@ def availability_team_deltas(roster: pd.DataFrame,
 
     Keeping this as a live delta preserves the temporal contract: a new injury changes
     the next prediction, not the preseason baseline or already-played games.
+
+    Units matter here. The team signal D is WAR per week (rate change x snaps per
+    week / 1000), and the stacks weight it at roughly 4 logits per unit. proj_war is a
+    whole season, so it is spread over SEASON_GAMES before it joins D; adding season
+    WAR directly would have let one injured starter swing a game by tens of points.
     """
     import sys
     sys.path.insert(0, str(ROOT / "war_model"))
@@ -136,12 +147,12 @@ def availability_team_deltas(roster: pd.DataFrame,
     status = availability_overrides(path)
     out: dict[str, float] = {}
     for r in roster.itertuples():
-        if status.get((r.team, norm_name(r.player))) != "out":
-            continue
+        share = AVAIL_SHARE.get(status.get((r.team, norm_name(r.player))), 1.0)
         # An absence already baked into the base roster has no additional live cost.
-        if not bool(r.available):
+        if share >= 1.0 or not bool(r.available):
             continue
-        out[r.team] = out.get(r.team, 0.0) - float(r.proj_war)
+        out[r.team] = (out.get(r.team, 0.0)
+                       - (1.0 - share) * float(r.proj_war) / SEASON_GAMES)
     return out
 
 
@@ -295,7 +306,9 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
     j["status"] = [status.get((t, k), "") for t, k in zip(j.team, j.key)]
     j["available_now"] = j.available.fillna(True) & j.status.ne("out")
     j.loc[~j.available_now, "war_inseason"] = 0.0
-    j.loc[~j.available_now, "delta_war"] = -j.loc[~j.available_now, "proj_war"]
+    share = j.status.map(AVAIL_SHARE).fillna(1.0)
+    j["war_inseason"] = j.war_inseason * share
+    j["delta_war"] = j.war_inseason - j.proj_war
     j["starter_now"] = current_starters(j)
     j.loc[j.status.eq("starter") & j.available_now, "starter_now"] = True
 
@@ -309,6 +322,7 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
             "d": round(float(row.delta_war if pd.notna(row.delta_war) else 0.0), 3),
             "st": bool(row.starter_now),
             "out": not bool(row.available_now),
+            **({"inj": row.status} if row.status in AVAIL_SHARE else {}),
         }
     return {
         "schema": 1, "season": 2026, "through_week": int(week),

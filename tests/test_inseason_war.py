@@ -71,7 +71,9 @@ class InseasonWarTests(unittest.TestCase):
         self.assertEqual(d["season"], 2026)
         self.assertGreaterEqual(d["through_week"], 1)
         row = next(iter(next(iter(d["players"].values())).values()))
-        self.assertEqual(set(row), {"sn", "war", "d", "st", "out"})
+        rows = [r for team in d["players"].values() for r in team.values()]
+        for r in rows:   # "inj" appears only for players on an injury report
+            self.assertEqual(set(r) - {"inj"}, {"sn", "war", "d", "st", "out"})
 
     def test_availability_delta_does_not_double_count_base_absence(self):
         roster = pd.DataFrame([
@@ -82,7 +84,35 @@ class InseasonWarTests(unittest.TestCase):
             path = Path(temp) / "availability.csv"
             path.write_text("team,player,status,note\nA,New Injury,out,x\n"
                             "A,Already Out,out,x\n")
-            self.assertEqual(IW.availability_team_deltas(roster, path), {"A": -.12})
+            self.assertEqual(IW.availability_team_deltas(roster, path),
+                             {"A": -.12 / IW.SEASON_GAMES})
+
+    def test_availability_delta_is_per_week_and_scales_by_report_status(self):
+        # D is WAR per week; a season proj_war must be spread over the season, or
+        # one injured starter would outweigh every in-season performance change.
+        roster = pd.DataFrame([
+            {"team": "A", "player": "Questionable Guy", "proj_war": .6, "available": True},
+            {"team": "A", "player": "Doubtful Guy", "proj_war": .4, "available": True},
+            {"team": "B", "player": "Healthy Guy", "proj_war": 1.0, "available": True},
+        ])
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "availability.csv"
+            path.write_text("team,player,status,note\nA,Questionable Guy,questionable,x\n"
+                            "A,Doubtful Guy,doubtful,x\n")
+            got = IW.availability_team_deltas(roster, path)
+        self.assertEqual(set(got), {"A"})
+        self.assertAlmostEqual(got["A"], -(.5 * .6 + .75 * .4) / IW.SEASON_GAMES)
+
+    def test_injury_report_status_reads_headline_not_prose(self):
+        from scripts import sync_injury_reports as S
+        self.assertEqual(S.norm_status("Out"), "out")
+        self.assertEqual(S.norm_status("IR - Knee"), "out")
+        self.assertEqual(S.norm_status("Questionable - Undisclosed"), "questionable")
+        self.assertIsNone(S.norm_status("Without a timetable"))
+        # Two sources that disagree average to the status between them.
+        self.assertEqual(S.status_of_share((S.SHARE["out"] + S.SHARE["questionable"]) / 2),
+                         "doubtful")
+        self.assertIsNone(S.status_of_share(1.0))
 
     def test_current_starters_follow_usage_and_remove_absences(self):
         frame = pd.DataFrame([
