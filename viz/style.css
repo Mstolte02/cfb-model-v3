@@ -686,6 +686,8 @@ details.nerd[open] > summary { margin-bottom: 14px; }
   --coral: #e05d44;
   --gold: #c69645;
   --accent: #9a542f;
+  --display: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --amber: #b7791f;
 }
 body { background: var(--paper); }
 .site-header {
@@ -1120,3 +1122,19 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
 .team-subnav button{flex:0 0 auto;border:0;border-radius:8px;padding:10px 14px;background:transparent;color:var(--muted);font:750 12px/1 var(--sans);cursor:pointer}
 .team-subnav button.active{background:var(--navy);color:#fff}.team-subnav button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .team-pane{display:none}.team-pane.active{display:block}.hero-stats.compact{margin-bottom:18px}.team-history-summary>.wi-btn{margin-top:16px}
+
+/* Team overview: a compact season dashboard, not a duplicate depth chart. */
+.overview-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+.pulse-card{position:relative;overflow:hidden;grid-column:span 6;padding:22px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,color-mix(in srgb,var(--panel) 92%,var(--tint) 8%),var(--panel));box-shadow:0 14px 34px rgba(0,0,0,.16)}
+.pulse-card::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--tint)}
+.pulse-card p{margin:12px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
+.overview-kicker{display:block;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.expectation-card,.season-card{min-height:220px}.expectation-number{margin:12px 0 0;font:800 clamp(42px,6vw,72px)/1 var(--display);letter-spacing:-.055em}
+.expectation-card h3{margin:3px 0 18px;font-size:18px}.expectation-track{position:relative;height:5px;margin:18px 0;background:linear-gradient(90deg,var(--red),#777 50%,var(--green));border-radius:9px}
+.expectation-track::after{content:"";position:absolute;left:50%;top:-5px;width:1px;height:15px;background:var(--text);opacity:.55}.expectation-track i{position:absolute;top:-5px;width:14px;height:14px;translate:-50% 0;border:3px solid var(--panel);border-radius:50%;background:var(--tint);box-shadow:0 0 0 2px var(--tint)}
+.season-record{margin:14px 0 18px;font:800 clamp(40px,5vw,64px)/1 var(--display);letter-spacing:-.04em}.season-moves{display:flex;gap:12px;flex-wrap:wrap}.season-moves span{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:rgba(0,0,0,.12);color:var(--muted);font-size:12px}.season-moves b{margin-right:5px;color:var(--text);font-size:17px}.season-moves b.pos{color:var(--green)}.season-moves b.neg{color:var(--red)}
+.movers-card{grid-column:span 6}.mover-list{list-style:none;margin:15px 0 0;padding:0}.mover-list li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line)}.mover-list li:first-child{border-top:0}.mover-list span{display:flex;flex-direction:column}.mover-list small{margin-top:2px;color:var(--muted);font-size:10px;letter-spacing:.08em}.mover-list strong{font-variant-numeric:tabular-nums}.mover-list .empty{color:var(--muted)}
+.units-card,.results-card{grid-column:1/-1}.unit-tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:15px}.unit-tile{display:grid;grid-template-columns:1fr auto;align-items:end;gap:2px 8px;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.12)}.unit-tile span{font-weight:800}.unit-tile b{font:800 24px/1 var(--display)}.unit-tile small{grid-column:1/-1;color:var(--muted)}.unit-tile.strength b{color:var(--green)}.unit-tile.watch b{color:var(--amber)}
+.result-ribbon{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:15px}.result-chip{display:grid;grid-template-columns:auto 1fr;gap:2px 9px;padding:12px;border-radius:12px;background:rgba(0,0,0,.14);border:1px solid var(--line)}.result-chip b{grid-row:1/3;font:900 25px/1 var(--display)}.result-chip.win b{color:var(--green)}.result-chip.loss b{color:var(--red)}.result-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:700}.result-chip small{color:var(--muted)}
+.leader-metric{display:flex;align-items:baseline;gap:6px;margin-top:10px;color:var(--muted);font-size:12px}.leader-metric b{color:var(--text);font:800 22px/1 var(--display)}.leader-metric em{margin-left:auto;font-style:normal;font-size:11px}
+@media(max-width:760px){.pulse-card,.movers-card{grid-column:1/-1}.unit-tiles{grid-template-columns:repeat(2,1fr)}.result-ribbon{grid-template-columns:1fr}.expectation-card,.season-card{min-height:0}.leader-metric{flex-wrap:wrap}.leader-metric em{width:100%;margin-left:0}}

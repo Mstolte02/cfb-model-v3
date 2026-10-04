@@ -35,6 +35,9 @@ LAM_GRID = np.linspace(0, 1, 21)
 # The backtest graded players with 20+ snaps in the window (war_inseason_backtest
 # MIN_WINDOW). Below that the rule is untested, so those players are not moved.
 MIN_SNAPS = 20
+AVAILABILITY = ROOT / "war_model" / "availability_2026.csv"
+STARTERS = {"QB": 1, "RB": 1, "WR": 3, "TE": 1, "OT": 2, "IOL": 3,
+            "DT": 2, "EDGE": 2, "LB": 2, "CB": 3, "SAF": 2}
 
 
 def _wls(x, y, w):
@@ -108,6 +111,64 @@ def canonical_team(names, team_map) -> str | None:
     return None
 
 
+def availability_overrides(path: Path = AVAILABILITY) -> dict[tuple[str, str], str]:
+    """Current verified player overrides, keyed the same way as the PFF name join."""
+    if not path.exists():
+        return {}
+    import sys
+    sys.path.insert(0, str(ROOT / "war_model"))
+    from build_roster_2026 import norm_name
+    rows = pd.read_csv(path).fillna("")
+    return {(r.team, norm_name(r.player)): str(r.status).lower()
+            for r in rows.itertuples()}
+
+
+def availability_team_deltas(roster: pd.DataFrame,
+                             path: Path = AVAILABILITY) -> dict[str, float]:
+    """WAR removed by confirmed current absences without rewriting the week-0 roster.
+
+    Keeping this as a live delta preserves the temporal contract: a new injury changes
+    the next prediction, not the preseason baseline or already-played games.
+    """
+    import sys
+    sys.path.insert(0, str(ROOT / "war_model"))
+    from build_roster_2026 import norm_name
+    status = availability_overrides(path)
+    out: dict[str, float] = {}
+    for r in roster.itertuples():
+        if status.get((r.team, norm_name(r.player))) != "out":
+            continue
+        # An absence already baked into the base roster has no additional live cost.
+        if not bool(r.available):
+            continue
+        out[r.team] = out.get(r.team, 0.0) - float(r.proj_war)
+    return out
+
+
+def current_starters(frame: pd.DataFrame) -> pd.Series:
+    """Infer today's first units from cumulative PFF participation.
+
+    This is a usage chart, not a speculative weekly depth chart. Once PFF has charted
+    enough players at a position, the busiest available players fill the normal unit;
+    sparse groups retain the preseason starter flags. Verified absences always lose
+    their starter designation.
+    """
+    result = frame.is_starter.fillna(False).astype(bool).copy()
+    for (_, group), idx in frame.groupby(["team", "broad_group"]).groups.items():
+        cap = STARTERS.get(group)
+        if not cap:
+            continue
+        group_rows = frame.loc[idx]
+        eligible = group_rows[(group_rows.available_now) & group_rows.snaps.notna()]
+        if len(eligible) < cap:
+            continue
+        result.loc[idx] = False
+        chosen = eligible.sort_values(["snaps", "proj_war"], ascending=False).head(cap)
+        result.loc[chosen.index] = True
+    result.loc[~frame.available_now] = False
+    return result
+
+
 # ---------------------------------------------------------------- team signal (v5.2)
 # The live ensemble's in-season WAR column. For a game in week w it reads the latest
 # cut c < w and takes D(home) - D(away), where D is the team's summed change in player
@@ -150,9 +211,10 @@ def team_deltas(rows: pd.DataFrame, rule: dict, k: dict) -> pd.DataFrame:
     """(season, cut, team, D) from window_rows output."""
     out = []
     for (g, c), d in rows.groupby(["group", "cut"]):
-        p = rule.get(g, {}).get(str(int(c)))
-        if p is None:
+        group_rule = rule.get(g, {})
+        if not group_rule:
             continue
+        p = group_rule[pick_cut(group_rule, int(c))]
         upd = p["a"] + p["b"] * ((1 - p["lam"]) * d.m + p["lam"] * d.obs)
         base = p["a_p"] + p["b_p"] * d.m
         out.append(d.assign(D=k[g] * (upd - base) * (d.snaps / c) / 1000.0))
@@ -229,15 +291,24 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
     j["delta_war"] = j.k * j.delta_rate * share * j.S / 1000.0
     j["war_inseason"] = j.proj_war + j.delta_war.fillna(0.0)
 
+    status = availability_overrides()
+    j["status"] = [status.get((t, k), "") for t, k in zip(j.team, j.key)]
+    j["available_now"] = j.available.fillna(True) & j.status.ne("out")
+    j.loc[~j.available_now, "war_inseason"] = 0.0
+    j.loc[~j.available_now, "delta_war"] = -j.loc[~j.available_now, "proj_war"]
+    j["starter_now"] = current_starters(j)
+    j.loc[j.status.eq("starter") & j.available_now, "starter_now"] = True
+
     players, matched = {}, 0
     for row in j.itertuples():
-        if pd.isna(row.snaps):
-            continue
-        matched += 1
+        if pd.notna(row.snaps):
+            matched += 1
         players.setdefault(row.team, {})[row.player] = {
-            "sn": int(row.snaps),
+            "sn": int(row.snaps) if pd.notna(row.snaps) else 0,
             "war": round(float(row.war_inseason), 3),
             "d": round(float(row.delta_war if pd.notna(row.delta_war) else 0.0), 3),
+            "st": bool(row.starter_now),
+            "out": not bool(row.available_now),
         }
     return {
         "schema": 1, "season": 2026, "through_week": int(week),
@@ -248,6 +319,7 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
         "method": ("Preseason expected WAR, moved by how this season's PFF grades change "
                    "the per-snap estimate. The prior counts each past season by its "
                    "snaps; the season so far gets one weight per position and week. "
-                   "Playing time is held at the preseason projection."),
+                   "PFF participation updates current first-unit roles; verified team "
+                   "injury announcements remove unavailable players."),
         "players": players,
     }

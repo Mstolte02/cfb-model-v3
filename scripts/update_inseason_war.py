@@ -98,18 +98,27 @@ def write_team_tables(params: dict, week: int, history: bool, skip_pull: bool):
     pr = B.priors(hist, SEASON)
     mu = pr.groupby("group").mu.first().to_dict()
     cutoffs = {}
-    for c in IW.MODEL_CUTS:
-        if c > week:
-            break
+    # Keep the fitted checkpoints for historical replay, plus the latest completed
+    # week so current power ratings never wait three weeks for a roster change.
+    publish_cuts = sorted(set(c for c in IW.MODEL_CUTS if c <= week) | {week})
+    for c in publish_cuts:
         d = SW.window_dir(SEASON, 1, c)
         if not skip_pull and len(list(d.glob("*.csv"))) < 10:
             SW.main([SEASON], [(1, c)])
         rows = IW.window_rows(SEASON, c, pr, mu, weight_season=SEASON - 1)
         D = IW.team_deltas(rows, rule, k)
         cutoffs[str(c)] = {r.team: round(float(r.D), 8) for r in D.itertuples()}
+    # Availability is intentionally current-only. Applying today's injury news to an
+    # old cut would rewrite the model's pregame view of already completed games.
+    from src.data import war
+    injury = IW.availability_team_deltas(war.player_contributions())
+    latest = cutoffs[str(week)]
+    for team, delta in injury.items():
+        latest[team] = round(latest.get(team, 0.0) + delta, 8)
     payload = {"season": SEASON, "through_week": int(week),
                "definition": "sum over players of k*(updated rate - calibrated prior)"
-                             "*snaps per week/1000, weeks 1..cut; src/inseason_war.py",
+                             "*snaps per week/1000, weeks 1..cut; current cutoff also "
+                             "removes confirmed unavailable WAR; src/inseason_war.py",
                "cutoffs": cutoffs}
     IW.team_payload_path(SEASON).write_text(json.dumps(payload, indent=1))
     print(f"-> {IW.team_payload_path(SEASON)} (cuts {sorted(int(c) for c in cutoffs)})")

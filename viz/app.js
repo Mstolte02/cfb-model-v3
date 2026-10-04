@@ -38,16 +38,32 @@
     fetchJSON("data/bet_tracking.json").catch(() => null),
     fetchJSON("data/locked_results_2026.json").catch(() => ({ bets: [] })),
     fetchJSON("data/deserving-model.json").catch(() => null),
-    // In-season player WAR (scripts/update_inseason_war.py). Optional: display only,
-    // nothing the ratings or bets read, so a missing file just hides the columns.
+    // In-season player WAR (scripts/update_inseason_war.py). The same build also
+    // publishes the team deltas consumed by the live ratings pipeline.
     fetchJSON("data/players_inseason.json").catch(() => null),
     fetchJSON("data/market_tracking.json").catch(() => null),
   ]);
-  /* In-season WAR joins by team and player name, the key the exporter writes. A
-     player PFF has not charted this season (injured, redshirting, not yet on the
-     field) has no entry and shows "—" rather than a number that was never measured. */
+  /* In-season WAR joins by team and player name, the key the exporter writes. Every
+     projected roster player is present; PFF updates the measured players while an
+     uncharted player stays at his opening number unless an availability event moves
+     him out. */
   const INS = (inseason && inseason.players) || {};
   const insOf = (t, n) => (INS[t] && INS[t][n]) || null;
+  const currentPlayer = (t, p) => {
+    const s = insOf(t, p.n);
+    return {...p, w: s ? s.war : p.w, st: s && s.st != null ? s.st : p.st,
+      out: s && s.out != null ? s.out : p.out, sn26: s ? s.sn : null,
+      dwin: s ? s.d : 0, win: s ? s.war : p.w};
+  };
+  function liveRoster(t) {
+    const base = players[t];
+    if (!base || !base.players) return base;
+    const ps = base.players.map(p => currentPlayer(t, p));
+    const byGroup = {};
+    for (const p of ps) byGroup[p.g] = (byGroup[p.g] || 0) + (p.w || 0);
+    const total = Object.values(byGroup).reduce((s, v) => s + v, 0);
+    return {...base, players: ps, byGroup, winsTotal: total, total};
+  }
   // An older lens toggle offered a roster-weighted variant that leaned harder on the
   // two-deep; it was a knowingly worse backtest kept as an alternative view, and it is
   // gone too. Talent is a PFF / recruiting / WAR blend whose weights are swept jointly
@@ -1850,7 +1866,7 @@
   const GROUP_LEAGUE = (function () {
     const acc = {};
     for (const t in players) {
-      const bg = players[t].byGroup || {};
+      const bg = (liveRoster(t) || {}).byGroup || {};
       for (const g in bg) (acc[g] = acc[g] || []).push({ t, v: bg[g] });
     }
     const out = {};
@@ -1994,13 +2010,74 @@
       <button type="button" class="wi-btn open-team-history" data-team="${esc(team)}">Open the full season tracker</button></div>`;
   }
 
+  function teamOverviewHTML(team, roster, tint) {
+    const card = TeamCard.data(team, ratings, schedule);
+    const games = card.games || [];
+    const measured = games.filter(g => g.probability != null);
+    const actual = games.reduce((s, g) => s + (g.result === "W" ? 1 : g.result === "T" ? .5 : 0), 0);
+    const expected = measured.reduce((s, g) => s + g.probability, 0);
+    const expectation = actual - expected;
+    const expClass = expectation >= 0 ? "pos" : "neg";
+    const expWord = expectation > .35 ? "Ahead of the model" : expectation < -.35
+      ? "Behind the model" : "Right on expectation";
+    const points = card.points || [], first = points[0], last = points.at(-1);
+    const rankMove = first && last ? first.rank - last.rank : 0;
+    const powerMove = first && last ? 100 * (last.power - first.power) : 0;
+
+    const ps = (roster && roster.players) || [];
+    const movers = ps.filter(p => Math.abs(p.dwin || 0) >= .0005);
+    const moverList = (positive) => movers.slice().sort((a, b) => positive
+      ? (b.dwin || 0) - (a.dwin || 0) : (a.dwin || 0) - (b.dwin || 0)).slice(0, 4)
+      .map(p => `<li><span><b>${esc(p.n)}</b><small>${esc(p.g)}${p.out ? " · OUT" : ""}</small></span>
+        <strong class="${p.dwin >= 0 ? "pos" : "neg"}">${p.dwin > 0 ? "+" : ""}${p.dwin.toFixed(3)}</strong></li>`).join("") ||
+        `<li class="empty">No measured movement yet</li>`;
+
+    const groups = Object.entries((roster && roster.byGroup) || {}).map(([g, v]) => ({
+      g, v, rank: GROUP_LEAGUE[g] && GROUP_LEAGUE[g].rank[team],
+      n: GROUP_LEAGUE[g] && GROUP_LEAGUE[g].n,
+    })).filter(x => x.rank != null).sort((a, b) => a.rank - b.rank);
+    const units = [...groups.slice(0, 3), ...groups.slice(-2).reverse()]
+      .filter((x, i, a) => a.findIndex(y => y.g === x.g) === i)
+      .map((x, i) => `<div class="unit-tile ${i < Math.min(3, groups.length) ? "strength" : "watch"}">
+        <span>${esc(x.g)}</span><b>#${x.rank}</b><small>${x.v.toFixed(2)} WAR · of ${x.n}</small></div>`).join("");
+    const results = games.slice(-5).reverse().map(g => `<div class="result-chip ${g.result === "W" ? "win" : g.result === "L" ? "loss" : "tie"}">
+      <b>${g.result}</b><span>W${g.week} ${esc(g.site)} ${esc(g.opponent)}</span>
+      <small>${g.probability == null ? "unrated" : pct(g.probability, 0) + " expected"}</small></div>`).join("") ||
+      `<p class="sub">No completed games yet.</p>`;
+
+    return `<div class="overview-grid" style="--tint:${tint}">
+      <section class="pulse-card expectation-card">
+        <span class="overview-kicker">Results vs expectation</span>
+        <div class="expectation-number ${expClass}">${expectation >= 0 ? "+" : ""}${expectation.toFixed(2)}</div>
+        <h3>${esc(expWord)}</h3>
+        <div class="expectation-track"><i style="left:${Math.max(4, Math.min(96, 50 + expectation * 18))}%"></i></div>
+        <p><b>${actual.toFixed(1)}</b> actual wins against <b>${expected.toFixed(1)}</b> expected in ${measured.length} rated game${measured.length === 1 ? "" : "s"}.</p>
+      </section>
+      <section class="pulse-card season-card">
+        <span class="overview-kicker">Season pulse</span>
+        <div class="season-record">${card.wins}–${card.losses}${card.ties ? `–${card.ties}` : ""}</div>
+        <div class="season-moves"><span><b class="${rankMove > 0 ? "pos" : rankMove < 0 ? "neg" : ""}">${rankMove ? (rankMove > 0 ? "▲" : "▼") + Math.abs(rankMove) : "—"}</b> ${rankMove < 0 ? "places down" : rankMove > 0 ? "places up" : "rank unchanged"}</span>
+          <span><b class="${powerMove >= 0 ? "pos" : "neg"}">${powerMove >= 0 ? "+" : ""}${powerMove.toFixed(1)}</b> win-rate pts</span></div>
+        <p>Movement from ${esc(first?.label || "the opening rating")} to ${esc(last?.label || "now")}.</p>
+      </section>
+      <section class="pulse-card movers-card"><span class="overview-kicker">Players beating expectation</span>
+        <ul class="mover-list">${moverList(true)}</ul></section>
+      <section class="pulse-card movers-card"><span class="overview-kicker">Biggest WAR declines</span>
+        <ul class="mover-list">${moverList(false)}</ul></section>
+      <section class="pulse-card units-card"><span class="overview-kicker">Unit identity</span>
+        <div class="unit-tiles">${units}</div><p>Best three units and the two rooms with the most ground to make up, ranked by current WAR.</p></section>
+      <section class="pulse-card results-card"><span class="overview-kicker">Latest results</span>
+        <div class="result-ribbon">${results}</div></section>
+    </div>`;
+  }
+
   function renderTeam() {
     const t = selT.value;
     const R = ratingRow()[t] || {};
     const S = simRow()[t] || {};
     const tint = color(t);
     const dist = (cur().playoff.win_dist || {})[t];
-    const roster = players[t];
+    const roster = liveRoster(t);
     const sched = teamSchedule(t);
 
     /* ---- win distribution ---- */
@@ -2132,7 +2209,7 @@
       <div class="team-subnav" role="tablist" aria-label="${esc(t)} information">
         ${[["overview","Overview"],["depth","Depth chart"],["season","Season outlook"],["schedule","Schedule"],["history","History"]].map(([key,label])=>`<button type="button" role="tab" data-team-tab="${key}" aria-selected="${teamTab===key}" class="${teamTab===key?'active':''}">${label}</button>`).join("")}
       </div>
-      <section class="team-pane${teamTab==='overview'?' active':''}" data-team-pane="overview"><div class="panel"><h3>Current depth chart</h3>${depthPreview}</div></section>
+      <section class="team-pane${teamTab==='overview'?' active':''}" data-team-pane="overview">${teamOverviewHTML(t, roster, tint)}</section>
       <section class="team-pane${teamTab==='depth'?' active':''}" data-team-pane="depth"><div class="panel"><h3>Where the wins come from</h3>${rosterHTML}
         <div class="wd-foot">${roster && !roster.players ? "Position groups from" :
           "Projected starters from"} the 2026 two-deep, each carrying
@@ -2196,16 +2273,14 @@
     for (const [t, r] of Object.entries(players)) {
       if (!r || !r.players) continue;
       for (const p of r.players) {
-        const s = insOf(t, p.n);
-        rows.push({ t, conf: conf(t), ...p,
-                    sn26: s ? s.sn : null, win: s ? s.war : null, dwin: s ? s.d : null });
+        rows.push({ t, conf: conf(t), ...currentPlayer(t, p) });
       }
     }
     return rows;
   })();
 
-  const plWar = r => { const e = WI.get(r.t, r.n); return e != null ? e : (r.raw || 0); };
-  const plQuality = r => r.q != null ? r.q : (r.raw || 0);
+  const plWar = r => r.win != null ? r.win : (r.w ?? r.raw ?? 0);
+  const plQuality = r => plWar(r);
   const plKey = r => r.t + "\u0000" + r.n;
 
   /* Depth, 2025 snaps and 2025 WAR are gone from this table. They are inputs to the
@@ -2245,15 +2320,10 @@
     { k: "p",    h: "Pos",      v: r => r.p || r.g },
     { k: "c",    h: "Class",    v: r => classLabel(r) },
     { k: "prk",  h: "Pos rank", n: true, v: r => plRanks().pos.get(plKey(r)) },
-    { k: "q",    h: "Value WAR", n: true, v: r => plQuality(r) },
-    { k: "role", h: "Role range", v: r => r.opp || 0 },
-    { k: "war",  h: "Expected WAR", n: true, v: r => plWar(r) },
-    { k: "sn26", h: "2026 snaps", n: true, v: r => r.sn26,
-      t: "Snaps PFF has charted for him this season" },
-    { k: "win",  h: "In-season WAR", n: true, v: r => r.win,
-      t: "Expected WAR after this season's PFF grades. The more past snaps behind a player, the less a few weeks move him. Playing time stays at the preseason projection." },
-    { k: "dwin", h: "Change", n: true, v: r => r.dwin,
-      t: "In-season WAR minus preseason Expected WAR" },
+    { k: "war",  h: "WAR", n: true, v: r => plWar(r),
+      t: "Current WAR through the latest completed week" },
+    { k: "dwin", h: "Change from season start", n: true, v: r => r.dwin,
+      t: "Current WAR minus the opening projection" },
   ];
   // Ranks sort smallest-first; every other numeric column sorts largest-first.
   const PL_ASC = new Set(["n", "t", "conf", "c", "rk", "prk"]);
@@ -2262,7 +2332,7 @@
   // that this table did not apply. That rescale is gone (it was covering an attenuated
   // slope in build_hybrid, now fixed at source), so both surfaces show the same number
   // and there is nothing left to reconcile.
-  let plSort = "q", plDesc = true;
+  let plSort = "war", plDesc = true;
   const PL_LIMIT = 300;
 
   function plFilled() {
@@ -2327,26 +2397,17 @@
           ? ` <span class="tag tr" title="Transferred in for 2026">TR</span>` : ""}</td>
         <td class="num pl-prk">${RK.pos.get(plKey(r))}<span class="pl-of">of ${
           (RK.groupN[grp] || 0).toLocaleString()} ${esc(grp)}</span></td>
-        <td class="num">${plQuality(r).toFixed(3)}</td>
-        <td class="pl-conf" title="Expected share of team snaps; range reflects depth-chart and rotation uncertainty">${
-          r.oppLo == null || r.oppHi == null ? "—" : `${pct(r.oppLo, 0)}–${pct(r.oppHi, 0)}`}</td>
-        <td class="num"><input class="wi-in pl-in" type="number" step="0.05"
-          data-team="${esc(r.t)}" data-player="${esc(r.n)}"
-          value="${plWar(r).toFixed(3)}" aria-label="Expected role-adjusted WAR for ${esc(r.n)}"
-          ${WI.enabled() ? "" : "disabled title=\"Read-only: the model reads roster WAR through the week-0 preseason level and, from v5.2, through in-season WAR built from PFF grades - not from this field\""}></td>
-        <td class="num">${r.sn26 == null ? "—" : r.sn26.toLocaleString()}</td>
-        <td class="num">${r.win == null ? "—" : r.win.toFixed(3)}</td>
+        <td class="num"><b>${plWar(r).toFixed(3)}</b></td>
         <td class="num ${r.dwin > 0.0005 ? "pos" : r.dwin < -0.0005 ? "neg" : ""}">${
-          r.dwin == null ? "—" : (r.dwin > 0 ? "+" : "") + r.dwin.toFixed(3)}</td>
+          (r.dwin > 0 ? "+" : "") + (r.dwin || 0).toFixed(3)}</td>
       </tr>`;
     }).join("");
 
-    const insNote = inseason ? `<div class="wd-foot"><b>In-season WAR</b> is through week
-        ${inseason.through_week}, from PFF grades. It moves each player's per-snap value
-        by what this season shows, and moves players with long records less. It keeps
-        the preseason playing time. Each team's total of these changes is an input to
-        the live model from week 4 on (Team tables → Model inputs). A dash means PFF
-        has not charted him this season.</div>` : "";
+    const insNote = inseason ? `<div class="wd-foot"><b>WAR</b> is current through week
+        ${inseason.through_week}. PFF grades update per-snap value, PFF participation
+        updates first-unit roles, and verified team announcements remove unavailable
+        players. The change column compares that number with opening day. These same
+        player changes feed the live team ratings.</div>` : "";
     document.getElementById("pl-table").innerHTML =
       `<div class="mini-wrap pl-scroll"><table class="mini pl-table"><thead><tr>${head}</tr></thead>
        <tbody>${body}</tbody></table></div>` +
@@ -2448,7 +2509,7 @@
     for (const r of ALL_PLAYERS) {
       const o = out[r.t] || (out[r.t] = {});
       const g = r.g || "—";
-      o[g] = (o[g] || 0) + plWar(r);
+      o[g] = (o[g] || 0) + plQuality(r);
     }
     // GROUP_ORDER partitions the two-deep exactly, so off + def is the whole roster
     // and matches the total the team page shows.
@@ -2909,26 +2970,28 @@
           : group === "DEF" ? OFF_GROUPS.has(p.g)
           : group && group !== "ALL" && p.g !== group;
         if (groupMiss || (cls && p.c !== cls)) continue;
-        rows.push({ team, ...p });
+        rows.push({ team, ...currentPlayer(team, p) });
       }
       rows.sort((a, b) => plQuality(b) - plQuality(a));
       document.getElementById("leader-grid").innerHTML = rows.slice(0, 10).map((p, i) => {
         const photo = (editorial.headshots || {})[p.team + "\u0000" + p.n];
         return `<article class="leader-card" style="--team:${color(p.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span>
           <div class="leader-portrait" style="background-image:url('${logoURL(p.team)}')">${photo ? `<img src="${photo}" alt="${esc(p.n)}" loading="lazy" onerror="this.remove()">` : ""}</div>
-          <div class="leader-copy"><span>${p.g} · <button class="team-link" data-team="${esc(p.team)}">${esc(p.team)}</button></span><h3>${esc(p.n)}</h3></div></article>`;
+          <div class="leader-copy"><span>${p.g} · <button class="team-link" data-team="${esc(p.team)}">${esc(p.team)}</button></span><h3>${esc(p.n)}</h3>
+            <div class="leader-metric"><b>${plQuality(p).toFixed(3)}</b> WAR <em class="${p.dwin >= 0 ? "pos" : "neg"}">${p.dwin >= 0 ? "+" : ""}${(p.dwin || 0).toFixed(3)} since start</em></div></div></article>`;
       }).join("");
     } else {
       rows = Object.entries(players).map(([team, r]) => {
-        const by = r.byGroup || {};
-        const value = group === "ALL" ? r.total
+        const live = liveRoster(team) || r;
+        const by = live.byGroup || {};
+        const value = group === "ALL" ? live.total
           : group === "OFF" ? Object.entries(by).reduce((s, [g, v]) => s + (OFF_GROUPS.has(g) ? v : 0), 0)
           : group === "DEF" ? Object.entries(by).reduce((s, [g, v]) => s + (!OFF_GROUPS.has(g) ? v : 0), 0)
           : (by[group] || 0);
         return { team, value };
       })
         .sort((a, b) => b.value - a.value).slice(0, 10);
-      document.getElementById("leader-grid").innerHTML = rows.map((r, i) => `<article class="leader-card team-room" style="--team:${color(r.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span><div class="leader-portrait"><img src="${logoURL(r.team)}" alt=""></div><div class="leader-copy"><span>${group === "ALL" ? "Complete roster" : group === "OFF" ? "Offense" : group === "DEF" ? "Defense" : group + " room"}</span><h3><button class="team-link" data-team="${esc(r.team)}">${esc(r.team)}</button></h3></div></article>`).join("");
+      document.getElementById("leader-grid").innerHTML = rows.map((r, i) => `<article class="leader-card team-room" style="--team:${color(r.team)}"><span class="leader-no">${String(i + 1).padStart(2, "0")}</span><div class="leader-portrait"><img src="${logoURL(r.team)}" alt=""></div><div class="leader-copy"><span>${group === "ALL" ? "Complete roster" : group === "OFF" ? "Offense" : group === "DEF" ? "Defense" : group + " room"}</span><h3><button class="team-link" data-team="${esc(r.team)}">${esc(r.team)}</button></h3><div class="leader-metric"><b>${r.value.toFixed(2)}</b> WAR</div></div></article>`).join("");
     }
     wireTeamLinks();
   }

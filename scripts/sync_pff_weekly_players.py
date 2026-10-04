@@ -5,7 +5,7 @@ One request per (season, week, side) returns every FBS player's snaps that week,
 ``source-data/pff_api/player_weekly/{side}_{season}_w{WW}.csv`` with a canonical CFBD
 ``team`` column; existing files are skipped, so the job resumes where it stopped.
 
-    python -m scripts.sync_pff_weekly_players --seasons 2021-2025
+    python -m scripts.sync_pff_weekly_players --seasons 2026 --weeks 1-5
 """
 from __future__ import annotations
 
@@ -63,5 +63,6 @@ def main(seasons, weeks=range(1, 16), min_remaining=.2, pause=.5):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--seasons", default="2021-2025")
+    parser.add_argument("--weeks", default="1-15")
     args = parser.parse_args()
-    print(f"{main(seasons_arg(args.seasons))} files written")
+    print(f"{main(seasons_arg(args.seasons), seasons_arg(args.weeks))} files written")

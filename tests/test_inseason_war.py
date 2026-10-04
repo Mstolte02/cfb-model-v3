@@ -71,7 +71,27 @@ class InseasonWarTests(unittest.TestCase):
         self.assertEqual(d["season"], 2026)
         self.assertGreaterEqual(d["through_week"], 1)
         row = next(iter(next(iter(d["players"].values())).values()))
-        self.assertEqual(set(row), {"sn", "war", "d"})
+        self.assertEqual(set(row), {"sn", "war", "d", "st", "out"})
+
+    def test_availability_delta_does_not_double_count_base_absence(self):
+        roster = pd.DataFrame([
+            {"team": "A", "player": "New Injury", "proj_war": .12, "available": True},
+            {"team": "A", "player": "Already Out", "proj_war": 0, "available": False},
+        ])
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "availability.csv"
+            path.write_text("team,player,status,note\nA,New Injury,out,x\n"
+                            "A,Already Out,out,x\n")
+            self.assertEqual(IW.availability_team_deltas(roster, path), {"A": -.12})
+
+    def test_current_starters_follow_usage_and_remove_absences(self):
+        frame = pd.DataFrame([
+            {"team": "A", "broad_group": "QB", "is_starter": True,
+             "available_now": False, "snaps": 80, "proj_war": .2},
+            {"team": "A", "broad_group": "QB", "is_starter": False,
+             "available_now": True, "snaps": 60, "proj_war": .1},
+        ])
+        self.assertEqual(IW.current_starters(frame).tolist(), [False, True])
 
 
 class WarRuntimeTests(unittest.TestCase):
@@ -90,6 +110,11 @@ class WarRuntimeTests(unittest.TestCase):
         self.assertEqual(wt(self.payload, 4), {"A": .02, "B": -.01})
         self.assertEqual(wt(self.payload, 7), {"A": .03})
         self.assertEqual(wt(self.payload, self.ER.POSTSEASON_OFFSET + 1), {"A": .03})
+
+    def test_current_week_cut_applies_to_next_week_only(self):
+        payload = {"cutoffs": {"3": {"A": .02}, "5": {"A": -.04}}}
+        self.assertEqual(self.ER.war_table(payload, 5), {"A": .02})
+        self.assertEqual(self.ER.war_table(payload, 6), {"A": -.04})
 
     def _member(self):
         base = ["prior_level", "elo_change", "dO", "dD", "hfa"]
