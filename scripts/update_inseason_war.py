@@ -15,6 +15,7 @@ import argparse
 import json
 import os
 import sys
+import tempfile
 import warnings
 from collections import defaultdict
 from pathlib import Path
@@ -130,11 +131,32 @@ def main(week: int | None, refit: bool, skip_pull: bool, history: bool = False):
 
     d = window_dir(SEASON, 1, week)
     if not skip_pull:
-        # late charting: always replace this season's window
-        for f in d.glob("*.csv"):
-            f.unlink()
-        SW.main([SEASON], [(1, week)])
+        # PFF may fail partway through a refresh. Fetch a complete replacement
+        # first, then replace cached reports; never erase the last valid window.
+        SW.WINDOW_DIR.mkdir(parents=True, exist_ok=True)
+        original_dir = SW.WINDOW_DIR
+        with tempfile.TemporaryDirectory(prefix="war-refresh-", dir=original_dir) as temp:
+            SW.WINDOW_DIR = Path(temp)
+            try:
+                SW.main([SEASON], [(1, week)])
+            finally:
+                SW.WINDOW_DIR = original_dir
+            staged = Path(temp) / d.name
+            required = [f"{name}.csv" for name in (*LEGACY, *POSITION)]
+            missing_stage = [name for name in required if not (staged / name).exists()]
+            if missing_stage:
+                raise SystemExit(
+                    f"PFF refresh incomplete through week {week}: "
+                    f"missing {', '.join(missing_stage)}; cached and published WAR unchanged")
+            d.mkdir(parents=True, exist_ok=True)
+            for name in required:
+                (staged / name).replace(d / name)
     files = {B.PREFIX[n]: d / f"{n}.csv" for n in (*LEGACY, *POSITION)}
+    missing = [path.name for path in files.values() if not path.exists()]
+    if missing:
+        raise SystemExit(
+            f"incomplete PFF window through week {week}: missing {', '.join(missing)}; "
+            "published player WAR was not changed")
     players = ww.load_players_from(files, SEASON)
     fc = ww.facet_contrib(players, SEASON, weight_season=SEASON - 1)
     hist = B.history()

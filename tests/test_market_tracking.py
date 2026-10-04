@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.capture_market_snapshot import (fetch_cfbd, fetch_espn_games, flatten, implied, latest_quotes,
+from scripts.capture_market_snapshot import (display_candidates, fetch_cfbd, fetch_espn_games, flatten, implied, latest_quotes,
                                              model_probability,
                                              moneyline_research_candidate, publish_finals,
                                              quote_key, quote_payload_hash, quote_value,
@@ -17,6 +17,17 @@ from war_model.materialize_availability import current_rows
 
 
 class MarketTrackingTests(unittest.TestCase):
+    def test_display_candidates_requires_fresh_board_and_future_kickoff(self):
+        now = datetime(2026, 9, 28, 20, tzinfo=timezone.utc)
+        rows = [{"start": "2026-09-29T00:00:00Z", "game_id": 1},
+                {"start": "2026-09-28T19:00:00Z", "game_id": 2}]
+        self.assertEqual([r["game_id"] for r in display_candidates(
+            rows, now, "2026-09-28T19:00:00Z", "2026-09-28T18:00:00Z")], [1])
+        self.assertEqual(display_candidates(
+            rows, now, "2026-09-22T17:00:00Z", "2026-09-28T18:00:00Z"), [])
+        self.assertEqual(display_candidates(
+            rows, now, "2026-09-28T19:00:00Z", "2026-09-21T20:00:00Z"), [])
+
     def test_newcomer_week_zero_games_are_excluded_from_bets(self):
         rows = weekly_payload({
             (401864577, "DraftKings"): {"game_id": 401864577, "provider": "DraftKings",

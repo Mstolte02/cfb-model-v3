@@ -1,5 +1,8 @@
 import json
+import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
@@ -9,6 +12,30 @@ from src import inseason_war as IW
 
 
 class InseasonWarTests(unittest.TestCase):
+    def test_failed_refresh_keeps_existing_window_and_published_payload(self):
+        from scripts import sync_pff_war_windows as SW
+        from scripts import update_inseason_war as U
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            window = root / "2026_w01-04"
+            window.mkdir()
+            cached = window / "rushing.csv"
+            cached.write_text("verified old report")
+            params = root / "params.json"
+            params.write_text("{}")
+            published = root / "players_inseason.json"
+            published.write_text("verified old WAR")
+            with patch.object(SW, "WINDOW_DIR", root), \
+                 patch.object(SW, "main", return_value=None), \
+                 patch.object(U, "ensure_key", return_value=None), \
+                 patch.object(IW, "PARAMS", params), \
+                 patch.object(IW, "OUT", published):
+                with self.assertRaisesRegex(SystemExit, "PFF refresh incomplete"):
+                    U.main(week=4, refit=False, skip_pull=False)
+            self.assertEqual(cached.read_text(), "verified old report")
+            self.assertEqual(published.read_text(), "verified old WAR")
+
     def test_pick_cut_nearest_with_ties_to_earlier(self):
         g = {"3": {}, "6": {}, "9": {}}
         self.assertEqual(IW.pick_cut(g, 1), "3")

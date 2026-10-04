@@ -109,8 +109,25 @@ three pilot games, implied 86-98% home wins while the direct win Noul gave
 calibrated margin distribution. The version 0.2 question set includes the
 bucket trial for research only.
 
-Historical grading remains blocked in this checkout because raw CFBD and
-licensed PFF/expanded-WAR inputs are external to Git. Restore immutable
-pregame source vintages, regenerate the 2023-2025 states, and score paired
-identical games and issue times against v5.3 and no-vig market snapshots.
-Only after that should a market-opportunity or tail-advantage label ship.
+## Historical result (2023-2025)
+
+The external CFBD, licensed PFF and expanded-WAR vintages were restored and the
+football-only batch was frozen on 2,189 exact game/cutoff pairs (729 in 2023,
+741 in 2024 and 719 in 2025), all resolved by Jev 1.13.0. The strict outer folds
+train only on earlier seasons and each weekly state reads only earlier weeks.
+
+Jev did not beat the CFB baseline. Pooled Brier was worse by .00248 for home win,
+.00247 for home 7+ and .00224 for away 7+, with all three 95% season-week block
+bootstrap intervals above zero. Home 14+, home 21+ and within 3 were statistical
+ties. Thirteen direct tail sets violated event nesting. The ten-bin margin Choice
+was decisively worse (Brier 1.018 vs .806, log loss 6.022 vs 1.975, ranked
+probability score .191 vs .152) and assigned zero probability to the realized
+bucket in 328 games. Its implied probabilities disagree with the direct Nouls by
+9-19 percentage points on average, depending on the target.
+
+A blend selected on 2023-24 assigned Jev zero weight for 2025 home win and away
+7+. Small apparent gains on four tail targets all had confidence intervals crossing
+zero. The calibration gate is therefore closed: do not publish a moneyline, spread,
+alternate-line or tail-opportunity label from this version, and do not proceed to
+market-threshold selection. The append-only ledger and ignored evaluation artifacts
+remain the negative benchmark for a future coherent single-distribution Jev version.

@@ -1,3 +1,7 @@
+import io
+from urllib.error import URLError
+
+import fourth_jev.client as client_module
 from fourth_jev.client import JevClient
 from fourth_jev.questions import football_questions
 from fourth_jev.state import build_game_state, build_market_state
@@ -23,6 +27,27 @@ def test_payload_matches_typesafe_shape():
     payload = client.payload(state, football_questions())
     assert set(payload) == {"state", "model", "questions"}
     assert payload["model"] == "jev-latest"
+
+
+def test_live_client_retries_transient_network_failure(monkeypatch):
+    calls = []
+
+    class Response(io.BytesIO):
+        def __enter__(self): return self
+        def __exit__(self, *args): self.close()
+
+    def fake_open(*args, **kwargs):
+        calls.append(1)
+        if len(calls) == 1:
+            raise URLError("temporary")
+        return Response(b'{"answers":{"home_win":{"noul":0.5}}}')
+
+    monkeypatch.setattr(client_module, "urlopen", fake_open)
+    monkeypatch.setattr(client_module.time, "sleep", lambda _: None)
+    client = JevClient(api_key="test", max_attempts=2)
+    result = client.evaluate({"game": {}}, {"home_win": {"type": "noul"}})
+    assert result["answers"]["home_win"]["noul"] == .5
+    assert len(calls) == 2
 
 
 def test_market_stage_is_separate():

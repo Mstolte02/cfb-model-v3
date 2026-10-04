@@ -1,6 +1,6 @@
 {
  "season": 2026,
- "through_week": 3,
+ "through_week": 5,
  "definition": "sum over players of k*(updated rate - calibrated prior)*snaps per week/1000, weeks 1..cut; src/inseason_war.py",
  "cutoffs": {
   "3": {

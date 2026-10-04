@@ -1080,6 +1080,18 @@ def availability_summary() -> dict:
             "last_event_at": max((r.get("observed_at") or "" for r in rows), default=None)}
 
 
+def display_candidates(rows: list[dict], now: datetime, last_check: str | None,
+                       board_lock: str | None, max_age_hours: float = 6) -> list[dict]:
+    """Never present a frozen research candidate as a current price after it ages."""
+    if not last_check or not board_lock:
+        return []
+    for timestamp in (last_check, board_lock):
+        age = (now - parse_time(timestamp)).total_seconds() / 3600
+        if age < 0 or age > max_age_hours:
+            return []
+    return [row for row in rows if row.get("start") and parse_time(row["start"]) > now]
+
+
 def run(raw: list[dict] | None, now: datetime, games: list[dict] | None = None,
         lock_weekly_board: bool = False) -> dict:
     """One capture. ``raw`` is None when the line fetch failed this time: nothing is
@@ -1216,10 +1228,13 @@ def run(raw: list[dict] | None, now: datetime, games: list[dict] | None = None,
 
     previous_tracking = (json.loads(TRACKING.read_text())
                          if TRACKING.exists() else {})
-    displayed_candidates = (sorted(candidates, key=lambda r: (-r["gap"], r["start"]))
-                            if board_updated
-                            else previous_tracking.get("current_candidates", []))
+    candidate_rows = (sorted(candidates, key=lambda r: (-r["gap"], r["start"]))
+                      if board_updated
+                      else previous_tracking.get("current_candidates", []))
     last_check = checks[-1] if checks else {}
+    displayed_candidates = display_candidates(
+        candidate_rows, now, last_check.get("checked_at"),
+        (odds.get("weekly_lock") or {}).get("locked_at"))
     tracking = {"checked_at": captured_at, "source": "CFBD /lines",
         "timestamp_semantics": "retrieval time, not sportsbook quote time",
         "results_source": "ESPN scoreboard" if games is not None else "CFBD /lines",

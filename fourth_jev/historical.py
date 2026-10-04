@@ -11,6 +11,7 @@ actual kickoff timestamp we attach it as metadata; otherwise the honest as-of la
 from __future__ import annotations
 
 import json
+import statistics
 from pathlib import Path
 from typing import Iterator
 
@@ -21,6 +22,45 @@ from fourth_jev.state import build_game_state
 from scripts import ensemble_replay as ER
 from scripts import train_live_ensemble as T
 from src import live_ensemble as LE
+
+
+_NORMAL = statistics.NormalDist()
+
+
+def cfb_distribution(home_win_probability: float, margin_sigma: float) -> dict:
+    """Coherent CFB-model margin baseline for the Jev questions.
+
+    The live model publishes its margin by reading the win probability through the
+    same probit link used by the rating update.  Tail events use half-point boundaries
+    because realized college-football margins are integers.  This is deliberately a
+    simple Normal benchmark, not a claim that the score distribution has Normal tails.
+    """
+    p = min(max(float(home_win_probability), 1e-8), 1 - 1e-8)
+    sigma = float(margin_sigma)
+    margin = sigma * _NORMAL.inv_cdf(p)
+
+    def above(integer_margin: int) -> float:
+        boundary = integer_margin - 0.5
+        return 1.0 - _NORMAL.cdf((boundary - margin) / sigma)
+
+    def below(integer_margin: int) -> float:
+        boundary = integer_margin + 0.5
+        return _NORMAL.cdf((boundary - margin) / sigma)
+
+    return {
+        "predicted_margin": margin,
+        "margin_sigma": sigma,
+        "probabilities": {
+            "home_win": p,
+            "home_by_7_plus": above(7),
+            "home_by_14_plus": above(14),
+            "home_by_21_plus": above(21),
+            "away_by_7_plus": below(-7),
+            "within_3": (_NORMAL.cdf((3.5 - margin) / sigma)
+                         - _NORMAL.cdf((-3.5 - margin) / sigma)),
+        },
+        "tail_assumption": "Normal margin; integer events use half-point boundaries",
+    }
 
 
 def _json_scalar(value):
@@ -155,6 +195,7 @@ def iter_game_states(context: dict) -> Iterator[dict]:
             home, away = game["home"], game["away"]
             hfa = 0.0 if game["neutral"] else 1.0
             model_p = ER.probability(ensemble, pre, home, away, hfa)
+            cfb_baseline = cfb_distribution(model_p, ensemble["margin_sigma"])
             key = (week, home, away)
             raw_meta = kickoff.get(key, {})
             game_id = raw_meta.get("id") or f"{season}-{week}-{home}-vs-{away}"
@@ -188,6 +229,10 @@ def iter_game_states(context: dict) -> Iterator[dict]:
                     "architecture": context["manifest"].get("architecture"),
                     "model_version": context["manifest"].get("model_version"),
                     "home_win_probability": model_p,
+                    "predicted_margin": cfb_baseline["predicted_margin"],
+                    "margin_sigma": cfb_baseline["margin_sigma"],
+                    "baseline_probabilities": cfb_baseline["probabilities"],
+                    "tail_assumption": cfb_baseline["tail_assumption"],
                     "training_seasons": context["training_seasons"],
                 },
                 context={

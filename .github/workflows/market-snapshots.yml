@@ -94,3 +94,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run pages.yml --ref main
+      # Keep result/ratings commits above even when prices are unavailable, but do
+      # not report a scheduled actionable-board lock as a successful capture.
+      - name: Verify weekly price lock
+        if: ${{ inputs.lock_weekly_board || github.event.schedule == '30 16 * 7-10 1' || github.event.schedule == '30 17 * 1,11-12 1' }}
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          tracking = json.loads(Path('viz/data/market_tracking.json').read_text())
+          if not tracking.get('weekly_board_updated_this_check'):
+              raise SystemExit('Weekly price lock failed: no fresh CFBD lines. Results may still have been published.')
+          PY

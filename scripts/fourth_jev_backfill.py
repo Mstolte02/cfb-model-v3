@@ -31,9 +31,10 @@ def _iter_jsonl(path: Path):
                 yield json.loads(line)
 
 
-def ensure_states(season: int, state_dir: Path, with_pff: bool) -> Path:
+def ensure_states(season: int, state_dir: Path, with_pff: bool,
+                  force: bool = False) -> Path:
     target = state_dir / f"states_{season}.jsonl"
-    if not target.exists():
+    if force or not target.exists():
         n = materialize_season(season, target, with_pff=with_pff)
         print(f"materialized {n} games -> {target}")
     else:
@@ -48,6 +49,8 @@ def main() -> None:
     parser.add_argument("--materialize-only", action="store_true")
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--no-pff", action="store_true")
+    parser.add_argument("--force", action="store_true",
+                        help="Regenerate state files even when they already exist")
     parser.add_argument("--state-dir", type=Path, default=DEFAULT_STATE_DIR)
     parser.add_argument("--ledger", type=Path, default=DEFAULT_LEDGER)
     args = parser.parse_args()
@@ -57,7 +60,8 @@ def main() -> None:
     sent = 0
 
     for season in args.season:
-        state_file = ensure_states(season, args.state_dir, with_pff=not args.no_pff)
+        state_file = ensure_states(season, args.state_dir,
+                                   with_pff=not args.no_pff, force=args.force)
         if args.materialize_only:
             continue
 

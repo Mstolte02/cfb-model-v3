@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel, inseason] = await Promise.all([
+  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel, inseason, marketTracking] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -41,6 +41,7 @@
     // In-season player WAR (scripts/update_inseason_war.py). Optional: display only,
     // nothing the ratings or bets read, so a missing file just hides the columns.
     fetchJSON("data/players_inseason.json").catch(() => null),
+    fetchJSON("data/market_tracking.json").catch(() => null),
   ]);
   /* In-season WAR joins by team and player name, the key the exporter writes. A
      player PFF has not charted this season (injured, redshirting, not yet on the
@@ -3337,6 +3338,15 @@
      row moves. */
   const ML_FLIP_FROM_WEEK = 3;
 
+  function marketBoardFresh() {
+    const now = Date.now();
+    const lock = Date.parse((odds.weekly_lock || {}).locked_at || "");
+    const checked = Date.parse((marketTracking || {}).lines_last_checked_at || "");
+    const maxAge = 6 * 3600 * 1000;
+    return Number.isFinite(lock) && Number.isFinite(checked) &&
+      lock <= now && checked <= now && now - lock <= maxAge && now - checked <= maxAge;
+  }
+
   /* The bet the board would print, or null for no bet. This IS the rule - both the
      board's flag and the tracker's record come from this one function. */
   function betToPlace(g, market) {
@@ -3345,6 +3355,9 @@
     // Week 1 is an authoritative historical ledger. If a row is absent, it was
     // not a bet at the time; never let today's rule/model manufacture it later.
     if (g.week === 1) return locked ? locked.bet : null;
+    // Keep settled history intact. An unplayed row cannot be an actionable price
+    // when the board lock or most recent successful quote check is stale.
+    if (Date.parse(g.start) > Date.now() && !marketBoardFresh()) return null;
     const RULE = BET_RULES[market];
     if (g.bettingExcluded) return null;
     if (g.gap == null || g.marketValue == null) return null;
@@ -3385,12 +3398,12 @@
     }
     if (betsOnly && !betRows.length) {
       document.getElementById("weekly-lines").innerHTML = `<div class="weekly-empty">
-        <b>No ${marketLabel.toLowerCase()} bets clear the model's gate ${week == null ? "right now" : "in week " + week}.</b>
-        <small>Turn off the bet filter to compare every posted line.</small></div>`;
+        <b>${marketBoardFresh() ? `No ${marketLabel.toLowerCase()} paper selections clear the model's gate.` : "The locked board or quote feed is stale; future paper selections are hidden."}</b>
+        <small>Turn off the filter to inspect archived lines. Do not treat them as currently available prices.</small></div>`;
       return;
     }
     const visibleRows = betsOnly ? betRows : rows;
-    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span><span>Bet to place</span></div>${visibleRows.map(g => {
+    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span><span>Paper signal</span></div>${visibleRows.map(g => {
       const lean = g.gap >= 0 ? g.home : g.away;
       const marketText = g.marketValue == null ? "—" : market === "moneyline" ? americanOdds(g.marketValue) : `${g.marketValue > 0 ? "+" : ""}${Number(g.marketValue).toFixed(1)}`;
       const modelText = g.modelValue == null ? "—" : market === "moneyline" ? pct(g.modelValue, 1) : `${g.modelValue > 0 && market === "spread" ? "+" : ""}${g.modelValue.toFixed(1)}`;
@@ -3400,7 +3413,7 @@
       const profit = final ? settleBet(g, market, final.home, final.away) : null;
       const resultClass = profit > 0 ? " win" : profit < 0 ? " loss"
         : profit === 0 ? " push" : "";
-      return `<div class="weekly-row${resultClass}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<span class="bet-tag">BET</span><b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
+      return `<div class="weekly-row${resultClass}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<span class="bet-tag">PAPER</span><b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
     }).join("")}</div>`;
     wireTeamLinks();
   }
@@ -3411,8 +3424,8 @@
     const host = document.getElementById("market-tracking");
     host.innerHTML = `<button type="button" class="bet-filter${betsOnly ? " active" : ""}"
       id="bet-filter" aria-pressed="${betsOnly}">
-      <span><small>${week == null ? "All listed weeks" : "Week " + week}</small>
-      <b>Bets to place for the week</b></span>
+      <span><small>${marketBoardFresh() ? (week == null ? "All listed weeks" : "Week " + week) : "Quotes stale — future signals hidden"}</small>
+      <b>Research selections (paper only)</b></span>
       <strong>${betCount}</strong>
       <em>${betsOnly ? `Showing ${betCount} of ${gameCount}` : "Show bets only"}</em>
     </button>`;
