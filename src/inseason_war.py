@@ -402,6 +402,78 @@ def playing_time(j: pd.DataFrame, week: int, params: dict) -> pd.DataFrame:
     return out
 
 
+DEPLOY_SPOTS = ["box", "slot", "fs", "corner", "dl"]
+# Where a player lined up, by side: PFF column -> label. Position-appropriate, so a
+# receiver reports wide/slot/inline and a lineman his spot on the line.
+ALIGN = {
+    "recv": {"recv__wide_snaps": "wide", "recv__slot_snaps": "slot", "recv__inline_snaps": "inline"},
+    "blk": {"blk__snap_counts_lt": "LT", "blk__snap_counts_lg": "LG", "blk__snap_counts_ce": "C",
+            "blk__snap_counts_rg": "RG", "blk__snap_counts_rt": "RT"},
+    "def": {"def__snap_counts_dl_a_gap": "A-gap", "def__snap_counts_dl_b_gap": "B-gap",
+            "def__snap_counts_dl_over_t": "over T", "def__snap_counts_dl_outside_t": "outside T",
+            "def__snap_counts_box": "box", "def__snap_counts_slot": "slot",
+            "def__snap_counts_fs": "deep", "def__snap_counts_corner": "outside CB"},
+}
+# RB is left out: PFF reports no backfield alignment, so his split would omit his main spot.
+SIDE_OF = {"WR": "recv", "TE": "recv", "OT": "blk", "IOL": "blk",
+           "DT": "def", "EDGE": "def", "LB": "def", "CB": "def", "SAF": "def"}
+
+
+def alignments(window_players: pd.DataFrame) -> dict:
+    """{(player_id, side): {label: share}} for shares of at least 5%."""
+    out = {}
+    w = window_players.assign(player_id=window_players.player_id.astype(str))
+    for side, cols in ALIGN.items():
+        have = [c for c in cols if c in w.columns]
+        if not have:
+            continue
+        a = w.groupby("player_id")[have].sum()
+        tot = a.sum(axis=1)
+        sh = a.div(tot.replace(0, np.nan), axis=0)
+        for pid, row in sh.iterrows():
+            d = {cols[c]: round(float(v), 2) for c, v in row.items() if v >= .05}
+            if d:
+                out[(pid, side)] = dict(sorted(d.items(), key=lambda kv: -kv[1]))
+    return out
+
+
+def safety_versatility(window_players: pd.DataFrame) -> pd.Series:
+    """Per PFF player_id: alignment entropy over box/slot/deep/corner/line, 0-1."""
+    cols = [f"def__snap_counts_{c}" for c in DEPLOY_SPOTS]
+    if not set(cols) <= set(window_players.columns):
+        return pd.Series(dtype=float)
+    a = window_players[["player_id", *cols]].copy()
+    a["player_id"] = a.player_id.astype(str)
+    a = a.groupby("player_id")[cols].sum()
+    p = a.div(a.sum(axis=1).replace(0, np.nan), axis=0)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        h = -(p * np.log(p)).sum(axis=1, min_count=1)
+    return h / np.log(len(cols))
+
+
+def deployment_factor(j: pd.DataFrame, versatility: pd.Series, params: dict) -> pd.Series:
+    """The one deployment adjustment that passed validation (October 2026).
+
+    scripts/deployment_war_backtest.py tested every alignment measure Mark listed. Only
+    safety versatility improved team efficiency and win% out of sample (-0.67% /
+    -0.16% RMSE, t -3.7 / -2.7) and replicated in both halves of the seasons: WAR a
+    safety earns while moving between deep, box and slot is worth less than WAR earned
+    in one job. Versatility is clamped to the historical 5th-95th percentile, the
+    slope is shrunk by its uncertainty, and the factor is normalised so league safety
+    WAR is unchanged; it moves value between safeties, it does not create any.
+    """
+    cfg = (params.get("deployment") or {}).get("SAF")
+    f = pd.Series(1.0, index=j.index)
+    if not cfg or versatility.empty:
+        return f
+    saf = j.broad_group.eq("SAF") & j.player_id.notna()
+    x = j.loc[saf, "player_id"].astype(str).map(versatility).clip(cfg["lo"], cfg["hi"])
+    raw = (1.0 + cfg["slope"] * (x - cfg["mean"])).fillna(1.0)
+    w = j.loc[saf, "proj_war"].clip(lower=0) + 1e-6
+    f.loc[saf] = raw / np.average(raw, weights=w)
+    return f
+
+
 def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
           priors: pd.DataFrame, params: dict, roster: pd.DataFrame) -> dict:
     """Assemble the site payload.
@@ -451,7 +523,7 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
     # built from; the playing time comes from the roster, as in preseason.
     r = roster.copy()
     r["key"] = r.player.map(norm_name)
-    j = r.merge(w[["team", "key", "group", "snaps", "delta_rate", "k", "S", "obs", "m"]],
+    j = r.merge(w[["team", "key", "player_id", "group", "snaps", "delta_rate", "k", "S", "obs", "m"]],
                 on=["team", "key"], how="left").assign(emerged=False)
     # Players who were not on the preseason two-deep but are playing. Without this
     # a breakout (Jesse Legree, Oregon State, third string in July) never appears.
@@ -459,7 +531,7 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
     on_chart = set(zip(r.team, r.key))
     ex = w[[(t, k) not in on_chart for t, k in zip(w.team, w.key)]]
     ex = ex[(ex.snaps >= EMERGED_SNAPS) & ex.team.isin(set(r.team)) & ex.group.isin(STARTERS)]
-    j = pd.concat([j, ex[["team", "player", "key", "group", "snaps", "delta_rate", "k", "S",
+    j = pd.concat([j, ex[["team", "player", "key", "player_id", "group", "snaps", "delta_rate", "k", "S",
                           "obs", "m"]].assign(broad_group=ex.group, expected_snap_share=0.0,
                                               proj_war=0.0, available=True, is_starter=False,
                                               emerged=True)], ignore_index=True)
@@ -469,13 +541,17 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
     perf = (j.k * j.delta_rate * j.share_now * j.S / 1000.0).fillna(0.0)
     # Playing time: the change in share, valued at his preseason per-share value.
     j["war_inseason"] = j.proj_war + (j.share_now - j.share_pre) * j.V + perf
+    # Deployment: applied to opening and current alike, so it never shows as change.
+    dep = deployment_factor(j, safety_versatility(window_players), params)
+    j["proj_war"] = j.proj_war * dep
+    j["war_inseason"] = j.war_inseason * dep
     j["delta_war"] = j.war_inseason - j.proj_war
 
     status = availability_overrides()
     j["status"] = [status.get((t, k), "") for t, k in zip(j.team, j.key)]
     # WAR before availability: what an injured player is worth when he plays. The
     # Team Overview's injury report shows it beside the counted figure.
-    j["war_base"] = j.war_inseason
+    j["war_base"] = j.war_inseason.copy()
     j["available_now"] = j.available.fillna(True) & j.status.ne("out")
     j.loc[~j.available_now, "war_inseason"] = 0.0
     share = j.status.map(AVAIL_SHARE).fillna(1.0)
@@ -490,6 +566,7 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
     j["starter_now"] = current_starters(j)
     j.loc[j.status.eq("starter") & j.available_now, "starter_now"] = True
 
+    al = alignments(window_players)
     players, matched = {}, 0
     for row in j.itertuples():
         if pd.notna(row.snaps):
@@ -502,8 +579,12 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
             **({"new": True, "g": row.broad_group} if row.emerged else {}),
             "st": bool(row.starter_now),
             "out": not bool(row.available_now),
-            **({"inj": row.status, "base": round(float(row.war_base), 3)}
-               if row.status in AVAIL_SHARE else {}),
+            **({"inj": row.status} if row.status in AVAIL_SHARE else {}),
+            # healthy WAR (if he plays) vs the WAR counted now; the gap is availability
+            "base": round(float(row.war_base), 3),
+            **({"al": al[(str(row.player_id), SIDE_OF[row.broad_group])]}
+               if pd.notna(row.player_id) and (str(row.player_id), SIDE_OF.get(row.broad_group))
+               in al else {}),
         }
     return {
         "schema": 1, "season": 2026, "through_week": int(week),

@@ -1230,3 +1230,4 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
 .lm-val b.pos{color:#2f6a2b}.lm-val b.neg{color:#9a2c21}.lm-val small{color:var(--muted);font-size:11px}
 .lm-note{margin-top:10px;color:var(--muted);font-size:12px}
 @media(max-width:800px){.leader-movers{grid-template-columns:1fr}}
+.pl-al{color:var(--muted);font-size:12px;white-space:nowrap}

@@ -80,6 +80,10 @@ def refit_params():
         "full_time_per_game": PT.full_time_per_game(PT.weekly(SEASON - 1)),
         "repl_per_1000": repl.to_dict(),
         "pt_n0": 1.0,
+        # Validated deployment adjustments (scripts/deployment_war_backtest.py) are
+        # fitted there, not here; a refit carries them forward.
+        "deployment": (json.loads(IW.PARAMS.read_text()).get("deployment")
+                       if IW.PARAMS.exists() else None),
     }
     IW.PARAMS.write_text(json.dumps(params, indent=1))
     print(f"-> {IW.PARAMS}")
