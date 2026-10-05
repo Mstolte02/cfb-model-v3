@@ -457,12 +457,91 @@
  },
  "pt_n0": 1.0,
  "deployment": {
-  "SAF": {
-   "measure": "def_versatility",
-   "slope": -3.327,
-   "mean": 0.6583,
-   "lo": 0.4678,
-   "hi": 0.7999
+  "rate": {
+   "WR": {
+    "mean": {
+     "wide": 0.594
+    },
+    "net": {
+     "wide": -0.0017
+    }
+   },
+   "TE": {
+    "mean": {
+     "inline": 0.568,
+     "wide": 0.072
+    },
+    "net": {
+     "inline": -0.005,
+     "wide": -0.0453
+    }
+   },
+   "OT": {
+    "mean": {
+     "rt": 0.496
+    },
+    "net": {
+     "rt": -0.0011
+    }
+   },
+   "IOL": {
+    "mean": {
+     "c": 0.341
+    },
+    "net": {
+     "c": 0.0002
+    }
+   },
+   "DT": {
+    "mean": {
+     "b_gap": 0.646,
+     "over_t": 0.115,
+     "outside_t": 0.033
+    },
+    "net": {
+     "b_gap": 0.0031,
+     "over_t": -0.0018,
+     "outside_t": 0.001
+    }
+   },
+   "EDGE": {
+    "mean": {
+     "outside_t": 0.778,
+     "off_ball": 0.032
+    },
+    "net": {
+     "outside_t": 0.0084,
+     "off_ball": 0.0275
+    }
+   },
+   "LB": {
+    "mean": {
+     "box": 0.814,
+     "slot_d": 0.1
+    },
+    "net": {
+     "box": -0.0102,
+     "slot_d": -0.0191
+    }
+   },
+   "CB": {
+    "mean": {
+     "slot_d": 0.206
+    },
+    "net": {
+     "slot_d": 0.0006
+    }
+   },
+   "SAF": {
+    "mean": {
+     "deep": 0.375,
+     "box": 0.362
+    },
+    "net": {
+     "deep": -0.006,
+     "box": -0.0058
+    }
+   }
   }
  }
 }

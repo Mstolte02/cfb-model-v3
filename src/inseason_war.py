@@ -402,7 +402,6 @@ def playing_time(j: pd.DataFrame, week: int, params: dict) -> pd.DataFrame:
     return out
 
 
-DEPLOY_SPOTS = ["box", "slot", "fs", "corner", "dl"]
 # Where a player lined up, by side: PFF column -> label. Position-appropriate, so a
 # receiver reports wide/slot/inline and a lineman his spot on the line.
 ALIGN = {
@@ -437,41 +436,58 @@ def alignments(window_players: pd.DataFrame) -> dict:
     return out
 
 
-def safety_versatility(window_players: pd.DataFrame) -> pd.Series:
-    """Per PFF player_id: alignment entropy over box/slot/deep/corner/line, 0-1."""
-    cols = [f"def__snap_counts_{c}" for c in DEPLOY_SPOTS]
-    if not set(cols) <= set(window_players.columns):
-        return pd.Series(dtype=float)
-    a = window_players[["player_id", *cols]].copy()
-    a["player_id"] = a.player_id.astype(str)
-    a = a.groupby("player_id")[cols].sum()
-    p = a.div(a.sum(axis=1).replace(0, np.nan), axis=0)
-    with np.errstate(divide="ignore", invalid="ignore"):
-        h = -(p * np.log(p)).sum(axis=1, min_count=1)
-    return h / np.log(len(cols))
+# Alignment pools per group, in window-report column names (see
+# scripts/deployment_rate_backtest.shares, which estimated the slopes on these).
+DEPLOY_POOLS = {
+    "WR": {"wide": "recv__wide_snaps", "slot": "recv__slot_snaps", "inline": "recv__inline_snaps"},
+    "TE": {"wide": "recv__wide_snaps", "slot": "recv__slot_snaps", "inline": "recv__inline_snaps"},
+    "OT": {"lt": "pblk__snap_counts_lt", "rt": "pblk__snap_counts_rt"},
+    "IOL": {"lg": "pblk__snap_counts_lg", "c": "pblk__snap_counts_ce", "rg": "pblk__snap_counts_rg"},
+    "DT": {"a_gap": "def__snap_counts_dl_a_gap", "b_gap": "def__snap_counts_dl_b_gap",
+           "over_t": "def__snap_counts_dl_over_t", "outside_t": "def__snap_counts_dl_outside_t"},
+    "EDGE": {"b_gap": "def__snap_counts_dl_b_gap", "over_t": "def__snap_counts_dl_over_t",
+             "outside_t": "def__snap_counts_dl_outside_t", "off_ball": "def__snap_counts_box"},
+    "LB": {"box": "def__snap_counts_box", "slot_d": "def__snap_counts_slot",
+           "a_gap": "def__snap_counts_dl_a_gap", "b_gap": "def__snap_counts_dl_b_gap",
+           "over_t": "def__snap_counts_dl_over_t", "outside_t": "def__snap_counts_dl_outside_t"},
+    "CB": {"slot_d": "def__snap_counts_slot", "outside_cb": "def__snap_counts_corner"},
+    "SAF": {"deep": "def__snap_counts_fs", "box": "def__snap_counts_box", "slot_d": "def__snap_counts_slot"},
+}
 
 
-def deployment_factor(j: pd.DataFrame, versatility: pd.Series, params: dict) -> pd.Series:
-    """The one deployment adjustment that passed validation (October 2026).
+def deployment_shift(j: pd.DataFrame, window_players: pd.DataFrame, params: dict) -> pd.Series:
+    """Per-snap rate shift from where each player actually lined up in 2026.
 
-    scripts/deployment_war_backtest.py tested every alignment measure Mark listed. Only
-    safety versatility improved team efficiency and win% out of sample (-0.67% /
-    -0.16% RMSE, t -3.7 / -2.7) and replicated in both halves of the seasons: WAR a
-    safety earns while moving between deep, box and slot is worth less than WAR earned
-    in one job. Versatility is clamped to the historical 5th-95th percentile, the
-    slope is shrunk by its uncertainty, and the factor is normalised so league safety
-    WAR is unchanged; it moves value between safeties, it does not create any.
+    scripts/deployment_rate_backtest.py estimated, per position and in WAR-rate units,
+    (a) assignment difficulty - how the same player's rate moves with his alignment
+    mix, within player-season - and (b) replacement level - how much worse the fill-ins
+    are when a regular from that alignment misses a game. Both are ridge-shrunk with
+    the penalty chosen by leave-one-season-out, no significance gates. The shift is
+    sum over alignments of (replacement slope - difficulty slope) * (his share - mean).
+    Nothing is a hand-set multiplier: WR, OT and IOL shrink to about zero because the
+    data gives them nothing; safeties, edges, tight ends and linebackers move.
     """
-    cfg = (params.get("deployment") or {}).get("SAF")
-    f = pd.Series(1.0, index=j.index)
-    if not cfg or versatility.empty:
-        return f
-    saf = j.broad_group.eq("SAF") & j.player_id.notna()
-    x = j.loc[saf, "player_id"].astype(str).map(versatility).clip(cfg["lo"], cfg["hi"])
-    raw = (1.0 + cfg["slope"] * (x - cfg["mean"])).fillna(1.0)
-    w = j.loc[saf, "proj_war"].clip(lower=0) + 1e-6
-    f.loc[saf] = raw / np.average(raw, weights=w)
-    return f
+    cfg = (params.get("deployment") or {}).get("rate") or {}
+    out = pd.Series(0.0, index=j.index)
+    w = window_players.assign(player_id=window_players.player_id.astype(str))
+    for g, c in cfg.items():
+        pool = {k: col for k, col in DEPLOY_POOLS[g].items() if col in w.columns}
+        if not pool:
+            continue
+        a = w.groupby("player_id")[list(pool.values())].sum().rename(
+            columns={v: k for k, v in pool.items()})
+        tot = a.sum(axis=1).replace(0, np.nan)
+        sh = pd.DataFrame(index=a.index)
+        for k in c["net"]:
+            if k == "off_ball":
+                sh[k] = a["off_ball"] / tot
+            else:
+                sh[k] = a[k] / tot
+        rows = j.broad_group.eq(g) & j.player_id.notna()
+        pid = j.loc[rows, "player_id"].astype(str)
+        shift = sum(c["net"][k] * (pid.map(sh[k]) - c["mean"][k]) for k in c["net"])
+        out.loc[rows] = shift.fillna(0.0).to_numpy()
+    return out
 
 
 def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
@@ -542,9 +558,11 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
     # Playing time: the change in share, valued at his preseason per-share value.
     j["war_inseason"] = j.proj_war + (j.share_now - j.share_pre) * j.V + perf
     # Deployment: applied to opening and current alike, so it never shows as change.
-    dep = deployment_factor(j, safety_versatility(window_players), params)
-    j["proj_war"] = j.proj_war * dep
-    j["war_inseason"] = j.war_inseason * dep
+    shift = deployment_shift(j, window_players, params)
+    dep = (j.k.fillna(j.broad_group.map(params["k"])) * shift * j.share_now
+           * j.broad_group.map(S).fillna(0.0) / 1000.0).fillna(0.0)
+    j["proj_war"] = j.proj_war + dep
+    j["war_inseason"] = j.war_inseason + dep
     j["delta_war"] = j.war_inseason - j.proj_war
 
     status = availability_overrides()

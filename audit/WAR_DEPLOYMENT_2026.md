@@ -81,43 +81,83 @@ replicate in odd and even seasons.
 QB has no deployment measure in the staged files (no play-action, RPO, clean/pressure
 splits); special teams are not part of this WAR. Both keep their existing model.
 
-## Accepted
+## Superseded: the first test was not evidence that deployment is irrelevant
 
-**Safety versatility.** −0.67% side RMSE (t −3.7), −0.16% win% (t −2.7); odd seasons
-slope −3.40 (t −3.2), even −3.89 (t −2.4). WAR a safety earns while moving between
-deep, box and slot is worth less than WAR earned in one job. Applied in
-`src/inseason_war.deployment_factor`: versatility clamped to the historical 5th-95th
-percentile (.468-.800), slope shrunk by (1 - 1/t²) to −3.33, normalised so league safety
-WAR is unchanged, applied to opening and current WAR alike so it never shows as a
-change. 664 safeties move; middle 90% between ×0.55 and ×1.5.
+Mark rejected this test's conclusions, correctly. It asked only whether team-season
+PPA moved with WAR earned in a deployment, which has little power for one position's
+alignment mix, used an unadjusted whole-side outcome, never measured production by
+alignment, never measured replacement, and used pass/fail gates. Its one adopted
+result (a safety-versatility factor of up to x0.55-x1.5) was removed. The work below
+replaces it.
 
-## Rejected
+## Deployment-specific production and replacement (5 October 2026)
 
-Everything else, including wide vs slot WR, WR versatility, LT vs RT, centre vs guard,
-slot CB, A-gap DT, outside-tackle edge, box/slot/on-line LB and box/deep/slot safety.
-**IOL versatility** passed the first rule (−0.20% / −0.12%) but did not replicate
-(odd seasons −3.9, even −67.4), so it is out. Several measures improved one outcome
-and worsened the other (DT A-gap, EDGE outside-T, LB on-line).
+No manual multipliers, no significance gates: every effect is estimated with ridge
+regression, penalty chosen by leave-one-season-out cross-validation, and enters at
+its shrunk size.
+
+**Data.** PFF single-week reports for every week of 2022-25 (alignment snaps and
+production per game), every game scored on the production facet path and adjusted
+for that game's opponent. CFBD per-game PPA, opponent-adjusted by what each
+opponent allowed in its other games (`src/unit_outcomes.py`).
+
+**Difficulty** (`scripts/deployment_production_backtest.py` on PFF job metrics,
+`scripts/deployment_rate_backtest.py` in WAR units). Within the same player, how
+production moves with his alignment mix. Graded by predicting each player's later
+games from his earlier ones.
+
+| job / group | within-player finding | later-game prediction error |
+|---|---|---|
+| SAF coverage | deep and box games allow ~1.0 and 0.5 fewer yds/cov snap than slot | −3.35% (job metric), −1.03% (WAR rate) |
+| TE routes | inline-heavy games +0.65 YPRR, +6.6 route grade vs split out | −1.1% / −1.3% |
+| LB pass rush | off-ball snaps win ~5.6 pts more often | −0.77% |
+| CB coverage grade | outside games ~2.2 grade points higher than slot | −0.43% |
+| OL pass pro | same tackle allows +0.6 pts pressure rate at RT; centres −0.8 vs guards | −0.33% |
+| EDGE pass rush | outside-T alignment wins ~2.75 pts more often | −0.30% |
+| WR wide vs slot | none (YPRR +0.03 ± 0.07, grade +0.27 ± 0.42) | +0.05% |
+| DT gaps | small, noisy | ~0 |
+
+**Replacement** (`scripts/deployment_rate_backtest.py`). In games a regular missed,
+his opponent-adjusted rate minus that of the players at his position who played
+instead, on his alignment shares; graded on held-out seasons.
+
+| group | absences | effect | held-out error |
+|---|---:|---|---:|
+| TE | 1,515 | split-wide TEs much easier to replace | −0.50% |
+| EDGE | 703 | off-ball and outside-T edges harder to replace | −0.41% |
+| CB | 1,120 | slot corners slightly easier to replace | −0.25% |
+| SAF | 943 | deep and box safeties harder to replace than slot | −0.16% |
+| WR | 1,580 | ~none | −0.10% |
+| OT / IOL / DT | 1,124 / 1,280 / 737 | none; ridge shrinks to ~0 | +0.10-0.18% |
+
+**Unit value** (`scripts/deployment_value_backtest.py`, team-seasons 2021-25, opponent-
+adjusted position-appropriate outcome). Shrunk estimates: EDGE WAR earned outside the
+tackle worth more (−0.64% RMSE); CB WAR earned in the slot worth somewhat less
+(−0.17%); WR, TE, OT, IOL, SAF, LB, DT shrink to ~0 (penalty at the top of the grid).
+The game-level absence version of this test lacked power (one game's unit PPA
+swings ±0.3-0.5 per play against ~0.02 WAR per missing player) and is not used.
+
+**QB environment.** PFF passing-pressure reports 2014-25: a pressure-neutral grade
+(clean and pressured grades at the league pressure mix) predicts next season worse
+than the raw grade (r .390 vs .403). Pressure faced is partly the quarterback's own
+doing, so no environment adjustment is applied.
+
+## What ships
+
+`src/inseason_war.deployment_shift`: per-snap shift = sum over alignments of
+(replacement slope − difficulty slope) × (his 2026 share − league share), times
+k × snap share × full-time snaps. Applied to opening and current WAR alike, so it is
+never shown as change since opening. At week 5 it moves EDGE −0.017 to +0.030 WAR,
+LB up to +0.018, SAF −0.004 to +0.009, TE ±0.006, everyone else within ±0.003.
+WR, OT and IOL move essentially nothing because the data gives them nothing.
 
 ## Availability
 
-Unchanged in principle and now in the output: `base` (healthy WAR, if he plays) beside
-`war` (counted now). The injury report shows both; Trending Down and the Top 10
-fallers leave injured players out.
-
-## Outputs
-
-`viz/data/players_inseason.json`, per player: `war` (current expected), `base`
-(healthy), `d` (change since opening), `sh` (2026 snap share), `al` (alignment shares,
-position-appropriate: wide/slot/inline for WR and TE, line spot for OL, gap and
-box/slot/deep/outside-CB for defenders; omitted for RB and QB, where PFF has no
-backfield or pocket alignment), `new` and `g` for players off the preseason chart.
-The player table has an Alignment column.
+`base` (healthy WAR) and `war` (counted now) per player; injury report and the
+movers lists keep injury out of performance.
 
 ## Downstream
 
-The team rating signal is built from per-snap rate changes and is not touched by
-the safety factor, so power ratings and game probabilities are unchanged (checked:
-`inseason_war_team_2026.json` identical, replay identical bar last-digit float noise).
-Player tables, Top 10, unit rankings and team pages reflect the safety change and the
-added players.
+The team rating signal is built from per-snap rate changes and is unchanged
+(`inseason_war_team_2026.json`, ratings and model identical). Player tables, Top 10,
+unit rankings and team pages carry the shifted player WAR.
