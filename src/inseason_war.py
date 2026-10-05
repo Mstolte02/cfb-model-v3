@@ -52,7 +52,54 @@ def _wls(x, y, w):
     return np.linalg.lstsq(X * sw[:, None], np.asarray(y) * sw, rcond=None)[0]
 
 
+# Fine grids matter: on the old 9-point s2 grid the gain could not land where the
+# offensive line needs it and the rule was 5-8% worse there than a single blend.
+G_GRID = (0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0)
+S2_GRID = tuple(np.round(np.logspace(-1, 5, 49), 4))
+
+
+def updated_rate(c: dict, m, P, obs, snaps):
+    """Calibrated per-snap rate after the season so far.
+
+    Sample-weighted (shipped October 2026, Mark's rule): each player's gain is
+    K = P / (P + s2 / snaps). P is the variance of his prior, small when years of snaps
+    sit behind it; s2 / snaps is the noise in this season's rate, small when he has
+    played a lot. So a newcomer or a player with a thin record moves quickly, a
+    four-year starter slowly, and anyone moves faster as 2026 snaps pile up. g rescales
+    the window to the season scale. The older one-weight blend remains for any rule
+    fitted before this (no "s2" key).
+    """
+    if "s2" in c:
+        K = P / (P + c["s2"] / np.maximum(snaps, 1.0))
+        est = m + K * (c["g"] * obs - m)
+    else:
+        est = (1 - c["lam"]) * m + c["lam"] * obs
+    return c["a"] + c["b"] * est
+
+
 def fit_rule(fr: pd.DataFrame) -> dict:
+    """{group: {cut: {g, s2, a, b, a_p, b_p, lam, n}}}: the sample-weighted update."""
+    out = {}
+    for (g, cut), d in fr.groupby(["group", "cut"]):
+        w = d.snaps_t.to_numpy()
+        n = np.maximum(d.snaps_w.to_numpy(), 1.0)
+
+        def est(gg, s2):
+            K = d.P.to_numpy() / (d.P.to_numpy() + s2 / n)
+            return d.m.to_numpy() + K * (gg * d.obs.to_numpy() - d.m.to_numpy())
+        gg, s2 = min(((x, y) for x in G_GRID for y in S2_GRID),
+                     key=lambda p: np.average((est(*p) - d.target) ** 2, weights=w))
+        a, b = _wls(est(gg, s2), d.target, w)
+        a_p, b_p = _wls(d.m, d.target, w)
+        lam = float(min(LAM_GRID, key=lambda l: np.average(
+            ((1 - l) * d.m + l * d.obs - d.target) ** 2, weights=w)))
+        out.setdefault(g, {})[str(int(cut))] = dict(
+            g=float(gg), s2=float(s2), a=float(a), b=float(b), a_p=float(a_p),
+            b_p=float(b_p), lam=lam, n=int(len(d)))
+    return out
+
+
+def fit_rule_blend(fr: pd.DataFrame) -> dict:
     """{group: {cut: {lam, a, b, a_p, b_p, n}}} from backtest rows (any seasons given)."""
     out = {}
     for (g, cut), d in fr.groupby(["group", "cut"]):
@@ -187,6 +234,8 @@ def current_starters(frame: pd.DataFrame) -> pd.Series:
 # players with MIN_SNAPS+ snaps in weeks 1..c. Measured as a stack column in
 # scripts/inseason_war_team_backtest.py.
 MODEL_CUTS = (3, 6, 9)
+# Graded weeks keep their inputs: see scripts/update_inseason_war.write_team_tables.
+FROZEN_BEFORE_CUT = 5
 TEAM_HISTORY = ROOT / "data" / "live" / "inseason_war_team_history.csv"
 
 
@@ -194,8 +243,24 @@ def team_payload_path(season: int) -> Path:
     return ROOT / "data" / "live" / f"inseason_war_team_{season}.json"
 
 
+def opponent_adjust(frame: pd.DataFrame, season: int, cut: int,
+                    beta: dict | None) -> pd.Series:
+    """obs made schedule-neutral: rate - beta[group] * difficulty the unit faced.
+
+    Difficulty is src/opponent_strength over weeks 1..cut, with team strength measured
+    only from games through the cut, so a live number never looks ahead.
+    """
+    if not beta:
+        return frame.obs
+    from src import opponent_strength as O
+    diff = O.window_difficulty(season, 1, cut, through=cut)
+    d = O.player_difficulty(frame.team, frame.group, diff)
+    return frame.obs - frame.group.map(beta).fillna(0.0) * d
+
+
 def window_rows(season: int, cut: int, priors: pd.DataFrame, mu: dict,
-                weight_season: int | None = None) -> pd.DataFrame:
+                weight_season: int | None = None,
+                opp_beta: dict | None = None) -> pd.DataFrame:
     """Per player for weeks 1..cut: obs rate, prior mean, snaps, canonical team."""
     import sys
     sys.path.insert(0, str(ROOT))
@@ -212,9 +277,11 @@ def window_rows(season: int, cut: int, priors: pd.DataFrame, mu: dict,
     fc["team"] = fc.player_id.map(teams)
     fc = fc[fc.group.notna() & (fc.snaps >= MIN_SNAPS) & fc.team.notna()].copy()
     fc["obs"] = fc.fc / fc.snaps * 1000.0
-    fc = fc.merge(priors[["player_id", "group", "m"]], on=["player_id", "group"],
+    fc["obs"] = opponent_adjust(fc, season, cut, opp_beta)
+    fc = fc.merge(priors[["player_id", "group", "m", "P"]], on=["player_id", "group"],
                   how="left")
     fc["m"] = fc.m.fillna(fc.group.map(mu))
+    fc["P"] = fc.P.fillna(fc.group.map(priors.groupby("group").tau2.first()))
     return fc.assign(season=season, cut=cut)
 
 
@@ -226,7 +293,7 @@ def team_deltas(rows: pd.DataFrame, rule: dict, k: dict) -> pd.DataFrame:
         if not group_rule:
             continue
         p = group_rule[pick_cut(group_rule, int(c))]
-        upd = p["a"] + p["b"] * ((1 - p["lam"]) * d.m + p["lam"] * d.obs)
+        upd = updated_rate(p, d.m, d.P, d.obs, d.snaps)
         base = p["a_p"] + p["b_p"] * d.m
         out.append(d.assign(D=k[g] * (upd - base) * (d.snaps / c) / 1000.0))
     x = pd.concat(out)
@@ -247,6 +314,88 @@ def game_war_column(games: pd.DataFrame, deltas: pd.DataFrame) -> pd.Series:
         vals.append(lookup.get((int(g.season), c, g.home_team), 0.0)
                     - lookup.get((int(g.season), c, g.away_team), 0.0))
     return pd.Series(vals, index=games.index, name="war_delta_diff")
+
+
+WEEKLY = ROOT.parent / "source-data" / "pff_api" / "player_weekly"
+# A projected share below this makes proj_war / share an unstable per-share value (a
+# 5% backup with 0.01 WAR would be "worth" a starter); those players are valued from
+# their per-snap rate instead, calibrated to the projection.
+V_SHARE_FLOOR = 0.15
+
+
+def season_snaps(season: int, week: int) -> pd.DataFrame:
+    """Per (team, name key): scrimmage snaps in weeks 1..week, team games, PFF group."""
+    import sys
+    sys.path.insert(0, str(ROOT / "war_model"))
+    from build_roster_2026 import norm_name
+    from scripts.playing_time_backtest import weekly
+    w = weekly(season)
+    w = w[w.week <= week]
+    games = w[["team", "week"]].drop_duplicates().groupby("team").size()
+    t = w.groupby(["team", "player_id"]).agg(player=("player", "first"),
+                                             group=("group", "first"),
+                                             sn=("snaps", "sum")).reset_index()
+    t["G"] = t.team.map(games)
+    t["key"] = t.player.map(norm_name)
+    t["player_id"] = t.player_id.astype(str)
+    return t
+
+
+def _rate_value(group: pd.Series, m: pd.Series, week: int, params: dict) -> pd.Series:
+    """WAR per full-time share at the prior per-snap rate (before calibration)."""
+    rule, k, S, R = (params["rule"], params["k"], params["full_time_snaps"],
+                     params["repl_per_1000"])
+    out = []
+    for g, mi in zip(group, m):
+        if g not in rule or pd.isna(mi):
+            out.append(np.nan)
+            continue
+        c = rule[g][pick_cut(rule[g], week)]
+        rate = c["a_p"] + c["b_p"] * mi
+        out.append(S[g] / 1000.0 * (k[g] * rate + R[g]))
+    return pd.Series(out, index=group.index)
+
+
+def playing_time(j: pd.DataFrame, week: int, params: dict) -> pd.DataFrame:
+    """share_pre, share_now and V (WAR per full-time share) for each roster row.
+
+    share_now is a Bayesian average of the preseason share and the 2026 snaps:
+    (n0 * prior + G * observed) / (n0 + G) in snaps per team game, as a share of a
+    full-time player at the position. scripts/playing_time_backtest.py fitted n0 at
+    0.5-1 game for every position (observed snaps cut rest-of-season error by two
+    thirds); the live prior is the projection, so n0 = 1 leans slightly toward it.
+    """
+    snaps = season_snaps(2026, week)
+    by_key = snaps.drop_duplicates(["team", "key"], keep=False).set_index(["team", "key"])
+    games = snaps.groupby("team").G.first()
+    n0 = params.get("pt_n0", 1.0)
+    grp = j.broad_group
+    slots = grp.map(STARTERS)
+    share_pre = j.expected_snap_share.fillna(0.0).clip(0.0, 1.0)
+    idx = pd.MultiIndex.from_arrays([j.team, j.key])
+    sn = pd.Series(by_key.sn.reindex(idx).to_numpy(), index=j.index).fillna(0.0)
+    G = j.team.map(games).fillna(0.0)
+    # The projection's share is the player's fraction of his two-deep room's snaps
+    # times the room's starter slots (war_model/depth_correction.reweight, whose
+    # usage term divides by the two-deep's own snaps), so 2026 snaps are put on the
+    # same footing. Dividing by every player who took a snap instead understated
+    # every starter by 25-40% at week 5.
+    U = sn.groupby([j.team, grp]).transform("sum")
+    obs_opp = (sn / U).where(U > 0, 0.0)
+    pre_opp = share_pre / slots
+    opp_now = (n0 * pre_opp + G * obs_opp) / (n0 + G)
+    share_now = (opp_now * slots).clip(0.0, 1.0).where(slots.notna() & (G > 0), share_pre)
+
+    m = j.m.fillna(grp.map(params["mu_2026"]))
+    v_rate = _rate_value(grp, m, week, params)
+    starters = (share_pre >= .5) & v_rate.gt(0) & j.proj_war.gt(0)
+    calib = ((j.proj_war / share_pre) / v_rate)[starters].groupby(grp[starters]).median()
+    v_low = (v_rate * grp.map(calib)).clip(lower=0.0).fillna(0.0)
+    V = np.where(share_pre >= V_SHARE_FLOOR, j.proj_war / share_pre.clip(lower=1e-9), v_low)
+    out = pd.DataFrame({"share_pre": share_pre, "share_now": share_now, "V": V,
+                        "sn26": sn, "G": G}, index=j.index)
+    out.attrs["calib"] = calib.to_dict()
+    return out
 
 
 def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
@@ -270,17 +419,19 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
     w["team"] = w.player_id.map(teams)
     w = w[w.group.notna() & (w.snaps > 0)]
     w["obs"] = w.fc / w.snaps * 1000.0
-    w = w.merge(priors[["player_id", "group", "m", "prior_snaps"]],
+    w["obs"] = opponent_adjust(w, 2026, week, params.get("opp_beta"))
+    w = w.merge(priors[["player_id", "group", "m", "P", "prior_snaps"]],
                 on=["player_id", "group"], how="left")
     rule, k, S = params["rule"], params["k"], params["full_time_snaps"]
     mu = params["mu_2026"]
     w["m"] = w.m.fillna(w.group.map(mu))
+    w["P"] = w.P.fillna(w.group.map(params["tau2_2026"]))
     rows = []
     for g, d in w.groupby("group"):
         if g not in rule:
             continue
         c = rule[g][pick_cut(rule[g], week)]
-        upd = c["a"] + c["b"] * ((1 - c["lam"]) * d.m + c["lam"] * d.obs)
+        upd = updated_rate(c, d.m, d.P, d.obs, d.snaps)
         base = c["a_p"] + c["b_p"] * d.m
         rows.append(d.assign(delta_rate=upd - base, k=k[g], S=S[g]))
     w = pd.concat(rows, ignore_index=True)
@@ -296,11 +447,15 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
     # built from; the playing time comes from the roster, as in preseason.
     r = roster.copy()
     r["key"] = r.player.map(norm_name)
-    j = r.merge(w[["team", "key", "group", "snaps", "delta_rate", "k", "S", "obs"]],
+    j = r.merge(w[["team", "key", "group", "snaps", "delta_rate", "k", "S", "obs", "m"]],
                 on=["team", "key"], how="left")
-    share = j.expected_snap_share.fillna(0.0)
-    j["delta_war"] = j.k * j.delta_rate * share * j.S / 1000.0
-    j["war_inseason"] = j.proj_war + j.delta_war.fillna(0.0)
+    pt = playing_time(j, week, params)
+    j = j.join(pt)
+    # Performance: the per-snap change, now applied to the snaps he is getting.
+    perf = (j.k * j.delta_rate * j.share_now * j.S / 1000.0).fillna(0.0)
+    # Playing time: the change in share, valued at his preseason per-share value.
+    j["war_inseason"] = j.proj_war + (j.share_now - j.share_pre) * j.V + perf
+    j["delta_war"] = j.war_inseason - j.proj_war
 
     status = availability_overrides()
     j["status"] = [status.get((t, k), "") for t, k in zip(j.team, j.key)]
@@ -309,6 +464,12 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
     share = j.status.map(AVAIL_SHARE).fillna(1.0)
     j["war_inseason"] = j.war_inseason * share
     j["delta_war"] = j.war_inseason - j.proj_war
+    # Team playing-time signal, WAR per week like D: the roster's share changes plus
+    # snaps taken by players off the chart. Players on an injury report are left to
+    # availability_team_deltas, which already removes their value.
+    pt_ok = ~j.status.isin(list(AVAIL_SHARE))
+    team_pt = (((j.share_now - j.share_pre) * j.V)[pt_ok].groupby(j.team[pt_ok]).sum()
+               / SEASON_GAMES)
     j["starter_now"] = current_starters(j)
     j.loc[j.status.eq("starter") & j.available_now, "starter_now"] = True
 
@@ -320,6 +481,7 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
             "sn": int(row.snaps) if pd.notna(row.snaps) else 0,
             "war": round(float(row.war_inseason), 3),
             "d": round(float(row.delta_war if pd.notna(row.delta_war) else 0.0), 3),
+            "sh": round(float(row.share_now), 3),
             "st": bool(row.starter_now),
             "out": not bool(row.available_now),
             **({"inj": row.status} if row.status in AVAIL_SHARE else {}),
@@ -333,7 +495,9 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
         "method": ("Preseason expected WAR, moved by how this season's PFF grades change "
                    "the per-snap estimate. The prior counts each past season by its "
                    "snaps; the season so far gets one weight per position and week. "
-                   "PFF participation updates current first-unit roles; verified team "
-                   "injury announcements remove unavailable players."),
+                   "Playing time is the 2026 snap share, blended with the preseason "
+                   "share as if it were one game; per-snap rates are adjusted for "
+                   "opponent difficulty; injury reports scale availability."),
+        "team_playing_time": {t: round(float(v), 6) for t, v in team_pt.items()},
         "players": players,
     }

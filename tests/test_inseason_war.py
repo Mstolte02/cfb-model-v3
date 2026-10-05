@@ -51,17 +51,26 @@ class InseasonWarTests(unittest.TestCase):
         self.assertEqual(IW.canonical_team(["N DAK ST"], tm), "North Dakota State")
         self.assertEqual(IW.canonical_team(["AIR FORCE", "Air Force"], tm), "Air Force")
 
-    def test_fit_rule_recovers_a_known_blend(self):
+    def test_fit_rule_recovers_a_known_sample_weighted_update(self):
+        # Truth: each player's season-to-date counts by his own precision, so thin
+        # records (large P) and big samples (many snaps) move further.
         rng = np.random.default_rng(0)
-        n = 4000
+        n = 6000
         m = rng.normal(0, 1, n)
+        P = rng.choice([.05, .5, 2.0], n)
+        snaps = rng.choice([30.0, 150.0, 400.0], n)
         obs = rng.normal(0, 1, n)
-        target = 0.7 * m + 0.3 * obs + rng.normal(0, .05, n)
-        fr = pd.DataFrame({"group": "QB", "cut": 3, "m": m, "obs": obs,
-                           "target": target, "snaps_t": 100.0})
+        K = P / (P + 30.0 / snaps)
+        target = m + K * (obs - m) + rng.normal(0, .05, n)
+        fr = pd.DataFrame({"group": "QB", "cut": 3, "m": m, "obs": obs, "P": P,
+                           "snaps_w": snaps, "target": target, "snaps_t": 100.0})
         c = IW.fit_rule(fr)["QB"]["3"]
-        self.assertAlmostEqual(c["lam"], 0.3, delta=0.05)
+        self.assertAlmostEqual(c["g"], 1.0, delta=0.15)
         self.assertAlmostEqual(c["b"], 1.0, delta=0.1)
+        # The rule moves a thin-record player further than a veteran on the same data.
+        thin = IW.updated_rate(c, 0.0, 2.0, 1.0, 150.0)
+        known = IW.updated_rate(c, 0.0, 0.05, 1.0, 150.0)
+        self.assertGreater(thin - c["a"], known - c["a"])
 
     def test_published_payload_shape(self):
         path = IW.OUT
@@ -73,7 +82,7 @@ class InseasonWarTests(unittest.TestCase):
         row = next(iter(next(iter(d["players"].values())).values()))
         rows = [r for team in d["players"].values() for r in team.values()]
         for r in rows:   # "inj" appears only for players on an injury report
-            self.assertEqual(set(r) - {"inj"}, {"sn", "war", "d", "st", "out"})
+            self.assertEqual(set(r) - {"inj"}, {"sn", "war", "d", "st", "out", "sh"})
 
     def test_availability_delta_does_not_double_count_base_absence(self):
         roster = pd.DataFrame([

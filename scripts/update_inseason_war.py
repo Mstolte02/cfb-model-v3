@@ -57,9 +57,17 @@ def ensure_key():
 
 def refit_params():
     from scripts import war_inseason_backtest as B
+    from scripts import playing_time_backtest as PT
     hist = B.history()
     fr = B.frame(hist)
+    # Opponent slopes first, then the update rule on schedule-neutral rates.
+    opp_beta = B.fit_opponent_beta(fr)
+    fr = B.apply_opponent(fr, opp_beta)
     pr26 = B.priors(hist, SEASON)
+    war = pd.read_csv(ROOT / "war_model" / "hybrid_player_war.csv")
+    war = war[(war.season == SEASON - 1) & (war.snaps >= 100)]
+    war["group"] = war.position.map(__import__("src.war_window", fromlist=["GROUP"]).GROUP)
+    repl = ((war.war - war.waa) / war.snaps * 1000).groupby(war.group).median()
     params = {
         "fitted_on": sorted(int(s) for s in fr.season.unique()),
         "cuts": sorted(int(c) for c in fr.cut.unique()),
@@ -67,6 +75,11 @@ def refit_params():
         "k": IW.war_scale(hist),
         "full_time_snaps": IW.full_time_snaps(hist),
         "mu_2026": pr26.groupby("group").mu.first().to_dict(),
+        "tau2_2026": pr26.groupby("group").tau2.first().to_dict(),
+        "opp_beta": opp_beta,
+        "full_time_per_game": PT.full_time_per_game(PT.weekly(SEASON - 1)),
+        "repl_per_1000": repl.to_dict(),
+        "pt_n0": 1.0,
     }
     IW.PARAMS.write_text(json.dumps(params, indent=1))
     print(f"-> {IW.PARAMS}")
@@ -91,7 +104,8 @@ def write_team_tables(params: dict, week: int, history: bool, skip_pull: bool):
             pr = B.priors(hist, s)
             mu = pr.groupby("group").mu.first().to_dict()
             for c in IW.MODEL_CUTS:
-                parts.append(IW.window_rows(s, c, pr, mu))
+                parts.append(IW.window_rows(s, c, pr, mu,
+                                            opp_beta=params.get("opp_beta")))
         D = IW.team_deltas(pd.concat(parts, ignore_index=True), rule, k)
         D.to_csv(IW.TEAM_HISTORY, index=False)
         print(f"-> {IW.TEAM_HISTORY} ({len(D)} team-cuts)")
@@ -101,11 +115,21 @@ def write_team_tables(params: dict, week: int, history: bool, skip_pull: bool):
     # Keep the fitted checkpoints for historical replay, plus the latest completed
     # week so current power ratings never wait three weeks for a roster change.
     publish_cuts = sorted(set(c for c in IW.MODEL_CUTS if c <= week) | {week})
+    # Cuts before FROZEN_BEFORE_CUT fed games that are already graded. They keep the
+    # values they were published with; the October 2026 method (pooled WAR, opponent
+    # adjustment, sample-weighted update, 2026 playing time) applies from there on.
+    old = {}
+    if IW.team_payload_path(SEASON).exists():
+        old = json.loads(IW.team_payload_path(SEASON).read_text()).get("cutoffs", {})
     for c in publish_cuts:
+        if c < IW.FROZEN_BEFORE_CUT and str(c) in old:
+            cutoffs[str(c)] = old[str(c)]
+            continue
         d = SW.window_dir(SEASON, 1, c)
         if not skip_pull and len(list(d.glob("*.csv"))) < 10:
             SW.main([SEASON], [(1, c)])
-        rows = IW.window_rows(SEASON, c, pr, mu, weight_season=SEASON - 1)
+        rows = IW.window_rows(SEASON, c, pr, mu, weight_season=SEASON - 1,
+                              opp_beta=params.get("opp_beta"))
         D = IW.team_deltas(rows, rule, k)
         cutoffs[str(c)] = {r.team: round(float(r.D), 8) for r in D.itertuples()}
     # Availability is intentionally current-only. Applying today's injury news to an
@@ -115,10 +139,16 @@ def write_team_tables(params: dict, week: int, history: bool, skip_pull: bool):
     latest = cutoffs[str(week)]
     for team, delta in injury.items():
         latest[team] = round(latest.get(team, 0.0) + delta, 8)
+    # The 2026 playing-time term (payload "team_playing_time") is NOT added here. It
+    # is in every player's WAR, but summed to a team it tracks blowouts: strong teams
+    # rest starters, so their shares fall (Miami, Georgia, Texas A&M lowest at week 5)
+    # and weak teams' rise, which says nothing about close games to come. D already
+    # counts each player's actual 2026 snaps through the performance term.
     payload = {"season": SEASON, "through_week": int(week),
                "definition": "sum over players of k*(updated rate - calibrated prior)"
                              "*snaps per week/1000, weeks 1..cut; current cutoff also "
-                             "removes confirmed unavailable WAR; src/inseason_war.py",
+                             "removes unavailable WAR; rates are opponent-adjusted and "
+                             "sample-weighted; src/inseason_war.py",
                "cutoffs": cutoffs}
     IW.team_payload_path(SEASON).write_text(json.dumps(payload, indent=1))
     print(f"-> {IW.team_payload_path(SEASON)} (cuts {sorted(int(c) for c in cutoffs)})")

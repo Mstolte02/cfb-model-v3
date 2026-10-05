@@ -112,6 +112,11 @@ if _selected_api:
 # Getting this wrong is how a receiver ends up rated on run-blocking volume.
 SKILL = "skill"      # graded quality
 RATE = "rate"        # observed rate, already normalized by opportunity
+# A COUNT (pressures allowed, stops, tackles, first downs) is divided by its
+# denominator before it is standardized. Until October 2026 these were z-scored
+# raw and then multiplied by snaps, which credited volume twice where more is
+# better and charged a player for playing at all where less is better.
+COUNT = "count"
 
 CATALOGUE = [
     # ---- quarterback ----------------------------------------------------------
@@ -152,14 +157,14 @@ CATALOGUE = [
     ("recv__avg_depth_of_target",    "recv__targets", ("WR",),       RATE),
     ("recv__targeted_qb_rating",     "recv__targets", ("WR",),       RATE),
     ("recv__targeted_qb_rating",     "recv__targets", ("TE",),       RATE),
-    ("recv__yards_after_catch",      "recv__receptions", ("WR",),    RATE),
-    ("recv__yards_after_catch",      "recv__receptions", ("TE",),    RATE),
-    ("recv__yards_after_catch",      "recv__receptions", ("HB","FB"), RATE),
-    ("recv__avoided_tackles",        "recv__receptions", ("WR",),    RATE),
+    ("recv__yards_after_catch",      "recv__receptions", ("WR",),    COUNT),
+    ("recv__yards_after_catch",      "recv__receptions", ("TE",),    COUNT),
+    ("recv__yards_after_catch",      "recv__receptions", ("HB","FB"), COUNT),
+    ("recv__avoided_tackles",        "recv__receptions", ("WR",),    COUNT),
     ("recv__yards_per_reception",    "recv__receptions", ("WR",),    RATE),
-    ("recv__first_downs",            "recv__targets",    ("WR",),    RATE),
-    ("recv__first_downs",            "recv__targets",    ("TE",),    RATE),
-    ("recv__touchdowns",             "recv__targets",    ("WR",),    RATE),
+    ("recv__first_downs",            "recv__targets",    ("WR",),    COUNT),
+    ("recv__first_downs",            "recv__targets",    ("TE",),    COUNT),
+    ("recv__touchdowns",             "recv__targets",    ("WR",),    COUNT),
     ("recv__grades_offense",         "recv__routes",     ("WR",),    SKILL),
 
     # ---- blocking -------------------------------------------------------------
@@ -172,12 +177,12 @@ CATALOGUE = [
     ("blk__grades_pass_block",  "blk__snap_counts_pass_block", ("TE",),         SKILL),
     ("blk__grades_run_block",   "blk__snap_counts_run_block",  ("TE",),         SKILL),
     ("blk__grades_run_block",   "blk__snap_counts_run_block",  ("HB", "FB"),    SKILL),
-    ("blk__pressures_allowed",  "blk__snap_counts_pass_block", ("T",),          RATE),
-    ("blk__pressures_allowed",  "blk__snap_counts_pass_block", ("G", "C"),      RATE),
-    ("blk__sacks_allowed",      "blk__snap_counts_pass_block", ("T",),          RATE),
-    ("blk__sacks_allowed",      "blk__snap_counts_pass_block", ("G", "C"),      RATE),
-    ("blk__penalties",          "blk__snap_counts_offense",    ("T",),          RATE),
-    ("blk__penalties",          "blk__snap_counts_offense",    ("G", "C"),      RATE),
+    ("blk__pressures_allowed",  "blk__snap_counts_pass_block", ("T",),          COUNT),
+    ("blk__pressures_allowed",  "blk__snap_counts_pass_block", ("G", "C"),      COUNT),
+    ("blk__sacks_allowed",      "blk__snap_counts_pass_block", ("T",),          COUNT),
+    ("blk__sacks_allowed",      "blk__snap_counts_pass_block", ("G", "C"),      COUNT),
+    ("blk__penalties",          "blk__snap_counts_offense",    ("T",),          COUNT),
+    ("blk__penalties",          "blk__snap_counts_offense",    ("G", "C"),      COUNT),
 
     # ---- API-only pass/run blocking -------------------------------------------
     ("pblk__true_pass_set_grades_pass_block",
@@ -206,12 +211,11 @@ CATALOGUE = [
     ("def__grades_pass_rush_defense", "def__snap_counts_pass_rush", ("ED",), SKILL),
     ("def__grades_pass_rush_defense", "def__snap_counts_pass_rush", ("LB",), SKILL),
     ("def__grades_pass_rush_defense", "def__snap_counts_pass_rush", ("CB", "S"), SKILL),
-    ("def__total_pressures",          "def__snap_counts_pass_rush", ("DI",), RATE),
-    ("def__total_pressures",          "def__snap_counts_pass_rush", ("ED",), RATE),
-    ("def__sacks",                    "def__snap_counts_pass_rush", ("DI",), RATE),
-    ("def__sacks",                    "def__snap_counts_pass_rush", ("ED",), RATE),
-    ("def__hurries",                  "def__snap_counts_pass_rush", ("ED",), RATE),
-    ("def__qb_rating_against",        "def__snap_counts_pass_rush", ("ED",), RATE),
+    ("def__total_pressures",          "def__snap_counts_pass_rush", ("DI",), COUNT),
+    ("def__total_pressures",          "def__snap_counts_pass_rush", ("ED",), COUNT),
+    ("def__sacks",                    "def__snap_counts_pass_rush", ("DI",), COUNT),
+    ("def__sacks",                    "def__snap_counts_pass_rush", ("ED",), COUNT),
+    ("def__hurries",                  "def__snap_counts_pass_rush", ("ED",), COUNT),
     ("prsh__true_pass_set_grades_pass_rush_defense",
      "prsh__true_pass_set_snap_counts_pass_rush", ("DI",), SKILL),
     ("prsh__true_pass_set_grades_pass_rush_defense",
@@ -227,8 +231,8 @@ CATALOGUE = [
     ("def__grades_run_defense", "def__snap_counts_run_defense", ("ED",), SKILL),
     ("def__grades_run_defense", "def__snap_counts_run_defense", ("LB",), SKILL),
     ("def__grades_run_defense", "def__snap_counts_run_defense", ("CB", "S"), SKILL),
-    ("def__stops",              "def__snap_counts_run_defense", ("DI",), RATE),
-    ("def__stops",              "def__snap_counts_run_defense", ("LB",), RATE),
+    ("def__stops",              "def__snap_counts_run_defense", ("DI",), COUNT),
+    ("def__stops",              "def__snap_counts_run_defense", ("LB",), COUNT),
     ("rdef__stop_percent",      "rdef__snap_counts_run", ("DI",), RATE),
     ("rdef__stop_percent",      "rdef__snap_counts_run", ("ED",), RATE),
     ("rdef__stop_percent",      "rdef__snap_counts_run", ("LB",), RATE),
@@ -240,11 +244,11 @@ CATALOGUE = [
     ("def__grades_coverage_defense", "def__snap_counts_coverage", ("LB",), SKILL),
     ("def__catch_rate",              "def__targets",             ("CB",), RATE),
     ("def__catch_rate",              "def__targets",             ("S",),  RATE),
-    ("def__yards",                   "def__snap_counts_coverage", ("CB",), RATE),
-    ("def__yards",                   "def__snap_counts_coverage", ("S",),  RATE),
-    ("def__yards_after_catch",       "def__targets",              ("CB",), RATE),
-    ("def__interceptions",           "def__targets",             ("CB", "S"), RATE),
-    ("def__pass_break_ups",          "def__targets",             ("CB",), RATE),
+    ("def__yards",                   "def__snap_counts_coverage", ("CB",), COUNT),
+    ("def__yards",                   "def__snap_counts_coverage", ("S",),  COUNT),
+    ("def__yards_after_catch",       "def__targets",              ("CB",), COUNT),
+    ("def__interceptions",           "def__targets",             ("CB", "S"), COUNT),
+    ("def__pass_break_ups",          "def__targets",             ("CB",), COUNT),
     ("def__qb_rating_against",       "def__targets",             ("CB",), RATE),
     ("cov__forced_incompletion_rate", "cov__targets", ("CB",), RATE),
     ("cov__forced_incompletion_rate", "cov__targets", ("S",), RATE),
@@ -258,13 +262,46 @@ CATALOGUE = [
     ("def__grades_tackle",     "def__snap_counts_defense", ("CB", "S"),  SKILL),
     ("def__missed_tackle_rate", "def__snap_counts_defense", ("LB",),     RATE),
     ("def__missed_tackle_rate", "def__snap_counts_defense", ("CB", "S"), RATE),
-    ("def__tackles",           "def__snap_counts_defense", ("LB",),      RATE),
+    ("def__tackles",           "def__snap_counts_defense", ("LB",),      COUNT),
 
     # ---- discipline -----------------------------------------------------------
     ("def__grades_defense_penalty", "def__snap_counts_defense", ("DI", "ED"), SKILL),
     ("def__grades_defense_penalty", "def__snap_counts_defense", ("LB", "CB", "S"), SKILL),
     ("rush__grades_offense_penalty", "blk__snap_counts_offense",
      ("QB", "HB", "FB", "WR", "TE"), SKILL),
+    # ---- measurements added October 2026 ---------------------------------------
+    # Non-grade PFF measures, by position, from files the build already stages.
+    # pbwr and the graded-play rates exist from 2019 only (like true_pass_set_pbwr).
+    ("pblk__pbe",           "pblk__snap_counts_pass_block", ("T",), RATE),
+    ("pblk__pbe",           "pblk__snap_counts_pass_block", ("G", "C"), RATE),
+    ("pblk__pbwr",          "pblk__snap_counts_pass_block", ("T",), RATE),
+    ("pblk__pbwr",          "pblk__snap_counts_pass_block", ("G", "C"), RATE),
+    ("rblk__pos_graded_rate", "rblk__snap_counts_run_block", ("T",), RATE),
+    ("rblk__pos_graded_rate", "rblk__snap_counts_run_block", ("G", "C"), RATE),
+    ("rblk__neg_graded_rate", "rblk__snap_counts_run_block", ("T",), RATE),
+    ("rblk__neg_graded_rate", "rblk__snap_counts_run_block", ("G", "C"), RATE),
+    ("prsh__prp",           "prsh__snap_counts_pass_rush", ("DI",), RATE),
+    ("prsh__prp",           "prsh__snap_counts_pass_rush", ("ED",), RATE),
+    ("prsh__pass_rush_win_rate", "prsh__snap_counts_pass_rush", ("DI",), RATE),
+    ("prsh__pass_rush_win_rate", "prsh__snap_counts_pass_rush", ("ED",), RATE),
+    ("def__batted_passes",  "def__snap_counts_pass_rush", ("DI",), COUNT),
+    ("def__tackles_for_loss", "def__snap_counts_run_defense", ("DI", "ED"), COUNT),
+    ("def__tackles_for_loss", "def__snap_counts_run_defense", ("LB",), COUNT),
+    ("def__missed_tackle_rate", "def__snap_counts_defense", ("DI", "ED"), RATE),
+    ("rdef__stop_percent",  "rdef__snap_counts_run", ("S",), RATE),
+    ("cov__yards_per_coverage_snap", "cov__snap_counts_coverage", ("LB",), RATE),
+    ("cov__forced_incompletion_rate", "cov__targets", ("LB",), RATE),
+    ("cov__qb_rating_against", "cov__targets", ("LB",), RATE),
+    ("cov__qb_rating_against", "cov__targets", ("S",), RATE),
+    ("cov__coverage_snaps_per_target", "cov__snap_counts_coverage", ("S",), RATE),
+    ("recv__drop_rate",     "recv__targets", ("TE",), RATE),
+    ("recv__contested_catch_rate", "recv__targets", ("TE",), RATE),
+    ("recv__avoided_tackles", "recv__receptions", ("TE",), COUNT),
+    ("rush__avoided_tackles", "rush__total_touches", ("HB", "FB"), COUNT),
+    ("rush__explosive",     "rush__attempts", ("HB", "FB"), COUNT),
+    ("rush__first_downs",   "rush__attempts", ("HB", "FB"), COUNT),
+    ("rush__fumbles",       "rush__total_touches", ("HB", "FB"), COUNT),
+    ("rush__yprr",          "rush__routes", ("HB", "FB"), RATE),
 ]
 
 # Metrics where a LOWER raw value is better. Signs are flipped at normalization so
@@ -278,11 +315,12 @@ LOWER_IS_BETTER = {
     "def__yards", "def__yards_after_catch",
     "pblk__true_pass_set_pressure_rate_allowed",
     "rdef__avg_depth_of_tackle", "cov__yards_per_coverage_snap",
+    "rblk__neg_graded_rate", "cov__qb_rating_against", "rush__fumbles",
 }
 
 # Volume floors. A rate computed on four targets is noise dressed as a measurement,
 # and it will not be regularized away because it can take extreme values.
-MIN_DENOM = {"rate": 25, "skill": 12}
+MIN_DENOM = {"rate": 25, "skill": 12, "count": 25}
 
 
 def group_of(positions):
@@ -377,7 +415,7 @@ def facet_values(players, catalogue=None, verbose=True, scheme=None):
     the hand-built facets, so everything downstream - the Massey solve, the closed-form
     WAA, the replacement pool - works unchanged on a learned feature set.
 
-    ROLE NORMALIZATION, WAR_ROLE_NORM = partial (default) | pooled | tier.
+    ROLE NORMALIZATION, WAR_ROLE_NORM = pooled (default) | partial | tier.
 
     `pooled` - z against every player at the position - is what shipped, and it charges
     a receiver for his depth-chart slot. WR1 route grade averages 73.9 against WR5's
@@ -398,8 +436,20 @@ def facet_values(players, catalogue=None, verbose=True, scheme=None):
     also asserting the thing that was not.
 
     Moves QB from 18.6% of total weight to ~15.4% and WR from 9.7% to ~10.9%.
+
+    OCTOBER 2026: `pooled` IS THE DEFAULT AGAIN. Mark asked that WAR be pure value
+    added, with no role adjustment, and the full production build was run both ways
+    on the corrected catalogue (counts as rates, the new measurements):
+
+                     team massey r next season   player WAR/snap year-to-year r
+        partial      .4926                       .626
+        pooled       .4938                       .649   (better in 9 of 11 groups)
+
+    The tier mean was removing real, repeatable quality along with any role bias, and
+    a WR2 on a strong team already outscores one on a weak team without it (2025 WR2s:
+    .245 WAR on top-fifth teams, .043 on bottom-fifth).
     """
-    scheme = scheme or os.environ.get("WAR_ROLE_NORM", "partial").lower()
+    scheme = scheme or os.environ.get("WAR_ROLE_NORM", "pooled").lower()
     if scheme not in ("pooled", "tier", "partial"):
         raise ValueError(f"WAR_ROLE_NORM={scheme!r}; expected pooled, tier or partial")
     if scheme != "pooled" and "tier" not in players.columns:
@@ -417,6 +467,8 @@ def facet_values(players, catalogue=None, verbose=True, scheme=None):
         d["metric"] = pd.to_numeric(players.loc[d.index, metric], errors="coerce")
         d["snaps"] = pd.to_numeric(players.loc[d.index, denom], errors="coerce")
         d = d[(d.snaps >= MIN_DENOM[kind]) & d.metric.notna()]
+        if kind == COUNT:
+            d["metric"] = d.metric / d.snaps
         if len(d) < 200:
             skipped.append((name, f"only {len(d)} qualifying player-seasons"))
             continue

@@ -16,8 +16,13 @@
   "CB_yards_after_catch",
   "CB_yards_per_coverage_snap",
   "DI-ED_defense_penalty",
+  "DI-ED_missed_tackle_rate",
   "DI-ED_tackle",
+  "DI-ED_tackles_for_loss",
+  "DI_batted_passes",
   "DI_pass_rush",
+  "DI_pass_rush_win_rate",
+  "DI_prp",
   "DI_run",
   "DI_sacks",
   "DI_stop_pct",
@@ -27,7 +32,8 @@
   "DI_true_pass_set_pass_rush_win_rate",
   "ED_hurries",
   "ED_pass_rush",
-  "ED_qb_rating_against",
+  "ED_pass_rush_win_rate",
+  "ED_prp",
   "ED_run",
   "ED_sacks",
   "ED_stop_pct",
@@ -35,8 +41,12 @@
   "ED_true_pass_set_pass_rush",
   "ED_true_pass_set_pass_rush_win_rate",
   "IOL_gap_run_block",
+  "IOL_neg_graded_rate",
   "IOL_pass_block",
+  "IOL_pbe",
+  "IOL_pbwr",
   "IOL_penalties",
+  "IOL_pos_graded_rate",
   "IOL_pressures_allowed",
   "IOL_run_block",
   "IOL_sacks_allowed",
@@ -46,17 +56,25 @@
   "IOL_zone_run_block",
   "LB_avg_depth_of_tackle",
   "LB_coverage",
+  "LB_forced_incompletion_rate",
   "LB_missed_tackle_rate",
   "LB_pass_rush",
   "LB_pass_rush_win_rate",
+  "LB_qb_rating_against",
   "LB_run",
   "LB_stop_pct",
   "LB_stops",
   "LB_tackle",
   "LB_tackles",
+  "LB_tackles_for_loss",
+  "LB_yards_per_coverage_snap",
   "OT_gap_run_block",
+  "OT_neg_graded_rate",
   "OT_pass_block",
+  "OT_pbe",
+  "OT_pbwr",
   "OT_penalties",
+  "OT_pos_graded_rate",
   "OT_pressures_allowed",
   "OT_run_block",
   "OT_sacks_allowed",
@@ -77,8 +95,12 @@
   "QB_sack_pct",
   "QB_twp_rate",
   "QB_ypa",
+  "RB_avoided_tackles",
   "RB_breakaway_pct",
   "RB_elusive_rating",
+  "RB_explosive",
+  "RB_first_downs",
+  "RB_fumbles",
   "RB_hands_fumble",
   "RB_pass_route",
   "RB_run",
@@ -86,11 +108,18 @@
   "RB_yards_after_catch",
   "RB_yco_attempt",
   "RB_ypa",
+  "RB_yprr",
   "S_catch_rate",
   "S_coverage",
+  "S_coverage_snaps_per_target",
   "S_forced_incompletion_rate",
+  "S_qb_rating_against",
+  "S_stop_pct",
   "S_yards",
   "S_yards_per_coverage_snap",
+  "TE_avoided_tackles",
+  "TE_contested_catch_rate",
+  "TE_drop_rate",
   "TE_first_downs",
   "TE_hands_drop",
   "TE_pass_block",
@@ -428,7 +457,7 @@
    "positions": [
     "WR"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "TE_yards_after_catch",
@@ -437,7 +466,7 @@
    "positions": [
     "TE"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "RB_yards_after_catch",
@@ -447,7 +476,7 @@
     "HB",
     "FB"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "WR_avoided_tackles",
@@ -456,7 +485,7 @@
    "positions": [
     "WR"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "WR_yards_per_reception",
@@ -474,7 +503,7 @@
    "positions": [
     "WR"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "TE_first_downs",
@@ -483,7 +512,7 @@
    "positions": [
     "TE"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "WR_touchdowns",
@@ -492,7 +521,7 @@
    "positions": [
     "WR"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "WR_offense",
@@ -576,7 +605,7 @@
    "positions": [
     "T"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "IOL_pressures_allowed",
@@ -586,7 +615,7 @@
     "G",
     "C"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "OT_sacks_allowed",
@@ -595,7 +624,7 @@
    "positions": [
     "T"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "IOL_sacks_allowed",
@@ -605,7 +634,7 @@
     "G",
     "C"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "OT_penalties",
@@ -614,7 +643,7 @@
    "positions": [
     "T"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "IOL_penalties",
@@ -624,7 +653,7 @@
     "G",
     "C"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "OT_true_pass_set_pass_block",
@@ -765,7 +794,7 @@
    "positions": [
     "DI"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "ED_total_pressures",
@@ -774,7 +803,7 @@
    "positions": [
     "ED"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "DI_sacks",
@@ -783,7 +812,7 @@
    "positions": [
     "DI"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "ED_sacks",
@@ -792,7 +821,7 @@
    "positions": [
     "ED"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "ED_hurries",
@@ -801,16 +830,7 @@
    "positions": [
     "ED"
    ],
-   "kind": "rate"
-  },
-  {
-   "name": "ED_qb_rating_against",
-   "metric": "def__qb_rating_against",
-   "denominator": "def__snap_counts_pass_rush",
-   "positions": [
-    "ED"
-   ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "DI_true_pass_set_pass_rush",
@@ -901,7 +921,7 @@
    "positions": [
     "DI"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "LB_stops",
@@ -910,7 +930,7 @@
    "positions": [
     "LB"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "DI_stop_pct",
@@ -1000,7 +1020,7 @@
    "positions": [
     "CB"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "S_yards",
@@ -1009,7 +1029,7 @@
    "positions": [
     "S"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "CB_yards_after_catch",
@@ -1018,7 +1038,7 @@
    "positions": [
     "CB"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "CB-S_interceptions",
@@ -1028,7 +1048,7 @@
     "CB",
     "S"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "CB_pass_break_ups",
@@ -1037,7 +1057,7 @@
    "positions": [
     "CB"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "CB_qb_rating_against",
@@ -1148,7 +1168,7 @@
    "positions": [
     "LB"
    ],
-   "kind": "rate"
+   "kind": "count"
   },
   {
    "name": "DI-ED_defense_penalty",
@@ -1183,6 +1203,287 @@
     "TE"
    ],
    "kind": "skill"
+  },
+  {
+   "name": "OT_pbe",
+   "metric": "pblk__pbe",
+   "denominator": "pblk__snap_counts_pass_block",
+   "positions": [
+    "T"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "IOL_pbe",
+   "metric": "pblk__pbe",
+   "denominator": "pblk__snap_counts_pass_block",
+   "positions": [
+    "G",
+    "C"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "OT_pbwr",
+   "metric": "pblk__pbwr",
+   "denominator": "pblk__snap_counts_pass_block",
+   "positions": [
+    "T"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "IOL_pbwr",
+   "metric": "pblk__pbwr",
+   "denominator": "pblk__snap_counts_pass_block",
+   "positions": [
+    "G",
+    "C"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "OT_pos_graded_rate",
+   "metric": "rblk__pos_graded_rate",
+   "denominator": "rblk__snap_counts_run_block",
+   "positions": [
+    "T"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "IOL_pos_graded_rate",
+   "metric": "rblk__pos_graded_rate",
+   "denominator": "rblk__snap_counts_run_block",
+   "positions": [
+    "G",
+    "C"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "OT_neg_graded_rate",
+   "metric": "rblk__neg_graded_rate",
+   "denominator": "rblk__snap_counts_run_block",
+   "positions": [
+    "T"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "IOL_neg_graded_rate",
+   "metric": "rblk__neg_graded_rate",
+   "denominator": "rblk__snap_counts_run_block",
+   "positions": [
+    "G",
+    "C"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "DI_prp",
+   "metric": "prsh__prp",
+   "denominator": "prsh__snap_counts_pass_rush",
+   "positions": [
+    "DI"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "ED_prp",
+   "metric": "prsh__prp",
+   "denominator": "prsh__snap_counts_pass_rush",
+   "positions": [
+    "ED"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "DI_pass_rush_win_rate",
+   "metric": "prsh__pass_rush_win_rate",
+   "denominator": "prsh__snap_counts_pass_rush",
+   "positions": [
+    "DI"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "ED_pass_rush_win_rate",
+   "metric": "prsh__pass_rush_win_rate",
+   "denominator": "prsh__snap_counts_pass_rush",
+   "positions": [
+    "ED"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "DI_batted_passes",
+   "metric": "def__batted_passes",
+   "denominator": "def__snap_counts_pass_rush",
+   "positions": [
+    "DI"
+   ],
+   "kind": "count"
+  },
+  {
+   "name": "DI-ED_tackles_for_loss",
+   "metric": "def__tackles_for_loss",
+   "denominator": "def__snap_counts_run_defense",
+   "positions": [
+    "DI",
+    "ED"
+   ],
+   "kind": "count"
+  },
+  {
+   "name": "LB_tackles_for_loss",
+   "metric": "def__tackles_for_loss",
+   "denominator": "def__snap_counts_run_defense",
+   "positions": [
+    "LB"
+   ],
+   "kind": "count"
+  },
+  {
+   "name": "DI-ED_missed_tackle_rate",
+   "metric": "def__missed_tackle_rate",
+   "denominator": "def__snap_counts_defense",
+   "positions": [
+    "DI",
+    "ED"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "S_stop_pct",
+   "metric": "rdef__stop_percent",
+   "denominator": "rdef__snap_counts_run",
+   "positions": [
+    "S"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "LB_yards_per_coverage_snap",
+   "metric": "cov__yards_per_coverage_snap",
+   "denominator": "cov__snap_counts_coverage",
+   "positions": [
+    "LB"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "LB_forced_incompletion_rate",
+   "metric": "cov__forced_incompletion_rate",
+   "denominator": "cov__targets",
+   "positions": [
+    "LB"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "LB_qb_rating_against",
+   "metric": "cov__qb_rating_against",
+   "denominator": "cov__targets",
+   "positions": [
+    "LB"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "S_qb_rating_against",
+   "metric": "cov__qb_rating_against",
+   "denominator": "cov__targets",
+   "positions": [
+    "S"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "S_coverage_snaps_per_target",
+   "metric": "cov__coverage_snaps_per_target",
+   "denominator": "cov__snap_counts_coverage",
+   "positions": [
+    "S"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "TE_drop_rate",
+   "metric": "recv__drop_rate",
+   "denominator": "recv__targets",
+   "positions": [
+    "TE"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "TE_contested_catch_rate",
+   "metric": "recv__contested_catch_rate",
+   "denominator": "recv__targets",
+   "positions": [
+    "TE"
+   ],
+   "kind": "rate"
+  },
+  {
+   "name": "TE_avoided_tackles",
+   "metric": "recv__avoided_tackles",
+   "denominator": "recv__receptions",
+   "positions": [
+    "TE"
+   ],
+   "kind": "count"
+  },
+  {
+   "name": "RB_avoided_tackles",
+   "metric": "rush__avoided_tackles",
+   "denominator": "rush__total_touches",
+   "positions": [
+    "HB",
+    "FB"
+   ],
+   "kind": "count"
+  },
+  {
+   "name": "RB_explosive",
+   "metric": "rush__explosive",
+   "denominator": "rush__attempts",
+   "positions": [
+    "HB",
+    "FB"
+   ],
+   "kind": "count"
+  },
+  {
+   "name": "RB_first_downs",
+   "metric": "rush__first_downs",
+   "denominator": "rush__attempts",
+   "positions": [
+    "HB",
+    "FB"
+   ],
+   "kind": "count"
+  },
+  {
+   "name": "RB_fumbles",
+   "metric": "rush__fumbles",
+   "denominator": "rush__total_touches",
+   "positions": [
+    "HB",
+    "FB"
+   ],
+   "kind": "count"
+  },
+  {
+   "name": "RB_yprr",
+   "metric": "rush__yprr",
+   "denominator": "rush__routes",
+   "positions": [
+    "HB",
+    "FB"
+   ],
+   "kind": "rate"
   }
  ]
 }

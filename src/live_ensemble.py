@@ -95,6 +95,11 @@ def ensemble_block(manifest: dict, frame: pd.DataFrame, comp: pd.DataFrame) -> d
             # v5.2: the PFF stack plus in-season player WAR; used when the PFF
             # table and the WAR payload are both in play.
             "stack_war": entry.get("stack_war"),
+            # October 2026: slates before stack_war_from_slate keep the stack they were
+            # graded on (scripts/ensemble_replay._stack).
+            **({"stack_war_legacy": entry["stack_war_legacy"],
+                "stack_war_from_slate": entry["stack_war_from_slate"]}
+               if entry.get("stack_war_legacy") else {}),
         })
     return {
         "model_version": manifest["model_version"],

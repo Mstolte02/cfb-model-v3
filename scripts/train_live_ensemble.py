@@ -263,6 +263,15 @@ def main():
                             projection_meta)
     frame = frames[PROJECTION_YEAR]
     frame.to_csv(LE.FRAME_PATH, index_label="team")
+    # Graded slates keep the WAR stack they were graded on. A previous manifest's
+    # legacy stack and boundary are carried forward unchanged.
+    if LE.MANIFEST_PATH.exists():
+        old = {m["name"]: m for m in LE.load_manifest()["members"]}
+        for m in manifest["members"]:
+            o = old.get(m["name"], {})
+            if o.get("stack_war_legacy"):
+                m["stack_war_legacy"] = o["stack_war_legacy"]
+                m["stack_war_from_slate"] = o["stack_war_from_slate"]
     LE.save_manifest(manifest)
     print(f"-> {LE.MANIFEST_PATH}\n-> {LE.FRAME_PATH}")
 

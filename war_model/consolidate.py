@@ -92,8 +92,14 @@ def find_clusters(Z, y, cut=CLUSTER_CUT):
         if np.corrcoef(c1, y)[0, 1] < 0:
             L = -L
         loadings = {m: float(v) for m, v in zip(members, L)}
+        # Two clusters at one position used to get the same name (IOL pass blocking
+        # and IOL run blocking were both `IOL_core`), and apply() then summed them into
+        # one composite, so the interior line lost its pass-protection block entirely.
+        name, n = _name_for(members), 2
+        while any(c["name"] == name for c in out):
+            name, n = f"{_name_for(members)}{n}", n + 1
         out.append({
-            "name": _name_for(members),
+            "name": name,
             "members": members,
             "loadings": loadings,
             "concept": _concept_for(loadings),

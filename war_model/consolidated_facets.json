@@ -11,20 +11,23 @@
   ],
   "n": 7,
   "concept": "passing",
-  "pc1_explained": 0.8165273403537437,
-  "r_pc1": 0.6394238261446011,
-  "r_full": 0.6504356441116969
+  "pc1_explained": 0.8296140410571079,
+  "r_pc1": 0.6567212779756193,
+  "r_full": 0.6757278104114833
  },
  "IOL_core": {
   "members": [
-   "IOL_run_block",
-   "IOL_zone_run_block"
+   "IOL_pass_block",
+   "IOL_pbe",
+   "IOL_pressures_allowed",
+   "IOL_true_pass_set_pass_block",
+   "IOL_true_pass_set_pressure_rate_allowed"
   ],
-  "n": 2,
-  "concept": "run_blocking",
-  "pc1_explained": 0.9120622046344454,
-  "r_pc1": 0.3447247372034948,
-  "r_full": 0.3530534524889285
+  "n": 5,
+  "concept": "pass_protection",
+  "pc1_explained": 0.8341461701322938,
+  "r_pc1": 0.2439290523498268,
+  "r_full": 0.2562202091346136
  },
  "QBWR_core": {
   "members": [
@@ -34,9 +37,9 @@
   ],
   "n": 3,
   "concept": "passing",
-  "pc1_explained": 0.9193988049770216,
-  "r_pc1": 0.4315728524685583,
-  "r_full": 0.43653603603452434
+  "pc1_explained": 0.9228039413779151,
+  "r_pc1": 0.46113759207943983,
+  "r_full": 0.479282078614557
  },
  "CBS_core": {
   "members": [
@@ -45,42 +48,53 @@
   ],
   "n": 2,
   "concept": "tackling",
-  "pc1_explained": 0.9754510224793808,
-  "r_pc1": 0.27059366367461113,
-  "r_full": 0.2784585352638341
+  "pc1_explained": 0.9757369004158108,
+  "r_pc1": 0.27180506156749334,
+  "r_full": 0.2795236884925575
  },
  "CB_core": {
   "members": [
-   "CB_yards",
-   "CB_yards_after_catch"
+   "CB_forced_incompletion_rate",
+   "CB_pass_break_ups"
   ],
   "n": 2,
   "concept": "coverage",
-  "pc1_explained": 0.8739378012262728,
-  "r_pc1": 0.022959487787722076,
-  "r_full": 0.024480620664881672
+  "pc1_explained": 0.9245961357535979,
+  "r_pc1": 0.12799024891515193,
+  "r_full": 0.12906161892016588
  },
- "DI_core": {
+ "CB_core2": {
   "members": [
-   "DI_sacks",
-   "DI_total_pressures"
+   "CB_yards",
+   "CB_yards_per_coverage_snap"
   ],
   "n": 2,
-  "concept": "pass_rush",
-  "pc1_explained": 0.8601847651747975,
-  "r_pc1": 0.329453862563022,
-  "r_full": 0.3345098984407491
+  "concept": "coverage",
+  "pc1_explained": 0.9930254618860761,
+  "r_pc1": 0.4379396468093541,
+  "r_full": 0.43843676504392964
  },
- "ED_core": {
+ "IOL_core2": {
   "members": [
-   "ED_hurries",
-   "ED_total_pressures"
+   "IOL_pbwr",
+   "IOL_true_pass_set_pbwr"
   ],
   "n": 2,
-  "concept": "pass_rush",
-  "pc1_explained": 0.9736375639071535,
-  "r_pc1": 0.3973212344516369,
-  "r_full": 0.40787507946107276
+  "concept": "pass_protection",
+  "pc1_explained": 0.9201622869909198,
+  "r_pc1": 0.23558637546489497,
+  "r_full": 0.24561040957080751
+ },
+ "IOL_core3": {
+  "members": [
+   "IOL_run_block",
+   "IOL_zone_run_block"
+  ],
+  "n": 2,
+  "concept": "run_blocking",
+  "pc1_explained": 0.8880537949425534,
+  "r_pc1": 0.32872328622782093,
+  "r_full": 0.34012948922163777
  },
  "LB_core": {
   "members": [
@@ -89,9 +103,9 @@
   ],
   "n": 2,
   "concept": "pass_rush",
-  "pc1_explained": 0.8589490884863389,
-  "r_pc1": 0.20886601271732286,
-  "r_full": 0.21915697640509288
+  "pc1_explained": 0.864499496563371,
+  "r_pc1": 0.2063078497504325,
+  "r_full": 0.21539452544072196
  },
  "OT_core": {
   "members": [
@@ -100,20 +114,20 @@
   ],
   "n": 2,
   "concept": "run_blocking",
-  "pc1_explained": 0.9014559857588993,
-  "r_pc1": 0.35798392526618134,
-  "r_full": 0.3743407269984798
+  "pc1_explained": 0.9073099755432527,
+  "r_pc1": 0.34725229768319205,
+  "r_full": 0.36372828880574615
  },
- "RB_core": {
+ "S_core": {
   "members": [
-   "RB_elusive_rating",
-   "RB_yco_attempt"
+   "S_yards",
+   "S_yards_per_coverage_snap"
   ],
   "n": 2,
-  "concept": "rushing",
-  "pc1_explained": 0.9214105447889244,
-  "r_pc1": 0.27154029325212886,
-  "r_full": 0.28035185424666553
+  "concept": "coverage",
+  "pc1_explained": 0.9922925274650584,
+  "r_pc1": 0.38311071575625194,
+  "r_full": 0.39134475238150007
  },
  "TE_core": {
   "members": [
@@ -122,9 +136,9 @@
   ],
   "n": 2,
   "concept": "receiving",
-  "pc1_explained": 0.9460999275753804,
-  "r_pc1": 0.22581003921012244,
-  "r_full": 0.22938263016359572
+  "pc1_explained": 0.947174999106112,
+  "r_pc1": 0.22699175488522852,
+  "r_full": 0.23154619429470075
  },
  "cfbd_core": {
   "members": [

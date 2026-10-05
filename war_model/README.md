@@ -17,9 +17,17 @@ Five stages, each reading the one before it:
    efficiency), 12 from CFBD play value. `consolidate.py` then merges the
    near-duplicate clusters onto their first principal component, which leaves
    **106**.
-   Standardization is role-relative (`WAR_ROLE_NORM=partial`): a receiver is scored
-   against the pooled distribution with his depth-chart tier's mean removed, so a
-   fifth receiver is not charged for being a fifth receiver.
+   Since October 2026 there are 144 PFF candidates: count statistics (pressures
+   allowed, stops, tackles, first downs and the like) are divided by their
+   opportunity before scoring instead of being scored raw, and non-grade PFF
+   measurements were added at every position - pass-block efficiency, PBWR and
+   graded-play rates on the line, PRP, win rate, TFL and batted passes up front,
+   coverage efficiency for linebackers and safeties, missed tackles forced and
+   explosive runs for backs.
+   Standardization is pooled (`WAR_ROLE_NORM=pooled`): every player is scored
+   against everyone at his position, with no depth-chart adjustment. Run both ways,
+   pooled made player WAR more repeatable year to year (.649 vs .626) with no loss
+   at team level; see `candidates.facet_values`.
 2. **weights** — `build_hybrid.py`, `two_level_weights.py`. How much each facet is
    worth, fitted against the *following* season's wins. Blocks are (job × position
    group), so positional value comes from that regression rather than from a rule;

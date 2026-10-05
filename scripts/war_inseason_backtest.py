@@ -41,6 +41,7 @@ from __future__ import annotations
 import json
 import sys
 import warnings
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -53,6 +54,7 @@ from config import ARTIFACTS  # noqa: E402
 from scripts.sync_pff_war_windows import LEGACY, POSITION, window_dir  # noqa: E402
 from scripts.war_credibility_backtest import (MIN_OBS_SNAPS, fit_fixed,  # noqa: E402
                                               fit_kalman, fixed_features, kalman)
+from src import opponent_strength as O  # noqa: E402
 from src import war_window as ww  # noqa: E402
 
 HIST = ARTIFACTS / "war_facet_history.parquet"
@@ -133,12 +135,17 @@ def frame(hist) -> pd.DataFrame:
         for cut, (wa, wb) in CUTS.items():
             w = window(test, *wa)
             r = window(test, *wb)
-            d = (w[["player_id", "group", "snaps", "fc"]]
+            d = (w[["player_id", "group", "snaps", "fc", "team_name"]]
                  .merge(r[["player_id", "snaps", "fc"]], on="player_id",
                         suffixes=("_w", "_t")))
             d = d[(d.snaps_w >= MIN_WINDOW) & (d.snaps_t >= MIN_TARGET) & d.group.notna()]
             d["obs"] = d.fc_w / d.snaps_w * ww.SCALE
             d["target"] = d.fc_t / d.snaps_t * ww.SCALE
+            # Opponent difficulty each window's unit faced (src/opponent_strength.py);
+            # apply_opponent() turns it into schedule-neutral rates.
+            d["team"] = d.team_name.map(lambda t: _canon(t))
+            d["diff_w"] = O.player_difficulty(d.team, d.group, O.window_difficulty(test, *wa))
+            d["diff_t"] = O.player_difficulty(d.team, d.group, O.window_difficulty(test, *wb))
             d = d.merge(pr, on=["player_id", "group"], how="left")
             # newcomers: population prior
             gp = pr.groupby("group").agg(mu=("mu", "first"), tau2=("tau2", "first"))
@@ -152,6 +159,39 @@ def frame(hist) -> pd.DataFrame:
             rows.append(d)
         print(f"frame {test}", flush=True)
     return pd.concat(rows, ignore_index=True)
+
+
+def _canon(team_name):
+    from src.inseason_war import canonical_team
+    return canonical_team([team_name], _team_map())
+
+
+@lru_cache(maxsize=1)
+def _team_map():
+    return json.load(open(Path(__file__).resolve().parents[1] / "war_model" / "team_map.json"))
+
+
+def fit_opponent_beta(fr: pd.DataFrame) -> dict:
+    """Per group, the within-player slope of facet rate on opponent difficulty.
+
+    The same player's early and late windows are compared, so team quality and
+    schedule strength cannot stand in for each other (scripts/opponent_adjust_backtest.py
+    measured it: rest-of-season error -1.3% pooled, lower in every group).
+    """
+    out = {}
+    for g, d in fr.groupby("group"):
+        y = (d.obs - d.target).to_numpy()
+        x = (d.diff_w - d.diff_t).to_numpy()
+        w = 1.0 / (1.0 / d.snaps_w + 1.0 / d.snaps_t).to_numpy()
+        X = np.c_[np.ones_like(x), x] * np.sqrt(w)[:, None]
+        out[g] = float(np.linalg.lstsq(X, y * np.sqrt(w), rcond=None)[0][1])
+    return out
+
+
+def apply_opponent(fr: pd.DataFrame, beta: dict) -> pd.DataFrame:
+    """Schedule-neutral window and target rates: rate - beta * difficulty faced."""
+    b = fr.group.map(beta).fillna(0.0)
+    return fr.assign(obs=fr.obs - b * fr.diff_w, target=fr.target - b * fr.diff_t)
 
 
 def wmse(y, p, w):
@@ -172,8 +212,8 @@ def bayes(df, g, s2, flat_prior=False, flat_window=False, P_mean=None, n_mean=No
     return df.m.to_numpy() + k * (g * df.obs.to_numpy() - df.m.to_numpy())
 
 
-G_GRID = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 3.0]
-S_GRID = [1, 3, 10, 30, 100, 300, 1000, 3000, 10000]
+G_GRID = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0]
+S_GRID = list(np.round(np.logspace(-1, 5, 49), 4))
 LAM_GRID = np.linspace(0, 1, 21)
 
 
@@ -239,6 +279,8 @@ def boot_ci(df, a, b, n=2000, seed=0):
 def main():
     hist = history()
     fr = frame(hist)
+    # Rates are schedule-neutral, as in production (src/opponent_strength.py).
+    fr = apply_opponent(fr, fit_opponent_beta(fr))
     res, chosen = evaluate(fr)
     res.to_csv(OUT.with_name("war_inseason_backtest_predictions.csv"), index=False)
     m = lambda df: {a: wmse(df.target, df[a], df.snaps_t) for a in ARMS}

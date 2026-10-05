@@ -54,6 +54,8 @@ def facet_frame(players, scheme):
         d["metric"] = pd.to_numeric(players.loc[d.index, metric], errors="coerce")
         d["snaps"] = pd.to_numeric(players.loc[d.index, denom], errors="coerce")
         d = d[(d.snaps >= MIN_DENOM[kind]) & d.metric.notna()]
+        if kind == "count":            # same rule as candidates.facet_values
+            d["metric"] = d.metric / d.snaps
         if len(d) < 200:
             continue
         if metric in LOWER_IS_BETTER:

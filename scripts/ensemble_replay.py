@@ -159,12 +159,20 @@ def _war(table: dict | None, team: str) -> float:
 
 
 def _stack(member: dict, pff: dict | None,
-           war: dict | None = None) -> tuple[list, list, list]:
+           war: dict | None = None, slate: int | None = None) -> tuple[list, list, list]:
     """WAR stack when PFF and the WAR payload are in play, else the PFF stack when
-    PFF is, else the base stack."""
+    PFF is, else the base stack.
+
+    Slates before ``stack_war_from_slate`` were graded on the stack fitted for the
+    earlier in-season method, so they keep it (``stack_war_legacy``) and keep exactly
+    the probabilities they were graded on. The boundary is a fixed slate, not one
+    that advances as weeks finish."""
     stack = None
     if pff is not None and war is not None:
         stack = member.get("stack_war")
+        legacy, start = member.get("stack_war_legacy"), member.get("stack_war_from_slate")
+        if legacy and start is not None and slate is not None and slate < start:
+            stack = legacy
     if not stack and pff is not None:
         stack = member.get("stack_pff")
     if stack:
@@ -174,9 +182,10 @@ def _stack(member: dict, pff: dict | None,
 
 def member_probability(member: dict, ratings: dict, form: dict | None,
                        home: str, away: str, hfa: float,
-                       pff: dict | None = None, war: dict | None = None) -> float:
+                       pff: dict | None = None, war: dict | None = None,
+                       slate: int | None = None) -> float:
     x = _features(member, ratings, form, home, away, hfa, pff, war)
-    columns, scale, coef = _stack(member, pff, war)
+    columns, scale, coef = _stack(member, pff, war, slate)
     return expit(sum(c * x[col] / s for col, s, c in zip(columns, scale, coef)))
 
 
@@ -188,7 +197,8 @@ def probability(ensemble: dict, state: dict, home: str, away: str,
         return None
     pff, war = state.get("pff"), state.get("war")
     values = [member_probability(m, state["ratings"][m["name"]],
-                                 state["form"].get(m["name"]), home, away, hfa, pff, war)
+                                 state["form"].get(m["name"]), home, away, hfa, pff, war,
+                                 state.get("slate"))
               for m in members]
     return sum(values) / len(values)
 
@@ -264,6 +274,7 @@ def replay(ensemble: dict, finals: list[dict], rows: list[dict],
         state["form"] = _forms(ensemble, rows, key, cache)
         state["pff"] = pff_table(pff, key)
         state["war"] = war_table(war, key)
+        state["slate"] = key
         changes = {m["name"]: {} for m in ensemble["members"]}
         for game in by_slate[key]:
             home, away = game["home"], game["away"]
@@ -292,12 +303,14 @@ def replay(ensemble: dict, finals: list[dict], rows: list[dict],
                                             state["ratings"].items()},
                                 "form": _forms(ensemble, rows, key + 1, cache),
                                 "pff": pff_table(pff, key + 1),
-                                "war": war_table(war, key + 1)}))
+                                "war": war_table(war, key + 1),
+                                "slate": key + 1}))
     end = stop_before if stop_before is not None else (
         max(by_slate) + 1 if by_slate else 1)
     state["form"] = _forms(ensemble, rows, end, cache)
     state["pff"] = pff_table(pff, end)
     state["war"] = war_table(war, end)
+    state["slate"] = end
     return {"events": events, "snapshots": snapshots, "state": state}
 
 
@@ -348,7 +361,7 @@ def power_table(ensemble: dict, state: dict, names: list[str]) -> list[dict]:
                  "pff_O_diff": _pff(pff, team, 0) - pff_mean[0],
                  "pff_D_diff": _pff(pff, team, 1) - pff_mean[1],
                  "war_delta_diff": _war(war, team) - war_mean}
-            columns, scale, coef = _stack(member, pff, war)
+            columns, scale, coef = _stack(member, pff, war, state.get("slate"))
             values.append(expit(sum(c * x[col] / s
                                     for col, s, c in zip(columns, scale, coef))))
         rows.append({"team": team,

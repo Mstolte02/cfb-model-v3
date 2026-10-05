@@ -677,6 +677,7 @@ def _replay_ensemble(schedule, model, ratings, model_path, ratings_path,
     preseason = ER.initial_state(ensemble)
     preseason["pff"] = ER.pff_table(pff, 1)
     preseason["war"] = ER.war_table(war, 1)
+    preseason["slate"] = 1
     history = [{"week": 0, "label": "Preseason", "completed_games": 0,
                 "teams": ER.power_table(ensemble, preseason, names)}]
     completed = 0

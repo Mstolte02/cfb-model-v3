@@ -2408,10 +2408,12 @@
     }).join("");
 
     const insNote = inseason ? `<div class="wd-foot"><b>WAR</b> is current through week
-        ${inseason.through_week}. PFF grades update per-snap value, PFF participation
-        updates first-unit roles, and verified team announcements remove unavailable
-        players. The change column compares that number with opening day. These same
-        player changes feed the live team ratings.</div>` : "";
+        ${inseason.through_week}. Per-snap value comes from this season's PFF grades
+        and measurements, adjusted for the strength of each opponent. A player with
+        little history moves faster than one with years of snaps behind him. Playing
+        time is his 2026 share of his position's snaps, and injury reports scale
+        availability. The change column compares that number with opening day. The
+        per-snap and injury changes feed the live team ratings.</div>` : "";
     document.getElementById("pl-table").innerHTML =
       `<div class="mini-wrap pl-scroll"><table class="mini pl-table"><thead><tr>${head}</tr></thead>
        <tbody>${body}</tbody></table></div>` +
