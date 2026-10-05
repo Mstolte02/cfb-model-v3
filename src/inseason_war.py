@@ -459,6 +459,9 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
 
     status = availability_overrides()
     j["status"] = [status.get((t, k), "") for t, k in zip(j.team, j.key)]
+    # WAR before availability: what an injured player is worth when he plays. The
+    # Team Overview's injury report shows it beside the counted figure.
+    j["war_base"] = j.war_inseason
     j["available_now"] = j.available.fillna(True) & j.status.ne("out")
     j.loc[~j.available_now, "war_inseason"] = 0.0
     share = j.status.map(AVAIL_SHARE).fillna(1.0)
@@ -484,7 +487,8 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
             "sh": round(float(row.share_now), 3),
             "st": bool(row.starter_now),
             "out": not bool(row.available_now),
-            **({"inj": row.status} if row.status in AVAIL_SHARE else {}),
+            **({"inj": row.status, "base": round(float(row.war_base), 3)}
+               if row.status in AVAIL_SHARE else {}),
         }
     return {
         "schema": 1, "season": 2026, "through_week": int(week),

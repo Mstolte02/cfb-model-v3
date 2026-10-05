@@ -1172,3 +1172,61 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
 .lb-gap span{color:var(--muted);font:700 11px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase}
 .lb-hero-media.logo::before{display:none}
 .lb-hero h3 .team-link,.lb-who h4 .team-link{color:inherit;font:inherit;text-align:left}
+
+/* Team Overview v2: standing, pulse, journey, performance, injuries, units. */
+.overview-grid .standing-card{grid-column:span 8}.overview-grid .season-card{grid-column:span 4;min-height:0}
+.journey-card,.units-card{grid-column:1/-1}
+.hs-head{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px 28px;margin:12px 0 4px}
+.hs-big{font:900 clamp(40px,5vw,60px)/1 var(--sans);letter-spacing:-.03em;color:var(--text);font-variant-numeric:tabular-nums}
+.hs-pct{display:grid;gap:3px;padding:10px 14px;border-radius:10px;background:color-mix(in srgb,var(--tint) 12%,var(--panel))}
+.hs-pct b{font:900 24px/1 var(--sans);color:var(--text)}.hs-pct span{color:var(--muted);font-size:12px}
+.hs-open{display:flex;gap:14px;margin-left:auto;color:var(--muted);font-size:13px}.hs-open b{color:var(--text)}
+.hs-open .pos b,.hs-open .pos{color:var(--green)}.hs-open .neg b,.hs-open .neg{color:var(--red)}
+.hs-chart,.rj-chart{display:block;width:100%;height:auto;margin-top:6px}
+.hs-bar{fill:color-mix(in srgb,var(--muted) 35%,transparent)}.hs-axis{stroke:var(--line2)}
+.hs-tick{font:600 10px var(--sans);fill:var(--muted);text-anchor:middle}
+.hs-note{margin-top:8px!important;font-size:12px!important}
+.hs-comps{margin-top:10px;font-size:13px}.hs-comps summary{cursor:pointer;font-weight:700;color:var(--text)}
+.hs-comps ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.hs-comps li{display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:8px}
+.hs-comps img{width:22px;height:22px;object-fit:contain}.hs-comps small{color:var(--muted)}
+.pulse-stats{display:grid;gap:10px;margin:0}.pulse-stats div{display:flex;justify-content:space-between;gap:10px;padding-top:9px;border-top:1px solid var(--line)}
+.pulse-stats dt{color:var(--muted);font-size:13px}.pulse-stats dd{margin:0;font:800 16px/1.2 var(--sans);color:var(--text)}
+.pulse-stats dd.pos{color:var(--green)}.pulse-stats dd.neg{color:var(--red)}
+.rj-list{list-style:none;margin:10px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 18px}
+.rj-row{display:grid;grid-template-columns:36px minmax(0,1fr) 78px 112px 74px;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;background:rgba(0,0,0,.035);font-size:13px}
+.rj-wk{color:var(--muted);font-weight:700}.rj-opp{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+.rj-res b{margin-right:4px}.rj-row.win .rj-res b{color:var(--green)}.rj-row.loss .rj-res b{color:var(--red)}
+.rj-pp{color:var(--muted);font-variant-numeric:tabular-nums}.rj-d{text-align:right;font-variant-numeric:tabular-nums}
+.perf-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}.perf-cols h4{margin:12px 0 0;font:800 12px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.inj-list li{display:grid;grid-template-columns:minmax(0,1fr) auto auto 56px;gap:10px}
+.inj-status{padding:3px 8px;border-radius:6px;font:800 11px/1.2 var(--sans);text-transform:uppercase;letter-spacing:.04em}
+.inj-status.out{background:rgba(168,50,38,.13);color:#9a2c21}.inj-status.doubtful,.inj-status.questionable{background:rgba(183,121,31,.15);color:#8a5a12}
+.inj-war{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}.inj-list strong{text-align:right}
+.empty-state{padding:18px 0;color:var(--muted)}
+.unit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:9px;margin-top:14px}
+.unit-row{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"name rank war" "bar bar bar" "chg chg chg";align-items:baseline;gap:6px 10px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.03)}
+.u-name{grid-area:name;font-weight:800}.u-rank{grid-area:rank;font:900 20px/1 var(--sans);color:var(--text)}.u-rank small{font-size:11px;color:var(--muted);font-weight:700}
+.u-war{grid-area:war;color:var(--muted);font-size:12px}.u-chg{grid-area:chg;color:var(--muted);font-size:11px}
+.u-bar{grid-area:bar;height:5px;border-radius:5px;background:var(--line)}.u-bar i{display:block;height:100%;border-radius:5px;background:color-mix(in srgb,var(--tint) 45%,var(--muted))}
+.unit-row.elite .u-bar i{background:var(--tint)}.unit-row.elite{border-color:color-mix(in srgb,var(--tint) 45%,var(--line))}
+.unit-row.above .u-bar i{background:color-mix(in srgb,var(--tint) 70%,var(--muted))}
+.unit-row.below .u-bar i{background:color-mix(in srgb,var(--muted) 55%,transparent)}
+@media(max-width:900px){.overview-grid .standing-card,.overview-grid .season-card{grid-column:1/-1}.rj-list{grid-template-columns:1fr}}
+@media(max-width:640px){.hs-open{margin-left:0}.perf-cols{grid-template-columns:1fr}.rj-row{grid-template-columns:30px minmax(0,1fr) 70px 58px;}.rj-pp{display:none}
+  .inj-list li{grid-template-columns:minmax(0,1fr) auto 52px}.inj-war{display:none}.unit-grid{grid-template-columns:1fr}}
+.leader-movers{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+.lm-col{padding:18px 20px;border:1px solid var(--line2);border-radius:16px;background:var(--panel)}
+.lm-col h3{margin:0 0 10px;font:800 13px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.lm-col ol{list-style:none;margin:0;padding:0}
+.lm-col li{display:grid;grid-template-columns:24px 40px minmax(0,1fr) auto;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.lm-col li:first-child{border-top:0}
+.lm-rank{color:var(--muted);font:800 15px/1 var(--sans);text-align:center}
+.lm-face{width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:center top;box-shadow:0 0 0 2px var(--team);background:#fff}
+.lm-face.logo{border-radius:8px;object-fit:contain;box-shadow:none;background:transparent}
+.lm-who{min-width:0;display:grid;gap:3px}.lm-who b{color:var(--text);font:800 16px/1.15 var(--display)}.lm-who small{color:var(--muted);font-size:12px}
+.lm-who .team-link{color:inherit;font:inherit}
+.lm-val{display:grid;justify-items:end;gap:3px}.lm-val b{font:900 18px/1 var(--sans);font-variant-numeric:tabular-nums}
+.lm-val b.pos{color:#2f6a2b}.lm-val b.neg{color:#9a2c21}.lm-val small{color:var(--muted);font-size:11px}
+.lm-note{margin-top:10px;color:var(--muted);font-size:12px}
+@media(max-width:800px){.leader-movers{grid-template-columns:1fr}}

@@ -53,7 +53,8 @@
     const s = insOf(t, p.n);
     return {...p, w: s ? s.war : p.w, st: s && s.st != null ? s.st : p.st,
       out: s && s.out != null ? s.out : p.out, sn26: s ? s.sn : null,
-      dwin: s ? s.d : 0, win: s ? s.war : p.w, inj: s ? s.inj : null};
+      dwin: s ? s.d : 0, win: s ? s.war : p.w, inj: s ? s.inj : null,
+      base: s && s.base != null ? s.base : null};
   };
   // Injury-report tag. Out zeroes the player; doubtful and questionable scale his WAR
   // to the expected share of the next game (src/inseason_war.AVAIL_SHARE).
@@ -2015,64 +2016,127 @@
       <button type="button" class="wi-btn open-team-history" data-team="${esc(team)}">Open the full season tracker</button></div>`;
   }
 
+  /* Historical team-week Power Ratings (scripts/export_power_history.py), fetched the
+     first time a team page opens; the Overview re-renders when it arrives. */
+  let POWER_HISTORY = null, powerHistoryAsked = false;
+  function powerHistory() {
+    if (!powerHistoryAsked) {
+      powerHistoryAsked = true;
+      fetchJSON("data/power_history.json").then(d => { POWER_HISTORY = d; renderTeam(); })
+        .catch(() => { POWER_HISTORY = false; renderTeam(); });
+    }
+    return POWER_HISTORY;
+  }
+  const ordinal = n => { const v = n % 100; return n + (v >= 11 && v <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] || "th"); };
+
+  function histogramSVG(H, x, tint, team) {
+    const bins = H.bins, W = 560, Ht = 150, pad = 22;
+    const max = Math.max(...bins.map(b => b.n)), bw = (W - 2 * pad) / bins.length;
+    const lo = bins[0].lo, hi = bins[bins.length - 1].hi;
+    const sx = v => pad + (v - lo) / (hi - lo) * (W - 2 * pad);
+    const bars = bins.map((b, i) => `<rect x="${(pad + i * bw + 1).toFixed(1)}" y="${(Ht - 18 - b.n / max * (Ht - 40)).toFixed(1)}" width="${Math.max(bw - 2, 1).toFixed(1)}" height="${(b.n / max * (Ht - 40)).toFixed(1)}" rx="1.5" class="hs-bar"/>`).join("");
+    const ticks = [0, .2, .4, .6, .8, 1].filter(t => t >= lo - 1e-9 && t <= hi + 1e-9)
+      .map(t => `<text x="${sx(t).toFixed(1)}" y="${Ht - 3}" class="hs-tick">${Math.round(t * 100)}</text>`).join("");
+    const mx = sx(x);
+    return `<svg class="hs-chart" viewBox="0 0 ${W} ${Ht + 26}" role="img" aria-label="Distribution of historical Power Ratings with ${esc(team)} marked at ${pct(x)}">
+      <g transform="translate(0,26)">${bars}<line x1="${pad}" x2="${W - pad}" y1="${Ht - 18}" y2="${Ht - 18}" class="hs-axis"/>${ticks}
+      <line x1="${mx.toFixed(1)}" x2="${mx.toFixed(1)}" y1="4" y2="${Ht - 18}" stroke="${tint}" stroke-width="3"/></g>
+      <image href="${logoURL(team)}" x="${(mx - 13).toFixed(1)}" y="0" width="26" height="26"/></svg>`;
+  }
+
+  function journeySVG(points, tint) {
+    if (points.length < 2) return "";
+    const W = 1200, H = 120, px = 30, py = 14;
+    const vs = points.map(p => p.power), lo = Math.min(...vs) - .02, hi = Math.max(...vs) + .02;
+    const X = i => px + i * (W - 2 * px) / (points.length - 1), Y = v => H - py - (v - lo) / (hi - lo) * (H - 2 * py);
+    const d = points.map((p, i) => `${i ? "L" : "M"}${X(i).toFixed(1)},${Y(p.power).toFixed(1)}`).join("");
+    return `<svg class="rj-chart" viewBox="0 0 ${W} ${H + 18}" role="img" aria-label="Power Rating by week">
+      <path d="${d}" fill="none" stroke="${tint}" stroke-width="2.5"/>
+      ${points.map((p, i) => `<circle cx="${X(i).toFixed(1)}" cy="${Y(p.power).toFixed(1)}" r="3.5" fill="${tint}"><title>${esc(p.label)}: ${pct(p.power)}</title></circle>
+        <text x="${X(i).toFixed(1)}" y="${H + 14}" class="hs-tick">${p.week ? "W" + p.week : "Pre"}</text>`).join("")}</svg>`;
+  }
+
   function teamOverviewHTML(team, roster, tint) {
+    const O = window.TeamOverview;
     const card = TeamCard.data(team, ratings, schedule);
-    const games = card.games || [];
-    const measured = games.filter(g => g.probability != null);
-    const actual = games.reduce((s, g) => s + (g.result === "W" ? 1 : g.result === "T" ? .5 : 0), 0);
-    const expected = measured.reduce((s, g) => s + g.probability, 0);
-    const expectation = actual - expected;
-    const expClass = expectation >= 0 ? "pos" : "neg";
-    const expWord = expectation > .35 ? "Ahead of the model" : expectation < -.35
-      ? "Behind the model" : "Right on expectation";
-    const points = card.points || [], first = points[0], last = points.at(-1);
-    const rankMove = first && last ? first.rank - last.rank : 0;
+    const first = card.first, last = card.last;
+    const power = last ? last.power : null;
     const powerMove = first && last ? 100 * (last.power - first.power) : 0;
+    const H = powerHistory();
 
+    /* 1. Historical Standing: how good, and how unusual */
+    let standing;
+    if (H && power != null) {
+      const p = Math.round(O.percentile(H.values, power));
+      const comps = O.comparables(H.observations, power, 5, {season: ratings.season, team});
+      standing = `<div class="hs-head">
+          <div><div class="hs-big">${pct(power)}</div><span class="overview-kicker">Power Rating · #${last.rank} nationally</span></div>
+          <div class="hs-pct"><b>${ordinal(p)}</b><span>percentile of historical model ratings</span></div>
+          <div class="hs-open"><span>Opening <b>${first ? pct(first.power) : "—"}</b></span><span>Now <b>${pct(power)}</b></span>
+            <span class="${powerMove >= 0 ? "pos" : "neg"}"><b>${powerMove >= 0 ? "+" : ""}${powerMove.toFixed(1)}</b> pts</span></div></div>
+        ${histogramSVG(H, power, tint, team)}
+        <p class="hs-note">Power Rating = neutral-site win rate against every FBS team. Background: ${H.observations.length.toLocaleString()} team-week ratings since 2021, preseason included; past seasons are replayed through today's model.</p>
+        <details class="hs-comps"><summary>Comparable historical ratings</summary><ul>${comps.map(c =>
+          `<li><img src="${logoURL(c.team)}" alt=""><span>${c.season} ${esc(c.team)} <small>${c.week ? "week " + c.week : "preseason"}</small></span><b>${pct(c.power)}</b></li>`).join("")}</ul></details>`;
+    } else {
+      standing = `<div class="hs-big">${power == null ? "—" : pct(power)}</div><p class="hs-note">${H === null ? "Loading the historical distribution…" : "The historical distribution is not available."}</p>`;
+    }
+
+    /* 3. Rating Journey: how they got here */
+    const trip = O.journey(card);
+    const tripRows = trip.map(g => {
+      const has = g.pre != null && g.post != null, dv = has ? 100 * (g.post - g.pre) : null;
+      return `<li class="rj-row ${g.result === "W" ? "win" : g.result === "L" ? "loss" : "tie"}">
+        <span class="rj-wk">W${g.week}</span><span class="rj-opp">${esc(g.site)} ${esc(g.opponent)}</span>
+        <span class="rj-res"><b>${g.result}</b> ${g.scored}–${g.allowed}</span>
+        <span class="rj-pp">${g.pre != null ? pct(g.pre) : "—"} → ${g.post != null ? pct(g.post) : "—"}</span>
+        <b class="rj-d ${has ? (dv >= 0 ? "pos" : "neg") : ""}">${has ? (dv >= 0 ? "+" : "") + dv.toFixed(1) + " pts" : "—"}</b></li>`;
+    }).join("") || `<li class="empty">No completed games yet.</li>`;
+
+    /* 4. Player Performance and Injury Report, kept apart */
     const ps = (roster && roster.players) || [];
-    const movers = ps.filter(p => Math.abs(p.dwin || 0) >= .0005);
-    const moverList = (positive) => movers.slice().sort((a, b) => positive
-      ? (b.dwin || 0) - (a.dwin || 0) : (a.dwin || 0) - (b.dwin || 0)).slice(0, 4)
-      .map(p => `<li><span><b>${esc(p.n)}</b><small>${esc(p.g)}${p.out ? " · OUT" : p.inj ? " · " + p.inj.toUpperCase() : ""}</small></span>
-        <strong class="${p.dwin >= 0 ? "pos" : "neg"}">${p.dwin > 0 ? "+" : ""}${p.dwin.toFixed(3)}</strong></li>`).join("") ||
-        `<li class="empty">No measured movement yet</li>`;
+    const mv = O.movers(ps);
+    const moverRow = p => `<li><span><b>${esc(p.n)}</b><small>${esc(p.g)} · ${(p.win ?? p.w ?? 0).toFixed(3)} WAR</small></span>
+      <strong class="${p.dwin >= 0 ? "pos" : "neg"}">${p.dwin > 0 ? "+" : ""}${p.dwin.toFixed(3)}</strong></li>`;
+    const inj = O.injuryReport(ps);
+    const injRows = inj.map(p => `<li><span><b>${esc(p.n)}</b><small>${esc(p.g)}</small></span>
+        <span class="inj-status ${p.status}">${p.status}</span>
+        <span class="inj-war">${p.base != null ? p.base.toFixed(3) + " → " : ""}${p.counted.toFixed(3)}</span>
+        <strong class="neg">${p.impact != null ? p.impact.toFixed(3) : "—"}</strong></li>`).join("");
 
-    const groups = Object.entries((roster && roster.byGroup) || {}).map(([g, v]) => ({
-      g, v, rank: GROUP_LEAGUE[g] && GROUP_LEAGUE[g].rank[team],
-      n: GROUP_LEAGUE[g] && GROUP_LEAGUE[g].n,
-    })).filter(x => x.rank != null).sort((a, b) => a.rank - b.rank);
-    const units = [...groups.slice(0, 3), ...groups.slice(-2).reverse()]
-      .filter((x, i, a) => a.findIndex(y => y.g === x.g) === i)
-      .map((x, i) => `<div class="unit-tile ${i < Math.min(3, groups.length) ? "strength" : "watch"}">
-        <span>${esc(x.g)}</span><b>#${x.rank}</b><small>${x.v.toFixed(2)} WAR · of ${x.n}</small></div>`).join("");
-    const results = games.slice(-5).reverse().map(g => `<div class="result-chip ${g.result === "W" ? "win" : g.result === "L" ? "loss" : "tie"}">
-      <b>${g.result}</b><span>W${g.week} ${esc(g.site)} ${esc(g.opponent)}</span>
-      <small>${g.probability == null ? "unrated" : pct(g.probability, 0) + " expected"}</small></div>`).join("") ||
-      `<p class="sub">No completed games yet.</p>`;
+    /* 5. Unit Rankings: every group the model defines for this roster */
+    const change = {};
+    for (const p of ps) change[p.g] = (change[p.g] || 0) + (p.dwin || 0);
+    const units = O.unitRankings(roster && roster.byGroup, GROUP_LEAGUE, team, change);
+    const tierName = {elite: "Elite", above: "Above average", average: "Average", below: "Below average"};
 
     return `<div class="overview-grid" style="--tint:${tint}">
-      <section class="pulse-card expectation-card">
-        <span class="overview-kicker">Results vs expectation</span>
-        <div class="expectation-number ${expClass}">${expectation >= 0 ? "+" : ""}${expectation.toFixed(2)}</div>
-        <h3>${esc(expWord)}</h3>
-        <div class="expectation-track"><i style="left:${Math.max(4, Math.min(96, 50 + expectation * 18))}%"></i></div>
-        <p><b>${actual.toFixed(1)}</b> actual wins against <b>${expected.toFixed(1)}</b> expected in ${measured.length} rated game${measured.length === 1 ? "" : "s"}.</p>
-      </section>
+      <section class="pulse-card standing-card"><span class="overview-kicker">Historical Standing</span>${standing}</section>
       <section class="pulse-card season-card">
-        <span class="overview-kicker">Season pulse</span>
+        <span class="overview-kicker">Season Pulse</span>
         <div class="season-record">${card.wins}–${card.losses}${card.ties ? `–${card.ties}` : ""}</div>
-        <div class="season-moves"><span><b class="${rankMove > 0 ? "pos" : rankMove < 0 ? "neg" : ""}">${rankMove ? (rankMove > 0 ? "▲" : "▼") + Math.abs(rankMove) : "—"}</b> ${rankMove < 0 ? "places down" : rankMove > 0 ? "places up" : "rank unchanged"}</span>
-          <span><b class="${powerMove >= 0 ? "pos" : "neg"}">${powerMove >= 0 ? "+" : ""}${powerMove.toFixed(1)}</b> win-rate pts</span></div>
-        <p>Movement from ${esc(first?.label || "the opening rating")} to ${esc(last?.label || "now")}.</p>
+        <dl class="pulse-stats">
+          <div><dt>Current rank</dt><dd>${last ? "#" + last.rank : "—"}</dd></div>
+          <div><dt>Since preseason</dt><dd class="${card.rankChange > 0 ? "pos" : card.rankChange < 0 ? "neg" : ""}">${card.rankChange ? (card.rankChange > 0 ? "▲" : "▼") + Math.abs(card.rankChange) + " places" : "No change"}</dd></div>
+          <div><dt>Power Rating move</dt><dd class="${powerMove >= 0 ? "pos" : "neg"}">${powerMove >= 0 ? "+" : ""}${powerMove.toFixed(1)} pts</dd></div>
+        </dl>
       </section>
-      <section class="pulse-card movers-card"><span class="overview-kicker">Players beating expectation</span>
-        <ul class="mover-list">${moverList(true)}</ul></section>
-      <section class="pulse-card movers-card"><span class="overview-kicker">Biggest WAR declines</span>
-        <ul class="mover-list">${moverList(false)}</ul></section>
-      <section class="pulse-card units-card"><span class="overview-kicker">Unit identity</span>
-        <div class="unit-tiles">${units}</div><p>Best three units and the two rooms with the most ground to make up, ranked by current WAR.</p></section>
-      <section class="pulse-card results-card"><span class="overview-kicker">Latest results</span>
-        <div class="result-ribbon">${results}</div></section>
+      <section class="pulse-card journey-card"><span class="overview-kicker">Rating Journey</span>
+        ${journeySVG(card.points, tint)}<ol class="rj-list">${tripRows}</ol></section>
+      <section class="pulse-card movers-card"><span class="overview-kicker">Player Performance</span>
+        <div class="perf-cols"><div><h4>Trending up</h4><ul class="mover-list">${mv.up.map(moverRow).join("") || `<li class="empty">No measured gains yet</li>`}</ul></div>
+        <div><h4>Trending down</h4><ul class="mover-list">${mv.down.map(moverRow).join("") || `<li class="empty">No measured declines</li>`}</ul></div></div>
+        <p>Measured change in WAR since opening day. Injured players are in the injury report instead.</p></section>
+      <section class="pulse-card movers-card"><span class="overview-kicker">Injury Report</span>
+        ${inj.length ? `<ul class="mover-list inj-list">${injRows}</ul><p>WAR when he plays → WAR counted now. The gap is the availability adjustment, not a performance change.</p>`
+          : `<p class="empty-state">No currently tracked availability limitations.</p>`}</section>
+      <section class="pulse-card units-card"><span class="overview-kicker">Unit Rankings</span>
+        <div class="unit-grid">${units.map(u => `<div class="unit-row ${u.tier}" title="${tierName[u.tier]} · ${Math.round(u.pct)}th percentile">
+          <span class="u-name">${esc(u.group)}</span><b class="u-rank">#${u.rank}<small> / ${u.n}</small></b>
+          <span class="u-war">${u.war.toFixed(2)} WAR</span>
+          <span class="u-bar"><i style="width:${Math.max(3, u.pct).toFixed(0)}%"></i></span>
+          <small class="u-chg ${u.change > 0.0005 ? "pos" : u.change < -0.0005 ? "neg" : ""}">${u.change == null ? "" : (u.change >= 0 ? "+" : "") + u.change.toFixed(2) + " since opening"}</small></div>`).join("")}</div>
+        <p>Every position group, ranked by current WAR against all FBS teams. Bar length is the group's percentile.</p></section>
     </div>`;
   }
 
@@ -2996,11 +3060,32 @@
     return `<div class="leader-board">${hero}<div class="lb-list">${list}</div></div>`;
   }
 
+  /* Biggest risers and fallers this season: the largest WAR changes since opening day
+     under the same filters as the board above. */
+  function leaderMoversHTML(m) {
+    if (!m) return "";
+    const row = (r, i) => `<li style="--team:${color(r.team)}"><span class="lm-rank">${i + 1}</span>
+      ${r.photo ? `<img class="lm-face" src="${r.photo}" alt="" loading="lazy" onerror="this.remove()">`
+        : `<img class="lm-face logo" src="${logoURL(r.team)}" alt="" loading="lazy">`}
+      <span class="lm-who"><b>${r.player ? esc(r.name) : `<button class="team-link" data-team="${esc(r.team)}">${esc(r.name)}</button>`}</b>
+        <small>${r.player ? `${esc(r.label)} · <button class="team-link" data-team="${esc(r.team)}">${esc(r.team)}</button>` : esc(r.label)}</small></span>
+      <span class="lm-val"><b class="${r.change >= 0 ? "pos" : "neg"}">${r.change >= 0 ? "+" : ""}${r.change.toFixed(r.digits === 2 ? 2 : 3)}</b><small>${r.value.toFixed(r.digits)} WAR now</small></span></li>`;
+    const col = (title, list, empty) => `<section class="lm-col"><h3>${title}</h3>${list.length
+      ? `<ol>${list.map(row).join("")}</ol>` : `<p class="lb-empty">${empty}</p>`}</section>`;
+    return `<div class="leader-movers">${col("Biggest risers", m.up, "No measured gains under these filters.")}
+      ${col("Biggest fallers", m.down, "No measured declines under these filters.")}</div>
+      <p class="lm-note">Change in WAR since opening day. Injured players are left out; an injury is not a performance change.</p>`;
+  }
+
   function renderLeaders() {
     const group = document.getElementById("leader-group").value;
     const cls = document.getElementById("leader-class").value;
     const teamFilter = document.getElementById("leader-team").value;
-    let rows;
+    let rows, moverRows = null;
+    const toLeader = p => ({
+      team: p.team, name: p.n, value: plQuality(p), digits: 3, change: p.dwin || 0,
+      label: p.g, tag: injTag(p), player: true,
+      photo: (editorial.headshots || {})[p.team + "\u0000" + p.n] || null });
     if (leaderKind === "players") {
       rows = [];
       for (const [team, roster] of Object.entries(players)) for (const p of roster.players || []) {
@@ -3012,6 +3097,10 @@
         rows.push({ team, ...currentPlayer(team, p) });
       }
       rows.sort((a, b) => plQuality(b) - plQuality(a));
+      // Risers and fallers use the same filters. Injured players are left out of
+      // both: an availability cut is not a performance change.
+      const mv = TeamOverview.movers(rows, 10);
+      moverRows = {up: mv.up.map(p => toLeader(p)), down: mv.down.map(p => toLeader(p))};
       rows = rows.slice(0, 10).map(p => ({
         team: p.team, name: p.n, value: plQuality(p), digits: 3, change: p.dwin || 0,
         label: p.g, tag: injTag(p), player: true,
@@ -3026,13 +3115,16 @@
         const ps = (live.players || []).filter(p => inGroup(p.g));
         const value = live.players ? ps.reduce((s, p) => s + (p.w || 0), 0)
           : Object.entries(live.byGroup || {}).reduce((s, [g, v]) => s + (inGroup(g) ? v : 0), 0);
-        const change = ps.reduce((s, p) => s + (p.dwin || 0), 0);
+        const change = ps.filter(p => !p.out && !p.inj).reduce((s, p) => s + (p.dwin || 0), 0);
         const best = ps.reduce((b, p) => (!b || (p.w || 0) > (b.w || 0) ? p : b), null);
         return { team, name: team, value, digits: 2, change, label, tag: "", photo: null,
                  leader: best && best.n };
-      }).sort((a, b) => b.value - a.value).slice(0, 10);
+      });
+      moverRows = {up: rows.filter(r => r.change > .0005).sort((a, b) => b.change - a.change).slice(0, 10),
+                   down: rows.filter(r => r.change < -.0005).sort((a, b) => a.change - b.change).slice(0, 10)};
+      rows = rows.sort((a, b) => b.value - a.value).slice(0, 10);
     }
-    document.getElementById("leader-grid").innerHTML = leaderBoardHTML(rows);
+    document.getElementById("leader-grid").innerHTML = leaderBoardHTML(rows) + leaderMoversHTML(moverRows);
     wireTeamLinks();
   }
   function fillLeaderControls() {
