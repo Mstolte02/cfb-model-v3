@@ -2395,8 +2395,6 @@
     { k: "p",    h: "Pos",      v: r => r.p || r.g },
     { k: "c",    h: "Class",    v: r => classLabel(r) },
     { k: "prk",  h: "Pos rank", n: true, v: r => plRanks().pos.get(plKey(r)) },
-    { k: "al",   h: "Alignment", v: r => alignText(r),
-      t: "Where he has lined up in 2026, from PFF snap alignment" },
     { k: "war",  h: "WAR", n: true, v: r => plWar(r),
       t: "Current WAR through the latest completed week" },
     { k: "dwin", h: "Change from season start", n: true, v: r => r.dwin,
@@ -2473,7 +2471,6 @@
           ? ` <span class="tag tr" title="Transferred in for 2026">TR</span>` : ""}</td>
         <td class="num pl-prk">${RK.pos.get(plKey(r))}<span class="pl-of">of ${
           (RK.groupN[grp] || 0).toLocaleString()} ${esc(grp)}</span></td>
-        <td class="pl-al">${esc(alignText(r))}</td>
         <td class="num"><b>${plWar(r).toFixed(3)}</b></td>
         <td class="num ${r.dwin > 0.0005 ? "pos" : r.dwin < -0.0005 ? "neg" : ""}">${
           (r.dwin > 0 ? "+" : "") + (r.dwin || 0).toFixed(3)}</td>
