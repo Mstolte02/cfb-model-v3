@@ -82,7 +82,7 @@ class InseasonWarTests(unittest.TestCase):
         row = next(iter(next(iter(d["players"].values())).values()))
         rows = [r for team in d["players"].values() for r in team.values()]
         for r in rows:   # "inj" appears only for players on an injury report
-            self.assertEqual(set(r) - {"inj", "base"}, {"sn", "war", "d", "st", "out", "sh"})
+            self.assertEqual(set(r) - {"inj", "base", "new", "g"}, {"sn", "war", "d", "st", "out", "sh"})
 
     def test_availability_delta_does_not_double_count_base_absence(self):
         roster = pd.DataFrame([
