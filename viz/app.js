@@ -64,7 +64,12 @@
   function liveRoster(t) {
     const base = players[t];
     if (!base || !base.players) return base;
-    const ps = base.players.map(p => currentPlayer(t, p));
+    // Who is in the model is decided by real 2026 snaps (Mark, Oct 2026): players the
+    // preseason two-deep missed but PFF has charted are added from the in-season file.
+    const known = new Set(base.players.map(p => p.n));
+    const added = Object.entries(INS[t] || {}).filter(([n, s]) => s.new && !known.has(n))
+      .map(([n, s]) => ({n, g: s.g, p: s.g, w: 0, emerged: true}));
+    const ps = [...base.players, ...added].map(p => currentPlayer(t, p));
     const byGroup = {};
     for (const p of ps) byGroup[p.g] = (byGroup[p.g] || 0) + (p.w || 0);
     const total = Object.values(byGroup).reduce((s, v) => s + v, 0);
@@ -2076,8 +2081,8 @@
             <span class="${powerMove >= 0 ? "pos" : "neg"}"><b>${powerMove >= 0 ? "+" : ""}${powerMove.toFixed(1)}</b> pts</span></div></div>
         ${histogramSVG(H, power, tint, team)}
         <p class="hs-note">Power Rating = neutral-site win rate against every FBS team. Background: ${H.observations.length.toLocaleString()} team-week ratings since 2021, preseason included; past seasons are replayed through today's model.</p>
-        <details class="hs-comps"><summary>Comparable historical ratings</summary><ul>${comps.map(c =>
-          `<li><img src="${logoURL(c.team)}" alt=""><span>${c.season} ${esc(c.team)} <small>${c.week ? "week " + c.week : "preseason"}</small></span><b>${pct(c.power)}</b></li>`).join("")}</ul></details>`;
+        <details class="hs-comps"><summary>Comparable team-seasons (final rating)</summary><ul>${comps.map(c =>
+          `<li><img src="${logoURL(c.team)}" alt=""><span>${c.season} ${esc(c.team)} <small>${c.season === ratings.season ? "to date" : "final"}</small></span><b>${pct(c.power)}</b></li>`).join("")}</ul></details>`;
     } else {
       standing = `<div class="hs-big">${power == null ? "—" : pct(power)}</div><p class="hs-note">${H === null ? "Loading the historical distribution…" : "The historical distribution is not available."}</p>`;
     }
@@ -2339,11 +2344,10 @@
      change made in either shows up in both and in the ratings. */
   const ALL_PLAYERS = (function () {
     const rows = [];
-    for (const [t, r] of Object.entries(players)) {
+    for (const t of Object.keys(players)) {
+      const r = liveRoster(t);
       if (!r || !r.players) continue;
-      for (const p of r.players) {
-        rows.push({ t, conf: conf(t), ...currentPlayer(t, p) });
-      }
+      for (const p of r.players) rows.push({ t, conf: conf(t), ...p });
     }
     return rows;
   })();
@@ -3088,13 +3092,13 @@
       photo: (editorial.headshots || {})[p.team + "\u0000" + p.n] || null });
     if (leaderKind === "players") {
       rows = [];
-      for (const [team, roster] of Object.entries(players)) for (const p of roster.players || []) {
+      for (const team of Object.keys(players)) for (const p of (liveRoster(team) || {}).players || []) {
         if (teamFilter && team !== teamFilter) continue;
         const groupMiss = group === "OFF" ? !OFF_GROUPS.has(p.g)
           : group === "DEF" ? OFF_GROUPS.has(p.g)
           : group && group !== "ALL" && p.g !== group;
         if (groupMiss || (cls && p.c !== cls)) continue;
-        rows.push({ team, ...currentPlayer(team, p) });
+        rows.push({ team, ...p });
       }
       rows.sort((a, b) => plQuality(b) - plQuality(a));
       // Risers and fallers use the same filters. Injured players are left out of

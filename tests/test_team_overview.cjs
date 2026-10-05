@@ -63,9 +63,9 @@ test('rating journey is chronological with pre and post ratings', () => {
   assert.equal(j[1].pre, .55); assert.equal(j[1].post, .6);
 });
 
-test('comparables keep one week per team-season and skip the team itself', () => {
-  const obs = [[2024, 3, 'A', .70], [2024, 5, 'A', .72], [2023, 9, 'B', .69], [2026, 5, 'X', .72]];
+test('comparables use each team-season once, at its final rating', () => {
+  const obs = [[2024, 3, 'A', .72], [2024, 15, 'A', .60], [2023, 15, 'B', .70], [2026, 5, 'X', .72]];
   const c = O.comparables(obs, .72, 5, {season: 2026, team: 'X'});
-  assert.deepEqual(c.map(x => x.team), ['A', 'B']);
-  assert.equal(c[0].week, 5);
+  assert.deepEqual(c.map(x => x.team), ['B', 'A']);
+  assert.equal(c[1].week, 15); assert.equal(c[1].power, .60);
 });

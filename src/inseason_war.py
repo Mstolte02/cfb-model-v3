@@ -321,6 +321,9 @@ WEEKLY = ROOT.parent / "source-data" / "pff_api" / "player_weekly"
 # 5% backup with 0.01 WAR would be "worth" a starter); those players are valued from
 # their per-snap rate instead, calibrated to the projection.
 V_SHARE_FLOOR = 0.15
+# Mark's rule (October 2026): who is in the model is decided by real 2026 snaps, never
+# the preseason two-deep. Any PFF player with this many snaps is included.
+EMERGED_SNAPS = MIN_SNAPS
 
 
 def season_snaps(season: int, week: int) -> pd.DataFrame:
@@ -368,6 +371,7 @@ def playing_time(j: pd.DataFrame, week: int, params: dict) -> pd.DataFrame:
     snaps = season_snaps(2026, week)
     by_key = snaps.drop_duplicates(["team", "key"], keep=False).set_index(["team", "key"])
     games = snaps.groupby("team").G.first()
+    unit = snaps.groupby(["team", "group"]).sn.sum()
     n0 = params.get("pt_n0", 1.0)
     grp = j.broad_group
     slots = grp.map(STARTERS)
@@ -375,12 +379,12 @@ def playing_time(j: pd.DataFrame, week: int, params: dict) -> pd.DataFrame:
     idx = pd.MultiIndex.from_arrays([j.team, j.key])
     sn = pd.Series(by_key.sn.reindex(idx).to_numpy(), index=j.index).fillna(0.0)
     G = j.team.map(games).fillna(0.0)
-    # The projection's share is the player's fraction of his two-deep room's snaps
-    # times the room's starter slots (war_model/depth_correction.reweight, whose
-    # usage term divides by the two-deep's own snaps), so 2026 snaps are put on the
-    # same footing. Dividing by every player who took a snap instead understated
-    # every starter by 25-40% at week 5.
-    U = sn.groupby([j.team, grp]).transform("sum")
+    # His fraction of every snap his room has taken in 2026, by anyone, times the
+    # room's starter slots. The two-deep has no say in who counts (Mark, Oct 2026).
+    # The preseason share is on the projection's two-deep footing, which overstates
+    # starters; it is only a one-game prior, so after a few games it barely matters.
+    U = pd.Series(unit.reindex(pd.MultiIndex.from_arrays([j.team, grp])).to_numpy(),
+                  index=j.index)
     obs_opp = (sn / U).where(U > 0, 0.0)
     pre_opp = share_pre / slots
     opp_now = (n0 * pre_opp + G * obs_opp) / (n0 + G)
@@ -448,7 +452,17 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
     r = roster.copy()
     r["key"] = r.player.map(norm_name)
     j = r.merge(w[["team", "key", "group", "snaps", "delta_rate", "k", "S", "obs", "m"]],
-                on=["team", "key"], how="left")
+                on=["team", "key"], how="left").assign(emerged=False)
+    # Players who were not on the preseason two-deep but are playing. Without this
+    # a breakout (Jesse Legree, Oregon State, third string in July) never appears.
+    # They start from zero projected WAR, so their whole WAR is change since opening.
+    on_chart = set(zip(r.team, r.key))
+    ex = w[[(t, k) not in on_chart for t, k in zip(w.team, w.key)]]
+    ex = ex[(ex.snaps >= EMERGED_SNAPS) & ex.team.isin(set(r.team)) & ex.group.isin(STARTERS)]
+    j = pd.concat([j, ex[["team", "player", "key", "group", "snaps", "delta_rate", "k", "S",
+                          "obs", "m"]].assign(broad_group=ex.group, expected_snap_share=0.0,
+                                              proj_war=0.0, available=True, is_starter=False,
+                                              emerged=True)], ignore_index=True)
     pt = playing_time(j, week, params)
     j = j.join(pt)
     # Performance: the per-snap change, now applied to the snaps he is getting.
@@ -485,6 +499,7 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
             "war": round(float(row.war_inseason), 3),
             "d": round(float(row.delta_war if pd.notna(row.delta_war) else 0.0), 3),
             "sh": round(float(row.share_now), 3),
+            **({"new": True, "g": row.broad_group} if row.emerged else {}),
             "st": bool(row.starter_now),
             "out": not bool(row.available_now),
             **({"inj": row.status, "base": round(float(row.war_base), 3)}
