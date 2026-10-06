@@ -1,13 +1,13 @@
 {
-  "checked_at": "2026-10-06T15:37:56Z",
+  "checked_at": "2026-10-06T15:40:04Z",
   "source": "ESPN scoreboard (DraftKings); CFBD /lines fallback",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
   "results_source": "ESPN scoreboard",
   "lines_checked_this_check": true,
-  "lines_last_checked_at": "2026-10-06T15:37:56Z",
+  "lines_last_checked_at": "2026-10-06T15:40:04Z",
   "quote_events": 4997,
-  "successful_checks": 185,
-  "changed_quotes_this_check": 60,
+  "successful_checks": 186,
+  "changed_quotes_this_check": 0,
   "games_with_quotes": 750,
   "books_with_quotes": [
     "Bovada",
@@ -19,14 +19,14 @@
     "uncertainty_gate": "80% Jeffreys lower bound > best-price break-even + 1pp",
     "status": "forward research; never an automatic bet"
   },
-  "weekly_board_updated_this_check": true,
+  "weekly_board_updated_this_check": false,
   "weekly_board_lock": {
     "locked_at": "2026-10-06T15:37:56Z",
     "cadence": "Monday 12:30 PM ET",
     "timezone": "America/New_York",
     "reason": "scheduled"
   },
-  "frozen_model_snapshots_this_check": 107,
+  "frozen_model_snapshots_this_check": 0,
   "current_candidates": [
     {
       "game_id": 401862794,
@@ -49,7 +49,7 @@
     }
   ],
   "entries": 24,
-  "new_entries_this_check": 1,
+  "new_entries_this_check": 0,
   "settlements": 23,
   "qualified_clv_observations": 18,
   "mean_consensus_clv": 0.0030040578129037518,
