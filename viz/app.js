@@ -3599,12 +3599,12 @@
     }
     if (betsOnly && !betRows.length) {
       document.getElementById("weekly-lines").innerHTML = `<div class="weekly-empty">
-        <b>${marketBoardFresh() ? `No ${marketLabel.toLowerCase()} paper selections clear the model's gate.` : "The locked board or quote feed is stale; future paper selections are hidden."}</b>
+        <b>${marketBoardFresh() ? `No ${marketLabel.toLowerCase()} bets clear the model's gate.` : "The locked board or quote feed is stale; future bets are hidden."}</b>
         <small>Turn off the filter to inspect archived lines. Do not treat them as currently available prices.</small></div>`;
       return;
     }
     const visibleRows = betsOnly ? betRows : rows;
-    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span><span>Paper signal</span></div>${visibleRows.map(g => {
+    document.getElementById("weekly-lines").innerHTML = `<div class="weekly-board"><div class="weekly-head"><span>Game</span><span>${esc(bookLabel)}</span><span>Model</span><span>Model gap</span><span>Bet</span></div>${visibleRows.map(g => {
       const lean = g.gap >= 0 ? g.home : g.away;
       const marketText = g.marketValue == null ? "—" : market === "moneyline" ? americanOdds(g.marketValue) : `${g.marketValue > 0 ? "+" : ""}${Number(g.marketValue).toFixed(1)}`;
       const modelText = g.modelValue == null ? "—" : market === "moneyline" ? pct(g.modelValue, 1) : `${g.modelValue > 0 && market === "spread" ? "+" : ""}${g.modelValue.toFixed(1)}`;
@@ -3614,7 +3614,7 @@
       const profit = final ? settleBet(g, market, final.home, final.away) : null;
       const resultClass = profit > 0 ? " win" : profit < 0 ? " loss"
         : profit === 0 ? " push" : "";
-      return `<div class="weekly-row${resultClass}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<span class="bet-tag">PAPER</span><b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
+      return `<div class="weekly-row${resultClass}"><div><small>WK ${g.week}</small>${teamMini(g.away)}<i>at</i>${teamMini(g.home)}</div><div><b>${marketText}</b><small>${marketLabel}</small></div><div><b>${modelText}</b><small>${g.r ? `${Math.round(g.r.scoreB)}–${Math.round(g.r.scoreA)}` : "unrated opponent"}</small></div><div class="edge"><b>${gapText}</b></div><div class="bet-cell">${bet ? `<span class="bet-tag">BET</span><b>${bet}</b>` : `<span class="bet-none">—</span>`}</div></div>`;
     }).join("")}</div>`;
     wireTeamLinks();
   }
@@ -3626,7 +3626,7 @@
     host.innerHTML = `<button type="button" class="bet-filter${betsOnly ? " active" : ""}"
       id="bet-filter" aria-pressed="${betsOnly}">
       <span><small>${marketBoardFresh() ? (week == null ? "All listed weeks" : "Week " + week) : "Quotes stale — future signals hidden"}</small>
-      <b>Research selections (paper only)</b></span>
+      <b>Model bets</b></span>
       <strong>${betCount}</strong>
       <em>${betsOnly ? `Showing ${betCount} of ${gameCount}` : "Show bets only"}</em>
     </button>`;

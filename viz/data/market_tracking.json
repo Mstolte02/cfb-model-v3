@@ -1,13 +1,13 @@
 {
-  "checked_at": "2026-10-06T06:29:49Z",
+  "checked_at": "2026-10-06T15:07:07Z",
   "source": "CFBD /lines",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
   "results_source": "ESPN scoreboard",
   "lines_checked_this_check": true,
-  "lines_last_checked_at": "2026-10-06T06:29:49Z",
-  "quote_events": 4928,
-  "successful_checks": 183,
-  "changed_quotes_this_check": 6,
+  "lines_last_checked_at": "2026-10-06T15:07:07Z",
+  "quote_events": 4937,
+  "successful_checks": 184,
+  "changed_quotes_this_check": 9,
   "games_with_quotes": 750,
   "books_with_quotes": [
     "Bovada",
@@ -19,15 +19,35 @@
     "uncertainty_gate": "80% Jeffreys lower bound > best-price break-even + 1pp",
     "status": "forward research; never an automatic bet"
   },
-  "weekly_board_updated_this_check": false,
+  "weekly_board_updated_this_check": true,
   "weekly_board_lock": {
-    "locked_at": "2026-10-05T22:50:25Z",
+    "locked_at": "2026-10-06T15:07:07Z",
     "cadence": "Monday 12:30 PM ET",
     "timezone": "America/New_York",
     "reason": "scheduled"
   },
-  "frozen_model_snapshots_this_check": 0,
-  "current_candidates": [],
+  "frozen_model_snapshots_this_check": 62,
+  "current_candidates": [
+    {
+      "game_id": 401856712,
+      "week": 6,
+      "start": "2026-10-10T23:30:00.000Z",
+      "home": "Alabama",
+      "away": "Georgia",
+      "side": "home",
+      "team": "Alabama",
+      "model_side_p": 0.6939048436801601,
+      "consensus_side_p": 0.48376623376623373,
+      "gap": 0.2101386099139264,
+      "best_price": 105.0,
+      "break_even_p": 0.4878048780487805,
+      "books": 2,
+      "historical_lower_80": 0.2983475937178055,
+      "uncertainty_cleared": false,
+      "gate": "80% Jeffreys lower bound > best-price break-even + 1pp",
+      "model_fingerprint": "beb18fe93aa74010"
+    }
+  ],
   "entries": 23,
   "new_entries_this_check": 0,
   "settlements": 23,
