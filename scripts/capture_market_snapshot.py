@@ -180,6 +180,82 @@ def _fetch_public_json(url: str, timeout: int = 45) -> dict:
         return json.load(response)
 
 
+def fetch_espn_lines(now: datetime, schedule_path: Path = SCHEDULE, fetch=None) -> list[dict]:
+    """Upcoming DraftKings quotes, mapped by ESPN/CFBD id to our schedule.
+
+    ESPN calls its latest displayed prices ``close`` even before kickoff. We record
+    retrieval time only; these are not certified sportsbook closing quotes.
+    """
+    get = fetch or _fetch_public_json
+    schedule = json.loads(schedule_path.read_text(encoding="utf-8"))
+    upcoming = {int(g["id"]): g for g in schedule if g.get("id") and not g.get("f")
+                and now.date().isoformat() <= g.get("d", "")
+                <= datetime.fromordinal(now.date().toordinal() + 8).date().isoformat()}
+    rows = []
+    for week in sorted({int(g["w"]) for g in upcoming.values()}):
+        query = {"dates": YEAR, "seasontype": 2, "week": week, "groups": 80, "limit": 500}
+        payload = get(f"{ESPN_SCOREBOARD}?{urllib.parse.urlencode(query)}")
+        if "events" not in payload:
+            raise RuntimeError("ESPN odds response has no events")
+        for event in payload["events"]:
+            game = upcoming.get(int(event["id"]))
+            if game is None:
+                continue
+            comp = (event.get("competitions") or [{}])[0]
+            start = event.get("date")
+            if not start or parse_time(start) <= now:
+                continue
+            for odds in comp.get("odds") or []:
+                provider = (odds.get("provider") or {}).get("name", "")
+                if provider.replace(" ", "").lower() != "draftkings":
+                    continue
+
+                def number(market, side, phase, field):
+                    value = (((odds.get(market) or {}).get(side) or {}).get(phase) or {}).get(field)
+                    try:
+                        value = float(value)
+                        return value if (math.isfinite(value) and abs(value) < 100000
+                                         and (field != "odds" or value != 0)) else None
+                    except (TypeError, ValueError):
+                        return None
+                line = {"provider": "DraftKings", "source": "ESPN scoreboard",
+                        "spread": number("pointSpread", "home", "close", "line"),
+                        "spreadOpen": number("pointSpread", "home", "open", "line"),
+                        "homeMoneyline": number("moneyline", "home", "close", "odds"),
+                        "awayMoneyline": number("moneyline", "away", "close", "odds")}
+                if all(line[field] is None for field in QUOTE_FIELDS):
+                    continue
+                rows.append({"id": int(event["id"]), "week": game["w"],
+                             "startDate": start, "homeTeam": game["h"],
+                             "awayTeam": game["a"], "neutralSite": bool(game.get("n")),
+                             "lines": [line]})
+                break
+    return rows
+
+
+def merge_line_feeds(cfbd: list[dict] | None, espn: list[dict]) -> list[dict]:
+    """Prefer ESPN DraftKings fields; retain CFBD coverage and other books."""
+    merged = {int(g["id"]): {**g, "lines": [dict(line) for line in g.get("lines") or []]}
+              for g in cfbd or []}
+    for game in espn:
+        old = merged.get(int(game["id"]), {**game, "lines": []})
+        fallback = next((line for line in old["lines"]
+                         if PROVIDER_ALIAS.get(line.get("provider"), line.get("provider"))
+                         == BOARD_PROVIDER), {})
+        preferred = dict(game["lines"][0])
+        used_fallback = False
+        for field in QUOTE_FIELDS:
+            if preferred.get(field) is None:
+                preferred[field] = fallback.get(field)
+                used_fallback |= fallback.get(field) is not None
+        if used_fallback:
+            preferred["source"] = "ESPN scoreboard; CFBD /lines fallback"
+        others = [line for line in old["lines"]
+                  if PROVIDER_ALIAS.get(line.get("provider"), line.get("provider")) != BOARD_PROVIDER]
+        merged[int(game["id"])] = {**old, **game, "lines": others + [preferred]}
+    return list(merged.values())
+
+
 def fetch_espn_games(now: datetime, schedule_path: Path = SCHEDULE,
                      fetch=None) -> list[dict]:
     """Final scores from ESPN's public scoreboard, in the shape of CFBD /games.
@@ -742,7 +818,7 @@ def flatten(raw: list[dict], captured_at: str) -> list[dict]:
                    "game_id": int(game["id"]), "week": game.get("week"),
                    "start": game.get("startDate"), "home": game.get("homeTeam"),
                    "away": game.get("awayTeam"), "neutral": bool(game.get("neutralSite")),
-                   "provider": provider}
+                   "provider": provider, "source": line.get("source", "CFBD /lines")}
             values = {field: line.get(field) for field in QUOTE_FIELDS}
             # CFBD/Bovada uses -100000 as an unavailable-moneyline sentinel on some
             # large favorites and underdogs. It is not a tradable price and, if read
@@ -1003,7 +1079,9 @@ def weekly_payload(quotes: dict[tuple, dict]) -> list[dict]:
         if not lines:
             continue
         first = lines[0]
-        books = {row["provider"]: {field: row.get(field) for field in QUOTE_FIELDS}
+        books = {row["provider"]: {**{field: row.get(field) for field in QUOTE_FIELDS},
+                                  "source": row.get("source", "CFBD /lines"),
+                                  "retrieved_at": row.get("captured_at")}
                  for row in lines}
         row = {"id": first["game_id"], "week": first.get("week"),
                "start": first.get("start"), "home": first.get("home"),
@@ -1096,7 +1174,7 @@ def display_candidates(rows: list[dict], now: datetime, last_check: str | None,
 
 
 def run(raw: list[dict] | None, now: datetime, games: list[dict] | None = None,
-        lock_weekly_board: bool = False) -> dict:
+        lock_weekly_board: bool = False, line_source: str = "CFBD /lines") -> dict:
     """One capture. ``raw`` is None when the line fetch failed this time: nothing is
     appended to the quote ledger or the check log (a failed check is not evidence a
     book pulled its price), the board cannot lock, and only results are processed."""
@@ -1121,7 +1199,7 @@ def run(raw: list[dict] | None, now: datetime, games: list[dict] | None = None,
     append_jsonl(QUOTES, changed)
     events = prior_events + changed
     payload_hash = quote_payload_hash(current)
-    check = {"checked_at": captured_at, "source": "CFBD /lines",
+    check = {"checked_at": captured_at, "source": line_source,
              "timestamp_semantics": "retrieval time, not sportsbook quote time",
              "games": len({r["game_id"] for r in current}), "quotes": len(current),
              "changed_quotes": len(changed), "payload_hash": payload_hash}
@@ -1223,6 +1301,10 @@ def run(raw: list[dict] | None, now: datetime, games: list[dict] | None = None,
     odds = json.loads(ODDS.read_text()) if ODDS.exists() else {"markets": {}, "sources": {}}
     board_updated = update_weekly_board(
         odds, current_quotes, captured_at, lock_weekly_board)
+    if board_updated:
+        odds["sources"]["cfbd_lines"].update({
+            "source": line_source,
+            "url": ESPN_SCOREBOARD if line_source.startswith("ESPN") else BASE + "/"})
     published_ratings = (json.loads(RATINGS.read_text())
                          if RATINGS.exists() else {"teams": []})
     frozen_model_snapshots = freeze_weekly_model_snapshots(
@@ -1238,7 +1320,7 @@ def run(raw: list[dict] | None, now: datetime, games: list[dict] | None = None,
     displayed_candidates = display_candidates(
         candidate_rows, now, last_check.get("checked_at"),
         (odds.get("weekly_lock") or {}).get("locked_at"))
-    tracking = {"checked_at": captured_at, "source": "CFBD /lines",
+    tracking = {"checked_at": captured_at, "source": line_source,
         "timestamp_semantics": "retrieval time, not sportsbook quote time",
         "results_source": "ESPN scoreboard" if games is not None else "CFBD /lines",
         "lines_checked_this_check": lines_checked,
@@ -1281,8 +1363,6 @@ def main() -> None:
     args = parser.parse_args()
     load_env()
     key = os.environ.get("CFBD_API_KEY")
-    if not key and not args.allow_missing_key:
-        raise RuntimeError("CFBD_API_KEY is not configured")
     now = utcnow()
     # Scores come from ESPN, so a spent CFBD budget never stops bets being graded.
     # CFBD /games is the fallback only if ESPN itself is down.
@@ -1300,9 +1380,19 @@ def main() -> None:
             lines = fetch_lines(key)
         except (urllib.error.URLError, TimeoutError, subprocess.TimeoutExpired,
                 RuntimeError) as exc:
-            print(f"CFBD lines unavailable ({exc}); publishing results only.")
+            print(f"CFBD lines unavailable ({exc}); trying ESPN odds.")
     else:
-        print("CFBD_API_KEY is not configured; publishing results only.")
+        print("CFBD_API_KEY is not configured; using ESPN odds.")
+    line_source = "CFBD /lines"
+    try:
+        espn_lines = fetch_espn_lines(now)
+        if espn_lines:
+            lines = merge_line_feeds(lines, espn_lines)
+            line_source = "ESPN scoreboard (DraftKings); CFBD /lines fallback" if key else "ESPN scoreboard (DraftKings)"
+        print(f"ESPN DraftKings odds: {len(espn_lines)} upcoming games.")
+    except (urllib.error.URLError, TimeoutError, subprocess.TimeoutExpired,
+            RuntimeError, KeyError, ValueError) as exc:
+        print(f"ESPN odds unavailable ({exc}); using CFBD lines if available.")
     missing = form_missing_finals(games, now) if key else []
     if missing:
         # Non-fatal: a failed pull replays on the committed table, and the next
@@ -1324,7 +1414,7 @@ def main() -> None:
             print(f"PFF form unavailable ({exc}); using the committed table.")
     else:
         print("PFF_API_KEY not configured; PFF form not refreshed.")
-    tracking = run(lines, now, games, args.lock_weekly_board)
+    tracking = run(lines, now, games, args.lock_weekly_board, line_source)
     print(f"Market check {tracking['checked_at']}: {tracking['games_with_quotes']} games, "
           f"{tracking['changed_quotes_this_check']} changed quotes, "
           f"{len(tracking['current_candidates'])} research candidates, "
@@ -1333,7 +1423,7 @@ def main() -> None:
     print("Weekly board " + ("locked." if tracking["weekly_board_updated_this_check"]
                              else "unchanged; background capture only."))
     if args.lock_weekly_board and lines is None:
-        print("::warning::Weekly board NOT locked: CFBD lines were unavailable.")
+        print("::warning::Weekly board NOT locked: no odds feed was available.")
     print(f"-> {QUOTES}\n-> {TRACKING}")
 
 

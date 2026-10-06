@@ -80,7 +80,8 @@ path and every environment variable that overrides one.
 ## Weekly workflow
 
 Nothing is required. The **Capture market snapshot** workflow runs every six hours:
-it pulls prices, final scores and CFBD's regular-season `/stats/game/advanced`
+it pulls upcoming DraftKings prices from ESPN (with CFBD /lines as the fallback),
+final scores and CFBD's regular-season `/stats/game/advanced`
 (committed to `data/live/`), replays the whole season from week 0 through the v5
 ensemble with `scripts/ensemble_replay.py`, and commits `viz/data/model_v4.json` and
 `ratings.json`. Its Monday 12:30 PM ET run locks the week's betting board, freezing a
@@ -95,6 +96,11 @@ python -m scripts.rank                           # print current ratings
 Rscript scripts/simulate_playoff.R 500 current   # CFP projection
 python -m unittest discover -s tests -v          # invariants
 ```
+
+ESPN quotes are mapped to the schedule by game ID and retain our team names. The
+quote ledger records the source and retrieval time; ESPN’s pregame `close` fields
+mean its latest displayed odds, not a verified closing quote. The public board
+remains DraftKings-only, and completed-game lines and results remain frozen.
 
 ## How it works
 

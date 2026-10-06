@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.capture_market_snapshot import (display_candidates, fetch_cfbd, fetch_espn_games, flatten, implied, latest_quotes,
+from scripts.capture_market_snapshot import (display_candidates, fetch_cfbd, fetch_espn_games, fetch_espn_lines, merge_line_feeds, flatten, implied, latest_quotes,
                                              model_probability,
                                              moneyline_research_candidate, publish_finals,
                                              quote_key, quote_payload_hash, quote_value,
@@ -17,6 +17,71 @@ from war_model.materialize_availability import current_rows
 
 
 class MarketTrackingTests(unittest.TestCase):
+    def test_espn_lines_use_home_spread_and_schedule_identity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            schedule = Path(tmp) / "schedule.json"
+            schedule.write_text(json.dumps([
+                {"id": 1, "h": "A", "a": "B", "w": 6, "d": "2026-10-10", "n": 1},
+                {"id": 2, "h": "C", "a": "D", "w": 6, "d": "2026-10-10"},
+                {"id": 3, "h": "E", "a": "F", "w": 5, "d": "2026-10-01", "f": 1}]))
+            quote = {"provider": {"name": "Draft Kings"},
+                     "spread": -7.5,  # generic field deliberately disagrees
+                     "pointSpread": {"home": {"close": {"line": "+7.5"},
+                                                "open": {"line": "+6"}}},
+                     "moneyline": {"home": {"close": {"odds": "+250"}},
+                                   "away": {"close": {"odds": "-310"}}}}
+            def fetch(url):
+                self.assertIn("week=6", url)
+                return {"events": [
+                    {"id": "1", "date": "2026-10-10T16:00Z", "competitions": [{"odds": [quote]}]},
+                    {"id": "2", "date": "2026-10-06T01:00Z", "competitions": [{"odds": [quote]}]},
+                    {"id": "999", "date": "2026-10-10T16:00Z", "competitions": [{"odds": [quote]}]}]}
+            rows = fetch_espn_lines(datetime(2026, 10, 6, 12, tzinfo=timezone.utc), schedule, fetch)
+            self.assertEqual(len(rows), 1)
+            self.assertEqual((rows[0]["homeTeam"], rows[0]["awayTeam"]), ("A", "B"))
+            self.assertTrue(rows[0]["neutralSite"])
+            line = rows[0]["lines"][0]
+            self.assertEqual((line["spread"], line["spreadOpen"]), (7.5, 6))
+            self.assertEqual((line["homeMoneyline"], line["awayMoneyline"]), (250, -310))
+            flattened = flatten(rows, "2026-10-06T12:00:00Z")
+            self.assertEqual(flattened[0]["source"], "ESPN scoreboard")
+            book = weekly_payload({quote_key(flattened[0]): flattened[0]})[0]["books"]["DraftKings"]
+            self.assertEqual(book["retrieved_at"], "2026-10-06T12:00:00Z")
+
+    def test_espn_merge_preserves_cfbd_fallback_and_other_books(self):
+        cfbd = [{"id": 1, "lines": [
+            {"provider": "Draft Kings", "spread": -3, "spreadOpen": -2,
+             "homeMoneyline": -140, "awayMoneyline": 120},
+            {"provider": "Bovada", "spread": -4}]},
+            {"id": 2, "lines": [{"provider": "DraftKings", "spread": -7}]}]
+        espn = [{"id": 1, "lines": [{"provider": "DraftKings", "spread": -3.5,
+                 "homeMoneyline": None, "awayMoneyline": None, "spreadOpen": None}]}]
+        merged = merge_line_feeds(cfbd, espn)
+        self.assertEqual(len(merged), 2)
+        self.assertEqual([l["provider"] for l in merged[0]["lines"]], ["Bovada", "DraftKings"])
+        self.assertEqual(merged[0]["lines"][1]["spread"], -3.5)
+        self.assertEqual(merged[0]["lines"][1]["homeMoneyline"], -140)
+        self.assertEqual(cfbd[0]["lines"][0]["spread"], -3)
+        self.assertEqual(merge_line_feeds(cfbd, []), cfbd)
+        self.assertEqual(merge_line_feeds(None, espn)[0]["id"], 1)
+
+    def test_espn_lines_reject_unavailable_and_other_book_quotes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            schedule = Path(tmp) / "schedule.json"
+            schedule.write_text(json.dumps([
+                {"id": 1, "h": "A", "a": "B", "w": 6, "d": "2026-10-10"}]))
+            def fetch(url):
+                return {"events": [{"id": "1", "date": "2026-10-10T16:00Z",
+                    "competitions": [{"odds": [
+                        {"provider": {"name": "Bovada"}, "spread": -3},
+                        {"provider": {"name": "DraftKings"},
+                         "moneyline": {"home": {"close": {"odds": "-100000"}},
+                                       "away": {"close": {"odds": "NaN"}}}}]}]}]}
+            self.assertEqual(fetch_espn_lines(
+                datetime(2026, 10, 6, tzinfo=timezone.utc), schedule, fetch), [])
+            with self.assertRaises(RuntimeError):
+                fetch_espn_lines(datetime(2026, 10, 6, tzinfo=timezone.utc), schedule, lambda url: {})
+
     def test_display_candidates_requires_fresh_board_and_future_kickoff(self):
         now = datetime(2026, 9, 28, 20, tzinfo=timezone.utc)
         rows = [{"start": "2026-09-29T00:00:00Z", "game_id": 1},
