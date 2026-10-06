@@ -1161,15 +1161,8 @@ def availability_summary() -> dict:
             "last_event_at": max((r.get("observed_at") or "" for r in rows), default=None)}
 
 
-def display_candidates(rows: list[dict], now: datetime, last_check: str | None,
-                       board_lock: str | None, max_age_hours: float = 6) -> list[dict]:
-    """Never present a frozen research candidate as a current price after it ages."""
-    if not last_check or not board_lock:
-        return []
-    for timestamp in (last_check, board_lock):
-        age = (now - parse_time(timestamp)).total_seconds() / 3600
-        if age < 0 or age > max_age_hours:
-            return []
+def display_candidates(rows: list[dict], now: datetime) -> list[dict]:
+    """Keep locked candidates until kickoff, independent of later quote checks."""
     return [row for row in rows if row.get("start") and parse_time(row["start"]) > now]
 
 
@@ -1317,9 +1310,7 @@ def run(raw: list[dict] | None, now: datetime, games: list[dict] | None = None,
                       if board_updated
                       else previous_tracking.get("current_candidates", []))
     last_check = checks[-1] if checks else {}
-    displayed_candidates = display_candidates(
-        candidate_rows, now, last_check.get("checked_at"),
-        (odds.get("weekly_lock") or {}).get("locked_at"))
+    displayed_candidates = display_candidates(candidate_rows, now)
     tracking = {"checked_at": captured_at, "source": line_source,
         "timestamp_semantics": "retrieval time, not sportsbook quote time",
         "results_source": "ESPN scoreboard" if games is not None else "CFBD /lines",

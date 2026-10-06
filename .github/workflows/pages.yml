@@ -55,7 +55,9 @@ jobs:
           if [ "$PRESEASON_CACHE_HIT" != "true" ]; then mode=both; fi
           Rscript scripts/simulate_playoff.R 500 "$mode"
       - name: Build dist/
-        run: python3 scripts/publish.py
+        run: |
+          node --test tests/test_market_board.cjs
+          python3 scripts/publish.py
       - uses: actions/configure-pages@v6
       # upload-pages-artifact stopped bundling dotfiles in v4, and publish.py
       # writes dist/.nojekyll - so ask for them back explicitly.

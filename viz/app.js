@@ -3539,15 +3539,6 @@
      row moves. */
   const ML_FLIP_FROM_WEEK = 3;
 
-  function marketBoardFresh() {
-    const now = Date.now();
-    const lock = Date.parse((odds.weekly_lock || {}).locked_at || "");
-    const checked = Date.parse((marketTracking || {}).lines_last_checked_at || "");
-    const maxAge = 6 * 3600 * 1000;
-    return Number.isFinite(lock) && Number.isFinite(checked) &&
-      lock <= now && checked <= now && now - lock <= maxAge && now - checked <= maxAge;
-  }
-
   /* The bet the board would print, or null for no bet. This IS the rule - both the
      board's flag and the tracker's record come from this one function. */
   function betToPlace(g, market) {
@@ -3556,9 +3547,8 @@
     // Week 1 is an authoritative historical ledger. If a row is absent, it was
     // not a bet at the time; never let today's rule/model manufacture it later.
     if (g.week === 1) return locked ? locked.bet : null;
-    // Keep settled history intact. An unplayed row cannot be an actionable price
-    // when the board lock or most recent successful quote check is stale.
-    if (Date.parse(g.start) > Date.now() && !marketBoardFresh()) return null;
+    // The Monday board stays visible until the next lock; quote age does not
+    // erase its selections or the historical record.
     const RULE = BET_RULES[market];
     if (g.bettingExcluded) return null;
     if (g.gap == null || g.marketValue == null) return null;
@@ -3599,8 +3589,8 @@
     }
     if (betsOnly && !betRows.length) {
       document.getElementById("weekly-lines").innerHTML = `<div class="weekly-empty">
-        <b>${marketBoardFresh() ? `No ${marketLabel.toLowerCase()} bets clear the model's gate.` : "The locked board or quote feed is stale; future bets are hidden."}</b>
-        <small>Turn off the filter to inspect archived lines. Do not treat them as currently available prices.</small></div>`;
+        <b>${`No ${marketLabel.toLowerCase()} bets clear the model's gate.`}</b>
+        <small>Turn off the filter to inspect the full locked board.</small></div>`;
       return;
     }
     const visibleRows = betsOnly ? betRows : rows;
@@ -3625,7 +3615,7 @@
     const host = document.getElementById("market-tracking");
     host.innerHTML = `<button type="button" class="bet-filter${betsOnly ? " active" : ""}"
       id="bet-filter" aria-pressed="${betsOnly}">
-      <span><small>${marketBoardFresh() ? (week == null ? "All listed weeks" : "Week " + week) : "Quotes stale — future signals hidden"}</small>
+      <span><small>${week == null ? "All listed weeks" : "Week " + week}</small>
       <b>Model bets</b></span>
       <strong>${betCount}</strong>
       <em>${betsOnly ? `Showing ${betCount} of ${gameCount}` : "Show bets only"}</em>
