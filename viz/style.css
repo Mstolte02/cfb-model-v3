@@ -749,7 +749,7 @@ main { max-width: 1320px; padding-top: 38px; }
   border: 1px solid var(--line2); border-radius: 9px; background: var(--panel);
   color: var(--ink); cursor: pointer; font: 750 12px/1 var(--sans);
   transition: border-color .12s, background .12s, color .12s; }
-.csv-btn::before { content: "\2193"; font-weight: 900; color: var(--accent); }
+.csv-btn::before { content: "\2398"; font-weight: 900; color: var(--accent); }
 .csv-btn:hover { border-color: var(--navy); background: var(--navy); color: #fff; }
 .csv-btn:hover::before { color: var(--bet); }
 .mini-team { display: inline-flex; align-items: center; gap: 8px; }
@@ -1231,3 +1231,10 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
 .lm-note{margin-top:10px;color:var(--muted);font-size:12px}
 @media(max-width:800px){.leader-movers{grid-template-columns:1fr}}
 .pl-al{color:var(--muted);font-size:12px;white-space:nowrap}
+
+.pickem-panel { margin: 0 0 20px; padding: 16px; border: 1px solid var(--line2); border-radius: 10px; background: var(--panel); }
+.pickem-panel[hidden] { display: none; }
+.pickem-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.pickem-actions label { flex: 1; font-weight: 750; }
+.pickem-panel textarea { box-sizing: border-box; width: 100%; resize: vertical; padding: 12px; border: 1px solid var(--line2); border-radius: 6px; background: var(--bg); color: var(--ink); font: 13px/1.6 monospace; }
+.pickem-panel p { margin: 8px 0 0; color: var(--muted); font-size: .82rem; }

@@ -126,7 +126,15 @@
       <label>Week <select id="weekly-week"></select></label>
       <span class="market-source">Lines: <b>DraftKings</b></span>
       <button type="button" class="csv-btn" id="pickem-export"
-        title="Every game on the selected week's slate, as id,home,away,predicted — the CFBD Model Pick'Em import format.">Pick'Em CSV</button>
+        aria-controls="pickem-panel" aria-expanded="false"
+        title="Show comma-separated picks for the selected week to copy.">Copy Pick'Em data</button>
+    </div>
+    <div id="pickem-panel" class="pickem-panel" hidden>
+      <div class="pickem-actions"><label for="pickem-data" id="pickem-label">Pick'Em data</label>
+        <button type="button" class="csv-btn" id="pickem-copy">Copy data</button>
+        <button type="button" class="csv-btn" id="pickem-close">Close</button></div>
+      <textarea id="pickem-data" readonly rows="12" spellcheck="false" wrap="off"></textarea>
+      <p id="pickem-copy-status" role="status" aria-live="polite">Select the text to copy, or use Copy data.</p>
     </div>
     <div id="market-tracking"></div>
     <div id="weekly-lines"></div>

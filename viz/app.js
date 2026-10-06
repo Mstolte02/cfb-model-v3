@@ -3735,19 +3735,39 @@
     });
     return ["id,home,away,predicted", ...rows].join("\n") + "\n";
   }
-  function downloadText(name, text) {
-    const url = URL.createObjectURL(new Blob([text], { type: "text/csv;charset=utf-8" }));
-    const a = Object.assign(document.createElement("a"), { href: url, download: name });
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
-  document.getElementById("pickem-export").addEventListener("click", () => {
+  function showPickemData(focus = true) {
     const sel = document.getElementById("weekly-week").value;
     const week = sel === "__all" ? null : Number(sel);
-    downloadText(`cfb-model-pickem-2026-${week == null ? "all-weeks" : "week" + week}.csv`,
-      pickemCSV(week));
+    const panel = document.getElementById("pickem-panel");
+    const text = document.getElementById("pickem-data");
+    text.value = pickemCSV(week);
+    panel.hidden = false;
+    document.getElementById("pickem-export").setAttribute("aria-expanded", "true");
+    document.getElementById("pickem-label").textContent =
+      `Pick'Em data · ${week == null ? "All weeks" : "Week " + week}`;
+    document.getElementById("pickem-copy-status").textContent = "Select the text to copy, or use Copy data.";
+    if (focus) { text.focus(); text.select(); }
+  }
+  document.getElementById("pickem-export").addEventListener("click", () => showPickemData());
+  document.getElementById("weekly-week").addEventListener("change", () => {
+    if (!document.getElementById("pickem-panel").hidden) showPickemData(false);
+  });
+  document.getElementById("pickem-copy").addEventListener("click", async () => {
+    const text = document.getElementById("pickem-data");
+    const status = document.getElementById("pickem-copy-status");
+    try {
+      await navigator.clipboard.writeText(text.value);
+      status.textContent = "Copied!";
+    } catch (_) {
+      text.focus(); text.select();
+      status.textContent = "Text selected. Press Ctrl+C (or Command+C) to copy.";
+    }
+  });
+  document.getElementById("pickem-close").addEventListener("click", () => {
+    document.getElementById("pickem-panel").hidden = true;
+    const button = document.getElementById("pickem-export");
+    button.setAttribute("aria-expanded", "false");
+    button.focus();
   });
 
   /* The live record: flag with betToPlace, settle with the final score. Same rows
