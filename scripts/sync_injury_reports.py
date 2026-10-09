@@ -154,7 +154,15 @@ PARSERS = {"mygamesim": parse_mygamesim, "covers": parse_covers,
 # ---------------------------------------------------------------- roster matching
 def roster() -> pd.DataFrame:
     from src.data import war
-    r = war.player_contributions()
+    r = war.player_contributions()[["team", "player"]]
+    # Players who play real 2026 snaps but were not on the July two-deep. The roster
+    # is whoever plays, so an injury to one of them must match too.
+    live = ROOT / "viz" / "data" / "players_inseason.json"
+    if live.exists():
+        teams = json.loads(live.read_text(encoding="utf-8"))["players"]
+        r = pd.concat([r, pd.DataFrame([(t, p) for t, ps in teams.items() for p in ps],
+                                       columns=["team", "player"])]
+                      ).drop_duplicates(ignore_index=True)
     r["key"] = r.player.map(norm_name)
     r["last"] = r.key.str.split().str[-1]
     r["initial"] = r.key.str[0]
@@ -253,7 +261,7 @@ def main(argv=None) -> int:
         shares = m.pop("shares")
         m["share"] = round(sum(shares) / len(shares), 3) if shares else 1.0
         m["status"] = status_of_share(m["share"])
-    print("unmatched (not on the projected two-deep)", dict(unmatched))
+    print("unmatched (not on the two-deep or 2026 snap list)", dict(unmatched))
 
     listed = {k: v for k, v in merged.items() if v["status"]}
     SNAPSHOT.write_text(json.dumps({

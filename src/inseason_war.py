@@ -40,7 +40,7 @@ AVAILABILITY = ROOT / "war_model" / "availability_2026.csv"
 # zero; the report grades between keep his contribution continuous rather than
 # forcing a play/sit call (scripts/sync_injury_reports.py uses the same scale).
 AVAIL_SHARE = {"out": 0.0, "doubtful": 0.25, "questionable": 0.5}
-# Regular-season games a preseason proj_war is spread over (see availability_team_deltas).
+# Regular-season games a season WAR is spread over (see availability_team_deltas).
 SEASON_GAMES = 12
 STARTERS = {"QB": 1, "RB": 1, "WR": 3, "TE": 1, "OT": 2, "IOL": 3,
             "DT": 2, "EDGE": 2, "LB": 2, "CB": 3, "SAF": 2}
@@ -187,6 +187,9 @@ def availability_team_deltas(roster: pd.DataFrame,
     week / 1000), and the stacks weight it at roughly 4 logits per unit. proj_war is a
     whole season, so it is spread over SEASON_GAMES before it joins D; adding season
     WAR directly would have let one injured starter swing a game by tens of points.
+
+    build() passes the in-season table with proj_war set to each player's healthy
+    2026 WAR, so the cost follows what he has done this season.
     """
     import sys
     sys.path.insert(0, str(ROOT / "war_model"))
@@ -570,6 +573,11 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
     # WAR before availability: what an injured player is worth when he plays. The
     # Team Overview's injury report shows it beside the counted figure.
     j["war_base"] = j.war_inseason.copy()
+    # The live injury cost. It is taken from this table, not the preseason roster, so
+    # a player who emerged in 2026 counts, and each player costs his healthy 2026 WAR
+    # rather than his July projection.
+    team_avail = availability_team_deltas(
+        j.assign(proj_war=j.war_base, available=j.available.fillna(True)))
     j["available_now"] = j.available.fillna(True) & j.status.ne("out")
     j.loc[~j.available_now, "war_inseason"] = 0.0
     share = j.status.map(AVAIL_SHARE).fillna(1.0)
@@ -616,6 +624,7 @@ def build(week: int, window_players: pd.DataFrame, window_fc: pd.DataFrame,
                    "Playing time is the 2026 snap share, blended with the preseason "
                    "share as if it were one game; per-snap rates are adjusted for "
                    "opponent difficulty; injury reports scale availability."),
+        "team_availability": {t: round(float(v), 8) for t, v in team_avail.items()},
         "team_playing_time": {t: round(float(v), 6) for t, v in team_pt.items()},
         "players": players,
     }

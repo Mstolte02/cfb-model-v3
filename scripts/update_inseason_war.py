@@ -138,8 +138,8 @@ def write_team_tables(params: dict, week: int, history: bool, skip_pull: bool):
         cutoffs[str(c)] = {r.team: round(float(r.D), 8) for r in D.itertuples()}
     # Availability is intentionally current-only. Applying today's injury news to an
     # old cut would rewrite the model's pregame view of already completed games.
-    from src.data import war
-    injury = IW.availability_team_deltas(war.player_contributions())
+    # Built in IW.build from players who play 2026 snaps, valued at 2026 WAR.
+    injury = json.loads(IW.OUT.read_text())["team_availability"]
     latest = cutoffs[str(week)]
     for team, delta in injury.items():
         latest[team] = round(latest.get(team, 0.0) + delta, 8)
