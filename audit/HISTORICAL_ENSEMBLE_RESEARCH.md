@@ -16,7 +16,7 @@ and was not substituted. The output JSON records hashes and coverage counts.
 
 Local PFF access successfully retrieved a 2025 team directory (265 rows), 2024
 blocking (5,808 rows), and historical 2025 offense/defense tables (281 rows each).
-The fresh Actions probe also recovered CFBD but still has no `PFF_API_KEY` secret.
+The repository `PFF_API_KEY` is now configured. A fresh Actions probe successfully recovered both CFBD and PFF (run 38340063670).
 See `audit/output/source_recovery_status.json` for both status-only probes.
 The local cache and fresh Actions advanced-game responses have 3,314 and 3,316
 rows respectively: source retrieval vintages differ even when credentials work.
@@ -94,8 +94,8 @@ cannot be recovered from current API responses alone.
 
 Keep production unchanged. Remaining work is specific: reconstruct chronological
 in-season WAR rules and audit all upstream facet/conversion fits; establish source
-vintages or collect prospective shadow predictions; configure the absent repository
-PFF secret for future captures. The unique workbooks are available locally but are
+vintages or collect prospective shadow predictions. The repository PFF secret is now
+configured and verified for future captures. The unique workbooks are available locally but are
 not public or API-regenerable. API credentials and licensed raw tables stay private.
 
 ## Reproduce
@@ -106,3 +106,7 @@ JSON, game-level predictions and this report. It never writes production model,
 kickoff ledgers, frozen predictions or locked bets. Tests:
 `python -m unittest tests.test_historical_ensemble_research tests.test_pff_carry_forward tests.test_ensemble_blend_research tests.test_ensemble_replay`.
 Use `PYTHON` to select the interpreter when running the Node X-Ray tests on Windows.
+
+## Subsequent WAR rebuild
+
+The in-season WAR chain and matched opposing-unit tests are now complete. See [Chronological WAR and matchup report](CHRONOLOGICAL_WAR_MATCHUPS.md) for the decision, metrics and remaining preseason lineage limitation.

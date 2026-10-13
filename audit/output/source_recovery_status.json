@@ -71,8 +71,21 @@
         "status": "recovered",
         "rows": 134
       },
-      "PFF": {
-        "status": "credential_not_configured"
+      "pff_historical_directory": {
+        "status": "recovered",
+        "rows": 265
+      },
+      "pff_historical_player_blocking": {
+        "status": "recovered",
+        "rows": 5808
+      },
+      "pff_historical_team_offense": {
+        "status": "recovered",
+        "rows": 281
+      },
+      "pff_historical_team_defense": {
+        "status": "recovered",
+        "rows": 281
       }
     },
     "limits": [
@@ -81,5 +94,5 @@
       "Expanded WAR lineage must be reconciled before claiming the original ensemble has been reproduced."
     ]
   },
-  "actions_run": "https://github.com/Mstolte02/cfb-model-v3/actions/runs/38338586310"
+  "actions_run": "https://github.com/Mstolte02/cfb-model-v3/actions/runs/38340063670"
 }

@@ -15,8 +15,9 @@ so higher is always harder. FCS opponents are in the same feed whenever they pla
 FBS team, and their poor PPA against FBS opposition makes them easy, which is the
 competition-level part of the adjustment. A team's strength is its mean over the games
 in the feed, shrunk toward the league mean by SHRINK games so a one-game FCS sample
-cannot look elite. For a past season the whole season is used (a schedule fact, not
-the player's own outcome); for the live season, games through the cut only.
+cannot look elite. Historical callers must pass through=cut for predictive inputs:
+full-season opponent performance includes future outcomes, even for a fixed schedule.
+Omitting through is appropriate only for completed-season descriptions or labels.
 """
 from __future__ import annotations
 
@@ -44,7 +45,8 @@ def games(season: int) -> pd.DataFrame:
     else:   # the CFBD /stats/game/advanced shape
         g = pd.DataFrame([{"week": r["week"], "team": r["team"], "opponent": r["opponent"],
                            "off_ppa": (r.get("offense") or {}).get("ppa"),
-                           "def_ppa": (r.get("defense") or {}).get("ppa")} for r in d])
+                           "def_ppa": (r.get("defense") or {}).get("ppa")} for r in d
+                          if r.get("seasonType", "regular") == "regular"])
     g = g[["week", "team", "opponent", "off_ppa", "def_ppa"]].dropna()
     return g.astype({"week": int})
 
