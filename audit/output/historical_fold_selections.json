@@ -1,0 +1,245 @@
+{
+  "source": "prior_decay_backtest earlier-season selections, recovered local artifact",
+  "folds": [
+    {
+      "test_season": 2023,
+      "member": "full_new_war",
+      "train_seasons": [
+        2021,
+        2022
+      ],
+      "selection": {
+        "knobs": {
+          "C": 0.03,
+          "alpha": 100.0,
+          "ensemble_weight": 0.25,
+          "probability_scale": 1.1
+        },
+        "k": 0.15,
+        "halflife": 4.0,
+        "C": 0.1
+      }
+    },
+    {
+      "test_season": 2023,
+      "member": "full_new_war_curvature",
+      "train_seasons": [
+        2021,
+        2022
+      ],
+      "selection": {
+        "knobs": {
+          "C": 0.03,
+          "alpha": 100.0,
+          "ensemble_weight": 0.0,
+          "probability_scale": 1.0
+        },
+        "k": 0.15,
+        "halflife": 4.0,
+        "C": 0.1
+      }
+    },
+    {
+      "test_season": 2023,
+      "member": "full_new_war_production",
+      "train_seasons": [
+        2021,
+        2022
+      ],
+      "selection": {
+        "knobs": {
+          "C": 0.03,
+          "alpha": 100.0,
+          "ensemble_weight": 0.25,
+          "probability_scale": 1.1
+        },
+        "k": 0.15,
+        "halflife": 4.0,
+        "C": 0.1
+      }
+    },
+    {
+      "test_season": 2023,
+      "member": "full_new_war_curvature_production",
+      "train_seasons": [
+        2021,
+        2022
+      ],
+      "selection": {
+        "knobs": {
+          "C": 0.03,
+          "alpha": 100.0,
+          "ensemble_weight": 0.0,
+          "probability_scale": 1.0
+        },
+        "k": 0.15,
+        "halflife": 4.0,
+        "C": 0.1
+      }
+    },
+    {
+      "test_season": 2024,
+      "member": "full_new_war",
+      "train_seasons": [
+        2021,
+        2022,
+        2023
+      ],
+      "selection": {
+        "knobs": {
+          "C": 0.03,
+          "alpha": 100.0,
+          "ensemble_weight": 0.5,
+          "probability_scale": 1.1
+        },
+        "k": 0.2,
+        "halflife": 8.0,
+        "C": 1.0
+      }
+    },
+    {
+      "test_season": 2024,
+      "member": "full_new_war_curvature",
+      "train_seasons": [
+        2021,
+        2022,
+        2023
+      ],
+      "selection": {
+        "knobs": {
+          "C": 0.03,
+          "alpha": 100.0,
+          "ensemble_weight": 0.25,
+          "probability_scale": 1.1
+        },
+        "k": 0.2,
+        "halflife": 8.0,
+        "C": 1.0
+      }
+    },
+    {
+      "test_season": 2024,
+      "member": "full_new_war_production",
+      "train_seasons": [
+        2021,
+        2022,
+        2023
+      ],
+      "selection": {
+        "knobs": {
+          "C": 0.03,
+          "alpha": 100.0,
+          "ensemble_weight": 0.75,
+          "probability_scale": 1.1
+        },
+        "k": 0.2,
+        "halflife": 8.0,
+        "C": 1.0
+      }
+    },
+    {
+      "test_season": 2024,
+      "member": "full_new_war_curvature_production",
+      "train_seasons": [
+        2021,
+        2022,
+        2023
+      ],
+      "selection": {
+        "knobs": {
+          "C": 0.03,
+          "alpha": 100.0,
+          "ensemble_weight": 0.5,
+          "probability_scale": 1.1
+        },
+        "k": 0.2,
+        "halflife": 8.0,
+        "C": 1.0
+      }
+    },
+    {
+      "test_season": 2025,
+      "member": "full_new_war",
+      "train_seasons": [
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "selection": {
+        "knobs": {
+          "C": 0.03,
+          "alpha": 100.0,
+          "ensemble_weight": 1.0,
+          "probability_scale": 1.1
+        },
+        "k": 0.2,
+        "halflife": null,
+        "C": 0.3
+      }
+    },
+    {
+      "test_season": 2025,
+      "member": "full_new_war_curvature",
+      "train_seasons": [
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "selection": {
+        "knobs": {
+          "C": 0.03,
+          "alpha": 100.0,
+          "ensemble_weight": 0.75,
+          "probability_scale": 1.1
+        },
+        "k": 0.2,
+        "halflife": null,
+        "C": 0.3
+      }
+    },
+    {
+      "test_season": 2025,
+      "member": "full_new_war_production",
+      "train_seasons": [
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "selection": {
+        "knobs": {
+          "C": 0.03,
+          "alpha": 100.0,
+          "ensemble_weight": 1.0,
+          "probability_scale": 1.0
+        },
+        "k": 0.2,
+        "halflife": null,
+        "C": 0.1
+      }
+    },
+    {
+      "test_season": 2025,
+      "member": "full_new_war_curvature_production",
+      "train_seasons": [
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "selection": {
+        "knobs": {
+          "C": 0.03,
+          "alpha": 100.0,
+          "ensemble_weight": 0.75,
+          "probability_scale": 1.0
+        },
+        "k": 0.2,
+        "halflife": null,
+        "C": 0.1
+      }
+    }
+  ]
+}

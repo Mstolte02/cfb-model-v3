@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-12",
+  "local": {
+    "purpose": "historical source recovery probe",
+    "season": 2025,
+    "sources": {
+      "cfbd_games": {
+        "status": "recovered",
+        "rows": 3745
+      },
+      "cfbd_game_efficiency": {
+        "status": "recovered",
+        "rows": 3314
+      },
+      "cfbd_preseason_efficiency": {
+        "status": "recovered",
+        "rows": 134
+      },
+      "cfbd_returning": {
+        "status": "recovered",
+        "rows": 134
+      },
+      "cfbd_talent": {
+        "status": "recovered",
+        "rows": 134
+      },
+      "pff_historical_directory": {
+        "status": "recovered",
+        "rows": 265
+      },
+      "pff_historical_player_blocking": {
+        "status": "recovered",
+        "rows": 5808
+      },
+      "pff_historical_team_offense": {
+        "status": "recovered",
+        "rows": 281
+      },
+      "pff_historical_team_defense": {
+        "status": "recovered",
+        "rows": 281
+      }
+    },
+    "limits": [
+      "A successful sample proves source access, not full historical reproducibility.",
+      "Bought depth-chart workbooks and unavailable historical source vintages cannot be recreated exactly from aggregate ratings.",
+      "Expanded WAR lineage must be reconciled before claiming the original ensemble has been reproduced."
+    ]
+  },
+  "actions": {
+    "purpose": "historical source recovery probe",
+    "season": 2025,
+    "sources": {
+      "cfbd_games": {
+        "status": "recovered",
+        "rows": 3745
+      },
+      "cfbd_game_efficiency": {
+        "status": "recovered",
+        "rows": 3316
+      },
+      "cfbd_preseason_efficiency": {
+        "status": "recovered",
+        "rows": 134
+      },
+      "cfbd_returning": {
+        "status": "recovered",
+        "rows": 134
+      },
+      "cfbd_talent": {
+        "status": "recovered",
+        "rows": 134
+      },
+      "PFF": {
+        "status": "credential_not_configured"
+      }
+    },
+    "limits": [
+      "A successful sample proves source access, not full historical reproducibility.",
+      "Bought depth-chart workbooks and unavailable historical source vintages cannot be recreated exactly from aggregate ratings.",
+      "Expanded WAR lineage must be reconciled before claiming the original ensemble has been reproduced."
+    ]
+  },
+  "actions_run": "https://github.com/Mstolte02/cfb-model-v3/actions/runs/38338586310"
+}

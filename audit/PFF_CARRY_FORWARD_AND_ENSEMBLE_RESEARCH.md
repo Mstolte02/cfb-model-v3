@@ -55,8 +55,8 @@ single logistic model to member-specific preseason differences, result-update
 differences, active form inputs, PFF, WAR, and home field. Repeated inputs retain
 their per-member columns; regularization is part of the stated experiment. Neither
 can reconstruct the original preseason feature union from the public payload,
-which stores the preseason scores as aggregates. The missing original team
-frames are needed for a true end-to-end refit of that union.
+which stores the preseason scores as aggregates. The recovered original team
+frames now support the fuller union comparison in HISTORICAL_ENSEMBLE_RESEARCH.md.
 
 ## Is production a matchup model?
 
@@ -99,8 +99,9 @@ This is one partial season, four held-out week clusters, and multiple candidates
 The PFF/WAR cutoffs include later retrievals, so chronological outcome splitting
 does not make this a prospective point-in-time backtest. The interval estimates in
 the JSON resample weeks; four clusters cannot support strong significance claims.
-The multi-season member prediction exports and raw preseason frames are not in
-this checkout, and the Library search did not recover the required dataset.
+The original run could not access the historical inputs. On October 12 the actual
+local source tree was recovered; see HISTORICAL_ENSEMBLE_RESEARCH.md for the newer
+multi-season comparison and the remaining upstream chronology limitations.
 Older checked-in v3/v4 prediction CSVs are not a substitute for this ensemble.
 
 Keep the existing production combination while the candidates are shadowed or

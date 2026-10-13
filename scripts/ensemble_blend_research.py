@@ -160,7 +160,7 @@ def run():
     payload={'status':'exploratory_only_no_promotion','season':2026,
       'contract':'Train only earlier weeks; first two weeks warm up; same games for all candidates.',
       'limitations':['Only one partial season and four evaluated week clusters.',
-        'Historical multi-season member prediction exports and raw preseason training frames are absent.',
+        'This diagnostic uses only 2026; recovered multi-season inputs are tested separately by historical_ensemble_research.',
         'PFF/WAR cutoffs include later retrievals; this is retrospective, not a prospective betting backtest.',
         'The published member fits are fixed; this does not refit their historical training pipelines.',
         'Penalty constants fixed before scoring, not tuned to held-out weeks; candidates are exploratory.',
@@ -239,8 +239,8 @@ single logistic model to member-specific preseason differences, result-update
 differences, active form inputs, PFF, WAR, and home field. Repeated inputs retain
 their per-member columns; regularization is part of the stated experiment. Neither
 can reconstruct the original preseason feature union from the public payload,
-which stores the preseason scores as aggregates. The missing original team
-frames are needed for a true end-to-end refit of that union.
+which stores the preseason scores as aggregates. The recovered original team
+frames now support the fuller union comparison in HISTORICAL_ENSEMBLE_RESEARCH.md.
 
 ## Is production a matchup model?
 
@@ -283,8 +283,9 @@ This is one partial season, four held-out week clusters, and multiple candidates
 The PFF/WAR cutoffs include later retrievals, so chronological outcome splitting
 does not make this a prospective point-in-time backtest. The interval estimates in
 the JSON resample weeks; four clusters cannot support strong significance claims.
-The multi-season member prediction exports and raw preseason frames are not in
-this checkout, and the Library search did not recover the required dataset.
+The original run could not access the historical inputs. On October 12 the actual
+local source tree was recovered; see HISTORICAL_ENSEMBLE_RESEARCH.md for the newer
+multi-season comparison and the remaining upstream chronology limitations.
 Older checked-in v3/v4 prediction CSVs are not a substitute for this ensemble.
 
 Keep the existing production combination while the candidates are shadowed or
@@ -307,5 +308,9 @@ and `node --test tests/test_power_xray.cjs tests/test_market_board.cjs`.
     body=''.join(f"<tr><td>{escape(labels[k])}</td><td>{m['brier']:.6f}</td><td>{m['delta_brier']:+.6f}</td><td>{m['log_loss']:.6f}</td><td>{m['weeks_better']}/4</td></tr>" for k,m in r['metrics'].items())
     html='''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>What should combine the models? · CFB X-Ray</title><link rel="stylesheet" href="style.css"></head><body><header><a href="./">← Power Rating X-Ray</a><span>RESEARCH / OCTOBER 11, 2026</span></header><main><section class="intro"><div class="eyebrow">RESEARCH, NOT A MODEL CHANGE</div><h1>Four views.<br><em>One better prediction?</em></h1><p>Testing learned blends, one combined model, and offense-versus-opposing-defense interactions.</p></section><section><h2>The PFF fix is live. The candidates are exploratory.</h2><p>PFF now carries forward the latest eligible weekly table, keeping in-season WAR active too. Frozen betting predictions remain unchanged. The explorer shows the data cutoff.</p><p class="note">The research below uses 229 games in Weeks 3–6, training only on earlier weeks. One partial season, four test weeks, and retrospective source pulls are not enough to choose a replacement. The live ensemble still averages four probabilities equally.</p></section><section><div class="eyebrow">MATCHED GAMES / LOWER IS BETTER</div><h2>Early results</h2><div class="table-scroll"><table><thead><tr><th>Candidate</th><th>Brier</th><th>Δ vs equal</th><th>Log loss</th><th>Weeks better</th></tr></thead><tbody>'''+body+'''</tbody></table></div><p class="note">Brier measures squared probability error; log loss penalizes confident mistakes more strongly. “Weeks better” compares Brier on the same four held-out weeks. Multiple candidates were inspected; these are promising leads, not confirmed improvements.</p></section><section><h2>What the matchup audit found</h2><p>The live model uses differences in offensive and defensive strength. Those terms can be rearranged into offense-versus-opposing-defense comparisons, but there is no explicit nonlinear O×D interaction in the active stack.</p><p class="note">We tested both a nonlinear gap and an opposing-product feature. The product uses O<sub>A</sub> × D<sub>B</sub> − O<sub>B</sub> × D<sub>A</sub>. It changes sign when the teams swap. That lets a specific pairing matter beyond the individual team strengths. Standardized offense and defense are not predicted points.</p><h2>Why not switch immediately?</h2><p>The members are highly correlated (0.993–0.997). Learned blending helps in this sample, and combining live inputs into one logistic model also improves overall. But the multi-season prediction exports and original preseason frames are unavailable. This test holds the existing member fits fixed; it does not retrain the complete preseason models.</p><p class="note">Next evidence needed: multi-season forward validation and prospective shadow results. The current production blend remains unchanged.</p></section><section><h2>Inspect the work</h2><p><a href="https://github.com/Mstolte02/cfb-model-v3/blob/main/audit/PFF_CARRY_FORWARD_AND_ENSEMBLE_RESEARCH.md">Full methodology and matchup explanation</a> · <a href="https://github.com/Mstolte02/cfb-model-v3/blob/main/audit/output/ensemble_blend_2026.json">Fold metrics and weights</a> · <a href="https://github.com/Mstolte02/cfb-model-v3/blob/main/audit/output/ensemble_blend_2026_predictions.csv">Game-level predictions</a></p></section></main></body></html>'''
     (ROOT/'viz/power-xray/research.html').write_text(html)
+    historical = ROOT/'audit/output/historical_ensemble_research.json'
+    if historical.exists():
+        from scripts.historical_ensemble_research import write_report as write_history
+        write_history(json.loads(historical.read_text()))
 
 if __name__=='__main__':write_report(run())
