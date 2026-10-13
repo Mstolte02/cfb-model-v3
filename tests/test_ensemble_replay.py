@@ -330,7 +330,7 @@ class PffForm(unittest.TestCase):
                                                     "A", "B", 1.0), places=12)
         self.assertNotAlmostEqual(base, week1, places=6)   # PFF stack, zero columns
         self.assertGreater(tilted, week1)                   # home PFF offence helps home
-        self.assertIsNone(ER.pff_table({"cutoffs": {"2": {}}}, 4))
+        self.assertIsNone(ER.pff_table({"cutoffs": {"2": {}}}, 4, carry_forward=False))
         self.assertEqual(ER.pff_table({"cutoffs": {"3": {"A": [1, 1]}}}, 4), {"A": [1, 1]})
         self.assertEqual(ER.pff_table({"cutoffs": {}}, 1), {})
 

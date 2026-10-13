@@ -1,0 +1,30 @@
+name: Check historical data recovery
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [scripts/check_source_recovery.py, .github/workflows/source-recovery.yml]
+permissions:
+  contents: read
+jobs:
+  sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+      PFF_API_KEY: ${{ secrets.PFF_API_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install source client dependencies
+        run: python -m pip install requests pandas numpy
+      - name: Recover a historical sample using existing clients
+        run: python -m scripts.check_source_recovery
+      - name: Save status only, no source data
+        uses: actions/upload-artifact@v5
+        with:
+          name: source-recovery-status
+          path: source-recovery-status.json
+          retention-days: 7

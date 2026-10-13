@@ -19,8 +19,9 @@ before W, the same contract the backtest was scored under.
 v5.1 adds PFF's season-to-date offence and defence composites. Each member then has
 a second stack, ``stack_pff``, over the same columns plus [pff_O_diff, pff_D_diff].
 A slate uses it when PFF's table through the previous week exists (week 1 reads an
-empty table, as the backtest did), and the base stack when it does not, so a missing
-PFF pull degrades to v5 rather than to a stack fed zeros it never saw.
+empty table, as the backtest did), and carries the latest eligible table forward across missing pulls. The base
+stack is used only when no eligible PFF table exists. Historical slates before the
+published policy boundary retain the original exact-cutoff behavior.
 
 v5.2 adds in-season player WAR (src/inseason_war.py): each team's summed change in
 player WAR per week, from PFF grades through cuts 3, 6 and 9. A third stack,
@@ -219,21 +220,38 @@ def _forms(ensemble: dict, rows: list[dict], cutoff: int, cache: dict) -> dict:
     return out
 
 
-def pff_table(pff: dict | None, slate: int) -> dict | None:
-    """PFF team values a slate may read: through the week before it.
+def pff_cutoff(pff: dict | None, slate: int, carry_forward: bool = True) -> int | None:
+    """Newest nonempty PFF cutoff strictly before the prediction slate.
 
-    ``pff`` is the committed payload {"cutoffs": {"3": {team: [O, D]}, ...}}. Week 1
-    reads an empty table (nothing has been played); a postseason slate reads the
-    last regular-season cutoff staged. None means no usable table: base stack.
+    Never reads the same slate or a future cutoff. Legacy replay may opt into the
+    former exact-cutoff contract so a policy change cannot regrade played games.
     """
-    if pff is None:
+    if pff is None or slate <= 1:
         return None
     cutoffs = {int(k): v for k, v in (pff.get("cutoffs") or {}).items()}
-    if slate >= POSTSEASON_OFFSET:
-        return cutoffs[max(cutoffs)] if cutoffs else None
+    if not carry_forward and slate < POSTSEASON_OFFSET:
+        return slate - 1 if slate - 1 in cutoffs else None
+    usable = [k for k, v in cutoffs.items() if k < slate and v]
+    return max(usable) if usable else None
+
+
+def pff_table(pff: dict | None, slate: int,
+              carry_forward: bool = True) -> dict | None:
+    """Keep the latest eligible PFF table until the next one is available."""
+    if pff is None:
+        return None
     if slate <= 1:
         return {}
-    return cutoffs.get(slate - 1)
+    cutoff = pff_cutoff(pff, slate, carry_forward)
+    return pff["cutoffs"][str(cutoff)] if cutoff is not None else None
+
+
+def pff_state(ensemble: dict, pff: dict | None, slate: int) -> dict:
+    carry = slate >= int(ensemble.get("pff_carry_forward_from_slate", 1))
+    cutoff = pff_cutoff(pff, slate, carry)
+    return {"pff": pff_table(pff, slate, carry), "pff_cutoff": cutoff,
+            "pff_carried_forward": cutoff is not None and cutoff < slate - 1,
+            "pff_fetched_at": ((pff or {}).get("fetched_at") or {}).get(str(cutoff))}
 
 
 def war_table(war: dict | None, slate: int) -> dict | None:
@@ -272,7 +290,7 @@ def replay(ensemble: dict, finals: list[dict], rows: list[dict],
         if stop_before is not None and key >= stop_before:
             break
         state["form"] = _forms(ensemble, rows, key, cache)
-        state["pff"] = pff_table(pff, key)
+        state.update(pff_state(ensemble, pff, key))
         state["war"] = war_table(war, key)
         state["slate"] = key
         changes = {m["name"]: {} for m in ensemble["members"]}
@@ -302,13 +320,13 @@ def replay(ensemble: dict, finals: list[dict], rows: list[dict],
         snapshots.append((key, {"ratings": {n: dict(r) for n, r in
                                             state["ratings"].items()},
                                 "form": _forms(ensemble, rows, key + 1, cache),
-                                "pff": pff_table(pff, key + 1),
+                                **pff_state(ensemble, pff, key + 1),
                                 "war": war_table(war, key + 1),
                                 "slate": key + 1}))
     end = stop_before if stop_before is not None else (
         max(by_slate) + 1 if by_slate else 1)
     state["form"] = _forms(ensemble, rows, end, cache)
-    state["pff"] = pff_table(pff, end)
+    state.update(pff_state(ensemble, pff, end))
     state["war"] = war_table(war, end)
     state["slate"] = end
     return {"events": events, "snapshots": snapshots, "state": state}
@@ -383,7 +401,9 @@ def compact_state(state: dict, digits: int = 8) -> dict:
         return {t: [round(v[0], digits), round(v[1], digits), int(v[2])]
                 for t, v in value.items()}
     pff, war = state.get("pff"), state.get("war")
-    return {"ratings": {n: {t: round(v, digits) for t, v in r.items()}
+    return {**{k: state[k] for k in ("slate", "pff_cutoff", "pff_carried_forward",
+                                    "pff_fetched_at") if k in state},
+            "ratings": {n: {t: round(v, digits) for t, v in r.items()}
                         for n, r in state["ratings"].items()},
             "form": {n: form(f) for n, f in state["form"].items()},
             # None = no PFF table in play (base stacks); {} = week 1 (PFF stacks, zeros)

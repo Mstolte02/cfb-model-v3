@@ -109,6 +109,9 @@ def ensemble_block(manifest: dict, frame: pd.DataFrame, comp: pd.DataFrame) -> d
         "combination": "unweighted mean of member probabilities",
         "form_table": f"data/live/game_advanced_{PROJECTION_YEAR}.json",
         "min_form_games": 2,
+        # October 11 policy: preserve prior slates; carry eligible PFF forward now.
+        "pff_carry_forward_from_slate": manifest.get(
+            "pff_carry_forward_from_slate", 7 if PROJECTION_YEAR == 2026 else 1),
         "margin_sigma": float(np.mean([m["margin_sigma"] for m in members])),
         "pff_form_table": f"data/live/pff_form_{PROJECTION_YEAR}.json",
         "war_team_table": f"data/live/inseason_war_team_{PROJECTION_YEAR}.json",
