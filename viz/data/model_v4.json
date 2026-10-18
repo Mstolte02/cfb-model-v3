@@ -24429,28 +24429,28 @@
    "slate": 8,
    "pff_cutoff": 7,
    "pff_carried_forward": false,
-   "pff_fetched_at": "2026-10-17T20:42:13Z",
+   "pff_fetched_at": "2026-10-18T04:42:47Z",
    "ratings": {
     "full_new_war": {
-     "Air Force": -0.80733621,
-     "Akron": -1.96896603,
-     "Alabama": 2.76263145,
+     "Air Force": -0.66929917,
+     "Akron": -2.1220825,
+     "Alabama": 2.40850373,
      "App State": -0.91006474,
      "Arizona": 1.0528571,
-     "Arizona State": -0.10999809,
-     "Arkansas": 0.29954248,
-     "Arkansas State": -1.12821903,
+     "Arizona State": -0.18874159,
+     "Arkansas": 0.51221576,
+     "Arkansas State": -0.97678414,
      "Army": 0.05859208,
-     "Auburn": 1.30972417,
+     "Auburn": 1.61774609,
      "Ball State": -2.14815422,
-     "Baylor": 1.11071396,
+     "Baylor": 0.77926422,
      "Boise State": 0.81311207,
      "Boston College": -0.27308205,
      "Bowling Green": -1.74346448,
      "Buffalo": -1.17598527,
-     "BYU": 1.28799887,
+     "BYU": 1.53153012,
      "California": -0.34167436,
-     "Central Michigan": -1.25497515,
+     "Central Michigan": -1.24578928,
      "Charlotte": -2.17101585,
      "Cincinnati": -0.23294478,
      "Clemson": 0.32639828,
@@ -24458,20 +24458,20 @@
      "Colorado": -0.22628213,
      "Colorado State": -1.5733457,
      "Delaware": -0.84783441,
-     "Duke": 0.54195899,
+     "Duke": 0.42028083,
      "East Carolina": -0.6406534,
-     "Eastern Michigan": -1.38352962,
+     "Eastern Michigan": -1.60089409,
      "Florida": 1.51968598,
      "Florida Atlantic": -0.89988235,
      "Florida International": -0.78745366,
-     "Florida State": 0.88635415,
+     "Florida State": 1.08941886,
      "Fresno State": 0.017897,
-     "Georgia": 2.80312876,
+     "Georgia": 2.49510684,
      "Georgia Southern": -0.69814784,
      "Georgia State": -0.52385126,
-     "Georgia Tech": 0.07990444,
+     "Georgia Tech": 0.02551456,
      "Hawai'i": -1.37755866,
-     "Houston": 1.15029837,
+     "Houston": 1.036883,
      "Illinois": 0.02789918,
      "Indiana": 2.0154353,
      "Iowa": 1.10186744,
@@ -24481,116 +24481,116 @@
      "Kansas": 0.51011602,
      "Kansas State": 0.44714648,
      "Kennesaw State": -1.14821185,
-     "Kent State": -2.09314543,
-     "Kentucky": 1.22079254,
+     "Kent State": -2.19218227,
+     "Kentucky": 1.44612481,
      "Liberty": 0.21137935,
-     "Louisiana": -0.48915029,
-     "Louisiana Tech": -0.47518529,
-     "Louisville": 1.20430903,
+     "Louisiana": -0.15568668,
+     "Louisiana Tech": -0.29451775,
+     "Louisville": 1.13168725,
      "LSU": 2.51735095,
      "Marshall": -1.19984261,
      "Maryland": -0.52912432,
      "Massachusetts": -1.81634884,
      "Memphis": 0.15658981,
-     "Miami": 2.80223383,
-     "Miami (OH)": -1.34607637,
-     "Michigan": 1.14066276,
+     "Miami": 2.59916912,
+     "Miami (OH)": -1.1929599,
+     "Michigan": 1.0793631,
      "Michigan State": -0.15677339,
      "Middle Tennessee": -1.44070925,
      "Minnesota": 0.14183572,
      "Mississippi State": 0.78806536,
-     "Missouri": 2.06850663,
+     "Missouri": 1.69081444,
      "Missouri State": -1.48720953,
-     "Navy": -0.82789332,
+     "Navy": -0.72711407,
      "NC State": 0.04817116,
      "Nebraska": 1.43887317,
-     "Nevada": -0.79333519,
+     "Nevada": -0.92366,
      "New Mexico": 0.82743482,
      "New Mexico State": -1.25675183,
-     "North Carolina": 0.41562892,
-     "North Dakota State": -0.5954073,
-     "Northern Illinois": -2.04303579,
+     "North Carolina": 0.53730708,
+     "North Dakota State": -0.46508248,
+     "Northern Illinois": -2.16514249,
      "North Texas": -0.1805497,
      "Northwestern": 0.97287561,
-     "Notre Dame": 2.77704452,
+     "Notre Dame": 2.53351328,
      "Ohio": -0.71688793,
      "Ohio State": 2.83225097,
-     "Oklahoma": 1.64029836,
-     "Oklahoma State": 0.40669866,
+     "Oklahoma": 1.41496609,
+     "Oklahoma State": 0.52011403,
      "Old Dominion": -1.32872469,
-     "Ole Miss": 1.99192184,
+     "Ole Miss": 2.36961403,
      "Oregon": 1.78205546,
-     "Oregon State": 0.82742482,
-     "Penn State": 0.74239471,
+     "Oregon State": 0.82086318,
+     "Penn State": 0.80369438,
      "Pittsburgh": 0.34931921,
      "Purdue": 0.11442603,
-     "Rice": -1.25151929,
+     "Rice": -1.54838733,
      "Rutgers": -0.39878225,
      "Sacramento State": -2.96305879,
      "Sam Houston": -1.73347113,
      "San Diego State": -1.27129441,
-     "San Jos\u00e9 State": -1.04578813,
+     "San Jos\u00e9 State": -1.03064983,
      "SMU": 0.64431421,
      "South Alabama": -0.55996439,
      "South Carolina": 1.40266042,
-     "Southern Miss": -1.37292943,
-     "South Florida": -0.36482507,
+     "Southern Miss": -1.52436432,
+     "South Florida": -0.26578823,
      "Stanford": -1.33740255,
-     "Syracuse": -0.31561621,
-     "TCU": 0.27657678,
+     "Syracuse": -0.24299444,
+     "TCU": 0.60802652,
      "Temple": -1.18196083,
-     "Tennessee": 1.70861581,
+     "Tennessee": 2.06274353,
      "Texas": 2.01211927,
      "Texas A&M": 1.56631147,
      "Texas State": 0.05866203,
-     "Texas Tech": 1.88846905,
-     "Toledo": -0.62468206,
-     "Troy": -0.60249808,
+     "Texas Tech": 1.96721255,
+     "Toledo": -0.40731759,
+     "Troy": -0.9359617,
      "Tulane": -0.174175,
-     "Tulsa": -0.9088032,
+     "Tulsa": -0.61193517,
      "UAB": -0.83350995,
      "UCF": 0.10194828,
-     "UCLA": 1.44221572,
+     "UCLA": 1.46221018,
      "UConn": -0.46913024,
-     "UL Monroe": -1.86240484,
-     "UNLV": -0.58092642,
+     "UL Monroe": -2.04307238,
+     "UNLV": -0.71896345,
      "USC": 1.17754526,
      "Utah": 1.85955054,
      "Utah State": -0.62614559,
-     "UTEP": -2.46524882,
-     "UTSA": -0.07095853,
-     "Vanderbilt": 0.44708864,
+     "UTEP": -2.48038713,
+     "UTSA": -0.17173778,
+     "Vanderbilt": 0.23441535,
      "Virginia": 0.24318115,
-     "Virginia Tech": 0.39101338,
+     "Virginia Tech": 0.44540327,
      "Wake Forest": 1.48617102,
      "Washington": 0.6096526,
-     "Washington State": -0.70648759,
+     "Washington State": -0.69992595,
      "Western Kentucky": -1.04169314,
-     "Western Michigan": -0.25846622,
+     "Western Michigan": -0.2676521,
      "West Virginia": -0.31505639,
-     "Wisconsin": 0.90581401,
-     "Wyoming": -1.40832438
+     "Wisconsin": 0.88581956,
+     "Wyoming": -1.28621768
     },
     "full_new_war_curvature": {
-     "Air Force": -0.74967666,
-     "Akron": -2.0568832,
-     "Alabama": 2.84056568,
+     "Air Force": -0.6192193,
+     "Akron": -2.19137632,
+     "Alabama": 2.4768748,
      "App State": -0.88593073,
      "Arizona": 0.95837873,
-     "Arizona State": -0.1436985,
-     "Arkansas": 0.30343982,
-     "Arkansas State": -1.11550419,
+     "Arizona State": -0.2298308,
+     "Arkansas": 0.50870483,
+     "Arkansas State": -0.97980205,
      "Army": 0.19066911,
-     "Auburn": 1.27715804,
+     "Auburn": 1.61505454,
      "Ball State": -2.05857535,
-     "Baylor": 1.06690429,
+     "Baylor": 0.73312508,
      "Boise State": 0.7567852,
      "Boston College": -0.29957369,
      "Bowling Green": -1.68058687,
      "Buffalo": -1.12568116,
-     "BYU": 1.16644788,
+     "BYU": 1.43358981,
      "California": -0.31819457,
-     "Central Michigan": -1.25794821,
+     "Central Michigan": -1.26284104,
      "Charlotte": -2.16255683,
      "Cincinnati": -0.2844927,
      "Clemson": 0.4228205,
@@ -24598,20 +24598,20 @@
      "Colorado": -0.32882766,
      "Colorado State": -1.57699759,
      "Delaware": -0.93884139,
-     "Duke": 0.46539215,
+     "Duke": 0.35531228,
      "East Carolina": -0.61884781,
-     "Eastern Michigan": -1.41875815,
+     "Eastern Michigan": -1.63312792,
      "Florida": 1.58524057,
      "Florida Atlantic": -0.86332109,
      "Florida International": -0.72919567,
-     "Florida State": 0.88860077,
+     "Florida State": 1.09254741,
      "Fresno State": -0.01009998,
-     "Georgia": 2.9938144,
+     "Georgia": 2.6559179,
      "Georgia Southern": -0.65859431,
      "Georgia State": -0.46277268,
-     "Georgia Tech": -0.00822541,
+     "Georgia Tech": -0.05438849,
      "Hawai'i": -1.37209293,
-     "Houston": 1.03859254,
+     "Houston": 0.93609771,
      "Illinois": -0.00148873,
      "Indiana": 1.99497834,
      "Iowa": 1.10688024,
@@ -24621,116 +24621,116 @@
      "Kansas": 0.46010876,
      "Kansas State": 0.38303389,
      "Kennesaw State": -1.00584341,
-     "Kent State": -2.09437374,
-     "Kentucky": 1.21388154,
+     "Kent State": -2.18811579,
+     "Kentucky": 1.46209857,
      "Liberty": 0.22536737,
-     "Louisiana": -0.55634677,
-     "Louisiana Tech": -0.50646098,
-     "Louisville": 1.16746424,
+     "Louisiana": -0.21213405,
+     "Louisiana Tech": -0.32054367,
+     "Louisville": 1.10073825,
      "LSU": 2.55021973,
      "Marshall": -1.2556712,
      "Maryland": -0.55154336,
      "Massachusetts": -1.77850429,
      "Memphis": 0.13909189,
-     "Miami": 2.81477016,
-     "Miami (OH)": -1.3033227,
-     "Michigan": 1.21202687,
+     "Miami": 2.61082353,
+     "Miami (OH)": -1.16882958,
+     "Michigan": 1.13830308,
      "Michigan State": -0.17424893,
      "Middle Tennessee": -1.44671745,
      "Minnesota": 0.11348705,
      "Mississippi State": 0.79670481,
-     "Missouri": 2.07833325,
+     "Missouri": 1.69912567,
      "Missouri State": -1.40969551,
-     "Navy": -0.74604287,
+     "Navy": -0.65530665,
      "NC State": -0.00151806,
      "Nebraska": 1.43337633,
-     "Nevada": -0.73939849,
+     "Nevada": -0.88521732,
      "New Mexico": 0.85082591,
      "New Mexico State": -1.19024956,
-     "North Carolina": 0.41345642,
-     "North Dakota State": -0.63690814,
-     "Northern Illinois": -2.00502075,
+     "North Carolina": 0.52353629,
+     "North Dakota State": -0.4910893,
+     "Northern Illinois": -2.1261533,
      "North Texas": -0.15397838,
      "Northwestern": 0.92378182,
-     "Notre Dame": 2.81681265,
+     "Notre Dame": 2.54967072,
      "Ohio": -0.75465173,
      "Ohio State": 2.9831827,
-     "Oklahoma": 1.78323028,
-     "Oklahoma State": 0.36635561,
+     "Oklahoma": 1.53501326,
+     "Oklahoma State": 0.46885043,
      "Old Dominion": -1.25398049,
-     "Ole Miss": 1.9997503,
+     "Ole Miss": 2.37895788,
      "Oregon": 1.8619678,
-     "Oregon State": 0.82032372,
-     "Penn State": 0.73046216,
+     "Oregon State": 0.79930317,
+     "Penn State": 0.80418595,
      "Pittsburgh": 0.32541139,
      "Purdue": 0.09732851,
-     "Rice": -1.24222353,
+     "Rice": -1.53896477,
      "Rutgers": -0.45083409,
      "Sacramento State": -3.01039189,
      "Sam Houston": -1.74262378,
      "San Diego State": -1.37363841,
-     "San Jos\u00e9 State": -1.04026048,
+     "San Jos\u00e9 State": -1.01416758,
      "SMU": 0.64694731,
      "South Alabama": -0.62548634,
      "South Carolina": 1.43037054,
-     "Southern Miss": -1.46187216,
-     "South Florida": -0.31704679,
+     "Southern Miss": -1.59757431,
+     "South Florida": -0.22330474,
      "Stanford": -1.38695087,
-     "Syracuse": -0.31286544,
-     "TCU": 0.21856985,
+     "Syracuse": -0.24613945,
+     "TCU": 0.55234906,
      "Temple": -1.13975586,
-     "Tennessee": 1.7284272,
+     "Tennessee": 2.09211808,
      "Texas": 2.17239594,
      "Texas A&M": 1.63876526,
      "Texas State": 0.02593504,
-     "Texas Tech": 1.80588625,
-     "Toledo": -0.63691588,
-     "Troy": -0.60809624,
+     "Texas Tech": 1.89201855,
+     "Toledo": -0.42254611,
+     "Troy": -0.95230896,
      "Tulane": -0.19252792,
-     "Tulsa": -0.89489014,
+     "Tulsa": -0.5981489,
      "UAB": -0.87476677,
      "UCF": 0.04991975,
-     "UCLA": 1.45278095,
+     "UCLA": 1.47221594,
      "UConn": -0.44717747,
-     "UL Monroe": -1.86296378,
-     "UNLV": -0.57512661,
+     "UL Monroe": -2.04888109,
+     "UNLV": -0.70558397,
      "USC": 1.15761755,
      "Utah": 1.79358775,
      "Utah State": -0.69666473,
-     "UTEP": -2.38752597,
-     "UTSA": -0.05444379,
-     "Vanderbilt": 0.40204492,
+     "UTEP": -2.41361887,
+     "UTSA": -0.14518001,
+     "Vanderbilt": 0.1967799,
      "Virginia": 0.20640552,
-     "Virginia Tech": 0.35996437,
+     "Virginia Tech": 0.40612745,
      "Wake Forest": 1.43158061,
      "Washington": 0.54911564,
-     "Washington State": -0.82732679,
+     "Washington State": -0.80630624,
      "Western Kentucky": -1.06270442,
-     "Western Michigan": -0.3528924,
+     "Western Michigan": -0.34799957,
      "West Virginia": -0.36701105,
-     "Wisconsin": 0.90913965,
-     "Wyoming": -1.35829594
+     "Wisconsin": 0.88970466,
+     "Wyoming": -1.23716339
     },
     "full_new_war_production": {
-     "Air Force": -0.69796862,
-     "Akron": -1.87505692,
-     "Alabama": 2.61792892,
+     "Air Force": -0.56343384,
+     "Akron": -2.02223096,
+     "Alabama": 2.26359725,
      "App State": -0.80850935,
      "Arizona": 1.02253469,
-     "Arizona State": -0.16079393,
-     "Arkansas": 0.19166367,
-     "Arkansas State": -1.03200584,
+     "Arizona State": -0.25964509,
+     "Arkansas": 0.39843274,
+     "Arkansas State": -0.87943402,
      "Army": 0.10698077,
-     "Auburn": 1.16837248,
+     "Auburn": 1.46988314,
      "Ball State": -2.0052934,
-     "Baylor": 1.05003249,
+     "Baylor": 0.7202816,
      "Boise State": 0.82380748,
      "Boston College": -0.26345063,
      "Bowling Green": -1.59223407,
      "Buffalo": -1.01178112,
-     "BYU": 1.20580757,
+     "BYU": 1.44019736,
      "California": -0.35391601,
-     "Central Michigan": -1.18270321,
+     "Central Michigan": -1.17629312,
      "Charlotte": -2.06861878,
      "Cincinnati": -0.22777166,
      "Clemson": 0.2293135,
@@ -24738,20 +24738,20 @@
      "Colorado": -0.28791159,
      "Colorado State": -1.50423211,
      "Delaware": -0.79527502,
-     "Duke": 0.51333015,
+     "Duke": 0.38888128,
      "East Carolina": -0.58765855,
-     "Eastern Michigan": -1.23838029,
+     "Eastern Michigan": -1.46338004,
      "Florida": 1.3355469,
      "Florida Atlantic": -0.84419261,
      "Florida International": -0.66385786,
-     "Florida State": 0.78588135,
+     "Florida State": 0.97281582,
      "Fresno State": 0.09332143,
-     "Georgia": 2.61480929,
+     "Georgia": 2.31329863,
      "Georgia Southern": -0.59193958,
      "Georgia State": -0.40478737,
-     "Georgia Tech": 0.0337447,
+     "Georgia Tech": -0.01753274,
      "Hawai'i": -1.28018821,
-     "Houston": 1.08717982,
+     "Houston": 0.97873059,
      "Illinois": -0.0136641,
      "Indiana": 1.85820055,
      "Iowa": 1.04219442,
@@ -24761,116 +24761,116 @@
      "Kansas": 0.44630862,
      "Kansas State": 0.40218782,
      "Kennesaw State": -1.04205874,
-     "Kent State": -1.97260974,
-     "Kentucky": 1.11797979,
+     "Kent State": -2.08176002,
+     "Kentucky": 1.33077806,
      "Liberty": 0.31929239,
-     "Louisiana": -0.40284276,
-     "Louisiana Tech": -0.43751936,
-     "Louisville": 1.07068266,
+     "Louisiana": -0.06569008,
+     "Louisiana Tech": -0.24297635,
+     "Louisville": 1.01822748,
      "LSU": 2.35741746,
      "Marshall": -1.12788713,
      "Maryland": -0.59679285,
      "Massachusetts": -1.58992807,
      "Memphis": 0.21370438,
-     "Miami": 2.579043,
-     "Miami (OH)": -1.20960062,
-     "Michigan": 1.03271553,
+     "Miami": 2.39210852,
+     "Miami (OH)": -1.06242658,
+     "Michigan": 0.9804941,
      "Michigan State": -0.17062294,
      "Middle Tennessee": -1.34774236,
      "Minnesota": 0.08629903,
      "Mississippi State": 0.70725705,
-     "Missouri": 1.92110522,
+     "Missouri": 1.53598773,
      "Missouri State": -1.4193674,
-     "Navy": -0.76231668,
+     "Navy": -0.66884581,
      "NC State": -0.01446295,
      "Nebraska": 1.36335726,
-     "Nevada": -0.66011402,
+     "Nevada": -0.78383218,
      "New Mexico": 0.88714645,
      "New Mexico State": -1.14928513,
-     "North Carolina": 0.36846303,
-     "North Dakota State": -0.41711071,
-     "Northern Illinois": -1.90774415,
+     "North Carolina": 0.4929119,
+     "North Dakota State": -0.29339255,
+     "Northern Illinois": -2.02526036,
      "North Texas": -0.12959994,
      "Northwestern": 0.92888315,
-     "Notre Dame": 2.63090797,
+     "Notre Dame": 2.39651819,
      "Ohio": -0.60757605,
      "Ohio State": 2.59955791,
-     "Oklahoma": 1.45596947,
-     "Oklahoma State": 0.3755936,
+     "Oklahoma": 1.2431712,
+     "Oklahoma State": 0.48404284,
      "Old Dominion": -1.2194841,
-     "Ole Miss": 1.80065084,
+     "Ole Miss": 2.18576833,
      "Oregon": 1.526253,
-     "Oregon State": 0.8650344,
-     "Penn State": 0.69234138,
+     "Oregon State": 0.85723799,
+     "Penn State": 0.74456282,
      "Pittsburgh": 0.32584289,
      "Purdue": 0.07561046,
-     "Rice": -1.16931065,
+     "Rice": -1.47060698,
      "Rutgers": -0.43689128,
      "Sacramento State": -2.75336384,
      "Sam Houston": -1.63484381,
      "San Diego State": -1.23463569,
-     "San Jos\u00e9 State": -0.89590408,
+     "San Jos\u00e9 State": -0.88596685,
      "SMU": 0.54455176,
      "South Alabama": -0.47059957,
      "South Carolina": 1.29747431,
-     "Southern Miss": -1.2693109,
-     "South Florida": -0.31671775,
+     "Southern Miss": -1.42188272,
+     "South Florida": -0.20756746,
      "Stanford": -1.36856193,
-     "Syracuse": -0.31117634,
-     "TCU": 0.22742721,
+     "Syracuse": -0.25872116,
+     "TCU": 0.5571781,
      "Temple": -1.10614642,
-     "Tennessee": 1.56512904,
+     "Tennessee": 1.91946072,
      "Texas": 1.792767,
      "Texas A&M": 1.35848344,
      "Texas State": 0.04885376,
-     "Texas Tech": 1.68494726,
-     "Toledo": -0.52802925,
-     "Troy": -0.49599276,
+     "Texas Tech": 1.78379843,
+     "Toledo": -0.30302949,
+     "Troy": -0.83314545,
      "Tulane": -0.11910047,
-     "Tulsa": -0.85401173,
+     "Tulsa": -0.55271539,
      "UAB": -0.74449697,
      "UCF": 0.08345006,
-     "UCLA": 1.35880524,
+     "UCLA": 1.38602477,
      "UConn": -0.38432689,
-     "UL Monroe": -1.73226019,
-     "UNLV": -0.49588604,
+     "UL Monroe": -1.92680321,
+     "UNLV": -0.63042083,
      "USC": 1.08578446,
      "Utah": 1.75938775,
      "Utah State": -0.58124716,
-     "UTEP": -2.35105481,
-     "UTSA": -0.05305858,
-     "Vanderbilt": 0.30133031,
+     "UTEP": -2.36099204,
+     "UTSA": -0.14652945,
+     "Vanderbilt": 0.09456124,
      "Virginia": 0.18607761,
-     "Virginia Tech": 0.36708375,
+     "Virginia Tech": 0.41836119,
      "Wake Forest": 1.42463201,
      "Washington": 0.53683213,
-     "Washington State": -0.6809664,
+     "Washington State": -0.67316999,
      "Western Kentucky": -1.00054408,
-     "Western Michigan": -0.20478598,
+     "Western Michigan": -0.21119607,
      "West Virginia": -0.29838624,
-     "Wisconsin": 0.86804047,
-     "Wyoming": -1.23964661
+     "Wisconsin": 0.84082094,
+     "Wyoming": -1.12213041
     },
     "full_new_war_curvature_production": {
-     "Air Force": -0.65280436,
-     "Akron": -1.96958834,
-     "Alabama": 2.69577414,
+     "Air Force": -0.52485938,
+     "Akron": -2.09808391,
+     "Alabama": 2.33311908,
      "App State": -0.78865662,
      "Arizona": 0.93588033,
-     "Arizona State": -0.18836872,
-     "Arkansas": 0.20122333,
-     "Arkansas State": -1.02361701,
+     "Arizona State": -0.29337146,
+     "Arkansas": 0.40108935,
+     "Arkansas State": -0.88680964,
      "Army": 0.20514704,
-     "Auburn": 1.14132089,
+     "Auburn": 1.47155048,
      "Ball State": -1.91976125,
-     "Baylor": 1.01169539,
+     "Baylor": 0.67991393,
      "Boise State": 0.76895433,
      "Boston College": -0.28323064,
      "Bowling Green": -1.53575081,
      "Buffalo": -0.97016898,
-     "BYU": 1.09625655,
+     "BYU": 1.3534592,
      "California": -0.330661,
-     "Central Michigan": -1.19269678,
+     "Central Michigan": -1.19976685,
      "Charlotte": -2.06558649,
      "Cincinnati": -0.27367001,
      "Clemson": 0.32263293,
@@ -24878,20 +24878,20 @@
      "Colorado": -0.38024144,
      "Colorado State": -1.51120451,
      "Delaware": -0.89377149,
-     "Duke": 0.44687761,
+     "Duke": 0.33307617,
      "East Carolina": -0.56790275,
-     "Eastern Michigan": -1.2809788,
+     "Eastern Michigan": -1.50247749,
      "Florida": 1.40735979,
      "Florida Atlantic": -0.81700687,
      "Florida International": -0.61213402,
-     "Florida State": 0.79473454,
+     "Florida State": 0.98300962,
      "Fresno State": 0.06410796,
-     "Georgia": 2.80058528,
+     "Georgia": 2.47035569,
      "Georgia Southern": -0.55674839,
      "Georgia State": -0.35022004,
-     "Georgia Tech": -0.04404203,
+     "Georgia Tech": -0.08747186,
      "Hawai'i": -1.28023818,
-     "Houston": 0.98691903,
+     "Houston": 0.88875657,
      "Illinois": -0.03733058,
      "Indiana": 1.84822356,
      "Iowa": 1.05143037,
@@ -24901,3419 +24901,3419 @@
      "Kansas": 0.39608246,
      "Kansas State": 0.34231675,
      "Kennesaw State": -0.90616745,
-     "Kent State": -1.97695411,
-     "Kentucky": 1.11545411,
+     "Kent State": -2.08156042,
+     "Kentucky": 1.35070734,
      "Liberty": 0.32856907,
-     "Louisiana": -0.47703621,
-     "Louisiana Tech": -0.47790492,
-     "Louisville": 1.04468906,
+     "Louisiana": -0.12885105,
+     "Louisiana Tech": -0.27766267,
+     "Louisville": 0.9968521,
      "LSU": 2.39312198,
      "Marshall": -1.19011029,
      "Maryland": -0.610275,
      "Massachusetts": -1.56451211,
      "Memphis": 0.19434364,
-     "Miami": 2.6013189,
-     "Miami (OH)": -1.17277848,
-     "Michigan": 1.10508084,
+     "Miami": 2.41304383,
+     "Miami (OH)": -1.04428292,
+     "Michigan": 1.03994166,
      "Michigan State": -0.18575662,
      "Middle Tennessee": -1.35073917,
      "Minnesota": 0.06139249,
      "Mississippi State": 0.72005529,
-     "Missouri": 1.93950446,
+     "Missouri": 1.55299572,
      "Missouri State": -1.34753657,
-     "Navy": -0.6871236,
+     "Navy": -0.60321263,
      "NC State": -0.05655066,
      "Nebraska": 1.36497437,
-     "Nevada": -0.61557111,
+     "Nevada": -0.75406212,
      "New Mexico": 0.90500285,
      "New Mexico State": -1.08926297,
-     "North Carolina": 0.37060503,
-     "North Dakota State": -0.46377325,
-     "Northern Illinois": -1.87945415,
+     "North Carolina": 0.48440647,
+     "North Dakota State": -0.32528224,
+     "Northern Illinois": -1.99569613,
      "North Texas": -0.10529534,
      "Northwestern": 0.88333742,
-     "Notre Dame": 2.67623082,
+     "Notre Dame": 2.41902817,
      "Ohio": -0.65147916,
      "Ohio State": 2.74144286,
-     "Oklahoma": 1.59929024,
-     "Oklahoma State": 0.34249192,
+     "Oklahoma": 1.36403701,
+     "Oklahoma State": 0.44065438,
      "Old Dominion": -1.14977619,
-     "Ole Miss": 1.81766333,
+     "Ole Miss": 2.20417207,
      "Oregon": 1.61503467,
-     "Oregon State": 0.85527687,
-     "Penn State": 0.67875611,
+     "Oregon State": 0.83336667,
+     "Penn State": 0.74389528,
      "Pittsburgh": 0.30851027,
      "Purdue": 0.06215548,
-     "Rice": -1.1640923,
+     "Rice": -1.46500464,
      "Rutgers": -0.4722851,
      "Sacramento State": -2.80633295,
      "Sam Houston": -1.65020947,
      "San Diego State": -1.33877437,
-     "San Jos\u00e9 State": -0.89219265,
+     "San Jos\u00e9 State": -0.8720986,
      "SMU": 0.55363426,
      "South Alabama": -0.54009102,
      "South Carolina": 1.33009173,
-     "Southern Miss": -1.36305153,
-     "South Florida": -0.27839959,
+     "Southern Miss": -1.4998589,
+     "South Florida": -0.17379327,
      "Stanford": -1.41157611,
-     "Syracuse": -0.30702995,
-     "TCU": 0.17721328,
+     "Syracuse": -0.25919299,
+     "TCU": 0.50899474,
      "Temple": -1.07456396,
-     "Tennessee": 1.59284115,
+     "Tennessee": 1.9554962,
      "Texas": 1.95388558,
      "Texas A&M": 1.43720468,
      "Texas State": 0.01552585,
-     "Texas Tech": 1.61888752,
-     "Toledo": -0.54412696,
-     "Troy": -0.50663257,
+     "Texas Tech": 1.72389026,
+     "Toledo": -0.32262827,
+     "Troy": -0.85481774,
      "Tulane": -0.14327076,
-     "Tulsa": -0.84223967,
+     "Tulsa": -0.54132733,
      "UAB": -0.79085916,
      "UCF": 0.03875774,
-     "UCLA": 1.37228807,
+     "UCLA": 1.39874001,
      "UConn": -0.3658711,
-     "UL Monroe": -1.7394852,
-     "UNLV": -0.49604396,
+     "UL Monroe": -1.93972745,
+     "UNLV": -0.62398894,
      "USC": 1.07419587,
      "Utah": 1.70084907,
      "Utah State": -0.65388328,
-     "UTEP": -2.2805711,
-     "UTSA": -0.03991839,
-     "Vanderbilt": 0.26500102,
+     "UTEP": -2.30066516,
+     "UTSA": -0.12382936,
+     "Vanderbilt": 0.06513501,
      "Virginia": 0.15475287,
-     "Virginia Tech": 0.34375228,
+     "Virginia Tech": 0.38718211,
      "Wake Forest": 1.3789269,
      "Washington": 0.48420491,
-     "Washington State": -0.80183966,
+     "Washington State": -0.77992946,
      "Western Kentucky": -1.02446695,
-     "Western Michigan": -0.3019657,
+     "Western Michigan": -0.29489564,
      "West Virginia": -0.34467152,
-     "Wisconsin": 0.87316044,
-     "Wyoming": -1.1975101
+     "Wisconsin": 0.8467085,
+     "Wyoming": -1.08126812
     }
    },
    "form": {
     "full_new_war": {
      "Akron": [
-      -1.11112417,
-      -1.78186923,
-      5
-     ],
-     "Alabama": [
-      1.98482856,
-      1.13928345,
+      -1.24869122,
+      -1.63618869,
       6
      ],
+     "Alabama": [
+      1.49001759,
+      1.06679907,
+      7
+     ],
      "Arkansas State": [
-      0.2820201,
-      -0.89570058,
-      5
+      -0.07464448,
+      -0.56821162,
+      6
      ],
      "Auburn": [
-      0.03284412,
-      1.0709593,
-      5
+      0.29523785,
+      0.9659212,
+      6
      ],
      "Ball State": [
-      -0.51663507,
-      -1.71967617,
+      -0.42989244,
+      -1.80849029,
       6
      ],
      "Baylor": [
-      0.76280031,
-      0.54397654,
-      4
+      0.59880445,
+      0.38852833,
+      5
      ],
      "Boise State": [
-      1.70987771,
-      -0.94033683,
+      1.78183394,
+      -0.95282846,
       5
      ],
      "Boston College": [
-      -0.81009133,
-      0.90922979,
+      -0.83560213,
+      0.95248442,
       5
      ],
      "California": [
-      -0.75918753,
-      -0.74145669,
+      -0.88818909,
+      -0.76565065,
       5
      ],
      "Central Michigan": [
-      -0.92406989,
-      -1.1169466,
-      5
+      -0.89559426,
+      -0.94788971,
+      6
      ],
      "Cincinnati": [
-      0.71304647,
-      -0.33221936,
+      0.80324174,
+      -0.34651662,
       5
      ],
      "Clemson": [
-      -0.81921971,
-      0.97136002,
+      -0.86043831,
+      0.98821329,
       5
      ],
      "Coastal Carolina": [
-      -0.18451114,
-      -0.47687546,
+      -0.18742892,
+      -0.4908012,
       6
      ],
      "Colorado": [
-      -1.54758994,
-      1.68877732,
+      -1.60343353,
+      1.6878862,
       4
      ],
      "Colorado State": [
-      1.27685163,
-      -1.74884278,
+      1.1199661,
+      -1.679981,
       5
      ],
      "Duke": [
-      -0.16268764,
-      0.87343445,
-      4
+      -0.17143337,
+      0.69835843,
+      5
      ],
      "East Carolina": [
-      -0.97941237,
-      0.10792189,
+      -1.0191905,
+      0.01246995,
       5
      ],
      "Eastern Michigan": [
-      -0.51636515,
-      -0.94203985,
-      6
+      -0.83239939,
+      -0.85633734,
+      7
      ],
      "Florida": [
-      0.92132399,
-      0.05989696,
+      0.86065662,
+      0.07064094,
       6
      ],
      "Florida Atlantic": [
-      -0.00157899,
-      -1.93645096,
+      0.03031206,
+      -1.90404755,
       5
      ],
      "Florida International": [
-      -1.00685723,
-      0.72462343,
+      -0.96778682,
+      0.73084272,
       5
      ],
      "Florida State": [
-      1.23435606,
-      -0.38482139,
-      5
+      1.14659708,
+      -0.39894321,
+      6
      ],
      "Fresno State": [
-      -0.25982668,
-      0.08618359,
+      -0.38464586,
+      0.26926219,
       6
      ],
      "Georgia Tech": [
-      0.66759189,
-      -1.1264821,
-      4
+      0.58981983,
+      -1.03480798,
+      5
      ],
      "Hawai'i": [
-      -1.10843082,
-      -1.2529567,
+      -1.2776432,
+      -1.17661759,
       6
      ],
      "Houston": [
-      1.63508401,
-      0.00501193,
-      5
+      1.65151325,
+      -0.21299678,
+      6
      ],
      "Illinois": [
-      1.14407029,
-      -1.37491938,
+      1.13672475,
+      -1.45457805,
       5
      ],
      "Indiana": [
-      1.70770749,
-      1.11858061,
+      1.75311784,
+      1.15393373,
       6
      ],
      "Iowa": [
-      0.39329084,
-      1.42813105,
+      0.42482706,
+      1.58762074,
       5
      ],
      "Jacksonville State": [
-      0.30638906,
-      -0.06885601,
+      0.27441211,
+      -0.0577755,
       6
      ],
      "James Madison": [
-      0.9774027,
-      0.06992691,
+      1.00763016,
+      0.07760169,
       6
      ],
      "Kent State": [
-      -1.48258181,
-      -1.17226497,
-      5
+      -1.64089854,
+      -0.92775109,
+      6
      ],
      "LSU": [
-      1.29064492,
-      2.62430747,
+      1.42400953,
+      2.72471577,
       6
      ],
      "Liberty": [
-      0.57286241,
-      0.41475989,
+      0.58284883,
+      0.44689922,
       5
      ],
      "Louisville": [
-      1.19690917,
-      0.39379944,
-      5
+      1.21123606,
+      0.47617876,
+      6
      ],
      "Marshall": [
-      -0.16699509,
-      -1.47839079,
+      -0.20114726,
+      -1.56430075,
       5
      ],
      "Massachusetts": [
-      -0.7488308,
-      -0.21879605,
+      -0.71966224,
+      -0.2607221,
       5
      ],
      "Memphis": [
-      0.62814268,
-      -0.32463642,
+      0.667781,
+      -0.33641119,
       6
      ],
      "Miami": [
-      1.65526365,
-      0.51690803,
-      4
+      1.48745698,
+      0.63653544,
+      5
      ],
      "Miami (OH)": [
-      -0.03716053,
-      -0.88760064,
-      5
+      -0.14466759,
+      -0.77076756,
+      6
      ],
      "Michigan": [
-      0.15928232,
-      0.80016935,
-      5
+      0.26883462,
+      1.11557025,
+      6
      ],
      "Michigan State": [
-      -0.10720503,
-      0.234223,
+      -0.17960263,
+      0.10659014,
       7
      ],
      "Mississippi State": [
-      1.10980699,
-      0.58622473,
+      1.1267484,
+      0.42263945,
       6
      ],
      "Missouri State": [
-      -2.01780893,
-      -1.14633571,
+      -2.08380633,
+      -1.16838772,
       5
      ],
      "NC State": [
-      -0.48938744,
-      -0.73156367,
+      -0.46394299,
+      -0.75622267,
       5
      ],
      "Nebraska": [
-      1.46904263,
-      0.98781734,
+      1.49441023,
+      1.03270483,
       5
      ],
      "Nevada": [
-      -0.04753058,
-      -0.81820053,
-      4
+      0.22467024,
+      -0.36547007,
+      5
      ],
      "New Mexico": [
-      0.60982273,
-      1.02361716,
+      0.66828613,
+      1.22103572,
       4
      ],
      "New Mexico State": [
-      -0.78801467,
-      -0.09019816,
+      -0.80668599,
+      -0.12637804,
       5
      ],
      "North Carolina": [
-      0.46125553,
-      0.52393343,
-      4
-     ],
-     "North Dakota State": [
-      0.20905878,
-      1.48918632,
+      0.43294347,
+      0.55349208,
       5
      ],
+     "North Dakota State": [
+      0.13212855,
+      1.57220822,
+      6
+     ],
      "North Texas": [
-      1.50655315,
-      -0.19893276,
+      1.4752714,
+      -0.12702547,
       5
      ],
      "Northern Illinois": [
-      -1.41600581,
-      -1.63095105,
-      4
+      -1.10161461,
+      -1.73934238,
+      5
      ],
      "Notre Dame": [
-      1.97888975,
-      2.13989145,
-      6
+      1.8566356,
+      2.00756395,
+      7
      ],
      "Ohio": [
-      -0.46957218,
-      -0.17932878,
+      -0.3670705,
+      -0.22166123,
       5
      ],
      "Ohio State": [
-      1.22485251,
-      1.53364009,
+      1.3168431,
+      1.54280972,
       7
      ],
      "Oklahoma": [
-      -0.38712864,
-      1.89594514,
-      5
+      -0.37598766,
+      1.9005512,
+      6
      ],
      "Oklahoma State": [
-      -0.074611,
-      -0.00743557,
-      4
-     ],
-     "Ole Miss": [
-      1.53071932,
-      -0.15543449,
+      0.11812746,
+      -0.07470583,
       5
      ],
+     "Ole Miss": [
+      1.79729003,
+      -0.01713888,
+      6
+     ],
      "Oregon": [
-      -0.39728246,
-      1.46694843,
+      -0.4792838,
+      1.57586011,
       4
      ],
      "Oregon State": [
-      0.67816394,
-      0.71915096,
-      5
-     ],
-     "Penn State": [
-      0.69395255,
-      1.00182333,
+      0.9321769,
+      0.24016678,
       6
      ],
+     "Penn State": [
+      0.56233382,
+      0.7820814,
+      7
+     ],
      "Pittsburgh": [
-      -0.10702986,
-      0.12780691,
+      -0.10909281,
+      0.13058303,
       6
      ],
      "Rutgers": [
-      0.27055103,
-      -0.92509478,
+      0.28555005,
+      -0.94690009,
       5
      ],
      "SMU": [
-      0.35335173,
-      -0.06575991,
+      0.39196826,
+      -0.11372831,
       5
      ],
      "Sacramento State": [
-      -1.64027481,
-      -1.31062521,
+      -1.71196163,
+      -1.39694192,
       5
      ],
      "Sam Houston": [
-      -1.83160575,
-      -0.65374879,
+      -1.82255561,
+      -0.67101582,
       5
      ],
      "San Jos\u00e9 State": [
-      -0.79105995,
-      0.40095796,
-      5
+      -0.70617664,
+      -0.06848088,
+      6
      ],
      "South Carolina": [
-      1.00221414,
-      -0.09352932,
+      1.09999713,
+      -0.3217254,
       5
      ],
      "South Florida": [
-      -0.92473455,
-      0.88295868,
-      5
+      -1.18837557,
+      1.09511882,
+      6
      ],
      "Stanford": [
-      -0.54684236,
-      -1.43823747,
+      -0.65364522,
+      -1.58203709,
       6
      ],
      "TCU": [
-      -0.5110598,
-      1.98516106,
-      4
+      -0.28642077,
+      1.87931554,
+      5
      ],
      "Texas": [
-      0.22203938,
-      2.25777093,
+      0.20300061,
+      2.34385612,
       6
      ],
      "Texas A&M": [
-      -0.23328536,
-      0.67192204,
+      -0.31390293,
+      0.65037655,
       6
      ],
      "Texas State": [
-      1.59269476,
-      -0.90861353,
+      1.56569603,
+      -0.91202166,
       5
      ],
      "Toledo": [
-      0.11001915,
-      -0.50633412,
-      5
+      0.11585635,
+      -0.29218551,
+      6
      ],
      "Troy": [
-      -0.01635835,
-      -1.28347957,
-      4
+      -0.10555669,
+      -1.082062,
+      5
      ],
      "Tulane": [
-      -0.8540573,
-      0.7123657,
+      -0.80769354,
+      0.65883056,
       6
      ],
      "Tulsa": [
-      -0.62513836,
-      0.09755376,
-      5
+      -0.56301156,
+      0.00143361,
+      6
      ],
      "UAB": [
-      -1.02306741,
-      0.28989338,
+      -1.0025448,
+      0.36078724,
       6
      ],
      "UCLA": [
-      0.11906824,
-      1.26102215,
-      5
-     ],
-     "UL Monroe": [
-      -1.92644223,
-      -1.51084816,
-      4
-     ],
-     "UNLV": [
-      -0.53850956,
-      0.40411706,
+      0.36631748,
+      1.45207846,
       6
      ],
+     "UL Monroe": [
+      -2.09174447,
+      -1.3271678,
+      5
+     ],
+     "UNLV": [
+      -0.35123997,
+      0.03835826,
+      7
+     ],
      "USC": [
-      1.91370258,
-      0.05220543,
+      1.94048212,
+      0.0553204,
       7
      ],
      "UTEP": [
-      -1.20135949,
-      -1.48587547,
-      5
+      -0.89360162,
+      -1.50596433,
+      6
      ],
      "Virginia": [
-      -0.48353224,
-      0.6451799,
+      -0.55379661,
+      0.6015029,
       6
      ],
      "Wake Forest": [
-      0.66850819,
-      0.7939797,
+      0.71200868,
+      0.77392777,
       6
      ],
      "Washington": [
-      0.04684374,
-      -0.19724894,
+      0.00610745,
+      -0.08956228,
       6
      ],
      "Washington State": [
-      -2.34879199,
-      0.29136221,
-      5
+      -1.7020746,
+      0.12979892,
+      6
      ],
      "West Virginia": [
-      0.52285419,
-      -1.32602353,
+      0.48400753,
+      -1.32233462,
       6
      ],
      "Western Kentucky": [
-      -1.44749437,
-      -1.45709616,
+      -1.48883214,
+      -1.53567979,
       6
      ],
      "Western Michigan": [
-      -0.69086202,
-      -0.45027398,
-      5
+      -0.67129768,
+      -0.45581734,
+      6
      ],
      "Wisconsin": [
-      1.09756983,
-      2.46975772,
-      4
-     ],
-     "Wyoming": [
-      -1.12774665,
-      -0.4189403,
+      0.81191696,
+      2.02319529,
       5
      ],
+     "Wyoming": [
+      -0.9789496,
+      -0.55685688,
+      6
+     ],
      "Air Force": [
-      -0.78585098,
-      0.25952571,
-      4
+      -0.44021803,
+      0.25121531,
+      5
      ],
      "App State": [
-      -0.8389136,
-      -0.58842454,
+      -0.86255629,
+      -0.58848578,
       5
      ],
      "Arizona": [
-      0.89841249,
-      -0.01471435,
+      0.8309041,
+      0.19659134,
       5
      ],
      "Arizona State": [
-      -0.48366857,
-      -0.57249085,
-      4
-     ],
-     "Arkansas": [
-      -0.28016746,
-      -0.04846275,
+      -0.71674573,
+      -0.68145505,
       5
      ],
+     "Arkansas": [
+      -0.19761624,
+      -0.08231948,
+      6
+     ],
      "Army": [
-      0.26623661,
-      -1.56973585,
+      0.42018074,
+      -1.60186722,
       5
      ],
      "BYU": [
-      1.37341068,
-      1.376942,
-      4
+      1.61374293,
+      1.45371149,
+      5
      ],
      "Bowling Green": [
-      -1.36287891,
-      -1.04343085,
+      -1.3087807,
+      -1.08071652,
       6
      ],
      "Buffalo": [
-      -0.80518602,
-      -0.07311061,
+      -0.80196356,
+      -0.09552247,
       5
      ],
      "Charlotte": [
-      -1.8881084,
-      -0.77707374,
+      -1.88416861,
+      -0.77057441,
       6
      ],
      "Delaware": [
-      -0.87896836,
-      -0.7204896,
+      -0.91079221,
+      -0.73803126,
       5
      ],
      "Georgia": [
-      1.83566091,
-      0.48204416,
-      5
+      1.77834271,
+      0.3504099,
+      6
      ],
      "Georgia Southern": [
-      0.23787911,
-      0.31939876,
+      0.21462189,
+      0.34109082,
       6
      ],
      "Georgia State": [
-      0.9348528,
-      -0.40271542,
+      0.97178612,
+      -0.30756815,
       5
      ],
      "Iowa State": [
-      0.18064272,
-      0.51867663,
+      0.1592,
+      0.51869218,
       5
      ],
      "Kansas": [
-      0.35245048,
-      1.13038309,
+      0.26096026,
+      1.07489727,
       5
      ],
      "Kansas State": [
-      0.75443066,
-      -0.242759,
+      0.66399567,
+      -0.09911969,
       5
      ],
      "Kennesaw State": [
-      -0.72018105,
-      -0.44648705,
+      -0.57307459,
+      -0.53048727,
       5
      ],
      "Kentucky": [
-      0.5958778,
-      1.00117817,
-      5
+      0.6581887,
+      0.76653345,
+      6
      ],
      "Louisiana": [
-      -0.3046273,
-      1.24058098,
-      5
+      -0.23018935,
+      1.41916698,
+      6
      ],
      "Louisiana Tech": [
-      -0.12012735,
-      -0.13857094,
-      4
+      -0.38272301,
+      -0.0480176,
+      5
      ],
      "Maryland": [
-      -0.49434393,
-      0.22860601,
+      -0.50962888,
+      0.24886632,
       6
      ],
      "Middle Tennessee": [
-      -0.97423798,
-      -0.46295599,
+      -0.98203344,
+      -0.50161169,
       5
      ],
      "Minnesota": [
-      -1.37975933,
-      0.28950435,
+      -1.38474702,
+      0.3070977,
       5
      ],
      "Missouri": [
-      0.67131445,
-      1.10860498,
-      5
+      0.38731246,
+      0.848769,
+      6
      ],
      "Navy": [
-      -0.04540481,
-      -0.42052932,
-      4
+      0.49990064,
+      -0.45659745,
+      5
      ],
      "Old Dominion": [
-      -1.62304806,
-      0.88191195,
+      -1.66185631,
+      0.91898245,
       6
      ],
      "Purdue": [
-      0.96371114,
-      -1.06800127,
+      0.94146442,
+      -1.14165909,
       6
      ],
      "Rice": [
-      -1.29263228,
-      -0.82698246,
-      5
+      -1.33726941,
+      -0.99121846,
+      6
      ],
      "San Diego State": [
-      -1.78648004,
-      0.44650221,
+      -1.85113269,
+      0.48045492,
       5
      ],
      "South Alabama": [
-      0.92103634,
-      -2.40512228,
+      1.10667352,
+      -2.57848685,
       5
      ],
      "Southern Miss": [
-      -0.652328,
-      -1.2067801,
-      4
+      -1.08532127,
+      -0.68874364,
+      5
      ],
      "Syracuse": [
-      -0.22896494,
-      -0.08800784,
-      4
+      -0.44160785,
+      -0.10843923,
+      5
      ],
      "Temple": [
-      0.33856976,
-      -0.78438328,
+      0.40818609,
+      -0.84708834,
       6
      ],
      "Tennessee": [
-      0.40250746,
-      1.24596874,
-      5
+      0.34498001,
+      1.881863,
+      6
      ],
      "Texas Tech": [
-      0.79563167,
-      0.11156583,
-      4
+      0.74306895,
+      0.15347793,
+      5
      ],
      "UCF": [
-      -0.16168782,
-      0.85757474,
+      -0.28643501,
+      0.97464205,
       5
      ],
      "UConn": [
-      0.10940628,
-      -0.35845923,
+      0.22379082,
+      -0.45971596,
       5
      ],
      "UTSA": [
-      -0.20893124,
-      0.26422907,
-      5
+      -0.02538924,
+      -0.06341254,
+      6
      ],
      "Utah": [
-      2.32879047,
-      0.70301013,
+      2.40193836,
+      0.77679888,
       4
      ],
      "Utah State": [
-      -1.06122518,
-      0.53279904,
+      -1.0962283,
+      0.60413464,
       5
      ],
      "Vanderbilt": [
-      -0.0811193,
-      -0.207536,
-      5
+      -0.14222988,
+      -0.33910748,
+      6
      ],
      "Virginia Tech": [
-      0.6227049,
-      -1.36289391,
-      5
+      0.5620874,
+      -1.25450739,
+      6
      ],
      "Northwestern": [
-      1.43814406,
-      0.2497022,
+      1.4375865,
+      0.21413692,
       5
      ]
     },
     "full_new_war_curvature": {
      "Akron": [
-      -1.11112417,
-      -1.78186923,
-      5
-     ],
-     "Alabama": [
-      1.98482856,
-      1.13928345,
+      -1.24869122,
+      -1.63618869,
       6
      ],
+     "Alabama": [
+      1.49001759,
+      1.06679907,
+      7
+     ],
      "Arkansas State": [
-      0.2820201,
-      -0.89570058,
-      5
+      -0.07464448,
+      -0.56821162,
+      6
      ],
      "Auburn": [
-      0.03284412,
-      1.0709593,
-      5
+      0.29523785,
+      0.9659212,
+      6
      ],
      "Ball State": [
-      -0.51663507,
-      -1.71967617,
+      -0.42989244,
+      -1.80849029,
       6
      ],
      "Baylor": [
-      0.76280031,
-      0.54397654,
-      4
+      0.59880445,
+      0.38852833,
+      5
      ],
      "Boise State": [
-      1.70987771,
-      -0.94033683,
+      1.78183394,
+      -0.95282846,
       5
      ],
      "Boston College": [
-      -0.81009133,
-      0.90922979,
+      -0.83560213,
+      0.95248442,
       5
      ],
      "California": [
-      -0.75918753,
-      -0.74145669,
+      -0.88818909,
+      -0.76565065,
       5
      ],
      "Central Michigan": [
-      -0.92406989,
-      -1.1169466,
-      5
+      -0.89559426,
+      -0.94788971,
+      6
      ],
      "Cincinnati": [
-      0.71304647,
-      -0.33221936,
+      0.80324174,
+      -0.34651662,
       5
      ],
      "Clemson": [
-      -0.81921971,
-      0.97136002,
+      -0.86043831,
+      0.98821329,
       5
      ],
      "Coastal Carolina": [
-      -0.18451114,
-      -0.47687546,
+      -0.18742892,
+      -0.4908012,
       6
      ],
      "Colorado": [
-      -1.54758994,
-      1.68877732,
+      -1.60343353,
+      1.6878862,
       4
      ],
      "Colorado State": [
-      1.27685163,
-      -1.74884278,
+      1.1199661,
+      -1.679981,
       5
      ],
      "Duke": [
-      -0.16268764,
-      0.87343445,
-      4
+      -0.17143337,
+      0.69835843,
+      5
      ],
      "East Carolina": [
-      -0.97941237,
-      0.10792189,
+      -1.0191905,
+      0.01246995,
       5
      ],
      "Eastern Michigan": [
-      -0.51636515,
-      -0.94203985,
-      6
+      -0.83239939,
+      -0.85633734,
+      7
      ],
      "Florida": [
-      0.92132399,
-      0.05989696,
+      0.86065662,
+      0.07064094,
       6
      ],
      "Florida Atlantic": [
-      -0.00157899,
-      -1.93645096,
+      0.03031206,
+      -1.90404755,
       5
      ],
      "Florida International": [
-      -1.00685723,
-      0.72462343,
+      -0.96778682,
+      0.73084272,
       5
      ],
      "Florida State": [
-      1.23435606,
-      -0.38482139,
-      5
+      1.14659708,
+      -0.39894321,
+      6
      ],
      "Fresno State": [
-      -0.25982668,
-      0.08618359,
+      -0.38464586,
+      0.26926219,
       6
      ],
      "Georgia Tech": [
-      0.66759189,
-      -1.1264821,
-      4
+      0.58981983,
+      -1.03480798,
+      5
      ],
      "Hawai'i": [
-      -1.10843082,
-      -1.2529567,
+      -1.2776432,
+      -1.17661759,
       6
      ],
      "Houston": [
-      1.63508401,
-      0.00501193,
-      5
+      1.65151325,
+      -0.21299678,
+      6
      ],
      "Illinois": [
-      1.14407029,
-      -1.37491938,
+      1.13672475,
+      -1.45457805,
       5
      ],
      "Indiana": [
-      1.70770749,
-      1.11858061,
+      1.75311784,
+      1.15393373,
       6
      ],
      "Iowa": [
-      0.39329084,
-      1.42813105,
+      0.42482706,
+      1.58762074,
       5
      ],
      "Jacksonville State": [
-      0.30638906,
-      -0.06885601,
+      0.27441211,
+      -0.0577755,
       6
      ],
      "James Madison": [
-      0.9774027,
-      0.06992691,
+      1.00763016,
+      0.07760169,
       6
      ],
      "Kent State": [
-      -1.48258181,
-      -1.17226497,
-      5
+      -1.64089854,
+      -0.92775109,
+      6
      ],
      "LSU": [
-      1.29064492,
-      2.62430747,
+      1.42400953,
+      2.72471577,
       6
      ],
      "Liberty": [
-      0.57286241,
-      0.41475989,
+      0.58284883,
+      0.44689922,
       5
      ],
      "Louisville": [
-      1.19690917,
-      0.39379944,
-      5
+      1.21123606,
+      0.47617876,
+      6
      ],
      "Marshall": [
-      -0.16699509,
-      -1.47839079,
+      -0.20114726,
+      -1.56430075,
       5
      ],
      "Massachusetts": [
-      -0.7488308,
-      -0.21879605,
+      -0.71966224,
+      -0.2607221,
       5
      ],
      "Memphis": [
-      0.62814268,
-      -0.32463642,
+      0.667781,
+      -0.33641119,
       6
      ],
      "Miami": [
-      1.65526365,
-      0.51690803,
-      4
+      1.48745698,
+      0.63653544,
+      5
      ],
      "Miami (OH)": [
-      -0.03716053,
-      -0.88760064,
-      5
+      -0.14466759,
+      -0.77076756,
+      6
      ],
      "Michigan": [
-      0.15928232,
-      0.80016935,
-      5
+      0.26883462,
+      1.11557025,
+      6
      ],
      "Michigan State": [
-      -0.10720503,
-      0.234223,
+      -0.17960263,
+      0.10659014,
       7
      ],
      "Mississippi State": [
-      1.10980699,
-      0.58622473,
+      1.1267484,
+      0.42263945,
       6
      ],
      "Missouri State": [
-      -2.01780893,
-      -1.14633571,
+      -2.08380633,
+      -1.16838772,
       5
      ],
      "NC State": [
-      -0.48938744,
-      -0.73156367,
+      -0.46394299,
+      -0.75622267,
       5
      ],
      "Nebraska": [
-      1.46904263,
-      0.98781734,
+      1.49441023,
+      1.03270483,
       5
      ],
      "Nevada": [
-      -0.04753058,
-      -0.81820053,
-      4
+      0.22467024,
+      -0.36547007,
+      5
      ],
      "New Mexico": [
-      0.60982273,
-      1.02361716,
+      0.66828613,
+      1.22103572,
       4
      ],
      "New Mexico State": [
-      -0.78801467,
-      -0.09019816,
+      -0.80668599,
+      -0.12637804,
       5
      ],
      "North Carolina": [
-      0.46125553,
-      0.52393343,
-      4
-     ],
-     "North Dakota State": [
-      0.20905878,
-      1.48918632,
+      0.43294347,
+      0.55349208,
       5
      ],
+     "North Dakota State": [
+      0.13212855,
+      1.57220822,
+      6
+     ],
      "North Texas": [
-      1.50655315,
-      -0.19893276,
+      1.4752714,
+      -0.12702547,
       5
      ],
      "Northern Illinois": [
-      -1.41600581,
-      -1.63095105,
-      4
+      -1.10161461,
+      -1.73934238,
+      5
      ],
      "Notre Dame": [
-      1.97888975,
-      2.13989145,
-      6
+      1.8566356,
+      2.00756395,
+      7
      ],
      "Ohio": [
-      -0.46957218,
-      -0.17932878,
+      -0.3670705,
+      -0.22166123,
       5
      ],
      "Ohio State": [
-      1.22485251,
-      1.53364009,
+      1.3168431,
+      1.54280972,
       7
      ],
      "Oklahoma": [
-      -0.38712864,
-      1.89594514,
-      5
+      -0.37598766,
+      1.9005512,
+      6
      ],
      "Oklahoma State": [
-      -0.074611,
-      -0.00743557,
-      4
-     ],
-     "Ole Miss": [
-      1.53071932,
-      -0.15543449,
+      0.11812746,
+      -0.07470583,
       5
      ],
+     "Ole Miss": [
+      1.79729003,
+      -0.01713888,
+      6
+     ],
      "Oregon": [
-      -0.39728246,
-      1.46694843,
+      -0.4792838,
+      1.57586011,
       4
      ],
      "Oregon State": [
-      0.67816394,
-      0.71915096,
-      5
-     ],
-     "Penn State": [
-      0.69395255,
-      1.00182333,
+      0.9321769,
+      0.24016678,
       6
      ],
+     "Penn State": [
+      0.56233382,
+      0.7820814,
+      7
+     ],
      "Pittsburgh": [
-      -0.10702986,
-      0.12780691,
+      -0.10909281,
+      0.13058303,
       6
      ],
      "Rutgers": [
-      0.27055103,
-      -0.92509478,
+      0.28555005,
+      -0.94690009,
       5
      ],
      "SMU": [
-      0.35335173,
-      -0.06575991,
+      0.39196826,
+      -0.11372831,
       5
      ],
      "Sacramento State": [
-      -1.64027481,
-      -1.31062521,
+      -1.71196163,
+      -1.39694192,
       5
      ],
      "Sam Houston": [
-      -1.83160575,
-      -0.65374879,
+      -1.82255561,
+      -0.67101582,
       5
      ],
      "San Jos\u00e9 State": [
-      -0.79105995,
-      0.40095796,
-      5
+      -0.70617664,
+      -0.06848088,
+      6
      ],
      "South Carolina": [
-      1.00221414,
-      -0.09352932,
+      1.09999713,
+      -0.3217254,
       5
      ],
      "South Florida": [
-      -0.92473455,
-      0.88295868,
-      5
+      -1.18837557,
+      1.09511882,
+      6
      ],
      "Stanford": [
-      -0.54684236,
-      -1.43823747,
+      -0.65364522,
+      -1.58203709,
       6
      ],
      "TCU": [
-      -0.5110598,
-      1.98516106,
-      4
+      -0.28642077,
+      1.87931554,
+      5
      ],
      "Texas": [
-      0.22203938,
-      2.25777093,
+      0.20300061,
+      2.34385612,
       6
      ],
      "Texas A&M": [
-      -0.23328536,
-      0.67192204,
+      -0.31390293,
+      0.65037655,
       6
      ],
      "Texas State": [
-      1.59269476,
-      -0.90861353,
+      1.56569603,
+      -0.91202166,
       5
      ],
      "Toledo": [
-      0.11001915,
-      -0.50633412,
-      5
+      0.11585635,
+      -0.29218551,
+      6
      ],
      "Troy": [
-      -0.01635835,
-      -1.28347957,
-      4
+      -0.10555669,
+      -1.082062,
+      5
      ],
      "Tulane": [
-      -0.8540573,
-      0.7123657,
+      -0.80769354,
+      0.65883056,
       6
      ],
      "Tulsa": [
-      -0.62513836,
-      0.09755376,
-      5
+      -0.56301156,
+      0.00143361,
+      6
      ],
      "UAB": [
-      -1.02306741,
-      0.28989338,
+      -1.0025448,
+      0.36078724,
       6
      ],
      "UCLA": [
-      0.11906824,
-      1.26102215,
-      5
-     ],
-     "UL Monroe": [
-      -1.92644223,
-      -1.51084816,
-      4
-     ],
-     "UNLV": [
-      -0.53850956,
-      0.40411706,
+      0.36631748,
+      1.45207846,
       6
      ],
+     "UL Monroe": [
+      -2.09174447,
+      -1.3271678,
+      5
+     ],
+     "UNLV": [
+      -0.35123997,
+      0.03835826,
+      7
+     ],
      "USC": [
-      1.91370258,
-      0.05220543,
+      1.94048212,
+      0.0553204,
       7
      ],
      "UTEP": [
-      -1.20135949,
-      -1.48587547,
-      5
+      -0.89360162,
+      -1.50596433,
+      6
      ],
      "Virginia": [
-      -0.48353224,
-      0.6451799,
+      -0.55379661,
+      0.6015029,
       6
      ],
      "Wake Forest": [
-      0.66850819,
-      0.7939797,
+      0.71200868,
+      0.77392777,
       6
      ],
      "Washington": [
-      0.04684374,
-      -0.19724894,
+      0.00610745,
+      -0.08956228,
       6
      ],
      "Washington State": [
-      -2.34879199,
-      0.29136221,
-      5
+      -1.7020746,
+      0.12979892,
+      6
      ],
      "West Virginia": [
-      0.52285419,
-      -1.32602353,
+      0.48400753,
+      -1.32233462,
       6
      ],
      "Western Kentucky": [
-      -1.44749437,
-      -1.45709616,
+      -1.48883214,
+      -1.53567979,
       6
      ],
      "Western Michigan": [
-      -0.69086202,
-      -0.45027398,
-      5
+      -0.67129768,
+      -0.45581734,
+      6
      ],
      "Wisconsin": [
-      1.09756983,
-      2.46975772,
-      4
-     ],
-     "Wyoming": [
-      -1.12774665,
-      -0.4189403,
+      0.81191696,
+      2.02319529,
       5
      ],
+     "Wyoming": [
+      -0.9789496,
+      -0.55685688,
+      6
+     ],
      "Air Force": [
-      -0.78585098,
-      0.25952571,
-      4
+      -0.44021803,
+      0.25121531,
+      5
      ],
      "App State": [
-      -0.8389136,
-      -0.58842454,
+      -0.86255629,
+      -0.58848578,
       5
      ],
      "Arizona": [
-      0.89841249,
-      -0.01471435,
+      0.8309041,
+      0.19659134,
       5
      ],
      "Arizona State": [
-      -0.48366857,
-      -0.57249085,
-      4
-     ],
-     "Arkansas": [
-      -0.28016746,
-      -0.04846275,
+      -0.71674573,
+      -0.68145505,
       5
      ],
+     "Arkansas": [
+      -0.19761624,
+      -0.08231948,
+      6
+     ],
      "Army": [
-      0.26623661,
-      -1.56973585,
+      0.42018074,
+      -1.60186722,
       5
      ],
      "BYU": [
-      1.37341068,
-      1.376942,
-      4
+      1.61374293,
+      1.45371149,
+      5
      ],
      "Bowling Green": [
-      -1.36287891,
-      -1.04343085,
+      -1.3087807,
+      -1.08071652,
       6
      ],
      "Buffalo": [
-      -0.80518602,
-      -0.07311061,
+      -0.80196356,
+      -0.09552247,
       5
      ],
      "Charlotte": [
-      -1.8881084,
-      -0.77707374,
+      -1.88416861,
+      -0.77057441,
       6
      ],
      "Delaware": [
-      -0.87896836,
-      -0.7204896,
+      -0.91079221,
+      -0.73803126,
       5
      ],
      "Georgia": [
-      1.83566091,
-      0.48204416,
-      5
+      1.77834271,
+      0.3504099,
+      6
      ],
      "Georgia Southern": [
-      0.23787911,
-      0.31939876,
+      0.21462189,
+      0.34109082,
       6
      ],
      "Georgia State": [
-      0.9348528,
-      -0.40271542,
+      0.97178612,
+      -0.30756815,
       5
      ],
      "Iowa State": [
-      0.18064272,
-      0.51867663,
+      0.1592,
+      0.51869218,
       5
      ],
      "Kansas": [
-      0.35245048,
-      1.13038309,
+      0.26096026,
+      1.07489727,
       5
      ],
      "Kansas State": [
-      0.75443066,
-      -0.242759,
+      0.66399567,
+      -0.09911969,
       5
      ],
      "Kennesaw State": [
-      -0.72018105,
-      -0.44648705,
+      -0.57307459,
+      -0.53048727,
       5
      ],
      "Kentucky": [
-      0.5958778,
-      1.00117817,
-      5
+      0.6581887,
+      0.76653345,
+      6
      ],
      "Louisiana": [
-      -0.3046273,
-      1.24058098,
-      5
+      -0.23018935,
+      1.41916698,
+      6
      ],
      "Louisiana Tech": [
-      -0.12012735,
-      -0.13857094,
-      4
+      -0.38272301,
+      -0.0480176,
+      5
      ],
      "Maryland": [
-      -0.49434393,
-      0.22860601,
+      -0.50962888,
+      0.24886632,
       6
      ],
      "Middle Tennessee": [
-      -0.97423798,
-      -0.46295599,
+      -0.98203344,
+      -0.50161169,
       5
      ],
      "Minnesota": [
-      -1.37975933,
-      0.28950435,
+      -1.38474702,
+      0.3070977,
       5
      ],
      "Missouri": [
-      0.67131445,
-      1.10860498,
-      5
+      0.38731246,
+      0.848769,
+      6
      ],
      "Navy": [
-      -0.04540481,
-      -0.42052932,
-      4
+      0.49990064,
+      -0.45659745,
+      5
      ],
      "Old Dominion": [
-      -1.62304806,
-      0.88191195,
+      -1.66185631,
+      0.91898245,
       6
      ],
      "Purdue": [
-      0.96371114,
-      -1.06800127,
+      0.94146442,
+      -1.14165909,
       6
      ],
      "Rice": [
-      -1.29263228,
-      -0.82698246,
-      5
+      -1.33726941,
+      -0.99121846,
+      6
      ],
      "San Diego State": [
-      -1.78648004,
-      0.44650221,
+      -1.85113269,
+      0.48045492,
       5
      ],
      "South Alabama": [
-      0.92103634,
-      -2.40512228,
+      1.10667352,
+      -2.57848685,
       5
      ],
      "Southern Miss": [
-      -0.652328,
-      -1.2067801,
-      4
+      -1.08532127,
+      -0.68874364,
+      5
      ],
      "Syracuse": [
-      -0.22896494,
-      -0.08800784,
-      4
+      -0.44160785,
+      -0.10843923,
+      5
      ],
      "Temple": [
-      0.33856976,
-      -0.78438328,
+      0.40818609,
+      -0.84708834,
       6
      ],
      "Tennessee": [
-      0.40250746,
-      1.24596874,
-      5
+      0.34498001,
+      1.881863,
+      6
      ],
      "Texas Tech": [
-      0.79563167,
-      0.11156583,
-      4
+      0.74306895,
+      0.15347793,
+      5
      ],
      "UCF": [
-      -0.16168782,
-      0.85757474,
+      -0.28643501,
+      0.97464205,
       5
      ],
      "UConn": [
-      0.10940628,
-      -0.35845923,
+      0.22379082,
+      -0.45971596,
       5
      ],
      "UTSA": [
-      -0.20893124,
-      0.26422907,
-      5
+      -0.02538924,
+      -0.06341254,
+      6
      ],
      "Utah": [
-      2.32879047,
-      0.70301013,
+      2.40193836,
+      0.77679888,
       4
      ],
      "Utah State": [
-      -1.06122518,
-      0.53279904,
+      -1.0962283,
+      0.60413464,
       5
      ],
      "Vanderbilt": [
-      -0.0811193,
-      -0.207536,
-      5
+      -0.14222988,
+      -0.33910748,
+      6
      ],
      "Virginia Tech": [
-      0.6227049,
-      -1.36289391,
-      5
+      0.5620874,
+      -1.25450739,
+      6
      ],
      "Northwestern": [
-      1.43814406,
-      0.2497022,
+      1.4375865,
+      0.21413692,
       5
      ]
     },
     "full_new_war_production": {
      "Akron": [
-      -1.11112417,
-      -1.78186923,
-      5
-     ],
-     "Alabama": [
-      1.98482856,
-      1.13928345,
+      -1.24869122,
+      -1.63618869,
       6
      ],
+     "Alabama": [
+      1.49001759,
+      1.06679907,
+      7
+     ],
      "Arkansas State": [
-      0.2820201,
-      -0.89570058,
-      5
+      -0.07464448,
+      -0.56821162,
+      6
      ],
      "Auburn": [
-      0.03284412,
-      1.0709593,
-      5
+      0.29523785,
+      0.9659212,
+      6
      ],
      "Ball State": [
-      -0.51663507,
-      -1.71967617,
+      -0.42989244,
+      -1.80849029,
       6
      ],
      "Baylor": [
-      0.76280031,
-      0.54397654,
-      4
+      0.59880445,
+      0.38852833,
+      5
      ],
      "Boise State": [
-      1.70987771,
-      -0.94033683,
+      1.78183394,
+      -0.95282846,
       5
      ],
      "Boston College": [
-      -0.81009133,
-      0.90922979,
+      -0.83560213,
+      0.95248442,
       5
      ],
      "California": [
-      -0.75918753,
-      -0.74145669,
+      -0.88818909,
+      -0.76565065,
       5
      ],
      "Central Michigan": [
-      -0.92406989,
-      -1.1169466,
-      5
+      -0.89559426,
+      -0.94788971,
+      6
      ],
      "Cincinnati": [
-      0.71304647,
-      -0.33221936,
+      0.80324174,
+      -0.34651662,
       5
      ],
      "Clemson": [
-      -0.81921971,
-      0.97136002,
+      -0.86043831,
+      0.98821329,
       5
      ],
      "Coastal Carolina": [
-      -0.18451114,
-      -0.47687546,
+      -0.18742892,
+      -0.4908012,
       6
      ],
      "Colorado": [
-      -1.54758994,
-      1.68877732,
+      -1.60343353,
+      1.6878862,
       4
      ],
      "Colorado State": [
-      1.27685163,
-      -1.74884278,
+      1.1199661,
+      -1.679981,
       5
      ],
      "Duke": [
-      -0.16268764,
-      0.87343445,
-      4
+      -0.17143337,
+      0.69835843,
+      5
      ],
      "East Carolina": [
-      -0.97941237,
-      0.10792189,
+      -1.0191905,
+      0.01246995,
       5
      ],
      "Eastern Michigan": [
-      -0.51636515,
-      -0.94203985,
-      6
+      -0.83239939,
+      -0.85633734,
+      7
      ],
      "Florida": [
-      0.92132399,
-      0.05989696,
+      0.86065662,
+      0.07064094,
       6
      ],
      "Florida Atlantic": [
-      -0.00157899,
-      -1.93645096,
+      0.03031206,
+      -1.90404755,
       5
      ],
      "Florida International": [
-      -1.00685723,
-      0.72462343,
+      -0.96778682,
+      0.73084272,
       5
      ],
      "Florida State": [
-      1.23435606,
-      -0.38482139,
-      5
+      1.14659708,
+      -0.39894321,
+      6
      ],
      "Fresno State": [
-      -0.25982668,
-      0.08618359,
+      -0.38464586,
+      0.26926219,
       6
      ],
      "Georgia Tech": [
-      0.66759189,
-      -1.1264821,
-      4
+      0.58981983,
+      -1.03480798,
+      5
      ],
      "Hawai'i": [
-      -1.10843082,
-      -1.2529567,
+      -1.2776432,
+      -1.17661759,
       6
      ],
      "Houston": [
-      1.63508401,
-      0.00501193,
-      5
+      1.65151325,
+      -0.21299678,
+      6
      ],
      "Illinois": [
-      1.14407029,
-      -1.37491938,
+      1.13672475,
+      -1.45457805,
       5
      ],
      "Indiana": [
-      1.70770749,
-      1.11858061,
+      1.75311784,
+      1.15393373,
       6
      ],
      "Iowa": [
-      0.39329084,
-      1.42813105,
+      0.42482706,
+      1.58762074,
       5
      ],
      "Jacksonville State": [
-      0.30638906,
-      -0.06885601,
+      0.27441211,
+      -0.0577755,
       6
      ],
      "James Madison": [
-      0.9774027,
-      0.06992691,
+      1.00763016,
+      0.07760169,
       6
      ],
      "Kent State": [
-      -1.48258181,
-      -1.17226497,
-      5
+      -1.64089854,
+      -0.92775109,
+      6
      ],
      "LSU": [
-      1.29064492,
-      2.62430747,
+      1.42400953,
+      2.72471577,
       6
      ],
      "Liberty": [
-      0.57286241,
-      0.41475989,
+      0.58284883,
+      0.44689922,
       5
      ],
      "Louisville": [
-      1.19690917,
-      0.39379944,
-      5
+      1.21123606,
+      0.47617876,
+      6
      ],
      "Marshall": [
-      -0.16699509,
-      -1.47839079,
+      -0.20114726,
+      -1.56430075,
       5
      ],
      "Massachusetts": [
-      -0.7488308,
-      -0.21879605,
+      -0.71966224,
+      -0.2607221,
       5
      ],
      "Memphis": [
-      0.62814268,
-      -0.32463642,
+      0.667781,
+      -0.33641119,
       6
      ],
      "Miami": [
-      1.65526365,
-      0.51690803,
-      4
+      1.48745698,
+      0.63653544,
+      5
      ],
      "Miami (OH)": [
-      -0.03716053,
-      -0.88760064,
-      5
+      -0.14466759,
+      -0.77076756,
+      6
      ],
      "Michigan": [
-      0.15928232,
-      0.80016935,
-      5
+      0.26883462,
+      1.11557025,
+      6
      ],
      "Michigan State": [
-      -0.10720503,
-      0.234223,
+      -0.17960263,
+      0.10659014,
       7
      ],
      "Mississippi State": [
-      1.10980699,
-      0.58622473,
+      1.1267484,
+      0.42263945,
       6
      ],
      "Missouri State": [
-      -2.01780893,
-      -1.14633571,
+      -2.08380633,
+      -1.16838772,
       5
      ],
      "NC State": [
-      -0.48938744,
-      -0.73156367,
+      -0.46394299,
+      -0.75622267,
       5
      ],
      "Nebraska": [
-      1.46904263,
-      0.98781734,
+      1.49441023,
+      1.03270483,
       5
      ],
      "Nevada": [
-      -0.04753058,
-      -0.81820053,
-      4
+      0.22467024,
+      -0.36547007,
+      5
      ],
      "New Mexico": [
-      0.60982273,
-      1.02361716,
+      0.66828613,
+      1.22103572,
       4
      ],
      "New Mexico State": [
-      -0.78801467,
-      -0.09019816,
+      -0.80668599,
+      -0.12637804,
       5
      ],
      "North Carolina": [
-      0.46125553,
-      0.52393343,
-      4
-     ],
-     "North Dakota State": [
-      0.20905878,
-      1.48918632,
+      0.43294347,
+      0.55349208,
       5
      ],
+     "North Dakota State": [
+      0.13212855,
+      1.57220822,
+      6
+     ],
      "North Texas": [
-      1.50655315,
-      -0.19893276,
+      1.4752714,
+      -0.12702547,
       5
      ],
      "Northern Illinois": [
-      -1.41600581,
-      -1.63095105,
-      4
+      -1.10161461,
+      -1.73934238,
+      5
      ],
      "Notre Dame": [
-      1.97888975,
-      2.13989145,
-      6
+      1.8566356,
+      2.00756395,
+      7
      ],
      "Ohio": [
-      -0.46957218,
-      -0.17932878,
+      -0.3670705,
+      -0.22166123,
       5
      ],
      "Ohio State": [
-      1.22485251,
-      1.53364009,
+      1.3168431,
+      1.54280972,
       7
      ],
      "Oklahoma": [
-      -0.38712864,
-      1.89594514,
-      5
+      -0.37598766,
+      1.9005512,
+      6
      ],
      "Oklahoma State": [
-      -0.074611,
-      -0.00743557,
-      4
-     ],
-     "Ole Miss": [
-      1.53071932,
-      -0.15543449,
+      0.11812746,
+      -0.07470583,
       5
      ],
+     "Ole Miss": [
+      1.79729003,
+      -0.01713888,
+      6
+     ],
      "Oregon": [
-      -0.39728246,
-      1.46694843,
+      -0.4792838,
+      1.57586011,
       4
      ],
      "Oregon State": [
-      0.67816394,
-      0.71915096,
-      5
-     ],
-     "Penn State": [
-      0.69395255,
-      1.00182333,
+      0.9321769,
+      0.24016678,
       6
      ],
+     "Penn State": [
+      0.56233382,
+      0.7820814,
+      7
+     ],
      "Pittsburgh": [
-      -0.10702986,
-      0.12780691,
+      -0.10909281,
+      0.13058303,
       6
      ],
      "Rutgers": [
-      0.27055103,
-      -0.92509478,
+      0.28555005,
+      -0.94690009,
       5
      ],
      "SMU": [
-      0.35335173,
-      -0.06575991,
+      0.39196826,
+      -0.11372831,
       5
      ],
      "Sacramento State": [
-      -1.64027481,
-      -1.31062521,
+      -1.71196163,
+      -1.39694192,
       5
      ],
      "Sam Houston": [
-      -1.83160575,
-      -0.65374879,
+      -1.82255561,
+      -0.67101582,
       5
      ],
      "San Jos\u00e9 State": [
-      -0.79105995,
-      0.40095796,
-      5
+      -0.70617664,
+      -0.06848088,
+      6
      ],
      "South Carolina": [
-      1.00221414,
-      -0.09352932,
+      1.09999713,
+      -0.3217254,
       5
      ],
      "South Florida": [
-      -0.92473455,
-      0.88295868,
-      5
+      -1.18837557,
+      1.09511882,
+      6
      ],
      "Stanford": [
-      -0.54684236,
-      -1.43823747,
+      -0.65364522,
+      -1.58203709,
       6
      ],
      "TCU": [
-      -0.5110598,
-      1.98516106,
-      4
+      -0.28642077,
+      1.87931554,
+      5
      ],
      "Texas": [
-      0.22203938,
-      2.25777093,
+      0.20300061,
+      2.34385612,
       6
      ],
      "Texas A&M": [
-      -0.23328536,
-      0.67192204,
+      -0.31390293,
+      0.65037655,
       6
      ],
      "Texas State": [
-      1.59269476,
-      -0.90861353,
+      1.56569603,
+      -0.91202166,
       5
      ],
      "Toledo": [
-      0.11001915,
-      -0.50633412,
-      5
+      0.11585635,
+      -0.29218551,
+      6
      ],
      "Troy": [
-      -0.01635835,
-      -1.28347957,
-      4
+      -0.10555669,
+      -1.082062,
+      5
      ],
      "Tulane": [
-      -0.8540573,
-      0.7123657,
+      -0.80769354,
+      0.65883056,
       6
      ],
      "Tulsa": [
-      -0.62513836,
-      0.09755376,
-      5
+      -0.56301156,
+      0.00143361,
+      6
      ],
      "UAB": [
-      -1.02306741,
-      0.28989338,
+      -1.0025448,
+      0.36078724,
       6
      ],
      "UCLA": [
-      0.11906824,
-      1.26102215,
-      5
-     ],
-     "UL Monroe": [
-      -1.92644223,
-      -1.51084816,
-      4
-     ],
-     "UNLV": [
-      -0.53850956,
-      0.40411706,
+      0.36631748,
+      1.45207846,
       6
      ],
+     "UL Monroe": [
+      -2.09174447,
+      -1.3271678,
+      5
+     ],
+     "UNLV": [
+      -0.35123997,
+      0.03835826,
+      7
+     ],
      "USC": [
-      1.91370258,
-      0.05220543,
+      1.94048212,
+      0.0553204,
       7
      ],
      "UTEP": [
-      -1.20135949,
-      -1.48587547,
-      5
+      -0.89360162,
+      -1.50596433,
+      6
      ],
      "Virginia": [
-      -0.48353224,
-      0.6451799,
+      -0.55379661,
+      0.6015029,
       6
      ],
      "Wake Forest": [
-      0.66850819,
-      0.7939797,
+      0.71200868,
+      0.77392777,
       6
      ],
      "Washington": [
-      0.04684374,
-      -0.19724894,
+      0.00610745,
+      -0.08956228,
       6
      ],
      "Washington State": [
-      -2.34879199,
-      0.29136221,
-      5
+      -1.7020746,
+      0.12979892,
+      6
      ],
      "West Virginia": [
-      0.52285419,
-      -1.32602353,
+      0.48400753,
+      -1.32233462,
       6
      ],
      "Western Kentucky": [
-      -1.44749437,
-      -1.45709616,
+      -1.48883214,
+      -1.53567979,
       6
      ],
      "Western Michigan": [
-      -0.69086202,
-      -0.45027398,
-      5
+      -0.67129768,
+      -0.45581734,
+      6
      ],
      "Wisconsin": [
-      1.09756983,
-      2.46975772,
-      4
-     ],
-     "Wyoming": [
-      -1.12774665,
-      -0.4189403,
+      0.81191696,
+      2.02319529,
       5
      ],
+     "Wyoming": [
+      -0.9789496,
+      -0.55685688,
+      6
+     ],
      "Air Force": [
-      -0.78585098,
-      0.25952571,
-      4
+      -0.44021803,
+      0.25121531,
+      5
      ],
      "App State": [
-      -0.8389136,
-      -0.58842454,
+      -0.86255629,
+      -0.58848578,
       5
      ],
      "Arizona": [
-      0.89841249,
-      -0.01471435,
+      0.8309041,
+      0.19659134,
       5
      ],
      "Arizona State": [
-      -0.48366857,
-      -0.57249085,
-      4
-     ],
-     "Arkansas": [
-      -0.28016746,
-      -0.04846275,
+      -0.71674573,
+      -0.68145505,
       5
      ],
+     "Arkansas": [
+      -0.19761624,
+      -0.08231948,
+      6
+     ],
      "Army": [
-      0.26623661,
-      -1.56973585,
+      0.42018074,
+      -1.60186722,
       5
      ],
      "BYU": [
-      1.37341068,
-      1.376942,
-      4
+      1.61374293,
+      1.45371149,
+      5
      ],
      "Bowling Green": [
-      -1.36287891,
-      -1.04343085,
+      -1.3087807,
+      -1.08071652,
       6
      ],
      "Buffalo": [
-      -0.80518602,
-      -0.07311061,
+      -0.80196356,
+      -0.09552247,
       5
      ],
      "Charlotte": [
-      -1.8881084,
-      -0.77707374,
+      -1.88416861,
+      -0.77057441,
       6
      ],
      "Delaware": [
-      -0.87896836,
-      -0.7204896,
+      -0.91079221,
+      -0.73803126,
       5
      ],
      "Georgia": [
-      1.83566091,
-      0.48204416,
-      5
+      1.77834271,
+      0.3504099,
+      6
      ],
      "Georgia Southern": [
-      0.23787911,
-      0.31939876,
+      0.21462189,
+      0.34109082,
       6
      ],
      "Georgia State": [
-      0.9348528,
-      -0.40271542,
+      0.97178612,
+      -0.30756815,
       5
      ],
      "Iowa State": [
-      0.18064272,
-      0.51867663,
+      0.1592,
+      0.51869218,
       5
      ],
      "Kansas": [
-      0.35245048,
-      1.13038309,
+      0.26096026,
+      1.07489727,
       5
      ],
      "Kansas State": [
-      0.75443066,
-      -0.242759,
+      0.66399567,
+      -0.09911969,
       5
      ],
      "Kennesaw State": [
-      -0.72018105,
-      -0.44648705,
+      -0.57307459,
+      -0.53048727,
       5
      ],
      "Kentucky": [
-      0.5958778,
-      1.00117817,
-      5
+      0.6581887,
+      0.76653345,
+      6
      ],
      "Louisiana": [
-      -0.3046273,
-      1.24058098,
-      5
+      -0.23018935,
+      1.41916698,
+      6
      ],
      "Louisiana Tech": [
-      -0.12012735,
-      -0.13857094,
-      4
+      -0.38272301,
+      -0.0480176,
+      5
      ],
      "Maryland": [
-      -0.49434393,
-      0.22860601,
+      -0.50962888,
+      0.24886632,
       6
      ],
      "Middle Tennessee": [
-      -0.97423798,
-      -0.46295599,
+      -0.98203344,
+      -0.50161169,
       5
      ],
      "Minnesota": [
-      -1.37975933,
-      0.28950435,
+      -1.38474702,
+      0.3070977,
       5
      ],
      "Missouri": [
-      0.67131445,
-      1.10860498,
-      5
+      0.38731246,
+      0.848769,
+      6
      ],
      "Navy": [
-      -0.04540481,
-      -0.42052932,
-      4
+      0.49990064,
+      -0.45659745,
+      5
      ],
      "Old Dominion": [
-      -1.62304806,
-      0.88191195,
+      -1.66185631,
+      0.91898245,
       6
      ],
      "Purdue": [
-      0.96371114,
-      -1.06800127,
+      0.94146442,
+      -1.14165909,
       6
      ],
      "Rice": [
-      -1.29263228,
-      -0.82698246,
-      5
+      -1.33726941,
+      -0.99121846,
+      6
      ],
      "San Diego State": [
-      -1.78648004,
-      0.44650221,
+      -1.85113269,
+      0.48045492,
       5
      ],
      "South Alabama": [
-      0.92103634,
-      -2.40512228,
+      1.10667352,
+      -2.57848685,
       5
      ],
      "Southern Miss": [
-      -0.652328,
-      -1.2067801,
-      4
+      -1.08532127,
+      -0.68874364,
+      5
      ],
      "Syracuse": [
-      -0.22896494,
-      -0.08800784,
-      4
+      -0.44160785,
+      -0.10843923,
+      5
      ],
      "Temple": [
-      0.33856976,
-      -0.78438328,
+      0.40818609,
+      -0.84708834,
       6
      ],
      "Tennessee": [
-      0.40250746,
-      1.24596874,
-      5
+      0.34498001,
+      1.881863,
+      6
      ],
      "Texas Tech": [
-      0.79563167,
-      0.11156583,
-      4
+      0.74306895,
+      0.15347793,
+      5
      ],
      "UCF": [
-      -0.16168782,
-      0.85757474,
+      -0.28643501,
+      0.97464205,
       5
      ],
      "UConn": [
-      0.10940628,
-      -0.35845923,
+      0.22379082,
+      -0.45971596,
       5
      ],
      "UTSA": [
-      -0.20893124,
-      0.26422907,
-      5
+      -0.02538924,
+      -0.06341254,
+      6
      ],
      "Utah": [
-      2.32879047,
-      0.70301013,
+      2.40193836,
+      0.77679888,
       4
      ],
      "Utah State": [
-      -1.06122518,
-      0.53279904,
+      -1.0962283,
+      0.60413464,
       5
      ],
      "Vanderbilt": [
-      -0.0811193,
-      -0.207536,
-      5
+      -0.14222988,
+      -0.33910748,
+      6
      ],
      "Virginia Tech": [
-      0.6227049,
-      -1.36289391,
-      5
+      0.5620874,
+      -1.25450739,
+      6
      ],
      "Northwestern": [
-      1.43814406,
-      0.2497022,
+      1.4375865,
+      0.21413692,
       5
      ]
     },
     "full_new_war_curvature_production": {
      "Akron": [
-      -1.11112417,
-      -1.78186923,
-      5
-     ],
-     "Alabama": [
-      1.98482856,
-      1.13928345,
+      -1.24869122,
+      -1.63618869,
       6
      ],
+     "Alabama": [
+      1.49001759,
+      1.06679907,
+      7
+     ],
      "Arkansas State": [
-      0.2820201,
-      -0.89570058,
-      5
+      -0.07464448,
+      -0.56821162,
+      6
      ],
      "Auburn": [
-      0.03284412,
-      1.0709593,
-      5
+      0.29523785,
+      0.9659212,
+      6
      ],
      "Ball State": [
-      -0.51663507,
-      -1.71967617,
+      -0.42989244,
+      -1.80849029,
       6
      ],
      "Baylor": [
-      0.76280031,
-      0.54397654,
-      4
+      0.59880445,
+      0.38852833,
+      5
      ],
      "Boise State": [
-      1.70987771,
-      -0.94033683,
+      1.78183394,
+      -0.95282846,
       5
      ],
      "Boston College": [
-      -0.81009133,
-      0.90922979,
+      -0.83560213,
+      0.95248442,
       5
      ],
      "California": [
-      -0.75918753,
-      -0.74145669,
+      -0.88818909,
+      -0.76565065,
       5
      ],
      "Central Michigan": [
-      -0.92406989,
-      -1.1169466,
-      5
+      -0.89559426,
+      -0.94788971,
+      6
      ],
      "Cincinnati": [
-      0.71304647,
-      -0.33221936,
+      0.80324174,
+      -0.34651662,
       5
      ],
      "Clemson": [
-      -0.81921971,
-      0.97136002,
+      -0.86043831,
+      0.98821329,
       5
      ],
      "Coastal Carolina": [
-      -0.18451114,
-      -0.47687546,
+      -0.18742892,
+      -0.4908012,
       6
      ],
      "Colorado": [
-      -1.54758994,
-      1.68877732,
+      -1.60343353,
+      1.6878862,
       4
      ],
      "Colorado State": [
-      1.27685163,
-      -1.74884278,
+      1.1199661,
+      -1.679981,
       5
      ],
      "Duke": [
-      -0.16268764,
-      0.87343445,
-      4
+      -0.17143337,
+      0.69835843,
+      5
      ],
      "East Carolina": [
-      -0.97941237,
-      0.10792189,
+      -1.0191905,
+      0.01246995,
       5
      ],
      "Eastern Michigan": [
-      -0.51636515,
-      -0.94203985,
-      6
+      -0.83239939,
+      -0.85633734,
+      7
      ],
      "Florida": [
-      0.92132399,
-      0.05989696,
+      0.86065662,
+      0.07064094,
       6
      ],
      "Florida Atlantic": [
-      -0.00157899,
-      -1.93645096,
+      0.03031206,
+      -1.90404755,
       5
      ],
      "Florida International": [
-      -1.00685723,
-      0.72462343,
+      -0.96778682,
+      0.73084272,
       5
      ],
      "Florida State": [
-      1.23435606,
-      -0.38482139,
-      5
+      1.14659708,
+      -0.39894321,
+      6
      ],
      "Fresno State": [
-      -0.25982668,
-      0.08618359,
+      -0.38464586,
+      0.26926219,
       6
      ],
      "Georgia Tech": [
-      0.66759189,
-      -1.1264821,
-      4
+      0.58981983,
+      -1.03480798,
+      5
      ],
      "Hawai'i": [
-      -1.10843082,
-      -1.2529567,
+      -1.2776432,
+      -1.17661759,
       6
      ],
      "Houston": [
-      1.63508401,
-      0.00501193,
-      5
+      1.65151325,
+      -0.21299678,
+      6
      ],
      "Illinois": [
-      1.14407029,
-      -1.37491938,
+      1.13672475,
+      -1.45457805,
       5
      ],
      "Indiana": [
-      1.70770749,
-      1.11858061,
+      1.75311784,
+      1.15393373,
       6
      ],
      "Iowa": [
-      0.39329084,
-      1.42813105,
+      0.42482706,
+      1.58762074,
       5
      ],
      "Jacksonville State": [
-      0.30638906,
-      -0.06885601,
+      0.27441211,
+      -0.0577755,
       6
      ],
      "James Madison": [
-      0.9774027,
-      0.06992691,
+      1.00763016,
+      0.07760169,
       6
      ],
      "Kent State": [
-      -1.48258181,
-      -1.17226497,
-      5
+      -1.64089854,
+      -0.92775109,
+      6
      ],
      "LSU": [
-      1.29064492,
-      2.62430747,
+      1.42400953,
+      2.72471577,
       6
      ],
      "Liberty": [
-      0.57286241,
-      0.41475989,
+      0.58284883,
+      0.44689922,
       5
      ],
      "Louisville": [
-      1.19690917,
-      0.39379944,
-      5
+      1.21123606,
+      0.47617876,
+      6
      ],
      "Marshall": [
-      -0.16699509,
-      -1.47839079,
+      -0.20114726,
+      -1.56430075,
       5
      ],
      "Massachusetts": [
-      -0.7488308,
-      -0.21879605,
+      -0.71966224,
+      -0.2607221,
       5
      ],
      "Memphis": [
-      0.62814268,
-      -0.32463642,
+      0.667781,
+      -0.33641119,
       6
      ],
      "Miami": [
-      1.65526365,
-      0.51690803,
-      4
+      1.48745698,
+      0.63653544,
+      5
      ],
      "Miami (OH)": [
-      -0.03716053,
-      -0.88760064,
-      5
+      -0.14466759,
+      -0.77076756,
+      6
      ],
      "Michigan": [
-      0.15928232,
-      0.80016935,
-      5
+      0.26883462,
+      1.11557025,
+      6
      ],
      "Michigan State": [
-      -0.10720503,
-      0.234223,
+      -0.17960263,
+      0.10659014,
       7
      ],
      "Mississippi State": [
-      1.10980699,
-      0.58622473,
+      1.1267484,
+      0.42263945,
       6
      ],
      "Missouri State": [
-      -2.01780893,
-      -1.14633571,
+      -2.08380633,
+      -1.16838772,
       5
      ],
      "NC State": [
-      -0.48938744,
-      -0.73156367,
+      -0.46394299,
+      -0.75622267,
       5
      ],
      "Nebraska": [
-      1.46904263,
-      0.98781734,
+      1.49441023,
+      1.03270483,
       5
      ],
      "Nevada": [
-      -0.04753058,
-      -0.81820053,
-      4
+      0.22467024,
+      -0.36547007,
+      5
      ],
      "New Mexico": [
-      0.60982273,
-      1.02361716,
+      0.66828613,
+      1.22103572,
       4
      ],
      "New Mexico State": [
-      -0.78801467,
-      -0.09019816,
+      -0.80668599,
+      -0.12637804,
       5
      ],
      "North Carolina": [
-      0.46125553,
-      0.52393343,
-      4
-     ],
-     "North Dakota State": [
-      0.20905878,
-      1.48918632,
+      0.43294347,
+      0.55349208,
       5
      ],
+     "North Dakota State": [
+      0.13212855,
+      1.57220822,
+      6
+     ],
      "North Texas": [
-      1.50655315,
-      -0.19893276,
+      1.4752714,
+      -0.12702547,
       5
      ],
      "Northern Illinois": [
-      -1.41600581,
-      -1.63095105,
-      4
+      -1.10161461,
+      -1.73934238,
+      5
      ],
      "Notre Dame": [
-      1.97888975,
-      2.13989145,
-      6
+      1.8566356,
+      2.00756395,
+      7
      ],
      "Ohio": [
-      -0.46957218,
-      -0.17932878,
+      -0.3670705,
+      -0.22166123,
       5
      ],
      "Ohio State": [
-      1.22485251,
-      1.53364009,
+      1.3168431,
+      1.54280972,
       7
      ],
      "Oklahoma": [
-      -0.38712864,
-      1.89594514,
-      5
+      -0.37598766,
+      1.9005512,
+      6
      ],
      "Oklahoma State": [
-      -0.074611,
-      -0.00743557,
-      4
-     ],
-     "Ole Miss": [
-      1.53071932,
-      -0.15543449,
+      0.11812746,
+      -0.07470583,
       5
      ],
+     "Ole Miss": [
+      1.79729003,
+      -0.01713888,
+      6
+     ],
      "Oregon": [
-      -0.39728246,
-      1.46694843,
+      -0.4792838,
+      1.57586011,
       4
      ],
      "Oregon State": [
-      0.67816394,
-      0.71915096,
-      5
-     ],
-     "Penn State": [
-      0.69395255,
-      1.00182333,
+      0.9321769,
+      0.24016678,
       6
      ],
+     "Penn State": [
+      0.56233382,
+      0.7820814,
+      7
+     ],
      "Pittsburgh": [
-      -0.10702986,
-      0.12780691,
+      -0.10909281,
+      0.13058303,
       6
      ],
      "Rutgers": [
-      0.27055103,
-      -0.92509478,
+      0.28555005,
+      -0.94690009,
       5
      ],
      "SMU": [
-      0.35335173,
-      -0.06575991,
+      0.39196826,
+      -0.11372831,
       5
      ],
      "Sacramento State": [
-      -1.64027481,
-      -1.31062521,
+      -1.71196163,
+      -1.39694192,
       5
      ],
      "Sam Houston": [
-      -1.83160575,
-      -0.65374879,
+      -1.82255561,
+      -0.67101582,
       5
      ],
      "San Jos\u00e9 State": [
-      -0.79105995,
-      0.40095796,
-      5
+      -0.70617664,
+      -0.06848088,
+      6
      ],
      "South Carolina": [
-      1.00221414,
-      -0.09352932,
+      1.09999713,
+      -0.3217254,
       5
      ],
      "South Florida": [
-      -0.92473455,
-      0.88295868,
-      5
+      -1.18837557,
+      1.09511882,
+      6
      ],
      "Stanford": [
-      -0.54684236,
-      -1.43823747,
+      -0.65364522,
+      -1.58203709,
       6
      ],
      "TCU": [
-      -0.5110598,
-      1.98516106,
-      4
+      -0.28642077,
+      1.87931554,
+      5
      ],
      "Texas": [
-      0.22203938,
-      2.25777093,
+      0.20300061,
+      2.34385612,
       6
      ],
      "Texas A&M": [
-      -0.23328536,
-      0.67192204,
+      -0.31390293,
+      0.65037655,
       6
      ],
      "Texas State": [
-      1.59269476,
-      -0.90861353,
+      1.56569603,
+      -0.91202166,
       5
      ],
      "Toledo": [
-      0.11001915,
-      -0.50633412,
-      5
+      0.11585635,
+      -0.29218551,
+      6
      ],
      "Troy": [
-      -0.01635835,
-      -1.28347957,
-      4
+      -0.10555669,
+      -1.082062,
+      5
      ],
      "Tulane": [
-      -0.8540573,
-      0.7123657,
+      -0.80769354,
+      0.65883056,
       6
      ],
      "Tulsa": [
-      -0.62513836,
-      0.09755376,
-      5
+      -0.56301156,
+      0.00143361,
+      6
      ],
      "UAB": [
-      -1.02306741,
-      0.28989338,
+      -1.0025448,
+      0.36078724,
       6
      ],
      "UCLA": [
-      0.11906824,
-      1.26102215,
-      5
-     ],
-     "UL Monroe": [
-      -1.92644223,
-      -1.51084816,
-      4
-     ],
-     "UNLV": [
-      -0.53850956,
-      0.40411706,
+      0.36631748,
+      1.45207846,
       6
      ],
+     "UL Monroe": [
+      -2.09174447,
+      -1.3271678,
+      5
+     ],
+     "UNLV": [
+      -0.35123997,
+      0.03835826,
+      7
+     ],
      "USC": [
-      1.91370258,
-      0.05220543,
+      1.94048212,
+      0.0553204,
       7
      ],
      "UTEP": [
-      -1.20135949,
-      -1.48587547,
-      5
+      -0.89360162,
+      -1.50596433,
+      6
      ],
      "Virginia": [
-      -0.48353224,
-      0.6451799,
+      -0.55379661,
+      0.6015029,
       6
      ],
      "Wake Forest": [
-      0.66850819,
-      0.7939797,
+      0.71200868,
+      0.77392777,
       6
      ],
      "Washington": [
-      0.04684374,
-      -0.19724894,
+      0.00610745,
+      -0.08956228,
       6
      ],
      "Washington State": [
-      -2.34879199,
-      0.29136221,
-      5
+      -1.7020746,
+      0.12979892,
+      6
      ],
      "West Virginia": [
-      0.52285419,
-      -1.32602353,
+      0.48400753,
+      -1.32233462,
       6
      ],
      "Western Kentucky": [
-      -1.44749437,
-      -1.45709616,
+      -1.48883214,
+      -1.53567979,
       6
      ],
      "Western Michigan": [
-      -0.69086202,
-      -0.45027398,
-      5
+      -0.67129768,
+      -0.45581734,
+      6
      ],
      "Wisconsin": [
-      1.09756983,
-      2.46975772,
-      4
-     ],
-     "Wyoming": [
-      -1.12774665,
-      -0.4189403,
+      0.81191696,
+      2.02319529,
       5
      ],
+     "Wyoming": [
+      -0.9789496,
+      -0.55685688,
+      6
+     ],
      "Air Force": [
-      -0.78585098,
-      0.25952571,
-      4
+      -0.44021803,
+      0.25121531,
+      5
      ],
      "App State": [
-      -0.8389136,
-      -0.58842454,
+      -0.86255629,
+      -0.58848578,
       5
      ],
      "Arizona": [
-      0.89841249,
-      -0.01471435,
+      0.8309041,
+      0.19659134,
       5
      ],
      "Arizona State": [
-      -0.48366857,
-      -0.57249085,
-      4
-     ],
-     "Arkansas": [
-      -0.28016746,
-      -0.04846275,
+      -0.71674573,
+      -0.68145505,
       5
      ],
+     "Arkansas": [
+      -0.19761624,
+      -0.08231948,
+      6
+     ],
      "Army": [
-      0.26623661,
-      -1.56973585,
+      0.42018074,
+      -1.60186722,
       5
      ],
      "BYU": [
-      1.37341068,
-      1.376942,
-      4
+      1.61374293,
+      1.45371149,
+      5
      ],
      "Bowling Green": [
-      -1.36287891,
-      -1.04343085,
+      -1.3087807,
+      -1.08071652,
       6
      ],
      "Buffalo": [
-      -0.80518602,
-      -0.07311061,
+      -0.80196356,
+      -0.09552247,
       5
      ],
      "Charlotte": [
-      -1.8881084,
-      -0.77707374,
+      -1.88416861,
+      -0.77057441,
       6
      ],
      "Delaware": [
-      -0.87896836,
-      -0.7204896,
+      -0.91079221,
+      -0.73803126,
       5
      ],
      "Georgia": [
-      1.83566091,
-      0.48204416,
-      5
+      1.77834271,
+      0.3504099,
+      6
      ],
      "Georgia Southern": [
-      0.23787911,
-      0.31939876,
+      0.21462189,
+      0.34109082,
       6
      ],
      "Georgia State": [
-      0.9348528,
-      -0.40271542,
+      0.97178612,
+      -0.30756815,
       5
      ],
      "Iowa State": [
-      0.18064272,
-      0.51867663,
+      0.1592,
+      0.51869218,
       5
      ],
      "Kansas": [
-      0.35245048,
-      1.13038309,
+      0.26096026,
+      1.07489727,
       5
      ],
      "Kansas State": [
-      0.75443066,
-      -0.242759,
+      0.66399567,
+      -0.09911969,
       5
      ],
      "Kennesaw State": [
-      -0.72018105,
-      -0.44648705,
+      -0.57307459,
+      -0.53048727,
       5
      ],
      "Kentucky": [
-      0.5958778,
-      1.00117817,
-      5
+      0.6581887,
+      0.76653345,
+      6
      ],
      "Louisiana": [
-      -0.3046273,
-      1.24058098,
-      5
+      -0.23018935,
+      1.41916698,
+      6
      ],
      "Louisiana Tech": [
-      -0.12012735,
-      -0.13857094,
-      4
+      -0.38272301,
+      -0.0480176,
+      5
      ],
      "Maryland": [
-      -0.49434393,
-      0.22860601,
+      -0.50962888,
+      0.24886632,
       6
      ],
      "Middle Tennessee": [
-      -0.97423798,
-      -0.46295599,
+      -0.98203344,
+      -0.50161169,
       5
      ],
      "Minnesota": [
-      -1.37975933,
-      0.28950435,
+      -1.38474702,
+      0.3070977,
       5
      ],
      "Missouri": [
-      0.67131445,
-      1.10860498,
-      5
+      0.38731246,
+      0.848769,
+      6
      ],
      "Navy": [
-      -0.04540481,
-      -0.42052932,
-      4
+      0.49990064,
+      -0.45659745,
+      5
      ],
      "Old Dominion": [
-      -1.62304806,
-      0.88191195,
+      -1.66185631,
+      0.91898245,
       6
      ],
      "Purdue": [
-      0.96371114,
-      -1.06800127,
+      0.94146442,
+      -1.14165909,
       6
      ],
      "Rice": [
-      -1.29263228,
-      -0.82698246,
-      5
+      -1.33726941,
+      -0.99121846,
+      6
      ],
      "San Diego State": [
-      -1.78648004,
-      0.44650221,
+      -1.85113269,
+      0.48045492,
       5
      ],
      "South Alabama": [
-      0.92103634,
-      -2.40512228,
+      1.10667352,
+      -2.57848685,
       5
      ],
      "Southern Miss": [
-      -0.652328,
-      -1.2067801,
-      4
+      -1.08532127,
+      -0.68874364,
+      5
      ],
      "Syracuse": [
-      -0.22896494,
-      -0.08800784,
-      4
+      -0.44160785,
+      -0.10843923,
+      5
      ],
      "Temple": [
-      0.33856976,
-      -0.78438328,
+      0.40818609,
+      -0.84708834,
       6
      ],
      "Tennessee": [
-      0.40250746,
-      1.24596874,
-      5
+      0.34498001,
+      1.881863,
+      6
      ],
      "Texas Tech": [
-      0.79563167,
-      0.11156583,
-      4
+      0.74306895,
+      0.15347793,
+      5
      ],
      "UCF": [
-      -0.16168782,
-      0.85757474,
+      -0.28643501,
+      0.97464205,
       5
      ],
      "UConn": [
-      0.10940628,
-      -0.35845923,
+      0.22379082,
+      -0.45971596,
       5
      ],
      "UTSA": [
-      -0.20893124,
-      0.26422907,
-      5
+      -0.02538924,
+      -0.06341254,
+      6
      ],
      "Utah": [
-      2.32879047,
-      0.70301013,
+      2.40193836,
+      0.77679888,
       4
      ],
      "Utah State": [
-      -1.06122518,
-      0.53279904,
+      -1.0962283,
+      0.60413464,
       5
      ],
      "Vanderbilt": [
-      -0.0811193,
-      -0.207536,
-      5
+      -0.14222988,
+      -0.33910748,
+      6
      ],
      "Virginia Tech": [
-      0.6227049,
-      -1.36289391,
-      5
+      0.5620874,
+      -1.25450739,
+      6
      ],
      "Northwestern": [
-      1.43814406,
-      0.2497022,
+      1.4375865,
+      0.21413692,
       5
      ]
     }
    },
    "pff": {
     "Air Force": [
-     1.18554583,
-     0.38680023
+     1.47846727,
+     -0.06110072
     ],
     "Akron": [
-     -0.41148713,
-     -0.96986437
+     -0.72260358,
+     -0.85552662
     ],
     "Alabama": [
-     1.62629822,
-     0.80025366
+     1.21508798,
+     0.70009801
     ],
     "App State": [
-     0.38018372,
-     -0.21337927
+     0.4011857,
+     -0.1682791
     ],
     "Arizona": [
-     1.14491042,
-     0.65173097
+     1.20504869,
+     0.72585399
     ],
     "Arizona State": [
-     -0.20993631,
-     0.56414049
+     -0.18973734,
+     0.11359166
     ],
     "Arkansas": [
-     -1.06921714,
-     -0.82829165
+     -0.77837068,
+     -0.62974923
     ],
     "Arkansas State": [
-     0.66220407,
-     -0.97688209
+     0.3556444,
+     -0.55670928
     ],
     "Army": [
-     1.46991829,
-     -0.66144454
+     1.82323479,
+     -0.93674924
     ],
     "Auburn": [
-     -0.27717792,
-     0.05003213
+     -0.2790526,
+     -0.03594191
     ],
     "BYU": [
-     1.46980043,
-     1.06530709
+     1.54690198,
+     1.15323044
     ],
     "Ball State": [
-     -1.30496446,
-     -1.58360092
+     -0.93093496,
+     -1.4573974
     ],
     "Baylor": [
-     -0.38046963,
-     1.21688437
+     -0.80627252,
+     1.28557323
     ],
     "Boise State": [
-     1.37462236,
-     0.45752398
+     1.44628362,
+     0.52522776
     ],
     "Boston College": [
-     -0.82815425,
-     0.15422589
+     -0.84199623,
+     -0.05395555
     ],
     "Bowling Green": [
-     -1.47501958,
-     -0.58813611
+     -1.32924431,
+     -0.81812718
     ],
     "Buffalo": [
-     -1.51076806,
-     -0.06891035
+     -1.53067813,
+     -0.05725817
     ],
     "California": [
-     -0.69771398,
-     0.23718882
+     -0.73237704,
+     0.29747061
     ],
     "Central Michigan": [
-     -1.17479498,
-     -0.80498424
+     -1.14670533,
+     -0.89517976
     ],
     "Charlotte": [
-     -2.15294708,
-     -2.06928513
+     -1.69814569,
+     -1.97036571
     ],
     "Cincinnati": [
-     0.87863636,
-     -0.86503081
+     1.22358267,
+     -1.08115679
     ],
     "Clemson": [
-     -1.4002469,
-     0.27721524
+     -1.4697742,
+     0.33877734
     ],
     "Coastal Carolina": [
-     -0.6271072,
-     -0.82360345
+     -0.65880895,
+     -0.7988855
     ],
     "Colorado": [
-     -1.01342065,
-     0.5240726
+     -1.06334134,
+     0.59393198
     ],
     "Colorado State": [
-     0.28474879,
-     -2.83195344
+     0.29881299,
+     -2.87441216
     ],
     "Delaware": [
-     -0.87352668,
-     -0.06417158
+     -0.91711804,
+     -0.01398722
     ],
     "Duke": [
-     0.37474328,
-     0.80582031
+     0.11479812,
+     0.57163362
     ],
     "East Carolina": [
-     -1.49674109,
-     1.03620796
+     -1.57154337,
+     1.12319566
     ],
     "Eastern Michigan": [
-     -0.62723039,
-     -0.55972647
+     -1.00017825,
+     -0.68011984
     ],
     "Florida": [
-     0.83527631,
-     -0.58537266
+     0.87889407,
+     -0.55266756
     ],
     "Florida Atlantic": [
-     0.45032937,
-     -0.30793737
+     0.61546209,
+     -0.88054121
     ],
     "Florida International": [
-     -0.44335383,
-     1.30679273
+     -0.46400377,
+     1.4028309
     ],
     "Florida State": [
-     0.44148024,
-     -0.77344233
+     0.23719774,
+     -0.80051139
     ],
     "Fresno State": [
-     -0.31747645,
-     -0.1192541
+     -0.33388709,
+     -0.07096281
     ],
     "Georgia": [
-     1.84793436,
-     1.38664609
+     1.68219178,
+     1.17374125
     ],
     "Georgia Southern": [
-     0.11912443,
-     0.29313954
+     0.12632862,
+     0.35524739
     ],
     "Georgia State": [
-     0.67498405,
-     0.84503933
+     0.52529342,
+     0.43950828
     ],
     "Georgia Tech": [
-     -0.13874021,
-     -0.51505929
+     0.04599345,
+     -0.50166275
     ],
     "Hawai'i": [
-     -0.7471825,
-     -0.65934138
+     -0.78352715,
+     -0.62911461
     ],
     "Houston": [
-     1.96520879,
-     0.27001611
+     2.01323762,
+     -0.08050984
     ],
     "Illinois": [
-     1.17472143,
-     -1.46973876
+     1.23728688,
+     -1.46660714
     ],
     "Indiana": [
-     1.63772856,
-     1.36154264
+     1.11181254,
+     1.24167593
     ],
     "Iowa": [
-     0.24482165,
-     1.11760277
+     0.25828132,
+     1.20733979
     ],
     "Iowa State": [
-     -0.62543433,
-     0.10841399
+     -0.65727834,
+     0.16436671
     ],
     "Jacksonville State": [
-     0.47153239,
-     -0.41604176
+     0.49746211,
+     -0.37766972
     ],
     "James Madison": [
-     0.79369424,
-     1.13260648
+     0.85913655,
+     1.04073125
     ],
     "Kansas": [
-     0.50949578,
-     0.95143083
+     0.30227315,
+     0.70269389
     ],
     "Kansas State": [
-     0.78229433,
-     0.58735079
+     0.68552312,
+     0.6425407
     ],
     "Kennesaw State": [
-     0.01158911,
-     -0.48102796
+     0.01447206,
+     -0.4448182
     ],
     "Kent State": [
-     -1.89403188,
-     -0.88136154
+     -2.3039205,
+     -0.7383699
     ],
     "Kentucky": [
-     0.61673818,
-     -0.7466738
+     0.65029734,
+     -0.71939652
     ],
     "LSU": [
-     0.98096569,
-     1.66966374
+     1.03346334,
+     1.77719507
     ],
     "Liberty": [
-     0.64990161,
-     1.41134051
+     0.68449711,
+     1.51092682
     ],
     "Louisiana": [
-     0.01037682,
-     0.18308119
+     -0.00354882,
+     0.39682421
     ],
     "Louisiana Tech": [
-     -0.24414308,
-     0.39398844
+     -0.25597423,
+     0.45949539
     ],
     "Louisville": [
-     1.06103004,
-     -0.5527936
+     1.11515618,
+     -0.51898066
     ],
     "Marshall": [
-     -0.62392223,
-     -1.24249805
+     -0.65365712,
+     -1.23175767
     ],
     "Maryland": [
-     -0.77268328,
-     -0.19103567
+     -0.630905,
+     -0.55688005
     ],
     "Massachusetts": [
-     -0.09322344,
-     0.46178487
+     -0.13615967,
+     0.55435304
     ],
     "Memphis": [
-     1.03168907,
-     0.12043548
+     1.08583797,
+     0.17677557
     ],
     "Miami": [
-     2.65435541,
-     1.77606509
+     2.34198705,
+     1.65118111
     ],
     "Miami (OH)": [
-     -0.12822411,
-     -0.50614399
+     -0.17596629,
+     -0.10983442
     ],
     "Michigan": [
-     -0.46638077,
-     1.28391246
+     -0.43308593,
+     1.15904337
     ],
     "Michigan State": [
-     -0.44953591,
-     -0.81342239
+     -0.4696366,
+     -0.78833215
     ],
     "Middle Tennessee": [
-     -0.48847207,
-     -1.53887451
+     -0.51224079,
+     -1.53811746
     ],
     "Minnesota": [
-     -0.6610182,
-     0.63300676
+     -0.6932314,
+     0.70651871
     ],
     "Mississippi State": [
-     0.57371377,
-     -1.09956204
+     0.60513286,
+     -1.08472876
     ],
     "Missouri": [
-     0.0530879,
-     0.95461884
+     -0.20208911,
+     0.5930386
     ],
     "Missouri State": [
-     -0.39179612,
-     -1.33550775
+     -0.41054394,
+     -1.32794285
     ],
     "NC State": [
-     0.34368655,
-     -0.60602228
+     0.36251868,
+     -0.57398417
     ],
     "Navy": [
-     0.54507459,
-     -0.0743933
+     0.57465003,
+     -0.0245112
     ],
     "Nebraska": [
-     0.7149742,
-     1.39451083
+     0.75167191,
+     1.49349479
     ],
     "Nevada": [
-     -0.36390414,
-     -0.04323673
+     -0.5795573,
+     0.0548078
     ],
     "New Mexico": [
-     0.52777096,
-     2.23097479
+     0.5555225,
+     2.35793367
     ],
     "New Mexico State": [
-     -0.95391129,
-     -0.1589672
+     -1.00193258,
+     -0.11201878
     ],
     "North Carolina": [
-     0.22001963,
-     -0.14041165
+     0.23084114,
+     0.04006745
     ],
     "North Dakota State": [
-     -0.14715234,
-     1.3548882
+     -0.26139422,
+     1.41497473
     ],
     "North Texas": [
-     1.52224723,
-     0.15656074
+     1.60107956,
+     0.21414205
     ],
     "Northern Illinois": [
-     -1.04041816,
-     -1.69063093
+     -0.85886785,
+     -1.8839076
     ],
     "Northwestern": [
-     0.98207171,
-     -0.28660286
+     1.03311087,
+     -0.24397125
     ],
     "Notre Dame": [
-     1.94342888,
-     1.61784357
+     2.04457286,
+     1.72423453
     ],
     "Ohio": [
-     -0.20609579,
-     -0.47697867
+     -0.21576314,
+     -0.44061339
     ],
     "Ohio State": [
-     1.62332661,
-     1.44593825
+     1.37486382,
+     1.54146682
     ],
     "Oklahoma": [
-     -1.5622564,
-     1.68087797
+     -1.64022806,
+     1.78945231
     ],
     "Oklahoma State": [
-     1.05064576,
-     0.27257361
+     1.20810998,
+     -0.16380942
     ],
     "Old Dominion": [
-     -2.34020439,
-     0.62927095
+     -2.45823663,
+     0.70265851
     ],
     "Ole Miss": [
-     1.18214919,
-     -0.41073511
+     1.2195052,
+     -0.11194866
     ],
     "Oregon": [
-     0.40337892,
-     0.75275752
+     0.42439752,
+     0.83024544
     ],
     "Oregon State": [
-     1.50775352,
-     0.02754167
+     1.53566219,
+     -0.11892873
     ],
     "Penn State": [
-     -0.21310399,
-     0.3783603
+     -0.31897378,
+     0.32744526
     ],
     "Pittsburgh": [
-     0.17838046,
-     1.57762878
+     0.26501595,
+     1.43695017
     ],
     "Purdue": [
-     0.26705694,
-     -1.33730537
+     0.28196122,
+     -1.32969951
     ],
     "Rice": [
-     -0.84960156,
-     -0.16973894
+     -0.90338736,
+     -0.48954847
     ],
     "Rutgers": [
-     -0.12935588,
-     -1.24275456
+     0.24817804,
+     -1.22342284
     ],
     "SMU": [
-     0.75938627,
-     0.51958769
+     0.79908799,
+     0.58932598
     ],
     "Sacramento State": [
-     -1.26170473,
-     -0.1422376
+     -1.32233514,
+     -0.09467362
     ],
     "Sam Houston": [
-     -0.96909399,
-     0.27519889
+     -1.01620897,
+     0.33670793
     ],
     "San Diego State": [
-     -2.18895567,
-     -1.19417386
+     -2.29962803,
+     -1.18188102
     ],
     "San Jos\u00e9 State": [
-     -0.70159889,
-     -0.15289997
+     -0.73631153,
+     -0.10573352
     ],
     "South Alabama": [
-     0.61134786,
-     -1.61458267
+     0.6424534,
+     -1.61632512
     ],
     "South Carolina": [
-     0.69307207,
-     -0.51099147
+     0.72948116,
+     -0.47579886
     ],
     "South Florida": [
-     0.53113798,
-     -0.1788102
+     0.40180541,
+     0.44814843
     ],
     "Southern Miss": [
-     -0.00948213,
-     -1.03920942
+     -0.36487812,
+     -0.72827424
     ],
     "Stanford": [
-     -1.61318139,
-     -2.3530943
+     -1.15027943,
+     -1.90195142
     ],
     "Syracuse": [
-     0.10155886,
-     0.29983631
+     0.10741247,
+     0.36213475
     ],
     "TCU": [
-     -0.20327283,
-     1.16763284
+     -0.45894917,
+     1.49100216
     ],
     "Temple": [
-     0.10645988,
-     -1.47328399
+     0.16986362,
+     -1.51293645
     ],
     "Tennessee": [
-     0.31536853,
-     0.79923651
+     0.23136792,
+     1.00268017
     ],
     "Texas": [
-     -0.12689391,
-     0.87544935
+     -0.13092285,
+     0.95702969
     ],
     "Texas A&M": [
-     -0.72202339,
-     0.56581362
+     -0.30894902,
+     0.77459597
     ],
     "Texas State": [
-     0.90485172,
-     -0.902564
+     0.95156991,
+     -0.88049815
     ],
     "Texas Tech": [
-     0.14218737,
-     0.88399005
+     0.42815034,
+     0.70904785
     ],
     "Toledo": [
-     0.217686,
-     0.67354858
+     0.33702,
+     1.04573916
     ],
     "Troy": [
-     -0.19928209,
-     0.1154308
+     -0.4303926,
+     0.03521911
     ],
     "Tulane": [
-     -1.5099314,
-     -0.27954711
+     -1.5885526,
+     -0.23658466
     ],
     "Tulsa": [
-     -0.46855695,
-     0.01840037
+     -0.14196488,
+     0.11320665
     ],
     "UAB": [
-     -0.80569193,
-     -0.15332627
+     -0.84526575,
+     -0.10620195
     ],
     "UCF": [
-     -0.28543791,
-     0.28794907
+     -0.29863935,
+     0.34987249
     ],
     "UCLA": [
-     0.75714654,
-     2.14974059
+     0.48761944,
+     1.99876813
     ],
     "UConn": [
-     0.52919114,
-     -0.42733433
+     0.55613675,
+     -0.38933014
     ],
     "UL Monroe": [
-     -0.17374155,
-     -2.38491297
+     -0.18080731,
+     -2.41242631
     ],
     "UNLV": [
-     -0.78287375,
-     0.67234012
+     -0.51138483,
+     0.15384877
     ],
     "USC": [
-     1.39993384,
-     -0.90571559
+     1.47283056,
+     -0.88372298
     ],
     "UTEP": [
-     -1.95814228,
-     -1.40116029
+     -2.05659626,
+     -1.39575135
     ],
     "UTSA": [
-     0.45519856,
-     -0.53168366
+     0.47938301,
+     -0.49718559
     ],
     "Utah": [
-     1.35841617,
-     1.49358209
+     1.42913311,
+     1.59591771
     ],
     "Utah State": [
-     -1.80429356,
-     0.02044709
+     -1.89495162,
+     0.07341333
     ],
     "Vanderbilt": [
-     -0.36568985,
-     -0.70515619
+     -0.45847049,
+     -0.86526422
     ],
     "Virginia": [
-     -0.05976423,
-     0.19392175
+     -0.06142076,
+     0.25270936
     ],
     "Virginia Tech": [
-     0.53416519,
-     0.84977733
+     0.4923159,
+     0.55686305
     ],
     "Wake Forest": [
-     1.13481035,
-     -0.51931074
+     1.1931551,
+     -0.4844509
     ],
     "Washington": [
-     -0.2334567,
-     0.13150418
+     -0.24395837,
+     0.1881966
     ],
     "Washington State": [
-     -1.66917615,
-     0.34999226
+     -1.36049779,
+     0.04889228
     ],
     "West Virginia": [
-     -0.10618148,
-     -1.11710966
+     0.11032267,
+     -1.44760726
     ],
     "Western Kentucky": [
-     -0.97576038,
-     -0.00976802
+     -1.02412604,
+     0.04223934
     ],
     "Western Michigan": [
-     0.13718499,
-     -0.20484658
+     0.26248104,
+     -0.10854935
     ],
     "Wisconsin": [
-     -0.03370424,
-     1.36820671
+     -0.12583797,
+     1.2719756
     ],
     "Wyoming": [
-     -1.09431665,
-     -0.72334593
+     -0.67330973,
+     -0.70420215
     ]
    },
    "war": {
@@ -28456,8 +28456,8 @@
     "Wisconsin": 0.02469619,
     "Wyoming": -0.03140237
    },
-   "completed_games": 353,
-   "form_rows": 706,
+   "completed_games": 382,
+   "form_rows": 764,
    "updated_through_slate": 7,
    "pff_cutoffs": [
     1,
