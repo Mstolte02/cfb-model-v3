@@ -57,18 +57,8 @@ assert(/function predict\(a, b, venue, week\)/.test(src),
   'predict lost its week argument, so nothing can ask for the graded margin');
 assert(/week != null && week < MARGIN_BASIS_FROM_WEEK/.test(src),
   'the frozen-margin branch is gone from predict');
-assert(/predict\(g\.home, g\.away, g\.neutral \? "N" : "A", g\.week\)/.test(src),
-  'marketRows stopped passing the week, so the bet board would regrade played weeks');
-assert(/const frozen = g\.modelSnapshot;/.test(src),
-  'marketRows no longer reads the immutable per-game model snapshot');
-assert(/pA: frozen\.homeWinProbability, margin: frozen\.homeMargin/.test(src),
-  'marketRows no longer replaces live ratings with the frozen pregame values');
-assert(/const line = g\.books\.DraftKings;/.test(src),
-  'marketRows no longer grades the board from DraftKings');
-assert(!/__consensus_best/.test(src),
-  'the Market Board or live results still contain a multi-book consensus path');
 assert(/predict\(t, opp, venue, g\.w\)/.test(src),
-  'the team schedule stopped passing the week, so it would disagree with the board');
+  'the team schedule stopped passing the week, so historical team forecasts would use current ratings');
 
 console.log('Dynamic margin: normInv matches scipy ndtri, stays antisymmetric, shares '
   + 'its probability clip with src/dynamic.py, and played weeks stay on the margin they '
