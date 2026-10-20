@@ -1,13 +1,13 @@
 {
-  "checked_at": "2026-10-20T04:59:05Z",
+  "checked_at": "2026-10-20T11:48:11Z",
   "source": "ESPN scoreboard (DraftKings); CFBD /lines fallback",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
   "results_source": "ESPN scoreboard",
   "lines_checked_this_check": true,
-  "lines_last_checked_at": "2026-10-20T04:59:05Z",
-  "quote_events": 6632,
-  "successful_checks": 233,
-  "changed_quotes_this_check": 13,
+  "lines_last_checked_at": "2026-10-20T11:48:11Z",
+  "quote_events": 6635,
+  "successful_checks": 234,
+  "changed_quotes_this_check": 3,
   "games_with_quotes": 954,
   "books_with_quotes": [
     "Bovada",
