@@ -2865,10 +2865,10 @@
   function renderDeserving() {
     const host=document.getElementById('deserving-top25');
     if(!deservingModel){host.innerHTML='<p class="stock-empty">Résumé model unavailable. Reload to try again.</p>';return;}
-    if(!deservingRows)deservingRows=RankingHistory.deserving(schedule,meta,[...FBS],deservingModel,ratings.teams);
+    if(!deservingRows)deservingRows=RankingHistory.deserving(schedule,meta,[...FBS],deservingModel);
     document.getElementById('deserving-date').textContent=`${ratings.season} finals · ${ratings.history?.at(-1)?.label||'Season to date'}`;
     host.innerHTML=deservingRows.length?rankingGrid(deservingRows.filter(r=>r.rank<=25),'Résumé score',r=>r.score.toFixed(2)):'<p class="stock-empty">The board opens after the first completed FBS matchup.</p>';
-    document.getElementById('deserving-ledger').innerHTML=`<div class="stock-table-wrap"><table><thead><tr><th>Rank</th><th>Team</th><th>Record</th><th>Opponent lift contribution</th><th>Score</th></tr></thead><tbody>${deservingRows.map(r=>`<tr><td>${r.rank}</td><td><button class="stock-team team-link" data-team="${esc(r.team)}">${esc(r.team)}</button></td><td>${r.wins}–${r.losses}${r.ties?'–'+r.ties:''}</td><td>${signedMove(r.liftContribution,2)}</td><td>${r.score.toFixed(2)}</td></tr>`).join('')}</tbody></table></div>`;
+    document.getElementById('deserving-ledger').innerHTML=`<div class="stock-table-wrap"><table><thead><tr><th>Rank</th><th>Team</th><th>FBS record</th><th>Win %</th><th>SOS rank</th><th>Opponent rating</th><th>Record base</th><th>SOS adjustment</th><th>Résumé score</th></tr></thead><tbody>${deservingRows.map(r=>`<tr><td>${r.rank}</td><td><button class="stock-team team-link" data-team="${esc(r.team)}">${esc(r.team)}</button></td><td>${r.wins}–${r.losses}${r.ties?'–'+r.ties:''}</td><td>${pct(r.win_pct,1)}</td><td>${1+deservingRows.filter(o=>o.sos>r.sos+1e-10).length}</td><td>${(100*r.sos).toFixed(2)}</td><td>${(100*r.recordBase).toFixed(2)}</td><td>${signedMove(100*r.scheduleAdjustment,2)}</td><td>${r.score.toFixed(2)}</td></tr>`).join('')}</tbody></table></div>`;
     wireTeamLinks();
   }
 
@@ -3364,3 +3364,4 @@
   renderAll();
   openRoute();
 })();
+

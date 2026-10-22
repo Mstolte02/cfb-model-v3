@@ -20,7 +20,7 @@
     const sd=Math.sqrt(values.reduce((s,v)=>s+(v-mean)**2,0)/values.length);
     return values.map(v=>sd>1e-12?(v-mean)/sd:0);
   }
-  // Pivoted Gaussian elimination solves the same ridge Massey system as the research.
+  // Pivoted Gaussian elimination solves the schedule-adjusted win/loss system.
   function solve(a,b) {
     a=a.map((row,i)=>[...row,b[i]]);const n=b.length;
     for(let k=0;k<n;k++) {
@@ -30,43 +30,44 @@
     }
     const x=Array(n).fill(0);for(let i=n-1;i>=0;i--) {let v=a[i][n];for(let j=i+1;j<n;j++)v-=a[i][j]*x[j];x[i]=v/a[i][i];}return x;
   }
-  function deserving(schedule, metadata, fbsNames, model, powerRatings = []) {
+  // Colley: (games + 2) * rating - sum(opponent ratings) = 1 + (wins - losses)/2.
+  // Conference metadata and predictive power ratings are deliberately unused.
+  function deserving(schedule, metadata, fbsNames, model) {
+    if (model?.method !== 'colley') throw new Error('Unsupported résumé method');
     const fbs=new Set(fbsNames);
-    const powerRank=new Map(powerRatings.map(r=>[r.team,Number.isFinite(r.rank)?r.rank:Infinity]));
-    const powerTie=(a,b)=>(powerRank.get(a.team)??Infinity)-(powerRank.get(b.team)??Infinity)||a.team.localeCompare(b.team);
-    const finals=schedule.filter(g=>g.f && Number.isFinite(g.hp) && Number.isFinite(g.ap) && g.st!=='postseason');
-    const rated=finals.filter(g=>fbs.has(g.h)&&fbs.has(g.a));
-    // Match the audited universe: at least one completed FBS matchup.
-    const names=[...new Set(rated.flatMap(g=>[g.h,g.a]))].sort();const n=names.length;
+    const finals=schedule.filter(g=>g.f && Number.isFinite(g.hp) && Number.isFinite(g.ap)
+      && g.st!=='postseason' && fbs.has(g.h) && fbs.has(g.a));
+    const names=[...new Set(finals.flatMap(g=>[g.h,g.a]))].sort(),n=names.length;
     if(!n)return [];
-    const idx=new Map(names.map((t,i)=>[t,i]));
-    const counts=Array(n).fill(0),total=Array(n).fill(0),wins=Array(n).fill(0),ties=Array(n).fill(0),direct=Array(n).fill(0),opps=names.map(()=>[]);
-    const a=names.map((_,i)=>names.map((_,j)=>i===j?model.ridge:0));
-    for(const g of rated) {
-      const i=idx.get(g.h),j=idx.get(g.a),margin=Math.max(-model.margin_cap,Math.min(model.margin_cap,g.hp-g.ap))-(g.n?0:model.home_field_points);
-      direct[i]+=margin;direct[j]-=margin;counts[i]++;counts[j]++;opps[i].push(j);opps[j].push(i);
-      a[i][i]++;a[j][j]++;a[i][j]--;a[j][i]--;
+    const idx=new Map(names.map((team,i)=>[team,i]));
+    const wins=Array(n).fill(0),losses=Array(n).fill(0),ties=Array(n).fill(0),opps=names.map(()=>[]);
+    const matrix=names.map((_,i)=>names.map((_,j)=>i===j?2:0));
+    for(const g of finals) {
+      const i=idx.get(g.h),j=idx.get(g.a);
+      opps[i].push(j);opps[j].push(i);
+      matrix[i][i]++;matrix[j][j]++;matrix[i][j]--;matrix[j][i]--;
+      if(g.hp>g.ap){wins[i]++;losses[j]++;}
+      else if(g.hp<g.ap){wins[j]++;losses[i]++;}
+      else {ties[i]++;ties[j]++;}
     }
-    const first=direct.map((v,i)=>v/counts[i]),second=first.map((v,i)=>v+opps[i].reduce((s,j)=>s+first[j],0)/counts[i]);
-    const fixed=solve(a,direct),mean=fixed.reduce((s,v)=>s+v,0)/n;fixed.forEach((v,i)=>fixed[i]=v-mean);
-    const sd=Math.sqrt(fixed.reduce((s,v)=>s+v*v,0)/n),sos=Array(n).fill(0);
-    for(const g of finals)for(const [t,o,scored,allowed] of [[g.h,g.a,g.hp,g.ap],[g.a,g.h,g.ap,g.hp]]) {
-      const i=idx.get(t);if(i===undefined)continue;total[i]++;wins[i]+=Number(scored>allowed);ties[i]+=Number(scored===allowed);
-      sos[i]+=idx.has(o)?fixed[idx.get(o)]:-2*sd;
-    }
-    const fz=z(first),sz=z(second),lift=z(sz.map((v,i)=>v-fz[i])),quality=z(fixed),sosz=z(sos.map((v,i)=>v/total[i]));
-    const rows=names.map((team,i)=>({team,win_pct:wins[i]/total[i],rating_z:quality[i],sos_z:sosz[i],second_pass_lift:lift[i],
-      p4:Number(['SEC','Big Ten','Big 12','ACC','Pac-12','Pac-10'].includes(metadata[team]?.conference)||team==='Notre Dame'),
-      wins:wins[i],losses:total[i]-wins[i]-ties[i],ties:ties[i],games:total[i],h2h:0}));
-    const score=(r,w)=>Object.entries(w).reduce((s,[k,v])=>s+v*r[k],0);
-    const order=rows.slice().sort((a,b)=>score(b,model.provisional_weights)-score(a,model.provisional_weights)||powerTie(a,b));
-    const ranks=new Map(order.map((r,i)=>[r.team,i]));
-    const pair=new Map();for(const g of rated)if(g.hp!==g.ap) {const w=g.hp>g.ap?g.h:g.a,l=g.hp>g.ap?g.a:g.h;pair.set(w+'|'+l,1);pair.set(l+'|'+w,-1);}
-    for(const r of rows) {for(const o of names)if(Math.abs(ranks.get(r.team)-ranks.get(o))<=model.h2h_within)r.h2h+=pair.get(r.team+'|'+o)||0;
-      r.score=score(r,model.weights);r.liftContribution=r.second_pass_lift*model.weights.second_pass_lift;}
-    rows.sort((a,b)=>Math.abs(b.score-a.score)>=1e-10?b.score-a.score:powerTie(a,b));
-    rows.forEach((r,i)=>r.rank=i+1);
+    const rating=solve(matrix,wins.map((w,i)=>1+(w-losses[i])/2));
+    const rows=names.map((team,i)=>{
+      const games=opps[i].length,sos=opps[i].reduce((s,j)=>s+rating[j],0)/games;
+      const recordBase=(wins[i]+ties[i]/2+1)/(games+2);
+      const scheduleAdjustment=games/(games+2)*(sos-.5);
+      return {team,wins:wins[i],losses:losses[i],ties:ties[i],games,
+        win_pct:(wins[i]+ties[i]/2)/games,rating:rating[i],sos,
+        recordBase,scheduleAdjustment,score:100*rating[i]};
+    });
+    // Equal résumés share a rank. Alphabetical ordering is display-only.
+    rows.sort((a,b)=>b.score-a.score||a.team.localeCompare(b.team));
+    let tieScore;
+    rows.forEach((r,i)=>{
+      if(i===0||Math.abs(r.score-tieScore)>1e-8){r.rank=i+1;tieScore=r.score;}
+      else r.rank=rows[i-1].rank;
+    });
     return rows;
   }
   root.RankingHistory={movement,deserving,z};if(typeof module!=='undefined')module.exports=root.RankingHistory;
 })(typeof window!=='undefined'?window:globalThis);
+

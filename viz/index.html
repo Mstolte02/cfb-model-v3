@@ -65,9 +65,9 @@
     <article class="ranking-board"><div class="board-head"><span>Model</span><h3>Neutral-field Top 25</h3><small>Ordered by neutral win rate</small></div><div id="power-top25"></div><p class="board-note">Neutral win rate is the average chance of beating every other rated FBS team on a neutral field.</p></article>
   </section>
   <section id="view-deserving" class="view">
-    <div class="view-head editorial-head"><span class="eyebrow">The résumé register / results earned</span><h2>Most Deserving</h2><p class="sub">What have you earned this season? Record, opponent quality, schedule and head-to-head, with a second look at your opponents.</p></div>
-    <article class="ranking-board deserving"><div class="board-head"><span>Second-pass opponent lift</span><h3>The earned Top 25</h3><small id="deserving-date"></small></div><div id="deserving-top25"></div><p class="board-note">The second pass checks whether opponents' own scoring results strengthen or weaken a résumé. Rankings use completed results this season. Teams enter after their first completed FBS matchup; equal scores are broken by the current Power Ratings. Early rankings can move sharply.</p></article>
-    <details class="stock-method"><summary>Inside the résumé score</summary><p>Two passes through capped, home-field-adjusted scoring margins measure opponent lift. The fitted score combines that lift with record, opponent-adjusted quality, schedule strength, conference status and head-to-head against nearby teams. Weights were fitted to 2015–2025 final CFP rankings using the earlier idempotence research. This is an experimental in-season application of a season-end model.</p><div id="deserving-ledger"></div></details>
+    <div class="view-head editorial-head"><span class="eyebrow">The résumé register / results earned</span><h2>Most Deserving</h2><p class="sub">Wins and losses, adjusted for the strength of the opponents you played.</p></div>
+    <article class="ranking-board deserving"><div class="board-head"><span>Opponent-adjusted record</span><h3>The earned Top 25</h3><small id="deserving-date"></small></div><div id="deserving-top25"></div><p class="board-note">Only completed regular-season FBS-versus-FBS games count. Every team starts equally. Equal scores share a rank, including ties at the Top 25 cutoff. Early rankings can move sharply as schedules connect.</p></article>
+    <details class="stock-method"><summary>Inside the résumé score</summary><p>The Colley method adjusts winning percentage for schedule strength using this season’s FBS results. Opponent ratings and your résumé rating are solved together: beating a stronger schedule earns more credit. Conference, polls, scoring margin and preseason ratings have no effect.</p><p>Record base = 100 × (wins + half of ties + 1) / (FBS games + 2). SOS adjustment = 100 × FBS games / (FBS games + 2) × (average opponent rating − 0.50). Résumé score = record base + SOS adjustment. The extra win and loss give every team the same small-sample starting point. SOS rank 1 is the toughest played schedule. Ratings are an index on a percentage-like scale, not a forecast win probability, and can extend beyond 0–100.</p><div id="deserving-ledger"></div></details>
   </section>
   <section id="view-stock-watch" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">The college football exchange</span><h2>Stock Watch</h2><p class="sub">Every climb. Every slide. Follow the full field through the season.</p></div>
@@ -128,7 +128,8 @@
 <footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Rankings and ratings are for entertainment. Model probabilities are estimates.</span></footer>
 <script src="team-card.js"></script>
 <script src="team-overview.js"></script>
-<script src="ranking-history.js"></script>
-<script src="app.js?v=61"></script>
+<script src="ranking-history.js?v=2"></script>
+<script src="app.js?v=62"></script>
 </body>
 </html>
+
