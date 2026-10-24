@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-10-23T21:29:31Z",
+  "checked_at": "2026-10-24T04:45:42Z",
   "source": "ESPN scoreboard (DraftKings); CFBD /lines fallback",
   "timestamp_semantics": "retrieval time, not sportsbook quote time",
   "games": 1019,
   "quotes": 1577,
-  "changed_quotes": 35,
-  "payload_hash": "85613e8ee29877d204f0f94df9d6d6d9dc1ff0c96464ee7102cd8611cb22d3b9"
+  "changed_quotes": 45,
+  "payload_hash": "12577758671a156459c77ef388f6188980c3bf3e1b09d6c73fd3ad8574f331a6"
 }
