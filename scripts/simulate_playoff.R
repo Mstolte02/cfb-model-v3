@@ -193,9 +193,8 @@ make_inputs <- function(mode) {
     spec$min_form <- model$ensemble$min_form_games %||% 2
     spec$sigma <- model$ensemble$margin_sigma
   }
-  # The current run seeds by the published Power Rating (ratings.json, the mean
-  # neutral-site win probability against every rated team), so the bracket follows
-  # the same order as the Power Rankings page.
+  # Team quality in the committee proxy is the published Power Rating (ratings.json,
+  # the mean neutral-site win probability against every rated team).
   rating <- if (mode == "current") {
     power <- read_json(file.path(viz, "ratings.json"))$teams
     power <- setNames(vapply(power, function(x) as.numeric(x$power), numeric(1)),
@@ -207,6 +206,82 @@ make_inputs <- function(mode) {
   rankings <- data.frame(team = fbs, rank = rank(-rating, ties.method = "first"))
   analytics <- data.frame(team = fbs, rating = as.numeric(rating))
   list(games = games, teams = teams, rankings = rankings, analytics = analytics, spec = spec)
+}
+
+# Committee proxy, the h2h-free fit from scripts/fit_committee.py on every published
+# committee ranking 2014-2025 (the provisional_weights in playoff_preseason.json).
+# Each simulation ranks teams on its own simulated record, so seeding follows how the
+# schedule plays out: score = win_pct + quality + schedule strength + power league.
+W_WINPCT <- 10.3397
+W_RATING <- 0.2262
+W_SOS <- 0.7362
+W_P4 <- 1.0864
+FCS_OPP_RATING <- -2.0
+P4_CONFS <- c("ACC", "Big 12", "Big Ten", "SEC")
+G6_CONFS <- c("American Athletic", "Conference USA", "Mid-American", "Mountain West", "Pac-12", "Sun Belt")
+
+# The schedule-only terms: quality z, mean opponent quality z (FCS opponents count
+# FCS_OPP_RATING), and the power-league flag. Notre Dame carries the power flag, as
+# in scripts/fit_committee.POWER_INDEPENDENTS.
+static_committee <- function(input) {
+  z <- setNames(as.numeric(scale(input$analytics$rating)), input$analytics$team)
+  g <- input$games
+  opp <- function(team, other) ifelse(other %in% names(z), z[other], FCS_OPP_RATING)
+  sos <- vapply(fbs, function(team) {
+    vals <- c(opp(team, g$away_team[g$home_team == team]), opp(team, g$home_team[g$away_team == team]))
+    if (length(vals)) mean(vals) else 0
+  }, numeric(1))
+  sos_z <- (sos - mean(sos)) / sd(sos)
+  conf <- vapply(fbs, function(team) team_meta[[team]]$conference %||% "FBS Independents", character(1))
+  p4 <- as.numeric(conf %in% P4_CONFS | fbs == "Notre Dame")
+  data.frame(team = fbs, conference = conf, rating_z = z[fbs], sos_z = sos_z, p4 = p4,
+             static = W_RATING * z[fbs] + W_SOS * sos_z + W_P4 * p4, stringsAsFactors = FALSE)
+}
+
+# Selection and bracket for every simulation: four P4 champions, the best-scoring G6
+# team, then at-large by score; straight seeding; first round at the higher seed,
+# quarterfinals on at neutral sites. Returns one row per (sim, team) with seed and exit.
+select_and_play <- function(standings, input) {
+  cm <- static_committee(input)
+  st <- standings[standings$team %in% fbs, c("sim", "team", "win_pct", "conf_champ")]
+  st$score <- W_WINPCT * st$win_pct + cm$static[match(st$team, cm$team)]
+  st$conference <- cm$conference[match(st$team, cm$team)]
+  sims <- split(st, st$sim)
+  seeds <- t(vapply(sims, function(s) {
+    s <- s[order(-s$score, s$team), ]
+    auto <- character()
+    for (c in P4_CONFS) {
+      champ <- s$team[s$conference == c & s$conf_champ %in% TRUE]
+      if (!length(champ)) champ <- s$team[s$conference == c]
+      auto <- c(auto, champ[1])
+    }
+    auto <- c(auto, s$team[s$conference %in% G6_CONFS][1])
+    field <- c(auto, head(setdiff(s$team, auto), 12L - length(auto)))
+    s$team[s$team %in% field]
+  }, character(12)))
+  play <- function(a, b, home) {
+    p <- probability(a, b, rep(!home, length(a)), input$spec)
+    ifelse(runif(length(a)) < p, a, b)
+  }
+  r1 <- lapply(list(c(8, 9), c(5, 12), c(6, 11), c(7, 10)),
+               function(k) play(seeds[, k[1]], seeds[, k[2]], TRUE))
+  qf <- list(play(seeds[, 1], r1[[1]], FALSE), play(seeds[, 4], r1[[2]], FALSE),
+             play(seeds[, 3], r1[[3]], FALSE), play(seeds[, 2], r1[[4]], FALSE))
+  sf <- list(play(qf[[1]], qf[[2]], FALSE), play(qf[[4]], qf[[3]], FALSE))
+  champ <- play(sf[[1]], sf[[2]], FALSE)
+  sim_ids <- as.integer(names(sims))
+  out <- standings[standings$team %in% fbs, ]
+  key <- paste(out$sim, out$team)
+  at <- function(teams) paste(rep(sim_ids, ncol(teams)), as.vector(teams))
+  out$seed <- NA_integer_
+  out$seed[match(at(seeds), key)] <- rep(seq_len(12), each = length(sim_ids))
+  out$exit <- 0L
+  out$exit[!is.na(out$seed)] <- 1L
+  out$exit[match(at(cbind(seeds[, 1:4], do.call(cbind, r1))), key)] <- 2L
+  out$exit[match(at(do.call(cbind, qf)), key)] <- 3L
+  out$exit[match(at(do.call(cbind, sf)), key)] <- 4L
+  out$exit[match(at(cbind(champ)), key)] <- 5L
+  out
 }
 
 safe_mean <- function(x) {
@@ -283,16 +358,15 @@ export_run <- function(mode) {
   sim <- cfb_simulations(
     input$games, input$teams,
     compute_results = model_results, spec = input$spec,
-    simulations = n_sims, playoff_seeds = 12L, sim_include = "POST",
-    rankings = input$rankings, autobid = "2026",
+    simulations = n_sims, playoff_seeds = 12L, sim_include = "REG", autobid = "2026",
     tiebreaker_data = list(analytics_ratings = input$analytics),
     chunks = min(max(4L, workers * 2L), n_sims), verbosity = "NONE"
   )
   template_path <- file.path(viz, paste0("playoff_", mode, ".json"))
   template <- if (file.exists(template_path)) read_json(template_path) else list(teams = list())
   old <- setNames(template$teams %||% list(), vapply(template$teams %||% list(), function(x) x$team, character(1)))
-  standings <- sim$standings[sim$standings$team %in% fbs, ]
-  max_exit <- max(standings$exit)
+  standings <- select_and_play(sim$standings, input)
+  max_exit <- 5L
   rows <- lapply(fbs, function(team) {
     st <- standings[standings$team == team, ]
     base <- old[[team]] %||% list(team = team, conference = team_meta[[team]]$conference)
@@ -326,10 +400,12 @@ export_run <- function(mode) {
   out$season <- 2026L
   out$version <- mode
   out$locked <- mode == "preseason"
-  out$engine <- paste0("cfbseedR::cfb_simulations() v", sim$sim_params$cfbseedR_version)
+  out$engine <- paste0("cfbseedR::cfb_simulations() v", sim$sim_params$cfbseedR_version, " regular season + committee-proxy selection")
   out$basis <- if (mode == "preseason") "Preseason team model; all results simulated" else "Current team model; completed results locked"
-  out$rules <- "12 teams; 2026 autobids; straight seeding; fixed bracket"
-  out$committee_proxy <- "Model power order supplied as a static ranking inside each season simulation"
+  out$rules <- "12 teams; auto: ACC/Big12/BigTen/SEC champs + highest-ranked G6 team; 7 at-large; straight seeding, top-4 byes; first round at higher seed; fixed bracket"
+  out$committee_proxy <- sprintf(
+    "Ranked inside each simulation on its own record: %.2f*win_pct + %.2f*power_z + %.2f*sos_z + %.2f*power_conf (h2h-free fit on 2014-2025 committee rankings)",
+    W_WINPCT, W_RATING, W_SOS, W_P4)
   out$teams <- rows
   out$bracket <- build_bracket(rows)
   out$tossups <- list()
