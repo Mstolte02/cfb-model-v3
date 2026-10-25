@@ -2,10 +2,11 @@
 
 # Build both public CFP projections with cfbseedR's full-season simulator.
 #
-# The preseason run ignores completed scores and the in-season rating layer. The
-# current run locks completed scores and uses the live v5 ensemble state (the v4
-# dynamic ratings on an older payload). Both use the model's own matchup
-# probabilities through cfbseedR's compute_results contract.
+# Both runs are the same engine and the same selection rule. The preseason run
+# simulates every game from the v5 ensemble's week-0 state (initial ratings, no form,
+# empty PFF and WAR tables) and ranks teams by the week-0 Power Rating. The current
+# run locks completed scores, uses the live ensemble state, and ranks teams by the
+# current Power Rating. Matchup probabilities go through cfbseedR's compute_results.
 #
 # Run: Rscript scripts/simulate_playoff.R [simulations] [both|preseason|current]
 
@@ -89,7 +90,12 @@ ensemble_tables <- function(ensemble) {
     }
     Wv <- setNames(rep(0, length(init)), names(init))
     for (t in intersect(names(war), names(init))) Wv[t] <- war[[t]]
-    st <- if (!is.null(pff) && !is.null(war) && !is.null(m$stack_war)) m$stack_war
+    # Slates before stack_war_from_slate keep the legacy WAR stack they were graded
+    # on, as in scripts/ensemble_replay._stack.
+    slate <- ensemble$state$slate
+    war_stack <- if (!is.null(m$stack_war_legacy) && !is.null(m$stack_war_from_slate) &&
+                     !is.null(slate) && slate < m$stack_war_from_slate) m$stack_war_legacy else m$stack_war
+    st <- if (!is.null(pff) && !is.null(war) && !is.null(war_stack)) war_stack
           else if (!is.null(pff) && !is.null(m$stack_pff)) m$stack_pff else m
     list(init = init, r = r, O = O, D = D, n = n, Op = Op, Dp = Dp, Wv = Wv,
          columns = unlist(st$columns), scale = unlist(st$scale), coef = unlist(st$coef))
@@ -188,28 +194,44 @@ make_inputs <- function(mode) {
     spec$dynamic <- dynamic
     spec$blend <- model$dynamic$blend %||% 0
   }
-  if (mode == "current" && !is.null(model$ensemble$state)) {
-    spec$ensemble <- ensemble_tables(model$ensemble)
+  if (!is.null(model$ensemble$state)) {
+    ensemble <- model$ensemble
+    # The week-0 state, as capture_market_snapshot draws the Preseason Power Ratings:
+    # initial ratings, no form, empty PFF and WAR tables, slate 1.
+    if (mode == "preseason") {
+      ensemble$state <- list(
+        ratings = setNames(lapply(ensemble$members, `[[`, "initial"),
+                           vapply(ensemble$members, `[[`, character(1), "name")),
+        form = list(), pff = setNames(list(), character()), war = setNames(list(), character()),
+        slate = 1L)
+    }
+    spec$ensemble <- ensemble_tables(ensemble)
     spec$min_form <- model$ensemble$min_form_games %||% 2
     spec$sigma <- model$ensemble$margin_sigma
   }
   # Team quality in the committee proxy is the published Power Rating (ratings.json,
-  # the mean neutral-site win probability against every rated team).
-  rating <- if (mode == "current") {
-    power <- read_json(file.path(viz, "ratings.json"))$teams
+  # the mean neutral-site win probability against every rated team): the week-0 row
+  # for the preseason run, today's for the current run.
+  rating <- {
+    ratings <- read_json(file.path(viz, "ratings.json"))
+    power <- if (mode == "preseason") {
+      week0 <- Filter(function(h) identical(as.integer(h$week), 0L), ratings$history)
+      if (!length(week0)) stop("ratings.json has no week-0 (Preseason) power ratings")
+      week0[[1]]$teams
+    } else ratings$teams
     power <- setNames(vapply(power, function(x) as.numeric(x$power), numeric(1)),
                       vapply(power, function(x) x$team, character(1)))
     missing <- setdiff(fbs, names(power))
     if (length(missing)) stop("ratings.json has no power rating for: ", paste(missing, collapse = ", "))
     power[fbs]
-  } else spec$logit[fbs]
+  }
   rankings <- data.frame(team = fbs, rank = rank(-rating, ties.method = "first"))
   analytics <- data.frame(team = fbs, rating = as.numeric(rating))
   list(games = games, teams = teams, rankings = rankings, analytics = analytics, spec = spec)
 }
 
 # Committee proxy, the h2h-free fit from scripts/fit_committee.py on every published
-# committee ranking 2014-2025 (the provisional_weights in playoff_preseason.json).
+# committee ranking 2014-2025 (its provisional_weights).
 # Each simulation ranks teams on its own simulated record, so seeding follows how the
 # schedule plays out: score = win_pct + quality + schedule strength + power league.
 W_WINPCT <- 10.3397
@@ -401,7 +423,7 @@ export_run <- function(mode) {
   out$version <- mode
   out$locked <- mode == "preseason"
   out$engine <- paste0("cfbseedR::cfb_simulations() v", sim$sim_params$cfbseedR_version, " regular season + committee-proxy selection")
-  out$basis <- if (mode == "preseason") "Preseason team model; all results simulated" else "Current team model; completed results locked"
+  out$basis <- if (mode == "preseason") "Week-0 ensemble and Preseason Power Ratings; every game simulated" else "Current ensemble and Power Ratings; completed results locked"
   out$rules <- "12 teams; auto: ACC/Big12/BigTen/SEC champs + highest-ranked G6 team; 7 at-large; straight seeding, top-4 byes; first round at higher seed; fixed bracket"
   out$committee_proxy <- sprintf(
     "Ranked inside each simulation on its own record: %.2f*win_pct + %.2f*power_z + %.2f*sos_z + %.2f*power_conf (h2h-free fit on 2014-2025 committee rankings)",
@@ -415,15 +437,6 @@ export_run <- function(mode) {
           round(as.numeric(difftime(Sys.time(), started, units = "mins")), 1), " minutes")
 }
 
-# The preseason projection is the one published before kickoff. Once it is locked it
-# is never re-simulated, because today's engine and inputs would change it.
-preseason_locked <- function() {
-  path <- file.path(viz, "playoff_preseason.json")
-  file.exists(path) && isTRUE(read_json(path)$locked)
-}
-if (mode_arg %in% c("both", "preseason")) {
-  if (preseason_locked()) message("preseason projection is locked; not re-simulated")
-  else export_run("preseason")
-}
+if (mode_arg %in% c("both", "preseason")) export_run("preseason")
 if (mode_arg %in% c("both", "current")) export_run("current")
 future::plan(future::sequential)

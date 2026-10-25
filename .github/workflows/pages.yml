@@ -40,10 +40,10 @@ jobs:
             any::cfbseedR
             any::jsonlite
           cache-version: 1
-      # The preseason projection is the committed file published before kickoff
-      # (viz/data/playoff_preseason.json). Only the current projection is rebuilt.
-      - name: Build CFP projection
-        run: Rscript scripts/simulate_playoff.R 500 current
+      # Both projections use the same engine: the preseason one from the week-0
+      # ensemble and Power Ratings, the current one from today's.
+      - name: Build CFP projections
+        run: Rscript scripts/simulate_playoff.R 500 both
       - name: Build dist/
         run: |
           node --test tests/test_ranking_history.cjs tests/test_power_xray.cjs tests/test_war_research.cjs

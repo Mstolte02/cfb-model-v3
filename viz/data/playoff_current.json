@@ -8352,5 +8352,5 @@
   "version": "current",
   "locked": false,
   "engine": "cfbseedR::cfb_simulations() v0.2.0 regular season + committee-proxy selection",
-  "basis": "Current team model; completed results locked"
+  "basis": "Current ensemble and Power Ratings; completed results locked"
 }
