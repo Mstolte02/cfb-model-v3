@@ -238,8 +238,8 @@ static_committee <- function(input) {
              static = W_RATING * z[fbs] + W_SOS * sos_z + W_P4 * p4, stringsAsFactors = FALSE)
 }
 
-# Selection and bracket for every simulation: the five highest-ranked conference
-# champions (any conference), then seven at-large by score; straight seeding; first round at the higher seed,
+# Selection and bracket for every simulation: four P4 champions, the best-scoring G6
+# team, then at-large by score; straight seeding; first round at the higher seed,
 # quarterfinals on at neutral sites. Returns one row per (sim, team) with seed and exit.
 select_and_play <- function(standings, input) {
   cm <- static_committee(input)
@@ -249,12 +249,13 @@ select_and_play <- function(standings, input) {
   sims <- split(st, st$sim)
   seeds <- t(vapply(sims, function(s) {
     s <- s[order(-s$score, s$team), ]
-    champs <- vapply(c(P4_CONFS, G6_CONFS), function(c) {
+    auto <- character()
+    for (c in P4_CONFS) {
       champ <- s$team[s$conference == c & s$conf_champ %in% TRUE]
       if (!length(champ)) champ <- s$team[s$conference == c]
-      champ[1]
-    }, character(1))
-    auto <- head(s$team[s$team %in% champs], 5L)
+      auto <- c(auto, champ[1])
+    }
+    auto <- c(auto, s$team[s$conference %in% G6_CONFS][1])
     field <- c(auto, head(setdiff(s$team, auto), 12L - length(auto)))
     s$team[s$team %in% field]
   }, character(12)))
@@ -308,18 +309,18 @@ build_bracket <- function(rows) {
   take <- function(team) {
     if (!is.null(team) && length(team) && !team %in% chosen) chosen <<- c(chosen, team)
   }
-  # The likeliest champion of each conference, then the five of them most often in
-  # the field, as in select_and_play.
-  champs <- list()
-  for (conference in c(p4, g6)) {
+  for (conference in p4) {
     pool <- rows[vapply(rows, function(x) identical(x$conference, conference), logical(1))]
     if (length(pool)) {
       score <- vapply(pool, row_number, numeric(1), key = "conf_champ")
-      champs <- c(champs, list(pool[[which.max(score)]]))
+      take(pool[[which.max(score)]]$team)
     }
   }
-  champs <- champs[order(-vapply(champs, row_number, numeric(1), key = "playoff"))]
-  for (row in head(champs, 5L)) take(row$team)
+  pool <- rows[vapply(rows, function(x) x$conference %in% g6, logical(1))]
+  if (length(pool)) {
+    score <- vapply(pool, row_number, numeric(1), key = "playoff")
+    take(pool[[which.max(score)]]$team)
+  }
   ordered <- rows[order(-vapply(rows, row_number, numeric(1), key = "playoff"),
                         vapply(rows, row_number, numeric(1), key = "power_rank", fallback = Inf))]
   for (row in ordered) if (length(chosen) < 12) take(row$team)
@@ -401,7 +402,7 @@ export_run <- function(mode) {
   out$locked <- mode == "preseason"
   out$engine <- paste0("cfbseedR::cfb_simulations() v", sim$sim_params$cfbseedR_version, " regular season + committee-proxy selection")
   out$basis <- if (mode == "preseason") "Preseason team model; all results simulated" else "Current team model; completed results locked"
-  out$rules <- "12 teams; auto: 5 highest-ranked conference champions; 7 at-large; straight seeding, top-4 byes; first round at higher seed; fixed bracket"
+  out$rules <- "12 teams; auto: ACC/Big12/BigTen/SEC champs + highest-ranked G6 team; 7 at-large; straight seeding, top-4 byes; first round at higher seed; fixed bracket"
   out$committee_proxy <- sprintf(
     "Ranked inside each simulation on its own record: %.2f*win_pct + %.2f*power_z + %.2f*sos_z + %.2f*power_conf (h2h-free fit on 2014-2025 committee rankings)",
     W_WINPCT, W_RATING, W_SOS, W_P4)

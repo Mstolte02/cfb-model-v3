@@ -1,7 +1,7 @@
 {
   "n_sims": 500,
   "season": 2026,
-  "rules": "12 teams; auto: 5 highest-ranked conference champions; 7 at-large; straight seeding, top-4 byes; first round at higher seed; fixed bracket",
+  "rules": "12 teams; auto: ACC/Big12/BigTen/SEC champs + highest-ranked G6 team; 7 at-large; straight seeding, top-4 byes; first round at higher seed; fixed bracket",
   "committee_proxy": "Ranked inside each simulation on its own record: 10.34*win_pct + 0.23*power_z + 0.74*sos_z + 1.09*power_conf (h2h-free fit on 2014-2025 committee rankings)",
   "committee_weights": {
     "win_pct": 10,
@@ -413,7 +413,7 @@
       "playoff": 0.546,
       "bye": 0.146,
       "qf": 0.318,
-      "sf": 0.06,
+      "sf": 0.062,
       "final": 0.008,
       "champ": 0,
       "g6_bid": 0,
@@ -504,8 +504,8 @@
       "conf_champ": 0.11,
       "playoff": 0.524,
       "bye": 0.106,
-      "qf": 0.25,
-      "sf": 0.072,
+      "qf": 0.248,
+      "sf": 0.07,
       "final": 0.022,
       "champ": 0.008,
       "g6_bid": 0,
@@ -550,7 +550,7 @@
       "conf_champ": 0.14,
       "playoff": 0.498,
       "bye": 0.086,
-      "qf": 0.25,
+      "qf": 0.252,
       "sf": 0.092,
       "final": 0.03,
       "champ": 0.01,
@@ -640,10 +640,10 @@
       "avg_wins": 9.16,
       "avg_losses": 1.84,
       "conf_champ": 0.538,
-      "playoff": 0.382,
+      "playoff": 0.41,
       "bye": 0,
-      "qf": 0.086,
-      "sf": 0.024,
+      "qf": 0.092,
+      "sf": 0.028,
       "final": 0.01,
       "champ": 0,
       "g6_bid": 0.1587,
@@ -659,7 +659,7 @@
         0,
         0,
         0,
-        0.382
+        0.41
       ],
       "bid": {
         "p4": 0,
@@ -817,6 +817,52 @@
       }
     },
     {
+      "team": "James Madison",
+      "conference": "Sun Belt",
+      "power_rank": 44,
+      "rating": 0.609,
+      "avg_wins": 10.21,
+      "avg_losses": 1.79,
+      "conf_champ": 0.494,
+      "playoff": 0.214,
+      "bye": 0,
+      "qf": 0.034,
+      "sf": 0.008,
+      "final": 0.002,
+      "champ": 0.002,
+      "g6_bid": 0.198,
+      "seeds": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.214
+      ],
+      "bid": {
+        "p4": 0,
+        "g6": 0.9997,
+        "at_large": 0.0003
+      },
+      "wins_in": 12.21,
+      "wins_out": 10.14,
+      "last_in": 0.1916,
+      "first_out": 0.0006,
+      "score_parts": {
+        "win_pct": 9.395,
+        "rating": 0.145,
+        "sos": -0.845,
+        "p4": 0,
+        "h2h": 0.005
+      }
+    },
+    {
       "team": "Arizona",
       "conference": "Big 12",
       "power_rank": 25,
@@ -955,98 +1001,6 @@
       }
     },
     {
-      "team": "New Mexico",
-      "conference": "Mountain West",
-      "power_rank": 43,
-      "rating": 0.613,
-      "avg_wins": 10,
-      "avg_losses": 2,
-      "conf_champ": 0.826,
-      "playoff": 0.152,
-      "bye": 0,
-      "qf": 0.01,
-      "sf": 0.002,
-      "final": 0,
-      "champ": 0,
-      "g6_bid": 0.243,
-      "seeds": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0.152
-      ],
-      "bid": {
-        "p4": 0,
-        "g6": 1,
-        "at_large": 0
-      },
-      "wins_in": 12.05,
-      "wins_out": 10.23,
-      "last_in": 0.2344,
-      "first_out": 0.0001,
-      "score_parts": {
-        "win_pct": 9.273,
-        "rating": 0.184,
-        "sos": -0.824,
-        "p4": 0,
-        "h2h": -0.002
-      }
-    },
-    {
-      "team": "James Madison",
-      "conference": "Sun Belt",
-      "power_rank": 44,
-      "rating": 0.609,
-      "avg_wins": 10.21,
-      "avg_losses": 1.79,
-      "conf_champ": 0.494,
-      "playoff": 0.142,
-      "bye": 0,
-      "qf": 0.02,
-      "sf": 0.006,
-      "final": 0.002,
-      "champ": 0.002,
-      "g6_bid": 0.198,
-      "seeds": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0.142
-      ],
-      "bid": {
-        "p4": 0,
-        "g6": 0.9997,
-        "at_large": 0.0003
-      },
-      "wins_in": 12.21,
-      "wins_out": 10.14,
-      "last_in": 0.1916,
-      "first_out": 0.0006,
-      "score_parts": {
-        "win_pct": 9.395,
-        "rating": 0.145,
-        "sos": -0.845,
-        "p4": 0,
-        "h2h": 0.005
-      }
-    },
-    {
       "team": "UTSA",
       "conference": "American Athletic",
       "power_rank": 58,
@@ -1056,7 +1010,7 @@
       "conf_champ": 0.408,
       "playoff": 0.14,
       "bye": 0,
-      "qf": 0.018,
+      "qf": 0.016,
       "sf": 0.002,
       "final": 0,
       "champ": 0,
@@ -1093,6 +1047,52 @@
       }
     },
     {
+      "team": "New Mexico",
+      "conference": "Mountain West",
+      "power_rank": 43,
+      "rating": 0.613,
+      "avg_wins": 10,
+      "avg_losses": 2,
+      "conf_champ": 0.826,
+      "playoff": 0.126,
+      "bye": 0,
+      "qf": 0.004,
+      "sf": 0,
+      "final": 0,
+      "champ": 0,
+      "g6_bid": 0.243,
+      "seeds": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.126
+      ],
+      "bid": {
+        "p4": 0,
+        "g6": 1,
+        "at_large": 0
+      },
+      "wins_in": 12.05,
+      "wins_out": 10.23,
+      "last_in": 0.2344,
+      "first_out": 0.0001,
+      "score_parts": {
+        "win_pct": 9.273,
+        "rating": 0.184,
+        "sos": -0.824,
+        "p4": 0,
+        "h2h": -0.002
+      }
+    },
+    {
       "team": "Liberty",
       "conference": "Conference USA",
       "power_rank": 42,
@@ -1100,9 +1100,9 @@
       "avg_wins": 10.29,
       "avg_losses": 1.71,
       "conf_champ": 0.822,
-      "playoff": 0.118,
+      "playoff": 0.096,
       "bye": 0,
-      "qf": 0.018,
+      "qf": 0.016,
       "sf": 0.006,
       "final": 0.002,
       "champ": 0,
@@ -1119,7 +1119,7 @@
         0,
         0,
         0,
-        0.118
+        0.096
       ],
       "bid": {
         "p4": 0,
@@ -1274,52 +1274,6 @@
         "sos": 0.552,
         "p4": 1.118,
         "h2h": 0.011
-      }
-    },
-    {
-      "team": "Oregon State",
-      "conference": "Pac-12",
-      "power_rank": 28,
-      "rating": 0.73,
-      "avg_wins": 7.93,
-      "avg_losses": 3.07,
-      "conf_champ": 0.426,
-      "playoff": 0.042,
-      "bye": 0,
-      "qf": 0.012,
-      "sf": 0.006,
-      "final": 0,
-      "champ": 0,
-      "g6_bid": 0.0679,
-      "seeds": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0.042
-      ],
-      "bid": {
-        "p4": 0,
-        "g6": 1,
-        "at_large": 0
-      },
-      "wins_in": 10.48,
-      "wins_out": 7.81,
-      "last_in": 0.0647,
-      "first_out": 0,
-      "score_parts": {
-        "win_pct": 8.744,
-        "rating": 0.12,
-        "sos": -0.339,
-        "p4": 0,
-        "h2h": 0.03
       }
     },
     {
@@ -1691,52 +1645,6 @@
       }
     },
     {
-      "team": "North Texas",
-      "conference": "American Athletic",
-      "power_rank": 52,
-      "rating": 0.572,
-      "avg_wins": 8.71,
-      "avg_losses": 3.29,
-      "conf_champ": 0.386,
-      "playoff": 0.01,
-      "bye": 0,
-      "qf": 0,
-      "sf": 0,
-      "final": 0,
-      "champ": 0,
-      "g6_bid": 0.01,
-      "seeds": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0.01
-      ],
-      "bid": {
-        "p4": 0,
-        "g6": 1,
-        "at_large": 0
-      },
-      "wins_in": 11.47,
-      "wins_out": 7.58,
-      "last_in": 0.01,
-      "first_out": 0,
-      "score_parts": {
-        "win_pct": 8.845,
-        "rating": -0.017,
-        "sos": -0.527,
-        "p4": 0,
-        "h2h": 0.011
-      }
-    },
-    {
       "team": "Oregon",
       "conference": "Big Ten",
       "power_rank": 20,
@@ -1783,20 +1691,20 @@
       }
     },
     {
-      "team": "Louisiana Tech",
-      "conference": "Sun Belt",
-      "power_rank": 66,
-      "rating": 0.515,
-      "avg_wins": 8.56,
-      "avg_losses": 3.44,
-      "conf_champ": 0.414,
-      "playoff": 0.008,
+      "team": "Oregon State",
+      "conference": "Pac-12",
+      "power_rank": 28,
+      "rating": 0.73,
+      "avg_wins": 7.93,
+      "avg_losses": 3.07,
+      "conf_champ": 0.426,
+      "playoff": 0.01,
       "bye": 0,
-      "qf": 0,
-      "sf": 0,
+      "qf": 0.002,
+      "sf": 0.002,
       "final": 0,
       "champ": 0,
-      "g6_bid": 0.0021,
+      "g6_bid": 0.0679,
       "seeds": [
         0,
         0,
@@ -1809,69 +1717,23 @@
         0,
         0,
         0,
-        0.008
+        0.01
       ],
       "bid": {
         "p4": 0,
         "g6": 1,
         "at_large": 0
       },
-      "wins_in": 11.07,
-      "wins_out": 6.82,
-      "last_in": 0.0021,
+      "wins_in": 10.48,
+      "wins_out": 7.81,
+      "last_in": 0.0647,
       "first_out": 0,
       "score_parts": {
-        "win_pct": 8.549,
-        "rating": -0.093,
-        "sos": -0.491,
+        "win_pct": 8.744,
+        "rating": 0.12,
+        "sos": -0.339,
         "p4": 0,
-        "h2h": 0.04
-      }
-    },
-    {
-      "team": "Army",
-      "conference": "American Athletic",
-      "power_rank": 51,
-      "rating": 0.579,
-      "avg_wins": 8.55,
-      "avg_losses": 3.45,
-      "conf_champ": 0.164,
-      "playoff": 0.006,
-      "bye": 0,
-      "qf": 0,
-      "sf": 0,
-      "final": 0,
-      "champ": 0,
-      "g6_bid": 0.017,
-      "seeds": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0.006
-      ],
-      "bid": {
-        "p4": 0,
-        "g6": 1,
-        "at_large": 0
-      },
-      "wins_in": 11.33,
-      "wins_out": 7.47,
-      "last_in": 0.0168,
-      "first_out": 0,
-      "score_parts": {
-        "win_pct": 8.873,
-        "rating": -0.018,
-        "sos": -0.482,
-        "p4": 0,
-        "h2h": 0.009
+        "h2h": 0.03
       }
     },
     {
@@ -1918,6 +1780,98 @@
         "sos": 0.504,
         "p4": 1.118,
         "h2h": 0.034
+      }
+    },
+    {
+      "team": "Louisiana Tech",
+      "conference": "Sun Belt",
+      "power_rank": 66,
+      "rating": 0.515,
+      "avg_wins": 8.56,
+      "avg_losses": 3.44,
+      "conf_champ": 0.414,
+      "playoff": 0.002,
+      "bye": 0,
+      "qf": 0,
+      "sf": 0,
+      "final": 0,
+      "champ": 0,
+      "g6_bid": 0.0021,
+      "seeds": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.002
+      ],
+      "bid": {
+        "p4": 0,
+        "g6": 1,
+        "at_large": 0
+      },
+      "wins_in": 11.07,
+      "wins_out": 6.82,
+      "last_in": 0.0021,
+      "first_out": 0,
+      "score_parts": {
+        "win_pct": 8.549,
+        "rating": -0.093,
+        "sos": -0.491,
+        "p4": 0,
+        "h2h": 0.04
+      }
+    },
+    {
+      "team": "North Texas",
+      "conference": "American Athletic",
+      "power_rank": 52,
+      "rating": 0.572,
+      "avg_wins": 8.71,
+      "avg_losses": 3.29,
+      "conf_champ": 0.386,
+      "playoff": 0.002,
+      "bye": 0,
+      "qf": 0,
+      "sf": 0,
+      "final": 0,
+      "champ": 0,
+      "g6_bid": 0.01,
+      "seeds": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.002
+      ],
+      "bid": {
+        "p4": 0,
+        "g6": 1,
+        "at_large": 0
+      },
+      "wins_in": 11.47,
+      "wins_out": 7.58,
+      "last_in": 0.01,
+      "first_out": 0,
+      "score_parts": {
+        "win_pct": 8.845,
+        "rating": -0.017,
+        "sos": -0.527,
+        "p4": 0,
+        "h2h": 0.011
       }
     },
     {
@@ -2217,6 +2171,52 @@
         "sos": -0.584,
         "p4": 0,
         "h2h": 0.056
+      }
+    },
+    {
+      "team": "Army",
+      "conference": "American Athletic",
+      "power_rank": 51,
+      "rating": 0.579,
+      "avg_wins": 8.55,
+      "avg_losses": 3.45,
+      "conf_champ": 0.164,
+      "playoff": 0,
+      "bye": 0,
+      "qf": 0,
+      "sf": 0,
+      "final": 0,
+      "champ": 0,
+      "g6_bid": 0.017,
+      "seeds": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "bid": {
+        "p4": 0,
+        "g6": 1,
+        "at_large": 0
+      },
+      "wins_in": 11.33,
+      "wins_out": 7.47,
+      "last_in": 0.0168,
+      "first_out": 0,
+      "score_parts": {
+        "win_pct": 8.873,
+        "rating": -0.018,
+        "sos": -0.482,
+        "p4": 0,
+        "h2h": 0.009
       }
     },
     {
