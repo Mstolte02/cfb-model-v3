@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Independent 2026 college football power rankings, team ratings, player WAR and season simulations for entertainment.">
+<meta name="description" content="Independent 2026 college football projections, sportsbook comparisons, player WAR, power rankings and scenario simulations.">
 <meta property="og:title" content="CFB Model v4 — 2026 Forecast Lab">
-<meta property="og:description" content="College football power rankings, team and player ratings, and build-your-own playoff scenarios.">
+<meta property="og:description" content="Weekly matchup edges, power ratings, player rankings and build-your-own playoff scenarios.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://mstolte02.github.io/cfb-model-v3/social-preview.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -20,20 +20,26 @@
     <span class="season">2026</span>
   </div>
   <nav class="hub-nav" aria-label="Primary">
-    <button class="hub-tab active" data-hub="rankings" data-default="power">Power Rankings</button>
+    <button class="hub-tab" data-hub="rankings" data-default="power">Power Rankings</button>
+    <button class="hub-tab active" data-hub="weekly" data-default="market">Weekly</button>
     <button class="hub-tab" data-hub="people" data-default="leaders">Ratings</button>
     <button class="hub-tab" data-hub="simulation" data-default="scenario">Simulation</button>
   </nav>
 </header>
 <div class="section-bar">
+  <nav class="section-nav active" data-hub-nav="weekly">
+    <button class="tab" data-view="matchup">Matchup lab</button>
+    <button class="tab active" data-view="market">Market board</button>
+    <button class="tab" data-view="tracking">Tracking Mark's Model</button>
+  </nav>
   <nav class="section-nav" data-hub-nav="people">
     <button class="tab" data-view="leaders">Top 10 studio</button>
     <button class="tab" data-view="team">Team breakdown</button>
     <button class="tab" data-view="ratings">Team tables</button>
     <button class="tab" data-view="players">Player tables</button>
   </nav>
-  <nav class="section-nav active" data-hub-nav="rankings">
-    <button class="tab active" data-view="power">Power Ratings</button>
+  <nav class="section-nav" data-hub-nav="rankings">
+    <button class="tab" data-view="power">Power Ratings</button>
     <button class="tab" data-view="deserving">Most Deserving</button>
     <button class="tab" data-view="stock-watch">Stock Watch</button>
     <button class="tab" data-view="power-history">Team history</button>
@@ -60,7 +66,7 @@
     <h3 class="bracket-title">How each of the twelve got in</h3><div id="playoff-resumes"></div>
   </section>
 
-  <section id="view-power" class="view active">
+  <section id="view-power" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">The weekly football register</span><h2>Power Ratings</h2><p class="sub">Who wins on a neutral field today? The model's Top 25, wearing the old colors.</p></div>
     <article class="ranking-board"><div class="board-head"><span>Model</span><h3>Neutral-field Top 25</h3><small>Ordered by neutral win rate</small></div><div id="power-top25"></div><p class="board-note">Neutral win rate is the average chance of beating every other rated FBS team on a neutral field.</p></article>
   </section>
@@ -96,8 +102,63 @@
     <div id="leader-grid" class="leader-grid"></div>
   </section>
 
+  <section id="view-matchup" class="view">
+    <div class="view-head editorial-head"><span class="eyebrow">Weekly matchup lab</span><h2>Simulate the game. Understand the edge.</h2>
+      <p class="sub">Head-to-head win probability, score, spread and total plus the model’s matchup-specific advantages. Any two teams, any venue. Posted lines for the real schedule now live on the Market board.</p></div>
+    <div class="matchup-controls">
+      <div class="picker" id="pickerA"></div>
+      <div class="venue"><div class="venue-label">VENUE</div><div class="venue-opts">
+        <label><input type="radio" name="venue" value="A"> <span id="venueA-label">Home A</span></label>
+        <label><input type="radio" name="venue" value="N" checked> Neutral</label>
+        <label><input type="radio" name="venue" value="B"> <span id="venueB-label">Home B</span></label>
+      </div></div><div class="picker" id="pickerB"></div>
+    </div>
+    <div id="matchup-result"></div>
+  </section>
 
+  <section id="view-market" class="view active">
+    <div class="view-head editorial-head"><span class="eyebrow">Weekly market board</span><h2>Where the model and the book disagree.</h2>
+      <p class="sub">Every FBS game with a posted line, one week at a time. The actionable board locks each Monday at 12:30 PM ET and stays fixed through the week, while later line movement is collected only for research. Games against FCS opposition are left off: the model does not rate those teams, so it has no honest number to price them with. Standard minimum gaps: 8 spread points or 20 percentage points of moneyline win probability. These full thresholds apply even when the model and market pick opposite outright winners. Moneylines still require a model win probability above 50%. The tracker applies this revised rule retrospectively across all 2026 weeks.</p></div>
+    <div class="market-toolbar">
+      <div class="seg" id="weekly-market">
+        <button class="seg-btn active" data-market="spread">Spread</button>
+        <button class="seg-btn" data-market="moneyline">Moneyline</button>
+      </div>
+      <label>Week <select id="weekly-week"></select></label>
+      <span class="market-source">Lines: <b>DraftKings</b></span>
+      <button type="button" class="csv-btn" id="pickem-export"
+        aria-controls="pickem-panel" aria-expanded="false"
+        title="Show comma-separated picks for the selected week to copy.">Copy Pick'Em data</button>
+    </div>
+    <div id="pickem-panel" class="pickem-panel" hidden>
+      <div class="pickem-actions"><label for="pickem-data" id="pickem-label">Pick'Em data</label>
+        <button type="button" class="csv-btn" id="pickem-copy">Copy data</button>
+        <button type="button" class="csv-btn" id="pickem-close">Close</button></div>
+      <textarea id="pickem-data" readonly rows="12" spellcheck="false" wrap="off"></textarea>
+      <p id="pickem-copy-status" role="status" aria-live="polite">Select the text to copy, or use Copy data.</p>
+    </div>
+    <div id="market-tracking"></div>
+    <div id="weekly-lines"></div>
+  </section>
 
+  <section id="view-tracking" class="view">
+    <div class="view-head editorial-head"><span class="eyebrow">Flat <b id="tk-unit">$50</b> a bet</span><h2>What the flagged bets actually did.</h2>
+      <p class="sub">Retrospective 2026 results: today’s selection rule applied to every week’s saved DraftKings lines and frozen predictions, not the original historical selections. $50 per selection; spread payouts assume −110, moneylines use the saved price. Unfinished games remain pending.</p></div>
+    <div class="dash-toolbar">
+      <div class="seg" id="tk-period">
+        <button class="seg-btn active" data-period="current">Current</button>
+        <button class="seg-btn" data-period="historical">Historical</button>
+      </div>
+      <label for="tk-week">Week</label><select id="tk-week" aria-label="Tracking week"></select>
+      <div class="seg" id="tk-market">
+        <button class="seg-btn active" data-market="all">All markets</button>
+        <button class="seg-btn" data-market="spread">Spread</button>
+        <button class="seg-btn" data-market="moneyline">Moneyline</button>
+      </div>
+      <span class="spacer"></span><span id="tk-count" class="dash-count"></span>
+    </div>
+    <div id="tk-body"></div>
+  </section>
 
   <section id="view-scenario" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">Build your season</span><h2>Scenario Builder</h2>
@@ -125,11 +186,11 @@
   </section>
 </main>
 
-<footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Rankings and ratings are for entertainment. Model probabilities are estimates.</span></footer>
+<footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Model probabilities are estimates. Sportsbook prices are dated snapshots, not live quotes. Gamble responsibly.</span></footer>
 <script src="team-card.js"></script>
 <script src="team-overview.js"></script>
 <script src="ranking-history.js?v=2"></script>
-<script src="app.js?v=62"></script>
+<script src="app.js?v=65"></script>
 </body>
 </html>
 

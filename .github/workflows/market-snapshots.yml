@@ -11,6 +11,7 @@ on:
   push:
     branches: [main]
     paths:
+      - viz/app.js
       - scripts/capture_market_snapshot.py
       - tests/test_market_tracking.py
       - .github/workflows/market-snapshots.yml
