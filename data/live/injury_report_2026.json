@@ -1,15 +1,15 @@
 {
  "season": 2026,
- "fetched_at": "2026-10-09T14:03:59Z",
+ "fetched_at": "2026-10-25T15:57:07Z",
  "rows": {
-  "mygamesim": 559,
-  "covers": 596,
+  "mygamesim": 588,
+  "covers": 589,
   "rotowire": 5
  },
  "players": [
   {
    "team": "Air Force",
-   "player": "Jalen Rashad Turner",
+   "player": "Evan Medders",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
@@ -17,6 +17,21 @@
    },
    "share": 0.5,
    "status": "questionable"
+  },
+  {
+   "team": "Air Force",
+   "player": "Griffin Stalfort",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Stalfort is dealing due to an undisclosed injury, and it has yet to be determined if he will play against Wyoming on Friday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Air Force",
@@ -38,63 +53,85 @@
    "player": "Sylas Maiava-Alaimalo",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Maiava-Alaimalo is nursing due to an undisclosed injury, and it has yet to be determined if he will play against Wyoming on Friday."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Akron",
    "player": "Cameron Monteiro",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
      "report": "Out - Undisclosed",
-     "note": "Monteiro is nursing an undisclosed injury, and is left out for Saturday's game against the Central Michigan."
+     "note": "Monteiro is nursing an undisclosed injury, and he will miss an extended period."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Akron",
    "player": "Cibastian Broughton",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
-     "report": "Out - Knee",
-     "note": "Gee is dealing with a knee injury, and has been left out for the game against C. Michigan on Saturday."
+     "report": "Questionable - Knee",
+     "note": "Gee is dealing with a knee injury, and it is unclear if he will play against Kent State on Saturday."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Akron",
    "player": "Luke Sivon",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Sivon is dealing with an undisclosed injury, and it has yet to be determined if he will be active against C. Michigan on Saturday, October 10th."
+     "report": "Out - Undisclosed",
+     "note": "Sivon is dealing with an undisclosed injury, and he will miss an undetermined length of time."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Akron",
    "player": "Reese Poffenbarger",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Akron",
+   "player": "Sean Patrick",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Patrick is nursing with an undisclosed injury, and it is unclear whether he will play against Kent State on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Alabama",
+   "player": "Cederian Morgan",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Hamstring",
+     "note": "Morgan is battling due to a hamstring injury, and it remains to be seen if he will be active against Texas A&M on Saturday."
     }
    },
    "share": 0.5,
@@ -113,7 +150,34 @@
   },
   {
    "team": "Alabama",
-   "player": "Jayvin James",
+   "player": "EJ Crowell",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Leg",
+     "note": "Crowell is nursing due to a lower leg injury, and it is unclear whether he will play against Texas A&M on Saturday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Alabama",
+   "player": "Josh Ford",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Arm",
+     "note": "Ford is nursing with a arm injury, and it is unclear if he will be active against Texas A&M on Saturday, October 24th."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Alabama",
+   "player": "Racin Delgatty",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -124,33 +188,22 @@
   },
   {
    "team": "Alabama",
-   "player": "Josh Ford",
+   "player": "Ryan Coleman-Williams",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Questionable - Arm",
-     "note": "Ford is nursing with a arm injury, and it is unclear if he will be active against Georgia on Saturday."
+     "report": "Out - Knee",
+     "note": "Coleman-Williams is battling due to a knee injury, and he is without a definitive time for his return."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
-   "team": "App State",
-   "player": "Alexander Sanchez",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "App State",
-   "player": "Dazmin James",
+   "team": "Alabama",
+   "player": "Zabien Brown",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -163,12 +216,37 @@
    "team": "App State",
    "player": "Dillon Galloway",
    "sources": {
-    "mygamesim": {
-     "report": "Out"
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Galloway is nursing with an undisclosed injury, and it is undetermined if he will play against James Madison on Thursday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "App State",
+   "player": "Malachi Singleton",
+   "sources": {
+    "covers": {
+     "report": "Out - Ankle",
+     "note": "Singleton is dealing with an ankle injury, and it is unclear how long he will be idle."
     }
    },
    "share": 0.0,
    "status": "out"
+  },
+  {
+   "team": "App State",
+   "player": "Treyaun Webb",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Webb is nursing with an undisclosed injury, and it is undetermined if he will play against James Madison on Thursday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Arizona",
@@ -189,12 +267,12 @@
      "report": "Out"
     },
     "covers": {
-     "report": "Out - Leg",
-     "note": "Rusk is laid up with an lower leg injury, and is not expected to play against the Cincinnati on Saturday."
+     "report": "Questionable - Leg",
+     "note": "Rusk is laid up with an lower leg injury, and it is unknown if he will face Iowa State on Saturday, October 24th."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Arizona",
@@ -220,7 +298,7 @@
     },
     "covers": {
      "report": "Questionable - Hamstring",
-     "note": "Richardson is managing with an hamstring injury, and he will not face Mountaineers on Saturday, October 10th."
+     "note": "Richardson is managing with an hamstring injury, and it is undetermined if he will face Iowa State on Saturday, October 24th."
     }
    },
    "share": 0.25,
@@ -228,22 +306,11 @@
   },
   {
    "team": "Arizona",
-   "player": "Ismail Mahdi",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Arizona",
-   "player": "Shane King",
+   "player": "Max Harris",
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "King is dealing with an undisclosed injury, and it is unclear if he will play against the Bearcats on Saturday."
+     "note": "Harris is battling with an undisclosed injury, and it is unknown if he will face Iowa State on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -268,23 +335,9 @@
    "team": "Arizona State",
    "player": "Grayson Rigdon",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Rigdon is battling with an undisclosed injury, and it has yet to be determined if he will be active against the Baylor on Saturday."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Arizona State",
-   "player": "James Giggey",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
+     "note": "Rigdon is battling with an undisclosed injury, and it has yet to be determined if he will be active against the Kansas State on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -307,6 +360,17 @@
   },
   {
    "team": "Arizona State",
+   "player": "Luke Baklenko",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Arizona State",
    "player": "Lyrik Rawls",
    "sources": {
     "mygamesim": {
@@ -319,6 +383,17 @@
    },
    "share": 0.0,
    "status": "out"
+  },
+  {
+   "team": "Arizona State",
+   "player": "Mikey Keene",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Arizona State",
@@ -363,10 +438,14 @@
   },
   {
    "team": "Arkansas",
-   "player": "Steven Soles Jr.",
+   "player": "Chris Marshall",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
+    },
+    "covers": {
+     "report": "Questionable - Leg",
+     "note": "Marshall exited the game due to leg injury, and it is uncertain if he will face Missouri on October 31st."
     }
    },
    "share": 0.5,
@@ -388,12 +467,11 @@
    "status": "out"
   },
   {
-   "team": "Army",
-   "player": "Brady Mott",
+   "team": "Arkansas State",
+   "player": "Hunter Summers",
    "sources": {
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Mott is managing with a undisclosed injury, and it is unclear if he will face the Temple on Friday, September 25th."
+    "mygamesim": {
+     "report": "Out"
     }
    },
    "share": 0.0,
@@ -401,21 +479,49 @@
   },
   {
    "team": "Army",
-   "player": "Godspower Nwawuihe",
+   "player": "Brady Anderson",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Anderson is nursing with an undisclosed injury, and it remain to seen if he will face Tulsa on Friday."
     }
    },
    "share": 0.5,
    "status": "questionable"
   },
   {
-   "team": "Auburn",
-   "player": "Jake Johnson",
+   "team": "Army",
+   "player": "Brady Mott",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Mott is managing with an undisclosed injury, and he will be idle for the remainder of the season."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Army",
+   "player": "Kurt Thompson",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Army",
+   "player": "Parker Poloskey",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Poloskey is hampered with an undisclosed injury, and it is undetermined if he will play against Tulsa on Friday."
     }
    },
    "share": 0.5,
@@ -426,23 +532,12 @@
    "player": "Andrew Gentry",
    "sources": {
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Gentry is sidelined with an undisclosed injury, and is unlikely to to face the Frogs on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Gentry is sidelined with an undisclosed injury, and it is unclear if he will suit up against the UCF on Saturday, October 24th."
     }
    },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "BYU",
-   "player": "Isaiah Glasker",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
-    }
-   },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "BYU",
@@ -461,50 +556,8 @@
   },
   {
    "team": "BYU",
-   "player": "Raider Damuni",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
-    },
-    "covers": {
-     "report": "Out - Lower Body",
-     "note": "Damuni is out of commission due to a lower body injury, and he will miss an extended period."
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "BYU",
-   "player": "Roger Saleapaga II",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Saleapaga is nursing an undisclosed injury, and it has yet to be established if he will play against Frogs on Friday, October 2nd."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "BYU",
-   "player": "Siale Esera",
-   "sources": {
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Esera is sidelined due to an undisclosed injury, and is not expected to face the Frogs on Saturday."
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "BYU",
    "player": "Sione Moa",
    "sources": {
-    "mygamesim": {
-     "report": "Out"
-    },
     "covers": {
      "report": "Out - Undisclosed",
      "note": "Moa is dealing with an undisclosed injury, and there is no timetable for his return."
@@ -515,26 +568,14 @@
   },
   {
    "team": "Ball State",
-   "player": "Corey Thompson Jr.",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Thompson is dealing with an undisclosed injury, and it is unclear if he will play Saturday against the Northwestern"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Ball State",
-   "player": "Isaiah Thacker",
+   "player": "Ace Cooper",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Thacker is dealing with an undisclosed injury, and there is no timetable for return."
+     "report": "Questionable - Undisclosed",
+     "note": "Cooper is nursing due to an undisclosed injury, and it remains to be seen if he will be active against Sacramento State on Saturday."
     }
    },
    "share": 0.25,
@@ -542,14 +583,23 @@
   },
   {
    "team": "Ball State",
-   "player": "Jalen Bonds",
+   "player": "Donovan Hamilton",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Bonds is dealing with an undisclosed injury, and it is unclear if he will play Saturday against the Northwestern"
+     "note": "Hamilton is dealing due to an undisclosed injury, and it is uncertain if he will be active against Sacramento State on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Ball State",
+   "player": "Jabari Smith Jr.",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Smith is nursing with an undisclosed injury, and it is unknown if he will be available against Sacramento State on Saturday."
     }
    },
    "share": 0.5,
@@ -560,26 +610,22 @@
    "player": "Sean Ward",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Baylor",
    "player": "Ashton Jones",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Jones is nursing an undisclosed injury, and it has yet to be determined if he will suit up against Arizona St. on Saturday, October 3rd."
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Baylor",
@@ -606,18 +652,7 @@
   },
   {
    "team": "Boise State",
-   "player": "Cameron Bates",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Boise State",
-   "player": "Darren Morris",
+   "player": "Ben Ford",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -630,62 +665,25 @@
    "team": "Boise State",
    "player": "Rasean Jones",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Jones is dealing with an undisclosed injury, and it has yet to be determined if he will play against Cougars on Saturday, October 24th."
     }
    },
    "share": 0.5,
    "status": "questionable"
-  },
-  {
-   "team": "Boise State",
-   "player": "Sire Gaines",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Upper Body",
-     "note": "Gaines is dealing with a upper body injury, and it has yet to be determined if he will play against Utah St. on Saturday, October 3rd."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Boston College",
-   "player": "Bo MacCormack III",
-   "sources": {
-    "covers": {
-     "report": "Out - Shoulder",
-     "note": "MacCormack III is dealing with an shoulder injury, and he will miss an extended period."
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Boston College",
-   "player": "Bodie Kahoun",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
-    }
-   },
-   "share": 0.0,
-   "status": "out"
   },
   {
    "team": "Boston College",
    "player": "Brady Clough",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Clough has been out of the lineup due to undisclosed injury, and he will be not available against SMU on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Clough is dealing with a Undisclosed injury, and it is unclear if he will play against Georgia Tech on Saturday."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Boston College",
@@ -700,14 +698,18 @@
   },
   {
    "team": "Boston College",
-   "player": "Chris Marable Jr.",
+   "player": "Evan Dickens",
    "sources": {
     "mygamesim": {
      "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Leg",
+     "note": "Dickens is nursing with a leg injury, and it is uncertain if he will play against Georgia Tech on Saturday."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Boston College",
@@ -719,6 +721,21 @@
    },
    "share": 0.0,
    "status": "out"
+  },
+  {
+   "team": "Boston College",
+   "player": "Reed Swanson",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Swanson is managing with a Undisclosed injury, and it is uncertain if he will play against Georgia Tech on Saturday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Bowling Green",
@@ -739,38 +756,32 @@
    "team": "Bowling Green",
    "player": "Isaiah Dawson",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Dawson is dealing with an undisclosed injury, and it is unknown if he will suit up against Sacramento State on Saturday, October 10th."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Bowling Green",
-   "player": "Ke'Marion Baldwin",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
      "report": "Out - Undisclosed",
-     "note": "Baldwin is tending to an undisclosed injury, and is left out for Saturday's game against the Redhawks."
+     "note": "Dawson is dealing with an undisclosed injury, and he will miss an undetermined length of time."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Bowling Green",
    "player": "Nick Sowell",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Bowling Green",
+   "player": "Trey Johnson",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Johnson is battling due to an undisclosed injury, and it is unknown if he will play Saturday versus Buffalo."
     }
    },
    "share": 0.5,
@@ -793,11 +804,11 @@
   },
   {
    "team": "Buffalo",
-   "player": "James McNeil Jr.",
+   "player": "Jasaiah Gathings",
    "sources": {
     "covers": {
      "report": "Out - Undisclosed",
-     "note": "McNeil Jr is dealing with an undisclosed injury, and it is yet to be established if he will suit up against Robert Morris on Saturday."
+     "note": "Gathings is dealing with an undisclosed injury, and there is no timetable for recovery."
     }
    },
    "share": 0.0,
@@ -805,14 +816,25 @@
   },
   {
    "team": "Buffalo",
-   "player": "Jasaiah Gathings",
+   "player": "Patrick Clacks III",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Buffalo",
+   "player": "Terrance Shelton Jr.",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Gathings is dealing with an undisclosed injury, and it is yet to be established if he will suit up against Robert Morris on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Shelton Jr. is nursing with an undisclosed injury, and it is unclear whether he will play against Bowling Green on Saturday."
     }
    },
    "share": 0.25,
@@ -820,14 +842,26 @@
   },
   {
    "team": "Buffalo",
-   "player": "Terrance Shelton Jr.",
+   "player": "Tyrell Simmons Jr.",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Simmons Jr. is fighting off an undisclosed injury, and it has yet to be established if he will be active against Bowling Green on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "California",
+   "player": "Adam Mohammed",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Shelton Jr. is nursing an undisclosed injury, and he is not projected to play against Western Michigan on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Mohammed is dealing with an undisclosed injury, and it is un determined if he will play against the SMU on Saturday."
     }
    },
    "share": 0.25,
@@ -835,10 +869,11 @@
   },
   {
    "team": "California",
-   "player": "Adam Mohammed",
+   "player": "Ashten Emory",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Emory is Managing due to an undisclosed injury, and it is un determined if he will play against the SMU on Saturday."
     }
    },
    "share": 0.5,
@@ -846,25 +881,48 @@
   },
   {
    "team": "California",
-   "player": "Chase Hendricks",
+   "player": "Bastian Swinney",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "California",
-   "player": "Jaron-Keawe Sagapolutele",
+   "player": "Cooper Perry",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Questionable - Head",
-     "note": "Sagapolutele is dealing with a head injury, and it has yet to be determined if he will face Virginia Tech on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Perry is nursing due to an undisclosed injury, and it remains to be seen if he will play against SMU on Saturday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "California",
+   "player": "Dorian Thomas",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "California",
+   "player": "Ian Strong",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Strong is hampered with an undisclosed injury, and it is yet to established to play against the SMU on Saturday."
     }
    },
    "share": 0.5,
@@ -872,10 +930,22 @@
   },
   {
    "team": "California",
-   "player": "Kamar Mothudi",
+   "player": "Jordan King",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "California",
+   "player": "Kyion Grayes",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Grayes is hampered with an undisclosed injury, and it is yet to established to play against the SMU on Saturday."
     }
    },
    "share": 0.5,
@@ -883,14 +953,14 @@
   },
   {
    "team": "California",
-   "player": "Kingston Lopa",
+   "player": "Mark Hamper",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "California",
@@ -905,14 +975,41 @@
   },
   {
    "team": "Central Michigan",
-   "player": "Rusty VanWetzinga IV",
+   "player": "Angel Flores",
    "sources": {
     "mygamesim": {
      "report": "Out"
     },
     "covers": {
-     "report": "Questionable - Knee",
-     "note": "VanWetzinga is dealing with an undisclosed injury, and it remains to be seen if he will be available against Ohio on Saturday, October 10th"
+     "report": "Questionable - Concussion",
+     "note": "Flores is dealing due to a concussion injury, and it is uncertain if he will play against Miami (Ohio) on Saturday"
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Central Michigan",
+   "player": "Jayden Clerveaux",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Clerveaux is tending to an undisclosed injury, and it is unclear whether he will play against Miami (Ohio) on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Central Michigan",
+   "player": "Shawn Foster II",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Foster is battling due to an undisclosed injury, and it is uncertain if he will play against Miami (Ohio) on Saturday."
     }
    },
    "share": 0.25,
@@ -930,28 +1027,53 @@
    "status": "out"
   },
   {
-   "team": "Charlotte",
-   "player": "Conner Harrell",
+   "team": "Cincinnati",
+   "player": "Devyn Zahursky",
    "sources": {
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Harrell is nursing an undisclosed injury, and he is not projected to play against Memphis on Saturday, October 3rd."
+    "mygamesim": {
+     "report": "Out"
     }
    },
    "share": 0.0,
    "status": "out"
   },
   {
+   "team": "Cincinnati",
+   "player": "Gi'Bran Payne",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Cincinnati left the game in between due to an undisclosed injury, and it is unclear whether he will play against Texas Tech on Saturday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Cincinnati",
+   "player": "Giyahni Kontosis",
+   "sources": {
+    "mygamesim": {
+     "report": "Doubtful"
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
    "team": "Clemson",
    "player": "Christopher Vizzina",
    "sources": {
     "covers": {
-     "report": "Questionable - Elbow",
-     "note": "Vizzina is dealing with an elbow injury, and it is uncertain if he will play against the Hurricanes on Saturday, October 3rd."
+     "report": "Out - Elbow",
+     "note": "Vizzina is dealing with an elbow injury, and he will miss an undetermined length of time."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Clemson",
@@ -961,23 +1083,31 @@
      "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Gipson is dealing with an Undisclosed injury, and it is unclear if he will play against California on Friday, September 25th."
+     "report": "Questionable - Undisclosed",
+     "note": "Gipson is dealing with an Undisclosed injury, and it remains to be seen if he will be active against Virginia Tech on Saturday."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
-   "team": "Coastal Carolina",
-   "player": "Colton Hinton",
+   "team": "Clemson",
+   "player": "Jarvis Green",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Shoulder",
+     "note": "Green is managing due to a shoulder injury, and it has yet to be established if he will play against Virginia Tech on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Clemson",
+   "player": "Vic Burley",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Hinton is bothered by an undisclosed injury, and it is unknown if he will play against Thundering Herd on Sunday."
     }
    },
    "share": 0.5,
@@ -989,7 +1119,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Williams is battling with an undisclosed injury, and it has yet to be determined if he will be active against the Red Raiders on Saturday."
+     "note": "Williams is battling with an undisclosed injury, and it has yet to be determined if he will be active against the Cowboys on Saturday."
     }
    },
    "share": 0.5,
@@ -1000,11 +1130,26 @@
    "player": "Danny Scudero",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Scudero is sidelined due to an undisclosed injury, and is not expected to face the Red Raiders on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Scudero is bothered by an undisclosed injury, and it remains to be seen if he will be active against Cowboys on Saturday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Colorado",
+   "player": "Kam Perry",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Perry has an undisclosed injury, and it is uncertain if he will face Cowboys on Saturday."
     }
    },
    "share": 0.25,
@@ -1014,24 +1159,36 @@
    "team": "Colorado",
    "player": "Makari Vickers",
    "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Vickers is sidelined due to an undisclosed injury, and it is undetermined if he will face Cowboys on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Colorado",
+   "player": "Micah Welch",
+   "sources": {
     "mygamesim": {
      "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Vickers is sidelined due to an undisclosed injury, and is not expected to face the Red Raiders on Saturday."
+     "report": "Questionable - Hand",
+     "note": "Welch is bothered by a hand injury, and it remains to be seen if he will be active against Cowboys on Saturday."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Colorado",
-   "player": "Quentin Gibson",
+   "player": "Tyler Martinez",
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Gibson is dealing with an undisclosed injury, and it is unknown if he will play against the Red-raiders on Saturday."
+     "note": "Martinez is sidelined due to an undisclosed injury, and it is unclear if he will play against the Cowboys on Saturday."
     }
    },
    "share": 0.5,
@@ -1042,30 +1199,42 @@
    "player": "Zach Atkins",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
      "report": "Out - Undisclosed",
-     "note": "Atkins is sidelined due to an undisclosed injury, and is not expected to face the Red Raiders on Saturday."
+     "note": "Atkins is sidelined due to an undisclosed injury, and there is no timetable for return."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Colorado State",
    "player": "Hauss Hejny",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
      "report": "Questionable - Hamstring",
-     "note": "Hejny is laid up with a hamstring injury, and it is uncertain if he will play against Texas State on Thursday, October 15th."
+     "note": "Hejny is laid up with a hamstring injury, and it is uncertain if he will play against San Diego State on Saturday, October 24th."
     }
    },
    "share": 0.5,
    "status": "questionable"
+  },
+  {
+   "team": "Colorado State",
+   "player": "RJ Vick",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Vick Jr is dealing with an undisclosed injury, and it remains to be seen if he will play against San Diego State on Saturday, October 24th."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Delaware",
@@ -1073,26 +1242,37 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Rehmann is dealing with an undisclosed injury, and it is unclear whether he will play against Liberty on Friday, October 2th."
+     "note": "Rehmann is dealing with an undisclosed injury, and it is unclear whether he will play against Western Kentucky Hilltoppers on Tuesday, October 27th."
     }
    },
    "share": 0.5,
    "status": "questionable"
   },
   {
-   "team": "Delaware",
-   "player": "Nick Minicucci",
+   "team": "Duke",
+   "player": "Andrew Pellicciotta",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Out - Leg",
-     "note": "Minicucci is hampered by a leg injury, and it is not anticipated that he will suit up against Liberty on Friday, October 2nd."
+     "report": "Out - Undisclosed",
+     "note": "Pellicciotta is battling due to an undisclosed injury, and he will be out of action against Virginia on Friday."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Duke",
+   "player": "Evan Smith",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Duke",
@@ -1107,6 +1287,17 @@
   },
   {
    "team": "Duke",
+   "player": "Jayden Moore",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Duke",
    "player": "Kendall Johnson",
    "sources": {
     "mygamesim": {
@@ -1117,76 +1308,134 @@
    "status": "out"
   },
   {
-   "team": "East Carolina",
-   "player": "Ashton Gray",
+   "team": "Duke",
+   "player": "Matt Craycraft",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Gray is bothred by an undisclosed injury, and it is unknown if he will play Saturday versus N.C. Central."
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "East Carolina",
    "player": "Brock Spalding",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Spalding is nursing with an undisclosed injury, and it is unclear if he will face Eagles on Saturday, September 26th."
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "East Carolina",
+   "player": "Dawson Quarterman",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "East Carolina",
+   "player": "Dillon Lorick",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "East Carolina",
    "player": "Jeremiah Melvin",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Eastern Michigan",
+   "player": "Dalin Wilkins",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Eastern Michigan",
+   "player": "Decorie Johnson",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Eastern Michigan",
+   "player": "Nick Devereaux",
+   "sources": {
+    "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Devereaux is laid up with an undisclosed injury, and he will miss an undetermined length of time."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Eastern Michigan",
+   "player": "Noah Kim",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
     },
     "covers": {
-     "report": "Out - Back",
-     "note": "Melvin is dealing with a back injury, and is not expected to face N.C. Central on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Kim is dealing due to an undisclosed injury, and it is uncertain if he will play against Ohio on Saturday, October 24th."
     }
    },
    "share": 0.25,
    "status": "doubtful"
   },
   {
-   "team": "East Carolina",
-   "player": "Landon Sides",
+   "team": "Florida",
+   "player": "Aaron Philo",
    "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    },
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Sides is dealing with an undisclosed injury, and it remains to be seen if he will suit up against Eagles on Saturday, September 26th."
+     "report": "Questionable - Shoulder",
+     "note": "Philo is nursing with a shoulder injury, and it remains to be seen if he will be active against Georgia on Saturday, October 31th."
     }
    },
    "share": 0.5,
    "status": "questionable"
   },
   {
-   "team": "Eastern Michigan",
-   "player": "Nick Devereaux",
+   "team": "Florida",
+   "player": "Duke Clark",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
-    },
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Devereaux is laid up with an undisclosed injury, and he will miss an undetermined length of time."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Florida",
@@ -1201,7 +1450,7 @@
   },
   {
    "team": "Florida Atlantic",
-   "player": "Brooks Johnson",
+   "player": "AJ Johnson",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
@@ -1211,16 +1460,41 @@
    "status": "questionable"
   },
   {
-   "team": "Florida International",
-   "player": "Kevin Schaeffer",
+   "team": "Florida Atlantic",
+   "player": "Brooks Johnson",
    "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Schaeffer is dealing with an undisclosed injury, and it remains to be seen if he will be available against Jacksonville St. on Tuesday, October 13th."
+    "mygamesim": {
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Florida Atlantic",
+   "player": "RJ Garcia II",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Florida International",
+   "player": "Anthony Carrie",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Carrie is managing due to an undisclosed injury, and it remains to be seen if he will suit up against Liberty Flames on Saturday, October 31st."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Florida State",
@@ -1238,15 +1512,26 @@
    "player": "Devin Carter",
    "sources": {
     "mygamesim": {
-     "report": "Out"
+     "report": "Questionable"
     },
     "covers": {
      "report": "Out - Back",
-     "note": "Carter is laid up with an undisclosed injury, and is not expected to play against the Cavaliers on Saturday."
+     "note": "Carter is hampered with an undisclosed injury, and he will miss an undetermined length of time."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Florida State",
+   "player": "Ousmane Kromah",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
     },
-    "rotowire": {
-     "report": "Out",
-     "note": "Return Oct 17th"
+    "covers": {
+     "report": "Out - Ankle",
+     "note": "Kromah is bothered by an ankle injury, and he has been shut down for the remainder of the season."
     }
    },
    "share": 0.0,
@@ -1272,23 +1557,20 @@
    "player": "Tae'Shaun Gelsey",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Gelsey is dealing with an undisclosed injury, and it is uncertain if he will play against Louisville on Friday, October 9th."
+     "report": "Out - Undisclosed",
+     "note": "Gelsey is dealing with an undisclosed injury, and he will miss an undetermined length of time."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Fresno State",
    "player": "Harold Duvall",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Duvall is hampered by an undisclosed injury, and it is uncertain if he will suit up against the San Diego State on Saturday."
+     "note": "Duvall is hampered by an undisclosed injury, and it is uncertain if he will suit up against the Oregon State on Saturday, October 31st."
     }
    },
    "share": 0.5,
@@ -1300,7 +1582,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Concussion",
-     "note": "Luke is dealing with a concussion injury, and it is unclear whether he will play against Boise State on Saturday."
+     "note": "Luke is dealing with a concussion injury, and it is unclear whether he will play against the Oregon State on Saturday, October 31st."
     }
    },
    "share": 0.5,
@@ -1322,11 +1604,11 @@
    "player": "Chauncey Bowens",
    "sources": {
     "mygamesim": {
-     "report": "Out"
+     "report": "Questionable"
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Georgia",
@@ -1336,27 +1618,38 @@
      "report": "Questionable"
     },
     "covers": {
-     "report": "Questionable - Leg",
-     "note": "Conan is dealing with a leg injury, and it is unclear if he will face Alabama on Saturday, October 10th."
+     "report": "Out - Leg",
+     "note": "Conan is dealing with a leg injury, and there is no timetable for return."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Georgia",
+   "player": "KJ Bolden",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Georgia",
    "player": "Thomas Blackshear",
    "sources": {
     "mygamesim": {
-     "report": "Out"
+     "report": "Questionable"
     },
     "covers": {
      "report": "Questionable - Upper Body",
-     "note": "Blackshear is dealing with a upper-body injury, and it remains to be seen if he will be active against the Alabama on Saturday."
+     "note": "Blackshear is dealing with a upper-body injury, and it remains to be seen if he will be active against the Florida Gators on Saturday, October 31st."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Georgia Southern",
@@ -1375,11 +1668,14 @@
   },
   {
    "team": "Georgia Southern",
-   "player": "Jeremiah Ware",
+   "player": "David Mbadinga",
    "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Ware is dealing with an undiscloed injury, and it is unclear whether he will face against Coastal Carolina on Saturday."
+     "note": "Mbadinga is battling with an undisclosed injury, and it is unclear if he will face App State on Saturday, October 31st."
     }
    },
    "share": 0.5,
@@ -1387,18 +1683,48 @@
   },
   {
    "team": "Georgia Southern",
-   "player": "Josh Dallas",
+   "player": "Jeremiah Ware",
    "sources": {
     "mygamesim": {
-     "report": "Probable"
+     "report": "Questionable"
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Dallas is dealing with an undiscloed injury, and it is unclear whether he will face against Coastal Carolina on Saturday."
+     "note": "Ware is dealing due to an undisclosed injury, and it is unknown if he will play against App State on Saturday, October 31st."
     }
    },
-   "share": 0.75,
+   "share": 0.5,
    "status": "questionable"
+  },
+  {
+   "team": "Georgia Southern",
+   "player": "Max Johnson",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Johnson is suffering with an undisclosed injury, and it is unclear if he will face App State on Saturday, October 31st."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Georgia State",
+   "player": "Matt Buron",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Buron is bothered by an undisclosed injury, and it remains to be seen if he will be active against Arkansas State on Saturday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Georgia Tech",
@@ -1408,12 +1734,12 @@
      "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Hoffler is sidelined due to an undisclosed injury, and is not expected to face the Stanford on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Hoffler is hampered by an undisclosed injury, and it is uncertain if he will play against the Boston College on Saturday, October 24th."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Georgia Tech",
@@ -1434,27 +1760,50 @@
      "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "MacKenny is sidelined due to an undisclosed injury, and is not expected to play against the Stanford on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "MacKenny is sidelined due to an undisclosed injury, and it is unclear if he will play against the Boston College on Saturday, October 24th."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Georgia Tech",
    "player": "Jordan Walker",
    "sources": {
     "mygamesim": {
-     "report": "Out"
+     "report": "Questionable"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Walker is sidelined due to an undisclosed injury, and is not expected to be active against the Stanford on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Walker is sidelined due to an undisclosed injury, and it is undetermined if he will suit up against the Boston College on Saturday, October 24th."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Georgia Tech",
+   "player": "Justice Haynes",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Haynes is nursing due to an undisclosed injury, and it is unclear whether he will play against Boston College on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Georgia Tech",
+   "player": "Kelvin Hill",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Georgia Tech",
@@ -1465,11 +1814,22 @@
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Richardson is battling with a Undisclosed injury, and it has yet to be determined if he will be active against the Stanford on Saturday."
+     "note": "Richardson is battling with a Undisclosed injury, and it has yet to be determined if he will be active against the Boston College on Saturday, October 24th."
     }
    },
    "share": 0.25,
    "status": "doubtful"
+  },
+  {
+   "team": "Georgia Tech",
+   "player": "Markell Samuel",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Georgia Tech",
@@ -1486,9 +1846,8 @@
    "team": "Georgia Tech",
    "player": "Savion Riley",
    "sources": {
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Riley has been out of the lineup due to an undisclosed injury, and is not expected to be available against the Stanford on Saturday."
+    "mygamesim": {
+     "report": "Out"
     }
    },
    "share": 0.0,
@@ -1502,8 +1861,19 @@
      "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Jones is out of commission due to an undisclosed injury, and is not expected to face the Stanford on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Jones is bothered by an undisclosed injury, and it is undetermined whether he will play against the Boston College on Saturday, October 24th."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Georgia Tech",
+   "player": "Tawfiq Thomas",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
     }
    },
    "share": 0.0,
@@ -1514,38 +1884,46 @@
    "player": "Carson Brown",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Hawai'i",
    "player": "Oakie Salave'a",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Salave'a is dealing with an undisclosed injury, and it is uncertain if he will kit up against Arizona St. on Saturday, October 10th."
+     "report": "Out - Undisclosed",
+     "note": "Salave'a is dealing with an undisclosed injury, and team officials have yet to provide an exact return date."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Hawai'i",
    "player": "Tre' Griffiths",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Griffiths is dealing with an undisclosed injury and it is unclear if he will play against Arizona St. on Saturday, October 10th."
+     "report": "Out - Undisclosed",
+     "note": "Griffiths is dealing with an undisclosed injury and he will miss an extended period."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Houston",
+   "player": "De'Marion Thomas",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Houston",
@@ -1560,23 +1938,8 @@
   },
   {
    "team": "Houston",
-   "player": "Luke McGary",
-   "sources": {
-    "covers": {
-     "report": "Out - Shoulder",
-     "note": "McGary has been sidelined due to shoulder injury, and he will miss an undetermined length of time."
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Houston",
    "player": "Muizz Tounkara",
    "sources": {
-    "mygamesim": {
-     "report": "Out"
-    },
     "covers": {
      "report": "Out - Foot",
      "note": "Tounkara is nursing with a foot injury, and team officials have yet to provide an exact return date."
@@ -1584,6 +1947,17 @@
    },
    "share": 0.0,
    "status": "out"
+  },
+  {
+   "team": "Houston",
+   "player": "Patrick Overmyer",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Illinois",
@@ -1627,31 +2001,19 @@
    "player": "Jayshon Platt",
    "sources": {
     "mygamesim": {
-     "report": "Probable"
+     "report": "Out"
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Platt is managing with an undisclosed injury, and it is unknown if he will partake against Michigan State on Sunday, October 11th."
+     "note": "Platt is managing with an undisclosed injury, and it is unknown if he will partake against Ducks on Sunday, October 24th."
     }
    },
-   "share": 0.75,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Illinois",
-   "player": "Kaden Feagin",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Feagin is dealing with an undisclosed injury, and it remains to be seen if he will suit up against Michigan State on Sunday."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Indiana",
-   "player": "Andrew Barker",
+   "player": "Katin Houser",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -1664,35 +2026,9 @@
    "team": "Indiana",
    "player": "Khobie Martin",
    "sources": {
-    "mygamesim": {
-     "report": "Out"
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Indiana",
-   "player": "Lebron Bond",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Bond is nursing an undisclosed injury, and he is not projected to play against W. Kentucky on Saturday, September 19th."
-    }
-   },
-   "share": 0.25,
-   "status": "doubtful"
-  },
-  {
-   "team": "Indiana",
-   "player": "Lee Beebe Jr.",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Beebe Jr. is dealing with an undisclosed injury, and it is unclear if he will return"
+     "report": "Questionable - Forearm",
+     "note": "Martin is dealing with a forearm injury, and it is uncertain if he will play against Michigan on Saturday."
     }
    },
    "share": 0.5,
@@ -1702,12 +2038,32 @@
    "team": "Iowa",
    "player": "Hank Brown",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
-     "report": "Questionable - Shoulder",
-     "note": "Brown is nursing with a shoulder injury, and it has yet to be established if he will play against Washington on Friday."
+     "report": "Out - Shoulder",
+     "note": "Brown is nursing with a shoulder injury, and he is unlikely to play against Minnesota on Saturday."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Iowa",
+   "player": "Kamari Moulton",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Iowa",
+   "player": "Lendon Phillips Jr.",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Ankle",
+     "note": "Phillips Jr. is laid up with an ankle injury, and it has yet to be established if he will play against Minnesota on Saturday."
     }
    },
    "share": 0.5,
@@ -1726,7 +2082,7 @@
   },
   {
    "team": "Iowa State",
-   "player": "Arnold Barnes III",
+   "player": "Beni Ngoyi",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -1743,12 +2099,12 @@
      "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Crawford is sidelined due to an undisclosed injury, and is not expected to face the West Virginia on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Crawford is hampered due to an undisclosed injury , and it is unclear if he will play against the Wildcats on Saturday, October 24th."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Iowa State",
@@ -1767,29 +2123,18 @@
   },
   {
    "team": "Iowa State",
-   "player": "Christian Greenlaw",
-   "sources": {
-    "mygamesim": {
-     "report": "Probable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Greenlaw is nursing with an undisclosed injury, and it is undetermined if he will face BYU on Friday."
-    }
-   },
-   "share": 0.75,
-   "status": "questionable"
-  },
-  {
-   "team": "Iowa State",
-   "player": "Drew Surges",
+   "player": "Dominic Overby",
    "sources": {
     "mygamesim": {
      "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Knee",
+     "note": "Overby is dealing with an Knee injury, and it is unknown if he will face the Wildcats on Saturday, October 24th."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Iowa State",
@@ -1797,7 +2142,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Miller is dealing with a Undisclosed injury, but he is expected to suit up against the Cougars on Saturday."
+     "note": "Miller is dealing with a Undisclosed injury, but he is expected to suit up against the Wildcats on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -1819,17 +2164,20 @@
    "player": "Jaheim Singletary",
    "sources": {
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Singletary is nursing with an undisclosed injury, and he will miss an undetermined length of time."
+     "report": "Questionable - Undisclosed",
+     "note": "Singletary is nursing with an undisclosed injury, and it is undetermined if he will suit up against the Wildcats on Saturday, October 24th."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Iowa State",
    "player": "Jordyn Bailey",
    "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
     "covers": {
      "report": "Out - Undisclosed",
      "note": "Bailey is dealing with an undisclosed injury, and it is unclear when he will return."
@@ -1855,18 +2203,29 @@
   },
   {
    "team": "Jacksonville State",
+   "player": "Cedric Kouemi",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Jacksonville State",
    "player": "Franklin Baret Jr.",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
     },
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Baret Jr has been out of the lineup due to undisclosed injury, and it is uncertain if he will play against FIU on Tuesday, October 13th."
+     "report": "Out - Undisclosed",
+     "note": "Baret Jr has been out of the lineup due to undisclosed injury, and there is no timetable for return."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Jacksonville State",
@@ -1880,23 +2239,22 @@
    "status": "questionable"
   },
   {
-   "team": "James Madison",
-   "player": "Corey Scott",
+   "team": "Jacksonville State",
+   "player": "Jalen Likely",
    "sources": {
     "mygamesim": {
-     "report": "Out"
+     "report": "Questionable"
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "James Madison",
-   "player": "JC Evans",
+   "player": "George Pettaway",
    "sources": {
-    "covers": {
-     "report": "Questionable - Wrist",
-     "note": "Evans is dealing with a wrist injury, and it remains to be seen if he will be active against Georgia Southern on Saturday, October 11th."
+    "mygamesim": {
+     "report": "Questionable"
     }
    },
    "share": 0.5,
@@ -1907,20 +2265,8 @@
    "player": "Za'Ron Collins",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Collins is dealing with an undisclosed injury, and it remains to be seen if he will be active against Georgia Southern on Saturday."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Kansas",
-   "player": "Carson Bruhn",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Bruhn is battling an undisclosed injury, and it is yet to be determined if he will be available against Utah Utes on Saturday, October 10rd."
+     "report": "Questionable - Shoulder",
+     "note": "Collins exited the game in between due to a shoulder injury, and it remains to be seen if he will be active against App State on Thursday."
     }
    },
    "share": 0.5,
@@ -1930,24 +2276,18 @@
    "team": "Kansas",
    "player": "Carter Moses",
    "sources": {
-    "mygamesim": {
-     "report": "Doubtful"
-    },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Moses is dealing with an undisclosed injury, and it is unclear if he will play against Middle Tennessee State on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Moses is dealing with an undisclosed injury, and it is unclear if he will play against Baylor on Saturday."
     }
    },
-   "share": 0.125,
-   "status": "out"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Kansas",
    "player": "Cole Ballard",
    "sources": {
-    "mygamesim": {
-     "report": "Out"
-    },
     "covers": {
      "report": "Out - Shoulder",
      "note": "Ballard is dealing with a shoulder injury, and there is no timetable for return."
@@ -1962,7 +2302,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Butler exited the game with an undisclosed injury, and it is yet to be established if he will suit up against Utah Utes on October 10rd."
+     "note": "Butler is nursing due to an undisclosed injury, and it is yet to be established if he will suit up against Baylor on Saturday."
     }
    },
    "share": 0.5,
@@ -1970,15 +2310,29 @@
   },
   {
    "team": "Kansas",
-   "player": "Tate Nagy",
+   "player": "Keaton Kubecka",
    "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Nagy is managing with an undisclsoed injury, and it has yet to be determined if he will face Utah on Saturday."
+     "note": "Kubecka is nursing with an undisclosed injury, and it is unclear if he will play against Baylor on Saturday."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Kansas",
+   "player": "Mason Ellis",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Kansas",
@@ -1997,11 +2351,49 @@
   },
   {
    "team": "Kansas State",
+   "player": "Avery Johnson",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Kansas State",
+   "player": "Derrick Salley Jr.",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Salley Jr. exited the game in between due to an undisclosed injury, and it is uncertain if he will play against Arizona State on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Kansas State",
+   "player": "Garrett Oakley",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Oakley is ailing from illness, and he will be out of the lineup against Arizona State on Saturday."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Kansas State",
    "player": "Jacob Knuth",
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Knuth is dealing with an undisclosed injury, and it is unclear if he will play against Houston Saturday, October 10th."
+     "note": "Knuth is dealing with an undisclosed injury, and it is unclear if he will play against Arizona State on Saturday."
     }
    },
    "share": 0.5,
@@ -2024,6 +2416,18 @@
   },
   {
    "team": "Kansas State",
+   "player": "Kaleb Patterson",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Patterson is liad up with an undisclosed injury, and it remains to be seen if he will be active against Arizona State on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Kansas State",
    "player": "Will Anciaux",
    "sources": {
     "mygamesim": {
@@ -2043,7 +2447,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Bullock Jr. is nursing with an undisclosed injury, and it remains to be seen if he will be active against Missouri St. on Wednesday, October 14."
+     "note": "Bullock Jr. is nursing with an undisclosed injury, and it remains to be seen if he will be active against Flames on Thursday, October 22nd."
     }
    },
    "share": 0.5,
@@ -2054,23 +2458,35 @@
    "player": "Zion Booker",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Booker is battling with an undisclosed injury, and it remains to be seen if he will be in the lineup against Missouri St. on Wednesday, October 14."
+     "note": "Booker is battling with an undisclosed injury, and it remains to be seen if he will be in the lineup against Flames on Thursday, October 22nd."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Kent State",
    "player": "Maurice Stephens",
    "sources": {
     "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Stephens is bothered by an undisclosed injury, and he will miss an undetermined length of time."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Kentucky",
+   "player": "Alex Afari Jr.",
+   "sources": {
+    "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Stephens is bothered by an undisclosed injury, and it remains to be seen if he will be active against Western Michigan on Saturday, October 10th."
+     "note": "Afari Jr. is nursing with an undisclosed injury, and he is unlikely to be available against Vanderbilt on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -2089,15 +2505,40 @@
   },
   {
    "team": "Kentucky",
-   "player": "DJ Miller",
+   "player": "CJ Baxter",
    "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    },
     "covers": {
-     "report": "Questionable - Leg",
-     "note": "Miller has been out of the lineup due to a leg injury, and it remains to be seen if he will be available against LSU on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Baxter is nursing with an undisclosed injury, and it remains to be seen if he will be active against Vanderbilt on Saturday, October 24th."
     }
    },
    "share": 0.5,
    "status": "questionable"
+  },
+  {
+   "team": "Kentucky",
+   "player": "Nic Anderson",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Kentucky",
+   "player": "Sam Greene",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "LSU",
@@ -2142,11 +2583,11 @@
   },
   {
    "team": "LSU",
-   "player": "TJ Dottery",
+   "player": "Tre' Brown",
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Dottery is managing with an undisclosed injury, and it is unclear whether he will play against McNeese on Saturday, October 3th."
+     "note": "Brown III exited the game in between due to an undisclosed injury, and it has yet to be determined if he will face Auburn on Saturday."
     }
    },
    "share": 0.5,
@@ -2156,16 +2597,25 @@
    "team": "LSU",
    "player": "Trey'Dez Green",
    "sources": {
-    "mygamesim": {
-     "report": "Out"
-    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Green is dealing with an undisclosed injury, and it remains to be seen if he will play against Kentucky on Saturday."
+     "note": "Green is dealing with an undisclosed injury, and it remains to be seen if he will play against Auburn on Saturday."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "LSU",
+   "player": "Tylen Singleton",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Singleton is bothered by an undisclosed injury, and it remains to be seen if he will be active against Auburn on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "LSU",
@@ -2218,67 +2668,19 @@
    "status": "out"
   },
   {
-   "team": "Louisiana",
-   "player": "Ja'Corian Norris",
-   "sources": {
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Norris is laid up with an undisclosed injury, and he is unlikely to suit up against Louisiana Tech on Saturday."
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Louisiana",
-   "player": "Shelton Sampson Jr.",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Knee",
-     "note": "Sampson Jr. is nursing with a knee injury, and it has yet to be determined if he will be available against Arkansas State on Saturday, October 3th."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
    "team": "Louisiana Tech",
-   "player": "Blake Baker",
-   "sources": {
-    "covers": {
-     "report": "Out - Hand",
-     "note": "Baker fractured his hand, and he will miss an undetermined length of time."
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Louisiana Tech",
-   "player": "Jaden Miller",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Miller is nursing an undisclosed injury, and is left out for Sunday's game against the Ragin Cajuns."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Louisiana Tech",
-   "player": "Trey Kukuk",
+   "player": "Dylone Brooks",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Questionable - Ankle",
-     "note": "Kukuk is battling with an ankle injury, and it has yet to be established if he will play agaisnt UL-Lafayette on Saturday."
+     "report": "Out - Undisclosed",
+     "note": "Brooks is battling due to an undisclosed injury, and he will be out of the lineup against Old Dominion on Saturday."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Louisville",
@@ -2300,76 +2702,22 @@
    "player": "Anwar O'neal",
    "sources": {
     "mygamesim": {
-     "report": "Probable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "O'Neal is dealing with an undisclosed injury, and it remains to be seen if he will suit up against SMU on Saturday, September 19th."
+     "report": "Out - Undisclosed",
+     "note": "O'Neal is dealing with an undisclosed injury, and he will miss an undetermined length of time."
     }
    },
-   "share": 0.75,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
-   "team": "Louisville",
-   "player": "Cason Henry",
+   "team": "Marshall",
+   "player": "Chris Culliver",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Louisville",
-   "player": "Daylen Russell",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Louisville",
-   "player": "Keyjuan Brown",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Probable - Undisclosed",
-     "note": "Brown is managing with an undisclosed injury , but it is expected to play against the North Carolina State on Saturday."
-    },
-    "rotowire": {
-     "report": "Questionable",
-     "note": "Return Oct 9th"
-    }
-   },
-   "share": 0.667,
-   "status": "questionable"
-  },
-  {
-   "team": "Louisville",
-   "player": "Lawayne McCoy",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "McCoy is dealing with an undisclosed injury, and it remains to be seen if he will suit up against North Carolina State on Saturday."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Louisville",
-   "player": "Lincoln Kienholz",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Lower Body",
-     "note": "Kienholz is dealing with a lower body injury, and it remains to be seen if he will suit up against North Carolina State on Saturday."
     }
    },
    "share": 0.5,
@@ -2377,41 +2725,7 @@
   },
   {
    "team": "Marshall",
-   "player": "Adrian Norton",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Norton is battling with an undisclsoed injury, and it is unclear whether he will play against Coastal Carolina on Sunday."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Maryland",
-   "player": "Amari Jackson",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Maryland",
-   "player": "Bryce Jenkins",
-   "sources": {
-    "mygamesim": {
-     "report": "Doubtful"
-    }
-   },
-   "share": 0.25,
-   "status": "doubtful"
-  },
-  {
-   "team": "Maryland",
-   "player": "Harry Dalton III",
+   "player": "Jo'Shon Barbie",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -2421,8 +2735,8 @@
    "status": "out"
   },
   {
-   "team": "Maryland",
-   "player": "Jamare Glasker",
+   "team": "Marshall",
+   "player": "Zion Turner",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
@@ -2433,32 +2747,36 @@
   },
   {
    "team": "Maryland",
-   "player": "Lavon Johnson",
+   "player": "Cardell Williams",
    "sources": {
-    "mygamesim": {
-     "report": "Doubtful"
-    },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Johnson is dealing with an undisclosed injury, and is not expected to be available on Saturday against UCLA."
+     "report": "Questionable - Undisclosed",
+     "note": "Williams is nursing with an Undisclosed injury, and it is unclear if he will play against Illinois on Saturday, October 31th."
     }
    },
-   "share": 0.125,
-   "status": "out"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Maryland",
-   "player": "Preston Howard",
+   "player": "Harry Dalton III",
    "sources": {
     "mygamesim": {
-     "report": "Probable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Howard is dealing with an undisclosed injury, and it is unclear whether he will face against the Ohio State on Saturday."
+     "report": "Questionable"
     }
    },
-   "share": 0.75,
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Maryland",
+   "player": "Na'eem Abdul-Rahim Gladding",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
    "status": "questionable"
   },
   {
@@ -2478,14 +2796,29 @@
   },
   {
    "team": "Massachusetts",
+   "player": "Dallas Elliott",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Elliott is nursing with an undisclosed injury, and it remain to seen if he will play against UConn on Friday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Massachusetts",
    "player": "Jordan Washington",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Massachusetts",
@@ -2493,7 +2826,45 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Griffin is dealing with an undisclosed injury, and it remains to be seen if he will be available against E. Michigan on Saturday, October 3rd."
+     "note": "Griffin is dealing with an undisclosed injury, and it remains to be seen if he will be available against UConn on Friday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Massachusetts",
+   "player": "T.Y. Harding",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Harding is dealing due to an undisclosed injury, and it is unclear whether he will play against UConn on Friday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Memphis",
+   "player": "Brady Kluse",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Kluse is dealing due to an undisclosed injury, and it is unclear whether he will play against East Carolina on Thursday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Memphis",
+   "player": "Tychaun Chapman",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
     }
    },
    "share": 0.5,
@@ -2546,19 +2917,7 @@
   },
   {
    "team": "Miami",
-   "player": "Mark Fletcher Jr.",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Upper Body",
-     "note": "Fletcher Jr is hampered by upper body injury, and it has yet to be established if he will be active against Clemson on Saturday, October 3th."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Miami",
-   "player": "Romanas Frederique Jr.",
+   "player": "Milan Parris",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -2569,7 +2928,7 @@
   },
   {
    "team": "Miami",
-   "player": "Xavier Lucas",
+   "player": "Romanas Frederique Jr.",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -2593,31 +2952,28 @@
    "team": "Miami (OH)",
    "player": "Christian Ross",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
      "report": "Out - Undisclosed",
-     "note": "Ross is nursing with an undisclosed injury, and he is not projected to face against the the Bowling Green on Saturday."
+     "note": "Ross is nursing with an undisclosed injury, and he will miss an extended period."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Miami (OH)",
    "player": "David McComb",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
      "report": "Out - Upper Body",
-     "note": "McComb is nursing an upper body injury, and he is not expected to be active against Bowling Green on Saturday, October 3rd."
+     "note": "McComb is nursing an upper body injury, and has been shut down for the remainder of the season."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Miami (OH)",
@@ -2677,30 +3033,97 @@
   },
   {
    "team": "Michigan",
-   "player": "John Henry Daley",
+   "player": "Blake Frazier",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Michigan",
+   "player": "Brady Norton",
    "sources": {
     "covers": {
-     "report": "Questionable - Lower Body",
-     "note": "Daley is dealing with a lower body injury, and it is unclear if he will suit up against the Minnesota on Tuesday."
+     "report": "Questionable - Undisclosed",
+     "note": "Norton is hampered by an undisclosed injury, and it is uncertain if he will play against Indiana on Saturday."
     }
    },
    "share": 0.5,
    "status": "questionable"
   },
   {
-   "team": "Michigan State",
-   "player": "Caleb Wheatland",
+   "team": "Michigan",
+   "player": "Dom Nichols",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Michigan",
+   "player": "Enow Etta",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Michigan",
+   "player": "Rod Moore",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Michigan",
+   "player": "Zack Marshall",
    "sources": {
     "mygamesim": {
      "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Wheatland is tending to an undisclosed injury, and he is not expected to be active against Illinois on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Marshall is bothered by an undisclosed injury, and it remains to be seen if he will be active against Indiana on Saturday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Michigan State",
+   "player": "Alessio Milivojevic",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
     }
    },
    "share": 0.0,
    "status": "out"
+  },
+  {
+   "team": "Michigan State",
+   "player": "Caleb Wheatland",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Wheatland is tending to an undisclosed injury, and it is unclear if he will play against UCLA on Saturday ."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Michigan State",
@@ -2711,7 +3134,7 @@
     },
     "covers": {
      "report": "Questionable - Knee",
-     "note": "Edwards is dealing with a knee injury, and it remains to be seen if he will be available against Illinois on Saturday."
+     "note": "Edwards is nursing with a knee injury, and it remains to be seen if he will be available against UCLA on Saturday."
     }
    },
    "share": 0.25,
@@ -2722,15 +3145,41 @@
    "player": "Cam Fancher",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
      "report": "Questionable - Knee",
-     "note": "Fancher exited the game with a knee injury, and it remains to be seen if he will be available against Illinois on Saturday."
+     "note": "Fancher is dealing with a knee injury, and it remains to be seen if he will be available against UCLA on Saturday."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Michigan State",
+   "player": "Charles Brantley",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Michigan State",
+   "player": "Charles Taplin",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Foot",
+     "note": "Taplin is dealing with a foot injury, and it is unclear whether he will play against UCLA on Saturday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Michigan State",
@@ -2745,7 +3194,29 @@
   },
   {
    "team": "Michigan State",
+   "player": "Jaziun Patterson",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Michigan State",
    "player": "Jordan Hall",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Michigan State",
+   "player": "Marvis Parrish",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
@@ -2755,15 +3226,52 @@
    "status": "questionable"
   },
   {
+   "team": "Michigan State",
+   "player": "Tre Bell",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
    "team": "Middle Tennessee",
    "player": "Landon Collins",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Middle Tennessee",
+   "player": "Markus Allen",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Middle Tennessee",
+   "player": "Tayvion Galloway",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Galloway is dealing due to an undisclosed injury, and it has yet to be determined if he will play against Kennesaw State Owls on Wednesday, October 28th."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Minnesota",
@@ -2771,7 +3279,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Turner is nursing with an undisclosed injury, and it is unclear if he will play Saturday against the Purdue"
+     "note": "Turner is nursing with an undisclosed injury, but he is projected to suit up against the Hawkeyes on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -2790,7 +3298,7 @@
   },
   {
    "team": "Minnesota",
-   "player": "Donielle Hayes",
+   "player": "Pierce Walsh",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -2804,7 +3312,19 @@
    "player": "Ayden Williams",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Mississippi State",
+   "player": "Fluff Bothwell",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Foot",
+     "note": "Bothwell is dealing with foot injury, and it remains to be seen if he will be active against Oklahoma on Saturday."
     }
    },
    "share": 0.5,
@@ -2812,14 +3332,14 @@
   },
   {
    "team": "Mississippi State",
-   "player": "Fluff Bothwell",
+   "player": "Isaac Smith",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Mississippi State",
@@ -2827,7 +3347,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Freeman is managing with an undisclosed injury, and it remains to be seen if he will be active against LSU on Saturday, October 10th."
+     "note": "Freeman is managing with an undisclosed injury, and it remains to be seen if he will be active against Oklahoma on Saturday."
     }
    },
    "share": 0.5,
@@ -2838,11 +3358,15 @@
    "player": "Kamario Taylor",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Taylor is nursing with an undisclosed injury, and it remains to be seen if he will be active against Oklahoma on Saturday."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Mississippi State",
@@ -2854,17 +3378,6 @@
     "covers": {
      "report": "Out - Leg",
      "note": "Williams is sidelined due to Leg injury, and he is expected to miss the remainder of the season."
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Mississippi State",
-   "player": "Zakari Tillman",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
     }
    },
    "share": 0.0,
@@ -2887,6 +3400,21 @@
   },
   {
    "team": "Missouri",
+   "player": "Brett Norfleet",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Norfleet is nursing due to an undisclosed injury, and it has yet to be established if he will suit up against Arkansas on Saturday, October 31st."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Missouri",
    "player": "Cayden Green",
    "sources": {
     "covers": {
@@ -2899,52 +3427,37 @@
   },
   {
    "team": "Missouri",
-   "player": "DaMarion Fowlkes",
+   "player": "Darris Smith",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Smith is dealing with an undisclosed injury, and he is not projected to play against the Arkansas on Saturday, October 31st."
     }
    },
    "share": 0.5,
    "status": "questionable"
   },
   {
-   "team": "Missouri",
-   "player": "Darris Smith",
+   "team": "Missouri State",
+   "player": "Breezy Dubar",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Smith is dealing with an undisclosed injury, and he is not projected to play against the Gators on Saturday, October 3rd."
+     "report": "Out"
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
-  },
-  {
-   "team": "Missouri",
-   "player": "Langden Kitchen",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Kitchen is hobbled by an undisclosed injury, and he is unlikely to suit up against the Gators on Saturday, October 3rd ."
-    }
-   },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Missouri State",
-   "player": "Makai Cope",
+   "player": "Mekhi Miller",
    "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Cope is nursing with an undisclosed injury, and it is unclear if he will face Mustangs on Saturday, September 26th."
+     "note": "Miller is battling due to an undisclosed injury, and it remains to be seen if he will face Sam Houston Bearkats on Tuesday, October 27th."
     }
    },
    "share": 0.5,
@@ -2952,7 +3465,7 @@
   },
   {
    "team": "NC State",
-   "player": "Duke Scott",
+   "player": "Asaad Brown Jr.",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -2963,25 +3476,40 @@
   },
   {
    "team": "NC State",
+   "player": "Duke Scott",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Foot",
+     "note": "Scott is nursing with a foot injury, and it has yet to be determined if he will be active against Stanford on Friday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "NC State",
    "player": "JoJo Trader",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "NC State",
    "player": "Kamen Smith",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "NC State",
@@ -2999,12 +3527,12 @@
    "player": "Tyreek Copper",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Copper is bothered by a undisclosed injury, and it has yet to be established if he will play against Louisville on Saturday, October 3th."
+     "report": "Out - Undisclosed",
+     "note": "Copper is bothered by a undisclosed injury, and team officials have yet to provide an exact return date."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "NC State",
@@ -3030,14 +3558,67 @@
   },
   {
    "team": "Navy",
-   "player": "Landon Walker",
+   "player": "Christian Cromer",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Navy",
+   "player": "Jacob Williams",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
-    },
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Navy",
+   "player": "Jake Norris",
+   "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Walker is nursing with an undisclosed injury, and it is unclear whether he will play against Tulsa on Saturday, October 10rd."
+     "note": "Norris is hampered with an undisclosed injury, and it is unclear whether he will play against North Texas Mean Green on Saturday, October 24th."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Navy",
+   "player": "Joshua Guerin",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Navy",
+   "player": "Landon Walker",
+   "sources": {
+    "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Walker is nursing with an undisclosed injury, and there is no timetable for recovery."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Navy",
+   "player": "Theo Elwell",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
     }
    },
    "share": 0.5,
@@ -3045,41 +3626,111 @@
   },
   {
    "team": "Nebraska",
-   "player": "Carter Nelson",
+   "player": "Anthony Jones Jr.",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Questionable - Leg",
-     "note": "Nelson is dealing with an undisclosed injury, but he is expected to play Saturday against the Indiana."
+     "report": "Out - Foot",
+     "note": "Jones Jr. is bothered by a foot injury, and a timetable for his return has yet to be established."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Nebraska",
+   "player": "Isaiah Mozee",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Mozee is nursing due to an undisclosed injury, and he will miss an undetermined length of time."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Nebraska",
    "player": "Jamal Rule",
    "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Rule is dealing with an undisclosed injury, but he is expected to play Saturday against the Indiana."
+     "note": "Rule is dealing with an undisclosed injury, and it is unknown if he will play against Washington on Saturday, October 31st."
     }
    },
    "share": 0.5,
    "status": "questionable"
+  },
+  {
+   "team": "Nebraska",
+   "player": "Jamir Conn",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Nebraska",
    "player": "Riley Van Poppel",
    "sources": {
     "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Van Poppel is dealing with an undisclosed injury, and it is unknown if he will play against the Washington on Saturday, October 31st."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Nevada",
+   "player": "AJ Bianco",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Nevada",
+   "player": "Carter Jones",
+   "sources": {
+    "mygamesim": {
      "report": "Questionable"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Jones is managing due to an undisclosed injury, and it has yet to be determined if he will be active against San Jose State on Saturday."
     }
    },
    "share": 0.5,
    "status": "questionable"
+  },
+  {
+   "team": "Nevada",
+   "player": "DJ Asiasi",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "New Mexico",
@@ -3087,7 +3738,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Bowers is battling with an undisclsoed injury, and it remains to be seen if he will be active against New Mexico State on Saturday."
+     "note": "Bowers is battling with an undisclsoed injury, and it remains to be seen if he will be active against North Dakota State on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -3110,11 +3761,10 @@
   },
   {
    "team": "New Mexico",
-   "player": "Massiah Mingo",
+   "player": "James Laubstein",
    "sources": {
-    "covers": {
-     "report": "Out - Foot",
-     "note": "Mingo is nursing with a foot injury, and he is not projected to face against the Aggies on Saturday."
+    "mygamesim": {
+     "report": "Out"
     }
    },
    "share": 0.0,
@@ -3125,26 +3775,26 @@
    "player": "Miles Williams",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "New Mexico",
    "player": "Shawn Miller",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
      "report": "Out - Undisclosed",
-     "note": "Miller is dealing with an undisclosed injury, and there is no timetable for recovery."
+     "note": "Miller is tending to an undisclosed injury, and there is no timetable for return."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "New Mexico",
@@ -3163,33 +3813,8 @@
   },
   {
    "team": "North Carolina",
-   "player": "Ade Willie",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "North Carolina",
-   "player": "Isaiah Johnson",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "North Carolina",
    "player": "Jaxxon Warren",
    "sources": {
-    "mygamesim": {
-     "report": "Out"
-    },
     "covers": {
      "report": "Out - Undisclosed",
      "note": "Warren is managing with an undisclosed injury, and he will miss an undetermined length of time."
@@ -3200,22 +3825,10 @@
   },
   {
    "team": "North Carolina",
-   "player": "Jaylen Harvey",
+   "player": "Mason Humphrey",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "North Dakota State",
-   "player": "DJ Scott",
-   "sources": {
-    "covers": {
-     "report": "Out - Foot",
-     "note": "is nursing with a Foot injury, and he is not projected to play against Louisville on Saturday"
+     "report": "Out"
     }
    },
    "share": 0.0,
@@ -3223,62 +3836,61 @@
   },
   {
    "team": "North Dakota State",
-   "player": "Myles Mitchell",
+   "player": "DJ Scott",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Mitchell is dealing with an undisclosed injury, and it is unclear if he will play Saturday against Rebels, 10th October."
+     "report": "Out - Undisclosed",
+     "note": "Scott is dealing with an undisclosed injury, and he will miss an undetermined length of time."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "North Dakota State",
-   "player": "Najee Nelson",
+   "player": "Nyeoti Punni",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Nelson is managing with an undisclosed injury, and it is yet to established if he will face the Rebels on Saturday, October 10th."
+     "report": "Out - Shoulder",
+     "note": "Punni has been sidelined due to shoulder injury, and he will miss an undetermined length of time."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "North Texas",
-   "player": "Brendon Haygood",
+   "player": "Chaston Ditta",
    "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Haygood is dealing with an undisclosed injury, and it remains to be seen if he will be active against 49ers on Saturday, October 10th."
+    "mygamesim": {
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "North Texas",
+   "player": "Corri Milliner",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Milliner is dealing with an undisclosed injury, and it is unclear if he will face Navy on October 24th."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "North Texas",
    "player": "James Tyre",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Tyre is dealing with an undisclosed injury, and it remains to be seen if he will be active against 49ers on Saturday, October 10th."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "North Texas",
-   "player": "Josiah Martin",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Martin is dealing with an undisclosed injury, and it remains to be seen if he will be active against 49ers on Saturday, October 10th."
+     "note": "Tyre is dealing with an undisclosed injury, and it remains to be seen if he will be active against Navy on October 24th."
     }
    },
    "share": 0.5,
@@ -3299,20 +3911,17 @@
    "team": "Northwestern",
    "player": "Braden Turner",
    "sources": {
-    "mygamesim": {
-     "report": "Out"
-    },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Turner is bothered by a Undisclosed injury, and is not expected to be active against the Indiana on Friday."
+     "report": "Questionable - Undisclosed",
+     "note": "Turner is bothered by a Undisclosed injury, and it is yet to established if he will play against Rutgers on Saturday."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Northwestern",
-   "player": "Damon Walters",
+   "player": "Brendan Flakes",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -3341,27 +3950,38 @@
    "player": "Luke Dehnicke",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Dehnicke is dealing with an undisclosed injury, and he is not projected to play against Penn State on Friday, October 2nd."
+     "report": "Questionable - Undisclosed",
+     "note": "Dehnicke is dealing with an undisclosed injury, and it is unclear if he will face Rutgers on Saturday."
     }
    },
    "share": 0.25,
    "status": "doubtful"
   },
   {
+   "team": "Northwestern",
+   "player": "Robert Fitzgerald",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
    "team": "Notre Dame",
    "player": "Blake Hebert",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Hebert is bothered by an undisclosed injury, and it remains to be seen if he will be active against Stanford on Saturday, October 10th."
+     "report": "Out - Undisclosed",
+     "note": "Hebert is bothered by an undisclosed injury, and there is no timetable for return."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Notre Dame",
@@ -3376,51 +3996,10 @@
   },
   {
    "team": "Notre Dame",
-   "player": "Charles Jagusah",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Notre Dame",
-   "player": "Jason Onye",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Notre Dame",
-   "player": "Kyngstonn Viliamu-Asa",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
-    },
-    "covers": {
-     "report": "Out - Thumb",
-     "note": "Viliamu-Asa is nursing with a thumb injury, and it is not anticipated that he will suit up against Stanford on Saturday."
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Notre Dame",
-   "player": "Leonard Moore",
+   "player": "Cooper Flanagan",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Concussion",
-     "note": "Moore is dealing with a concussion injury, and it has yet to be established if he will play against Stanford on Saturday."
     }
    },
    "share": 0.5,
@@ -3443,18 +4022,26 @@
   },
   {
    "team": "Ohio",
-   "player": "Nick Poulos",
+   "player": "Riley Neer",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Poulos is nursing an undisclosed injury, and it is uncertain if he will face Central Michigan on Saturday, October 10th."
+     "note": "Neer is dealing with an undisclosed injury, and it is unclear whether he will play against the Eastern Michigan on Saturday."
     }
    },
    "share": 0.5,
    "status": "questionable"
+  },
+  {
+   "team": "Ohio State",
+   "player": "Austin Siereveld",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Ohio State",
@@ -3462,7 +4049,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Bennett is dealing with an undisclosed injury, and it is unclear if he will suit up against Maryland on Sunday October 11th."
+     "note": "Bennett is dealing with an undisclosed injury, and it is unclear if he will suit up against USC on Saturday, October 31th."
     }
    },
    "share": 0.5,
@@ -3470,44 +4057,11 @@
   },
   {
    "team": "Ohio State",
-   "player": "Brandon Inniss",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Ohio State",
-   "player": "Christian Alliegro",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Ohio State",
-   "player": "Devin McCuin",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Ohio State",
-   "player": "Kyle Parker",
+   "player": "Bo Jackson",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Parker is nursing with an undisclosed injury, and it is unclear if he will play against Iowa on Saturday, October 3rd."
+     "report": "Questionable - Shoulder",
+     "note": "Jackson is battling due to a shoulder injury, and it has yet to be established if he will play against USC on Saturday, October 31th."
     }
    },
    "share": 0.5,
@@ -3515,7 +4069,7 @@
   },
   {
    "team": "Ohio State",
-   "player": "Phillip Daniels",
+   "player": "Brock Boyd",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
@@ -3526,26 +4080,59 @@
   },
   {
    "team": "Ohio State",
-   "player": "Terry Moore",
+   "player": "Ja'Kobi Jackson",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Foot",
+     "note": "Jackson underwent surgery for a Lisfranc injury in his foot, and he will miss an undetermined length of time."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Ohio State",
+   "player": "Julian Sayin",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Arm",
+     "note": "Sayin has been out of the lineup due to a arm injury, and he will miss an undetermined length of time."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Oklahoma",
-   "player": "David Stone",
+   "player": "Eli Bowen",
    "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Stone is dealing with an undisclosed injury, and it is yet to be established if he will suit up against Texas on Saturday."
+    "mygamesim": {
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Oklahoma",
+   "player": "Elijah Thomas",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Lower Body",
+     "note": "Thomas is liad up with an lower body injury, and it is unclear whether he will play against Mississippi State on Saturday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Oklahoma",
@@ -3557,44 +4144,6 @@
    },
    "share": 0.0,
    "status": "out"
-  },
-  {
-   "team": "Oklahoma",
-   "player": "Jer'Michael Carter",
-   "sources": {
-    "mygamesim": {
-     "report": "Probable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Carter is dealing with an undisclosed injury, and it is unclear if he will play against Texas on Saturday."
-    }
-   },
-   "share": 0.75,
-   "status": "questionable"
-  },
-  {
-   "team": "Oklahoma",
-   "player": "Kip Lewis",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Knee",
-     "note": "Lewis is nursing an knee injury, and it has yet to be determined if he will kit up against Texas on Saturday."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Oklahoma",
-   "player": "Michael Fasusi",
-   "sources": {
-    "mygamesim": {
-     "report": "Doubtful"
-    }
-   },
-   "share": 0.25,
-   "status": "doubtful"
   },
   {
    "team": "Oklahoma",
@@ -3616,15 +4165,26 @@
    "player": "Trynae Washington",
    "sources": {
     "mygamesim": {
-     "report": "Doubtful"
+     "report": "Out"
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Oklahoma",
    "player": "Xavier Robinson",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Oklahoma State",
+   "player": "Carson Kolb",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -3641,23 +4201,12 @@
      "report": "Out"
     },
     "covers": {
-     "report": "Questionable - Leg",
-     "note": "Sexton is dealing with a leg injury, and it is unknown if he will face UCF on Saturday, October 10th."
+     "report": "Out - Leg",
+     "note": "Sexton is dealing with a leg injury, and there is no timetable for return."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
-  },
-  {
-   "team": "Oklahoma State",
-   "player": "Johnny Dickson III",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Oklahoma State",
@@ -3672,19 +4221,38 @@
    "status": "out"
   },
   {
-   "team": "Oklahoma State",
-   "player": "Wyatt Young",
+   "team": "Old Dominion",
+   "player": "JJ Harrell",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Harrell is managing with an undisclosed injury, and it is uncertain if he will be available against Louisiana Tech on Saturday, October 24th."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Old Dominion",
-   "player": "JJ Harrell",
+   "player": "Quinn Henicle",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Henicle is nursing with an undisclosed injury, and it is unknown if he will face Louisiana Tech on Saturday, October 24th."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Old Dominion",
+   "player": "Ryan Huff",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -3705,8 +4273,19 @@
    "status": "out"
   },
   {
-   "team": "Old Dominion",
-   "player": "TJ Johnson",
+   "team": "Ole Miss",
+   "player": "Edwin Joseph",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Ole Miss",
+   "player": "Kewan Lacy",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
@@ -3717,26 +4296,10 @@
   },
   {
    "team": "Ole Miss",
-   "player": "Kewan Lacy",
+   "player": "Terez Davis",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
-    },
-    "covers": {
-     "report": "Out - Shoulder",
-     "note": "Lacy is nursing with a shoulder injury, and he is not projected to face against Gators on Saturday."
-    }
-   },
-   "share": 0.25,
-   "status": "doubtful"
-  },
-  {
-   "team": "Ole Miss",
-   "player": "Makhi Frazier",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Frazier is hampered by an undisclosed injury, and it is unclear if he will play against the Gators on Saturday."
     }
    },
    "share": 0.5,
@@ -3747,22 +4310,15 @@
    "player": "Aaron Flowers",
    "sources": {
     "mygamesim": {
-     "report": "Doubtful"
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Flowers has been shut down for the remainder of the season due to an undisclosed injury."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
-  },
-  {
-   "team": "Oregon",
-   "player": "Aaron Scott Jr.",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Oregon",
@@ -3781,10 +4337,25 @@
    "sources": {
     "covers": {
      "report": "Questionable - Neck",
-     "note": "Gresham is hampered by a neck injury, and it has yet to be established if he will be active against UCLA on Saturday, October 10th."
+     "note": "Gresham is hampered by a neck injury, and it has yet to be established if he will be active against the Illinois on Saturday."
     }
    },
    "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Oregon",
+   "player": "Evan Stewart",
+   "sources": {
+    "mygamesim": {
+     "report": "Probable"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Stewart is nursing with an undisclosed injury, and it is unknown if he will play Saturday versus Illinois."
+    }
+   },
+   "share": 0.75,
    "status": "questionable"
   },
   {
@@ -3792,24 +4363,12 @@
    "player": "Iverson Hooks",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Hooks is dealing with an undisclosed injury, and it is unknown if he will face UCLA on Saturday, October 10th."
+     "report": "Out - Undisclosed",
+     "note": "Hooks is dealing with an undisclosed injury, and he will miss an extended period."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Oregon",
-   "player": "Jamari Johnson",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Johnson is dealing with an undisclosed injury, and it is unclear if he will face UCLA on Saturday, October 10th."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Oregon",
@@ -3828,15 +4387,14 @@
   },
   {
    "team": "Oregon",
-   "player": "Kendre Harrison",
+   "player": "Messiah Hampton",
    "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Harrison is dealing with an undisclosed injury, and it is unclear whether he will play against UCLA on Saturday, October 10th."
+    "mygamesim": {
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Oregon",
@@ -3850,54 +4408,31 @@
    "status": "out"
   },
   {
-   "team": "Oregon State",
-   "player": "Kourdey Glass",
-   "sources": {
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Glass is sidelined due to an undisclosed injury, and is not expected to face the Colorado State on Saturday."
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Oregon State",
-   "player": "Xayvion Noland",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
    "team": "Penn State",
    "player": "Brian Kortovich",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Kortovich is hobbled by an undisclosed injury, and it remains to be seen if he will be available against Northwestern on Friday, October 2th."
+     "report": "Out - Undisclosed",
+     "note": "Kortovich is hobbled by an undisclosed injury, and there is no timetable for return."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Penn State",
    "player": "Koby Howard",
    "sources": {
     "mygamesim": {
-     "report": "Out"
+     "report": "Questionable"
     },
     "covers": {
      "report": "Out - Undisclosed",
      "note": "Howard is tending to an undisclosed injury, and there is no timetable for recovery."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Penn State",
@@ -3923,7 +4458,7 @@
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Lagg is nursing with an undisclosed injury, and it is up in the air if he will play against North Carolina on Saturday, October 10th."
+     "note": "Lagg is nursing with an undisclosed injury, and it is up in the air if he will play against Miami on Saturday."
     }
    },
    "share": 0.25,
@@ -3931,37 +4466,14 @@
   },
   {
    "team": "Pittsburgh",
-   "player": "Josh Guerrier",
+   "player": "Ja'Kyrian Turner",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Pittsburgh",
-   "player": "Justin Cook",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Cook is nursing with an undisclosed injury, and it is up in the air if he will play against North Carolina on Saturday, October 10th."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Pittsburgh",
-   "player": "Malik Knight",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Knight is dealing with an undisclosed injury, and there is no timetable for his return."
+     "report": "Questionable - Undisclosed",
+     "note": "Turner is managing with an undisclosed injury, and it is uncertain if he will play against Miami on Saturday."
     }
    },
    "share": 0.25,
@@ -3976,23 +4488,11 @@
     },
     "covers": {
      "report": "Questionable - Leg",
-     "note": "Heintschel exited the game with a leg injury, and it remains to be seen if he will be available against the North Carolina on Saturday, October 10th."
+     "note": "Heintschel is battling with a leg injury, and it remains to be seen if he will be available against Miami on Saturday."
     }
    },
    "share": 0.25,
    "status": "doubtful"
-  },
-  {
-   "team": "Pittsburgh",
-   "player": "Tony Kinsler",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Kinsler is nursing with an undisclosed injury, and it is up in the air if he will play against North Carolina on Saturday, October 10th."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
   },
   {
    "team": "Purdue",
@@ -4033,18 +4533,44 @@
   },
   {
    "team": "Rice",
-   "player": "Davis Lane",
+   "player": "Barry Jackson Jr.",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Lane is battling with an undisclosed injury, and it is uncertain if he will play against Fresno State on Saturday."
+     "note": "Jackson Jr is managing due to an undisclosed injury, and it is unclear whether he will play against Florida Atlantic on Saturday."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Rice",
+   "player": "Ben Grice",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Grice is bothered by an undisclosed injury, and it is unclear whether he will play against Florida Atlantic on Saturday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Rice",
+   "player": "Jacurri Brown",
+   "sources": {
+    "mygamesim": {
+     "report": "Doubtful"
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Rice",
@@ -4082,20 +4608,8 @@
    "status": "out"
   },
   {
-   "team": "Rutgers",
-   "player": "Antwan Raymond",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Raymond is dealing with undisclosed injury, and it is uncertain if he will be available Saturday against the Indiana."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Rutgers",
-   "player": "Davoun Fuse",
+   "team": "Rice",
+   "player": "Will Swartz",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -4109,15 +4623,42 @@
    "player": "Dylan Lonergan",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
      "report": "Out - Head",
      "note": "Lonergan is dealing with an head injury, and there is no timetable for his return."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Rutgers",
+   "player": "Jourdin Houston",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Houston is nursing with an undisclosed injury, and it remain to seen if he will face Northwestern on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Rutgers",
+   "player": "Kaj Sanders",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Sanders is dealing with an undisclosed injury, and he has been shut down for the remainder of the season."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Rutgers",
@@ -4127,16 +4668,27 @@
      "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Levy is battling with an undisclsoed injury, and he will be out of the lineup against USC on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Levy is battling with an undisclsoed injury, and it is unclear whether he will play against Northwestern on Saturday."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Rutgers",
-   "player": "Kevyn Humes",
+   "player": "Ty Morris",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Rutgers",
+   "player": "Zahmir Dawud",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -4158,6 +4710,32 @@
   },
   {
    "team": "SMU",
+   "player": "Carterrious Brown",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "SMU",
+   "player": "Dramekco Green",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Hand",
+     "note": "Green is dealing with a hand injury, and he will miss an undetermined length of time."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "SMU",
    "player": "Ira Singleton",
    "sources": {
     "mygamesim": {
@@ -4166,6 +4744,17 @@
     "covers": {
      "report": "Out - Undisclosed",
      "note": "Singleton is sidelined with an undisclosed injury, and he is expected to miss the remainder of the season."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "SMU",
+   "player": "Jaelyn Davis-Robinson",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
     }
    },
    "share": 0.0,
@@ -4194,52 +4783,43 @@
      "note": "Rhodes has been out of the lineup with a tore ACL injury, and he will be out of commission for the remainder of the season."
     }
    },
-   "share": 0.167,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "SMU",
-   "player": "Yamir Knight",
+   "player": "Tyren Polley Jr.",
    "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Knight is dealing with un undisclosed injury, and it is unclear if he will play Saturday against the Boston College."
+     "report": "Out - Pectoral",
+     "note": "Polley is battling due to a pectoral injury, and he will be idle for the remainder of the season."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "SMU",
-   "player": "Yannick Smith",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Smith is dealing with an undisclosed injury, and it is unclear if he will play Saturday against the Boston"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Sacramento State",
    "player": "Ajon Bryant",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Bryant is dealing with an undisclosed injury, and it has yet to be established if he will suit up against Bowling Green on Saturday, October 10th."
+     "report": "Out - Undisclosed",
+     "note": "Bryant is dealing with an undisclosed injury, and team officials have yet to provide an exact return date."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Sacramento State",
-   "player": "Davion Godley",
+   "player": "Jordan Williams",
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Godley is dealing with an undisclosed injury, and it has yet to be established if he will suit up against Bowling Green on Saturday, October 10th."
+     "note": "Williams is dealing with an undisclosed injury, and it remain to seen if he will face Ball State on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -4250,7 +4830,23 @@
    "player": "Max Whisner",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Whisner is dealing with an undisclosed injury, and it is unclear if he will face State Aggies on Wednesday, October 21st."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "San Diego State",
+   "player": "Donovan Brown",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Brown is dealing with an undisclosed injury, and it is unclear if he will play against the Colorado State on Saturday."
     }
    },
    "share": 0.5,
@@ -4258,40 +4854,26 @@
   },
   {
    "team": "San Diego State",
-   "player": "Donovan Brown",
+   "player": "Jackson Ford",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Ford is dealing with an undisclosed injury, and it is unclear if he will play against the Colorado State on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "San Diego State",
+   "player": "Jayden Denegal",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Brown is dealing with an undisclosed injury, and it is unclear if he will play against the Oregon State on Saturday."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "San Diego State",
-   "player": "Javion Kinnard",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Knee",
-     "note": "Kinnard is dealing with a knee injury, and it is unclear if he will play against the Beavers on Sunday"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "San Diego State",
-   "player": "Justius Lowe",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
+     "note": "Denegal exited the game due to an undisclosed injury, and it is undetermined if he will play against the Colorado State on Saturday."
     }
    },
    "share": 0.5,
@@ -4310,70 +4892,15 @@
   },
   {
    "team": "San Diego State",
-   "player": "Kime Fangupo",
+   "player": "Ryan Wolfer",
    "sources": {
-    "mygamesim": {
-     "report": "Doubtful"
-    }
-   },
-   "share": 0.25,
-   "status": "doubtful"
-  },
-  {
-   "team": "San Diego State",
-   "player": "Lucky Sutton",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
-     "report": "Questionable - Ankle",
-     "note": "Sutton is dealing with an ankle injury, and it is unclear if he will play against the Bobcats on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Wolfer is dealing with an undisclosed injury, and it is unclear if he will play against the Colorado State on Saturday."
     }
    },
    "share": 0.5,
    "status": "questionable"
-  },
-  {
-   "team": "San Diego State",
-   "player": "Nathan Acevedo",
-   "sources": {
-    "mygamesim": {
-     "report": "Doubtful"
-    },
-    "covers": {
-     "report": "Doubtful - Undisclosed",
-     "note": "Acevedo is nursing with an undisclosed injury and he is not projected to be active against the Oregon State on Saturday."
-    }
-   },
-   "share": 0.25,
-   "status": "doubtful"
-  },
-  {
-   "team": "San Diego State",
-   "player": "Ryan Wolfer",
-   "sources": {
-    "mygamesim": {
-     "report": "Doubtful"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Wolfer is dealing with an undisclosed injury, and it is unclear if he will play against the Bobcats on Saturday."
-    }
-   },
-   "share": 0.375,
-   "status": "doubtful"
-  },
-  {
-   "team": "San Diego State",
-   "player": "Stone Saunders",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
-    }
-   },
-   "share": 0.0,
-   "status": "out"
   },
   {
    "team": "San José State",
@@ -4381,6 +4908,46 @@
    "sources": {
     "mygamesim": {
      "report": "Questionable"
+    },
+    "covers": {
+     "report": "Questionable - Leg",
+     "note": "Hoch is hampered by a leg injury, and it is unclear if he will play against the Nevada on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "San José State",
+   "player": "Jabari Bates",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Bates is nursing with an undisclosed injury, and it is unclear if he will play against the Nevada on Saturday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "San José State",
+   "player": "Jordan Anderson",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Anderson is bothered by an undisclosed injury, and it is unclear if he will play against the Nevada on Saturday"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "San José State",
+   "player": "Luke Weaver",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Weaver is hampered by an undisclosed injury, and it is unclear if he will play against the Nevada on Saturday."
     }
    },
    "share": 0.5,
@@ -4395,7 +4962,7 @@
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "White is dealing with an undisclosed injury, and it is unclear if he will play against the Marshall on Tuesday, October 22nd."
+     "note": "White is dealing with an undisclosed injury, and it is unclear if he will play against Louisiana Tech Bulldogs on Saturday, October 31st."
     }
    },
    "share": 0.5,
@@ -4418,17 +4985,6 @@
   },
   {
    "team": "South Carolina",
-   "player": "Carter Miller",
-   "sources": {
-    "mygamesim": {
-     "report": "Doubtful"
-    }
-   },
-   "share": 0.25,
-   "status": "doubtful"
-  },
-  {
-   "team": "South Carolina",
    "player": "Dylan Stewart",
    "sources": {
     "covers": {
@@ -4443,16 +4999,13 @@
    "team": "South Carolina",
    "player": "Gabriel Brownlow-Dindy",
    "sources": {
-    "mygamesim": {
-     "report": "Doubtful"
-    },
     "covers": {
      "report": "Questionable - Upper Body",
      "note": "Brownlow-Dindy is nursing with a upper body injury, and it is uncertain if he will play against Florida on Saturday."
     }
    },
-   "share": 0.375,
-   "status": "doubtful"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "South Carolina",
@@ -4465,6 +5018,17 @@
    },
    "share": 0.5,
    "status": "questionable"
+  },
+  {
+   "team": "South Carolina",
+   "player": "Jawarn Howell",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "South Carolina",
@@ -4485,15 +5049,12 @@
    "team": "South Carolina",
    "player": "Mazeo Bennett Jr.",
    "sources": {
-    "mygamesim": {
-     "report": "Probable"
-    },
     "covers": {
      "report": "Questionable - Undisclosed",
      "note": "Bennett is dealing with an undisclosed injury, and it is unclear if he will suit up against the Florida on Saturday."
     }
    },
-   "share": 0.75,
+   "share": 0.5,
    "status": "questionable"
   },
   {
@@ -4501,11 +5062,11 @@
    "player": "Quay'sheed Scott",
    "sources": {
     "mygamesim": {
-     "report": "Doubtful"
+     "report": "Out"
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "South Florida",
@@ -4513,11 +5074,26 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Branch is battling with an undisclosed injury, and it is undetermined if he will suit up against the Navy on Saturday, 17th Oct."
+     "note": "Branch is battling with an undisclosed injury, and it is undetermined if he will suit up against the UAB on Saturday, 31st Oct."
     }
    },
    "share": 0.5,
    "status": "questionable"
+  },
+  {
+   "team": "Southern Miss",
+   "player": "Avery Sledge",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Sledge is dealing with an undisclosed injury and, it is uncertain if he will be available against the Georgia State on October 24th."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Southern Miss",
@@ -4539,15 +5115,15 @@
    "player": "Grant Page",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
      "report": "Out - Elbow",
      "note": "Page is sidelined due to a dislocated elbow, and team officials have yet to provide an exact return date."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Southern Miss",
@@ -4559,6 +5135,17 @@
     "covers": {
      "report": "Out - Foot",
      "note": "Himes is out of commission due to a foot injury, and he will miss an extended period."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Southern Miss",
+   "player": "Robert Briggs",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
     }
    },
    "share": 0.0,
@@ -4581,26 +5168,11 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Shaw is dealing with an undisclosed injury, and it remains to be seen if he will be available against Notre Dame on Saturday, October 10th."
+     "note": "Shaw is dealing with an undisclosed injury, and it remains to be seen if he will be available against NC State on Friday, October 23th."
     }
    },
    "share": 0.5,
    "status": "questionable"
-  },
-  {
-   "team": "Stanford",
-   "player": "Jahsiah Galvan",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
-    },
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Galvan is sidelined with an undisclosed injury, and there is no timetable for return."
-    }
-   },
-   "share": 0.0,
-   "status": "out"
   },
   {
    "team": "Stanford",
@@ -4618,38 +5190,27 @@
    "player": "Niki Prongos",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Prongos is dealing with an undisclosed injury, and it is undetermined if he will suit up against Notre Dame on Saturday, October 10th."
+     "report": "Out - Undisclosed",
+     "note": "Prongos is dealing with an undisclosed injury, and he will miss an extended period."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Syracuse",
-   "player": "Ahmad Miller",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Syracuse",
    "player": "Amari Odom",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Odom is bothered by an undisclosed injury, and it is unclear if he will suit up against the Virginia on Saturday."
+     "note": "Odom is bothered by an undisclosed injury, and it is unclear if he will suit up against North Carolina on Saturday, October 24th."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Syracuse",
@@ -4664,22 +5225,11 @@
   },
   {
    "team": "Syracuse",
-   "player": "Ju'Juan Johnson",
+   "player": "Steve Angeli",
    "sources": {
     "covers": {
-     "report": "Questionable - Hand",
-     "note": "Johnson is battling with an hand injury, and it remains to be seen if he will be active against Eagles on Sunday, October 11th."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Syracuse",
-   "player": "Nazir Ward",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
+     "report": "Questionable - Undisclosed",
+     "note": "Angeli has an undisclosed injury, and it is uncertain if he will suit up against North Carolina on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -4687,37 +5237,21 @@
   },
   {
    "team": "TCU",
-   "player": "Jeremy Scott",
+   "player": "Jeremy Payne",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "TCU",
-   "player": "Joe Pitchford",
+   "player": "Landon Walker",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Pitchford has been out of the lineup due to an undisclosed injury, and he will be not available against Cougars on Saturday."
-    }
-   },
-   "share": 0.25,
-   "status": "doubtful"
-  },
-  {
-   "team": "TCU",
-   "player": "Jordan Dwyer",
-   "sources": {
-    "covers": {
-     "report": "Out - Foot",
-     "note": "Dwyer is dealing with a foot injury, and he will miss an undetermined length of time."
+     "report": "Out"
     }
    },
    "share": 0.0,
@@ -4727,9 +5261,6 @@
    "team": "TCU",
    "player": "Michael Short",
    "sources": {
-    "mygamesim": {
-     "report": "Out"
-    },
     "covers": {
      "report": "Out - Undisclosed",
      "note": "Short is sidelined with an undisclosed injury, and there is no timetable for return."
@@ -4739,15 +5270,38 @@
    "status": "out"
   },
   {
+   "team": "TCU",
+   "player": "Zach Chapman",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
    "team": "Temple",
-   "player": "Jaxon Smolik",
+   "player": "Ajani Sheppard",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Sheppard is tending to an undisclosed injury, and it is uncertain if he will face East Carolina on Saturday, October 31th."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Temple",
+   "player": "JoJo Bermudez",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
     },
     "covers": {
-     "report": "Questionable - Foot",
-     "note": "Smolik is suffering with a foot injury, and it is undetermined if he will face Huskies on Sunday."
+     "report": "Questionable - Undisclosed",
+     "note": "Bermudez is bothered by an undisclosed injury, and it is unclear whether he will play against East Carolina on Saturday, October 31th."
     }
    },
    "share": 0.5,
@@ -4759,7 +5313,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Hardy is tending to an undisclosed injury, and it is unclear if he will face South Florida on Saturday, October 3rd."
+     "note": "Hardy is tending to an undisclosed injury, and it is unclear against East Carolina on Saturday, October 31th."
     }
    },
    "share": 0.5,
@@ -4770,12 +5324,12 @@
    "player": "Reis Stocksdale",
    "sources": {
     "covers": {
-     "report": "Questionable - Hamstring",
-     "note": "Stocksdale is dealing with a hamstring injury, and it is unclear if he will face South Florida on Saturday, October 3rd."
+     "report": "Out - Hamstring",
+     "note": "Stocksdale is dealing with a hamstring injury, and there is no timetable for his return."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Temple",
@@ -4786,7 +5340,7 @@
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Brown is suffering with a undisclosed injury, and it is undetermined if he will face South Florida on Saturday"
+     "note": "Brown is suffering with a undisclosed injury, and it is undetermined if he will face East Carolina on Saturday, October 31th."
     }
    },
    "share": 0.5,
@@ -4805,17 +5359,6 @@
   },
   {
    "team": "Tennessee",
-   "player": "Faizon Brandon",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Tennessee",
    "player": "Jadais Richard",
    "sources": {
     "mygamesim": {
@@ -4827,37 +5370,10 @@
   },
   {
    "team": "Tennessee",
-   "player": "Javin Gordon",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Leg",
-     "note": "Gordon is dealing with a leg injury, and it is unclear whether he will play against Auburn on Saturday, October 3rd."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Tennessee",
    "player": "Joakim Dodson",
    "sources": {
     "mygamesim": {
      "report": "Out"
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "Tennessee",
-   "player": "Qua Moss",
-   "sources": {
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Moss is nursing an undisclosed injury, and he is not projected to play against Auburn on Saturday"
     }
    },
    "share": 0.0,
@@ -4880,11 +5396,37 @@
   },
   {
    "team": "Texas",
+   "player": "Cam Coleman",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Texas",
+   "player": "Colin Simmons",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Ankle",
+     "note": "Simmons is hampered with an ankle injury, and it is uncertain if he will suit up against Ole Miss on Saturday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Texas",
    "player": "Daylan McCutcheon",
    "sources": {
     "covers": {
      "report": "Questionable - Illness",
-     "note": "McCutcheon is ailing from an illness, and it is unclear if he will play against Oklahoma on Saturday, October 10th."
+     "note": "McCutcheon is ailing from an illness, and it remains to be seen if he will suit up against Ole Miss on Saturday."
     }
    },
    "share": 0.5,
@@ -4894,13 +5436,16 @@
    "team": "Texas",
    "player": "Hollywood Smothers",
    "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
     "covers": {
-     "report": "Questionable - Ankle",
-     "note": "Smothers is dealing with an Ankle injury, and it is unknown if he will suit up against Oklahoma on Saturday, October 10th."
+     "report": "Questionable - Undisclosed",
+     "note": "Smothers is laid up with an undisclosed injury, and it remains to be seen if he will be active against Mississippi on Saturday."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Texas",
@@ -4910,20 +5455,19 @@
      "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Lockett is hampered by an undisclosed injury, and he is not expected to play against the Oklahoma on Saturday."
+     "report": "Questionable - Undisclosed",
+     "note": "Lockett is hampered by an undisclosed injury, and it is uncertain if he will suit up against Ole Miss on Saturday."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Texas",
-   "player": "Nick Townsend",
+   "player": "Kobe Black",
    "sources": {
-    "covers": {
-     "report": "Questionable - Knee",
-     "note": "Townsend is hampered by a knee injury, and it is up in the air if he will suit up against Oklahoma on Saturday, October 10th."
+    "mygamesim": {
+     "report": "Questionable"
     }
    },
    "share": 0.5,
@@ -4934,8 +5478,31 @@
    "player": "Trevor Goosby",
    "sources": {
     "covers": {
-     "report": "Questionable - Knee",
-     "note": "Goosby is dealing with a knee injury, and it is unknown if he will suit up against Oklahoma on Saturday, October 10th."
+     "report": "Out - Knee",
+     "note": "Goosby is managing with a knee injury, and there is no timetable for his return."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Texas A&M",
+   "player": "Anto Saka",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Texas A&M",
+   "player": "Ashton Bethel-Roman",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Personal",
+     "note": "Bethel-Roman is dealing due to a personal reason, and it remains to be seen if he will be active against Alabama on Saturday."
     }
    },
    "share": 0.5,
@@ -4950,7 +5517,7 @@
     },
     "covers": {
      "report": "Out - Undisclosed",
-     "note": "Ivy is dealing with an undisclosed injury, and he will be out of the lineup against Missouri on Saturday."
+     "note": "Ivy is dealing with an undisclosed injury, and he will be out of action for the remainder of the season."
     }
    },
    "share": 0.0,
@@ -4958,22 +5525,22 @@
   },
   {
    "team": "Texas A&M",
-   "player": "Jamarion Morrow",
+   "player": "Kelshaun Johnson",
    "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Morrow is dealing with an undisclosed injury, and it is unclear whether he will play against Missouri on Saturday."
+    "mygamesim": {
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Texas A&M",
    "player": "Mario Craver",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Craver is tending to an undisclosed injury, and it is unclear whether he will play against Alabama on Saturday."
     }
    },
    "share": 0.5,
@@ -4998,8 +5565,9 @@
    "team": "Texas State",
    "player": "Blake Smith",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
+    "covers": {
+     "report": "Questionable - Foot",
+     "note": "Smith is is bothered by a foot injury, and it remains to be seen if he will be active against Utah State on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -5007,14 +5575,17 @@
   },
   {
    "team": "Texas State",
-   "player": "Jordan Sample",
+   "player": "Davian Jackson",
    "sources": {
+    "mygamesim": {
+     "report": "Probable"
+    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Sample is dealing with an undisclosed injury, and it is unknown if he will play against San Diego State on Saturday, October 3th."
+     "note": "Jackson is nursing with an undisclosed injury, and it is undetermined if he will face Utah State on Saturday, October 24th."
     }
    },
-   "share": 0.5,
+   "share": 0.75,
    "status": "questionable"
   },
   {
@@ -5022,20 +5593,8 @@
    "player": "Kylen Evans",
    "sources": {
     "covers": {
-     "report": "Questionable - Shoulder",
-     "note": "vans is nursing with a shoulder injury, and it is unclear if he will face San Diego State on Saturday, October 3th."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Texas Tech",
-   "player": "Amier Boyd",
-   "sources": {
-    "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Boyd is nursing with an undisclosed injury, and it remains to be seen if he will be active against Colorado on Saturday, October 3rd."
+     "note": "Evans is bothered by an undisclosed injury, and it is uncertain if he will play against Utah State on Saturday."
     }
    },
    "share": 0.5,
@@ -5046,57 +5605,102 @@
    "player": "Cameron Dickey",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
      "report": "Out - Ankle",
      "note": "Dickey is battling with a sprained ankle injury, and there is no timetable for his return."
     }
    },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Texas Tech",
+   "player": "Donte Lee Jr.",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Knee",
+     "note": "Lee is dealing with a knee torn ACL injury, and he has been shut down for the remainder of the season."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Texas Tech",
+   "player": "Hunter Zambrano",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Texas Tech",
+   "player": "Jalen Jones",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Jones is dealing with an undisclosed injury, and it is unclear if he will play against Cincinnati on Saturday, October 24th."
+    }
+   },
    "share": 0.25,
    "status": "doubtful"
   },
   {
-   "team": "Texas Tech",
-   "player": "Thomas Castellanos",
+   "team": "Toledo",
+   "player": "Connor Walendzak",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Texas Tech",
-   "player": "Trey White",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Knee",
-     "note": "White is battling with a knee injury, and it is unclear if he will play against Colorado on Saturday, October 3rd."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Toledo",
    "player": "Corey Smith",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Smith is bothered by an undisclosed injury, and it remains to be seen if he will be active against Western Michigan on Saturday."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Toledo",
    "player": "Kalvin Gilbert Jr.",
    "sources": {
     "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Gilbert is nursing with an undisclosed injury, and there is no timetable for return."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Toledo",
+   "player": "Rico Bond",
+   "sources": {
+    "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Gilbert is nursing with an undisclosed injury, and it remains to be seen if he will be available against Buffalo on Saturday, October 10th"
+     "note": "Bond is nursing by an undisclosed injury, and it remains to be seen if he will be active against Western Michigan on Saturday."
     }
    },
    "share": 0.5,
@@ -5107,26 +5711,35 @@
    "player": "Trenton Jones",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Jones is nursing with an undisclosed injury, and it remains to be seen if he will be available against Buffalo on Saturday, October 10th"
+     "report": "Out - Undisclosed",
+     "note": "Jones is nursing with an undisclosed injury, and he will miss an undetermined length of time."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Troy",
    "player": "Fabian Rogosch",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Rogosch is bothered by an undisclosed injury, and it is unclear whether he will play against Louisiana on Saturday, October 17th."
+     "report": "Out - Undisclosed",
+     "note": "Rogosch is bothered by an undisclosed injury, and he will miss an extended period."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Troy",
+   "player": "Goose Crowder",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Shoulder",
+     "note": "Crowder is bothered by a shoulder injury, and it is unclear whether he will play against Louisiana-Monroe on Saturday."
     }
    },
    "share": 0.5,
@@ -5148,60 +5761,76 @@
    "status": "out"
   },
   {
+   "team": "Troy",
+   "player": "TK Keyes",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
    "team": "Tulane",
    "player": "Jamauri McClure",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
      "report": "Out - Foot",
      "note": "McClure is managing a foot injury, and there is no timetable for his return."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Tulane",
+   "player": "Maurice Turner",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Tulane",
+   "player": "Ty Thompson",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Toe",
+     "note": "Thompson is battling due to an undisclosed injury, and it is uncertain if he will face UTSA on Saturday, October 24th."
     }
    },
    "share": 0.25,
    "status": "doubtful"
   },
   {
-   "team": "Tulane",
-   "player": "Zycarl Lewis Jr.",
+   "team": "Tulsa",
+   "player": "Donnell Gee Jr.",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
-     "report": "Questionable - Leg",
-     "note": "Lewis Jr. is bothered by a lef injury, and his status is unknown against Army on Saturday, October 10th."
+     "report": "Questionable - Undisclosed",
+     "note": "Gee Jr. is liad up due to an undisclosed injury, and it remains to be seen if he will be active against Army on Friday."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "Tulsa",
    "player": "Grayson Tempest",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Tempest is dealing with an undisclosed injury, and it has yet to be established if he will be available against the Navy on Saturday, October 10th."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "Tulsa",
-   "player": "Jimmy Calloway",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Calloway is dealing with an undisclosed injury, and it has yet to be established if he will be available against the Navy on Saturday, October 10th."
+     "note": "Tempest is dealing with an undisclosed injury, and it has yet to be established if he will be available against the Army on Friday."
     }
    },
    "share": 0.5,
@@ -5213,10 +5842,6 @@
    "sources": {
     "mygamesim": {
      "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Ferguson is dealing with an undisclosed injury, and it is uncertain if he will play against Tigers on Sunday, October 11th."
     }
    },
    "share": 0.5,
@@ -5234,39 +5859,28 @@
    "status": "questionable"
   },
   {
-   "team": "UAB",
-   "player": "Kaleb Brown",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
    "team": "UCF",
    "player": "Alonza Barnett III",
    "sources": {
     "covers": {
-     "report": "Questionable - Hamstring",
-     "note": "Barnett III is managing with an hamstring injury, and it is unclear if he will face Oklahoma St on Saturday."
+     "report": "Out - Hamstring",
+     "note": "Barnett III is managing with an hamstring injury, and he will be out of the lineup against BYU on Saturday."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "UCF",
    "player": "Duane Thomas Jr.",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Thomas Jr. is dealing with an undisclosed injury, and it is unclear if he will play against Oklahoma State on Saturday."
+     "report": "Out - Undisclosed",
+     "note": "Thomas Jr. is dealing with an undisclosed injury, and he will miss an extended period."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "UCF",
@@ -5274,7 +5888,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Shoulder",
-     "note": "Wade is dealing with an Shoulder injury, and it is unclear if he will play against Houston on Saturday."
+     "note": "Wade is dealing with an Shoulder injury, and it is unclear if he will play against BYU on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -5294,15 +5908,18 @@
   },
   {
    "team": "UCLA",
-   "player": "Aidan Mizell",
+   "player": "Jordan Davis",
    "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Mizell is dealing with an undisclosed injury, and it remains to be seen if he will suit up against Terrapins on Friday, September 25th."
+     "report": "Out - Undisclosed",
+     "note": "UCLA is nursing due to an undisclosed injury, and he is unlikely to play against Wisconsin on Saturday."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "UCLA",
@@ -5332,6 +5949,36 @@
   },
   {
    "team": "UCLA",
+   "player": "Nico Iamaleava",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Leg",
+     "note": "Iamaleava is managing due to a leg injury, and he will be idle for the remainder of the season"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "UCLA",
+   "player": "Rodrick Pleasant",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Pleasant is laid up with an undisclosed injury, and he will be out of the lineup against Wisconsin on Saturday."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "UCLA",
    "player": "Sam Yoon",
    "sources": {
     "mygamesim": {
@@ -5339,7 +5986,7 @@
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Yoon is sidelined with an undisclosed injury, and it remains to be seen if he will suit up against Terrapins on Friday, September 25th."
+     "note": "Yoon is sidelined with an undisclosed injury, and it remains to be seen if he will suit up against Badgers on Saturday, October 17th."
     }
    },
    "share": 0.25,
@@ -5350,15 +5997,11 @@
    "player": "Tao Johnson",
    "sources": {
     "mygamesim": {
-     "report": "Probable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Johnson is bothered by an undisclosed injury, and it remains to be seen if he will suit up against Terrapins on Friday, September 25th."
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "UConn",
@@ -5369,7 +6012,7 @@
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Merklinger is dealing with an undisclosed injury, and it is unknown if he will face Gardner-Webb on Monday, November 2nd."
+     "note": "Merklinger is dealing with an undisclosed injury, and it is unknown if he will face Minutemen on Friday , October 23rd."
     }
    },
    "share": 0.5,
@@ -5391,45 +6034,15 @@
    "status": "doubtful"
   },
   {
-   "team": "UConn",
-   "player": "Kenji Christian",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Hamstring",
-     "note": "Christian is nursing an Hamstring injury, and it is unclear if he will face Owls on Saturday, October 10th."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "UL Monroe",
-   "player": "Derrick Jameson",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Jameson is battling with an undisclosed injury, and it remains to be seen if he will be active against the South Alabama on Saturday."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
    "team": "UNLV",
    "player": "DeAngelo Irvin Jr.",
    "sources": {
     "mygamesim": {
-     "report": "Out"
+     "report": "Questionable"
     },
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Irvin Jr. is bothered by an undisclosed injury, and it is unclear if he will play against the North Dakota State on Saturday."
+     "report": "Out - Undisclosed",
+     "note": "Irvin Jr. is bothered by an undisclosed injury, and there is no timetable for recovery."
     }
    },
    "share": 0.25,
@@ -5437,34 +6050,11 @@
   },
   {
    "team": "UNLV",
-   "player": "Jaylon Glover",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "UNLV",
    "player": "Kayden McGee",
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "McGee is dealing with an undisclosed injury, and it is to be seen if he will play against California on Saturday, October 3rd."
-    }
-   },
-   "share": 0.5,
-   "status": "questionable"
-  },
-  {
-   "team": "UNLV",
-   "player": "Taeshaun Lyons",
-   "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Lyons is dealing with an undisclosed injury, and it remains to be seen if he will be available against Bison on Sunday, October 11th."
+     "note": "McGee is dealing due to an undisclosed injury, and it is uncertain if he will play against Northern Illinois Huskies on Saturday, October 31th."
     }
    },
    "share": 0.5,
@@ -5487,17 +6077,6 @@
   },
   {
    "team": "USC",
-   "player": "Desman Stephens II",
-   "sources": {
-    "mygamesim": {
-     "report": "Out"
-    }
-   },
-   "share": 0.0,
-   "status": "out"
-  },
-  {
-   "team": "USC",
    "player": "Jide Abasiri",
    "sources": {
     "mygamesim": {
@@ -5513,7 +6092,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Reddick is dealing with an undisclsoed injury, and it is unclear whether he will play against Washington on Saturday, October 3th."
+     "note": "Reddick is dealing with an undisclosed injury, and it is unclear whether he will play against Badgers on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -5539,15 +6118,15 @@
    "player": "Mark Bowman",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Bowman is dealing with an undisclosed injury, and it is unclear if he will play against Washington on Saturday."
+     "note": "Bowman is dealing with an undisclosed injury, and it is unclear if he will play against Badgers on Saturday, October 24th."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
    "team": "USC",
@@ -5555,7 +6134,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Huard is battling with an undisclosed injury, and it remains to be seen if he will suit up against Washington on Saturday, October 3th."
+     "note": "Huard is battling with an undisclosed injury, and it remains to be seen if he will suit up against Badgers on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -5566,26 +6145,26 @@
    "player": "Terrell Anderson",
    "sources": {
     "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Anderson has been sidelined due to an undisclosed injury, and a timetable for return/recovery has yet to be established."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "UTEP",
+   "player": "Carver Cheeks",
+   "sources": {
+    "mygamesim": {
      "report": "Questionable"
     }
    },
    "share": 0.5,
    "status": "questionable"
-  },
-  {
-   "team": "USC",
-   "player": "Trent Mosley",
-   "sources": {
-    "mygamesim": {
-     "report": "Questionable"
-    },
-    "covers": {
-     "report": "Doubtful - Knee",
-     "note": "Mosley is dealing with a knee injury, and he is unlikely to play against Washington on Saturday."
-    }
-   },
-   "share": 0.375,
-   "status": "doubtful"
   },
   {
    "team": "UTEP",
@@ -5593,37 +6172,67 @@
    "sources": {
     "mygamesim": {
      "report": "Questionable"
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Utah",
+   "player": "JC Hart",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Colson Jr. is battling with an undisclosed injury, and it remains to be seen if he will play against Nevada on Saturday."
+     "note": "Hart has an undisclosed injury, and it is unknown if he will face Houston on Saturday, October 24th."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.25,
+   "status": "doubtful"
   },
   {
-   "team": "UTEP",
-   "player": "Lamar Sperling",
+   "team": "Utah",
+   "player": "Kelvin Obot",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Utah State",
+   "player": "Anthony Garcia",
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Sperling is dealing with an undisclosed injury, and it is unclear if he will play Saturday against the Nevada"
+     "note": "Garcia is dealing with an undisclosed injury, and it is uncertain if he will suit up against the Bobcats on Saturday, October 24th."
     }
    },
    "share": 0.5,
    "status": "questionable"
   },
   {
-   "team": "UTEP",
-   "player": "Tavorus Jones",
+   "team": "Utah State",
+   "player": "Collin Remenowsky",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Remenowsky is dealing with an undisclosed injury, and it is uncertain if he will suit up against the Bobcats on Saturday, October 24th."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Utah State",
+   "player": "Eli Wood",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Jones is dealing with an undisclosed injury, and it is unclear if he will play Saturday against the Nevada"
     }
    },
    "share": 0.5,
@@ -5648,12 +6257,21 @@
    "team": "Utah State",
    "player": "Kache Kaio",
    "sources": {
-    "mygamesim": {
-     "report": "Out"
-    },
     "covers": {
-     "report": "Probable - Undisclosed",
-     "note": "Kaio is dealing with an undisclosed injury, but he is expected to suit up Saturday against the Boise State."
+     "report": "Questionable - Undisclosed",
+     "note": "Kaio is dealing with an undisclosed injury, and it is unclear if he will play against the Bobcats on Saturday, October 24th."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Utah State",
+   "player": "McCae Hillstead",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Hillstead is dealing with an undisclosed injury, and it is undetermined if he will be suit up against the Bobcats on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -5663,16 +6281,13 @@
    "team": "Utah State",
    "player": "Nehemiah Washington",
    "sources": {
-    "mygamesim": {
-     "report": "Out"
-    },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Washington is dealing with an undisclosed injury, and he is not expected to suit up against the Washington State on Friday."
+     "report": "Questionable - Undisclosed",
+     "note": "Washington is dealing with an undisclosed injury, and it is undetermined if he will play against the Bobcats on Saturday, October 24th."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Utah State",
@@ -5697,12 +6312,24 @@
      "report": "Out"
     },
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Haynes is nursing with an undisclosed injury, and is not expected to be active against Washington State on Friday."
+     "report": "Questionable - Undisclosed",
+     "note": "Haynes is nursing with an undisclosed injury, and it is undetermined whether he will play against the Bobcats on Saturday, October 24th."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Utah State",
+   "player": "Sesi Vailahi",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Vailahi is dealing with an undisclosed injury, and it is unclear if he will be available against the Bobcats on Saturday, October 24th."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Vanderbilt",
@@ -5717,7 +6344,40 @@
   },
   {
    "team": "Vanderbilt",
+   "player": "Blaze Berlowitz",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Vanderbilt",
+   "player": "Gunner Givens",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Vanderbilt",
    "player": "Mitchell Smith",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Virginia",
+   "player": "Brandyn Hillman",
    "sources": {
     "mygamesim": {
      "report": "Out"
@@ -5745,12 +6405,27 @@
      "report": "Out"
     },
     "covers": {
-     "report": "Questionable - Hamstring",
-     "note": "Newton-Short is managing a hamstring injury, and it is unknown if he will play against Syracuse on Saturday, October 10th."
+     "report": "Out - Hamstring",
+     "note": "Newton-Short is managing with a hamstring injury, and there is no timetable for his return."
     }
    },
-   "share": 0.25,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Virginia",
+   "player": "Ethan Minter",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Minter is nursing with an undisclosed injury, and he is unlikely to face Duke on Friday."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Virginia",
@@ -5780,10 +6455,14 @@
   },
   {
    "team": "Virginia",
-   "player": "Omillio Agard",
+   "player": "Kameron Courtney",
    "sources": {
     "mygamesim": {
-     "report": "Doubtful"
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Courtney is battling due to an undisclosed injury, and it has yet to be determined if he will be active against Duke on Friday."
     }
    },
    "share": 0.25,
@@ -5791,22 +6470,52 @@
   },
   {
    "team": "Virginia",
-   "player": "Peyton Lewis",
+   "player": "Omillio Agard",
    "sources": {
-    "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Lewis is hampered by an undisclosed injury, and it remains to be seen if he will be available against Syracuse on Saturday, October 3rd."
+    "mygamesim": {
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Virginia",
+   "player": "Peyton Lewis",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Lewis is hampered by an undisclosed injury, and it remains to be seen if he will be available against Duke on Friday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Virginia",
+   "player": "Rico Flores Jr.",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
+    "covers": {
+     "report": "Out - Knee",
+     "note": "Flores is nursing due to a knee injury, and he is unlikely to face Duke on Friday."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Virginia Tech",
    "player": "Brody Meadows",
    "sources": {
-    "mygamesim": {
-     "report": "Questionable"
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Meadows is dealing with an undisclosed injury, and it is unclear if he will suit up against the Clemson on Saturday."
     }
    },
    "share": 0.5,
@@ -5818,7 +6527,7 @@
    "sources": {
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Altuner is dealing with an undisclosed injury, and it is unknown if he will suit up against the Golden Bears on Saturday, October 10th."
+     "note": "Altuner is dealing with an undisclosed injury, and it is unknown if he will suit up against the Clemson on Saturday."
     }
    },
    "share": 0.5,
@@ -5826,14 +6535,48 @@
   },
   {
    "team": "Virginia Tech",
-   "player": "Takye Heath",
+   "player": "Montavious Cunningham",
    "sources": {
     "mygamesim": {
-     "report": "Questionable"
+     "report": "Out"
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Heath is dealing with an undisclosed injury, and it is unknown if he will suit up against the Golden Bears on Saturday, October 10th."
+     "note": "Cunningham is nursing due to an undisclosed injury, and it is unclear whether he will play against Clemson on Saturday."
+    }
+   },
+   "share": 0.25,
+   "status": "doubtful"
+  },
+  {
+   "team": "Virginia Tech",
+   "player": "Takye Heath",
+   "sources": {
+    "covers": {
+     "report": "Out - Undisclosed",
+     "note": "Heath is dealing with an undisclosed injury, and he will miss an extended period."
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Virginia Tech",
+   "player": "Thomas Williams",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Wake Forest",
+   "player": "Carlos Hernandez",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
     }
    },
    "share": 0.5,
@@ -5844,12 +6587,12 @@
    "player": "Ny Carr",
    "sources": {
     "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Carr is laid up with an undisclosed injury, and is not expected to play against the Miami on Saturday, September 19th."
+     "report": "Questionable - Undisclosed",
+     "note": "Carr is laid up with an undisclosed injury, and it is unclear if he will play against the Virginia on Saturday."
     }
    },
-   "share": 0.0,
-   "status": "out"
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Washington",
@@ -5860,11 +6603,26 @@
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Moss is tending to an undisclosed injury, and it remains to be seen if he will play against Golden Gophers on Saturday, September 26th."
+     "note": "Moss is tending to an undisclosed injury, and it remains to be seen if he will play against the Nebraska on Saturday, October 31st."
     }
    },
    "share": 0.25,
    "status": "doubtful"
+  },
+  {
+   "team": "Washington",
+   "player": "Demond Williams Jr.",
+   "sources": {
+    "mygamesim": {
+     "report": "Questionable"
+    },
+    "covers": {
+     "report": "Questionable - Ribs",
+     "note": "Williams is nursing with a rib injury, and he is unlikely to dress against Nebraska on Saturday, October 31st."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
   },
   {
    "team": "Washington",
@@ -5882,16 +6640,53 @@
    "status": "out"
   },
   {
+   "team": "Washington",
+   "player": "Trey Cooley",
+   "sources": {
+    "mygamesim": {
+     "report": "Probable"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Cooley is tending to an undisclosed injury, and it remains to be seen if he will play against the Nebraska on Saturday, October 31th."
+    }
+   },
+   "share": 0.75,
+   "status": "questionable"
+  },
+  {
+   "team": "Washington",
+   "player": "Xe'ree Alexander",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Washington State",
+   "player": "Darrius Clemons",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
    "team": "Washington State",
    "player": "Ryan McKendry",
    "sources": {
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "McKendry is tending to an undisclosed injury, and it has yet to be established if he will take the field against Fresno State on Saturday, October 3th."
+     "report": "Out - Undisclosed",
+     "note": "McKendry is tending to an undisclosed injury, and he will miss an undetermined length of time."
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Washington State",
@@ -5923,43 +6718,43 @@
    "team": "West Virginia",
    "player": "Cam Ball",
    "sources": {
-    "mygamesim": {
-     "report": "Doubtful"
-    },
     "covers": {
-     "report": "Questionable - Undisclosed",
-     "note": "Ball is hampered by an undisclosed injury, and it has yet to be established if he will face Arizona on Saturday, October 10th."
+     "report": "Out - Undisclosed",
+     "note": "Ball is hampered by an undisclosed injury, and he will miss an undetermined length of time."
     }
    },
-   "share": 0.375,
-   "status": "doubtful"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "West Virginia",
-   "player": "John Neider",
+   "player": "Jason Chambers",
    "sources": {
     "mygamesim": {
-     "report": "Probable"
-    },
-    "covers": {
-     "report": "Out - Undisclosed",
-     "note": "Neider is hampered by an undisclosed injury and he is not expected to play against the Arizona on Saturday."
+     "report": "Out"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.0,
+   "status": "out"
   },
   {
    "team": "Western Kentucky",
    "player": "K.D. Hutchinson",
    "sources": {
+    "mygamesim": {
+     "report": "Out"
+    },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Hutchinson is dealing with an undisclosed injury, and it is unclear if he will suit up against Sam Houston on Wednesday."
+     "note": "Hutchinson is dealing with an undisclosed injury, and it is unclear if he will suit up against Blue Hens on Tuesday, October 27th."
+    },
+    "rotowire": {
+     "report": "Out",
+     "note": "Return Nov 21st"
     }
    },
-   "share": 0.5,
-   "status": "questionable"
+   "share": 0.167,
+   "status": "doubtful"
   },
   {
    "team": "Western Kentucky",
@@ -5967,6 +6762,14 @@
    "sources": {
     "mygamesim": {
      "report": "Questionable"
+    },
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Johnson is nursing with an undisclosed injury, and it is unclear if he will suit up against Blue Hens on Tuesday, October 27th."
+    },
+    "rotowire": {
+     "report": "Questionable",
+     "note": "Return Oct 27th"
     }
    },
    "share": 0.5,
@@ -5974,14 +6777,21 @@
   },
   {
    "team": "Wisconsin",
-   "player": "Abu Sama III",
+   "player": "Cai Bates",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Wisconsin",
+   "player": "Malachi Coleman",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
-    },
-    "covers": {
-     "report": "Questionable - Upper Body",
-     "note": "Sama III is nursing an upper body injury, and it is unclear whether he will play against UCLA on Saturday, October 17th."
     }
    },
    "share": 0.5,
@@ -5989,14 +6799,25 @@
   },
   {
    "team": "Wisconsin",
-   "player": "Jaylon Domingeaux",
+   "player": "Marvin Burks Jr.",
+   "sources": {
+    "mygamesim": {
+     "report": "Out"
+    }
+   },
+   "share": 0.0,
+   "status": "out"
+  },
+  {
+   "team": "Wisconsin",
+   "player": "Nate Palmer",
    "sources": {
     "mygamesim": {
      "report": "Questionable"
     },
     "covers": {
      "report": "Questionable - Undisclosed",
-     "note": "Domingeaux is tending to an undisclosed injury, and it has yet to be determined if he will be active against UCLA on Saturday, October 17th."
+     "note": "Palmer is battling due to an undisclosed injury, and it is unknown if he will play against USC on Saturday, October 24th."
     }
    },
    "share": 0.5,
@@ -6004,18 +6825,38 @@
   },
   {
    "team": "Wyoming",
-   "player": "Deion DeBlanc",
+   "player": "Cade Brook",
    "sources": {
     "mygamesim": {
      "report": "Out"
-    },
-    "covers": {
-     "report": "Out - Toe",
-     "note": "DeBlanc is dealing with a toe injury, and is not projected to suit up against San Jose State on Friday."
     }
    },
    "share": 0.0,
    "status": "out"
+  },
+  {
+   "team": "Wyoming",
+   "player": "Deion DeBlanc",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Toe",
+     "note": "DeBlanc is nursing due to a toe injury, and it is uncertain if he will play against Air Force on Friday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
+  },
+  {
+   "team": "Wyoming",
+   "player": "Jackson Holman",
+   "sources": {
+    "covers": {
+     "report": "Questionable - Undisclosed",
+     "note": "Holman is battling due to an undisclosed injury, and it is uncertain if he will play against Air Force on Friday."
+    }
+   },
+   "share": 0.5,
+   "status": "questionable"
   }
  ]
 }

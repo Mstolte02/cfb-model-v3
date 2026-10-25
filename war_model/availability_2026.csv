@@ -2,12 +2,11 @@ team,player,status,note
 Notre Dame,Sullivan Absher,starter,Starts at RG with Jagusah out
 Notre Dame,Charles Jagusah,out,Injured again in camp; Sullivan Absher takes right guard
 Notre Dame,Quincy Porter,out,Season-ending knee surgery announced by Marcus Freeman
-Akron,Cameron Monteiro,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Monteiro is nursing an undisclosed injury, and is left out for Saturday's game against the Central Michigan."
-Akron,Reese Poffenbarger,questionable,mygamesim: Questionable
+Akron,Cameron Monteiro,out,"covers: Out - Undisclosed - Monteiro is nursing an undisclosed injury, and he will miss an extended period."
+Akron,Reese Poffenbarger,out,mygamesim: Out
 Alabama,Desmond Umeozulu,out,mygamesim: Out
-Alabama,Jayvin James,out,mygamesim: Out
 Arizona,Chris Hunter,out,mygamesim: Out
-Arizona,Cole Rusk,out,"mygamesim: Out; covers: Out - Leg - Rusk is laid up with an lower leg injury, and is not expected to play against the Cincinnati on Saturday."
+Arizona,Cole Rusk,doubtful,"mygamesim: Out; covers: Questionable - Leg - Rusk is laid up with an lower leg injury, and it is unknown if he will face Iowa State on Saturday, October 24th."
 Arizona,Daylen Austin,out,mygamesim: Out; covers: Out - Undisclosed - Austin has been shut down for the remainder of the season due to an undisclosed injury.
 Arizona,Giovanni Richardson,doubtful,"mygamesim: Questionable; covers: Out - Lower Body - Richardson is nursing with a lower body injury, and he will miss an extended period."
 Arizona State,Khamari Anderson,out,"mygamesim: Out; covers: Out - Leg - Anderson is sidelined with a leg injury, and it is anticipated that he will miss the remainder of the season."
@@ -16,453 +15,528 @@ Arizona State,Wade Helton,out,"mygamesim: Out; covers: Out - Leg - Helton is sid
 Arizona State,Zyrus Fiaseu,out,"mygamesim: Out; covers: IR - Knee - Fiaseu is sidelined with a knee injury, and he is projected to miss the remainder of the season."
 Arizona,Tre Spivey,out,mygamesim: Out
 Arkansas State,Devin Spencer,out,"mygamesim: Out; covers: Out - Knee - Spencer is dealing with a knee injury, and he is projected to miss the remainder of the season."
-Arkansas,Steven Soles Jr.,questionable,mygamesim: Questionable
-Army,Godspower Nwawuihe,questionable,mygamesim: Questionable
-Ball State,Corey Thompson Jr.,questionable,"covers: Questionable - Undisclosed - Thompson is dealing with an undisclosed injury, and it is unclear if he will play Saturday against the Northwestern"
-Ball State,Isaiah Thacker,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Thacker is dealing with an undisclosed injury, and there is no timetable for return."
-Ball State,Jalen Bonds,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Bonds is dealing with an undisclosed injury, and it is unclear if he will play Saturday against the Northwestern"
-Ball State,Sean Ward,questionable,mygamesim: Questionable
-Baylor,Ashton Jones,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Jones is nursing an undisclosed injury, and it has yet to be determined if he will suit up against Arizona St. on Saturday, October 3rd."
+Ball State,Sean Ward,out,mygamesim: Out
+Baylor,Ashton Jones,out,mygamesim: Out
 Baylor,Jacob Redding,out,mygamesim: Out
 Baylor,Taz Williams Jr.,out,"covers: Out - Collarbone - Williams who is dealing with a collarbone injury, and he will miss an extended period."
-Boise State,Cameron Bates,out,mygamesim: Out
-Boise State,Darren Morris,out,mygamesim: Out
-Boise State,Sire Gaines,questionable,"mygamesim: Probable; covers: Questionable - Upper Body - Gaines is dealing with a upper body injury, and it has yet to be determined if he will play against Utah St. on Saturday, October 3rd."
-Boston College,Bodie Kahoun,out,mygamesim: Out
 Boston College,Cameron Martinez,out,mygamesim: Out
-Boston College,Chris Marable Jr.,out,mygamesim: Out
 Boston College,Kaelan Chudzinski,out,mygamesim: Out
 Bowling Green,Austin Clay,out,"mygamesim: Out; covers: Out - Undisclosed - Clay is dealing with an undisclosed injury, and he has been shut down for the remainder of the season."
-Bowling Green,Isaiah Dawson,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Dawson is dealing with an undisclosed injury, and it is unknown if he will suit up against Sacramento State on Saturday, October 10th."
-Bowling Green,Nick Sowell,questionable,mygamesim: Questionable
+Bowling Green,Isaiah Dawson,out,"covers: Out - Undisclosed - Dawson is dealing with an undisclosed injury, and he will miss an undetermined length of time."
+Bowling Green,Nick Sowell,out,mygamesim: Out
 Buffalo,Elijah Holmes,out,"mygamesim: Out; covers: Out - Knee - Holmes is nursing with an undisclosed injury, and he is not projected to face against Robert Morris on Saturday."
-Buffalo,Jasaiah Gathings,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Gathings is dealing with an undisclosed injury, and it is yet to be established if he will suit up against Robert Morris on Saturday."
+Buffalo,Jasaiah Gathings,out,"covers: Out - Undisclosed - Gathings is dealing with an undisclosed injury, and there is no timetable for recovery."
 Buffalo,Terrance Shelton Jr.,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Shelton Jr. is nursing an undisclosed injury, and he is not projected to play against Western Michigan on Saturday."
-BYU,Andrew Gentry,out,"covers: Out - Undisclosed - Gentry is sidelined with an undisclosed injury, and is unlikely to to face the Frogs on Saturday."
+BYU,Andrew Gentry,questionable,"covers: Questionable - Undisclosed - Gentry is sidelined with an undisclosed injury, and it is unclear if he will suit up against the UCF on Saturday, October 24th."
 BYU,LJ Martin,out,"mygamesim: Out; covers: Out - Ankle - Martin is managing with an ankle injury, and there is no timetable for his return."
-BYU,Raider Damuni,out,"mygamesim: Out; covers: Out - Lower Body - Damuni is out of commission due to a lower body injury, and he will miss an extended period."
-BYU,Roger Saleapaga II,questionable,"covers: Questionable - Undisclosed - Saleapaga is nursing an undisclosed injury, and it has yet to be established if he will play against Frogs on Friday, October 2nd."
-BYU,Siale Esera,out,"mygamesim: Out; covers: Out - Undisclosed - Esera is sidelined due to an undisclosed injury, and is not expected to face the Frogs on Saturday."
 BYU,Sione Moa,out,"mygamesim: Out; covers: Out - Undisclosed - Moa is dealing with an undisclosed injury, and there is no timetable for his return."
-California,Adam Mohammed,questionable,mygamesim: Questionable
-California,Jaron-Keawe Sagapolutele,questionable,mygamesim: Questionable
-Central Michigan,Rusty VanWetzinga IV,doubtful,"mygamesim: Out; covers: Questionable - Knee - VanWetzinga is dealing with an undisclosed injury, and it remains to be seen if he will be available against Ohio on Saturday, October 10th"
+California,Adam Mohammed,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Mohammed is dealing with an undisclosed injury, and it is un determined if he will play against the SMU on Saturday."
 Central Michigan,Tommy McIntosh,out,mygamesim: Out
-Charlotte,Conner Harrell,out,"covers: Out - Undisclosed - Harrell is nursing an undisclosed injury, and he is not projected to play against Memphis on Saturday, October 3rd."
-Clemson,Christopher Vizzina,questionable,"covers: Questionable - Elbow - Vizzina is dealing with an elbow injury, and it is uncertain if he will play against the Hurricanes on Saturday, October 3rd."
-Clemson,Corian Gipson,out,"covers: Out - Undisclosed - Gipson is dealing with an Undisclosed injury, and it is unclear if he will play against California on Friday, September 25th."
-Coastal Carolina,Colton Hinton,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Hinton is bothred by an undisclosed injury, and it is unknown if he will play Saturday versus the Southern Eagles."
+Clemson,Christopher Vizzina,out,"covers: Out - Elbow - Vizzina is dealing with an elbow injury, and he will miss an undetermined length of time."
+Clemson,Corian Gipson,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Gipson is dealing with an Undisclosed injury, and it remains to be seen if he will be active against Virginia Tech on Saturday."
 Colorado,Danny Scudero,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Scudero is sidelined due to an undisclosed injury, and is not expected to face the Red Raiders on Saturday."
 Colorado State,Hauss Hejny,questionable,"mygamesim: Questionable; covers: Questionable - Hamstring - Hejny is nursing an undisclosed injury, and he is not projected to play against Oregon State on Saturday"
-Colorado,Zach Atkins,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Atkins is sidelined due to an undisclosed injury, and is not expected to face the Red Raiders on Saturday."
+Colorado,Zach Atkins,out,"mygamesim: Out; covers: Out - Undisclosed - Atkins is sidelined due to an undisclosed injury, and there is no timetable for return."
 Delaware,Brandon Rehmann,questionable,"covers: Questionable - Undisclosed - Rehmann is dealing with an undisclosed injury, and it is unclear whether he will play against Liberty on Friday, October 2th."
-Delaware,Nick Minicucci,doubtful,"mygamesim: Questionable; covers: Out - Leg - Minicucci is hampered by a leg injury, and it is not anticipated that he will suit up against Liberty on Friday, October 2nd."
 Duke,Kendall Johnson,out,mygamesim: Out
-East Carolina,Ashton Gray,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Gray is bothred by an undisclosed injury, and it is unknown if he will play Saturday versus N.C. Central."
-East Carolina,Brock Spalding,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Spalding is nursing with an undisclosed injury, and it is unclear if he will face Eagles on Saturday, September 26th."
-East Carolina,Jeremiah Melvin,doubtful,"mygamesim: Questionable; covers: Out - Back - Melvin is dealing with a back injury, and is not expected to face N.C. Central on Saturday."
-East Carolina,Landon Sides,questionable,"covers: Questionable - Undisclosed - Sides is dealing with an undisclosed injury, and it remains to be seen if he will suit up against Eagles on Saturday, September 26th."
-Eastern Michigan,Nick Devereaux,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Devereaux is laid up with an undisclosed injury, and he will miss an undetermined length of time."
-Florida Atlantic,Brooks Johnson,questionable,mygamesim: Questionable
-Florida International,Kevin Schaeffer,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Schaeffer is dealing with an undisclosed injury, and it remains to be seen if he will be available against New Mexico State on Wednesday, October 7th."
+East Carolina,Brock Spalding,out,mygamesim: Out
+East Carolina,Jeremiah Melvin,out,mygamesim: Out
+Eastern Michigan,Nick Devereaux,out,"covers: Out - Undisclosed - Devereaux is laid up with an undisclosed injury, and he will miss an undetermined length of time."
+Florida Atlantic,Brooks Johnson,out,mygamesim: Out
 Florida State,Blake Nichelson,out,mygamesim: Out
-Florida State,Devin Carter,out,"mygamesim: Out; covers: Out - Back - Carter is laid up with an undisclosed injury, and is not expected to play against the Cavaliers on Saturday."
-Florida State,Tae'Shaun Gelsey,questionable,"covers: Questionable - Undisclosed - Gelsey is dealing with an undisclosed injury, and it is uncertain if he will play against Louisville on Friday, October 9th."
+Florida State,Devin Carter,doubtful,"mygamesim: Questionable; covers: Out - Back - Carter is hampered with an undisclosed injury, and he will miss an undetermined length of time."
+Florida State,Tae'Shaun Gelsey,out,"covers: Out - Undisclosed - Gelsey is dealing with an undisclosed injury, and he will miss an undetermined length of time."
 Florida,Vernell Brown III,questionable,mygamesim: Questionable
 Fresno State,Harold Duvall,questionable,mygamesim: Questionable
 Fresno State,Rayshon Luke,questionable,mygamesim: Questionable
 Georgia,Amaris Williams,out,mygamesim: Out
-Georgia,Isiah Canion,questionable,"mygamesim: Questionable; covers: Questionable - Leg - Conan is dealing with a leg injury, and it is unclear if he will face Alabama on Saturday, October 10th."
-Georgia Tech,A.J. Hoffler,out,"mygamesim: Out; covers: Out - Undisclosed - Hoffler is sidelined due to an undisclosed injury, and is not expected to face the Stanford on Saturday."
-Georgia Tech,Ethan Mackenny,out,"mygamesim: Out; covers: Out - Undisclosed - MacKenny is sidelined due to an undisclosed injury, and is not expected to play against the Stanford on Saturday."
-Georgia Tech,Jordan Walker,out,"mygamesim: Out; covers: Out - Undisclosed - Walker is sidelined due to an undisclosed injury, and is not expected to be active against the Stanford on Saturday."
+Georgia,Isiah Canion,doubtful,"mygamesim: Questionable; covers: Out - Leg - Conan is dealing with a leg injury, and there is no timetable for return."
+Georgia Tech,A.J. Hoffler,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Hoffler is hampered by an undisclosed injury, and it is uncertain if he will play against the Boston College on Saturday, October 24th."
+Georgia Tech,Ethan Mackenny,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - MacKenny is sidelined due to an undisclosed injury, and it is unclear if he will play against the Boston College on Saturday, October 24th."
+Georgia Tech,Jordan Walker,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Walker is sidelined due to an undisclosed injury, and it is undetermined if he will suit up against the Boston College on Saturday, October 24th."
 Georgia Tech,Malachi Hosley,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Richardson is battling with a Undisclosed injury, and it has yet to be determined if he will be active against the Stanford on Saturday."
 Georgia Tech,Savion Riley,out,"mygamesim: Out; covers: Out - Undisclosed - Riley has been out of the lineup due to an undisclosed injury, and is not expected to be available against the Stanford on Saturday."
-Hawai'i,Oakie Salave'a,questionable,"covers: Questionable - Undisclosed - Salave'a sat out the game due to an undisclosed injury, and it is uncertain if he will kit up against Wyoming on Saturday, September 26th."
-Hawai'i,Tre' Griffiths,questionable,mygamesim: Questionable; covers: Questionable - Undisclosed - Griffiths is dealing with an undisclosed injury and it is unclear if he will play Saturday against the San Jose State; rotowire: Questionable - Return Oct 10th
+Hawai'i,Oakie Salave'a,out,"covers: Out - Undisclosed - Salave'a is dealing with an undisclosed injury, and team officials have yet to provide an exact return date."
+Hawai'i,Tre' Griffiths,out,covers: Out - Undisclosed - Griffiths is dealing with an undisclosed injury and he will miss an extended period.
 Houston,Muizz Tounkara,out,"covers: Out - Foot - Tounkara is nursing with a foot injury, and team officials have yet to provide an exact return date."
 Illinois,Alex Perry,out,"mygamesim: Out; covers: Out - Shoulder - Perry is batting with a shoulder injury and will undergo surgery, and team officials have yet to provide an exact return date."
 Illinois,Ca'Lil Valentine,out,mygamesim: Out
 Illinois,Champ Smith,out,mygamesim: Out
-Illinois,Jayshon Platt,questionable,"mygamesim: Probable; covers: Questionable - Undisclosed - Platt is managing with an undisclosed injury, and it is unknown if he will partake against Michigan State on Sunday, October 11th."
-Illinois,Kaden Feagin,questionable,"covers: Questionable - Undisclosed - Feagin is dealing with an undisclosed injury, and it remains to be seen if he will suit up against Michigan State on Sunday."
-Indiana,Khobie Martin,out,mygamesim: Out
-Indiana,Lebron Bond,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Bond is nursing an undisclosed injury, and he is not projected to play against W. Kentucky on Saturday, September 19th."
-Iowa,Hank Brown,questionable,mygamesim: Questionable
-Iowa State,Caden Crawford,out,"mygamesim: Out; covers: Out - Undisclosed - Crawford is sidelined due to an undisclosed injury, and is not expected to face the West Virginia on Saturday."
+Illinois,Jayshon Platt,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Platt is managing with an undisclosed injury, and it is unknown if he will partake against Ducks on Sunday, October 24th."
+Indiana,Khobie Martin,questionable,"covers: Questionable - Forearm - Martin is dealing with a forearm injury, and it is uncertain if he will play against Michigan on Saturday."
+Iowa,Hank Brown,out,"covers: Out - Shoulder - Brown is nursing with a shoulder injury, and he is unlikely to play against Minnesota on Saturday."
+Iowa State,Caden Crawford,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Crawford is hampered due to an undisclosed injury , and it is unclear if he will play against the Wildcats on Saturday, October 24th."
 Iowa State,Carter Pabst,out,"mygamesim: Out; covers: Out - Knee - Pabst is sidelined due to knee injury, and he is expected to miss the remainder of the season."
 Iowa State,Evan Boyd,out,mygamesim: Out
-Iowa State,Jaheim Singletary,out,"covers: Out - Undisclosed - Singletary is nursing with an undisclosed injury, and he will miss an undetermined length of time."
+Iowa State,Jaheim Singletary,questionable,"covers: Questionable - Undisclosed - Singletary is nursing with an undisclosed injury, and it is undetermined if he will suit up against the Wildcats on Saturday, October 24th."
 Iowa State,Jordyn Bailey,out,"covers: Out - Undisclosed - Bailey is dealing with an undisclosed injury, and it is unclear when he will return."
 Jacksonville State,Andrew Paul,out,"mygamesim: Out; covers: Out - Undisclosed - Paul is battling with an undisclosed injury, and he is likely to miss the remainder of the season."
-Jacksonville State,Franklin Baret Jr.,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Baret Jr has been out of the lineup due to undisclosed injury, and it is uncertain if he will play against Kennesaw State on Wednesday, October 7th."
+Jacksonville State,Franklin Baret Jr.,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Baret Jr has been out of the lineup due to undisclosed injury, and there is no timetable for return."
 Jacksonville State,Gabe Glover,questionable,mygamesim: Questionable
-James Madison,JC Evans,questionable,"covers: Questionable - Wrist - Evans is dealing with a wrist injury, and it remains to be seen if he will be active against Georgia Southern on Saturday, October 11th."
 James Madison,Za'Ron Collins,questionable,"covers: Questionable - Undisclosed - Collins is dealing with an undisclosed injury, and it remains to be seen if he will be active against Georgia Southern on Saturday."
-Kansas,Carson Bruhn,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Bruhn is battling an undisclosed injury, and it is yet to be determined if he will be available against Utah Utes on Saturday, October 10rd."
 Kansas,Cole Ballard,out,"mygamesim: Out; covers: Out - Shoulder - Ballard is dealing with a shoulder injury, and there is no timetable for return."
 Kansas State,Jacob Knuth,questionable,"covers: Questionable - Undisclosed - Knuth is dealing with an undisclosed injury, and it is unclear if he will play against Houston Saturday, October 10th."
 Kansas State,John Pastore,out,mygamesim: Out; covers: Out - Leg - Pastore has been shut down for the remainder of the season with a lower leg injury.
 Kansas,Yasin Willis,out,"mygamesim: Out; covers: Out - Foot - Willis has been out of the lineup with an foot injury, and he is expected to miss the remainder of the season."
 Kennesaw State,Gerard Bullock Jr.,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Bullock Jr. is nursing with an undisclosed injury, and it remains to be seen if he will be active against Jax State on Wednesday, October 7th."
-Kennesaw State,Zion Booker,questionable,mygamesim: Questionable
-Kent State,Maurice Stephens,questionable,"covers: Questionable - Undisclosed - Stephens is bothered by an undisclosed injury, and it remains to be seen if he will be active against Western Michigan on Saturday, October 10th."
-Kentucky,DJ Miller,questionable,"covers: Questionable - Leg - Miller has been out of the lineup due to a leg injury, and it remains to be seen if he will be available against LSU on Saturday."
+Kennesaw State,Zion Booker,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Booker is battling with an undisclosed injury, and it remains to be seen if he will be in the lineup against Flames on Thursday, October 22nd."
+Kent State,Maurice Stephens,out,"covers: Out - Undisclosed - Stephens is bothered by an undisclosed injury, and he will miss an undetermined length of time."
 Liberty,Caleb Ryan,questionable,"covers: Questionable - Undisclosed - Ryan is nursing an undisclosed injury, and it is unknown if he will play against Sam Houston on Thursday, October 8th."
 Liberty,Jiquavious Marshall,out,"mygamesim: Out; covers: Out - Leg - Marshall is hampered by leg injury, and he will be idle for the remainder of the season."
-Louisiana,Shelton Sampson Jr.,questionable,"covers: Questionable - Knee - Sampson Jr. is nursing with a knee injury, and it has yet to be determined if he will be available against Arkansas State on Saturday, October 3th."
-Louisiana Tech,Blake Baker,out,"covers: Out - Hand - Baker fractured his hand, and he will miss an undetermined length of time."
-Louisiana Tech,Trey Kukuk,questionable,mygamesim: Questionable
 Louisville,Antonio Watts,out,"mygamesim: Out; covers: Out - Knee - Watts has been out of commission due to a knee injury, and it is anticipated that he will miss the remainder of the season."
-Louisville,Anwar O'neal,questionable,"covers: Questionable - Undisclosed - O'Neal is dealing with an undisclosed injury, and it remains to be seen if he will suit up against SMU on Saturday, September 19th."
-Louisville,Lawayne McCoy,questionable,"covers: Questionable - Undisclosed - McCoy is dealing with an undisclosed injury, and it remains to be seen if he will suit up against North Carolina State on Saturday."
-Louisville,Lincoln Kienholz,questionable,"covers: Questionable - Lower Body - Kienholz is dealing with a lower body injury, and it remains to be seen if he will suit up against North Carolina State on Saturday."
+Louisville,Anwar O'neal,out,"mygamesim: Out; covers: Out - Undisclosed - O'Neal is dealing with an undisclosed injury, and he will miss an undetermined length of time."
 LSU,Dashawn Spears,out,"mygamesim: Out; covers: Out - Knee - Spears has been sidelined due to a torn ACL, and he is likely to miss the remainder of the season."
-LSU,TJ Dottery,questionable,"covers: Questionable - Undisclosed - Dottery is managing with an undisclosed injury, and it is unclear whether he will play against McNeese on Saturday, October 3th."
-LSU,Trey'Dez Green,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Green is dealing with an undisclosed injury, and it remains to be seen if he will play against Kentucky on Saturday."
+LSU,Trey'Dez Green,questionable,"covers: Questionable - Undisclosed - Green is dealing with an undisclosed injury, and it remains to be seen if he will play against Auburn on Saturday."
 LSU,Whit Weeks,out,mygamesim: Out
-Marshall,Adrian Norton,questionable,"covers: Questionable - Undisclosed - Norton is battling with an undisclsoed injury, and it is unclear whether he will play against Coastal Carolina on Sunday."
-Maryland,Harry Dalton III,out,mygamesim: Out
-Maryland,Lavon Johnson,out,"mygamesim: Out; covers: Out - Undisclosed - Johnson is dealing with an undisclosed injury, and is not expected to be available on Saturday against UCLA."
-Maryland,Preston Howard,questionable,"mygamesim: Probable; covers: Questionable - Undisclosed - Howard is dealing with an undisclosed injury, and it is unclear whether he will face against the Ohio State on Saturday."
+Maryland,Harry Dalton III,questionable,mygamesim: Questionable
 Maryland,Zahir Mathis,out,"mygamesim: Out; covers: Out - Leg - Mathis is battling with a leg injury, and he will be idle for the remainder of the season."
-Massachusetts,Jordan Washington,questionable,mygamesim: Questionable
+Massachusetts,Jordan Washington,out,mygamesim: Out
 Massachusetts,Joseph Griffin Jr.,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Griffin is dealing with an undisclosed injury, and it remains to be seen if he will be available against E. Michigan on Saturday, October 3rd."
 Miami,CharMar Brown,out,"mygamesim: Out; covers: Out - Lower Body - Brown is dealing with a lower body injury, and he has been shut down for the remainder of the season."
 Miami,Joshua Moore,out,"mygamesim: Out; covers: Out - Upper Body - Moore is battling with an upper body injury, and he will be idle for the remainder of the season."
 Miami,Luka Gilbert,out,"mygamesim: Out; covers: Out - Undisclosed - Gilbert has been out of commission due to an undisclosed injury, and he will be idle for the remainder of the season"
-Miami,Mark Fletcher Jr.,questionable,"covers: Questionable - Upper Body - Fletcher Jr is hampered by upper body injury, and it has yet to be established if he will be active against Clemson on Saturday, October 3th."
 Miami (OH),Brady Simmons,out,mygamesim: Out
-Miami (OH),Christian Ross,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Ross is nursing with an undisclosed injury, and he is not projected to face against the the Bowling Green on Saturday."
-Miami (OH),David McComb,doubtful,"mygamesim: Questionable; covers: Out - Upper Body - McComb is nursing an upper body injury, and he is not expected to be active against Bowling Green on Saturday, October 3rd."
+Miami (OH),Christian Ross,out,"covers: Out - Undisclosed - Ross is nursing with an undisclosed injury, and he will miss an extended period."
+Miami (OH),David McComb,out,"mygamesim: Out; covers: Out - Upper Body - McComb is nursing an upper body injury, and has been shut down for the remainder of the season."
 Miami (OH),Keith Reynolds,out,"mygamesim: Out; covers: Out - Undisclosed - Reynolds has been sidelined due to an undisclosed injury, and has been shut down for the remainder of the season."
 Miami (OH),Thomas Gotkowski,out,"mygamesim: Out; covers: Out - Undisclosed - Gotkowski is battling with an undisclosed injury, and he will be idle for the remainder of the season."
 Miami,Romanas Frederique Jr.,out,mygamesim: Out
-Miami,Xavier Lucas,out,mygamesim: Out
 Michigan,Andrew Babalola,out,mygamesim: Out
 Michigan,Andrew Sprague,out,"mygamesim: Out; covers: Out - Undisclosed - Sprague is sidelined due to an undisclosed injury, and is not expected to play against the Hawkeyes on Saturday."
-Michigan,John Henry Daley,questionable,"mygamesim: Questionable; covers: Questionable - Lower Body - Daley is dealing with a lower body injury, and it is unclear if he will suit up against the Minnesota on Tuesday."
 Michigan State,Cam Edwards,doubtful,"mygamesim: Out; covers: Questionable - Knee - Edwards exited the game with a knee injury, and it remains to be seen if he will be available against the Illinois on Sunday, October 11th."
-Michigan State,Cam Fancher,questionable,"mygamesim: Questionable; covers: Questionable - Knee - Fancher exited the game with a knee injury, and it remains to be seen if he will be available against the Kent State on Sunday, October 11th."
+Michigan State,Cam Fancher,doubtful,"mygamesim: Out; covers: Questionable - Knee - Fancher is dealing with a knee injury, and it remains to be seen if he will be available against UCLA on Saturday."
 Michigan State,Jay Coyne,out,mygamesim: Out
-Michigan State,Jordan Hall,questionable,mygamesim: Questionable
-Middle Tennessee,Landon Collins,questionable,mygamesim: Questionable
+Michigan State,Jordan Hall,out,mygamesim: Out
+Middle Tennessee,Landon Collins,out,mygamesim: Out
 Minnesota,A.J. Turner,questionable,"covers: Questionable - Undisclosed - Turner is nursing with an undisclosed injury, and it is unclear if he will play Saturday against the Purdue"
 Minnesota,Ashton Beers,out,mygamesim: Out
-Mississippi State,Ayden Williams,questionable,mygamesim: Questionable
+Mississippi State,Ayden Williams,out,mygamesim: Out
 Mississippi State,Fluff Bothwell,questionable,mygamesim: Questionable
-Mississippi State,Kamario Taylor,questionable,mygamesim: Questionable
+Mississippi State,Kamario Taylor,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Taylor is nursing with an undisclosed injury, and it remains to be seen if he will be active against Oklahoma on Saturday."
 Mississippi State,Trevion Williams,out,"mygamesim: Out; covers: Out - Leg - Williams is sidelined due to Leg injury, and he is expected to miss the remainder of the season."
-Mississippi State,Zakari Tillman,out,mygamesim: Out
 Missouri,Ahmad Hardy,out,"mygamesim: Out; covers: Out - Leg - Hardy is dealing with a leg injury, and and a timetable for return has yet to be established."
 Missouri,Cayden Green,out,"covers: Out - Undisclosed - Green is dealing with an undisclosed injury, and there is no timetable for his return."
-Missouri,Darris Smith,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Smith is dealing with an undisclosed injury, and he is not projected to play against the Gators on Saturday, October 3rd."
-Missouri,Langden Kitchen,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Kitchen is hobbled by an undisclosed injury, and he is unlikely to suit up against the Gators on Saturday, October 3rd ."
-Missouri State,Makai Cope,questionable,"covers: Questionable - Undisclosed - Cope is nursing with an undisclosed injury, and it is unclear if he will face Mustangs on Saturday, September 26th."
-NC State,Duke Scott,out,mygamesim: Out
-NC State,JoJo Trader,questionable,mygamesim: Questionable
-NC State,Tyreek Copper,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Copper is bothered by a undisclosed injury, and it has yet to be established if he will play against Louisville on Saturday, October 3th."
+Missouri,Darris Smith,questionable,"covers: Questionable - Undisclosed - Smith is dealing with an undisclosed injury, and he is not projected to play against the Arkansas on Saturday, October 31st."
+NC State,Duke Scott,doubtful,"mygamesim: Out; covers: Questionable - Foot - Scott is nursing with a foot injury, and it has yet to be determined if he will be active against Stanford on Friday."
+NC State,JoJo Trader,out,mygamesim: Out
+NC State,Tyreek Copper,out,"covers: Out - Undisclosed - Copper is bothered by a undisclosed injury, and team officials have yet to provide an exact return date."
 NC State,Vander Ploog,out,mygamesim: Out
-Nebraska,Carter Nelson,questionable,"mygamesim: Questionable; covers: Questionable - Leg - Nelson is dealing with an undisclosed injury, but he is expected to play Saturday against the Indiana."
 New Mexico,Jack Layne,out,"mygamesim: Out; covers: Out - Elbow - Layne is laid up with an elbow injury, and he will miss an undetermined length of time."
-New Mexico,Massiah Mingo,out,"covers: Out - Foot - Mingo is nursing with a foot injury, and he is not projected to face against the Aggies on Saturday."
-New Mexico,Miles Williams,questionable,mygamesim: Questionable
-New Mexico,Shawn Miller,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Miller is dealing with an undisclosed injury, and there is no timetable for recovery."
+New Mexico,Miles Williams,out,mygamesim: Out
+New Mexico,Shawn Miller,out,"mygamesim: Out; covers: Out - Undisclosed - Miller is tending to an undisclosed injury, and there is no timetable for return."
 New Mexico,Troy Omeire,out,"mygamesim: Out; covers: Out - Undisclosed - Omeire is laid up with an undisclosed injury, and he will miss an undetermined length of time."
 North Carolina,Jaxxon Warren,out,"mygamesim: Out; covers: Out - Undisclosed - Warren is managing with an undisclosed injury, and he will miss an undetermined length of time."
 North Dakota State,DJ Scott,out,"covers: Out - Foot - is nursing with a Foot injury, and he is not projected to play against Louisville on Saturday"
-North Dakota State,Myles Mitchell,questionable,"covers: Questionable - Undisclosed - Mitchell is dealing with an undisclosed injury, and it is unclear if he will play Saturday against Rebels, 10th October."
-North Dakota State,Najee Nelson,questionable,"covers: Questionable - Undisclosed - Nelson is managing with an undisclosed injury, and it is yet to established if he will face the Rebels on Saturday, October 10th."
-North Texas,Brendon Haygood,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Haygood is dealing with an undisclosed injury, and it remains to be seen if he will be active against 49ers on Saturday, October 10th."
 North Texas,James Tyre,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Tyre is dealing with an undisclosed injury, and it remains to be seen if he will be active against 49ers on Saturday, October 10th."
-Northwestern,Braden Turner,out,"mygamesim: Out; covers: Out - Undisclosed - Turner is bothered by a Undisclosed injury, and is not expected to be active against the Indiana on Friday."
-Northwestern,Damon Walters,out,mygamesim: Out
+Northwestern,Braden Turner,questionable,"covers: Questionable - Undisclosed - Turner is bothered by a Undisclosed injury, and it is yet to established if he will play against Rutgers on Saturday."
 Northwestern,Josh Fussell,out,"mygamesim: Out; covers: Out - Undisclosed - Fussell is dealing with an undisclosed injury, and there is no timetable for recovery."
 Northwestern,Luke Dehnicke,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Dehnicke is dealing with an undisclosed injury, and he is not projected to play against Penn State on Friday, October 2nd."
-Notre Dame,Blake Hebert,questionable,"covers: Questionable - Undisclosed - Hebert is bothered by an undisclosed injury, and it remains to be seen if he will be active against Stanford on Saturday, October 10th."
+Notre Dame,Blake Hebert,out,"covers: Out - Undisclosed - Hebert is bothered by an undisclosed injury, and there is no timetable for return."
 Notre Dame,Brauntae Johnson,out,mygamesim: Out
-Notre Dame,Jason Onye,out,mygamesim: Out
-Ohio,Nick Poulos,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Poulos is nursing an undisclosed injury, and it is uncertain if he will face Central Michigan on Saturday, October 10th."
-Ohio State,Kyle Parker,questionable,"covers: Questionable - Undisclosed - Parker is nursing with an undisclosed injury, and it is unclear if he will play against Iowa on Saturday, October 3rd."
-Ohio State,Phillip Daniels,questionable,mygamesim: Questionable
-Oklahoma,David Stone,questionable,"covers: Questionable - Undisclosed - Stone is dealing with an undisclosed injury, and it is yet to be established if he will suit up against the Bulldogs on Saturday."
-Oklahoma,Jer'Michael Carter,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Carter is dealing with an undisclosed injury, and it is unclear if he will play against Georgia on Saturday, September 26th."
-Oklahoma,Kip Lewis,questionable,"covers: Questionable - Knee - Lewis is nursing an knee injury, and he is expected to kit up against Bulldogs on Saturday, September 26th."
-Oklahoma,Michael Fasusi,doubtful,mygamesim: Doubtful
-Oklahoma State,Jacob Sexton,doubtful,"mygamesim: Out; covers: Questionable - Leg - Sexton is dealing with a leg injury, and it is unknown if he will face UCF on Saturday, October 10th."
+Oklahoma State,Jacob Sexton,out,"mygamesim: Out; covers: Out - Leg - Sexton is dealing with a leg injury, and there is no timetable for return."
 Oklahoma State,Oscar Hammond,out,"covers: Out - Undisclosed - Hammond is hobbled by an undisclosed injury, and there is no timetable for his return."
 Oklahoma,Trell Harris,out,"mygamesim: Out; covers: Out - Back - Harris sustained a back injury, and there is no timetable for return."
 Old Dominion,Sidney Mbanasor,out,mygamesim: Out
-Ole Miss,Kewan Lacy,doubtful,"mygamesim: Questionable; covers: Out - Shoulder - Lacy is nursing with a shoulder injury, and he is not projected to face against Gators on Saturday."
-Ole Miss,Makhi Frazier,questionable,"covers: Questionable - Undisclosed - Frazier is hampered by an undisclosed injury, and it is unclear if he will play against the Gators on Saturday."
+Ole Miss,Kewan Lacy,questionable,mygamesim: Questionable
 Oregon,Dante Moore,out,mygamesim: Out
 Oregon,Dillon Gresham,questionable,"covers: Questionable - Neck - Gresham is hampered by a neck injury, and it has yet to be established if he will be active against UCLA on Saturday, October 10th."
-Oregon,Iverson Hooks,questionable,"covers: Questionable - Undisclosed - Hooks is dealing with an undisclosed injury, and it is unknown if he will face UCLA on Saturday, October 10th."
-Oregon,Jamari Johnson,questionable,"covers: Questionable - Undisclosed - Johnson is dealing with an undisclosed injury, and it is unclear if he will face UCLA on Saturday, October 10th."
+Oregon,Iverson Hooks,out,"covers: Out - Undisclosed - Hooks is dealing with an undisclosed injury, and he will miss an extended period."
 Oregon,Jeremiah McClellan,out,"mygamesim: Out; covers: Out - Foot - McClellan is sidelined due to a foot injury, and there is no timetable for recovery."
 Oregon,Trent Ferguson,out,mygamesim: Out
-Penn State,Koby Howard,out,"mygamesim: Out; covers: Out - Undisclosed - Howard is tending to an undisclosed injury, and there is no timetable for recovery."
+Penn State,Koby Howard,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Howard is tending to an undisclosed injury, and there is no timetable for recovery."
 Penn State,Max Granville,out,mygamesim: Out; covers: Out - Undisclosed - Granville has been shut down for the remainder of the season with an undisclosed injury.
 Pittsburgh,Elijah Lagg,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Lagg is nursing with an undisclosed injury, and it is up in the air if he will play against North Carolina on Saturday, October 10th."
-Pittsburgh,Josh Guerrier,questionable,mygamesim: Questionable
-Pittsburgh,Malik Knight,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Knight is dealing with an undisclosed injury, and there is no timetable for his return."
 Pittsburgh,Mason Heintschel,doubtful,"mygamesim: Out; covers: Questionable - Leg - Heintschel exited the game with a leg injury, and it remains to be seen if he will be available against the North Carolina on Saturday, October 10th."
-Pittsburgh,Tony Kinsler,questionable,"covers: Questionable - Undisclosed - Kinsler is nursing with an undisclosed injury, and it is up in the air if he will play against North Carolina on Saturday, October 10th."
 Purdue,Joey Tanona,out,mygamesim: Out
 Purdue,Kylan Fox,out,"mygamesim: Out; covers: Out - Knee - Fox is laid up with a knee injury, and there is no timetable for his return."
 Purdue,Mister Clark,out,mygamesim: Out
-Rice,Davis Lane,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Lane is battling with an undisclosed injury, and it is uncertain if he will play against Fresno State on Saturday."
 Rice,James Falk,questionable,"covers: Questionable - Undisclosed - Falk is laid up with an undisclosed injury, and it remains to be seen if he will be active against Fresno State on Saturday, September 26th."
 Rice,Preston Zinter,questionable,"covers: Questionable - Leg - Zinter is laid up with a leg injury, and it remains to be seen if he will be active against Fresno State on Saturday, September 26th."
 Rice,Quinton Jackson,out,mygamesim: Out
-Rutgers,Antwan Raymond,questionable,"mygamesim: Probable; covers: Questionable - Undisclosed - Raymond is dealing with undisclosed injury, and it is uncertain if he will be available Saturday against the Indiana."
-Rutgers,Davoun Fuse,out,mygamesim: Out
-Rutgers,Kevin Levy,out,"mygamesim: Out; covers: Out - Undisclosed - Levy is battling with an undisclsoed injury, and he will be out of the lineup against USC on Saturday."
-Rutgers,Kevyn Humes,out,mygamesim: Out
-Sacramento State,Ajon Bryant,questionable,"covers: Questionable - Undisclosed - Bryant is dealing with an undisclosed injury, and it has yet to be established if he will suit up against Bowling Green on Saturday, October 10th."
-Sacramento State,Davion Godley,questionable,"covers: Questionable - Undisclosed - Godley is dealing with an undisclosed injury, and it has yet to be established if he will suit up against Bowling Green on Saturday, October 10th."
+Rutgers,Kevin Levy,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Levy is battling with an undisclsoed injury, and it is unclear whether he will play against Northwestern on Saturday."
+Sacramento State,Ajon Bryant,out,"covers: Out - Undisclosed - Bryant is dealing with an undisclosed injury, and team officials have yet to provide an exact return date."
+San Diego State,Jackson Ford,questionable,"covers: Questionable - Undisclosed - Ford is dealing with an undisclosed injury, and it is unclear if he will play against the Colorado State on Saturday."
 San Diego State,Kalan Ellis,out,mygamesim: Out
-San Diego State,Lucky Sutton,questionable,"mygamesim: Questionable; covers: Questionable - Ankle - Sutton is dealing with an ankle injury, and it is unclear if he will play against the Bobcats on Saturday."
-San Diego State,Ryan Wolfer,doubtful,"mygamesim: Doubtful; covers: Questionable - Undisclosed - Wolfer is dealing with an undisclosed injury, and it is unclear if he will play against the Bobcats on Saturday."
-San Diego State,Stone Saunders,out,mygamesim: Out
+San Diego State,Ryan Wolfer,questionable,"covers: Questionable - Undisclosed - Wolfer is dealing with an undisclosed injury, and it is unclear if he will play against the Colorado State on Saturday."
 SMU,Abel Hoopii,out,mygamesim: Out
 SMU,Ira Singleton,out,"mygamesim: Out; covers: Out - Undisclosed - Singleton is sidelined with an undisclosed injury, and he is expected to miss the remainder of the season."
-SMU,Link Rhodes,doubtful,"mygamesim: Out; covers: Out - Knee - Rhodes has been out of the lineup with a tore ACL injury, and he will be out of commission for the remainder of the season."
-SMU,Yamir Knight,questionable,"covers: Questionable - Undisclosed - Knight is dealing with un undisclosed injury, and it is unclear if he will play Saturday against the Boston College."
-SMU,Yannick Smith,questionable,"covers: Questionable - Undisclosed - Smith is dealing with an undisclosed injury, and it is unclear if he will play Saturday against the Boston"
+SMU,Link Rhodes,out,"mygamesim: Out; covers: Out - Knee - Rhodes has been out of the lineup with a tore ACL injury, and he will be out of commission for the remainder of the season."
 South Alabama,Devin White,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - White is dealing with an undisclosed injury, and it is unclear if he will play against the Marshall on Tuesday, October 22nd."
 South Alabama,Khatori Marion,out,"mygamesim: Out; covers: Out - Undisclosed - Marion has been out of commission due to an undisclosed injury, and it is anticipated that he will miss the remainder of the season."
 South Carolina,Dylan Stewart,out,"mygamesim: Out; covers: Out - Back - Stewart is dealing with a back injury, and he will miss an undetermined length of time."
-South Carolina,Gabriel Brownlow-Dindy,doubtful,"mygamesim: Doubtful; covers: Questionable - Upper Body - Brownlow-Dindy is nursing with a upper body injury, and it is uncertain if he will play against Florida on Saturday."
+South Carolina,Gabriel Brownlow-Dindy,questionable,"covers: Questionable - Upper Body - Brownlow-Dindy is nursing with a upper body injury, and it is uncertain if he will play against Florida on Saturday."
 South Carolina,Jacarrius Peak,questionable,"covers: Questionable - Undisclosed - Peak is nursing with an undisclosed injury, and it is unclear if he will play against Kentucky Wildcats on Saturday, October 3th."
 South Carolina,Jayden Sellers,out,"mygamesim: Out; covers: Out - Lower Body - Sellers is fighting off a lower body injury, and he has been shut down for the remainder of the season."
 South Florida,Arhmad Branch,questionable,"covers: Questionable - Undisclosed - Branch is battling with an undisclosed injury, and it remains to be seen if he will be active against Temple on Saturday."
 Stanford,Brandon Nicholson,out,mygamesim: Out
 Stanford,Carter Shaw,questionable,"covers: Questionable - Undisclosed - Shaw is dealing with an undisclosed injury, and it remains to be seen if he will be available against Notre Dame on Saturday, October 10th."
-Stanford,Jahsiah Galvan,out,"mygamesim: Out; covers: Out - Undisclosed - Galvan is sidelined with an undisclosed injury, and there is no timetable for return."
 Stanford,Matt Rose,out,mygamesim: Out
-Stanford,Niki Prongos,questionable,"covers: Questionable - Undisclosed - Prongos is dealing with an undisclosed injury, and it is undetermined if he will suit up against Notre Dame on Saturday, October 10th."
-Syracuse,Ju'Juan Johnson,questionable,"mygamesim: Questionable; covers: Questionable - Hand - Johnson is battling with an hand injury, and it remains to be seen if he will be active against UConn on Saturday, 03rd October."
-TCU,Jordan Dwyer,out,"covers: Out - Foot - Dwyer is dealing with a foot injury, and he will miss an undetermined length of time."
+Stanford,Niki Prongos,out,"covers: Out - Undisclosed - Prongos is dealing with an undisclosed injury, and he will miss an extended period."
+Syracuse,Steve Angeli,questionable,"covers: Questionable - Undisclosed - Angeli has an undisclosed injury, and it is uncertain if he will suit up against North Carolina on Saturday, October 24th."
 TCU,Michael Short,out,"mygamesim: Out; covers: Out - Undisclosed - Short is sidelined with an undisclosed injury, and there is no timetable for return."
-Temple,Jaxon Smolik,questionable,"mygamesim: Probable; covers: Questionable - Foot - Smolik is suffering with a foot injury, and it is undetermined if he will face South Florida on Saturday, October 3rd."
 Temple,Rameir Hardy,questionable,"covers: Questionable - Undisclosed - Hardy is tending to an undisclosed injury, and it is unclear if he will face South Florida on Saturday, October 3rd."
-Temple,Reis Stocksdale,questionable,"covers: Questionable - Hamstring - Stocksdale is dealing with a hamstring injury, and it is unclear if he will face South Florida on Saturday, October 3rd."
+Temple,Reis Stocksdale,out,"covers: Out - Hamstring - Stocksdale is dealing with a hamstring injury, and there is no timetable for his return."
 Temple,Sam Brown V,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Brown is suffering with a undisclosed injury, and it is undetermined if he will face South Florida on Saturday"
 Tennessee,Ethan Davis,out,mygamesim: Out
 Tennessee,Jadais Richard,out,mygamesim: Out
 Tennessee,Joakim Dodson,out,mygamesim: Out
-Tennessee,Qua Moss,out,"mygamesim: Out; covers: Out - Undisclosed - Moss is nursing an undisclosed injury, and he is not projected to play against Auburn on Saturday"
 Tennessee,Wendell Moe Jr.,out,mygamesim: Out; covers: Out - Undisclosed - Moe Jr has been shut down for the remainder of the season due to an undisclosed injury.
-Texas A&M,Jamarion Morrow,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Morrow is dealing with an undisclosed injury, and it is unclear whether he will play against Arkansas on Saturday, October 3th."
 Texas A&M,Mario Craver,questionable,"mygamesim: Probable; covers: Questionable - Undisclosed - Craver is dealing with an undisclosed injury, and it is unclear if he will play against Arkansas on Saturday, October 3rd."
 Texas A&M,Terry Bussey,out,"mygamesim: Out; covers: Out - Undisclosed - Bussey is tending to an undisclosed injury, and he has been shut down for the remainder of the season."
 Texas,Daylan McCutcheon,questionable,"covers: Questionable - Illness - McCutcheon is ailing from an illness, and it is unclear if he will play against Oklahoma on Saturday, October 10th."
-Texas,Hollywood Smothers,questionable,"mygamesim: Questionable; covers: Questionable - Ankle - Smothers is dealing with an Ankle injury, and it is unknown if he will suit up against Oklahoma on Saturday, October 10th."
-Texas,Nick Townsend,questionable,"mygamesim: Questionable; covers: Questionable - Knee - Townsend is hampered by a knee injury, and it is up in the air if he will suit up against Oklahoma on Saturday, October 10th."
+Texas,Hollywood Smothers,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Smothers is laid up with an undisclosed injury, and it remains to be seen if he will be active against Mississippi on Saturday."
 Texas State,Blake Smith,questionable,mygamesim: Questionable
 Texas State,Kylen Evans,questionable,"mygamesim: Probable; covers: Questionable - Shoulder - vans is nursing with a shoulder injury, and it is unclear if he will face San Diego State on Saturday, October 3th."
-Texas Tech,Amier Boyd,questionable,"covers: Questionable - Undisclosed - Boyd is nursing with an undisclosed injury, and it remains to be seen if he will be active against Colorado on Saturday, October 3rd."
-Texas Tech,Trey White,questionable,"covers: Questionable - Knee - White is battling with a knee injury, and it is unclear if he will play against Colorado on Saturday, October 3rd."
-Texas,Trevor Goosby,questionable,"covers: Questionable - Knee - Goosby is dealing with a knee injury, and it is unknown if he will suit up against Oklahoma on Saturday, October 10th."
-Toledo,Corey Smith,questionable,mygamesim: Questionable
-Toledo,Kalvin Gilbert Jr.,questionable,"covers: Questionable - Undisclosed - Gilbert is nursing with an undisclosed injury, and it remains to be seen if he will be available against Buffalo on Saturday, October 10th"
-Toledo,Trenton Jones,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Jones is nursing with an undisclosed injury, and it remains to be seen if he will be available against Buffalo on Saturday, October 10th"
-Troy,Fabian Rogosch,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Rogosch is bothered by an undisclosed injury, and it is unclear whether he will play against Southern Miss on Tuesday, October 6th."
+Texas,Trevor Goosby,out,"covers: Out - Knee - Goosby is managing with a knee injury, and there is no timetable for his return."
+Toledo,Corey Smith,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Smith is bothered by an undisclosed injury, and it remains to be seen if he will be active against Western Michigan on Saturday."
+Toledo,Kalvin Gilbert Jr.,out,"covers: Out - Undisclosed - Gilbert is nursing with an undisclosed injury, and there is no timetable for return."
+Toledo,Trenton Jones,out,"mygamesim: Out; covers: Out - Undisclosed - Jones is nursing with an undisclosed injury, and he will miss an undetermined length of time."
+Troy,Fabian Rogosch,out,"covers: Out - Undisclosed - Rogosch is bothered by an undisclosed injury, and he will miss an extended period."
 Troy,Jackson Worley,out,"mygamesim: Out; covers: Out - Undisclosed - Worley has been out of the lineup due to undisclosed injury, and he is expected to miss the remainder of the season."
-Tulane,Jamauri McClure,doubtful,"mygamesim: Questionable; covers: Out - Foot - McClure is managing a foot injury, and there is no timetable for his return."
-Tulane,Zycarl Lewis Jr.,questionable,"mygamesim: Questionable; covers: Questionable - Leg - Lewis Jr. is bothered by a lef injury, and his status is unknown against Army on Saturday, October 10th."
+Tulane,Jamauri McClure,out,"covers: Out - Foot - McClure is managing a foot injury, and there is no timetable for his return."
 Tulsa,Grayson Tempest,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Tempest is dealing with an undisclosed injury, and it has yet to be established if he will be available against the Navy on Saturday, October 10th."
-Tulsa,Jimmy Calloway,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Calloway is dealing with an undisclosed injury, and it has yet to be established if he will be available against the Navy on Saturday, October 10th."
 UAB,Jaylen Elder,questionable,mygamesim: Questionable
-UAB,Kaleb Brown,questionable,mygamesim: Questionable
-UCF,Alonza Barnett III,questionable,"covers: Questionable - Hamstring - Barnett III is managing with an hamstring injury, and it is unclear if he will face Oklahoma St on Saturday."
-UCF,Duane Thomas Jr.,questionable,"covers: Questionable - Undisclosed - Thomas Jr. is dealing with an Undisclosed injury, and it is unclear if he will play against TCU on Saturday."
+UCF,Alonza Barnett III,out,"covers: Out - Hamstring - Barnett III is managing with an hamstring injury, and he will be out of the lineup against BYU on Saturday."
+UCF,Duane Thomas Jr.,out,"covers: Out - Undisclosed - Thomas Jr. is dealing with an undisclosed injury, and he will miss an extended period."
 UCF,Dylan Wade,questionable,"covers: Questionable - Shoulder - Wade is dealing with an Shoulder injury, and it is unclear if he will play against Houston on Saturday."
 UCF,Lewis Carter,out,"covers: Out - Undisclosed - Carter has been placed on the injured list with a undisclosed injury, and team officials have yet to provide an exact return date."
-UCLA,Aidan Mizell,questionable,"covers: Questionable - Undisclosed - Mizell is dealing with an undisclosed injury, and it remains to be seen if he will suit up against Terrapins on Friday, September 25th."
 UCLA,Leland Smith,out,mygamesim: Out
 UCLA,Mikey Matthews,out,"mygamesim: Out; covers: Out - Undisclosed - Matthews is dealing with a lower-leg injury, and he has been shut down for the remainder of the season."
 UCLA,Sam Yoon,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Yoon is sidelined with an undisclosed injury, and it remains to be seen if he will suit up against Terrapins on Friday, September 25th."
-UCLA,Tao Johnson,questionable,"mygamesim: Probable; covers: Questionable - Undisclosed - Johnson is bothered by an undisclosed injury, and it remains to be seen if he will suit up against Terrapins on Friday, September 25th."
+UCLA,Tao Johnson,out,mygamesim: Out
 UConn,Jake Merklinger,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Merklinger is dealing with an undisclosed injury, and it is unknown if he will face Gardner-Webb on Monday, November 2nd."
-UL Monroe,Derrick Jameson,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Jameson is battling with an undisclosed injury, and it remains to be seen if he will be active against the South Alabama on Saturday."
 UNLV,DeAngelo Irvin Jr.,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Irvin Jr. is bothered by an undisclosed injury, and it is unclear if he will play against the North Dakota State on Saturday."
-UNLV,Jaylon Glover,out,mygamesim: Out
 UNLV,Kayden McGee,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - McGee is dealing with an undisclosed injury, and it is to be seen if he will play against California on Saturday, October 3rd."
 USC,Corey Simms,out,"mygamesim: Out; covers: Out - Knee - Simms is sidelined due to knee injury, and he is expected to miss the remainder of the season."
-USC,Desman Stephens II,out,mygamesim: Out
 USC,Kendarius Reddick,questionable,"covers: Questionable - Undisclosed - Reddick is dealing with an undisclsoed injury, and it is unclear whether he will play against Washington on Saturday, October 3th."
 USC,Kilian O'Connor,out,"mygamesim: Out; covers: Out - Undisclosed - O'Connor has been sidelined due to an undisclosed injury, and he has been shut down for the remainder of the season."
-USC,Mark Bowman,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Bowman is dealing with an undisclosed injury, and it is unclear if he will play against Washington on Saturday."
+USC,Mark Bowman,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Bowman is dealing with an undisclosed injury, and it is unclear if he will play against Badgers on Saturday, October 24th."
 USC,Sam Huard,questionable,"covers: Questionable - Undisclosed - Huard is battling with an undisclosed injury, and it remains to be seen if he will suit up against Washington on Saturday, October 3th."
-USC,Trent Mosley,doubtful,"mygamesim: Questionable; covers: Doubtful - Knee - Mosley is dealing with a knee injury, and he is unlikely to play against Washington on Saturday."
 Utah State,Jackson Nelson,out,"mygamesim: Out; covers: Out - Undisclosed - Nelson is dealing with an undisclosed injury, and he is projected to miss the remainder of the season."
 UTEP,EJ Colson,questionable,mygamesim: Questionable
-UTEP,Tavorus Jones,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Jones is dealing with an undisclosed injury, and it is unclear if he will play Saturday against the Nevada"
 Vanderbilt,Mitchell Smith,out,mygamesim: Out
-Virginia,Dillon Newton-Short,doubtful,"mygamesim: Out; covers: Questionable - Hamstring - Newton-Short is managing a hamstring injury, and it is unknown if he will play against Syracuse on Saturday, October 10th."
+Virginia,Dillon Newton-Short,out,"mygamesim: Out; covers: Out - Hamstring - Newton-Short is managing with a hamstring injury, and there is no timetable for his return."
 Virginia,Jason Hammond,out,"mygamesim: Out; covers: Out - Undisclosed - Jason is nursing with an undisclosed injury, and he will miss an extended period."
-Virginia,Peyton Lewis,questionable,"covers: Questionable - Undisclosed - Lewis is hampered by an undisclosed injury, and it remains to be seen if he will be available against Syracuse on Saturday, October 3rd."
+Virginia,Peyton Lewis,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Lewis is hampered by an undisclosed injury, and it remains to be seen if he will be available against Duke on Friday."
 Virginia Tech,Kyle Altuner,questionable,"covers: Questionable - Undisclosed - Altuner is dealing with an undisclosed injury, and it is unknown if he will suit up against the Golden Bears on Saturday, October 10th."
-Virginia Tech,Takye Heath,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Heath is dealing with an undisclosed injury, and it is unknown if he will suit up against the Golden Bears on Saturday, October 10th."
-Wake Forest,Ny Carr,out,"mygamesim: Out; covers: Out - Undisclosed - Carr is laid up with an undisclosed injury, and is not expected to play against the Miami on Saturday, September 19th."
+Virginia Tech,Takye Heath,out,"covers: Out - Undisclosed - Heath is dealing with an undisclosed injury, and he will miss an extended period."
+Wake Forest,Ny Carr,questionable,"covers: Questionable - Undisclosed - Carr is laid up with an undisclosed injury, and it is unclear if he will play against the Virginia on Saturday."
 Washington,Christian Moss,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Moss is tending to an undisclosed injury, and it remains to be seen if he will play against Golden Gophers on Saturday, September 26th."
 Washington,Jayden Limar,out,"mygamesim: Out; covers: Out - Upper Body - Limar will undergo surgery due to an upper body injury, and he will miss an undetermined length of time."
-Washington State,Ryan McKendry,questionable,"covers: Questionable - Undisclosed - McKendry is tending to an undisclosed injury, and it has yet to be established if he will take the field against Fresno State on Saturday, October 3th."
+Washington State,Ryan McKendry,out,"covers: Out - Undisclosed - McKendry is tending to an undisclosed injury, and he will miss an undetermined length of time."
 Washington State,Tony Freeman,out,mygamesim: Out; covers: Out - Leg - Freeman has been shut down for the remainder of the season with a torn ACL.
 West Virginia,Armoni Weaver-Bomar,out,mygamesim: Out
-West Virginia,Cam Ball,doubtful,"mygamesim: Doubtful; covers: Questionable - Undisclosed - Ball is hampered by an undisclosed injury, and it has yet to be established if he will face Arizona on Saturday, October 10th."
-Western Kentucky,K.D. Hutchinson,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Hutchinson is dealing with an undisclosed injury, and it is unclear if he will suit up against Missouri State on Thursday, October 8th."
-Wisconsin,Abu Sama III,questionable,"mygamesim: Questionable; covers: Questionable - Upper Body - Sama III is nursing an upper body injury, and it is unclear whether he will play against UCLA on Saturday, October 17th."
-Wisconsin,Jaylon Domingeaux,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Domingeaux is tending to an undisclosed injury, and it has yet to be determined if he will be active against UCLA on Saturday, October 17th."
-Air Force,Jalen Rashad Turner,questionable,mygamesim: Questionable
+West Virginia,Cam Ball,out,"covers: Out - Undisclosed - Ball is hampered by an undisclosed injury, and he will miss an undetermined length of time."
+Western Kentucky,K.D. Hutchinson,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Hutchinson is dealing with an undisclosed injury, and it is unclear if he will suit up against Blue Hens on Tuesday, October 27th.; rotowire: Out - Return Nov 21st"
 Air Force,Liam Szarka,out,"mygamesim: Out; covers: Out - Leg - Szarka is battling with a lower leg injury, and has been shut down for the remainder of the season."
-Air Force,Sylas Maiava-Alaimalo,questionable,mygamesim: Questionable
-Akron,Cibastian Broughton,doubtful,"mygamesim: Questionable; covers: Out - Knee - Gee is dealing with a knee injury, and has been left out for the game against C. Michigan on Saturday."
-Akron,Luke Sivon,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Sivon is dealing with an undisclosed injury, and it has yet to be determined if he will be active against C. Michigan on Saturday, October 10th."
+Air Force,Sylas Maiava-Alaimalo,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Maiava-Alaimalo is nursing due to an undisclosed injury, and it has yet to be determined if he will play against Wyoming on Friday."
+Akron,Cibastian Broughton,questionable,"covers: Questionable - Knee - Gee is dealing with a knee injury, and it is unclear if he will play against Kent State on Saturday."
+Akron,Luke Sivon,out,"mygamesim: Out; covers: Out - Undisclosed - Sivon is dealing with an undisclosed injury, and he will miss an undetermined length of time."
 Alabama,Josh Ford,questionable,"mygamesim: Questionable; covers: Questionable - Arm - Ford is nursing with a arm injury, and it is unclear if he will be active against Georgia on Saturday."
-App State,Alexander Sanchez,questionable,mygamesim: Questionable
-App State,Dazmin James,out,mygamesim: Out
-App State,Dillon Galloway,out,mygamesim: Out
-Arizona,Ismail Mahdi,out,mygamesim: Out
-Arizona,Shane King,questionable,"covers: Questionable - Undisclosed - King is dealing with an undisclosed injury, and it is unclear if he will play against the Bearcats on Saturday."
+App State,Dillon Galloway,questionable,"covers: Questionable - Undisclosed - Galloway is nursing with an undisclosed injury, and it is undetermined if he will play against James Madison on Thursday."
 Arizona State,Grayson Rigdon,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Rigdon is battling with an undisclosed injury, and it has yet to be determined if he will be active against the Baylor on Saturday."
-Arizona State,James Giggey,questionable,mygamesim: Questionable
 Arizona State,Lyrik Rawls,out,"mygamesim: Out; covers: Out - Leg - Rawls is managing with a leg injury, and he will miss an undetermined length of time."
 Army,Brady Mott,out,"covers: Out - Undisclosed - Mott is managing with a undisclosed injury, and it is unclear if he will face the Temple on Friday, September 25th."
-Auburn,Jake Johnson,questionable,mygamesim: Questionable
 Boise State,Rasean Jones,questionable,mygamesim: Questionable
-Boston College,Bo MacCormack III,out,"covers: Out - Shoulder - MacCormack III is dealing with an shoulder injury, and he will miss an extended period."
-Boston College,Brady Clough,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Clough has been out of the lineup due to undisclosed injury, and he will be not available against SMU on Saturday."
-Bowling Green,Ke'Marion Baldwin,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Baldwin is tending to an undisclosed injury, and is left out for Saturday's game against the Redhawks."
-Buffalo,James McNeil Jr.,out,"covers: Out - Undisclosed - McNeil Jr is dealing with an undisclosed injury, and it is yet to be established if he will suit up against Robert Morris on Saturday."
-BYU,Isaiah Glasker,out,mygamesim: Out
-California,Chase Hendricks,questionable,mygamesim: Questionable
-California,Kamar Mothudi,questionable,mygamesim: Questionable
-California,Kingston Lopa,questionable,mygamesim: Questionable
+Boston College,Brady Clough,questionable,"covers: Questionable - Undisclosed - Clough is dealing with a Undisclosed injury, and it is unclear if he will play against Georgia Tech on Saturday."
 California,Nate Burrell,out,mygamesim: Out
 Colorado,Charlie Williams,questionable,"covers: Questionable - Undisclosed - Williams is battling with an undisclosed injury, and it has yet to be determined if he will be active against the Red Raiders on Saturday."
-Colorado,Makari Vickers,out,"mygamesim: Out; covers: Out - Undisclosed - Vickers is sidelined due to an undisclosed injury, and is not expected to face the Red Raiders on Saturday."
-Colorado,Quentin Gibson,questionable,"covers: Questionable - Undisclosed - Gibson is dealing with an undisclosed injury, and it is unknown if he will play against the Red-raiders on Saturday."
+Colorado,Makari Vickers,questionable,"covers: Questionable - Undisclosed - Vickers is sidelined due to an undisclosed injury, and it is undetermined if he will face Cowboys on Saturday."
 Duke,Jamien Little,out,mygamesim: Out
 Florida State,Samuel Singleton Jr.,out,"mygamesim: Out; covers: Out - Lower Body - Singleton is managing a lower body injury, and he will miss an undetermined length of time."
-Georgia,Chauncey Bowens,out,mygamesim: Out
+Georgia,Chauncey Bowens,questionable,mygamesim: Questionable
 Georgia Southern,Ashton Hollins,out,"mygamesim: Out; covers: Out - Shoulder - Hollins is liad up with a shoulder injury, and he will be idle for the remainder of the season."
 Georgia Southern,Jeremiah Ware,questionable,"covers: Questionable - Undisclosed - Ware is dealing with an undiscloed injury, and it is unclear whether he will face against Coastal Carolina on Saturday."
-Georgia Southern,Josh Dallas,questionable,"mygamesim: Probable; covers: Questionable - Undisclosed - Dallas is dealing with an undiscloed injury, and it is unclear whether he will face against Coastal Carolina on Saturday."
 Georgia Tech,Daiquan White,out,mygamesim: Out
 Georgia Tech,Noah Carter,out,mygamesim: Out
-Georgia Tech,Shymeik Jones,out,"mygamesim: Out; covers: Out - Undisclosed - Jones is out of commission due to an undisclosed injury, and is not expected to face the Stanford on Saturday."
-Georgia,Thomas Blackshear,doubtful,"mygamesim: Out; covers: Questionable - Upper Body - Blackshear is dealing with a upper-body injury, and it remains to be seen if he will be active against the Alabama on Saturday."
-Hawai'i,Carson Brown,questionable,mygamesim: Questionable
+Georgia Tech,Shymeik Jones,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Jones is bothered by an undisclosed injury, and it is undetermined whether he will play against the Boston College on Saturday, October 24th."
+Georgia,Thomas Blackshear,questionable,"mygamesim: Questionable; covers: Questionable - Upper Body - Blackshear is dealing with a upper-body injury, and it remains to be seen if he will be active against the Florida Gators on Saturday, October 31st."
+Hawai'i,Carson Brown,out,mygamesim: Out
 Houston,Jaden Yates,out,mygamesim: Out
-Houston,Luke McGary,out,"covers: Out - Shoulder - McGary has been sidelined due to shoulder injury, and he will miss an undetermined length of time."
-Indiana,Andrew Barker,out,mygamesim: Out
-Indiana,Lee Beebe Jr.,questionable,"covers: Questionable - Undisclosed - Beebe Jr. is dealing with an undisclosed injury, and it is unclear if he will return"
-Iowa State,Arnold Barnes III,out,mygamesim: Out
-Iowa State,Christian Greenlaw,questionable,"mygamesim: Probable; covers: Questionable - Undisclosed - Greenlaw is nursing with an undisclosed injury, and it is undetermined if he will face BYU on Friday."
-Iowa State,Drew Surges,out,mygamesim: Out
 Iowa State,Easton Miller,questionable,"covers: Questionable - Undisclosed - Miller is dealing with a Undisclosed injury, but he is expected to suit up against the Cougars on Saturday."
 Iowa,Tyler Brown,out,mygamesim: Out
-James Madison,Corey Scott,out,mygamesim: Out
-Kansas,Carter Moses,out,"mygamesim: Doubtful; covers: Out - Undisclosed - Moses is dealing with an undisclosed injury, and it is unclear if he will play against Middle Tennessee State on Saturday."
+Kansas,Carter Moses,questionable,"covers: Questionable - Undisclosed - Moses is dealing with an undisclosed injury, and it is unclear if he will play against Baylor on Saturday."
 Kansas,Jailen Butler,questionable,"covers: Questionable - Undisclosed - Butler exited the game with an undisclosed injury, and it is yet to be established if he will suit up against Utah Utes on October 10rd."
 Kansas State,Will Anciaux,out,"mygamesim: Out; covers: Out - Leg - Anciaux is nursing with a lower leg injury, and he will be idle for the remainder of the season."
-Kansas,Tate Nagy,questionable,"covers: Questionable - Undisclosed - Nagy is managing with an undisclsoed injury, and it has yet to be determined if he will face Utah on Saturday."
 Kentucky,Antwan Smith,out,mygamesim: Out
 Louisiana,Darrell Smith,out,"covers: Out - Undisclosed - Smith is fighting off an undisclosed injury, and he will be idle for the remainder of the season."
-Louisiana,Ja'Corian Norris,out,"covers: Out - Undisclosed - Norris is laid up with an undisclosed injury, and he is unlikely to suit up against Louisiana Tech on Saturday."
-Louisiana Tech,Jaden Miller,questionable,"covers: Questionable - Undisclosed - Miller is nursing an undisclosed injury, and is left out for Sunday's game against the Ragin Cajuns."
-Louisville,Cason Henry,questionable,mygamesim: Questionable
-Louisville,Daylen Russell,questionable,mygamesim: Questionable
-Louisville,Keyjuan Brown,questionable,"mygamesim: Questionable; covers: Probable - Undisclosed - Brown is managing with an undisclosed injury , but it is expected to play against the North Carolina State on Saturday.; rotowire: Questionable - Return Oct 9th"
 LSU,Charles Ross II,out,mygamesim: Out
 LSU,Phillip Wright III,out,"mygamesim: Out; covers: Out - Undisclosed - Wright III is hampered by an undisclosed injury, and he is likely to miss the remainder of the season."
-Maryland,Amari Jackson,questionable,mygamesim: Questionable
-Maryland,Bryce Jenkins,doubtful,mygamesim: Doubtful
-Maryland,Jamare Glasker,questionable,mygamesim: Questionable
-Michigan State,Caleb Wheatland,out,"mygamesim: Out; covers: Out - Undisclosed - Wheatland is tending to an undisclosed injury, and he is not expected to be active against Illinois on Saturday."
-Minnesota,Donielle Hayes,out,mygamesim: Out
+Michigan State,Caleb Wheatland,questionable,"covers: Questionable - Undisclosed - Wheatland is tending to an undisclosed injury, and it is unclear if he will play against UCLA on Saturday ."
 Mississippi State,Jamari Freeman,questionable,"covers: Questionable - Undisclosed - Freeman is managing with an undisclosed injury, and it remains to be seen if he will be active against LSU on Saturday, October 10th."
-Missouri,DaMarion Fowlkes,questionable,mygamesim: Questionable
-Navy,Landon Walker,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Walker is nursing with an undisclosed injury, and it is unclear whether he will play against Tulsa on Saturday, October 10rd."
-NC State,Kamen Smith,questionable,mygamesim: Questionable
+Navy,Landon Walker,out,"covers: Out - Undisclosed - Walker is nursing with an undisclosed injury, and there is no timetable for recovery."
+NC State,Kamen Smith,out,mygamesim: Out
 NC State,Tristan Teasdell,out,mygamesim: Out
 NC State,Yousef Mugharbil,out,mygamesim: Out
 Nebraska,Jamal Rule,questionable,"covers: Questionable - Undisclosed - Rule is dealing with an undisclosed injury, but he is expected to play Saturday against the Indiana."
-Nebraska,Riley Van Poppel,questionable,mygamesim: Questionable
+Nebraska,Riley Van Poppel,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Van Poppel is dealing with an undisclosed injury, and it is unknown if he will play against the Washington on Saturday, October 31st."
 New Mexico,Darrion Bowers,questionable,"covers: Questionable - Undisclosed - Bowers is battling with an undisclsoed injury, and it remains to be seen if he will be active against New Mexico State on Saturday."
-North Carolina,Ade Willie,questionable,mygamesim: Questionable
-North Carolina,Isaiah Johnson,questionable,mygamesim: Questionable
-North Carolina,Jaylen Harvey,questionable,mygamesim: Questionable
-North Texas,Josiah Martin,questionable,"covers: Questionable - Undisclosed - Martin is dealing with an undisclosed injury, and it remains to be seen if he will be active against 49ers on Saturday, October 10th."
 Northern Illinois,Rickey Taylor Jr.,out,mygamesim: Out
-Notre Dame,Kyngstonn Viliamu-Asa,out,"mygamesim: Out; covers: Out - Thumb - Viliamu-Asa is nursing with a thumb injury, and it is not anticipated that he will suit up against Stanford on Saturday."
-Notre Dame,Leonard Moore,questionable,"mygamesim: Questionable; covers: Questionable - Concussion - Moore is dealing with a concussion injury, and it has yet to be established if he will play against Stanford on Saturday."
 Ohio State,Bennett Christian,questionable,"covers: Questionable - Undisclosed - Bennett is dealing with an undisclosed injury, and it is unclear if he will suit up against Maryland on Sunday October 11th."
-Ohio State,Brandon Inniss,questionable,mygamesim: Questionable
-Ohio State,Christian Alliegro,questionable,mygamesim: Questionable
-Ohio State,Devin McCuin,questionable,mygamesim: Questionable
-Ohio State,Terry Moore,questionable,mygamesim: Questionable
 Oklahoma,Jacobe Johnson,out,mygamesim: Out
-Oklahoma State,Johnny Dickson III,questionable,mygamesim: Questionable
-Oklahoma State,Wyatt Young,questionable,mygamesim: Questionable
-Oklahoma,Trynae Washington,doubtful,mygamesim: Doubtful
+Oklahoma,Trynae Washington,out,mygamesim: Out
 Oklahoma,Xavier Robinson,out,mygamesim: Out
-Old Dominion,JJ Harrell,out,mygamesim: Out
-Old Dominion,TJ Johnson,questionable,mygamesim: Questionable
-Oregon,Aaron Flowers,doubtful,mygamesim: Doubtful
-Oregon,Aaron Scott Jr.,questionable,mygamesim: Questionable
-Oregon,Kendre Harrison,questionable,"covers: Questionable - Undisclosed - Harrison is dealing with an undisclosed injury, and it is unclear whether he will play against UCLA on Saturday, October 10th."
-Oregon State,Kourdey Glass,out,"covers: Out - Undisclosed - Glass is sidelined due to an undisclosed injury, and is not expected to face the Colorado State on Saturday."
-Oregon State,Xayvion Noland,questionable,mygamesim: Questionable
-Penn State,Brian Kortovich,questionable,"covers: Questionable - Undisclosed - Kortovich is hobbled by an undisclosed injury, and it remains to be seen if he will be available against Northwestern on Friday, October 2th."
-Pittsburgh,Justin Cook,questionable,"covers: Questionable - Undisclosed - Cook is nursing with an undisclosed injury, and it is up in the air if he will play against North Carolina on Saturday, October 10th."
-Rutgers,Dylan Lonergan,doubtful,"mygamesim: Questionable; covers: Out - Head - Lonergan is dealing with an head injury, and there is no timetable for his return."
-Sam Houston,Max Whisner,questionable,mygamesim: Questionable
+Old Dominion,JJ Harrell,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Harrell is managing with an undisclosed injury, and it is uncertain if he will be available against Louisiana Tech on Saturday, October 24th."
+Oregon,Aaron Flowers,out,mygamesim: Out; covers: Out - Undisclosed - Flowers has been shut down for the remainder of the season due to an undisclosed injury.
+Penn State,Brian Kortovich,out,"covers: Out - Undisclosed - Kortovich is hobbled by an undisclosed injury, and there is no timetable for return."
+Rutgers,Dylan Lonergan,out,"mygamesim: Out; covers: Out - Head - Lonergan is dealing with an head injury, and there is no timetable for his return."
+Sam Houston,Max Whisner,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Whisner is dealing with an undisclosed injury, and it is unclear if he will face State Aggies on Wednesday, October 21st."
 San Diego State,Donovan Brown,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Brown is dealing with an undisclosed injury, and it is unclear if he will play against the Oregon State on Saturday."
-San Diego State,Javion Kinnard,questionable,"mygamesim: Questionable; covers: Questionable - Knee - Kinnard is dealing with a knee injury, and it is unclear if he will play against the Beavers on Sunday"
-San Diego State,Justius Lowe,questionable,mygamesim: Questionable
-San Diego State,Kime Fangupo,doubtful,mygamesim: Doubtful
-San Diego State,Nathan Acevedo,doubtful,mygamesim: Doubtful; covers: Doubtful - Undisclosed - Acevedo is nursing with an undisclosed injury and he is not projected to be active against the Oregon State on Saturday.
 San José State,Cooper Hoch,questionable,mygamesim: Questionable
 SMU,Jaylen Moses,out,mygamesim: Out
-South Carolina,Carter Miller,doubtful,mygamesim: Doubtful
 South Carolina,Mazeo Bennett Jr.,questionable,"mygamesim: Probable; covers: Questionable - Undisclosed - Bennett is dealing with an undisclosed injury, and it is unclear if he will suit up against the Florida on Saturday."
-South Carolina,Quay'sheed Scott,doubtful,mygamesim: Doubtful
+South Carolina,Quay'sheed Scott,out,mygamesim: Out
 Southern Miss,Ethan Hampton,out,"mygamesim: Out; covers: Out - Hand - Hampton is nursing with a hand injury, and a timetable for return has yet to be established."
-Southern Miss,Grant Page,doubtful,"mygamesim: Questionable; covers: Out - Elbow - Page is sidelined due to a dislocated elbow, and team officials have yet to provide an exact return date."
+Southern Miss,Grant Page,out,"mygamesim: Out; covers: Out - Elbow - Page is sidelined due to a dislocated elbow, and team officials have yet to provide an exact return date."
 Southern Miss,Jaylen Himes,out,"mygamesim: Out; covers: Out - Foot - Himes is out of commission due to a foot injury, and he will miss an extended period."
-Syracuse,Ahmad Miller,questionable,mygamesim: Questionable
-Syracuse,Amari Odom,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Odom is bothered by an undisclosed injury, and it is unclear if he will suit up against the Virginia on Saturday."
+Syracuse,Amari Odom,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Odom is bothered by an undisclosed injury, and it is unclear if he will suit up against North Carolina on Saturday, October 24th."
 Syracuse,Darien Williams,out,mygamesim: Out
-Syracuse,Nazir Ward,questionable,mygamesim: Questionable
-TCU,Jeremy Scott,questionable,mygamesim: Questionable
-TCU,Joe Pitchford,doubtful,"mygamesim: Questionable; covers: Out - Undisclosed - Pitchford has been out of the lineup due to an undisclosed injury, and he will be not available against Cougars on Saturday."
-Tennessee,Faizon Brandon,questionable,mygamesim: Questionable
-Tennessee,Javin Gordon,questionable,"mygamesim: Questionable; covers: Questionable - Leg - Gordon is dealing with a leg injury, and it is unclear whether he will play against Auburn on Saturday, October 3rd."
 Texas A&M,Blake Ivy,out,"mygamesim: Out; covers: Out - Undisclosed - Ivy is dealing with an undisclosed injury, and he will be out of the lineup against Missouri on Saturday."
-Texas,Kaliq Lockett,out,"mygamesim: Out; covers: Out - Undisclosed - Lockett is hampered by an undisclosed injury, and he is not expected to play against the Oklahoma on Saturday."
-Texas State,Jordan Sample,questionable,"covers: Questionable - Undisclosed - Sample is dealing with an undisclosed injury, and it is unknown if he will play against San Diego State on Saturday, October 3th."
-Texas Tech,Cameron Dickey,doubtful,"mygamesim: Questionable; covers: Out - Ankle - Dickey is battling with a sprained ankle injury, and there is no timetable for his return."
-Texas Tech,Thomas Castellanos,questionable,mygamesim: Questionable
+Texas,Kaliq Lockett,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Lockett is hampered by an undisclosed injury, and it is uncertain if he will suit up against Ole Miss on Saturday."
+Texas Tech,Cameron Dickey,out,"mygamesim: Out; covers: Out - Ankle - Dickey is battling with a sprained ankle injury, and there is no timetable for his return."
 UAB,Antonio Ferguson,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Ferguson is dealing with an undisclosed injury, and it is uncertain if he will play against Tigers on Sunday, October 11th."
 UConn,Javon Brown,doubtful,"mygamesim: Questionable; covers: Out - Concussion - Brown is bothered by a concussion protocol, and he is without a definitive timetable for return."
-UConn,Kenji Christian,questionable,"mygamesim: Questionable; covers: Questionable - Hamstring - Christian is nursing an Hamstring injury, and it is unclear if he will face Owls on Saturday, October 10th."
-UNLV,Taeshaun Lyons,questionable,"covers: Questionable - Undisclosed - Lyons is dealing with an undisclosed injury, and it remains to be seen if he will be available against Bison on Sunday, October 11th."
 USC,Jide Abasiri,questionable,mygamesim: Questionable
-USC,Terrell Anderson,questionable,mygamesim: Questionable
+USC,Terrell Anderson,out,"mygamesim: Out; covers: Out - Undisclosed - Anderson has been sidelined due to an undisclosed injury, and a timetable for return/recovery has yet to be established."
 Utah State,Kache Kaio,questionable,"mygamesim: Out; covers: Probable - Undisclosed - Kaio is dealing with an undisclosed injury, but he is expected to suit up Saturday against the Boise State."
-Utah State,Nehemiah Washington,out,"mygamesim: Out; covers: Out - Undisclosed - Washington is dealing with an undisclosed injury, and he is not expected to suit up against the Washington State on Friday."
+Utah State,Nehemiah Washington,questionable,"covers: Questionable - Undisclosed - Washington is dealing with an undisclosed injury, and it is undetermined if he will play against the Bobcats on Saturday, October 24th."
 Utah State,Nikko Boncore,out,"mygamesim: Out; covers: Out - Undisclosed - Boncore is dealing with an undisclosed injury, and he has been shut down for the remainder of the season."
-Utah State,Rex Haynes,out,"mygamesim: Out; covers: Out - Undisclosed - Haynes is nursing with an undisclosed injury, and is not expected to be active against Washington State on Friday."
-UTEP,Lamar Sperling,questionable,"covers: Questionable - Undisclosed - Sperling is dealing with an undisclosed injury, and it is unclear if he will play Saturday against the Nevada"
+Utah State,Rex Haynes,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Haynes is nursing with an undisclosed injury, and it is undetermined whether he will play against the Bobcats on Saturday, October 24th."
 Vanderbilt,Aaron Bryant,out,mygamesim: Out
 Virginia,Devon Baxter,out,mygamesim: Out
 Virginia,Evan Ward,out,mygamesim: Out
-Virginia,Omillio Agard,doubtful,mygamesim: Doubtful
+Virginia,Omillio Agard,out,mygamesim: Out
 Virginia Tech,Brody Meadows,questionable,mygamesim: Questionable
-West Virginia,John Neider,questionable,mygamesim: Probable; covers: Out - Undisclosed - Neider is hampered by an undisclosed injury and he is not expected to play against the Arizona on Saturday.
 Western Kentucky,Nigel Johnson,questionable,mygamesim: Questionable
-Wyoming,Deion DeBlanc,out,"mygamesim: Out; covers: Out - Toe - DeBlanc is dealing with a toe injury, and is not projected to suit up against San Jose State on Friday."
+Wyoming,Deion DeBlanc,questionable,"covers: Questionable - Toe - DeBlanc is nursing due to a toe injury, and it is uncertain if he will play against Air Force on Friday."
+Air Force,Evan Medders,questionable,mygamesim: Questionable
+Air Force,Griffin Stalfort,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Stalfort is dealing due to an undisclosed injury, and it has yet to be determined if he will play against Wyoming on Friday."
+Akron,Sean Patrick,questionable,"covers: Questionable - Undisclosed - Patrick is nursing with an undisclosed injury, and it is unclear whether he will play against Kent State on Saturday."
+Alabama,Cederian Morgan,questionable,"covers: Questionable - Hamstring - Morgan is battling due to a hamstring injury, and it remains to be seen if he will be active against Texas A&M on Saturday."
+Alabama,EJ Crowell,doubtful,"mygamesim: Out; covers: Questionable - Leg - Crowell is nursing due to a lower leg injury, and it is unclear whether he will play against Texas A&M on Saturday."
+Alabama,Racin Delgatty,out,mygamesim: Out
+Alabama,Ryan Coleman-Williams,out,"mygamesim: Out; covers: Out - Knee - Coleman-Williams is battling due to a knee injury, and he is without a definitive time for his return."
+Alabama,Zabien Brown,out,mygamesim: Out
+App State,Malachi Singleton,out,"covers: Out - Ankle - Singleton is dealing with an ankle injury, and it is unclear how long he will be idle."
+App State,Treyaun Webb,questionable,"covers: Questionable - Undisclosed - Webb is nursing with an undisclosed injury, and it is undetermined if he will play against James Madison on Thursday."
+Arizona,Max Harris,questionable,"covers: Questionable - Undisclosed - Harris is battling with an undisclosed injury, and it is unknown if he will face Iowa State on Saturday, October 24th."
+Arizona State,Luke Baklenko,out,mygamesim: Out
+Arizona State,Mikey Keene,questionable,mygamesim: Questionable
+Arkansas,Chris Marshall,questionable,"mygamesim: Questionable; covers: Questionable - Leg - Marshall exited the game due to leg injury, and it is uncertain if he will face Missouri on October 31st."
+Arkansas State,Hunter Summers,out,mygamesim: Out
+Army,Brady Anderson,questionable,"covers: Questionable - Undisclosed - Anderson is nursing with an undisclosed injury, and it remain to seen if he will face Tulsa on Friday."
+Army,Kurt Thompson,out,mygamesim: Out
+Army,Parker Poloskey,questionable,"covers: Questionable - Undisclosed - Poloskey is hampered with an undisclosed injury, and it is undetermined if he will play against Tulsa on Friday."
+Ball State,Ace Cooper,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Cooper is nursing due to an undisclosed injury, and it remains to be seen if he will be active against Sacramento State on Saturday."
+Ball State,Donovan Hamilton,questionable,"covers: Questionable - Undisclosed - Hamilton is dealing due to an undisclosed injury, and it is uncertain if he will be active against Sacramento State on Saturday."
+Ball State,Jabari Smith Jr.,questionable,"covers: Questionable - Undisclosed - Smith is nursing with an undisclosed injury, and it is unknown if he will be available against Sacramento State on Saturday."
+Boise State,Ben Ford,out,mygamesim: Out
+Boston College,Evan Dickens,doubtful,"mygamesim: Out; covers: Questionable - Leg - Dickens is nursing with a leg injury, and it is uncertain if he will play against Georgia Tech on Saturday."
+Boston College,Reed Swanson,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Swanson is managing with a Undisclosed injury, and it is uncertain if he will play against Georgia Tech on Saturday."
+Bowling Green,Trey Johnson,questionable,"covers: Questionable - Undisclosed - Johnson is battling due to an undisclosed injury, and it is unknown if he will play Saturday versus Buffalo."
+Buffalo,Patrick Clacks III,out,mygamesim: Out
+Buffalo,Tyrell Simmons Jr.,questionable,"covers: Questionable - Undisclosed - Simmons Jr. is fighting off an undisclosed injury, and it has yet to be established if he will be active against Bowling Green on Saturday."
+California,Ashten Emory,questionable,"covers: Questionable - Undisclosed - Emory is Managing due to an undisclosed injury, and it is un determined if he will play against the SMU on Saturday."
+California,Bastian Swinney,out,mygamesim: Out
+California,Cooper Perry,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Perry is nursing due to an undisclosed injury, and it remains to be seen if he will play against SMU on Saturday."
+California,Dorian Thomas,out,mygamesim: Out
+California,Ian Strong,questionable,"covers: Questionable - Undisclosed - Strong is hampered with an undisclosed injury, and it is yet to established to play against the SMU on Saturday."
+California,Jordan King,out,mygamesim: Out
+California,Kyion Grayes,questionable,"covers: Questionable - Undisclosed - Grayes is hampered with an undisclosed injury, and it is yet to established to play against the SMU on Saturday."
+California,Mark Hamper,out,mygamesim: Out
+Central Michigan,Angel Flores,doubtful,"mygamesim: Out; covers: Questionable - Concussion - Flores is dealing due to a concussion injury, and it is uncertain if he will play against Miami (Ohio) on Saturday"
+Central Michigan,Jayden Clerveaux,questionable,"covers: Questionable - Undisclosed - Clerveaux is tending to an undisclosed injury, and it is unclear whether he will play against Miami (Ohio) on Saturday."
+Central Michigan,Shawn Foster II,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Foster is battling due to an undisclosed injury, and it is uncertain if he will play against Miami (Ohio) on Saturday."
+Cincinnati,Devyn Zahursky,out,mygamesim: Out
+Cincinnati,Gi'Bran Payne,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Cincinnati left the game in between due to an undisclosed injury, and it is unclear whether he will play against Texas Tech on Saturday."
+Cincinnati,Giyahni Kontosis,doubtful,mygamesim: Doubtful
+Clemson,Jarvis Green,questionable,"covers: Questionable - Shoulder - Green is managing due to a shoulder injury, and it has yet to be established if he will play against Virginia Tech on Saturday."
+Clemson,Vic Burley,questionable,mygamesim: Questionable
+Colorado,Kam Perry,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Perry has an undisclosed injury, and it is uncertain if he will face Cowboys on Saturday."
+Colorado,Micah Welch,doubtful,"mygamesim: Out; covers: Questionable - Hand - Welch is bothered by a hand injury, and it remains to be seen if he will be active against Cowboys on Saturday."
+Colorado State,RJ Vick,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Vick Jr is dealing with an undisclosed injury, and it remains to be seen if he will play against San Diego State on Saturday, October 24th."
+Colorado,Tyler Martinez,questionable,"covers: Questionable - Undisclosed - Martinez is sidelined due to an undisclosed injury, and it is unclear if he will play against the Cowboys on Saturday."
+Duke,Andrew Pellicciotta,out,"mygamesim: Out; covers: Out - Undisclosed - Pellicciotta is battling due to an undisclosed injury, and he will be out of action against Virginia on Friday."
+Duke,Evan Smith,out,mygamesim: Out
+Duke,Jayden Moore,questionable,mygamesim: Questionable
+Duke,Matt Craycraft,out,mygamesim: Out
+East Carolina,Dawson Quarterman,out,mygamesim: Out
+East Carolina,Dillon Lorick,out,mygamesim: Out
+Eastern Michigan,Dalin Wilkins,out,mygamesim: Out
+Eastern Michigan,Decorie Johnson,out,mygamesim: Out
+Eastern Michigan,Noah Kim,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Kim is dealing due to an undisclosed injury, and it is uncertain if he will play against Ohio on Saturday, October 24th."
+Florida,Aaron Philo,questionable,"mygamesim: Questionable; covers: Questionable - Shoulder - Philo is nursing with a shoulder injury, and it remains to be seen if he will be active against Georgia on Saturday, October 31th."
+Florida Atlantic,AJ Johnson,questionable,mygamesim: Questionable
+Florida Atlantic,RJ Garcia II,out,mygamesim: Out
+Florida,Duke Clark,questionable,mygamesim: Questionable
+Florida International,Anthony Carrie,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Carrie is managing due to an undisclosed injury, and it remains to be seen if he will suit up against Liberty Flames on Saturday, October 31st."
+Florida State,Ousmane Kromah,out,"mygamesim: Out; covers: Out - Ankle - Kromah is bothered by an ankle injury, and he has been shut down for the remainder of the season."
+Georgia,KJ Bolden,out,mygamesim: Out
+Georgia Southern,David Mbadinga,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Mbadinga is battling with an undisclosed injury, and it is unclear if he will face App State on Saturday, October 31st."
+Georgia Southern,Max Johnson,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Johnson is suffering with an undisclosed injury, and it is unclear if he will face App State on Saturday, October 31st."
+Georgia State,Matt Buron,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Buron is bothered by an undisclosed injury, and it remains to be seen if he will be active against Arkansas State on Saturday."
+Georgia Tech,Justice Haynes,questionable,"covers: Questionable - Undisclosed - Haynes is nursing due to an undisclosed injury, and it is unclear whether he will play against Boston College on Saturday."
+Georgia Tech,Kelvin Hill,questionable,mygamesim: Questionable
+Georgia Tech,Markell Samuel,out,mygamesim: Out
+Georgia Tech,Tawfiq Thomas,out,mygamesim: Out
+Houston,De'Marion Thomas,out,mygamesim: Out
+Houston,Patrick Overmyer,questionable,mygamesim: Questionable
+Illinois,Katin Houser,out,mygamesim: Out
+Iowa,Kamari Moulton,out,mygamesim: Out
+Iowa,Lendon Phillips Jr.,questionable,"covers: Questionable - Ankle - Phillips Jr. is laid up with an ankle injury, and it has yet to be established if he will play against Minnesota on Saturday."
+Iowa State,Beni Ngoyi,out,mygamesim: Out
+Iowa State,Dominic Overby,doubtful,"mygamesim: Out; covers: Questionable - Knee - Overby is dealing with an Knee injury, and it is unknown if he will face the Wildcats on Saturday, October 24th."
+Jacksonville State,Cedric Kouemi,questionable,mygamesim: Questionable
+Jacksonville State,Jalen Likely,questionable,mygamesim: Questionable
+James Madison,George Pettaway,questionable,mygamesim: Questionable
+Kansas,Keaton Kubecka,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Kubecka is nursing with an undisclosed injury, and it is unclear if he will play against Baylor on Saturday."
+Kansas,Mason Ellis,out,mygamesim: Out
+Kansas State,Avery Johnson,questionable,mygamesim: Questionable
+Kansas State,Derrick Salley Jr.,questionable,"covers: Questionable - Undisclosed - Salley Jr. exited the game in between due to an undisclosed injury, and it is uncertain if he will play against Arizona State on Saturday."
+Kansas State,Garrett Oakley,out,"mygamesim: Out; covers: Out - Undisclosed - Oakley is ailing from illness, and he will be out of the lineup against Arizona State on Saturday."
+Kansas State,Kaleb Patterson,questionable,"covers: Questionable - Undisclosed - Patterson is liad up with an undisclosed injury, and it remains to be seen if he will be active against Arizona State on Saturday."
+Kentucky,Alex Afari Jr.,questionable,"covers: Questionable - Undisclosed - Afari Jr. is nursing with an undisclosed injury, and he is unlikely to be available against Vanderbilt on Saturday, October 24th."
+Kentucky,CJ Baxter,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Baxter is nursing with an undisclosed injury, and it remains to be seen if he will be active against Vanderbilt on Saturday, October 24th."
+Kentucky,Nic Anderson,out,mygamesim: Out
+Kentucky,Sam Greene,out,mygamesim: Out
+Louisiana Tech,Dylone Brooks,out,"mygamesim: Out; covers: Out - Undisclosed - Brooks is battling due to an undisclosed injury, and he will be out of the lineup against Old Dominion on Saturday."
+LSU,Tre' Brown,questionable,"covers: Questionable - Undisclosed - Brown III exited the game in between due to an undisclosed injury, and it has yet to be determined if he will face Auburn on Saturday."
+LSU,Tylen Singleton,questionable,"covers: Questionable - Undisclosed - Singleton is bothered by an undisclosed injury, and it remains to be seen if he will be active against Auburn on Saturday."
+Marshall,Chris Culliver,questionable,mygamesim: Questionable
+Marshall,Jo'Shon Barbie,out,mygamesim: Out
+Marshall,Zion Turner,questionable,mygamesim: Questionable
+Maryland,Cardell Williams,questionable,"covers: Questionable - Undisclosed - Williams is nursing with an Undisclosed injury, and it is unclear if he will play against Illinois on Saturday, October 31th."
+Maryland,Na'eem Abdul-Rahim Gladding,questionable,mygamesim: Questionable
+Massachusetts,Dallas Elliott,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Elliott is nursing with an undisclosed injury, and it remain to seen if he will play against UConn on Friday."
+Massachusetts,T.Y. Harding,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Harding is dealing due to an undisclosed injury, and it is unclear whether he will play against UConn on Friday."
+Memphis,Brady Kluse,questionable,"covers: Questionable - Undisclosed - Kluse is dealing due to an undisclosed injury, and it is unclear whether he will play against East Carolina on Thursday."
+Memphis,Tychaun Chapman,questionable,mygamesim: Questionable
+Miami,Milan Parris,out,mygamesim: Out
+Michigan,Blake Frazier,out,mygamesim: Out
+Michigan,Brady Norton,questionable,"covers: Questionable - Undisclosed - Norton is hampered by an undisclosed injury, and it is uncertain if he will play against Indiana on Saturday."
+Michigan,Dom Nichols,out,mygamesim: Out
+Michigan,Enow Etta,questionable,mygamesim: Questionable
+Michigan,Rod Moore,questionable,mygamesim: Questionable
+Michigan State,Alessio Milivojevic,out,mygamesim: Out
+Michigan State,Charles Brantley,out,mygamesim: Out
+Michigan State,Charles Taplin,doubtful,"mygamesim: Out; covers: Questionable - Foot - Taplin is dealing with a foot injury, and it is unclear whether he will play against UCLA on Saturday."
+Michigan State,Jaziun Patterson,out,mygamesim: Out
+Michigan State,Marvis Parrish,questionable,mygamesim: Questionable
+Michigan State,Tre Bell,out,mygamesim: Out
+Michigan,Zack Marshall,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Marshall is bothered by an undisclosed injury, and it remains to be seen if he will be active against Indiana on Saturday."
+Middle Tennessee,Markus Allen,out,mygamesim: Out
+Middle Tennessee,Tayvion Galloway,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Galloway is dealing due to an undisclosed injury, and it has yet to be determined if he will play against Kennesaw State Owls on Wednesday, October 28th."
+Minnesota,Pierce Walsh,out,mygamesim: Out
+Mississippi State,Isaac Smith,out,mygamesim: Out
+Missouri,Brett Norfleet,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Norfleet is nursing due to an undisclosed injury, and it has yet to be established if he will suit up against Arkansas on Saturday, October 31st."
+Missouri State,Breezy Dubar,out,mygamesim: Out
+Missouri State,Mekhi Miller,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Miller is battling due to an undisclosed injury, and it remains to be seen if he will face Sam Houston Bearkats on Tuesday, October 27th."
+Navy,Christian Cromer,out,mygamesim: Out
+Navy,Jacob Williams,questionable,mygamesim: Questionable
+Navy,Jake Norris,questionable,"covers: Questionable - Undisclosed - Norris is hampered with an undisclosed injury, and it is unclear whether he will play against North Texas Mean Green on Saturday, October 24th."
+Navy,Joshua Guerin,out,mygamesim: Out
+Navy,Theo Elwell,questionable,mygamesim: Questionable
+NC State,Asaad Brown Jr.,out,mygamesim: Out
+Nebraska,Anthony Jones Jr.,out,"mygamesim: Out; covers: Out - Foot - Jones Jr. is bothered by a foot injury, and a timetable for his return has yet to be established."
+Nebraska,Isaiah Mozee,out,"mygamesim: Out; covers: Out - Undisclosed - Mozee is nursing due to an undisclosed injury, and he will miss an undetermined length of time."
+Nebraska,Jamir Conn,out,mygamesim: Out
+Nevada,AJ Bianco,out,mygamesim: Out
+Nevada,Carter Jones,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Jones is managing due to an undisclosed injury, and it has yet to be determined if he will be active against San Jose State on Saturday."
+Nevada,DJ Asiasi,out,mygamesim: Out
+New Mexico,James Laubstein,out,mygamesim: Out
+North Carolina,Mason Humphrey,out,mygamesim: Out
+North Dakota State,Nyeoti Punni,out,"covers: Out - Shoulder - Punni has been sidelined due to shoulder injury, and he will miss an undetermined length of time."
+North Texas,Chaston Ditta,out,mygamesim: Out
+North Texas,Corri Milliner,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Milliner is dealing with an undisclosed injury, and it is unclear if he will face Navy on October 24th."
+Northwestern,Brendan Flakes,out,mygamesim: Out
+Northwestern,Robert Fitzgerald,out,mygamesim: Out
+Notre Dame,Cooper Flanagan,questionable,mygamesim: Questionable
+Ohio,Riley Neer,questionable,"covers: Questionable - Undisclosed - Neer is dealing with an undisclosed injury, and it is unclear whether he will play against the Eastern Michigan on Saturday."
+Ohio State,Austin Siereveld,out,mygamesim: Out
+Ohio State,Bo Jackson,questionable,"covers: Questionable - Shoulder - Jackson is battling due to a shoulder injury, and it has yet to be established if he will play against USC on Saturday, October 31th."
+Ohio State,Brock Boyd,questionable,mygamesim: Questionable
+Ohio State,Ja'Kobi Jackson,out,"mygamesim: Out; covers: Out - Foot - Jackson underwent surgery for a Lisfranc injury in his foot, and he will miss an undetermined length of time."
+Ohio State,Julian Sayin,out,"mygamesim: Out; covers: Out - Arm - Sayin has been out of the lineup due to a arm injury, and he will miss an undetermined length of time."
+Oklahoma,Eli Bowen,out,mygamesim: Out
+Oklahoma,Elijah Thomas,doubtful,"mygamesim: Out; covers: Questionable - Lower Body - Thomas is liad up with an lower body injury, and it is unclear whether he will play against Mississippi State on Saturday."
+Oklahoma State,Carson Kolb,out,mygamesim: Out
+Old Dominion,Quinn Henicle,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Henicle is nursing with an undisclosed injury, and it is unknown if he will face Louisiana Tech on Saturday, October 24th."
+Old Dominion,Ryan Huff,out,mygamesim: Out
+Ole Miss,Edwin Joseph,out,mygamesim: Out
+Ole Miss,Terez Davis,questionable,mygamesim: Questionable
+Oregon,Evan Stewart,questionable,"mygamesim: Probable; covers: Questionable - Undisclosed - Stewart is nursing with an undisclosed injury, and it is unknown if he will play Saturday versus Illinois."
+Oregon,Messiah Hampton,out,mygamesim: Out
+Pittsburgh,Ja'Kyrian Turner,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Turner is managing with an undisclosed injury, and it is uncertain if he will play against Miami on Saturday."
+Rice,Barry Jackson Jr.,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Jackson Jr is managing due to an undisclosed injury, and it is unclear whether he will play against Florida Atlantic on Saturday."
+Rice,Ben Grice,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Grice is bothered by an undisclosed injury, and it is unclear whether he will play against Florida Atlantic on Saturday."
+Rice,Jacurri Brown,doubtful,mygamesim: Doubtful
+Rice,Will Swartz,out,mygamesim: Out
+Rutgers,Jourdin Houston,questionable,"covers: Questionable - Undisclosed - Houston is nursing with an undisclosed injury, and it remain to seen if he will face Northwestern on Saturday."
+Rutgers,Kaj Sanders,out,"mygamesim: Out; covers: Out - Undisclosed - Sanders is dealing with an undisclosed injury, and he has been shut down for the remainder of the season."
+Rutgers,Ty Morris,questionable,mygamesim: Questionable
+Rutgers,Zahmir Dawud,out,mygamesim: Out
+Sacramento State,Jordan Williams,questionable,"covers: Questionable - Undisclosed - Williams is dealing with an undisclosed injury, and it remain to seen if he will face Ball State on Saturday, October 24th."
+San Diego State,Jayden Denegal,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Denegal exited the game due to an undisclosed injury, and it is undetermined if he will play against the Colorado State on Saturday."
+San José State,Jabari Bates,questionable,"covers: Questionable - Undisclosed - Bates is nursing with an undisclosed injury, and it is unclear if he will play against the Nevada on Saturday."
+San José State,Jordan Anderson,questionable,"covers: Questionable - Undisclosed - Anderson is bothered by an undisclosed injury, and it is unclear if he will play against the Nevada on Saturday"
+San José State,Luke Weaver,questionable,"covers: Questionable - Undisclosed - Weaver is hampered by an undisclosed injury, and it is unclear if he will play against the Nevada on Saturday."
+SMU,Carterrious Brown,out,mygamesim: Out
+SMU,Dramekco Green,out,"mygamesim: Out; covers: Out - Hand - Green is dealing with a hand injury, and he will miss an undetermined length of time."
+SMU,Jaelyn Davis-Robinson,out,mygamesim: Out
+SMU,Tyren Polley Jr.,out,"mygamesim: Out; covers: Out - Pectoral - Polley is battling due to a pectoral injury, and he will be idle for the remainder of the season."
+South Carolina,Jawarn Howell,out,mygamesim: Out
+Southern Miss,Avery Sledge,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Sledge is dealing with an undisclosed injury and, it is uncertain if he will be available against the Georgia State on October 24th."
+Southern Miss,Robert Briggs,out,mygamesim: Out
+TCU,Jeremy Payne,out,mygamesim: Out
+TCU,Landon Walker,out,mygamesim: Out
+TCU,Zach Chapman,questionable,mygamesim: Questionable
+Temple,Ajani Sheppard,questionable,"covers: Questionable - Undisclosed - Sheppard is tending to an undisclosed injury, and it is uncertain if he will face East Carolina on Saturday, October 31th."
+Temple,JoJo Bermudez,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Bermudez is bothered by an undisclosed injury, and it is unclear whether he will play against East Carolina on Saturday, October 31th."
+Texas A&M,Anto Saka,questionable,mygamesim: Questionable
+Texas A&M,Ashton Bethel-Roman,questionable,"covers: Questionable - Personal - Bethel-Roman is dealing due to a personal reason, and it remains to be seen if he will be active against Alabama on Saturday."
+Texas A&M,Kelshaun Johnson,out,mygamesim: Out
+Texas,Cam Coleman,out,mygamesim: Out
+Texas,Colin Simmons,doubtful,"mygamesim: Out; covers: Questionable - Ankle - Simmons is hampered with an ankle injury, and it is uncertain if he will suit up against Ole Miss on Saturday."
+Texas,Kobe Black,questionable,mygamesim: Questionable
+Texas State,Davian Jackson,questionable,"mygamesim: Probable; covers: Questionable - Undisclosed - Jackson is nursing with an undisclosed injury, and it is undetermined if he will face Utah State on Saturday, October 24th."
+Texas Tech,Donte Lee Jr.,out,"mygamesim: Out; covers: Out - Knee - Lee is dealing with a knee torn ACL injury, and he has been shut down for the remainder of the season."
+Texas Tech,Hunter Zambrano,out,mygamesim: Out
+Texas Tech,Jalen Jones,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Jones is dealing with an undisclosed injury, and it is unclear if he will play against Cincinnati on Saturday, October 24th."
+Toledo,Connor Walendzak,out,mygamesim: Out
+Toledo,Rico Bond,questionable,"covers: Questionable - Undisclosed - Bond is nursing by an undisclosed injury, and it remains to be seen if he will be active against Western Michigan on Saturday."
+Troy,Goose Crowder,questionable,"covers: Questionable - Shoulder - Crowder is bothered by a shoulder injury, and it is unclear whether he will play against Louisiana-Monroe on Saturday."
+Troy,TK Keyes,out,mygamesim: Out
+Tulane,Maurice Turner,questionable,mygamesim: Questionable
+Tulane,Ty Thompson,doubtful,"mygamesim: Out; covers: Questionable - Toe - Thompson is battling due to an undisclosed injury, and it is uncertain if he will face UTSA on Saturday, October 24th."
+Tulsa,Donnell Gee Jr.,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Gee Jr. is liad up due to an undisclosed injury, and it remains to be seen if he will be active against Army on Friday."
+UCLA,Jordan Davis,out,"mygamesim: Out; covers: Out - Undisclosed - UCLA is nursing due to an undisclosed injury, and he is unlikely to play against Wisconsin on Saturday."
+UCLA,Nico Iamaleava,out,"mygamesim: Out; covers: Out - Leg - Iamaleava is managing due to a leg injury, and he will be idle for the remainder of the season"
+UCLA,Rodrick Pleasant,out,"mygamesim: Out; covers: Out - Undisclosed - Pleasant is laid up with an undisclosed injury, and he will be out of the lineup against Wisconsin on Saturday."
+Utah,JC Hart,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Hart has an undisclosed injury, and it is unknown if he will face Houston on Saturday, October 24th."
+Utah,Kelvin Obot,out,mygamesim: Out
+Utah State,Anthony Garcia,questionable,"covers: Questionable - Undisclosed - Garcia is dealing with an undisclosed injury, and it is uncertain if he will suit up against the Bobcats on Saturday, October 24th."
+Utah State,Collin Remenowsky,questionable,"covers: Questionable - Undisclosed - Remenowsky is dealing with an undisclosed injury, and it is uncertain if he will suit up against the Bobcats on Saturday, October 24th."
+Utah State,Eli Wood,questionable,mygamesim: Questionable
+Utah State,McCae Hillstead,questionable,"covers: Questionable - Undisclosed - Hillstead is dealing with an undisclosed injury, and it is undetermined if he will be suit up against the Bobcats on Saturday, October 24th."
+Utah State,Sesi Vailahi,questionable,"covers: Questionable - Undisclosed - Vailahi is dealing with an undisclosed injury, and it is unclear if he will be available against the Bobcats on Saturday, October 24th."
+UTEP,Carver Cheeks,questionable,mygamesim: Questionable
+Vanderbilt,Blaze Berlowitz,out,mygamesim: Out
+Vanderbilt,Gunner Givens,out,mygamesim: Out
+Virginia,Brandyn Hillman,out,mygamesim: Out
+Virginia,Ethan Minter,out,"mygamesim: Out; covers: Out - Undisclosed - Minter is nursing with an undisclosed injury, and he is unlikely to face Duke on Friday."
+Virginia,Kameron Courtney,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Courtney is battling due to an undisclosed injury, and it has yet to be determined if he will be active against Duke on Friday."
+Virginia,Rico Flores Jr.,out,"mygamesim: Out; covers: Out - Knee - Flores is nursing due to a knee injury, and he is unlikely to face Duke on Friday."
+Virginia Tech,Montavious Cunningham,doubtful,"mygamesim: Out; covers: Questionable - Undisclosed - Cunningham is nursing due to an undisclosed injury, and it is unclear whether he will play against Clemson on Saturday."
+Virginia Tech,Thomas Williams,out,mygamesim: Out
+Wake Forest,Carlos Hernandez,questionable,mygamesim: Questionable
+Washington,Demond Williams Jr.,questionable,"mygamesim: Questionable; covers: Questionable - Ribs - Williams is nursing with a rib injury, and he is unlikely to dress against Nebraska on Saturday, October 31st."
+Washington State,Darrius Clemons,out,mygamesim: Out
+Washington,Trey Cooley,questionable,"mygamesim: Probable; covers: Questionable - Undisclosed - Cooley is tending to an undisclosed injury, and it remains to be seen if he will play against the Nebraska on Saturday, October 31th."
+Washington,Xe'ree Alexander,out,mygamesim: Out
+West Virginia,Jason Chambers,out,mygamesim: Out
+Wisconsin,Cai Bates,out,mygamesim: Out
+Wisconsin,Malachi Coleman,questionable,mygamesim: Questionable
+Wisconsin,Marvin Burks Jr.,out,mygamesim: Out
+Wisconsin,Nate Palmer,questionable,"mygamesim: Questionable; covers: Questionable - Undisclosed - Palmer is battling due to an undisclosed injury, and it is unknown if he will play against USC on Saturday, October 24th."
+Wyoming,Cade Brook,out,mygamesim: Out
+Wyoming,Jackson Holman,questionable,"covers: Questionable - Undisclosed - Holman is battling due to an undisclosed injury, and it is uncertain if he will play against Air Force on Friday."
