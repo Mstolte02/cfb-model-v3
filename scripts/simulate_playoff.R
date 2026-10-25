@@ -193,9 +193,17 @@ make_inputs <- function(mode) {
     spec$min_form <- model$ensemble$min_form_games %||% 2
     spec$sigma <- model$ensemble$margin_sigma
   }
-  rating <- if (!is.null(spec$ensemble)) {
-    Reduce(`+`, lapply(spec$ensemble, function(m) m$r[fbs])) / length(spec$ensemble)
-  } else if (mode == "current" && !is.null(spec$dynamic)) spec$dynamic[fbs] else spec$logit[fbs]
+  # The current run seeds by the published Power Rating (ratings.json, the mean
+  # neutral-site win probability against every rated team), so the bracket follows
+  # the same order as the Power Rankings page.
+  rating <- if (mode == "current") {
+    power <- read_json(file.path(viz, "ratings.json"))$teams
+    power <- setNames(vapply(power, function(x) as.numeric(x$power), numeric(1)),
+                      vapply(power, function(x) x$team, character(1)))
+    missing <- setdiff(fbs, names(power))
+    if (length(missing)) stop("ratings.json has no power rating for: ", paste(missing, collapse = ", "))
+    power[fbs]
+  } else spec$logit[fbs]
   rankings <- data.frame(team = fbs, rank = rank(-rating, ties.method = "first"))
   analytics <- data.frame(team = fbs, rating = as.numeric(rating))
   list(games = games, teams = teams, rankings = rankings, analytics = analytics, spec = spec)
@@ -331,6 +339,15 @@ export_run <- function(mode) {
           round(as.numeric(difftime(Sys.time(), started, units = "mins")), 1), " minutes")
 }
 
-if (mode_arg %in% c("both", "preseason")) export_run("preseason")
+# The preseason projection is the one published before kickoff. Once it is locked it
+# is never re-simulated, because today's engine and inputs would change it.
+preseason_locked <- function() {
+  path <- file.path(viz, "playoff_preseason.json")
+  file.exists(path) && isTRUE(read_json(path)$locked)
+}
+if (mode_arg %in% c("both", "preseason")) {
+  if (preseason_locked()) message("preseason projection is locked; not re-simulated")
+  else export_run("preseason")
+}
 if (mode_arg %in% c("both", "current")) export_run("current")
 future::plan(future::sequential)

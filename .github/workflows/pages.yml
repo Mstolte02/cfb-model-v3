@@ -40,20 +40,10 @@ jobs:
             any::cfbseedR
             any::jsonlite
           cache-version: 1
-      # Generate the locked cfbseedR preseason projection once, then restore that
-      # exact file on future deploys. A cache miss safely rebuilds both versions.
-      - id: preseason-cache
-        uses: actions/cache@v4
-        with:
-          path: viz/data/playoff_preseason.json
-          key: cfbseedr-preseason-2026-v1
-      - name: Build CFP projections
-        env:
-          PRESEASON_CACHE_HIT: ${{ steps.preseason-cache.outputs.cache-hit }}
-        run: |
-          mode=current
-          if [ "$PRESEASON_CACHE_HIT" != "true" ]; then mode=both; fi
-          Rscript scripts/simulate_playoff.R 500 "$mode"
+      # The preseason projection is the committed file published before kickoff
+      # (viz/data/playoff_preseason.json). Only the current projection is rebuilt.
+      - name: Build CFP projection
+        run: Rscript scripts/simulate_playoff.R 500 current
       - name: Build dist/
         run: |
           node --test tests/test_ranking_history.cjs tests/test_power_xray.cjs tests/test_war_research.cjs
