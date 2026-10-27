@@ -42,8 +42,12 @@ jobs:
           cache-version: 1
       # Both projections use the same engine: the preseason one from the week-0
       # ensemble and Power Ratings, the current one from today's.
+      - name: Check conditional playoff probabilities
+        run: Rscript tests/test_playoff_record_odds.R
       - name: Build CFP projections
-        run: Rscript scripts/simulate_playoff.R 500 both
+        run: |
+          Rscript scripts/simulate_playoff.R 500 preseason
+          Rscript scripts/simulate_playoff.R 2000 current
       - name: Build dist/
         run: |
           node --test tests/test_ranking_history.cjs tests/test_power_xray.cjs tests/test_war_research.cjs

@@ -3879,8 +3879,72 @@
     renderTracking();
   }));
 
+  /* Conditional playoff odds always use the current published season simulation,
+     independently of the projected bracket's current/preseason toggle. */
+  let recordOddsReady = false;
+  function renderRecordOdds() {
+    const host = document.getElementById("ro-table");
+    const data = playoffCurrent.record_odds;
+    if (!data || !data.teams) {
+      host.innerHTML = '<div class="panel">Playoff odds by record will appear after the next season simulation finishes.</div>';
+      return;
+    }
+    const checkpoint = document.getElementById("ro-checkpoint");
+    const conference = document.getElementById("ro-conf");
+    if (!recordOddsReady) {
+      checkpoint.innerHTML = data.checkpoints.map(c => `<option value="${esc(c.id)}">${esc(c.label)}</option>`).join("");
+      conference.innerHTML += [...new Set(Object.keys(data.teams).map(conf))].sort()
+        .map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+      recordOddsReady = true;
+    }
+    const query = document.getElementById("ro-search").value.trim().toLowerCase();
+    const headline = Object.fromEntries(playoffCurrent.teams.map(t => [t.team, t.playoff]));
+    const names = Object.keys(data.teams).filter(t => (!query || t.toLowerCase().includes(query)) &&
+      (!conference.value || conf(t) === conference.value))
+      .sort((a, b) => (headline[b] || 0) - (headline[a] || 0) || a.localeCompare(b));
+    document.getElementById("ro-count").textContent = `${names.length} teams`;
+    const label = data.checkpoints.find(c => c.id === checkpoint.value)?.label || "End of regular season";
+    document.getElementById("ro-meta").textContent =
+      `${label} · ${playoffCurrent.n_sims.toLocaleString()} simulated seasons · completed results locked · updated ${new Date(data.generated_at).toLocaleString()}. Each column adds one loss in the games still to play through this checkpoint.`;
+    if (!names.length) {
+      host.innerHTML = '<div class="panel">No teams match these filters.</div>';
+      return;
+    }
+    const maxCells = Math.max(...names.map(t => data.teams[t].checkpoints[checkpoint.value].length));
+    host.innerHTML = `<table class="record-odds-table"><caption class="sr-only">${esc(label)}: conditional playoff probability at each reachable record</caption>
+      <thead><tr><th scope="col">Team / current record</th><th scope="col">CFP now</th>${Array.from({length: maxCells}, (_, i) =>
+        `<th scope="col">${i === 0 ? "No more losses" : `${i} more loss${i === 1 ? "" : "es"}`}</th>`).join("")}</tr></thead><tbody>${names.map(t => {
+      const row = data.teams[t];
+      const cells = row.checkpoints[checkpoint.value];
+      return `<tr><th scope="row"><a href="#team/${encodeURIComponent(t)}">${logoURL(t) ? `<img src="${esc(logoURL(t))}" alt="" loading="lazy">` : ""}${esc(t)}</a><small>${row.current_wins}–${row.current_losses} now · ${row.remaining} left</small></th>
+        <td class="ro-overall">${roPercent(headline[t])}</td>${Array.from({length: maxCells}, (_, i) => {
+          const c = cells[i];
+          if (!c) return '<td class="ro-unreachable"><span aria-label="No record at this number of additional losses">—</span></td>';
+          const thin = c.samples > 0 && c.samples < data.min_samples;
+          const title = c.samples ? `${c.made.toLocaleString()} playoff appearances / ${c.samples.toLocaleString()} simulations at ${c.wins}–${c.losses}; ${(100 * c.record_probability).toFixed(1)}% chance of this record${thin ? '; small sample' : ''}` : 'Reachable record; no matching simulations';
+          return `<td class="ro-cell${thin ? " ro-thin" : ""}" style="--ro-strength:${c.samples ? c.playoff * .24 : 0}" title="${esc(title)}">
+            <span class="ro-record">${c.wins}–${c.losses}</span><b>${c.samples ? roPercent(c.playoff) : "Not sampled"}</b>
+            <small>${c.samples ? `${c.samples.toLocaleString()} sims${thin ? " · small sample" : ""}` : "0 sims"}</small></td>`;
+        }).join("")}</tr>`;
+    }).join("")}</tbody></table>`;
+  }
+  // Keep tiny nonzero rates distinguishable from zero without ever rounding a
+  // non-certain probability up to 100%.
+  function roPercent(p) {
+    if (!Number.isFinite(p)) return "—";
+    if (p === 0) return "0%";
+    if (p === 1) return "100%";
+    if (p < .001) return "<0.1%";
+    if (p > .999) return ">99.9%";
+    return `${(100 * p).toFixed(1)}%`;
+  }
+  document.getElementById("ro-search").addEventListener("input", renderRecordOdds);
+  document.getElementById("ro-conf").addEventListener("change", renderRecordOdds);
+  document.getElementById("ro-checkpoint").addEventListener("change", renderRecordOdds);
+
   function render(view) {
-    if (view === "tracking") renderTracking();
+    if (view === "record-odds") renderRecordOdds();
+    else if (view === "tracking") renderTracking();
     else if (view === "playoff") renderPlayoff();
     else if (view === "matchup") renderMatchup();
     else if (view === "team") renderTeam();
