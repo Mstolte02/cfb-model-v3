@@ -75,3 +75,5 @@ stopifnot(identical(limited$rooting_teams, list("C")), !"B" %in% names(limited$g
           "B" %in% names(limited$games[[2]]$effects))
 stopifnot(length(playoff_game_impacts(standings, fixed_games, fixed, c("A", "B", "C"))$games) == 0)
 cat("Game impacts: conditional denominators, third-party rooting effects, simulation alignment, absent outcomes, eligibility and completed games passed\n")
+
+stopifnot(impacts$rooting_z > 1.96)

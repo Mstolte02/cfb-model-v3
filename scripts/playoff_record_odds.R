@@ -107,6 +107,11 @@ playoff_game_impacts <- function(standings, games, scheduled, fbs,
          effects = effects)
   })
   list(min_samples = min_samples, rooting_threshold = threshold,
-       rooting_min_swing = .02, rooting_teams = as.list(eligible),
+       # Simultaneous 95% normal intervals across every tested game for a team.
+       # A per-game 1.96 cutoff produces false rooting interests when scanning
+       # hundreds of otherwise unrelated outcomes.
+       rooting_min_swing = .02,
+       rooting_z = qnorm(1 - .05 / (2 * max(1L, length(rows)))),
+       rooting_teams = as.list(eligible),
        baseline = as.list(baseline), games = rows)
 }

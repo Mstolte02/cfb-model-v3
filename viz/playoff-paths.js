@@ -36,8 +36,9 @@
         if (!finite(e.swing) || !finite(e.home_win) || !finite(e.away_win)) return null;
         const swing = Math.abs(e.swing);
         // Exclude negligible differences and differences smaller than the Monte
-        // Carlo sampling uncertainty. Do not manufacture a rooting interest.
-        if (swing < impacts.rooting_min_swing || !finite(e.standard_error) || swing <= 1.96 * e.standard_error) return null;
+        // Carlo sampling uncertainty, accounting for the full set of games scanned.
+        // Do not manufacture a rooting interest from repeated comparisons.
+        if (swing < impacts.rooting_min_swing || !finite(e.standard_error) || swing <= (impacts.rooting_z || 3.8) * e.standard_error) return null;
         return {game: g, team, winner: e.swing > 0 ? g.home : g.away,
           other: e.swing > 0 ? g.away : g.home,
           preferred: e.swing > 0 ? e.home_win : e.away_win,
