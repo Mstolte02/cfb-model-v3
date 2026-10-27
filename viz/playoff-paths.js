@@ -30,7 +30,10 @@
   function rootingGuide(impacts, team, week) {
     if (!(impacts.rooting_teams || []).includes(team)) return [];
     return impacts.games.filter(g => (week === "all" || g.week === Number(week)) &&
-      g.home !== team && g.away !== team && g.supported && g.effects[team])
+      g.home !== team && g.away !== team && g.supported && g.effects[team] &&
+      // Keep the guide focused on playoff contenders. Associations with games
+      // between two teams below the eligibility threshold are not recommendations.
+      (impacts.rooting_teams.includes(g.home) || impacts.rooting_teams.includes(g.away)))
       .map(g => {
         const e = g.effects[team];
         if (!finite(e.swing) || !finite(e.home_win) || !finite(e.away_win)) return null;
