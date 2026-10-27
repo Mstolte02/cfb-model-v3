@@ -637,7 +637,8 @@
     render(view);
     if (updateRoute) {
       const route = view === "team" && selT && selT.value
-        ? `team/${encodeURIComponent(selT.value)}` : view;
+        ? `team/${encodeURIComponent(selT.value)}`
+        : view === "record-odds" && recordOddsMode !== "records" ? `record-odds/${recordOddsMode}` : view;
       if (location.hash.slice(1) !== route) history.pushState(null, "", `#${route}`);
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -660,6 +661,9 @@
     const [view, encodedTeam] = raw.split("/");
     const hub = hubForView(view);
     if (!hub) return;
+    if (view === "record-odds") {
+      recordOddsMode = ["losses", "likely", "leverage", "rooting"].includes(encodedTeam) ? encodedTeam : "records";
+    }
     if (view === "team" && encodedTeam) {
       const team = decodeURIComponent(encodedTeam);
       if (vecOf(team)) selT.value = team;
@@ -3879,68 +3883,125 @@
     renderTracking();
   }));
 
-  /* Conditional playoff odds always use the current published season simulation,
-     independently of the projected bracket's current/preseason toggle. */
-  let recordOddsReady = false;
+  /* All five playoff views use the current published season draws, independently
+     of the bracket's current/preseason toggle and the roster what-if editor. */
+  let recordOddsReady = false, recordOddsMode = "records";
+  const roPercent = p => PlayoffPaths.percent(p);
+  const roPoints = (p, signed = false) => !Number.isFinite(p) ? "—" :
+    `${signed && p > 0 ? "+" : ""}${(100 * p).toFixed(1)} pp`;
+  const roTeamLink = t => `<a href="#team/${encodeURIComponent(t)}">${logoURL(t) ? `<img src="${esc(logoURL(t))}" alt="" loading="lazy">` : ""}${esc(t)}</a>`;
+  const roTeamHead = t => `<th scope="row">${roTeamLink(t)}<small>${esc(conf(t))}</small></th>`;
+  function roRecordCell(c, minSamples, showRecord = true) {
+    if (!c) return '<td class="ro-unreachable"><span title="This loss total is unreachable from the completed results at this checkpoint">—</span></td>';
+    const thin = c.samples > 0 && c.samples < minSamples;
+    const title = c.samples ? `${c.made.toLocaleString()} playoff appearances / ${c.samples.toLocaleString()} simulations at ${c.wins}–${c.losses}; ${roPercent(c.record_probability)} chance of this record` : 'Reachable record; no matching simulations';
+    return `<td class="ro-cell${thin ? " ro-thin" : ""}" style="--ro-strength:${c.samples ? c.playoff * .24 : 0}" title="${esc(title)}">
+      ${showRecord ? `<span class="ro-record">${c.wins}–${c.losses}</span>` : ""}<b>${c.samples ? roPercent(c.playoff) : "Not sampled"}</b>
+      <small>${c.samples ? `${c.samples.toLocaleString()} sims${thin ? " · small sample" : ""}` : "0 sims"}</small></td>`;
+  }
+  function roGameTeam(t, g) {
+    const e = g.effects[t];
+    if (!e) return `<span class="ro-fcs">${esc(t)}<small>Outside the FBS playoff field</small></span>`;
+    const win = t === g.home ? e.home_win : e.away_win;
+    const loss = t === g.home ? e.away_win : e.home_win;
+    return `<div class="ro-game-team">${roTeamLink(t)}<div class="ro-outcomes"><span>If win <b>${roPercent(win)}</b></span><span>If loss <b>${roPercent(loss)}</b></span></div>
+      <small>${roPoints(Number.isFinite(win) && Number.isFinite(loss) ? win - loss : null, true)} swing</small></div>`;
+  }
   function renderRecordOdds() {
     const host = document.getElementById("ro-table");
-    const data = playoffCurrent.record_odds;
+    const data = playoffCurrent.record_odds, impacts = playoffCurrent.game_impacts;
     if (!data || !data.teams) {
-      host.innerHTML = '<div class="panel">Playoff odds by record will appear after the next season simulation finishes.</div>';
+      host.innerHTML = '<div class="panel">Playoff paths will appear after the next season simulation finishes.</div>';
       return;
     }
-    const checkpoint = document.getElementById("ro-checkpoint");
-    const conference = document.getElementById("ro-conf");
+    const checkpoint = document.getElementById("ro-checkpoint"), conference = document.getElementById("ro-conf");
+    const week = document.getElementById("ro-week"), rootTeam = document.getElementById("ro-team");
+    const headline = Object.fromEntries(playoffCurrent.teams.map(t => [t.team, t.playoff]));
+    const ordered = Object.keys(data.teams).sort((a, b) => (headline[b] || 0) - (headline[a] || 0) || a.localeCompare(b));
     if (!recordOddsReady) {
       checkpoint.innerHTML = data.checkpoints.map(c => `<option value="${esc(c.id)}">${esc(c.label)}</option>`).join("");
-      conference.innerHTML += [...new Set(Object.keys(data.teams).map(conf))].sort()
-        .map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+      conference.innerHTML += [...new Set(ordered.map(conf))].sort().map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+      const weeks = [...new Set((impacts?.games || []).map(g => g.week))].sort((a, b) => a - b);
+      week.innerHTML = weeks.map(w => `<option value="${w}">Week ${w}</option>`).join("") + '<option value="all">All remaining weeks</option>';
+      rootTeam.innerHTML = ordered.filter(t => (impacts?.rooting_teams || []).includes(t))
+        .map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join("");
       recordOddsReady = true;
     }
+    const mode = recordOddsMode, isGames = mode === "leverage" || mode === "rooting";
+    document.querySelectorAll("#ro-mode button").forEach(b => {
+      const active = b.dataset.roMode === mode;
+      b.classList.toggle("active", active); b.setAttribute("aria-pressed", String(active));
+    });
+    document.getElementById("ro-search").hidden = mode === "rooting";
+    conference.hidden = mode === "rooting";
+    checkpoint.hidden = isGames || mode === "likely";
+    week.hidden = !isGames; rootTeam.hidden = mode !== "rooting";
+    host.classList.toggle("ro-card-host", mode === "rooting");
+    const description = document.getElementById("ro-description"), note = document.getElementById("ro-note");
+    const descriptions = {
+      records: 'What happens if they win out, drop one more, or drop two? Each cell shows playoff chances given that record.',
+      losses: 'Compare teams at the same total number of losses. A column means the same loss total for everyone, even when teams have played different numbers of games.',
+      likely: 'The single record that occurred most often for each team, and its playoff chances if it finishes there. This is the most common finish, not a rounded average or necessarily a greater-than-50% outcome.',
+      leverage: 'Which games change the playoff picture most? Ranked by the combined swing in the two participating teams’ playoff chances between a win and a loss.',
+      rooting: 'Pick a team to see whose wins would help it reach the playoff. The guide covers teams with at least a 1% overall playoff chance.'
+    };
+    description.textContent = descriptions[mode];
+    document.getElementById("ro-meta").textContent = `${playoffCurrent.n_sims.toLocaleString()} simulated seasons · completed results locked · updated ${new Date(data.generated_at).toLocaleString()}`;
+    const recordNote = 'Records include regular-season games, including FCS opponents. Percentages are conditional on the displayed record, averaged across its simulated paths. “Not sampled” means a reachable record did not occur; a dash means it is unreachable. Small samples are marked. Simulated 0% and 100% are not guarantees.';
+    const gameNote = 'Each comparison uses the same season simulations, split by which team won this game. Swings are percentage points (pp), not relative percentages. They are estimates, not guarantees; they are not additive across games.';
+    note.textContent = isGames ? gameNote : recordNote;
     const query = document.getElementById("ro-search").value.trim().toLowerCase();
-    const headline = Object.fromEntries(playoffCurrent.teams.map(t => [t.team, t.playoff]));
-    const names = Object.keys(data.teams).filter(t => (!query || t.toLowerCase().includes(query)) &&
-      (!conference.value || conf(t) === conference.value))
-      .sort((a, b) => (headline[b] || 0) - (headline[a] || 0) || a.localeCompare(b));
-    document.getElementById("ro-count").textContent = `${names.length} teams`;
-    const label = data.checkpoints.find(c => c.id === checkpoint.value)?.label || "End of regular season";
-    document.getElementById("ro-meta").textContent =
-      `${label} · ${playoffCurrent.n_sims.toLocaleString()} simulated seasons · completed results locked · updated ${new Date(data.generated_at).toLocaleString()}. Each column adds one loss in the games still to play through this checkpoint.`;
-    if (!names.length) {
-      host.innerHTML = '<div class="panel">No teams match these filters.</div>';
+    const matches = t => (!query || t.toLowerCase().includes(query)) && (!conference.value || conf(t) === conference.value);
+    const names = ordered.filter(matches);
+    if (isGames) {
+      if (!impacts) { host.innerHTML = '<div class="panel">Game-by-game playoff swings will appear after the season simulation finishes.</div>'; return; }
+      const games = impacts.games.filter(g => (week.value === "all" || g.week === Number(week.value)));
+      if (mode === "rooting") {
+        const team = rootTeam.value;
+        if (!team) { host.innerHTML = '<div class="panel">No teams meet the rooting-guide threshold.</div>'; return; }
+        const guide = PlayoffPaths.rootingGuide(impacts, team, week.value);
+        const own = games.filter(g => g.home === team || g.away === team);
+        document.getElementById("ro-count").textContent = `${guide.length} rooting interests`;
+        note.textContent += ` Elsewhere, we show swings of at least ${100 * impacts.rooting_min_swing} pp with at least ${impacts.min_samples} simulations for each winner, excluding differences within the simulation's sampling uncertainty. Recommendations consider one game at a time; multiple upsets need not combine in the same way.`;
+        host.innerHTML = `<div class="ro-root-summary"><div>${roTeamLink(team)}<span>Overall playoff chance</span></div><b>${roPercent(impacts.baseline[team])}</b></div>
+          <h3 class="ro-group-title">Your game${own.length === 1 ? "" : "s"}</h3>${own.length ? own.map(g => `<div class="ro-own-game"><div><small>Week ${g.week}</small><b>${esc(g.away)} at ${esc(g.home)}</b></div>${roGameTeam(team, g)}${!g.supported ? '<small class="ro-sample-label">Small sample for one result</small>' : ""}</div>`).join("") : '<p class="sub">No remaining game for this team in the selected week.</p>'}
+          <h3 class="ro-group-title">Elsewhere: who to root for</h3>${guide.length ? `<ol class="ro-root-list">${guide.map((r, i) => `<li><div class="ro-root-rank">${i + 1}</div><div class="ro-root-pick"><small>Week ${r.game.week}${r.game.date ? ` · ${esc(r.game.date)}` : ""}</small><div>Root for ${roTeamLink(r.winner)}</div><small>to beat ${esc(r.other)}</small></div><div class="ro-root-effect"><b>+${roPoints(r.swing)}</b><span>playoff swing</span></div><div class="ro-root-compare"><span>If ${esc(r.winner)} wins <b>${roPercent(r.preferred)}</b></span><span>If ${esc(r.other)} wins <b>${roPercent(r.opposite)}</b></span></div></li>`).join("")}</ol>` : '<div class="panel">No clear rooting interests elsewhere for this team in the selected week. Try another week or all remaining weeks.</div>'}`;
+        return;
+      }
+      const ranked = PlayoffPaths.rankGames(games.filter(g => matches(g.home) || matches(g.away)));
+      document.getElementById("ro-count").textContent = `${ranked.length} games`;
+      note.textContent += ` Combined swing is the sum of the absolute swings for the two participating FBS teams; it can exceed 100 pp. Games with fewer than ${impacts.min_samples} simulations for either winner appear after games with stronger sample support; unsampled comparisons are unranked.`;
+      if (!ranked.length) { host.innerHTML = '<div class="panel">No remaining games match these filters.</div>'; return; }
+      host.innerHTML = `<table class="record-odds-table ro-game-table"><caption class="sr-only">Weekly games ranked by combined playoff swing</caption><thead><tr><th scope="col">Game</th><th scope="col">Away team’s playoff chances</th><th scope="col">Home team’s playoff chances</th><th scope="col">Combined swing</th></tr></thead><tbody>${ranked.map(g => `<tr><th scope="row"><small>Week ${g.week}${g.date ? ` · ${esc(g.date)}` : ""}</small>${esc(g.away)}<span class="ro-at">at</span>${esc(g.home)}<small>${g.samples_home.toLocaleString()} home wins / ${g.samples_away.toLocaleString()} away wins</small></th><td>${roGameTeam(g.away, g)}</td><td>${roGameTeam(g.home, g)}</td><td><b class="ro-leverage-value">${roPoints(g.combined_swing)}</b>${!g.supported ? `<small class="ro-sample-label">${g.combined_swing == null ? "Unranked · unsampled result" : "Small sample"}</small>` : ""}</td></tr>`).join("")}</tbody></table>`;
       return;
     }
-    const maxCells = Math.max(...names.map(t => data.teams[t].checkpoints[checkpoint.value].length));
-    host.innerHTML = `<table class="record-odds-table"><caption class="sr-only">${esc(label)}: conditional playoff probability at each reachable record</caption>
-      <thead><tr><th scope="col">Team / current record</th><th scope="col">CFP now</th>${Array.from({length: maxCells}, (_, i) =>
-        `<th scope="col">${i === 0 ? "No more losses" : `${i} more loss${i === 1 ? "" : "es"}`}</th>`).join("")}</tr></thead><tbody>${names.map(t => {
-      const row = data.teams[t];
-      const cells = row.checkpoints[checkpoint.value];
-      return `<tr><th scope="row"><a href="#team/${encodeURIComponent(t)}">${logoURL(t) ? `<img src="${esc(logoURL(t))}" alt="" loading="lazy">` : ""}${esc(t)}</a><small>${row.current_wins}–${row.current_losses} now · ${row.remaining} left</small></th>
-        <td class="ro-overall">${roPercent(headline[t])}</td>${Array.from({length: maxCells}, (_, i) => {
-          const c = cells[i];
-          if (!c) return '<td class="ro-unreachable"><span aria-label="No record at this number of additional losses">—</span></td>';
-          const thin = c.samples > 0 && c.samples < data.min_samples;
-          const title = c.samples ? `${c.made.toLocaleString()} playoff appearances / ${c.samples.toLocaleString()} simulations at ${c.wins}–${c.losses}; ${(100 * c.record_probability).toFixed(1)}% chance of this record${thin ? '; small sample' : ''}` : 'Reachable record; no matching simulations';
-          return `<td class="ro-cell${thin ? " ro-thin" : ""}" style="--ro-strength:${c.samples ? c.playoff * .24 : 0}" title="${esc(title)}">
-            <span class="ro-record">${c.wins}–${c.losses}</span><b>${c.samples ? roPercent(c.playoff) : "Not sampled"}</b>
-            <small>${c.samples ? `${c.samples.toLocaleString()} sims${thin ? " · small sample" : ""}` : "0 sims"}</small></td>`;
-        }).join("")}</tr>`;
-    }).join("")}</tbody></table>`;
+    document.getElementById("ro-count").textContent = `${names.length} teams`;
+    if (!names.length) { host.innerHTML = '<div class="panel">No teams match these filters.</div>'; return; }
+    if (mode === "likely") {
+      host.innerHTML = `<table class="record-odds-table"><caption class="sr-only">Most likely final regular-season records and conditional playoff odds</caption><thead><tr><th scope="col">Team</th><th scope="col">Most likely finish</th><th scope="col">Chance of this finish</th><th scope="col">CFP at this finish</th><th scope="col">Overall CFP</th></tr></thead><tbody>${names.map(t => {
+        const modes = PlayoffPaths.modalRecords(data.teams[t].checkpoints.final);
+        return modes.map(c => `<tr>${roTeamHead(t)}<td><b>${c.wins}–${c.losses}</b>${modes.length > 1 ? '<small>Tied most likely finish</small>' : ""}</td><td>${roPercent(c.record_probability)}</td>${roRecordCell(c, data.min_samples, false)}<td class="ro-overall">${roPercent(headline[t])}</td></tr>`).join("");
+      }).join("")}</tbody></table>`;
+      note.textContent += ' “Overall CFP” averages across all records. “CFP at this finish” uses only simulations with the most likely record. Tied most likely records are all shown.';
+      return;
+    }
+    const label = data.checkpoints.find(c => c.id === checkpoint.value)?.label || "End of regular season";
+    const rows = names.map(t => data.teams[t].checkpoints[checkpoint.value]);
+    const columns = mode === "losses" ? PlayoffPaths.lossColumns(rows) : Array.from({length: Math.max(...rows.map(cells => cells.length))}, (_, i) => i);
+    host.innerHTML = `<table class="record-odds-table"><caption class="sr-only">${esc(label)}: playoff probability at each reachable record</caption>
+      <thead><tr><th scope="col">Team</th><th scope="col">Overall CFP</th>${columns.map(i => `<th scope="col">${mode === "losses" ? `${i} total loss${i === 1 ? "" : "es"}` : i === 0 ? "No more losses" : `${i} more loss${i === 1 ? "" : "es"}`}</th>`).join("")}</tr></thead><tbody>${names.map((t, rowIndex) => {
+        const cells = rows[rowIndex];
+        return `<tr>${roTeamHead(t)}<td class="ro-overall">${roPercent(headline[t])}</td>${columns.map(i => roRecordCell(mode === "losses" ? cells.find(c => c.losses === i) : cells[i], data.min_samples)).join("")}</tr>`;
+      }).join("")}</tbody></table>`;
   }
-  // Keep tiny nonzero rates distinguishable from zero without ever rounding a
-  // non-certain probability up to 100%.
-  function roPercent(p) {
-    if (!Number.isFinite(p)) return "—";
-    if (p === 0) return "0%";
-    if (p === 1) return "100%";
-    if (p < .001) return "<0.1%";
-    if (p > .999) return ">99.9%";
-    return `${(100 * p).toFixed(1)}%`;
-  }
+  document.querySelectorAll("#ro-mode button").forEach(b => b.addEventListener("click", () => {
+    recordOddsMode = b.dataset.roMode;
+    const route = recordOddsMode === "records" ? "record-odds" : `record-odds/${recordOddsMode}`;
+    if (location.hash.slice(1) !== route) history.pushState(null, "", `#${route}`);
+    renderRecordOdds();
+  }));
   document.getElementById("ro-search").addEventListener("input", renderRecordOdds);
-  document.getElementById("ro-conf").addEventListener("change", renderRecordOdds);
-  document.getElementById("ro-checkpoint").addEventListener("change", renderRecordOdds);
+  ["ro-conf", "ro-checkpoint", "ro-team", "ro-week"].forEach(id => document.getElementById(id).addEventListener("change", renderRecordOdds));
 
   function render(view) {
     if (view === "record-odds") renderRecordOdds();

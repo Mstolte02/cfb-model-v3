@@ -10,7 +10,7 @@
 <meta property="og:image" content="https://mstolte02.github.io/cfb-model-v3/social-preview.png">
 <meta name="twitter:card" content="summary_large_image">
 <title>CFB Model v4 — 2026 Forecast Lab</title>
-<link rel="stylesheet" href="style.css?v=49">
+<link rel="stylesheet" href="style.css?v=50">
 </head>
 <body>
 <header class="site-header">
@@ -48,24 +48,34 @@
   <nav class="section-nav" data-hub-nav="simulation">
     <button class="tab" data-view="scenario">Scenario builder</button>
     <button class="tab" data-view="playoff">Projected bracket</button>
-    <button class="tab" data-view="record-odds">Playoff odds by record</button>
+    <button class="tab" data-view="record-odds">Playoff paths</button>
     <button class="tab" data-view="team">Depth charts</button>
   </nav>
 </div>
 
 <main>
   <section id="view-record-odds" class="view">
-    <div class="view-head"><span class="eyebrow">The road to the field</span><h2>Playoff odds by record</h2>
-      <p class="sub">If a team reaches this record, how often does it make the playoff? Explore every reachable record from today through the end of the regular season.</p></div>
-    <div class="dash-toolbar">
+    <div class="view-head"><span class="eyebrow">The road to the field</span><h2>Playoff paths</h2>
+      <p class="sub" id="ro-intro">Explore each team's playoff chances by record, compare equal loss totals, and find the games that matter most.</p></div>
+    <div class="seg ro-modes" id="ro-mode" role="group" aria-label="Playoff analysis">
+      <button class="seg-btn active" data-ro-mode="records" aria-pressed="true">By record</button>
+      <button class="seg-btn" data-ro-mode="losses" aria-pressed="false">Same losses</button>
+      <button class="seg-btn" data-ro-mode="likely" aria-pressed="false">Likely finishes</button>
+      <button class="seg-btn" data-ro-mode="leverage" aria-pressed="false">Weekly swings</button>
+      <button class="seg-btn" data-ro-mode="rooting" aria-pressed="false">Rooting guide</button>
+    </div>
+    <div class="dash-toolbar ro-controls">
       <input type="search" id="ro-search" placeholder="Search teams…" aria-label="Search teams">
       <select id="ro-conf" aria-label="Conference"><option value="">All conferences</option></select>
       <select id="ro-checkpoint" aria-label="Record checkpoint"></select>
-      <span class="spacer"></span><span id="ro-count" class="dash-count"></span>
+      <select id="ro-team" aria-label="Team to root for" hidden></select>
+      <select id="ro-week" aria-label="Game week" hidden></select>
+      <span class="spacer"></span><span id="ro-count" class="dash-count" aria-live="polite"></span>
     </div>
-    <p class="sub" id="ro-meta"></p>
-    <div id="ro-table" class="record-odds-scroll" tabindex="0" role="region" aria-label="Playoff odds by record table"></div>
-    <p class="sub record-odds-note">Each percentage means <b>chance to make the playoff given that record</b>, averaged across the simulated paths to it. Records include regular-season games, including FCS opponents. Which opponents a team beats and what happens elsewhere still matter. Small samples are marked; “Not sampled” means the record is possible but did not occur in this run. A simulated 0% or 100% is not a guarantee.</p>
+    <p class="sub ro-description" id="ro-description"></p>
+    <p class="sub ro-meta" id="ro-meta"></p>
+    <div id="ro-table" class="record-odds-scroll" tabindex="0" role="region" aria-label="Playoff paths"></div>
+    <p class="sub record-odds-note" id="ro-note"></p>
   </section>
   <section id="view-playoff" class="view">
     <div class="view-head"><span class="eyebrow">The projected field</span><h2>2026–27 College Football Playoff</h2><p class="sub" id="playoff-meta"></p></div>
@@ -204,7 +214,8 @@
 <script src="team-card.js"></script>
 <script src="team-overview.js"></script>
 <script src="ranking-history.js?v=2"></script>
-<script src="app.js?v=66"></script>
+<script src="playoff-paths.js"></script>
+<script src="app.js?v=67"></script>
 </body>
 </html>
 

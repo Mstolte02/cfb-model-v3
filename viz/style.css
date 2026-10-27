@@ -1258,3 +1258,44 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
 .ro-overall { font-weight: bold; }
 .record-odds-note { max-width: 1000px; margin-bottom: 24px; }
 @media(max-width:600px) { .record-odds-table tr > th:first-child { min-width: 150px; max-width: 160px; } .record-odds-table th, .record-odds-table td { padding: 10px 8px; min-width: 108px; } }
+
+/* Playoff paths: compare loss totals, likely finishes, and game-level swings. */
+.ro-modes { flex-wrap: wrap; margin-bottom: 14px; }
+.ro-controls [hidden] { display: none !important; }
+.ro-description { max-width: 1050px; margin: 12px 0 6px; }
+.ro-meta { font-family: var(--sans); font-size: 12px; }
+.record-odds-table .ro-game-team a { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; text-decoration: none; color: var(--text); }
+.ro-game-team a img, .ro-root-summary img, .ro-root-pick img { width: 28px; height: 28px; object-fit: contain; }
+.ro-game-team .ro-outcomes { display: flex; justify-content: center; gap: 20px; margin-top: 12px; }
+.ro-outcomes span { color: var(--muted); font-size: 11px; }
+.ro-outcomes b { display: block; color: var(--text); font-size: 20px; font-weight: 700; }
+.ro-game-team > small { margin-top: 8px; }
+.ro-game-table td { min-width: 220px; }
+.ro-game-table tr > th:first-child { min-width: 225px; }
+.ro-game-table th small { white-space: normal; }
+.ro-at { display: block; font-size: 11px; color: var(--muted); font-weight: 400; }
+.ro-leverage-value { font-size: 23px; color: var(--green); }
+.record-odds-table .ro-sample-label, .ro-own-game .ro-sample-label { color: #8d5d13; font-size: 11px; }
+.ro-card-host { max-height: none; overflow: visible; border: 0; }
+.ro-root-summary { padding: 22px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid var(--line2); background: var(--panel2); border-radius: 8px; font-family: var(--sans); }
+.ro-root-summary a { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: bold; color: var(--text); text-decoration: none; }
+.ro-root-summary span { display: block; font-size: 12px; color: var(--muted); margin-top: 8px; }
+.ro-root-summary > b { font-size: 34px; color: var(--green); }
+.ro-group-title { margin: 24px 0 12px; font-size: 21px; }
+.ro-own-game { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); margin-bottom: 10px; font-family: var(--sans); }
+.ro-own-game > div > small { display: block; color: var(--muted); font-size: 11px; margin-bottom: 4px; }
+.ro-own-game .ro-game-team > a { display: none; }
+.ro-own-game .ro-outcomes { margin-top: 0; }
+.ro-root-list { list-style: none; padding: 0; display: grid; gap: 12px; }
+.ro-root-list li { display: grid; grid-template-columns: 30px minmax(160px,1fr) 140px minmax(220px,1fr); align-items: center; gap: 20px; padding: 20px; border: 1px solid var(--line); background: var(--panel); border-radius: 8px; font-family: var(--sans); }
+.ro-root-rank { color: var(--muted); font-size: 20px; font-family: Georgia, serif; }
+.ro-root-pick small { display: block; color: var(--muted); font-size: 11px; }
+.ro-root-pick > div { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 5px 0; }
+.ro-root-pick a { display: inline-flex; align-items: center; gap: 8px; font-size: 18px; font-weight: bold; color: var(--text); text-decoration: none; }
+.ro-root-effect b { display: block; font-size: 25px; color: var(--green); }
+.ro-root-effect > span { font-size: 11px; color: var(--muted); }
+.ro-root-compare { display: grid; gap: 5px; }
+.ro-root-compare > span { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); }
+.ro-root-compare b { font-size: 17px; color: var(--text); white-space: nowrap; }
+@media(max-width:800px) { .ro-root-list li { grid-template-columns: 25px 1fr 120px; gap: 12px; } .ro-root-compare { grid-column: 2 / -1; } }
+@media(max-width:500px) { .ro-root-list li { grid-template-columns: 1fr 105px; padding: 14px; } .ro-root-rank { display: none; } .ro-root-compare { grid-column: 1 / -1; } .ro-root-effect b { font-size: 22px; } .ro-root-summary { padding: 16px; } .ro-root-summary a { font-size: 19px; } .ro-root-summary > b { font-size: 29px; } .ro-modes .seg-btn { font-size: 12px; padding: 9px 12px; } }

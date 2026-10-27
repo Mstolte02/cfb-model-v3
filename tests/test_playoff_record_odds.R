@@ -46,3 +46,32 @@ finished <- playoff_record_odds(standings, fixed_games, fixed, c("A", "B", "C"))
 stopifnot(length(finished$checkpoints) == 1, length(finished$teams$A$checkpoints$final) == 1,
           finished$teams$A$checkpoints$final[[1]]$playoff == .5)
 cat("Playoff record odds: conditional denominators, locks, zero samples, checkpoints, postseason exclusion, draw alignment passed\n")
+
+# A-C is a true 2/3 playoff swing for A. B, a third party, prefers C.
+impacts <- playoff_game_impacts(standings, games, scheduled, c("A", "B", "C"), min_samples = 1L)
+ac <- impacts$games[[1]]
+stopifnot(length(impacts$games) == 2, ac$home == "A", ac$away == "C",
+          ac$samples_home == 1, ac$samples_away == 3, ac$supported,
+          abs(ac$effects$A$home_win - 1) < 1e-12,
+          abs(ac$effects$A$away_win - 1/3) < 1e-12,
+          abs(ac$combined_swing - 2/3) < 1e-12,
+          abs(ac$effects$B$swing + 1/3) < 1e-12,
+          ac$effects$C$swing == 0)
+# Every game partition recovers the SAME overall playoff rate, including outsiders.
+for (g in impacts$games) for (team in names(g$effects)) {
+  e <- g$effects[[team]]
+  stopifnot(abs((g$samples_home * e$home_win + g$samples_away * e$away_win) / 4 - impacts$baseline[[team]]) < 1e-12)
+}
+reverse <- playoff_game_impacts(standings[nrow(standings):1, ], games[nrow(games):1, ], scheduled, c("A", "B", "C"), min_samples = 1L)
+stopifnot(identical(impacts, reverse))
+# A missing outcome is unknown, not 0%. It cannot supply a leverage ranking.
+all_home <- games; all_home$result[all_home$home_team == "A" & all_home$away_team == "C"] <- 7
+thin <- playoff_game_impacts(standings, all_home, scheduled, c("A", "B", "C"))$games[[1]]
+stopifnot(!thin$supported, thin$samples_away == 0, is.null(thin$combined_swing),
+          is.null(thin$effects$A$away_win), is.null(thin$effects$A$swing))
+# Rooting threshold restricts eligible teams, but both game participants retain odds.
+limited <- playoff_game_impacts(standings, games, scheduled, c("A", "B", "C"), threshold = .6)
+stopifnot(identical(limited$rooting_teams, list("C")), !"B" %in% names(limited$games[[1]]$effects),
+          "B" %in% names(limited$games[[2]]$effects))
+stopifnot(length(playoff_game_impacts(standings, fixed_games, fixed, c("A", "B", "C"))$games) == 0)
+cat("Game impacts: conditional denominators, third-party rooting effects, simulation alignment, absent outcomes, eligibility and completed games passed\n")

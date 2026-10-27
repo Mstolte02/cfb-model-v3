@@ -434,6 +434,8 @@ export_run <- function(mode) {
   out$tossups <- list()
   out$win_dist <- win_dist
   out$record_odds <- playoff_record_odds(standings, sim$games, input$games, fbs)
+  out$game_impacts <- if (mode == "current") playoff_game_impacts(
+    standings, sim$games, input$games, fbs, metadata = schedule) else NULL
   write_json(out, template_path, auto_unbox = TRUE, pretty = TRUE, digits = 8, null = "null")
   message("wrote ", template_path, " in ",
           round(as.numeric(difftime(Sys.time(), started, units = "mins")), 1), " minutes")

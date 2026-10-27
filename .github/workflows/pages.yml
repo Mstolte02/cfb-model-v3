@@ -50,7 +50,7 @@ jobs:
           Rscript scripts/simulate_playoff.R 2000 current
       - name: Build dist/
         run: |
-          node --test tests/test_ranking_history.cjs tests/test_power_xray.cjs tests/test_war_research.cjs
+          node --test tests/test_ranking_history.cjs tests/test_power_xray.cjs tests/test_war_research.cjs tests/test_playoff_paths.cjs
           python3 scripts/publish.py
       - uses: actions/configure-pages@v6
       # upload-pages-artifact stopped bundling dotfiles in v4, and publish.py

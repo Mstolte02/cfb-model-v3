@@ -54,3 +54,59 @@ playoff_record_odds <- function(standings, games, scheduled, fbs, min_samples = 
   list(generated_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
        min_samples = min_samples, checkpoints = checkpoints, teams = rows)
 }
+
+# Pair each game's winner with each team's eventual playoff selection, using the
+# identical simulation IDs. These are conditional comparisons, not independent
+# reruns with a forced winner. Retain both denominators and null unsampled outcomes.
+playoff_game_impacts <- function(standings, games, scheduled, fbs,
+                                 metadata = list(), min_samples = 30L, threshold = .01) {
+  sim_ids <- sort(unique(standings$sim))
+  n <- length(sim_ids)
+  selected <- vapply(fbs, function(team) {
+    st <- standings[standings$team == team, , drop = FALSE]
+    if (nrow(st) != n || anyDuplicated(st$sim)) stop("expected one playoff outcome per team and simulation")
+    !is.na(st$seed[match(sim_ids, st$sim)])
+  }, logical(n))
+  # vapply collapses its result to a vector for a single simulation.
+  selected <- matrix(selected, nrow = n, dimnames = list(NULL, fbs))
+  baseline <- colMeans(selected)
+  eligible <- names(baseline)[baseline >= threshold]
+  key <- function(week, home, away) paste(week, home, away, sep = "\r")
+  reg <- games[games$game_type == "REG", , drop = FALSE]
+  pending <- scheduled[scheduled$game_type == "REG" & is.na(scheduled$result), , drop = FALSE]
+  draws <- split(seq_len(nrow(reg)), key(reg$week, reg$home_team, reg$away_team))
+  meta <- setNames(metadata, vapply(metadata, function(g) key(g$w, g$h, g$a), character(1)))
+  rows <- lapply(seq_len(nrow(pending)), function(i) {
+    g <- pending[i, ]
+    id <- key(g$week, g$home_team, g$away_team)
+    sim_game <- reg[draws[[id]], , drop = FALSE]
+    if (nrow(sim_game) != n || anyDuplicated(sim_game$sim) || anyNA(sim_game$result) || any(sim_game$result == 0)) {
+      stop("expected one untied game result per simulation: ", id)
+    }
+    home_won <- sim_game$result[match(sim_ids, sim_game$sim)] > 0
+    nh <- sum(home_won); na <- n - nh
+    ph <- if (nh) colMeans(selected[home_won, , drop = FALSE]) else rep(NA_real_, length(fbs))
+    pa <- if (na) colMeans(selected[!home_won, , drop = FALSE]) else rep(NA_real_, length(fbs))
+    names(ph) <- names(pa) <- fbs
+    delta <- ph - pa
+    null_if_na <- function(x) if (is.finite(x)) unname(x) else NULL
+    keep <- union(eligible, intersect(c(g$home_team, g$away_team), fbs))
+    effects <- setNames(lapply(keep, function(team) {
+      se <- if (nh && na) sqrt(ph[team] * (1 - ph[team]) / nh + pa[team] * (1 - pa[team]) / na) else NA_real_
+      list(home_win = null_if_na(ph[team]), away_win = null_if_na(pa[team]),
+           swing = null_if_na(delta[team]), standard_error = null_if_na(se))
+    }), keep)
+    participants <- intersect(c(g$home_team, g$away_team), fbs)
+    info <- meta[[id]]
+    list(id = if (!is.null(info$id)) as.character(info$id) else paste(g$week, g$home_team, g$away_team, sep = "|"),
+         week = as.integer(g$week), date = info$d,
+         home = g$home_team, away = g$away_team,
+         samples_home = nh, samples_away = na, home_win_probability = nh / n,
+         supported = nh >= min_samples && na >= min_samples,
+         combined_swing = if (nh && na) sum(abs(delta[participants])) else NULL,
+         effects = effects)
+  })
+  list(min_samples = min_samples, rooting_threshold = threshold,
+       rooting_min_swing = .02, rooting_teams = as.list(eligible),
+       baseline = as.list(baseline), games = rows)
+}
