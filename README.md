@@ -4,7 +4,7 @@ A college football forecasting system for the 2026 season. It rates all 138 FBS
 teams, predicts each game, builds a wins-above-replacement figure for every player,
 and publishes the result as a browser app.
 
-**Live site: [2026 Forecast Lab](https://mstolte02.github.io/cfb-model-v3/)**
+**Live site: [2026 Forecast Lab](https://cfb-model-v3.vercel.app/)**
 
 Three rules hold across the whole build:
 
@@ -85,8 +85,9 @@ final scores and CFBD's regular-season `/stats/game/advanced`
 (committed to `data/live/`), replays the whole season from week 0 through the v5
 ensemble with `scripts/ensemble_replay.py`, and commits `viz/data/model_v4.json` and
 `ratings.json`. Its Monday 12:30 PM ET run locks the week's betting board, freezing a
-point-in-time model snapshot into every row. A push to `main` rebuilds the CFP
-projection with `scripts/simulate_playoff.R` and deploys the site.
+point-in-time model snapshot into every row. Vercel publishes pushes to `main` directly. The separate playoff-data workflow
+runs `scripts/simulate_playoff.R` and commits refreshed projections, which Vercel
+then publishes without coupling website builds to the simulation runner.
 
 To do the same thing by hand:
 

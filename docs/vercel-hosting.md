@@ -1,5 +1,9 @@
 # Vercel hosting
 
+Production: https://cfb-model-v3.vercel.app/
+
+Project: `prj_kF8n27wtXe7fRp7n1jR9pgLcZBPR` in `mstolte02s-projects`.
+
 Import `Mstolte02/cfb-model-v3` into Vercel, use repository root `.` and production
 branch `main`. The checked-in `vercel.json` supplies framework, install command,
 build command and output directory. No API keys are needed to publish the site.
@@ -22,10 +26,11 @@ preseason/current playoff outcomes and commits the two refreshed JSON files.
 Vercel then publishes the updated data. Model refreshes still require a GitHub
 runner; hosting migration does not migrate the scheduled computations.
 
-Both scheduled commits and manual source pushes should produce Vercel Git
-integration deployments. Verify the first bot-authored data commit in Vercel.
-If account policies reject automation authors, configure a Vercel Deploy Hook
-for that workflow before relying on unattended data publication.
+The owner-run refresh jobs use the repository owner's verified GitHub noreply
+identity as author, with the automation bot retained as committer. This keeps
+Vercel Hobby's owner-author requirement compatible with scheduled model updates
+while preserving automated provenance. No Vercel deployment token or hook is
+needed in GitHub.
 
 ## Cutover checks
 

@@ -56,6 +56,9 @@ jobs:
           Rscript scripts/simulate_playoff.R 2000 current
       - name: Commit refreshed projections for Vercel
         shell: bash
+        env:
+          CFB_REPO_OWNER: ${{ github.repository_owner }}
+          CFB_REPO_OWNER_ID: ${{ github.repository_owner_id }}
         run: |
           git config user.name "cfb-playoff-model[bot]"
           git config user.email "cfb-playoff-model[bot]@users.noreply.github.com"
@@ -64,7 +67,7 @@ jobs:
             echo "Projection data is already current."
             exit 0
           fi
-          git commit -m "Refresh 2026 playoff projections"
+          git commit --author="$CFB_REPO_OWNER <$CFB_REPO_OWNER_ID+$CFB_REPO_OWNER@users.noreply.github.com>" -m "Refresh 2026 playoff projections"
           for attempt in 1 2 3; do
             if git push origin HEAD:main; then
               exit 0
