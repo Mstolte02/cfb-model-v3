@@ -27,26 +27,5 @@
       (finite(b.combined_swing) ? b.combined_swing : -1) - (finite(a.combined_swing) ? a.combined_swing : -1) ||
       a.home.localeCompare(b.home) || a.away.localeCompare(b.away));
   }
-  function rootingGuide(impacts, team, week) {
-    if (!(impacts.rooting_teams || []).includes(team)) return [];
-    return impacts.games.filter(g => (week === "all" || g.week === Number(week)) &&
-      g.home !== team && g.away !== team && g.supported && g.effects[team] &&
-      // Keep the guide focused on playoff contenders. Associations with games
-      // between two teams below the eligibility threshold are not recommendations.
-      (impacts.rooting_teams.includes(g.home) || impacts.rooting_teams.includes(g.away)))
-      .map(g => {
-        const e = g.effects[team];
-        if (!finite(e.swing) || !finite(e.home_win) || !finite(e.away_win)) return null;
-        const swing = Math.abs(e.swing);
-        // Exclude negligible differences and differences smaller than the Monte
-        // Carlo sampling uncertainty, accounting for the full set of games scanned.
-        // Do not manufacture a rooting interest from repeated comparisons.
-        if (swing < impacts.rooting_min_swing || !finite(e.standard_error) || swing <= (impacts.rooting_z || 3.8) * e.standard_error) return null;
-        return {game: g, team, winner: e.swing > 0 ? g.home : g.away,
-          other: e.swing > 0 ? g.away : g.home,
-          preferred: e.swing > 0 ? e.home_win : e.away_win,
-          opposite: e.swing > 0 ? e.away_win : e.home_win, swing};
-      }).filter(Boolean).sort((a, b) => b.swing - a.swing || a.game.week - b.game.week || a.winner.localeCompare(b.winner));
-  }
-  return {percent, modalRecords, lossColumns, rankGames, rootingGuide};
+  return {percent, modalRecords, lossColumns, rankGames};
 });

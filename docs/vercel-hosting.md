@@ -35,7 +35,7 @@ needed in GitHub.
 ## Cutover checks
 
 - A production Vercel deployment passes the existing JavaScript tests.
-- The main page, Mark's Playoff, Projected bracket, and Power Rating X-Ray open.
+- Power Rankings is the landing page; Mark's Playoff, Projected bracket, Playoff Paths and Scenario Builder open.
 - Data files return JSON; nested images and scripts load.
 - A model-data commit triggers a Vercel build.
 - Share the Vercel production URL after successful deployment.

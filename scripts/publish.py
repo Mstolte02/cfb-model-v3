@@ -4,10 +4,11 @@ viz/ is the working copy the local server renders. dist/ is what Vercel publishe
 between what you look at while building and what other people get, the fewer ways
 the published site can be wrong in a way you never see.
 
-Two differences, both deliberate:
+Publication exclusions and options:
 
   war_diagnostics.html   the WAR build's internal report - facet weights, model
                          comparisons, per-player tables. A working document.
+  power-xray/           Retained research source, removed from the public site.
   --no-players           OPTIONAL. Strips the per-player rows out of players.json,
                          leaving team and position-group totals. Off by default: the
                          site ships the full roster view. It exists because those rows
@@ -51,7 +52,7 @@ def fingerprint_assets(site: Path):
     index = site / "index.html"
     html = index.read_text()
     versions = {}
-    for name in ("app.js", "style.css", "team-card.js", "ranking-history.js", "playoff-paths.js", "marks-playoff.js"):
+    for name in ("app.js", "style.css", "team-card.js", "ranking-history.js", "playoff-paths.js", "marks-playoff.js", "scenario-lab.js", "simulation-studio.js", "simulation-studio.css"):
         source = site / name
         digest = hashlib.sha256(source.read_bytes()).hexdigest()[:12]
         target_name = f"{source.stem}.{digest}{source.suffix}"
@@ -77,7 +78,7 @@ def main(no_players: bool = False):
     if DIST.exists():
         shutil.rmtree(DIST)
     shutil.copytree(VIZ, DIST, ignore=shutil.ignore_patterns(
-        "war_diagnostics.html", ".DS_Store"))
+        "war_diagnostics.html", "power-xray", ".DS_Store"))
 
     # GitHub Pages runs everything through Jekyll otherwise, which drops files and
     # folders beginning with an underscore.
