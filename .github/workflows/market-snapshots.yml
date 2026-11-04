@@ -55,7 +55,7 @@ jobs:
           ref: main
           fetch-depth: 0
       - name: Run market tracking tests
-        run: python3 -m unittest tests.test_market_tracking
+        run: python3 -m unittest tests.test_market_tracking tests.test_cfp_rankings
       - name: Capture timestamped provider prices
         shell: bash
         env:
@@ -66,6 +66,8 @@ jobs:
             args+=(--lock-weekly-board)
           fi
           python3 scripts/capture_market_snapshot.py "${args[@]}"
+      - name: Refresh actual CFP committee rankings
+        run: python3 scripts/update_cfp_rankings.py
       - id: changes
         name: Record append-only snapshot changes
         shell: bash
@@ -76,7 +78,7 @@ jobs:
           fi
           git config user.name "cfb-market-tracker[bot]"
           git config user.email "cfb-market-tracker[bot]@users.noreply.github.com"
-          git add data/market_snapshots data/live viz/data/odds.json viz/data/market_tracking.json viz/data/schedule.json viz/data/model_v4.json viz/data/ratings.json
+          git add data/market_snapshots data/live viz/data/odds.json viz/data/market_tracking.json viz/data/schedule.json viz/data/model_v4.json viz/data/ratings.json viz/data/cfp_rankings.json
           git commit -m "Capture 2026 market snapshot"
           for attempt in 1 2 3; do
             if git push; then

@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel, inseason, marketTracking] = await Promise.all([
+  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel, inseason, marketTracking, committeeRankings] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -42,6 +42,7 @@
     // publishes the team deltas consumed by the live ratings pipeline.
     fetchJSON("data/players_inseason.json").catch(() => null),
     fetchJSON("data/market_tracking.json").catch(() => null),
+    fetchJSON("data/cfp_rankings.json").catch(() => null),
   ]);
   /* In-season WAR joins by team and player name, the key the exporter writes. Every
      projected roster player is present; PFF updates the measured players while an
@@ -2968,6 +2969,12 @@
     wireTeamLinks();
   }
 
+  function renderMarksPlayoff() {
+    if(!deservingModel) { document.getElementById("marks-playoff").innerHTML="<p>Résumé model unavailable.</p>"; return; }
+    if(!deservingRows)deservingRows=RankingHistory.deserving(schedule,meta,[...FBS],deservingModel);
+    MarksPlayoff.mount({rows:deservingRows,meta,schedule,poll:committeeRankings,season:ratings.season,host:document.getElementById("marks-playoff"),esc,crestOf,wireTeamLinks});
+  }
+
   function fillPowerHistoryTeams() {
     const select = document.getElementById("power-history-team");
     if (!select || select.options.length) return;
@@ -4014,6 +4021,7 @@
     else if (view === "players") renderPlayers();
     else if (view === "power") renderPower();
     else if (view === "deserving") renderDeserving();
+    else if (view === "marks-playoff") renderMarksPlayoff();
     else if (view === "stock-watch") renderStockWatch();
     else if (view === "power-history") renderPowerHistory();
     else if (view === "market") renderWeeklyLines();
