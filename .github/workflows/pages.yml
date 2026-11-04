@@ -1,34 +1,38 @@
-# Publish the site to GitHub Pages on every push to main.
-#
-# scripts/publish.py is stdlib-only, so this needs no pip install and no model
-# dependencies. It copies viz/ to dist/ and drops the working-document diagnostics
-# report, which is why the site is not served straight out of viz/ - see that script.
-# It is run WITHOUT --no-players, so the roster rows ship and the roster editor works.
-name: Deploy site
+# Hosting builds run directly on Vercel. This workflow only refreshes model data.
+# Retain pages.yml so existing scheduled capture handoffs continue to work.
+name: Refresh playoff projections
 
 on:
   push:
     branches: [main]
+    paths:
+      - scripts/simulate_playoff.R
+      - scripts/committee_anchor.R
+      - scripts/playoff_record_odds.R
+      - tests/test_committee_anchor.R
+      - tests/test_playoff_record_odds.R
+      - viz/data/model_v4.json
+      - viz/data/ratings.json
+      - viz/data/schedule.json
+      - viz/data/cfp_rankings.json
+      - .github/workflows/pages.yml
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# Normal deploys finish before the next begins. An explicit [restart-deploy]\n# push can replace a stalled run without changing normal publication behavior.
 concurrency:
-  group: pages
-  cancel-in-progress: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[restart-deploy]') }}
+  group: playoff-data-refresh
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: release
@@ -50,17 +54,25 @@ jobs:
         run: |
           Rscript scripts/simulate_playoff.R 500 preseason
           Rscript scripts/simulate_playoff.R 2000 current
-      - name: Build dist/
+      - name: Commit refreshed projections for Vercel
+        shell: bash
         run: |
-          node --test tests/test_ranking_history.cjs tests/test_marks_playoff.cjs tests/test_power_xray.cjs tests/test_war_research.cjs tests/test_playoff_paths.cjs
-          python3 scripts/publish.py
-      - uses: actions/configure-pages@v6
-      # upload-pages-artifact stopped bundling dotfiles in v4, and publish.py
-      # writes dist/.nojekyll - so ask for them back explicitly.
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: dist
-          include-hidden-files: true
-      - id: deploy
-        uses: actions/deploy-pages@v5
-
+          git config user.name "cfb-playoff-model[bot]"
+          git config user.email "cfb-playoff-model[bot]@users.noreply.github.com"
+          git add viz/data/playoff_current.json viz/data/playoff_preseason.json
+          if git diff --cached --quiet; then
+            echo "Projection data is already current."
+            exit 0
+          fi
+          git commit -m "Refresh 2026 playoff projections"
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              echo "Projection push failed after $attempt attempts." >&2
+              exit 1
+            fi
+            git fetch origin main
+            git rebase origin/main
+          done

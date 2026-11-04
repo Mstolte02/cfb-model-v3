@@ -25,11 +25,9 @@ on:
     - cron: "30 16 * 7-10 1"
     - cron: "30 17 * 1,11-12 1"
 
-# This job does not publish the site itself. It used to, but its own copy of the
-# build skipped the R playoff simulation, so every capture put the committed (stale)
-# playoff_current.json back on the site. It now hands off to the Deploy site
-# workflow, the one build that runs simulate_playoff.R. A workflow_dispatch made with
-# GITHUB_TOKEN is the documented exception that does start another workflow.
+# Vercel publishes source and committed data directly. Captures hand off to the
+# separate R model workflow, which commits refreshed playoff projections when ready.
+# Website changes no longer wait for an Actions runner or the season simulations.
 permissions:
   contents: write
   actions: write
@@ -92,7 +90,7 @@ jobs:
             git fetch origin main
             git rebase origin/main
           done
-      - name: Deploy the site through the full build
+      - name: Refresh playoff model data separately
         if: steps.changes.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}

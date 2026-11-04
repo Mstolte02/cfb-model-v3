@@ -16,3 +16,6 @@ dist/
 
 # Fourth & Jev generated historical states / ledgers
 artifacts/fourth_jev/
+
+# Vercel account linkage is local state, never repository configuration.
+.vercel/

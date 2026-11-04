@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "",
+  "buildCommand": "node --test tests/test_ranking_history.cjs tests/test_marks_playoff.cjs tests/test_power_xray.cjs tests/test_war_research.cjs tests/test_playoff_paths.cjs && python3 scripts/publish.py",
+  "outputDirectory": "dist",
+  "headers": [
+    {
+      "source": "/data/(.*)",
+      "headers": [{"key": "Cache-Control", "value": "public, max-age=0, must-revalidate"}]
+    },
+    {
+      "source": "/(.*).html",
+      "headers": [{"key": "Cache-Control", "value": "public, max-age=0, must-revalidate"}]
+    },
+    {
+      "source": "/",
+      "headers": [{"key": "Cache-Control", "value": "public, max-age=0, must-revalidate"}]
+    }
+  ]
+}

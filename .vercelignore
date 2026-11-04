@@ -1,0 +1,14 @@
+/.git/
+/.openai/
+/.env
+/venv/
+/__pycache__/
+/artifacts/
+/audit/
+/archive/
+/docs/
+/data/
+/war_model/
+/src/
+/requirements.txt
+/dist/

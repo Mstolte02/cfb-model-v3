@@ -1,7 +1,6 @@
 """Build the publishable copy of the site into dist/.
 
-viz/ is the working copy the local server renders. dist/ is what goes to GitHub
-Pages. They are almost the same thing, which is the point - the fewer differences
+viz/ is the working copy the local server renders. dist/ is what Vercel publishes. They are almost the same thing, which is the point - the fewer differences
 between what you look at while building and what other people get, the fewer ways
 the published site can be wrong in a way you never see.
 
@@ -19,9 +18,7 @@ When --no-players is used the stripping happens HERE, at build time, rather than
 asking the app to hide things: a hidden field is still a downloaded field. A number
 that is not in dist/ cannot be read out of the page.
 
-Deliberately stdlib-only, and it does NOT import config: the GitHub Action that
-publishes the site runs it on a bare Python with none of the model's dependencies
-installed. Everything it needs is already committed under viz/.
+Deliberately stdlib-only, and it does NOT import config: Vercel runs the static build with no model dependencies installed. Everything it needs is already committed under viz/.
 
 Run: python3 scripts/publish.py [--no-players]
 """
