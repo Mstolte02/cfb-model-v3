@@ -21,3 +21,12 @@ const ratings=require('../viz/data/ratings.json'),model=require('../viz/data/des
 const live=deserving(schedule,teams,ratings.teams.map(r=>r.team),model);
 const liveField=selectField(live,teams);assert.equal(liveField.field.length,12);assert.equal(liveField.error,null);
 console.log('Mark playoff selection passed: P4/G6 inclusion, straight byes, champion override, Notre Dame, missing data, comparison signs and live field');
+const {projectedHTML}=require('../viz/marks-playoff.js');
+const seeds=Array.from({length:12},(_,i)=>`Team ${i+1}`);
+const projected=projectedHTML({games:Array.from({length:11},()=>({top:seeds[0],bottom:seeds[1],p:.67,winner:seeds[0]})),seeds,
+  teams:seeds.map((team,i)=>({team,current_cfp_rank:i+1,playoff:.7,champ:.1,avg_wins:10,avg_losses:2})),autoBids:[seeds[0]],season:2026,
+  anchor:{released:'2026-11-03'},preseason:false,esc:s=>String(s),crestOf:()=>({mark:'logo.png',plate:'#123456'}),meta:{}});
+assert(projected.includes('PROJECTED PLAYOFF'));assert(projected.includes('PROJECTED CHAMPION'));
+assert(projected.includes('Starting from CFP rankings · 2026-11-03'));
+assert(projected.includes('67%'));assert(projected.includes('33%'));assert(projected.includes('CFP #1'));
+assert(projected.includes('ALL MATCHUPS ARE PROJECTED'));

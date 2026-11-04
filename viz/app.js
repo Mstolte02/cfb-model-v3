@@ -780,11 +780,9 @@
     const snapshot = playoffVersion === "preseason"
       ? "Preseason snapshot — permanently locked"
       : "Current projection — updates with completed games";
+    const anchor = playoff.committee_anchor;
     document.getElementById("playoff-meta").innerHTML =
-      `<b>${snapshot}</b>. ${esc(playoff.engine || "Season Monte Carlo")} over the full 2026 schedule — <b>${playoff.n_sims.toLocaleString()}
-       simulations</b>. Rules: ${esc(playoff.rules)}. Ranking input:
-       ${esc(playoff.committee_proxy || "model power order")}.
-`;
+      `<b>${snapshot}</b>. ${playoff.n_sims.toLocaleString()} simulated seasons. ${esc(playoff.basis || playoff.committee_proxy || "Football model projection")}${anchor ? `. <a href="${esc(anchor.source_url)}" target="_blank" rel="noopener">Committee release: ${esc(anchor.released)} ↗</a>` : ""}. The field, seeds and winners below are projections.`;
 
     const P = playoff.teams;
     const byTeam = Object.fromEntries(P.map(t => [t.team, t]));
@@ -795,9 +793,9 @@
         `<p class="sub">No bracket in this export — re-run <code>scripts/simulate_playoff.R</code>.</p>`;
     } else {
       const G = resolveBracket(br.games, br.feeds);
-      document.getElementById("bracket").innerHTML = bracketHTML(G, br.seeds,
-        champ => `projected champion · ${pct((byTeam[champ] || {}).champ || 0, 1)} title odds`,
-        false, true);
+      document.getElementById("bracket").innerHTML = MarksPlayoff.projectedHTML({
+        games:G,seeds:br.seeds,teams:P,autoBids:br.auto_bids||[],season:playoff.season,
+        anchor,preseason:playoffVersion==="preseason",esc,crestOf,meta});
     }
 
     renderSelection(P, byTeam, br);
@@ -887,6 +885,14 @@
     const el = document.getElementById("playoff-resumes");
     if (!el) return;
     const seeds = (br && br.seeds) || [];
+    if(cur().playoff.committee_anchor) {
+      el.innerHTML=`<div class="res-grid">${seeds.map((team,i)=>{
+        const t=byTeam[team];if(!t)return "";
+        return `<div class="res-card"><div class="res-head"><span class="res-seed">${i+1}</span><img src="${logoURL(team)}" alt=""><div class="res-name"><button class="team-link" data-team="${esc(team)}">${esc(team)}</button><div class="conf">Current CFP ${t.current_cfp_rank?'#'+t.current_cfp_rank:'NR'}</div></div><div class="res-odds"><b>${pct(t.playoff,0)}</b><span>to make it</span></div></div><div class="res-route">Projected record: <b>${t.avg_wins.toFixed(1)}–${t.avg_losses.toFixed(1)}</b></div><div class="res-rec"><span>${pct(t.bye,0)} bye</span><span>${pct(t.champ,1)} title</span></div></div>`;
+      }).join("")}</div><p class="board-note">Current committee rankings establish the starting order. Completed games are locked; the live football model simulates the remaining schedule and conference titles, then applies the playoff qualification rules.</p>`;
+      return;
+    }
+
     const cards = seeds.map((t, i) => (byTeam[t] ? resumeCard(byTeam[t], i + 1) : ""))
                        .join("");
 
@@ -1502,6 +1508,12 @@
         quality is what the historical rankings say, not an assumption. Leaving one
         season out at a time, it reproduces the real final ranking at a rank
         correlation of 0.91.</div>`;
+
+    if(el && pl.committee_anchor) el.innerHTML = `<div class="steps">
+      <div class="step"><span class="step-n">1</span><h4>Start with the committee</h4><p>The actual CFP Top 25 released ${esc(pl.committee_anchor.released)} sets the initial order. Unranked teams start below No. 25.</p></div>
+      <div class="step"><span class="step-n">2</span><h4>Project the remaining games</h4><p>Completed results stay locked. The football model simulates the remaining schedule and conference championships. Final records move teams up or down from the committee baseline.</p></div>
+      <div class="step"><span class="step-n">3</span><h4>Apply automatic bids</h4><p>The four Power 4 champions and highest-ranked Group of 6 team qualify. Notre Dame is protected if its simulated final ranking is in the Top 12.</p></div>
+      <div class="step"><span class="step-n">4</span><h4>Seed the projected field</h4><p>Fill the remaining places in simulated ranking order. The top four seeds receive byes; seeds 5–8 host round one. The bracket never reseeds.</p></div></div><p class="board-note">Projection method: preserve each team’s current committee adjustment to the historical selection model, then update its record contribution in each simulated season. Rank spacing is derived from the current score-versus-rank relationship. This is a model forecast of future committee decisions.</p>`;
 
     const ccg = document.getElementById("playoff-ccg");
     if (!ccg) return;

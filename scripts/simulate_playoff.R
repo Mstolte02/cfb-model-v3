@@ -6,7 +6,8 @@
 # simulates every game from the v5 ensemble's week-0 state (initial ratings, no form,
 # empty PFF and WAR tables) and ranks teams by the week-0 Power Rating. The current
 # run locks completed scores, uses the live ensemble state, and ranks teams by the
-# current Power Rating. Matchup probabilities go through cfbseedR's compute_results.
+# actual CFP Top 25 baseline once published, evolving with simulated final records.
+# Matchup probabilities go through cfbseedR's compute_results.
 #
 # Run: Rscript scripts/simulate_playoff.R [simulations] [both|preseason|current]
 
@@ -27,6 +28,7 @@ if (!mode_arg %in% c("both", "preseason", "current")) {
 root <- normalizePath(file.path(dirname(sub("^--file=", "", grep("^--file=", commandArgs(), value = TRUE)[1])), ".."))
 viz <- file.path(root, "viz", "data")
 source(file.path(root, "scripts", "playoff_record_odds.R"))
+source(file.path(root, "scripts", "committee_anchor.R"))
 
 # cfbseedR splits work into chunks but deliberately leaves execution sequential
 # unless the caller selects a future plan. Use the runner's available cores while
@@ -228,7 +230,7 @@ make_inputs <- function(mode) {
   }
   rankings <- data.frame(team = fbs, rank = rank(-rating, ties.method = "first"))
   analytics <- data.frame(team = fbs, rating = as.numeric(rating))
-  list(games = games, teams = teams, rankings = rankings, analytics = analytics, spec = spec)
+  list(games = games, teams = teams, rankings = rankings, analytics = analytics, spec = spec, mode = mode)
 }
 
 # Committee proxy, the h2h-free fit from scripts/fit_committee.py on every published
@@ -267,7 +269,11 @@ static_committee <- function(input) {
 select_and_play <- function(standings, input) {
   cm <- static_committee(input)
   st <- standings[standings$team %in% fbs, c("sim", "team", "win_pct", "conf_champ")]
+  poll_path <- file.path(viz, "cfp_rankings.json")
+  anchor <- if (input$mode == "current" && file.exists(poll_path))
+    committee_anchor(cm, schedule, read_json(poll_path), 2026L, W_WINPCT) else NULL
   st$score <- W_WINPCT * st$win_pct + cm$static[match(st$team, cm$team)]
+  if (!is.null(anchor)) st$score <- st$score + anchor$offset[st$team]
   st$conference <- cm$conference[match(st$team, cm$team)]
   sims <- split(st, st$sim)
   seeds <- t(vapply(sims, function(s) {
@@ -279,6 +285,8 @@ select_and_play <- function(standings, input) {
       auto <- c(auto, champ[1])
     }
     auto <- c(auto, s$team[s$conference %in% G6_CONFS][1])
+    # The Notre Dame Top 12 guarantee is checked against the simulated final ranking.
+    if ("Notre Dame" %in% head(s$team, 12)) auto <- union(auto, "Notre Dame")
     field <- c(auto, head(setdiff(s$team, auto), 12L - length(auto)))
     s$team[s$team %in% field]
   }, character(12)))
@@ -298,6 +306,14 @@ select_and_play <- function(standings, input) {
   at <- function(teams) paste(rep(sim_ids, ncol(teams)), as.vector(teams))
   out$seed <- NA_integer_
   out$seed[match(at(seeds), key)] <- rep(seq_len(12), each = length(sim_ids))
+  out$selection_score <- st$score[match(key, paste(st$sim, st$team))]
+  out$selection_rank <- ave(-out$selection_score, out$sim, FUN = function(x) rank(x, ties.method = "first"))
+  out$g6_auto <- FALSE
+  for (id in sim_ids) {
+    ix <- which(out$sim == id & cm$conference[match(out$team, cm$team)] %in% G6_CONFS)
+    out$g6_auto[ix[which.max(out$selection_score[ix])]] <- TRUE
+  }
+  attr(out, "committee_anchor") <- anchor
   out$exit <- 0L
   out$exit[!is.na(out$seed)] <- 1L
   out$exit[match(at(cbind(seeds[, 1:4], do.call(cbind, r1))), key)] <- 2L
@@ -341,9 +357,13 @@ build_bracket <- function(rows) {
   }
   pool <- rows[vapply(rows, function(x) x$conference %in% g6, logical(1))]
   if (length(pool)) {
-    score <- vapply(pool, row_number, numeric(1), key = "playoff")
+    score <- vapply(pool, row_number, numeric(1), key = "g6_bid")
     take(pool[[which.max(score)]]$team)
   }
+  # Protect Notre Dame when the representative projected ranking has it in the Top 12.
+  projected_order <- rows[order(vapply(rows, row_number, numeric(1), key = "projected_rank", fallback = Inf))]
+  if (any(vapply(head(projected_order, 12), function(x) identical(x$team, "Notre Dame"), logical(1)))) take("Notre Dame")
+  auto_teams <- chosen
   ordered <- rows[order(-vapply(rows, row_number, numeric(1), key = "playoff"),
                         vapply(rows, row_number, numeric(1), key = "power_rank", fallback = Inf))]
   for (row in ordered) if (length(chosen) < 12) take(row$team)
@@ -362,6 +382,7 @@ build_bracket <- function(rows) {
   game <- function(round, top = NULL, bottom = NULL, site = NULL) list(round = round, top = top, bottom = bottom, site = site)
   list(
     seeds = unname(seeds),
+    auto_bids = as.list(auto_teams),
     games = list(
       game("R1", seeds[[8]], seeds[[9]], seeds[[8]]), game("R1", seeds[[5]], seeds[[12]], seeds[[5]]),
       game("R1", seeds[[6]], seeds[[11]], seeds[[6]]), game("R1", seeds[[7]], seeds[[10]], seeds[[7]]),
@@ -389,6 +410,7 @@ export_run <- function(mode) {
   template <- if (file.exists(template_path)) read_json(template_path) else list(teams = list())
   old <- setNames(template$teams %||% list(), vapply(template$teams %||% list(), function(x) x$team, character(1)))
   standings <- select_and_play(sim$standings, input)
+  anchor <- attr(standings, "committee_anchor")
   max_exit <- 5L
   rows <- lapply(fbs, function(team) {
     st <- standings[standings$team == team, ]
@@ -408,6 +430,13 @@ export_run <- function(mode) {
     base$final <- round(event_rate(st$exit >= 4), 4)
     base$champ <- round(event_rate(st$exit == max_exit), 4)
     base$seeds <- as.list(round(seeds, 4))
+    base$projected_rank <- round(mean(st$selection_rank), 2)
+    base$current_cfp_rank <- if (!is.null(anchor) && team %in% names(anchor$rank)) unname(anchor$rank[team]) else NULL
+    base$g6_bid <- round(event_rate(st$g6_auto), 4)
+    base$wins_in <- if (any(!is.na(st$seed))) round(mean(st$wins[!is.na(st$seed)]), 2) else NULL
+    base$wins_out <- if (any(is.na(st$seed))) round(mean(st$wins[is.na(st$seed)]), 2) else NULL
+    # Historical score decompositions are not valid after committee anchoring.
+    if (!is.null(anchor)) { base$score_parts <- NULL; base$bid <- NULL; base$last_in <- NULL; base$first_out <- NULL }
     base
   })
   rows <- rows[order(-vapply(rows, `[[`, numeric(1), "playoff"), -vapply(rows, `[[`, numeric(1), "champ"))]
@@ -429,6 +458,14 @@ export_run <- function(mode) {
   out$committee_proxy <- sprintf(
     "Ranked inside each simulation on its own record: %.2f*win_pct + %.2f*power_z + %.2f*sos_z + %.2f*power_conf (h2h-free fit on 2014-2025 committee rankings)",
     W_WINPCT, W_RATING, W_SOS, W_P4)
+  out$committee_anchor <- if (is.null(anchor)) NULL else list(
+    released = anchor$released, games_through = anchor$games_through,
+    source_url = anchor$source_url, method = anchor$method, rank_spacing = anchor$rank_spacing)
+  if (!is.null(anchor)) {
+    out$basis <- paste0("Actual CFP rankings released ", anchor$released, "; completed results locked; remaining games simulated with the live football model")
+    out$committee_proxy <- "Starts in actual CFP Top 25 order; current committee residuals are retained while simulated final records change the ranking. Unranked teams start below No. 25."
+    out$engine <- paste0("cfbseedR::cfb_simulations() v", sim$sim_params$cfbseedR_version, " + current CFP ranking baseline")
+  }
   out$teams <- rows
   out$bracket <- build_bracket(rows)
   out$tossups <- list()
