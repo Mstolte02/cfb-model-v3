@@ -16,10 +16,10 @@ permissions:
   pages: write
   id-token: write
 
-# Let a running deploy finish rather than cancelling it half-uploaded.
+# Normal deploys finish before the next begins. An explicit [restart-deploy]\n# push can replace a stalled run without changing normal publication behavior.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[restart-deploy]') }}
 
 jobs:
   deploy:
