@@ -1,0 +1,2500 @@
+{
+  "current": {
+    "generated_at": "2026-11-05T07:03:07Z",
+    "season": 2026,
+    "n_sims": 2000,
+    "teams": {
+      "Miami": {
+        "predicted_resume_score": 11.13145933,
+        "resume_score_parts": {
+          "baseline": 11.91727653,
+          "record": 9.5538828,
+          "staticScore": 1.9601754,
+          "recordChange": -0.7858172
+        }
+      },
+      "Alabama": {
+        "predicted_resume_score": 11.39753607,
+        "resume_score_parts": {
+          "baseline": 11.41606137,
+          "record": 7.7362497,
+          "staticScore": 2.62127128,
+          "recordChange": -0.0185253
+        }
+      },
+      "Georgia": {
+        "predicted_resume_score": 11.44903935,
+        "resume_score_parts": {
+          "baseline": 11.79197274,
+          "record": 8.70430412,
+          "staticScore": 2.29915344,
+          "recordChange": -0.34293338
+        }
+      },
+      "Indiana": {
+        "predicted_resume_score": 11.32494949,
+        "resume_score_parts": {
+          "baseline": 11.54136516,
+          "record": 8.97442878,
+          "staticScore": 1.98450895,
+          "recordChange": -0.21641567
+        }
+      },
+      "Notre Dame": {
+        "predicted_resume_score": 10.71464466,
+        "resume_score_parts": {
+          "baseline": 10.66423862,
+          "record": 9.09764354,
+          "staticScore": 1.89428699,
+          "recordChange": 0.05040604
+        }
+      },
+      "Ole Miss": {
+        "predicted_resume_score": 10.81754577,
+        "resume_score_parts": {
+          "baseline": 10.78954241,
+          "record": 7.78277835,
+          "staticScore": 2.52050693,
+          "recordChange": 0.02800335
+        }
+      },
+      "Utah": {
+        "predicted_resume_score": 10.7722849,
+        "resume_score_parts": {
+          "baseline": 11.66666895,
+          "record": 9.44531595,
+          "staticScore": 1.8874429,
+          "recordChange": -0.89438405
+        }
+      },
+      "Ohio State": {
+        "predicted_resume_score": 10.65051743,
+        "resume_score_parts": {
+          "baseline": 10.53893483,
+          "record": 7.8663576,
+          "staticScore": 2.32125391,
+          "recordChange": 0.1115826
+        }
+      },
+      "Boise State": {
+        "predicted_resume_score": 8.88594911,
+        "resume_score_parts": {
+          "baseline": 8.90998556,
+          "record": 8.83856355,
+          "staticScore": 0.03759845,
+          "recordChange": -0.02403645
+        }
+      },
+      "Texas": {
+        "predicted_resume_score": 10.52094582,
+        "resume_score_parts": {
+          "baseline": 11.16545379,
+          "record": 7.11026703,
+          "staticScore": 3.03329874,
+          "recordChange": -0.64450797
+        }
+      },
+      "LSU": {
+        "predicted_resume_score": 10.38353866,
+        "resume_score_parts": {
+          "baseline": 10.28832725,
+          "record": 7.8499864,
+          "staticScore": 2.72581084,
+          "recordChange": 0.0952114
+        }
+      },
+      "BYU": {
+        "predicted_resume_score": 10.03037103,
+        "resume_score_parts": {
+          "baseline": 10.9148462,
+          "record": 8.16276233,
+          "staticScore": 2.01848737,
+          "recordChange": -0.88447517
+        }
+      },
+      "Wake Forest": {
+        "predicted_resume_score": 10.03384229,
+        "resume_score_parts": {
+          "baseline": 10.03771967,
+          "record": 9.04336011,
+          "staticScore": 1.3904905,
+          "recordChange": -0.00387739
+        }
+      },
+      "Tennessee": {
+        "predicted_resume_score": 9.96256163,
+        "resume_score_parts": {
+          "baseline": 10.41363104,
+          "record": 7.30370559,
+          "staticScore": 2.41195237,
+          "recordChange": -0.45106941
+        }
+      },
+      "Houston": {
+        "predicted_resume_score": 9.89302894,
+        "resume_score_parts": {
+          "baseline": 9.91241588,
+          "record": 7.73538806,
+          "staticScore": 1.9050058,
+          "recordChange": -0.01938694
+        }
+      },
+      "UCLA": {
+        "predicted_resume_score": 9.66410825,
+        "resume_score_parts": {
+          "baseline": 11.04015,
+          "record": 8.96365826,
+          "staticScore": 1.53377209,
+          "recordChange": -1.37604174
+        }
+      },
+      "Kentucky": {
+        "predicted_resume_score": 9.86560226,
+        "resume_score_parts": {
+          "baseline": 11.29075758,
+          "record": 7.62208218,
+          "staticScore": 2.65714881,
+          "recordChange": -1.42515532
+        }
+      },
+      "Texas Tech": {
+        "predicted_resume_score": 9.68093495,
+        "resume_score_parts": {
+          "baseline": 10.16302346,
+          "record": 8.56514899,
+          "staticScore": 1.8096917,
+          "recordChange": -0.48208851
+        }
+      },
+      "Iowa": {
+        "predicted_resume_score": 9.48043273,
+        "resume_score_parts": {
+          "baseline": 9.6618083,
+          "record": 7.57339943,
+          "staticScore": 1.72906483,
+          "recordChange": -0.18137557
+        }
+      },
+      "New Mexico": {
+        "predicted_resume_score": 7.9222991,
+        "resume_score_parts": {
+          "baseline": 8.23981405,
+          "record": 8.72972255,
+          "staticScore": -0.80742345,
+          "recordChange": -0.31751495
+        }
+      },
+      "UTSA": {
+        "predicted_resume_score": 8.16584222,
+        "resume_score_parts": {
+          "baseline": 8.7754537,
+          "record": 8.43762602,
+          "staticScore": -0.2717838,
+          "recordChange": -0.60961148
+        }
+      },
+      "South Carolina": {
+        "predicted_resume_score": 9.2039759,
+        "resume_score_parts": {
+          "baseline": 9.41120072,
+          "record": 6.25508768,
+          "staticScore": 2.3012662,
+          "recordChange": -0.20722482
+        }
+      },
+      "Florida": {
+        "predicted_resume_score": 9.17789105,
+        "resume_score_parts": {
+          "baseline": 9.03528935,
+          "record": 6.6049142,
+          "staticScore": 2.5311134,
+          "recordChange": 0.1426017
+        }
+      },
+      "Oregon": {
+        "predicted_resume_score": 9.20884507,
+        "resume_score_parts": {
+          "baseline": 9.16059314,
+          "record": 6.51056443,
+          "staticScore": 2.2169113,
+          "recordChange": 0.04825193
+        }
+      },
+      "USC": {
+        "predicted_resume_score": 9.06317602,
+        "resume_score_parts": {
+          "baseline": 9.53650451,
+          "record": 7.5686604,
+          "staticScore": 2.24158339,
+          "recordChange": -0.47332849
+        }
+      },
+      "Arizona": {
+        "predicted_resume_score": 8.95761146,
+        "resume_score_parts": {
+          "baseline": 9.28589693,
+          "record": 7.42648953,
+          "staticScore": 1.58298353,
+          "recordChange": -0.32828547
+        }
+      },
+      "Missouri": {
+        "predicted_resume_score": 8.79191597,
+        "resume_score_parts": {
+          "baseline": 9.78711209,
+          "record": 6.75957888,
+          "staticScore": 2.39335115,
+          "recordChange": -0.99519612
+        }
+      },
+      "Liberty": {
+        "predicted_resume_score": 8.17466414,
+        "resume_score_parts": {
+          "baseline": 8.04886445,
+          "record": 9.17303718,
+          "staticScore": -0.99837305,
+          "recordChange": 0.12579968
+        }
+      },
+      "Wisconsin": {
+        "predicted_resume_score": 8.483477,
+        "resume_score_parts": {
+          "baseline": 8.08324444,
+          "record": 6.86254505,
+          "staticScore": 1.62093194,
+          "recordChange": 0.40023255
+        }
+      },
+      "Northwestern": {
+        "predicted_resume_score": 7.96181398,
+        "resume_score_parts": {
+          "baseline": 8.78468177,
+          "record": 6.93190721,
+          "staticScore": 1.67302178,
+          "recordChange": -0.82286779
+        }
+      },
+      "Baylor": {
+        "predicted_resume_score": 7.80652551,
+        "resume_score_parts": {
+          "baseline": 8.40708975,
+          "record": 5.86174826,
+          "staticScore": 1.94477725,
+          "recordChange": -0.60056424
+        }
+      },
+      "James Madison": {
+        "predicted_resume_score": 7.16790806,
+        "resume_score_parts": {
+          "baseline": 7.3383695,
+          "record": 7.87152745,
+          "staticScore": -0.70361939,
+          "recordChange": -0.17046144
+        }
+      },
+      "Louisiana Tech": {
+        "predicted_resume_score": 7.29656092,
+        "resume_score_parts": {
+          "baseline": 7.39694218,
+          "record": 7.65439375,
+          "staticScore": -0.35783282,
+          "recordChange": -0.10038125
+        }
+      },
+      "Michigan": {
+        "predicted_resume_score": 7.98417717,
+        "resume_score_parts": {
+          "baseline": 8.5369203,
+          "record": 5.90956937,
+          "staticScore": 2.0746078,
+          "recordChange": -0.55274313
+        }
+      },
+      "Minnesota": {
+        "predicted_resume_score": 7.10373705,
+        "resume_score_parts": {
+          "baseline": 8.20276099,
+          "record": 5.36328855,
+          "staticScore": 1.74044849,
+          "recordChange": -1.09902395
+        }
+      },
+      "Oklahoma State": {
+        "predicted_resume_score": 7.69155452,
+        "resume_score_parts": {
+          "baseline": 8.08144737,
+          "record": 6.07241965,
+          "staticScore": 1.61913487,
+          "recordChange": -0.38989285
+        }
+      },
+      "Duke": {
+        "predicted_resume_score": 7.610695,
+        "resume_score_parts": {
+          "baseline": 8.78468177,
+          "record": 6.58078823,
+          "staticScore": 1.38439237,
+          "recordChange": -1.17398677
+        }
+      },
+      "Illinois": {
+        "predicted_resume_score": 6.69977211,
+        "resume_score_parts": {
+          "baseline": 8.13483631,
+          "record": 5.0272483,
+          "staticScore": 1.67252381,
+          "recordChange": -1.4350642
+        }
+      },
+      "Louisville": {
+        "predicted_resume_score": 8.42195597,
+        "resume_score_parts": {
+          "baseline": 8.30391106,
+          "record": 6.58035741,
+          "staticScore": 1.84159856,
+          "recordChange": 0.11804491
+        }
+      },
+      "Memphis": {
+        "predicted_resume_score": 7.25977196,
+        "resume_score_parts": {
+          "baseline": 7.61893293,
+          "record": 7.68282792,
+          "staticScore": -0.42305596,
+          "recordChange": -0.35916097
+        }
+      },
+      "North Texas": {
+        "predicted_resume_score": 7.15878741,
+        "resume_score_parts": {
+          "baseline": 7.32809999,
+          "record": 7.58546241,
+          "staticScore": -0.42667501,
+          "recordChange": -0.16931259
+        }
+      },
+      "Oklahoma": {
+        "predicted_resume_score": 7.43327151,
+        "resume_score_parts": {
+          "baseline": 7.88218682,
+          "record": 4.72093469,
+          "staticScore": 2.71233682,
+          "recordChange": -0.44891531
+        }
+      },
+      "Air Force": {
+        "predicted_resume_score": 6.12288111,
+        "resume_score_parts": {
+          "baseline": 6.84364436,
+          "record": 7.03401175,
+          "staticScore": -0.91113064,
+          "recordChange": -0.72076325
+        }
+      },
+      "Akron": {
+        "predicted_resume_score": 0.36717867,
+        "resume_score_parts": {
+          "baseline": 0.07982117,
+          "record": 1.57982,
+          "staticScore": -1.21264133,
+          "recordChange": 0.2873575
+        }
+      },
+      "App State": {
+        "predicted_resume_score": 5.21369535,
+        "resume_score_parts": {
+          "baseline": 5.40368734,
+          "record": 6.27232051,
+          "staticScore": -1.05862516,
+          "recordChange": -0.18999199
+        }
+      },
+      "Arizona State": {
+        "predicted_resume_score": 6.67294129,
+        "resume_score_parts": {
+          "baseline": 6.91420096,
+          "record": 4.92859033,
+          "staticScore": 1.74435096,
+          "recordChange": -0.24125967
+        }
+      },
+      "Arkansas": {
+        "predicted_resume_score": 5.60341713,
+        "resume_score_parts": {
+          "baseline": 6.41249866,
+          "record": 3.06830598,
+          "staticScore": 2.53511116,
+          "recordChange": -0.80908152
+        }
+      },
+      "Arkansas State": {
+        "predicted_resume_score": 4.70935276,
+        "resume_score_parts": {
+          "baseline": 4.49695809,
+          "record": 5.38224467,
+          "staticScore": -0.67289191,
+          "recordChange": 0.21239467
+        }
+      },
+      "Army": {
+        "predicted_resume_score": 6.33325654,
+        "resume_score_parts": {
+          "baseline": 6.04848397,
+          "record": 6.74708507,
+          "staticScore": -0.41382853,
+          "recordChange": 0.28477257
+        }
+      },
+      "Auburn": {
+        "predicted_resume_score": 8.20710763,
+        "resume_score_parts": {
+          "baseline": 7.62334541,
+          "record": 5.75361223,
+          "staticScore": 2.45349541,
+          "recordChange": 0.58376223
+        }
+      },
+      "Ball State": {
+        "predicted_resume_score": 2.38723606,
+        "resume_score_parts": {
+          "baseline": 2.86717047,
+          "record": 3.39745309,
+          "staticScore": -1.01021703,
+          "recordChange": -0.47993441
+        }
+      },
+      "Boston College": {
+        "predicted_resume_score": 5.79721468,
+        "resume_score_parts": {
+          "baseline": 6.77733207,
+          "record": 4.1897326,
+          "staticScore": 1.60748207,
+          "recordChange": -0.9801174
+        }
+      },
+      "Bowling Green": {
+        "predicted_resume_score": 1.6638589,
+        "resume_score_parts": {
+          "baseline": 1.08799505,
+          "record": 2.87357496,
+          "staticScore": -1.20971606,
+          "recordChange": 0.57586385
+        }
+      },
+      "Buffalo": {
+        "predicted_resume_score": 5.24216204,
+        "resume_score_parts": {
+          "baseline": 5.03536804,
+          "record": 6.6691065,
+          "staticScore": -1.42694446,
+          "recordChange": 0.206794
+        }
+      },
+      "California": {
+        "predicted_resume_score": 4.54100493,
+        "resume_score_parts": {
+          "baseline": 4.54962135,
+          "record": 3.43795025,
+          "staticScore": 1.10305468,
+          "recordChange": -0.00861642
+        }
+      },
+      "Central Michigan": {
+        "predicted_resume_score": 4.02090532,
+        "resume_score_parts": {
+          "baseline": 2.78660364,
+          "record": 5.11168919,
+          "staticScore": -1.09078386,
+          "recordChange": 1.23430169
+        }
+      },
+      "Charlotte": {
+        "predicted_resume_score": 0.91692007,
+        "resume_score_parts": {
+          "baseline": 0.6963398,
+          "record": 1.51304277,
+          "staticScore": -0.5961227,
+          "recordChange": 0.22058027
+        }
+      },
+      "Cincinnati": {
+        "predicted_resume_score": 7.42704277,
+        "resume_score_parts": {
+          "baseline": 8.16116147,
+          "record": 5.7281938,
+          "staticScore": 1.69884897,
+          "recordChange": -0.7341187
+        }
+      },
+      "Clemson": {
+        "predicted_resume_score": 7.82798299,
+        "resume_score_parts": {
+          "baseline": 8.19762726,
+          "record": 6.09266823,
+          "staticScore": 1.73531476,
+          "recordChange": -0.36964427
+        }
+      },
+      "Coastal Carolina": {
+        "predicted_resume_score": 3.41856418,
+        "resume_score_parts": {
+          "baseline": 3.26433032,
+          "record": 4.03162136,
+          "staticScore": -0.61305718,
+          "recordChange": 0.15423386
+        }
+      },
+      "Colorado": {
+        "predicted_resume_score": 5.55585371,
+        "resume_score_parts": {
+          "baseline": 5.59850498,
+          "record": 3.83473624,
+          "staticScore": 1.72111748,
+          "recordChange": -0.04265126
+        }
+      },
+      "Colorado State": {
+        "predicted_resume_score": 3.08570694,
+        "resume_score_parts": {
+          "baseline": 3.58953232,
+          "record": 3.37356212,
+          "staticScore": -0.28785518,
+          "recordChange": -0.50382538
+        }
+      },
+      "Delaware": {
+        "predicted_resume_score": 4.47663945,
+        "resume_score_parts": {
+          "baseline": 4.3473932,
+          "record": 5.29909625,
+          "staticScore": -0.8224568,
+          "recordChange": 0.12924625
+        }
+      },
+      "East Carolina": {
+        "predicted_resume_score": 4.52570158,
+        "resume_score_parts": {
+          "baseline": 4.51665434,
+          "record": 5.17889724,
+          "staticScore": -0.65319566,
+          "recordChange": 0.00904724
+        }
+      },
+      "Eastern Michigan": {
+        "predicted_resume_score": 2.78811905,
+        "resume_score_parts": {
+          "baseline": 3.20285591,
+          "record": 4.18068537,
+          "staticScore": -1.39256631,
+          "recordChange": -0.41473686
+        }
+      },
+      "Florida Atlantic": {
+        "predicted_resume_score": 4.86482855,
+        "resume_score_parts": {
+          "baseline": 6.00521129,
+          "record": 5.32192975,
+          "staticScore": -0.45710121,
+          "recordChange": -1.14038275
+        }
+      },
+      "Florida International": {
+        "predicted_resume_score": 3.42138524,
+        "resume_score_parts": {
+          "baseline": 2.87424278,
+          "record": 4.42452996,
+          "staticScore": -1.00314472,
+          "recordChange": 0.54714246
+        }
+      },
+      "Florida State": {
+        "predicted_resume_score": 6.29306387,
+        "resume_score_parts": {
+          "baseline": 5.73342761,
+          "record": 4.43702376,
+          "staticScore": 1.85604011,
+          "recordChange": 0.55963626
+        }
+      },
+      "Fresno State": {
+        "predicted_resume_score": 6.01606298,
+        "resume_score_parts": {
+          "baseline": 6.15423897,
+          "record": 6.32413651,
+          "staticScore": -0.30807353,
+          "recordChange": -0.13817599
+        }
+      },
+      "Georgia Southern": {
+        "predicted_resume_score": 4.95870129,
+        "resume_score_parts": {
+          "baseline": 4.73079706,
+          "record": 5.39775422,
+          "staticScore": -0.43905294,
+          "recordChange": 0.22790422
+        }
+      },
+      "Georgia State": {
+        "predicted_resume_score": 4.27059948,
+        "resume_score_parts": {
+          "baseline": 4.29386381,
+          "record": 5.14658568,
+          "staticScore": -0.87598619,
+          "recordChange": -0.02326432
+        }
+      },
+      "Georgia Tech": {
+        "predicted_resume_score": 3.65537501,
+        "resume_score_parts": {
+          "baseline": 4.21371881,
+          "record": 2.0265812,
+          "staticScore": 1.62879381,
+          "recordChange": -0.5583438
+        }
+      },
+      "Hawai'i": {
+        "predicted_resume_score": 2.46140449,
+        "resume_score_parts": {
+          "baseline": 1.34385525,
+          "record": 3.70247424,
+          "staticScore": -1.24106975,
+          "recordChange": 1.11754924
+        }
+      },
+      "Iowa State": {
+        "predicted_resume_score": 6.46091494,
+        "resume_score_parts": {
+          "baseline": 6.80901817,
+          "record": 4.82174677,
+          "staticScore": 1.63916817,
+          "recordChange": -0.34810323
+        }
+      },
+      "Jacksonville State": {
+        "predicted_resume_score": 6.81497071,
+        "resume_score_parts": {
+          "baseline": 6.70898879,
+          "record": 7.86075693,
+          "staticScore": -1.04578621,
+          "recordChange": 0.10598192
+        }
+      },
+      "Kansas": {
+        "predicted_resume_score": 6.01450153,
+        "resume_score_parts": {
+          "baseline": 5.62676278,
+          "record": 4.26512625,
+          "staticScore": 1.74937528,
+          "recordChange": 0.38773875
+        }
+      },
+      "Kansas State": {
+        "predicted_resume_score": 6.00976086,
+        "resume_score_parts": {
+          "baseline": 6.53923966,
+          "record": 4.6403712,
+          "staticScore": 1.36938966,
+          "recordChange": -0.5294788
+        }
+      },
+      "Kennesaw State": {
+        "predicted_resume_score": 3.21762822,
+        "resume_score_parts": {
+          "baseline": 1.84244812,
+          "record": 3.9601051,
+          "staticScore": -0.74247688,
+          "recordChange": 1.3751801
+        }
+      },
+      "Kent State": {
+        "predicted_resume_score": 2.02949173,
+        "resume_score_parts": {
+          "baseline": 2.29918557,
+          "record": 3.17687283,
+          "staticScore": -1.1473811,
+          "recordChange": -0.26969384
+        }
+      },
+      "Louisiana": {
+        "predicted_resume_score": 5.93456026,
+        "resume_score_parts": {
+          "baseline": 5.6437562,
+          "record": 6.75311656,
+          "staticScore": -0.8185563,
+          "recordChange": 0.29080406
+        }
+      },
+      "Marshall": {
+        "predicted_resume_score": 4.89466006,
+        "resume_score_parts": {
+          "baseline": 5.44309498,
+          "record": 5.91387758,
+          "staticScore": -1.01921752,
+          "recordChange": -0.54843492
+        }
+      },
+      "Maryland": {
+        "predicted_resume_score": 4.32440027,
+        "resume_score_parts": {
+          "baseline": 4.27097849,
+          "record": 2.63834678,
+          "staticScore": 1.68605349,
+          "recordChange": 0.05342178
+        }
+      },
+      "Massachusetts": {
+        "predicted_resume_score": 3.61282847,
+        "resume_score_parts": {
+          "baseline": 3.37415372,
+          "record": 5.40852474,
+          "staticScore": -1.79569628,
+          "recordChange": 0.23867474
+        }
+      },
+      "Miami (OH)": {
+        "predicted_resume_score": 4.44684321,
+        "resume_score_parts": {
+          "baseline": 5.28866712,
+          "record": 5.62048859,
+          "staticScore": -1.17364538,
+          "recordChange": -0.84182391
+        }
+      },
+      "Michigan State": {
+        "predicted_resume_score": 4.39378413,
+        "resume_score_parts": {
+          "baseline": 4.39679988,
+          "record": 2.58190925,
+          "staticScore": 1.81187488,
+          "recordChange": -0.00301575
+        }
+      },
+      "Middle Tennessee": {
+        "predicted_resume_score": 4.04745203,
+        "resume_score_parts": {
+          "baseline": 4.17669828,
+          "record": 5.04060375,
+          "staticScore": -0.99315172,
+          "recordChange": -0.12924625
+        }
+      },
+      "Mississippi State": {
+        "predicted_resume_score": 7.36855519,
+        "resume_score_parts": {
+          "baseline": 7.40474414,
+          "record": 5.13366105,
+          "staticScore": 2.23489414,
+          "recordChange": -0.03618895
+        }
+      },
+      "Missouri State": {
+        "predicted_resume_score": 2.74671524,
+        "resume_score_parts": {
+          "baseline": 3.13186907,
+          "record": 3.49223368,
+          "staticScore": -0.74551843,
+          "recordChange": -0.38515383
+        }
+      },
+      "Navy": {
+        "predicted_resume_score": 3.38457745,
+        "resume_score_parts": {
+          "baseline": 2.29287746,
+          "record": 3.67662499,
+          "staticScore": -0.29204754,
+          "recordChange": 1.09169999
+        }
+      },
+      "NC State": {
+        "predicted_resume_score": 6.00010919,
+        "resume_score_parts": {
+          "baseline": 6.41412801,
+          "record": 4.75583118,
+          "staticScore": 1.24427801,
+          "recordChange": -0.41401882
+        }
+      },
+      "Nebraska": {
+        "predicted_resume_score": 7.87884879,
+        "resume_score_parts": {
+          "baseline": 8.0692716,
+          "record": 6.27188969,
+          "staticScore": 1.6069591,
+          "recordChange": -0.19042281
+        }
+      },
+      "Nevada": {
+        "predicted_resume_score": 3.25871086,
+        "resume_score_parts": {
+          "baseline": 2.7839463,
+          "record": 4.35215206,
+          "staticScore": -1.0934412,
+          "recordChange": 0.47476456
+        }
+      },
+      "New Mexico State": {
+        "predicted_resume_score": 2.89439933,
+        "resume_score_parts": {
+          "baseline": 2.9370506,
+          "record": 3.83473624,
+          "staticScore": -0.9403369,
+          "recordChange": -0.04265126
+        }
+      },
+      "North Carolina": {
+        "predicted_resume_score": 7.49220476,
+        "resume_score_parts": {
+          "baseline": 7.15056384,
+          "record": 5.51149092,
+          "staticScore": 1.98071384,
+          "recordChange": 0.34164092
+        }
+      },
+      "North Dakota State": {
+        "predicted_resume_score": 6.81182673,
+        "resume_score_parts": {
+          "baseline": 6.88880005,
+          "record": 7.96501557,
+          "staticScore": -1.15318884,
+          "recordChange": -0.07697332
+        }
+      },
+      "Northern Illinois": {
+        "predicted_resume_score": -0.09020546,
+        "resume_score_parts": {
+          "baseline": -0.99449839,
+          "record": 0.90429293,
+          "staticScore": -0.99449839,
+          "recordChange": 0.90429293
+        }
+      },
+      "Ohio": {
+        "predicted_resume_score": 6.45479907,
+        "resume_score_parts": {
+          "baseline": 6.53277764,
+          "record": 7.67679643,
+          "staticScore": -1.22199736,
+          "recordChange": -0.07797857
+        }
+      },
+      "Old Dominion": {
+        "predicted_resume_score": 1.6353762,
+        "resume_score_parts": {
+          "baseline": 1.54849399,
+          "record": 2.38459331,
+          "staticScore": -0.74921712,
+          "recordChange": 0.0868822
+        }
+      },
+      "Oregon State": {
+        "predicted_resume_score": 6.54371059,
+        "resume_score_parts": {
+          "baseline": 6.38109531,
+          "record": 6.62492778,
+          "staticScore": -0.08121719,
+          "recordChange": 0.16261528
+        }
+      },
+      "Penn State": {
+        "predicted_resume_score": 7.4699442,
+        "resume_score_parts": {
+          "baseline": 6.72160842,
+          "record": 5.91818579,
+          "staticScore": 1.55175842,
+          "recordChange": 0.74833579
+        }
+      },
+      "Pittsburgh": {
+        "predicted_resume_score": 7.87813856,
+        "resume_score_parts": {
+          "baseline": 8.20771649,
+          "record": 6.5635554,
+          "staticScore": 1.31458316,
+          "recordChange": -0.32957794
+        }
+      },
+      "Purdue": {
+        "predicted_resume_score": 5.65423041,
+        "resume_score_parts": {
+          "baseline": 5.95709746,
+          "record": 3.57452045,
+          "staticScore": 2.07970996,
+          "recordChange": -0.30286705
+        }
+      },
+      "Rice": {
+        "predicted_resume_score": 1.51125638,
+        "resume_score_parts": {
+          "baseline": 0.94946601,
+          "record": 1.85425287,
+          "staticScore": -0.34299649,
+          "recordChange": 0.56179037
+        }
+      },
+      "Rutgers": {
+        "predicted_resume_score": 4.07432742,
+        "resume_score_parts": {
+          "baseline": 4.03943094,
+          "record": 2.61982149,
+          "staticScore": 1.45450594,
+          "recordChange": 0.03489649
+        }
+      },
+      "Sacramento State": {
+        "predicted_resume_score": 0.38189306,
+        "resume_score_parts": {
+          "baseline": 0.68361125,
+          "record": 1.99599292,
+          "staticScore": -1.61409986,
+          "recordChange": -0.30171819
+        }
+      },
+      "Sam Houston": {
+        "predicted_resume_score": 0.65923186,
+        "resume_score_parts": {
+          "baseline": 0.28700266,
+          "record": 1.6646917,
+          "staticScore": -1.00545984,
+          "recordChange": 0.3722292
+        }
+      },
+      "San Diego State": {
+        "predicted_resume_score": 4.07426217,
+        "resume_score_parts": {
+          "baseline": 4.41066797,
+          "record": 4.25901643,
+          "staticScore": -0.18475426,
+          "recordChange": -0.33640579
+        }
+      },
+      "San Jos\u00e9 State": {
+        "predicted_resume_score": 3.79070034,
+        "resume_score_parts": {
+          "baseline": 3.60957884,
+          "record": 4.77654372,
+          "staticScore": -0.98584338,
+          "recordChange": 0.1811215
+        }
+      },
+      "SMU": {
+        "predicted_resume_score": 7.85281631,
+        "resume_score_parts": {
+          "baseline": 8.78468177,
+          "record": 6.82290954,
+          "staticScore": 1.41125538,
+          "recordChange": -0.93186546
+        }
+      },
+      "South Alabama": {
+        "predicted_resume_score": 4.23631527,
+        "resume_score_parts": {
+          "baseline": 4.40735114,
+          "record": 4.99881413,
+          "staticScore": -0.76249886,
+          "recordChange": -0.17103587
+        }
+      },
+      "Southern Miss": {
+        "predicted_resume_score": 3.31864584,
+        "resume_score_parts": {
+          "baseline": 3.15191817,
+          "record": 4.04411516,
+          "staticScore": -0.72546933,
+          "recordChange": 0.16672766
+        }
+      },
+      "South Florida": {
+        "predicted_resume_score": 6.88244864,
+        "resume_score_parts": {
+          "baseline": 7.01686474,
+          "record": 7.6203589,
+          "staticScore": -0.73791026,
+          "recordChange": -0.1344161
+        }
+      },
+      "Stanford": {
+        "predicted_resume_score": 5.36608651,
+        "resume_score_parts": {
+          "baseline": 6.02725288,
+          "record": 3.93425585,
+          "staticScore": 1.43183066,
+          "recordChange": -0.66116637
+        }
+      },
+      "Syracuse": {
+        "predicted_resume_score": 6.05995643,
+        "resume_score_parts": {
+          "baseline": 6.60494479,
+          "record": 4.62486165,
+          "staticScore": 1.43509479,
+          "recordChange": -0.54498835
+        }
+      },
+      "TCU": {
+        "predicted_resume_score": 6.72480539,
+        "resume_score_parts": {
+          "baseline": 7.12460712,
+          "record": 4.77004827,
+          "staticScore": 1.95475712,
+          "recordChange": -0.39980173
+        }
+      },
+      "Temple": {
+        "predicted_resume_score": 2.65146597,
+        "resume_score_parts": {
+          "baseline": 2.05305583,
+          "record": 3.18333514,
+          "staticScore": -0.53186917,
+          "recordChange": 0.59841014
+        }
+      },
+      "Texas A&M": {
+        "predicted_resume_score": 7.54066318,
+        "resume_score_parts": {
+          "baseline": 7.69834361,
+          "record": 5.01216958,
+          "staticScore": 2.52849361,
+          "recordChange": -0.15768042
+        }
+      },
+      "Texas State": {
+        "predicted_resume_score": 5.49472325,
+        "resume_score_parts": {
+          "baseline": 5.96303109,
+          "record": 5.44009216,
+          "staticScore": 0.05463109,
+          "recordChange": -0.46830784
+        }
+      },
+      "Toledo": {
+        "predicted_resume_score": 6.68803221,
+        "resume_score_parts": {
+          "baseline": 6.39378158,
+          "record": 8.04902563,
+          "staticScore": -1.36099342,
+          "recordChange": 0.29425063
+        }
+      },
+      "Troy": {
+        "predicted_resume_score": 3.77447974,
+        "resume_score_parts": {
+          "baseline": 4.41252539,
+          "record": 4.53180435,
+          "staticScore": -0.75732461,
+          "recordChange": -0.63804565
+        }
+      },
+      "Tulane": {
+        "predicted_resume_score": 4.67360213,
+        "resume_score_parts": {
+          "baseline": 4.98422395,
+          "record": 4.85922818,
+          "staticScore": -0.18562605,
+          "recordChange": -0.31062182
+        }
+      },
+      "Tulsa": {
+        "predicted_resume_score": 4.75767525,
+        "resume_score_parts": {
+          "baseline": 4.52244707,
+          "record": 5.40507818,
+          "staticScore": -0.64740293,
+          "recordChange": 0.23522818
+        }
+      },
+      "UAB": {
+        "predicted_resume_score": 4.17146753,
+        "resume_score_parts": {
+          "baseline": 4.54498919,
+          "record": 4.79632834,
+          "staticScore": -0.62486081,
+          "recordChange": -0.37352166
+        }
+      },
+      "UCF": {
+        "predicted_resume_score": 6.78945269,
+        "resume_score_parts": {
+          "baseline": 6.80366978,
+          "record": 5.15563291,
+          "staticScore": 1.63381978,
+          "recordChange": -0.01421709
+        }
+      },
+      "UConn": {
+        "predicted_resume_score": 4.60109083,
+        "resume_score_parts": {
+          "baseline": 4.41454541,
+          "record": 5.35639542,
+          "staticScore": -0.75530459,
+          "recordChange": 0.18654542
+        }
+      },
+      "UL Monroe": {
+        "predicted_resume_score": 0.71382386,
+        "resume_score_parts": {
+          "baseline": 0.23992094,
+          "record": 1.76636542,
+          "staticScore": -1.05254156,
+          "recordChange": 0.47390292
+        }
+      },
+      "UNLV": {
+        "predicted_resume_score": 5.1484783,
+        "resume_score_parts": {
+          "baseline": 5.11715147,
+          "record": 5.93972683,
+          "staticScore": -0.79124853,
+          "recordChange": 0.03132683
+        }
+      },
+      "Utah State": {
+        "predicted_resume_score": 3.65328524,
+        "resume_score_parts": {
+          "baseline": 3.68994418,
+          "record": 3.84072856,
+          "staticScore": -0.18744332,
+          "recordChange": -0.03665894
+        }
+      },
+      "UTEP": {
+        "predicted_resume_score": 0.81845578,
+        "resume_score_parts": {
+          "baseline": 0.51386545,
+          "record": 1.59705283,
+          "staticScore": -0.77859705,
+          "recordChange": 0.30459033
+        }
+      },
+      "Vanderbilt": {
+        "predicted_resume_score": 5.5121578,
+        "resume_score_parts": {
+          "baseline": 6.07825638,
+          "record": 3.31128892,
+          "staticScore": 2.20086888,
+          "recordChange": -0.56609858
+        }
+      },
+      "Virginia": {
+        "predicted_resume_score": 6.14865056,
+        "resume_score_parts": {
+          "baseline": 5.98867242,
+          "record": 4.75540036,
+          "staticScore": 1.3932502,
+          "recordChange": 0.15997814
+        }
+      },
+      "Virginia Tech": {
+        "predicted_resume_score": 7.85476426,
+        "resume_score_parts": {
+          "baseline": 8.71856003,
+          "record": 6.89097923,
+          "staticScore": 0.96378503,
+          "recordChange": -0.86379577
+        }
+      },
+      "Washington": {
+        "predicted_resume_score": 7.44592895,
+        "resume_score_parts": {
+          "baseline": 8.22097563,
+          "record": 5.68726582,
+          "staticScore": 1.75866313,
+          "recordChange": -0.77504668
+        }
+      },
+      "Washington State": {
+        "predicted_resume_score": 1.56631915,
+        "resume_score_parts": {
+          "baseline": 0.99737455,
+          "record": 1.71780016,
+          "staticScore": -0.15148101,
+          "recordChange": 0.5689446
+        }
+      },
+      "Western Kentucky": {
+        "predicted_resume_score": 2.90515726,
+        "resume_score_parts": {
+          "baseline": 3.28040221,
+          "record": 3.50214255,
+          "staticScore": -0.59698529,
+          "recordChange": -0.37524495
+        }
+      },
+      "Western Michigan": {
+        "predicted_resume_score": 6.22576506,
+        "resume_score_parts": {
+          "baseline": 5.81863938,
+          "record": 7.30025902,
+          "staticScore": -1.07449396,
+          "recordChange": 0.40712569
+        }
+      },
+      "West Virginia": {
+        "predicted_resume_score": 6.85733894,
+        "resume_score_parts": {
+          "baseline": 8.22950329,
+          "record": 5.09014815,
+          "staticScore": 1.76719079,
+          "recordChange": -1.37216435
+        }
+      },
+      "Wyoming": {
+        "predicted_resume_score": 4.66741269,
+        "resume_score_parts": {
+          "baseline": 5.2528982,
+          "record": 5.87682699,
+          "staticScore": -1.2094143,
+          "recordChange": -0.58548551
+        }
+      }
+    }
+  },
+  "preseason": {
+    "generated_at": "2026-11-05T07:00:31Z",
+    "season": 2026,
+    "n_sims": 500,
+    "teams": {
+      "Notre Dame": {
+        "predicted_resume_score": 10.66692198,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 8.84561335,
+          "staticScore": 1.82130863,
+          "recordChange": -0.20162415
+        }
+      },
+      "Ohio State": {
+        "predicted_resume_score": 10.87922542,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 8.34586118,
+          "staticScore": 2.53336424,
+          "recordChange": 0.59108618
+        }
+      },
+      "Oregon": {
+        "predicted_resume_score": 10.79992207,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 8.55610175,
+          "staticScore": 2.24382032,
+          "recordChange": 2.09378925
+        }
+      },
+      "Miami": {
+        "predicted_resume_score": 10.4686853,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 8.58884413,
+          "staticScore": 1.87984117,
+          "recordChange": -1.75085587
+        }
+      },
+      "Texas Tech": {
+        "predicted_resume_score": 10.46583839,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 8.91799125,
+          "staticScore": 1.54784714,
+          "recordChange": -0.12924625
+        }
+      },
+      "Texas A&M": {
+        "predicted_resume_score": 10.05992389,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 7.35669655,
+          "staticScore": 2.70322734,
+          "recordChange": 2.18684655
+        }
+      },
+      "Texas": {
+        "predicted_resume_score": 10.03195026,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.86211423,
+          "staticScore": 3.16983602,
+          "recordChange": -0.89266077
+        }
+      },
+      "Georgia": {
+        "predicted_resume_score": 9.86002494,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 7.10854375,
+          "staticScore": 2.75148119,
+          "recordChange": -1.93869375
+        }
+      },
+      "Alabama": {
+        "predicted_resume_score": 9.81922377,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 7.09131092,
+          "staticScore": 2.72791286,
+          "recordChange": -0.66346408
+        }
+      },
+      "LSU": {
+        "predicted_resume_score": 9.61428798,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.93966198,
+          "staticScore": 2.67462599,
+          "recordChange": -0.81511302
+        }
+      },
+      "Oklahoma": {
+        "predicted_resume_score": 9.43083222,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.5243507,
+          "staticScore": 2.90648152,
+          "recordChange": 1.3545007
+        }
+      },
+      "Indiana": {
+        "predicted_resume_score": 9.33335465,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 7.22228045,
+          "staticScore": 2.1110742,
+          "recordChange": -1.96856399
+        }
+      },
+      "Michigan": {
+        "predicted_resume_score": 9.35355724,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.94138527,
+          "staticScore": 2.41217197,
+          "recordChange": 0.47907277
+        }
+      },
+      "Utah": {
+        "predicted_resume_score": 9.16811683,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 7.49111265,
+          "staticScore": 1.67700418,
+          "recordChange": -2.84858735
+        }
+      },
+      "Florida": {
+        "predicted_resume_score": 9.11962902,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.38476475,
+          "staticScore": 2.73486427,
+          "recordChange": -0.07754775
+        }
+      },
+      "Ole Miss": {
+        "predicted_resume_score": 9.08590062,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.39165788,
+          "staticScore": 2.69424273,
+          "recordChange": -1.36311712
+        }
+      },
+      "USC": {
+        "predicted_resume_score": 9.04228934,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.84143483,
+          "staticScore": 2.2008545,
+          "recordChange": -1.20055406
+        }
+      },
+      "Missouri": {
+        "predicted_resume_score": 8.74439436,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.16935433,
+          "staticScore": 2.57504003,
+          "recordChange": -1.58542067
+        }
+      },
+      "BYU": {
+        "predicted_resume_score": 8.81545226,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 7.01376317,
+          "staticScore": 1.80168909,
+          "recordChange": -2.03347433
+        }
+      },
+      "Tennessee": {
+        "predicted_resume_score": 8.6653144,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.02976838,
+          "staticScore": 2.63554602,
+          "recordChange": -1.72500662
+        }
+      },
+      "Louisville": {
+        "predicted_resume_score": 8.33442702,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.52952055,
+          "staticScore": 1.80490647,
+          "recordChange": 0.06720805
+        }
+      },
+      "Vanderbilt": {
+        "predicted_resume_score": 8.19740333,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.71440753,
+          "staticScore": 2.4829958,
+          "recordChange": 1.83702003
+        }
+      },
+      "Washington": {
+        "predicted_resume_score": 8.31438041,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.38821132,
+          "staticScore": 1.92616909,
+          "recordChange": -0.07410118
+        }
+      },
+      "SMU": {
+        "predicted_resume_score": 8.26844368,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.68806262,
+          "staticScore": 1.58038107,
+          "recordChange": -1.06671238
+        }
+      },
+      "Auburn": {
+        "predicted_resume_score": 8.39410629,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.83848393,
+          "staticScore": 2.55562235,
+          "recordChange": 0.66863393
+        }
+      },
+      "Florida State": {
+        "predicted_resume_score": 8.14067228,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.0694039,
+          "staticScore": 2.07126838,
+          "recordChange": 2.1920164
+        }
+      },
+      "Penn State": {
+        "predicted_resume_score": 8.19633487,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.45886593,
+          "staticScore": 1.73746894,
+          "recordChange": 1.28901593
+        }
+      },
+      "South Carolina": {
+        "predicted_resume_score": 8.10688167,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.64719948,
+          "staticScore": 2.45968219,
+          "recordChange": -0.81511302
+        }
+      },
+      "Texas State": {
+        "predicted_resume_score": 6.00106059,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.27525793,
+          "staticScore": -0.27419734,
+          "recordChange": 0.36685793
+        }
+      },
+      "South Florida": {
+        "predicted_resume_score": 6.14543301,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.80869245,
+          "staticScore": -0.66325944,
+          "recordChange": -0.94608255
+        }
+      },
+      "Toledo": {
+        "predicted_resume_score": 6.22917451,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 7.35324998,
+          "staticScore": -1.12407548,
+          "recordChange": -0.40152502
+        }
+      },
+      "Kansas State": {
+        "predicted_resume_score": 7.69304773,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.33651282,
+          "staticScore": 1.35653491,
+          "recordChange": 1.16666282
+        }
+      },
+      "James Madison": {
+        "predicted_resume_score": 6.23681644,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 7.04822883,
+          "staticScore": -0.8114124,
+          "recordChange": -0.99376006
+        }
+      },
+      "Houston": {
+        "predicted_resume_score": 7.93578749,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.46403578,
+          "staticScore": 1.4717517,
+          "recordChange": -1.29073922
+        }
+      },
+      "Clemson": {
+        "predicted_resume_score": 7.74594306,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.92292482,
+          "staticScore": 1.82301824,
+          "recordChange": -0.53938768
+        }
+      },
+      "East Carolina": {
+        "predicted_resume_score": 5.78887911,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.25724178,
+          "staticScore": -0.46836267,
+          "recordChange": 1.08739178
+        }
+      },
+      "Boise State": {
+        "predicted_resume_score": 5.62290626,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.85603009,
+          "staticScore": -0.23312383,
+          "recordChange": -3.00656991
+        }
+      },
+      "San Diego State": {
+        "predicted_resume_score": 5.4721026,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.88610922,
+          "staticScore": -0.41400662,
+          "recordChange": 1.290687
+        }
+      },
+      "Memphis": {
+        "predicted_resume_score": 5.67290953,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.29170745,
+          "staticScore": -0.61879792,
+          "recordChange": -1.75028144
+        }
+      },
+      "TCU": {
+        "predicted_resume_score": 7.2957689,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.60584068,
+          "staticScore": 1.68992821,
+          "recordChange": 0.43599068
+        }
+      },
+      "Virginia": {
+        "predicted_resume_score": 7.25992546,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.79884842,
+          "staticScore": 1.46107705,
+          "recordChange": 1.20342619
+        }
+      },
+      "NC State": {
+        "predicted_resume_score": 7.5459551,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.09697643,
+          "staticScore": 1.44897867,
+          "recordChange": 0.92712643
+        }
+      },
+      "Nebraska": {
+        "predicted_resume_score": 7.72387876,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.89190572,
+          "staticScore": 1.83197304,
+          "recordChange": -0.57040678
+        }
+      },
+      "Virginia Tech": {
+        "predicted_resume_score": 7.39993402,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.85054692,
+          "staticScore": 1.5493871,
+          "recordChange": -1.90422808
+        }
+      },
+      "Army": {
+        "predicted_resume_score": 5.71199109,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.31066357,
+          "staticScore": -0.59867247,
+          "recordChange": -0.15164893
+        }
+      },
+      "Arizona": {
+        "predicted_resume_score": 7.48221658,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.89535228,
+          "staticScore": 1.5868643,
+          "recordChange": -1.85942272
+        }
+      },
+      "Tulane": {
+        "predicted_resume_score": 5.10163848,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.43695892,
+          "staticScore": -0.33532044,
+          "recordChange": 0.26710892
+        }
+      },
+      "Delaware": {
+        "predicted_resume_score": 5.87802904,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.45714265,
+          "staticScore": -0.57911361,
+          "recordChange": 1.28729265
+        }
+      },
+      "Georgia Tech": {
+        "predicted_resume_score": 7.20846801,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.45074518,
+          "staticScore": 1.75772283,
+          "recordChange": 2.86582018
+        }
+      },
+      "Baylor": {
+        "predicted_resume_score": 7.10840956,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.32322222,
+          "staticScore": 1.78518734,
+          "recordChange": -1.13909028
+        }
+      },
+      "UTSA": {
+        "predicted_resume_score": 5.66706809,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.08663673,
+          "staticScore": -0.41956864,
+          "recordChange": -2.96060077
+        }
+      },
+      "Iowa": {
+        "predicted_resume_score": 7.34143085,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.65064605,
+          "staticScore": 1.6907848,
+          "recordChange": -2.10412895
+        }
+      },
+      "Colorado": {
+        "predicted_resume_score": 6.49499018,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.82347005,
+          "staticScore": 1.67152013,
+          "recordChange": 0.94608255
+        }
+      },
+      "Kansas": {
+        "predicted_resume_score": 7.06871757,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.47659443,
+          "staticScore": 1.59212313,
+          "recordChange": 1.59920693
+        }
+      },
+      "New Mexico": {
+        "predicted_resume_score": 5.63662522,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.58121905,
+          "staticScore": -0.94459383,
+          "recordChange": -2.46601845
+        }
+      },
+      "Washington State": {
+        "predicted_resume_score": 5.09304007,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.30896596,
+          "staticScore": -0.2159259,
+          "recordChange": 4.16011041
+        }
+      },
+      "Western Michigan": {
+        "predicted_resume_score": 5.49091321,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.31238685,
+          "staticScore": -0.82147364,
+          "recordChange": -0.58074648
+        }
+      },
+      "Ohio": {
+        "predicted_resume_score": 5.13773114,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.1521215,
+          "staticScore": -1.01439036,
+          "recordChange": -1.6026535
+        }
+      },
+      "Oregon State": {
+        "predicted_resume_score": 4.8217201,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.16609011,
+          "staticScore": -0.34437001,
+          "recordChange": -1.29622239
+        }
+      },
+      "Duke": {
+        "predicted_resume_score": 7.00484723,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.53346278,
+          "staticScore": 1.47138445,
+          "recordChange": -2.22131222
+        }
+      },
+      "UCF": {
+        "predicted_resume_score": 6.72652717,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.36458102,
+          "staticScore": 1.36194616,
+          "recordChange": 0.19473102
+        }
+      },
+      "Arizona State": {
+        "predicted_resume_score": 7.0701057,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.30598938,
+          "staticScore": 1.76411632,
+          "recordChange": 0.13613938
+        }
+      },
+      "Jacksonville State": {
+        "predicted_resume_score": 5.04751286,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 6.09352987,
+          "staticScore": -1.04601701,
+          "recordChange": -1.66124513
+        }
+      },
+      "Kentucky": {
+        "predicted_resume_score": 6.9808586,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.33405758,
+          "staticScore": 2.64680101,
+          "recordChange": -4.71317992
+        }
+      },
+      "Louisiana Tech": {
+        "predicted_resume_score": 5.26150256,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.790232,
+          "staticScore": -0.52872944,
+          "recordChange": -1.964543
+        }
+      },
+      "Wake Forest": {
+        "predicted_resume_score": 6.96697622,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.40421653,
+          "staticScore": 1.56275969,
+          "recordChange": -3.64302097
+        }
+      },
+      "Kennesaw State": {
+        "predicted_resume_score": 5.22795845,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.97290003,
+          "staticScore": -0.74494158,
+          "recordChange": 3.38797503
+        }
+      },
+      "South Alabama": {
+        "predicted_resume_score": 4.71875044,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.47487115,
+          "staticScore": -0.75612071,
+          "recordChange": 0.30502115
+        }
+      },
+      "Marshall": {
+        "predicted_resume_score": 5.07096577,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.90052213,
+          "staticScore": -0.82955636,
+          "recordChange": -0.56179037
+        }
+      },
+      "Southern Miss": {
+        "predicted_resume_score": 4.68335064,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.3352852,
+          "staticScore": -0.65193456,
+          "recordChange": 1.4578977
+        }
+      },
+      "Western Kentucky": {
+        "predicted_resume_score": 5.2320701,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.67304873,
+          "staticScore": -0.44097863,
+          "recordChange": 1.79566123
+        }
+      },
+      "California": {
+        "predicted_resume_score": 6.78950271,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.47659443,
+          "staticScore": 1.31290827,
+          "recordChange": 2.03002777
+        }
+      },
+      "Maryland": {
+        "predicted_resume_score": 7.04466324,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.38009057,
+          "staticScore": 1.66457267,
+          "recordChange": 2.79516557
+        }
+      },
+      "Navy": {
+        "predicted_resume_score": 4.81196056,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.39560012,
+          "staticScore": -0.58363956,
+          "recordChange": 2.81067512
+        }
+      },
+      "App State": {
+        "predicted_resume_score": 4.44331158,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.28875655,
+          "staticScore": -0.84544497,
+          "recordChange": -1.17355595
+        }
+      },
+      "Florida Atlantic": {
+        "predicted_resume_score": 4.39669482,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.94065332,
+          "staticScore": -0.54395849,
+          "recordChange": -1.52165918
+        }
+      },
+      "Iowa State": {
+        "predicted_resume_score": 6.54743577,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.2112088,
+          "staticScore": 1.33622697,
+          "recordChange": 0.0413588
+        }
+      },
+      "North Texas": {
+        "predicted_resume_score": 4.79902033,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.46797802,
+          "staticScore": -0.66895768,
+          "recordChange": -2.28679698
+        }
+      },
+      "Old Dominion": {
+        "predicted_resume_score": 4.57614337,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.28530998,
+          "staticScore": -0.70916662,
+          "recordChange": 2.98759887
+        }
+      },
+      "Pittsburgh": {
+        "predicted_resume_score": 7.04561075,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.56792845,
+          "staticScore": 1.4776823,
+          "recordChange": -1.32520488
+        }
+      },
+      "Rutgers": {
+        "predicted_resume_score": 6.69551512,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.2112088,
+          "staticScore": 1.48430632,
+          "recordChange": 2.6262838
+        }
+      },
+      "Wisconsin": {
+        "predicted_resume_score": 6.44444802,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.93031362,
+          "staticScore": 1.5141344,
+          "recordChange": -1.53199888
+        }
+      },
+      "Air Force": {
+        "predicted_resume_score": 3.96772769,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.23016492,
+          "staticScore": -1.26243723,
+          "recordChange": -2.52461008
+        }
+      },
+      "Arkansas": {
+        "predicted_resume_score": 6.84214134,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.18930178,
+          "staticScore": 2.65283956,
+          "recordChange": 0.31191428
+        }
+      },
+      "Louisiana": {
+        "predicted_resume_score": 4.03678255,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.97511898,
+          "staticScore": -0.93833644,
+          "recordChange": -1.48719352
+        }
+      },
+      "Middle Tennessee": {
+        "predicted_resume_score": 4.07473475,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.95099302,
+          "staticScore": -0.87625826,
+          "recordChange": -0.21885698
+        }
+      },
+      "Minnesota": {
+        "predicted_resume_score": 7.12073292,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.44385205,
+          "staticScore": 1.67688087,
+          "recordChange": -1.01846045
+        }
+      },
+      "Nevada": {
+        "predicted_resume_score": 3.97688931,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.14055418,
+          "staticScore": -1.16366488,
+          "recordChange": 1.26316668
+        }
+      },
+      "Utah State": {
+        "predicted_resume_score": 4.13854066,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.48554985,
+          "staticScore": -0.3470092,
+          "recordChange": 0.60816235
+        }
+      },
+      "West Virginia": {
+        "predicted_resume_score": 6.3162469,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.86138228,
+          "staticScore": 1.45486461,
+          "recordChange": -1.60093022
+        }
+      },
+      "Wyoming": {
+        "predicted_resume_score": 3.80148914,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.15606373,
+          "staticScore": -1.3545746,
+          "recordChange": -1.30624877
+        }
+      },
+      "Akron": {
+        "predicted_resume_score": 4.20999141,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.3042661,
+          "staticScore": -1.09427469,
+          "recordChange": 4.0118036
+        }
+      },
+      "Central Michigan": {
+        "predicted_resume_score": 4.4335539,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.41110967,
+          "staticScore": -0.97755577,
+          "recordChange": 1.53372217
+        }
+      },
+      "Fresno State": {
+        "predicted_resume_score": 3.85255872,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.3633534,
+          "staticScore": -0.51079468,
+          "recordChange": -2.0989591
+        }
+      },
+      "Illinois": {
+        "predicted_resume_score": 6.73654109,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.1078118,
+          "staticScore": 1.62872929,
+          "recordChange": -1.3545007
+        }
+      },
+      "Liberty": {
+        "predicted_resume_score": 4.43179605,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.48176428,
+          "staticScore": -1.04996824,
+          "recordChange": -3.56547322
+        }
+      },
+      "Miami (OH)": {
+        "predicted_resume_score": 4.68980157,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.82469767,
+          "staticScore": -1.13489609,
+          "recordChange": -0.63761483
+        }
+      },
+      "New Mexico State": {
+        "predicted_resume_score": 3.96726953,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.79589752,
+          "staticScore": -0.82862799,
+          "recordChange": 0.91851002
+        }
+      },
+      "Northwestern": {
+        "predicted_resume_score": 6.82610672,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.08023927,
+          "staticScore": 1.74586746,
+          "recordChange": -2.67453573
+        }
+      },
+      "San Jos\u00e9 State": {
+        "predicted_resume_score": 4.74099871,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.83318152,
+          "staticScore": -1.09218282,
+          "recordChange": 1.2377593
+        }
+      },
+      "Temple": {
+        "predicted_resume_score": 4.66151599,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.23878133,
+          "staticScore": -0.57726534,
+          "recordChange": 2.65385633
+        }
+      },
+      "Troy": {
+        "predicted_resume_score": 4.22097952,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.01130793,
+          "staticScore": -0.79032842,
+          "recordChange": -0.15854207
+        }
+      },
+      "UCLA": {
+        "predicted_resume_score": 6.58228586,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.8389796,
+          "staticScore": 1.74330626,
+          "recordChange": -5.5007204
+        }
+      },
+      "Arkansas State": {
+        "predicted_resume_score": 4.16966706,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.02337092,
+          "staticScore": -0.85370385,
+          "recordChange": -0.14647908
+        }
+      },
+      "Buffalo": {
+        "predicted_resume_score": 3.80809692,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.14055418,
+          "staticScore": -1.33245726,
+          "recordChange": -1.32175832
+        }
+      },
+      "Cincinnati": {
+        "predicted_resume_score": 6.38305822,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.84242617,
+          "staticScore": 1.54063206,
+          "recordChange": -1.61988633
+        }
+      },
+      "Eastern Michigan": {
+        "predicted_resume_score": 3.83781055,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.98545868,
+          "staticScore": -1.14764814,
+          "recordChange": 0.39003646
+        }
+      },
+      "Hawai'i": {
+        "predicted_resume_score": 4.37607474,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.44557533,
+          "staticScore": -1.0695006,
+          "recordChange": 2.86065033
+        }
+      },
+      "Mississippi State": {
+        "predicted_resume_score": 6.23445674,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 3.77743707,
+          "staticScore": 2.45701968,
+          "recordChange": -1.39241293
+        }
+      },
+      "North Carolina": {
+        "predicted_resume_score": 6.17953401,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.48053667,
+          "staticScore": 1.69899734,
+          "recordChange": -0.68931333
+        }
+      },
+      "Purdue": {
+        "predicted_resume_score": 6.11983682,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.3323343,
+          "staticScore": 1.78750252,
+          "recordChange": 0.4549468
+        }
+      },
+      "Rice": {
+        "predicted_resume_score": 3.51034382,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.0014639,
+          "staticScore": -0.49112008,
+          "recordChange": 2.7090014
+        }
+      },
+      "Sam Houston": {
+        "predicted_resume_score": 3.42684454,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.30993162,
+          "staticScore": -0.88308707,
+          "recordChange": 3.01746912
+        }
+      },
+      "UAB": {
+        "predicted_resume_score": 4.00342709,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.72351962,
+          "staticScore": -0.72009253,
+          "recordChange": -0.44633038
+        }
+      },
+      "UL Monroe": {
+        "predicted_resume_score": 4.03428606,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.94926973,
+          "staticScore": -0.91498367,
+          "recordChange": 3.65680723
+        }
+      },
+      "Ball State": {
+        "predicted_resume_score": 2.7488253,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 3.88600392,
+          "staticScore": -1.13717861,
+          "recordChange": 0.00861642
+        }
+      },
+      "Boston College": {
+        "predicted_resume_score": 5.21048456,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 3.5361774,
+          "staticScore": 1.67430716,
+          "recordChange": -1.6336726
+        }
+      },
+      "Bowling Green": {
+        "predicted_resume_score": 3.59728004,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.74764558,
+          "staticScore": -1.15036554,
+          "recordChange": 2.44993447
+        }
+      },
+      "Charlotte": {
+        "predicted_resume_score": 2.87821513,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 3.61717172,
+          "staticScore": -0.73895658,
+          "recordChange": 2.32470922
+        }
+      },
+      "Coastal Carolina": {
+        "predicted_resume_score": 3.8596842,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.76487842,
+          "staticScore": -0.90519422,
+          "recordChange": 0.88749092
+        }
+      },
+      "Colorado State": {
+        "predicted_resume_score": 3.92088287,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.45359078,
+          "staticScore": -0.53270791,
+          "recordChange": 0.57620328
+        }
+      },
+      "Florida International": {
+        "predicted_resume_score": 3.90284261,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.95788615,
+          "staticScore": -1.05504354,
+          "recordChange": 1.08049865
+        }
+      },
+      "Georgia Southern": {
+        "predicted_resume_score": 3.5862511,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.23755372,
+          "staticScore": -0.65130262,
+          "recordChange": -0.93229628
+        }
+      },
+      "Georgia State": {
+        "predicted_resume_score": 4.12522857,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.09057897,
+          "staticScore": -0.96535039,
+          "recordChange": -0.07927103
+        }
+      },
+      "Kent State": {
+        "predicted_resume_score": 3.17800883,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 3.98595435,
+          "staticScore": -0.80794552,
+          "recordChange": 0.53938768
+        }
+      },
+      "Massachusetts": {
+        "predicted_resume_score": 1.98009778,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 3.618895,
+          "staticScore": -1.63879722,
+          "recordChange": -1.550955
+        }
+      },
+      "Michigan State": {
+        "predicted_resume_score": 5.28942419,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 3.38625175,
+          "staticScore": 1.90317244,
+          "recordChange": 0.80132675
+        }
+      },
+      "Missouri State": {
+        "predicted_resume_score": 3.58478838,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.13243343,
+          "staticScore": -0.54764505,
+          "recordChange": 0.25504593
+        }
+      },
+      "North Dakota State": {
+        "predicted_resume_score": 2.91391786,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.35990683,
+          "staticScore": -1.44598897,
+          "recordChange": -3.68208206
+        }
+      },
+      "Northern Illinois": {
+        "predicted_resume_score": 3.33993997,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.51155577,
+          "staticScore": -1.1716158,
+          "recordChange": 4.51155577
+        }
+      },
+      "Oklahoma State": {
+        "predicted_resume_score": 5.53107566,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.00663375,
+          "staticScore": 1.52444191,
+          "recordChange": -2.45567875
+        }
+      },
+      "Sacramento State": {
+        "predicted_resume_score": 3.08558415,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.66837455,
+          "staticScore": -1.5827904,
+          "recordChange": 2.37066344
+        }
+      },
+      "Stanford": {
+        "predicted_resume_score": 5.60440083,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 3.87566422,
+          "staticScore": 1.72873661,
+          "recordChange": -0.71975801
+        }
+      },
+      "Syracuse": {
+        "predicted_resume_score": 5.4875361,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.06177882,
+          "staticScore": 1.42575728,
+          "recordChange": -1.10807118
+        }
+      },
+      "Tulsa": {
+        "predicted_resume_score": 4.26338644,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.0457736,
+          "staticScore": -0.78238716,
+          "recordChange": -0.1240764
+        }
+      },
+      "UConn": {
+        "predicted_resume_score": 4.17627135,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 5.10436523,
+          "staticScore": -0.92809389,
+          "recordChange": -0.06548477
+        }
+      },
+      "UNLV": {
+        "predicted_resume_score": 3.94344874,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.92342048,
+          "staticScore": -0.97997174,
+          "recordChange": -0.98497952
+        }
+      },
+      "UTEP": {
+        "predicted_resume_score": 3.36475173,
+        "resume_score_parts": {
+          "baseline": null,
+          "record": 4.20481133,
+          "staticScore": -0.8400596,
+          "recordChange": 2.91234883
+        }
+      }
+    }
+  }
+}

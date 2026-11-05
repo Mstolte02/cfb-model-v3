@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel, inseason, marketTracking, committeeRankings] = await Promise.all([
+  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel, inseason, marketTracking, committeeRankings, resumeScoreSnapshots] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -43,6 +43,7 @@
     fetchJSON("data/players_inseason.json").catch(() => null),
     fetchJSON("data/market_tracking.json").catch(() => null),
     fetchJSON("data/cfp_rankings.json").catch(() => null),
+    fetchJSON("data/resume_scores.json").catch(() => null),
   ]);
   /* In-season WAR joins by team and player name, the key the exporter writes. Every
      projected roster player is present; PFF updates the measured players while an
@@ -951,84 +952,15 @@
     pathsMounted=true;
   }
 
+  function renderResumeScores() {
+    const preseason = document.getElementById("resume-score-version").value === "preseason";
+    document.getElementById("resume-scores").innerHTML = ResumeScores.html({
+      playoff: preseason ? playoffPreseason : playoffCurrent, snapshots: resumeScoreSnapshots, esc, crestOf});
+    wireTeamLinks();
+  }
+  document.getElementById("resume-score-version").addEventListener("change", renderResumeScores);
+
   function renderSelection(P, byTeam, br) {
-    const el = document.getElementById("playoff-explain");
-    const pl = cur().playoff;
-    const cw = pl.committee_weights;
-
-    /* Step 2 asserted an ordering - record, then schedule, then quality - and asked to
-       be taken on faith. This is that claim as a measurement: the average selected
-       team's committee score, term by term, over the twelve in the bracket above. The
-       raw fitted weights cannot be compared to each other (win pct is a fraction, the
-       other inputs are z-scores and flags), so what is charted is the CONTRIBUTION each
-       term actually makes, which is the thing the sentence is about. Same colours as
-       the résumé cards below, so a reader can carry the key down the page. */
-    const fieldTeams = ((br && br.seeds) || []).map(t => byTeam[t])
-      .filter(t => t && t.score_parts);
-    let weightsHTML = "";
-    if (fieldTeams.length) {
-      const avg = {};
-      for (const [k] of PART_META) {
-        avg[k] = fieldTeams.reduce((s, t) => s + (t.score_parts[k] || 0), 0) /
-                 fieldTeams.length;
-      }
-      const span = Math.max(...PART_META.map(([k]) => Math.abs(avg[k]))) || 1;
-      const rows = PART_META.map(([k, lab, c, ink]) => `<div class="cw-row">
-          <span class="cw-lab">${lab}</span>
-          <div class="cw-track"><i style="width:${100 * Math.abs(avg[k]) / span}%;
-            background:${c}"></i></div>
-          <span class="cw-val" style="color:${ink}">${avg[k].toFixed(2)}</span>
-        </div>`).join("");
-      weightsHTML = `<div class="cw-chart">
-        <div class="cw-head">What the ranking is actually made of
-          <span class="hint">— average ranking points per term across the twelve teams
-            in the projected field</span></div>
-        ${rows}</div>`;
-    }
-
-    if (el) el.innerHTML = `
-      <div class="steps">
-        <div class="step"><span class="step-n">1</span>
-          <h4>Play the season</h4>
-          <p>All ${schedule.length} scheduled games are simulated
-            ${pl.n_sims.toLocaleString()} times, then each conference stages a title
-            game between its top two finishers.</p></div>
-        <div class="step"><span class="step-n">2</span>
-          <h4>Rank the teams</h4>
-          <p>A stand-in for the selection committee sorts everyone. It is fitted to
-            every ranking the real committee has published since 2014, and what it
-            learned is that the committee cares most about <b>record</b>, then
-            <b>schedule strength</b>, and much less about how good a team looks. It
-            also breaks near-ties on <b>head-to-head</b>: beating a team ranked close
-            to you counts, and losing to one costs.</p>
-          ${weightsHTML}</div>
-        <div class="step"><span class="step-n">3</span>
-          <h4>Hand out 5 automatic bids</h4>
-          <p>The champions of the ACC, Big&nbsp;12, Big&nbsp;Ten and SEC are in no
-            matter where they are ranked, plus the highest-ranked team from the other
-            six conferences &mdash; <b>new for 2026</b>, that team no longer has to win
-            its league.</p></div>
-        <div class="step"><span class="step-n">4</span>
-          <h4>Fill the last 7 and seed</h4>
-          <p>The seven highest-ranked teams left over get at-large bids. Seeding is
-            straight down the ranking, 1 through 12: the top four sit out the first
-            round, and seeds 5&ndash;8 host it.</p></div>
-      </div>
-      <div class="wd-foot">The committee stand-in scores each team
-        <b>${cw ? cw.win_pct.toFixed(1) : "?"} &times; win&nbsp;pct
-        + ${cw ? cw.sos.toFixed(2) : "?"} &times; schedule strength
-        + ${cw ? cw.rating.toFixed(2) : "?"} &times; team rating</b>. Those weights are
-        fitted, not chosen &mdash; and the fact that record and schedule dwarf team
-        quality is what the historical rankings say, not an assumption. Leaving one
-        season out at a time, it reproduces the real final ranking at a rank
-        correlation of 0.91.</div>`;
-
-    if(el && pl.committee_anchor) el.innerHTML = `<div class="steps">
-      <div class="step"><span class="step-n">1</span><h4>Start with the committee</h4><p>The actual CFP Top 25 released ${esc(pl.committee_anchor.released)} sets the initial order. Unranked teams start below No. 25.</p></div>
-      <div class="step"><span class="step-n">2</span><h4>Project the remaining games</h4><p>Completed results stay locked. The football model simulates the remaining schedule and conference championships. Final records move teams up or down from the committee baseline.</p></div>
-      <div class="step"><span class="step-n">3</span><h4>Apply automatic bids</h4><p>The four Power 4 champions and highest-ranked Group of 6 team qualify. Notre Dame is protected if its simulated final ranking is in the Top 12.</p></div>
-      <div class="step"><span class="step-n">4</span><h4>Seed the projected field</h4><p>Fill the remaining places in simulated ranking order. The top four seeds receive byes; seeds 5–8 host round one. The bracket never reseeds.</p></div></div><p class="board-note">Projection method: preserve each team’s current committee adjustment to the historical selection model, then update its record contribution in each simulated season. Rank spacing is derived from the current score-versus-rank relationship. This is a model forecast of future committee decisions.</p>`;
-
     const ccg = document.getElementById("playoff-ccg");
     if (!ccg) return;
     const block = (title, confs, auto) => `
@@ -3422,6 +3354,7 @@
     if (view === "record-odds") renderRecordOdds();
     else if (view === "tracking") renderTracking();
     else if (view === "playoff") renderPlayoff();
+    else if (view === "resume-scores") renderResumeScores();
     else if (view === "matchup") renderMatchup();
     else if (view === "team") renderTeam();
     else if (view === "scenario") renderScenario();

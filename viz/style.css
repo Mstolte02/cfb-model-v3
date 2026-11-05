@@ -1310,3 +1310,16 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
 @media(prefers-reduced-motion:reduce){.mp-bar{animation:none}}
 .mp-stage{min-height:670px}.mp-bar-team img{background:var(--team-plate,#18332f);border-radius:5px;padding:3px}
 #bracket:has(.mp-projected){display:block}.mp-projected .mp-masthead{background:linear-gradient(115deg,#18384a,#102624)}.mp-prob{margin-left:auto;padding-right:6px;font:700 12px var(--sans);white-space:nowrap}.mp-projected .mp-team small{font-size:8px}.mp-projected .mp-team strong{font-size:11px}.mp-projected .mp-team:not(.mp-compact){padding-right:4px;gap:5px}.mp-projected .mp-team:not(.mp-compact) img{width:28px;height:28px}.mp-projected .mp-trophy>b{display:block;margin-bottom:12px}.mp-projected .mp-trophy>small{font-size:9px;display:block;margin-top:6px}.mp-projected .mp-advances:before{content:'▸';position:absolute;left:-10px;color:#e6ca87;font-size:14px}.mp-projected .mp-trophy{top:94px}.mp-projected .mp-trophy .mp-team{text-align:left}
+
+/* Predicted committee ranking ledger */
+.resume-score-scroll { overflow-x:auto; border:1px solid var(--line,#ddd); border-radius:12px; }
+.resume-score-table { width:100%; border-collapse:collapse; font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.resume-score-table caption { text-align:left; padding:16px; font-weight:700; }
+.resume-score-table td,.resume-score-table th { padding:12px 14px; border-top:1px solid var(--line,#ddd); text-align:right; }
+.resume-score-table th:nth-child(2),.resume-score-table th[scope="row"] { text-align:left; }
+.resume-score-table thead { background:#f1eee7; }
+.resume-score-table .team-link { display:inline-flex; align-items:center; gap:8px; }
+.resume-score-table img { width:28px; height:28px; object-fit:contain; }
+.resume-score-table small { display:block; font-weight:400; opacity:.7; margin-left:36px; }
+.resume-score-table .in-field { background:rgba(65,111,74,.06); }
+.resume-score-table tr:hover { background:rgba(65,111,74,.12); }

@@ -49,6 +49,7 @@
   <nav class="section-nav" data-hub-nav="simulation">
     <button class="tab" data-view="scenario">Scenario builder</button>
     <button class="tab" data-view="playoff">Projected bracket</button>
+    <button class="tab" data-view="resume-scores">Predicted Resume Scores</button>
     <button class="tab" data-view="record-odds">Playoff paths</button>
   </nav>
 </div>
@@ -63,9 +64,15 @@
     </div>
     <h3 class="bracket-title">Projected Bracket <span class="hint">— starting from the committee, forecasting the finish</span></h3>
     <div id="bracket"></div>
-    <h3 class="bracket-title">How the field is chosen</h3><div id="playoff-explain"></div>
+    <p class="board-note"><a href="#resume-scores">View Predicted Resume Scores →</a> to see the ranking points behind the simulation’s field and seeds.</p>
     <h3 class="bracket-title">Conference title races <span class="hint">— four Power 4 champions receive automatic bids</span></h3><div id="playoff-ccg"></div>
     <h3 class="bracket-title">How each of the twelve got in</h3><div id="playoff-resumes"></div>
+  </section>
+
+  <section id="view-resume-scores" class="view">
+    <div class="view-head"><span class="eyebrow">Inside the committee forecast</span><h2>Predicted Resume Scores</h2><p class="sub">The ranking points behind our projected CFP field.</p></div>
+    <label class="history-toolbar">Projection snapshot <select id="resume-score-version"><option value="current">Current projection</option><option value="preseason">Preseason · locked</option></select></label>
+    <div id="resume-scores"></div>
   </section>
 
   <section id="view-power" class="view active">
@@ -192,6 +199,7 @@
 <script src="marks-playoff.js"></script>
 <script src="scenario-lab.js"></script>
 <script src="simulation-studio.js"></script>
+<script src="resume-scores.js"></script>
 <script src="app.js?v=67"></script>
 </body>
 </html>

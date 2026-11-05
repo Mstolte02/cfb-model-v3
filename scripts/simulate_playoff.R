@@ -412,6 +412,7 @@ export_run <- function(mode) {
   standings <- select_and_play(sim$standings, input)
   anchor <- attr(standings, "committee_anchor")
   max_exit <- 5L
+  cm <- static_committee(input)
   rows <- lapply(fbs, function(team) {
     st <- standings[standings$team == team, ]
     base <- old[[team]] %||% list(team = team, conference = team_meta[[team]]$conference)
@@ -430,6 +431,13 @@ export_run <- function(mode) {
     base$final <- round(event_rate(st$exit >= 4), 4)
     base$champ <- round(event_rate(st$exit == max_exit), 4)
     base$seeds <- as.list(round(seeds, 4))
+    base$predicted_resume_score <- round(mean(st$selection_score), 8)
+    static <- cm$static[match(team, cm$team)]
+    record <- W_WINPCT * mean(st$win_pct)
+    base$resume_score_parts <- list(
+      baseline = if (is.null(anchor)) NULL else unname(anchor$baseline[team]),
+      record = record, staticScore = static,
+      recordChange = if (is.null(anchor)) NULL else unname(W_WINPCT * (mean(st$win_pct) - anchor$win_pct[team])))
     base$projected_rank <- round(mean(st$selection_rank), 2)
     base$current_cfp_rank <- if (!is.null(anchor) && team %in% names(anchor$rank)) unname(anchor$rank[team]) else NULL
     base$g6_bid <- round(event_rate(st$g6_auto), 4)
@@ -455,6 +463,7 @@ export_run <- function(mode) {
   out$engine <- paste0("cfbseedR::cfb_simulations() v", sim$sim_params$cfbseedR_version, " regular season + committee-proxy selection")
   out$basis <- if (mode == "preseason") "Week-0 ensemble and Preseason Power Ratings; every game simulated" else "Current ensemble and Power Ratings; completed results locked"
   out$rules <- "12 teams; auto: ACC/Big12/BigTen/SEC champs + highest-ranked G6 team; 7 at-large; straight seeding, top-4 byes; first round at higher seed; fixed bracket"
+  out$selection_weights <- list(win_pct = W_WINPCT, rating = W_RATING, sos = W_SOS, power_conf = W_P4)
   out$committee_proxy <- sprintf(
     "Ranked inside each simulation on its own record: %.2f*win_pct + %.2f*power_z + %.2f*sos_z + %.2f*power_conf (h2h-free fit on 2014-2025 committee rankings)",
     W_WINPCT, W_RATING, W_SOS, W_P4)
