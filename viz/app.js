@@ -961,6 +961,8 @@
   document.getElementById("resume-score-version").addEventListener("change", renderResumeScores);
 
   function renderSelection(P, byTeam, br) {
+    const P4_CONFS = cur().playoff.p4_confs || [...P4];
+    const G6_CONFS = cur().playoff.g6_confs || ["American Athletic", "Conference USA", "Mid-American", "Mountain West", "Pac-12", "Sun Belt"];
     const ccg = document.getElementById("playoff-ccg");
     if (!ccg) return;
     const block = (title, confs, auto) => `
