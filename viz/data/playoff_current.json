@@ -66,7 +66,14 @@
       "wins_in": 11.11,
       "wins_out": 9.16,
       "projected_rank": 5.74,
-      "current_cfp_rank": 1
+      "current_cfp_rank": 1,
+      "predicted_resume_score": 11.13145755,
+      "resume_score_parts": {
+        "baseline": 11.91727475,
+        "record": 9.5538828,
+        "staticScore": 1.96017857,
+        "recordChange": -0.7858172
+      }
     },
     {
       "team": "Alabama",
@@ -100,7 +107,14 @@
       "wins_in": 9.01,
       "wins_out": 7.21,
       "projected_rank": 3.58,
-      "current_cfp_rank": 5
+      "current_cfp_rank": 5,
+      "predicted_resume_score": 11.39753474,
+      "resume_score_parts": {
+        "baseline": 11.41606004,
+        "record": 7.7362497,
+        "staticScore": 2.62126482,
+        "recordChange": -0.0185253
+      }
     },
     {
       "team": "Georgia",
@@ -134,7 +148,14 @@
       "wins_in": 10.18,
       "wins_out": 8.53,
       "projected_rank": 4.11,
-      "current_cfp_rank": 2
+      "current_cfp_rank": 2,
+      "predicted_resume_score": 11.44903769,
+      "resume_score_parts": {
+        "baseline": 11.79197107,
+        "record": 8.70430412,
+        "staticScore": 2.29915049,
+        "recordChange": -0.34293338
+      }
     },
     {
       "team": "Indiana",
@@ -168,7 +189,14 @@
       "wins_in": 10.53,
       "wins_out": 8.94,
       "projected_rank": 4.56,
-      "current_cfp_rank": 4
+      "current_cfp_rank": 4,
+      "predicted_resume_score": 11.32494805,
+      "resume_score_parts": {
+        "baseline": 11.54136372,
+        "record": 8.97442878,
+        "staticScore": 1.98450951,
+        "recordChange": -0.21641567
+      }
     },
     {
       "team": "Notre Dame",
@@ -202,7 +230,14 @@
       "wins_in": 10.72,
       "wins_out": 9.7,
       "projected_rank": 8.07,
-      "current_cfp_rank": 11
+      "current_cfp_rank": 11,
+      "predicted_resume_score": 10.71464401,
+      "resume_score_parts": {
+        "baseline": 10.66423797,
+        "record": 9.09764354,
+        "staticScore": 1.89429271,
+        "recordChange": 0.05040604
+      }
     },
     {
       "team": "Ole Miss",
@@ -236,7 +271,14 @@
       "wins_in": 9.32,
       "wins_out": 7.96,
       "projected_rank": 7.5,
-      "current_cfp_rank": 10
+      "current_cfp_rank": 10,
+      "predicted_resume_score": 10.817545,
+      "resume_score_parts": {
+        "baseline": 10.78954165,
+        "record": 7.78277835,
+        "staticScore": 2.52050066,
+        "recordChange": 0.02800335
+      }
     },
     {
       "team": "Utah",
@@ -270,7 +312,14 @@
       "wins_in": 11.31,
       "wins_out": 9.78,
       "projected_rank": 7.87,
-      "current_cfp_rank": 3
+      "current_cfp_rank": 3,
+      "predicted_resume_score": 10.77228334,
+      "resume_score_parts": {
+        "baseline": 11.66666739,
+        "record": 9.44531595,
+        "staticScore": 1.88744681,
+        "recordChange": -0.89438405
+      }
     },
     {
       "team": "Ohio State",
@@ -304,7 +353,14 @@
       "wins_in": 9.48,
       "wins_out": 7.96,
       "projected_rank": 8.44,
-      "current_cfp_rank": 12
+      "current_cfp_rank": 12,
+      "predicted_resume_score": 10.65051689,
+      "resume_score_parts": {
+        "baseline": 10.53893429,
+        "record": 7.8663576,
+        "staticScore": 2.32125067,
+        "recordChange": 0.1115826
+      }
     },
     {
       "team": "Boise State",
@@ -338,7 +394,14 @@
       "wins_in": 9.68,
       "wins_out": 8.73,
       "projected_rank": 24.89,
-      "current_cfp_rank": 25
+      "current_cfp_rank": 25,
+      "predicted_resume_score": 8.88595003,
+      "resume_score_parts": {
+        "baseline": 8.90998647,
+        "record": 8.83856355,
+        "staticScore": 0.0376089,
+        "recordChange": -0.02403645
+      }
     },
     {
       "team": "Texas",
@@ -372,7 +435,14 @@
       "wins_in": 8.78,
       "wins_out": 7.54,
       "projected_rank": 9.88,
-      "current_cfp_rank": 7
+      "current_cfp_rank": 7,
+      "predicted_resume_score": 10.52094472,
+      "resume_score_parts": {
+        "baseline": 11.16545268,
+        "record": 7.11026703,
+        "staticScore": 3.03329023,
+        "recordChange": -0.64450797
+      }
     },
     {
       "team": "LSU",
@@ -406,7 +476,14 @@
       "wins_in": 9.75,
       "wins_out": 8.52,
       "projected_rank": 10.9,
-      "current_cfp_rank": 14
+      "current_cfp_rank": 14,
+      "predicted_resume_score": 10.38353834,
+      "resume_score_parts": {
+        "baseline": 10.28832693,
+        "record": 7.8499864,
+        "staticScore": 2.72580486,
+        "recordChange": 0.0952114
+      }
     },
     {
       "team": "BYU",
@@ -440,7 +517,14 @@
       "wins_in": 10.22,
       "wins_out": 8.88,
       "projected_rank": 13.56,
-      "current_cfp_rank": 9
+      "current_cfp_rank": 9,
+      "predicted_resume_score": 10.03037015,
+      "resume_score_parts": {
+        "baseline": 10.91484533,
+        "record": 8.16276233,
+        "staticScore": 2.01848875,
+        "recordChange": -0.88447517
+      }
     },
     {
       "team": "Wake Forest",
@@ -474,7 +558,14 @@
       "wins_in": 11,
       "wins_out": 10.19,
       "projected_rank": 13.49,
-      "current_cfp_rank": 16
+      "current_cfp_rank": 16,
+      "predicted_resume_score": 10.03384219,
+      "resume_score_parts": {
+        "baseline": 10.03771958,
+        "record": 9.04336011,
+        "staticScore": 1.39049834,
+        "recordChange": -0.00387739
+      }
     },
     {
       "team": "Tennessee",
@@ -508,7 +599,14 @@
       "wins_in": 9.37,
       "wins_out": 8.05,
       "projected_rank": 14.6,
-      "current_cfp_rank": 13
+      "current_cfp_rank": 13,
+      "predicted_resume_score": 9.9625612,
+      "resume_score_parts": {
+        "baseline": 10.41363061,
+        "record": 7.30370559,
+        "staticScore": 2.41194861,
+        "recordChange": -0.45106941
+      }
     },
     {
       "team": "Houston",
@@ -542,7 +640,14 @@
       "wins_in": 9.96,
       "wins_out": 8.53,
       "projected_rank": 15.02,
-      "current_cfp_rank": 17
+      "current_cfp_rank": 17,
+      "predicted_resume_score": 9.89302896,
+      "resume_score_parts": {
+        "baseline": 9.9124159,
+        "record": 7.73538806,
+        "staticScore": 1.90500693,
+        "recordChange": -0.01938694
+      }
     },
     {
       "team": "UCLA",
@@ -576,7 +681,14 @@
       "wins_in": 11.32,
       "wins_out": 10,
       "projected_rank": 17.69,
-      "current_cfp_rank": 8
+      "current_cfp_rank": 8,
+      "predicted_resume_score": 9.66410726,
+      "resume_score_parts": {
+        "baseline": 11.040149,
+        "record": 8.96365826,
+        "staticScore": 1.53377853,
+        "recordChange": -1.37604174
+      }
     },
     {
       "team": "Kentucky",
@@ -610,7 +722,14 @@
       "wins_in": 9.93,
       "wins_out": 8.38,
       "projected_rank": 15.29,
-      "current_cfp_rank": 6
+      "current_cfp_rank": 6,
+      "predicted_resume_score": 9.86560104,
+      "resume_score_parts": {
+        "baseline": 11.29075636,
+        "record": 7.62208218,
+        "staticScore": 2.65714184,
+        "recordChange": -1.42515532
+      }
     },
     {
       "team": "Texas Tech",
@@ -644,7 +763,14 @@
       "wins_in": 10.93,
       "wins_out": 9.54,
       "projected_rank": 16.25,
-      "current_cfp_rank": 15
+      "current_cfp_rank": 15,
+      "predicted_resume_score": 9.68093474,
+      "resume_score_parts": {
+        "baseline": 10.16302326,
+        "record": 8.56514899,
+        "staticScore": 1.80969286,
+        "recordChange": -0.48208851
+      }
     },
     {
       "team": "Iowa",
@@ -678,7 +804,14 @@
       "wins_in": 9.99,
       "wins_out": 8.52,
       "projected_rank": 18.06,
-      "current_cfp_rank": 19
+      "current_cfp_rank": 19,
+      "predicted_resume_score": 9.48043297,
+      "resume_score_parts": {
+        "baseline": 9.66180854,
+        "record": 7.57339943,
+        "staticScore": 1.72906698,
+        "recordChange": -0.18137557
+      }
     },
     {
       "team": "New Mexico",
@@ -711,7 +844,14 @@
       ],
       "wins_in": 10.99,
       "wins_out": 9.99,
-      "projected_rank": 37.6
+      "projected_rank": 37.6,
+      "predicted_resume_score": 7.92231726,
+      "resume_score_parts": {
+        "baseline": 8.23983221,
+        "record": 8.72972255,
+        "staticScore": -0.80740529,
+        "recordChange": -0.31751495
+      }
     },
     {
       "team": "UTSA",
@@ -744,7 +884,14 @@
       ],
       "wins_in": 10.97,
       "wins_out": 9.64,
-      "projected_rank": 35.06
+      "projected_rank": 35.06,
+      "predicted_resume_score": 8.16585545,
+      "resume_score_parts": {
+        "baseline": 8.77546693,
+        "record": 8.43762602,
+        "staticScore": -0.27177057,
+        "recordChange": -0.60961148
+      }
     },
     {
       "team": "South Carolina",
@@ -778,7 +925,14 @@
       "wins_in": 8.94,
       "wins_out": 7.1,
       "projected_rank": 21.31,
-      "current_cfp_rank": 21
+      "current_cfp_rank": 21,
+      "predicted_resume_score": 9.20397637,
+      "resume_score_parts": {
+        "baseline": 9.41120119,
+        "record": 6.25508768,
+        "staticScore": 2.30126239,
+        "recordChange": -0.20722482
+      }
     },
     {
       "team": "Florida",
@@ -812,7 +966,14 @@
       "wins_in": 8.99,
       "wins_out": 7.56,
       "projected_rank": 21.86,
-      "current_cfp_rank": 24
+      "current_cfp_rank": 24,
+      "predicted_resume_score": 9.17789185,
+      "resume_score_parts": {
+        "baseline": 9.03529015,
+        "record": 6.6049142,
+        "staticScore": 2.5311071,
+        "recordChange": 0.1426017
+      }
     },
     {
       "team": "Oregon",
@@ -846,7 +1007,14 @@
       "wins_in": 9,
       "wins_out": 7.45,
       "projected_rank": 21.58,
-      "current_cfp_rank": 23
+      "current_cfp_rank": 23,
+      "predicted_resume_score": 9.20884576,
+      "resume_score_parts": {
+        "baseline": 9.16059383,
+        "record": 6.51056443,
+        "staticScore": 2.21690976,
+        "recordChange": 0.04825193
+      }
     },
     {
       "team": "USC",
@@ -880,7 +1048,14 @@
       "wins_in": 10,
       "wins_out": 8.71,
       "projected_rank": 23.43,
-      "current_cfp_rank": 20
+      "current_cfp_rank": 20,
+      "predicted_resume_score": 9.06317638,
+      "resume_score_parts": {
+        "baseline": 9.53650487,
+        "record": 7.5686604,
+        "staticScore": 2.24158258,
+        "recordChange": -0.47332849
+      }
     },
     {
       "team": "Arizona",
@@ -914,7 +1089,14 @@
       "wins_in": 9.99,
       "wins_out": 8.54,
       "projected_rank": 25.3,
-      "current_cfp_rank": 22
+      "current_cfp_rank": 22,
+      "predicted_resume_score": 8.95761203,
+      "resume_score_parts": {
+        "baseline": 9.28589751,
+        "record": 7.42648952,
+        "staticScore": 1.58298843,
+        "recordChange": -0.32828548
+      }
     },
     {
       "team": "Missouri",
@@ -948,7 +1130,14 @@
       "wins_in": 9.85,
       "wins_out": 7.78,
       "projected_rank": 25.6,
-      "current_cfp_rank": 18
+      "current_cfp_rank": 18,
+      "predicted_resume_score": 8.7919161,
+      "resume_score_parts": {
+        "baseline": 9.78711222,
+        "record": 6.75957887,
+        "staticScore": 2.39334816,
+        "recordChange": -0.99519613
+      }
     },
     {
       "team": "Liberty",
@@ -981,7 +1170,14 @@
       ],
       "wins_in": 11,
       "wins_out": 10.64,
-      "projected_rank": 34.72
+      "projected_rank": 34.72,
+      "predicted_resume_score": 8.17468557,
+      "resume_score_parts": {
+        "baseline": 8.04888588,
+        "record": 9.17303718,
+        "staticScore": -0.99835162,
+        "recordChange": 0.12579968
+      }
     },
     {
       "team": "Wisconsin",
@@ -1014,7 +1210,14 @@
       ],
       "wins_in": 9,
       "wins_out": 7.96,
-      "projected_rank": 30.11
+      "projected_rank": 30.11,
+      "predicted_resume_score": 8.48347956,
+      "resume_score_parts": {
+        "baseline": 8.08324701,
+        "record": 6.86254505,
+        "staticScore": 1.62093451,
+        "recordChange": 0.40023255
+      }
     },
     {
       "team": "Northwestern",
@@ -1047,7 +1250,14 @@
       ],
       "wins_in": 10,
       "wins_out": 8.04,
-      "projected_rank": 36.86
+      "projected_rank": 36.86,
+      "predicted_resume_score": 7.961815,
+      "resume_score_parts": {
+        "baseline": 8.7846828,
+        "record": 6.93190721,
+        "staticScore": 1.67302507,
+        "recordChange": -0.82286779
+      }
     },
     {
       "team": "Baylor",
@@ -1080,7 +1290,14 @@
       ],
       "wins_in": 9,
       "wins_out": 6.8,
-      "projected_rank": 39.04
+      "projected_rank": 39.04,
+      "predicted_resume_score": 7.80652644,
+      "resume_score_parts": {
+        "baseline": 8.40709068,
+        "record": 5.86174826,
+        "staticScore": 1.94477818,
+        "recordChange": -0.60056424
+      }
     },
     {
       "team": "James Madison",
@@ -1113,7 +1330,14 @@
       ],
       "wins_out": 9.13,
       "projected_rank": 49.85,
-      "wins_in": 10
+      "wins_in": 10,
+      "predicted_resume_score": 7.16792568,
+      "resume_score_parts": {
+        "baseline": 7.33838712,
+        "record": 7.87152745,
+        "staticScore": -0.70360177,
+        "recordChange": -0.17046144
+      }
     },
     {
       "team": "Louisiana Tech",
@@ -1146,7 +1370,14 @@
       ],
       "wins_in": 10,
       "wins_out": 8.88,
-      "projected_rank": 48.75
+      "projected_rank": 48.75,
+      "predicted_resume_score": 7.29657596,
+      "resume_score_parts": {
+        "baseline": 7.39695721,
+        "record": 7.65439375,
+        "staticScore": -0.35781779,
+        "recordChange": -0.10038125
+      }
     },
     {
       "team": "Michigan",
@@ -1179,7 +1410,14 @@
       ],
       "wins_in": 9,
       "wins_out": 6.86,
-      "projected_rank": 36.83
+      "projected_rank": 36.83,
+      "predicted_resume_score": 7.98417602,
+      "resume_score_parts": {
+        "baseline": 8.53691915,
+        "record": 5.90956937,
+        "staticScore": 2.07460665,
+        "recordChange": -0.55274313
+      }
     },
     {
       "team": "Minnesota",
@@ -1212,7 +1450,14 @@
       ],
       "wins_out": 6.22,
       "projected_rank": 52.02,
-      "wins_in": 9
+      "wins_in": 9,
+      "predicted_resume_score": 7.10373782,
+      "resume_score_parts": {
+        "baseline": 8.20276177,
+        "record": 5.36328855,
+        "staticScore": 1.74044927,
+        "recordChange": -1.09902395
+      }
     },
     {
       "team": "Oklahoma State",
@@ -1245,7 +1490,14 @@
       ],
       "wins_in": 9,
       "wins_out": 7.05,
-      "projected_rank": 42.6
+      "projected_rank": 42.6,
+      "predicted_resume_score": 7.69155899,
+      "resume_score_parts": {
+        "baseline": 8.08145185,
+        "record": 6.07241965,
+        "staticScore": 1.61913935,
+        "recordChange": -0.38989285
+      }
     },
     {
       "team": "Duke",
@@ -1278,7 +1530,14 @@
       ],
       "wins_out": 7.64,
       "projected_rank": 41.87,
-      "wins_in": 10
+      "wins_in": 10,
+      "predicted_resume_score": 7.61069603,
+      "resume_score_parts": {
+        "baseline": 8.7846828,
+        "record": 6.58078823,
+        "staticScore": 1.38440028,
+        "recordChange": -1.17398677
+      }
     },
     {
       "team": "Illinois",
@@ -1311,7 +1570,14 @@
       ],
       "wins_out": 5.83,
       "projected_rank": 59.52,
-      "wins_in": 9
+      "wins_in": 9,
+      "predicted_resume_score": 6.69977522,
+      "resume_score_parts": {
+        "baseline": 8.13483942,
+        "record": 5.0272483,
+        "staticScore": 1.67252692,
+        "recordChange": -1.4350642
+      }
     },
     {
       "team": "Louisville",
@@ -1344,7 +1610,14 @@
       ],
       "wins_out": 7.64,
       "projected_rank": 30.62,
-      "wins_in": 9
+      "wins_in": 9,
+      "predicted_resume_score": 8.42195768,
+      "resume_score_parts": {
+        "baseline": 8.30391277,
+        "record": 6.58035741,
+        "staticScore": 1.84160027,
+        "recordChange": 0.11804491
+      }
     },
     {
       "team": "Memphis",
@@ -1377,7 +1650,14 @@
       ],
       "wins_in": 10,
       "wins_out": 8.92,
-      "projected_rank": 49.6
+      "projected_rank": 49.6,
+      "predicted_resume_score": 7.25978739,
+      "resume_score_parts": {
+        "baseline": 7.61894836,
+        "record": 7.68282792,
+        "staticScore": -0.42304053,
+        "recordChange": -0.35916097
+      }
     },
     {
       "team": "North Texas",
@@ -1410,7 +1690,14 @@
       ],
       "wins_in": 10,
       "wins_out": 8.8,
-      "projected_rank": 51.68
+      "projected_rank": 51.68,
+      "predicted_resume_score": 7.15880158,
+      "resume_score_parts": {
+        "baseline": 7.32811416,
+        "record": 7.58546241,
+        "staticScore": -0.42666084,
+        "recordChange": -0.16931259
+      }
     },
     {
       "team": "Oklahoma",
@@ -1443,7 +1730,14 @@
       ],
       "wins_in": 8,
       "wins_out": 5.48,
-      "projected_rank": 45.71
+      "projected_rank": 45.71,
+      "predicted_resume_score": 7.43326394,
+      "resume_score_parts": {
+        "baseline": 7.88217924,
+        "record": 4.72093469,
+        "staticScore": 2.71232924,
+        "recordChange": -0.44891531
+      }
     },
     {
       "team": "Air Force",
@@ -1475,7 +1769,14 @@
         0
       ],
       "wins_out": 8.16,
-      "projected_rank": 69.22
+      "projected_rank": 69.22,
+      "predicted_resume_score": 6.12289911,
+      "resume_score_parts": {
+        "baseline": 6.84366236,
+        "record": 7.03401175,
+        "staticScore": -0.91111264,
+        "recordChange": -0.72076325
+      }
     },
     {
       "team": "Akron",
@@ -1507,7 +1808,14 @@
         0
       ],
       "wins_out": 1.83,
-      "projected_rank": 135.35
+      "projected_rank": 135.35,
+      "predicted_resume_score": 0.36709939,
+      "resume_score_parts": {
+        "baseline": 0.0797419,
+        "record": 1.57982,
+        "staticScore": -1.2127206,
+        "recordChange": 0.2873575
+      }
     },
     {
       "team": "App State",
@@ -1539,7 +1847,14 @@
         0
       ],
       "wins_out": 7.28,
-      "projected_rank": 84.92
+      "projected_rank": 84.92,
+      "predicted_resume_score": 5.21371539,
+      "resume_score_parts": {
+        "baseline": 5.40370737,
+        "record": 6.27232051,
+        "staticScore": -1.05860513,
+        "recordChange": -0.18999199
+      }
     },
     {
       "team": "Arizona State",
@@ -1571,7 +1886,14 @@
         0
       ],
       "wins_out": 5.72,
-      "projected_rank": 59.52
+      "projected_rank": 59.52,
+      "predicted_resume_score": 6.67294308,
+      "resume_score_parts": {
+        "baseline": 6.91420275,
+        "record": 4.92859033,
+        "staticScore": 1.74435275,
+        "recordChange": -0.24125967
+      }
     },
     {
       "team": "Arkansas",
@@ -1603,7 +1925,14 @@
       ],
       "projected_rank": 78.54,
       "g6_bid": 0,
-      "wins_out": 3.56
+      "wins_out": 3.56,
+      "predicted_resume_score": 5.60341028,
+      "resume_score_parts": {
+        "baseline": 6.4124918,
+        "record": 3.06830598,
+        "staticScore": 2.5351043,
+        "recordChange": -0.80908152
+      }
     },
     {
       "team": "Arkansas State",
@@ -1635,7 +1964,14 @@
         0
       ],
       "wins_out": 6.25,
-      "projected_rank": 92.93
+      "projected_rank": 92.93,
+      "predicted_resume_score": 4.70936952,
+      "resume_score_parts": {
+        "baseline": 4.49697485,
+        "record": 5.38224467,
+        "staticScore": -0.67287515,
+        "recordChange": 0.21239467
+      }
     },
     {
       "team": "Army",
@@ -1667,7 +2003,14 @@
         0
       ],
       "wins_out": 7.83,
-      "projected_rank": 66.05
+      "projected_rank": 66.05,
+      "predicted_resume_score": 6.33327358,
+      "resume_score_parts": {
+        "baseline": 6.04850101,
+        "record": 6.74708507,
+        "staticScore": -0.41381149,
+        "recordChange": 0.28477257
+      }
     },
     {
       "team": "Auburn",
@@ -1699,7 +2042,14 @@
         0
       ],
       "wins_out": 6.68,
-      "projected_rank": 34.3
+      "projected_rank": 34.3,
+      "predicted_resume_score": 8.20710269,
+      "resume_score_parts": {
+        "baseline": 7.62334046,
+        "record": 5.75361223,
+        "staticScore": 2.45349046,
+        "recordChange": 0.58376223
+      }
     },
     {
       "team": "Ball State",
@@ -1731,7 +2081,14 @@
         0
       ],
       "wins_out": 3.94,
-      "projected_rank": 123.23
+      "projected_rank": 123.23,
+      "predicted_resume_score": 2.38725296,
+      "resume_score_parts": {
+        "baseline": 2.86718737,
+        "record": 3.39745309,
+        "staticScore": -1.01020013,
+        "recordChange": -0.47993441
+      }
     },
     {
       "team": "Boston College",
@@ -1763,7 +2120,14 @@
       ],
       "projected_rank": 75.44,
       "g6_bid": 0,
-      "wins_out": 4.86
+      "wins_out": 4.86,
+      "predicted_resume_score": 5.79721904,
+      "resume_score_parts": {
+        "baseline": 6.77733644,
+        "record": 4.1897326,
+        "staticScore": 1.60748644,
+        "recordChange": -0.9801174
+      }
     },
     {
       "team": "Bowling Green",
@@ -1795,7 +2159,14 @@
         0
       ],
       "wins_out": 3.34,
-      "projected_rank": 128.72
+      "projected_rank": 128.72,
+      "predicted_resume_score": 1.66377975,
+      "resume_score_parts": {
+        "baseline": 1.0879159,
+        "record": 2.87357496,
+        "staticScore": -1.20979521,
+        "recordChange": 0.57586385
+      }
     },
     {
       "team": "Buffalo",
@@ -1827,7 +2198,14 @@
         0
       ],
       "wins_out": 7.74,
-      "projected_rank": 84.04
+      "projected_rank": 84.04,
+      "predicted_resume_score": 5.24208468,
+      "resume_score_parts": {
+        "baseline": 5.03529068,
+        "record": 6.6691065,
+        "staticScore": -1.42702182,
+        "recordChange": 0.206794
+      }
     },
     {
       "team": "California",
@@ -1859,7 +2237,14 @@
         0
       ],
       "wins_out": 3.99,
-      "projected_rank": 94.64
+      "projected_rank": 94.64,
+      "predicted_resume_score": 4.54101342,
+      "resume_score_parts": {
+        "baseline": 4.54962984,
+        "record": 3.43795025,
+        "staticScore": 1.10306317,
+        "recordChange": -0.00861642
+      }
     },
     {
       "team": "Central Michigan",
@@ -1891,7 +2276,14 @@
         0
       ],
       "wins_out": 5.93,
-      "projected_rank": 103.83
+      "projected_rank": 103.83,
+      "predicted_resume_score": 4.02082649,
+      "resume_score_parts": {
+        "baseline": 2.7865248,
+        "record": 5.11168919,
+        "staticScore": -1.0908627,
+        "recordChange": 1.23430169
+      }
     },
     {
       "team": "Charlotte",
@@ -1923,7 +2315,14 @@
       ],
       "projected_rank": 132.3,
       "g6_bid": 0,
-      "wins_out": 1.76
+      "wins_out": 1.76,
+      "predicted_resume_score": 0.91693376,
+      "resume_score_parts": {
+        "baseline": 0.69635349,
+        "record": 1.51304277,
+        "staticScore": -0.59610901,
+        "recordChange": 0.22058027
+      }
     },
     {
       "team": "Cincinnati",
@@ -1955,7 +2354,14 @@
         0
       ],
       "wins_out": 6.65,
-      "projected_rank": 46.56
+      "projected_rank": 46.56,
+      "predicted_resume_score": 7.42694809,
+      "resume_score_parts": {
+        "baseline": 8.16106679,
+        "record": 5.7281938,
+        "staticScore": 1.69875429,
+        "recordChange": -0.7341187
+      }
     },
     {
       "team": "Clemson",
@@ -1987,7 +2393,14 @@
         0
       ],
       "wins_out": 7.07,
-      "projected_rank": 40.06
+      "projected_rank": 40.06,
+      "predicted_resume_score": 7.82798629,
+      "resume_score_parts": {
+        "baseline": 8.19763057,
+        "record": 6.09266823,
+        "staticScore": 1.73531807,
+        "recordChange": -0.36964427
+      }
     },
     {
       "team": "Coastal Carolina",
@@ -2019,7 +2432,14 @@
         0
       ],
       "wins_out": 4.68,
-      "projected_rank": 110.75
+      "projected_rank": 110.75,
+      "predicted_resume_score": 3.41857962,
+      "resume_score_parts": {
+        "baseline": 3.26434576,
+        "record": 4.03162136,
+        "staticScore": -0.61304174,
+        "recordChange": 0.15423386
+      }
     },
     {
       "team": "Colorado",
@@ -2051,7 +2471,14 @@
         0
       ],
       "wins_out": 4.45,
-      "projected_rank": 78.92
+      "projected_rank": 78.92,
+      "predicted_resume_score": 5.55585543,
+      "resume_score_parts": {
+        "baseline": 5.5985067,
+        "record": 3.83473624,
+        "staticScore": 1.7211192,
+        "recordChange": -0.04265126
+      }
     },
     {
       "team": "Colorado State",
@@ -2083,7 +2510,14 @@
         0
       ],
       "wins_out": 3.59,
-      "projected_rank": 116.18
+      "projected_rank": 116.18,
+      "predicted_resume_score": 3.08571864,
+      "resume_score_parts": {
+        "baseline": 3.58954402,
+        "record": 3.37356212,
+        "staticScore": -0.28784348,
+        "recordChange": -0.50382538
+      }
     },
     {
       "team": "Delaware",
@@ -2115,7 +2549,14 @@
         0
       ],
       "wins_out": 6.15,
-      "projected_rank": 96.92
+      "projected_rank": 96.92,
+      "predicted_resume_score": 4.47665814,
+      "resume_score_parts": {
+        "baseline": 4.34741189,
+        "record": 5.29909625,
+        "staticScore": -0.82243811,
+        "recordChange": 0.12924625
+      }
     },
     {
       "team": "East Carolina",
@@ -2147,7 +2588,14 @@
         0
       ],
       "wins_out": 6.01,
-      "projected_rank": 95.27
+      "projected_rank": 95.27,
+      "predicted_resume_score": 4.52571824,
+      "resume_score_parts": {
+        "baseline": 4.516671,
+        "record": 5.17889724,
+        "staticScore": -0.653179,
+        "recordChange": 0.00904724
+      }
     },
     {
       "team": "Eastern Michigan",
@@ -2179,7 +2627,14 @@
         0
       ],
       "wins_out": 4.85,
-      "projected_rank": 119.33
+      "projected_rank": 119.33,
+      "predicted_resume_score": 2.78813923,
+      "resume_score_parts": {
+        "baseline": 3.20287609,
+        "record": 4.18068537,
+        "staticScore": -1.39254613,
+        "recordChange": -0.41473686
+      }
     },
     {
       "team": "Florida Atlantic",
@@ -2211,7 +2666,14 @@
         0
       ],
       "wins_out": 6.18,
-      "projected_rank": 90.45
+      "projected_rank": 90.45,
+      "predicted_resume_score": 4.86484364,
+      "resume_score_parts": {
+        "baseline": 6.00522639,
+        "record": 5.32192975,
+        "staticScore": -0.45708611,
+        "recordChange": -1.14038275
+      }
     },
     {
       "team": "Florida International",
@@ -2243,7 +2705,14 @@
         0
       ],
       "wins_out": 5.14,
-      "projected_rank": 112.14
+      "projected_rank": 112.14,
+      "predicted_resume_score": 3.42140552,
+      "resume_score_parts": {
+        "baseline": 2.87426306,
+        "record": 4.42452996,
+        "staticScore": -1.00312444,
+        "recordChange": 0.54714246
+      }
     },
     {
       "team": "Florida State",
@@ -2275,7 +2744,14 @@
         0
       ],
       "wins_out": 5.15,
-      "projected_rank": 65.42
+      "projected_rank": 65.42,
+      "predicted_resume_score": 6.29306461,
+      "resume_score_parts": {
+        "baseline": 5.73342834,
+        "record": 4.43702376,
+        "staticScore": 1.85604084,
+        "recordChange": 0.55963626
+      }
     },
     {
       "team": "Fresno State",
@@ -2307,7 +2783,14 @@
         0
       ],
       "wins_out": 6.73,
-      "projected_rank": 71.11
+      "projected_rank": 71.11,
+      "predicted_resume_score": 6.01607703,
+      "resume_score_parts": {
+        "baseline": 6.15425302,
+        "record": 6.32413651,
+        "staticScore": -0.30805948,
+        "recordChange": -0.13817599
+      }
     },
     {
       "team": "Georgia Southern",
@@ -2339,7 +2822,14 @@
         0
       ],
       "wins_out": 6.26,
-      "projected_rank": 88.94
+      "projected_rank": 88.94,
+      "predicted_resume_score": 4.95871582,
+      "resume_score_parts": {
+        "baseline": 4.7308116,
+        "record": 5.39775422,
+        "staticScore": -0.4390384,
+        "recordChange": 0.22790422
+      }
     },
     {
       "team": "Georgia State",
@@ -2371,7 +2861,14 @@
         0
       ],
       "wins_out": 5.97,
-      "projected_rank": 99.73
+      "projected_rank": 99.73,
+      "predicted_resume_score": 4.27061762,
+      "resume_score_parts": {
+        "baseline": 4.29388194,
+        "record": 5.14658568,
+        "staticScore": -0.87596806,
+        "recordChange": -0.02326432
+      }
     },
     {
       "team": "Georgia Tech",
@@ -2403,7 +2900,14 @@
         0
       ],
       "wins_out": 2.35,
-      "projected_rank": 109.81
+      "projected_rank": 109.81,
+      "predicted_resume_score": 3.6553777,
+      "resume_score_parts": {
+        "baseline": 4.2137215,
+        "record": 2.0265812,
+        "staticScore": 1.6287965,
+        "recordChange": -0.5583438
+      }
     },
     {
       "team": "Hawai'i",
@@ -2435,7 +2939,14 @@
         0
       ],
       "wins_out": 4.3,
-      "projected_rank": 122.57
+      "projected_rank": 122.57,
+      "predicted_resume_score": 2.4614258,
+      "resume_score_parts": {
+        "baseline": 1.34387656,
+        "record": 3.70247424,
+        "staticScore": -1.24104844,
+        "recordChange": 1.11754924
+      }
     },
     {
       "team": "Iowa State",
@@ -2467,7 +2978,14 @@
         0
       ],
       "wins_out": 5.6,
-      "projected_rank": 63.66
+      "projected_rank": 63.66,
+      "predicted_resume_score": 6.46091793,
+      "resume_score_parts": {
+        "baseline": 6.80902116,
+        "record": 4.82174677,
+        "staticScore": 1.63917116,
+        "recordChange": -0.34810323
+      }
     },
     {
       "team": "Jacksonville State",
@@ -2499,7 +3017,14 @@
         0
       ],
       "wins_out": 9.12,
-      "projected_rank": 57.51
+      "projected_rank": 57.51,
+      "predicted_resume_score": 6.81499257,
+      "resume_score_parts": {
+        "baseline": 6.70901065,
+        "record": 7.86075693,
+        "staticScore": -1.04576435,
+        "recordChange": 0.10598192
+      }
     },
     {
       "team": "Kansas",
@@ -2531,7 +3056,14 @@
         0
       ],
       "wins_out": 4.95,
-      "projected_rank": 70.81
+      "projected_rank": 70.81,
+      "predicted_resume_score": 6.01450535,
+      "resume_score_parts": {
+        "baseline": 5.6267666,
+        "record": 4.26512625,
+        "staticScore": 1.7493791,
+        "recordChange": 0.38773875
+      }
     },
     {
       "team": "Kansas State",
@@ -2563,7 +3095,14 @@
         0
       ],
       "wins_out": 5.39,
-      "projected_rank": 71.37
+      "projected_rank": 71.37,
+      "predicted_resume_score": 6.00976838,
+      "resume_score_parts": {
+        "baseline": 6.53924718,
+        "record": 4.6403712,
+        "staticScore": 1.36939718,
+        "recordChange": -0.5294788
+      }
     },
     {
       "team": "Kennesaw State",
@@ -2595,7 +3134,14 @@
         0
       ],
       "wins_out": 4.6,
-      "projected_rank": 113.53
+      "projected_rank": 113.53,
+      "predicted_resume_score": 3.21764559,
+      "resume_score_parts": {
+        "baseline": 1.84246549,
+        "record": 3.9601051,
+        "staticScore": -0.74245951,
+        "recordChange": 1.3751801
+      }
     },
     {
       "team": "Kent State",
@@ -2627,7 +3173,14 @@
         0
       ],
       "wins_out": 3.69,
-      "projected_rank": 125.84
+      "projected_rank": 125.84,
+      "predicted_resume_score": 2.02940948,
+      "resume_score_parts": {
+        "baseline": 2.29910332,
+        "record": 3.17687282,
+        "staticScore": -1.14746334,
+        "recordChange": -0.26969384
+      }
     },
     {
       "team": "Louisiana",
@@ -2659,7 +3212,14 @@
         0
       ],
       "wins_out": 7.84,
-      "projected_rank": 72.12
+      "projected_rank": 72.12,
+      "predicted_resume_score": 5.93457892,
+      "resume_score_parts": {
+        "baseline": 5.64377486,
+        "record": 6.75311656,
+        "staticScore": -0.81853764,
+        "recordChange": 0.29080406
+      }
     },
     {
       "team": "Marshall",
@@ -2691,7 +3251,14 @@
         0
       ],
       "wins_out": 6.86,
-      "projected_rank": 90.18
+      "projected_rank": 90.18,
+      "predicted_resume_score": 4.89468001,
+      "resume_score_parts": {
+        "baseline": 5.44311493,
+        "record": 5.91387758,
+        "staticScore": -1.01919757,
+        "recordChange": -0.54843492
+      }
     },
     {
       "team": "Maryland",
@@ -2723,7 +3290,14 @@
         0
       ],
       "wins_out": 3.06,
-      "projected_rank": 99.17
+      "projected_rank": 99.17,
+      "predicted_resume_score": 4.32440209,
+      "resume_score_parts": {
+        "baseline": 4.27098031,
+        "record": 2.63834678,
+        "staticScore": 1.68605531,
+        "recordChange": 0.05342178
+      }
     },
     {
       "team": "Massachusetts",
@@ -2755,7 +3329,14 @@
         0
       ],
       "wins_out": 6.28,
-      "projected_rank": 109.5
+      "projected_rank": 109.5,
+      "predicted_resume_score": 3.61275392,
+      "resume_score_parts": {
+        "baseline": 3.37407918,
+        "record": 5.40852474,
+        "staticScore": -1.79577082,
+        "recordChange": 0.23867474
+      }
     },
     {
       "team": "Miami (OH)",
@@ -2787,7 +3368,14 @@
         0
       ],
       "wins_out": 6.52,
-      "projected_rank": 97.39
+      "projected_rank": 97.39,
+      "predicted_resume_score": 4.44580346,
+      "resume_score_parts": {
+        "baseline": 5.28848901,
+        "record": 5.61962695,
+        "staticScore": -1.17382349,
+        "recordChange": -0.84268555
+      }
     },
     {
       "team": "Michigan State",
@@ -2819,7 +3407,14 @@
         0
       ],
       "wins_out": 3,
-      "projected_rank": 98.49
+      "projected_rank": 98.49,
+      "predicted_resume_score": 4.39378725,
+      "resume_score_parts": {
+        "baseline": 4.39680299,
+        "record": 2.58190925,
+        "staticScore": 1.81187799,
+        "recordChange": -0.00301575
+      }
     },
     {
       "team": "Middle Tennessee",
@@ -2851,7 +3446,14 @@
         0
       ],
       "wins_out": 5.85,
-      "projected_rank": 103.4
+      "projected_rank": 103.4,
+      "predicted_resume_score": 4.04747137,
+      "resume_score_parts": {
+        "baseline": 4.17671762,
+        "record": 5.04060375,
+        "staticScore": -0.99313238,
+        "recordChange": -0.12924625
+      }
     },
     {
       "team": "Mississippi State",
@@ -2883,7 +3485,14 @@
         0
       ],
       "wins_out": 5.96,
-      "projected_rank": 46.99
+      "projected_rank": 46.99,
+      "predicted_resume_score": 7.36855102,
+      "resume_score_parts": {
+        "baseline": 7.40473997,
+        "record": 5.13366105,
+        "staticScore": 2.23488997,
+        "recordChange": -0.03618895
+      }
     },
     {
       "team": "Missouri State",
@@ -2915,7 +3524,14 @@
         0
       ],
       "wins_out": 4.05,
-      "projected_rank": 119.31
+      "projected_rank": 119.31,
+      "predicted_resume_score": 2.74673125,
+      "resume_score_parts": {
+        "baseline": 3.13188507,
+        "record": 3.49223368,
+        "staticScore": -0.74550243,
+        "recordChange": -0.38515383
+      }
     },
     {
       "team": "Navy",
@@ -2947,7 +3563,14 @@
         0
       ],
       "wins_out": 4.27,
-      "projected_rank": 112.56
+      "projected_rank": 112.56,
+      "predicted_resume_score": 3.38459016,
+      "resume_score_parts": {
+        "baseline": 2.29289017,
+        "record": 3.67662499,
+        "staticScore": -0.29203483,
+        "recordChange": 1.09169999
+      }
     },
     {
       "team": "NC State",
@@ -2979,7 +3602,14 @@
         0
       ],
       "wins_out": 5.52,
-      "projected_rank": 71.76
+      "projected_rank": 71.76,
+      "predicted_resume_score": 6.00011621,
+      "resume_score_parts": {
+        "baseline": 6.41413503,
+        "record": 4.75583118,
+        "staticScore": 1.24428503,
+        "recordChange": -0.41401882
+      }
     },
     {
       "team": "Nebraska",
@@ -3011,7 +3641,14 @@
         0
       ],
       "wins_out": 7.28,
-      "projected_rank": 39.55
+      "projected_rank": 39.55,
+      "predicted_resume_score": 7.87885347,
+      "resume_score_parts": {
+        "baseline": 8.06927628,
+        "record": 6.27188969,
+        "staticScore": 1.60696378,
+        "recordChange": -0.19042281
+      }
     },
     {
       "team": "Nevada",
@@ -3043,7 +3680,14 @@
         0
       ],
       "wins_out": 5.05,
-      "projected_rank": 114.2
+      "projected_rank": 114.2,
+      "predicted_resume_score": 3.25872937,
+      "resume_score_parts": {
+        "baseline": 2.78396481,
+        "record": 4.35215206,
+        "staticScore": -1.09342269,
+        "recordChange": 0.47476456
+      }
     },
     {
       "team": "New Mexico State",
@@ -3075,7 +3719,14 @@
         0
       ],
       "wins_out": 4.45,
-      "projected_rank": 117.85
+      "projected_rank": 117.85,
+      "predicted_resume_score": 2.89441772,
+      "resume_score_parts": {
+        "baseline": 2.93706898,
+        "record": 3.83473624,
+        "staticScore": -0.94031852,
+        "recordChange": -0.04265126
+      }
     },
     {
       "team": "North Carolina",
@@ -3107,7 +3758,14 @@
         0
       ],
       "wins_out": 6.4,
-      "projected_rank": 44.31
+      "projected_rank": 44.31,
+      "predicted_resume_score": 7.49220403,
+      "resume_score_parts": {
+        "baseline": 7.15056311,
+        "record": 5.51149092,
+        "staticScore": 1.98071311,
+        "recordChange": 0.34164092
+      }
     },
     {
       "team": "North Dakota State",
@@ -3139,7 +3797,14 @@
         0
       ],
       "wins_out": 9.24,
-      "projected_rank": 57.12
+      "projected_rank": 57.12,
+      "predicted_resume_score": 6.81184717,
+      "resume_score_parts": {
+        "baseline": 6.88882049,
+        "record": 7.96501557,
+        "staticScore": -1.1531684,
+        "recordChange": -0.07697332
+      }
     },
     {
       "team": "Northern Illinois",
@@ -3171,7 +3836,14 @@
         0
       ],
       "wins_out": 1.05,
-      "projected_rank": 136.3
+      "projected_rank": 136.3,
+      "predicted_resume_score": -0.0901896,
+      "resume_score_parts": {
+        "baseline": -0.99448253,
+        "record": 0.90429293,
+        "staticScore": -0.99448253,
+        "recordChange": 0.90429293
+      }
     },
     {
       "team": "Ohio",
@@ -3203,7 +3875,14 @@
         0
       ],
       "wins_out": 8.91,
-      "projected_rank": 64.15
+      "projected_rank": 64.15,
+      "predicted_resume_score": 6.45515353,
+      "resume_score_parts": {
+        "baseline": 6.53270128,
+        "record": 7.67722725,
+        "staticScore": -1.22207372,
+        "recordChange": -0.07754775
+      }
     },
     {
       "team": "Old Dominion",
@@ -3235,7 +3914,14 @@
         0
       ],
       "wins_out": 2.77,
-      "projected_rank": 128.32
+      "projected_rank": 128.32,
+      "predicted_resume_score": 1.63539312,
+      "resume_score_parts": {
+        "baseline": 1.54851092,
+        "record": 2.38459331,
+        "staticScore": -0.74920019,
+        "recordChange": 0.0868822
+      }
     },
     {
       "team": "Oregon State",
@@ -3267,7 +3953,14 @@
         0
       ],
       "wins_out": 7.05,
-      "projected_rank": 62.32
+      "projected_rank": 62.32,
+      "predicted_resume_score": 6.54372145,
+      "resume_score_parts": {
+        "baseline": 6.38110617,
+        "record": 6.62492778,
+        "staticScore": -0.08120633,
+        "recordChange": 0.16261528
+      }
     },
     {
       "team": "Penn State",
@@ -3299,7 +3992,14 @@
         0
       ],
       "wins_out": 6.87,
-      "projected_rank": 46.18
+      "projected_rank": 46.18,
+      "predicted_resume_score": 7.46995084,
+      "resume_score_parts": {
+        "baseline": 6.72161505,
+        "record": 5.91818579,
+        "staticScore": 1.55176505,
+        "recordChange": 0.74833579
+      }
     },
     {
       "team": "Pittsburgh",
@@ -3331,7 +4031,14 @@
         0
       ],
       "wins_out": 7.62,
-      "projected_rank": 38.63
+      "projected_rank": 38.63,
+      "predicted_resume_score": 7.87804837,
+      "resume_score_parts": {
+        "baseline": 8.20762631,
+        "record": 6.5635554,
+        "staticScore": 1.31449298,
+        "recordChange": -0.32957794
+      }
     },
     {
       "team": "Purdue",
@@ -3363,7 +4070,14 @@
         0
       ],
       "wins_out": 4.15,
-      "projected_rank": 78.06
+      "projected_rank": 78.06,
+      "predicted_resume_score": 5.65422846,
+      "resume_score_parts": {
+        "baseline": 5.95709551,
+        "record": 3.57452045,
+        "staticScore": 2.07970801,
+        "recordChange": -0.30286705
+      }
     },
     {
       "team": "Rice",
@@ -3395,7 +4109,14 @@
         0
       ],
       "wins_out": 2.15,
-      "projected_rank": 129.06
+      "projected_rank": 129.06,
+      "predicted_resume_score": 1.51126905,
+      "resume_score_parts": {
+        "baseline": 0.94947869,
+        "record": 1.85425287,
+        "staticScore": -0.34298381,
+        "recordChange": 0.56179037
+      }
     },
     {
       "team": "Rutgers",
@@ -3427,7 +4148,14 @@
         0
       ],
       "wins_out": 3.04,
-      "projected_rank": 103.04
+      "projected_rank": 103.04,
+      "predicted_resume_score": 4.0743309,
+      "resume_score_parts": {
+        "baseline": 4.03943442,
+        "record": 2.61982149,
+        "staticScore": 1.45450942,
+        "recordChange": 0.03489649
+      }
     },
     {
       "team": "Sacramento State",
@@ -3459,7 +4187,14 @@
         0
       ],
       "wins_out": 2.32,
-      "projected_rank": 134.89
+      "projected_rank": 134.89,
+      "predicted_resume_score": 0.38191643,
+      "resume_score_parts": {
+        "baseline": 0.68363462,
+        "record": 1.99599292,
+        "staticScore": -1.61407649,
+        "recordChange": -0.30171819
+      }
     },
     {
       "team": "Sam Houston",
@@ -3491,7 +4226,14 @@
         0
       ],
       "wins_out": 1.93,
-      "projected_rank": 133.73
+      "projected_rank": 133.73,
+      "predicted_resume_score": 0.65924966,
+      "resume_score_parts": {
+        "baseline": 0.28702046,
+        "record": 1.6646917,
+        "staticScore": -1.00544204,
+        "recordChange": 0.3722292
+      }
     },
     {
       "team": "San Diego State",
@@ -3523,7 +4265,14 @@
         0
       ],
       "wins_out": 4.53,
-      "projected_rank": 102.45
+      "projected_rank": 102.45,
+      "predicted_resume_score": 4.07427323,
+      "resume_score_parts": {
+        "baseline": 4.41067903,
+        "record": 4.25901643,
+        "staticScore": -0.1847432,
+        "recordChange": -0.33640579
+      }
     },
     {
       "team": "San José State",
@@ -3555,7 +4304,14 @@
         0
       ],
       "wins_out": 6.01,
-      "projected_rank": 105.85
+      "projected_rank": 105.85,
+      "predicted_resume_score": 3.79071765,
+      "resume_score_parts": {
+        "baseline": 3.60959615,
+        "record": 4.77654372,
+        "staticScore": -0.98582607,
+        "recordChange": 0.1811215
+      }
     },
     {
       "team": "SMU",
@@ -3587,7 +4343,14 @@
         0
       ],
       "wins_out": 7.92,
-      "projected_rank": 37.58
+      "projected_rank": 37.58,
+      "predicted_resume_score": 7.85281733,
+      "resume_score_parts": {
+        "baseline": 8.7846828,
+        "record": 6.82290954,
+        "staticScore": 1.41126249,
+        "recordChange": -0.93186546
+      }
     },
     {
       "team": "South Alabama",
@@ -3619,7 +4382,14 @@
         0
       ],
       "wins_out": 5.8,
-      "projected_rank": 100.43
+      "projected_rank": 100.43,
+      "predicted_resume_score": 4.23633353,
+      "resume_score_parts": {
+        "baseline": 4.4073694,
+        "record": 4.99881413,
+        "staticScore": -0.7624806,
+        "recordChange": -0.17103587
+      }
     },
     {
       "team": "Southern Miss",
@@ -3651,7 +4421,14 @@
         0
       ],
       "wins_out": 4.69,
-      "projected_rank": 112.02
+      "projected_rank": 112.02,
+      "predicted_resume_score": 3.31866225,
+      "resume_score_parts": {
+        "baseline": 3.15193459,
+        "record": 4.04411516,
+        "staticScore": -0.72545291,
+        "recordChange": 0.16672766
+      }
     },
     {
       "team": "South Florida",
@@ -3683,7 +4460,14 @@
         0
       ],
       "wins_out": 8.84,
-      "projected_rank": 55.33
+      "projected_rank": 55.33,
+      "predicted_resume_score": 6.88246724,
+      "resume_score_parts": {
+        "baseline": 7.01688334,
+        "record": 7.6203589,
+        "staticScore": -0.73789166,
+        "recordChange": -0.1344161
+      }
     },
     {
       "team": "Stanford",
@@ -3715,7 +4499,14 @@
       ],
       "projected_rank": 82.19,
       "g6_bid": 0,
-      "wins_out": 4.57
+      "wins_out": 4.57,
+      "predicted_resume_score": 5.36609087,
+      "resume_score_parts": {
+        "baseline": 6.02725725,
+        "record": 3.93425585,
+        "staticScore": 1.43183502,
+        "recordChange": -0.66116637
+      }
     },
     {
       "team": "Syracuse",
@@ -3747,7 +4538,14 @@
         0
       ],
       "wins_out": 5.37,
-      "projected_rank": 69.92
+      "projected_rank": 69.92,
+      "predicted_resume_score": 6.0599611,
+      "resume_score_parts": {
+        "baseline": 6.60494945,
+        "record": 4.62486165,
+        "staticScore": 1.43509945,
+        "recordChange": -0.54498835
+      }
     },
     {
       "team": "TCU",
@@ -3779,7 +4577,14 @@
         0
       ],
       "wins_out": 5.54,
-      "projected_rank": 58.07
+      "projected_rank": 58.07,
+      "predicted_resume_score": 6.72480599,
+      "resume_score_parts": {
+        "baseline": 7.12460772,
+        "record": 4.77004827,
+        "staticScore": 1.95475772,
+        "recordChange": -0.39980173
+      }
     },
     {
       "team": "Temple",
@@ -3811,7 +4616,14 @@
         0
       ],
       "wins_out": 3.69,
-      "projected_rank": 120.1
+      "projected_rank": 120.1,
+      "predicted_resume_score": 2.65191199,
+      "resume_score_parts": {
+        "baseline": 2.05307103,
+        "record": 3.18376596,
+        "staticScore": -0.53185397,
+        "recordChange": 0.59884096
+      }
     },
     {
       "team": "Texas A&M",
@@ -3843,7 +4655,14 @@
         0
       ],
       "wins_out": 5.82,
-      "projected_rank": 44.97
+      "projected_rank": 44.97,
+      "predicted_resume_score": 7.54065742,
+      "resume_score_parts": {
+        "baseline": 7.69833785,
+        "record": 5.01216958,
+        "staticScore": 2.52848785,
+        "recordChange": -0.15768042
+      }
     },
     {
       "team": "Texas State",
@@ -3875,7 +4694,14 @@
         0
       ],
       "wins_out": 5.79,
-      "projected_rank": 79.97
+      "projected_rank": 79.97,
+      "predicted_resume_score": 5.49473221,
+      "resume_score_parts": {
+        "baseline": 5.96304005,
+        "record": 5.44009216,
+        "staticScore": 0.05464005,
+        "recordChange": -0.46830784
+      }
     },
     {
       "team": "Toledo",
@@ -3907,7 +4733,14 @@
         0
       ],
       "wins_out": 9.34,
-      "projected_rank": 59.75
+      "projected_rank": 59.75,
+      "predicted_resume_score": 6.68805627,
+      "resume_score_parts": {
+        "baseline": 6.39380564,
+        "record": 8.04902563,
+        "staticScore": -1.36096936,
+        "recordChange": 0.29425063
+      }
     },
     {
       "team": "Troy",
@@ -3939,7 +4772,14 @@
         0
       ],
       "wins_out": 5.26,
-      "projected_rank": 106.99
+      "projected_rank": 106.99,
+      "predicted_resume_score": 3.77449609,
+      "resume_score_parts": {
+        "baseline": 4.41254174,
+        "record": 4.53180435,
+        "staticScore": -0.75730826,
+        "recordChange": -0.63804565
+      }
     },
     {
       "team": "Tulane",
@@ -3971,7 +4811,14 @@
         0
       ],
       "wins_out": 5.64,
-      "projected_rank": 93.59
+      "projected_rank": 93.59,
+      "predicted_resume_score": 4.67361589,
+      "resume_score_parts": {
+        "baseline": 4.98423771,
+        "record": 4.85922818,
+        "staticScore": -0.18561229,
+        "recordChange": -0.31062182
+      }
     },
     {
       "team": "Tulsa",
@@ -4003,7 +4850,14 @@
         0
       ],
       "wins_out": 6.27,
-      "projected_rank": 91.52
+      "projected_rank": 91.52,
+      "predicted_resume_score": 4.75769149,
+      "resume_score_parts": {
+        "baseline": 4.52246332,
+        "record": 5.40507818,
+        "staticScore": -0.64738668,
+        "recordChange": 0.23522818
+      }
     },
     {
       "team": "UAB",
@@ -4035,7 +4889,14 @@
         0
       ],
       "wins_out": 5.57,
-      "projected_rank": 100.49
+      "projected_rank": 100.49,
+      "predicted_resume_score": 4.17105255,
+      "resume_score_parts": {
+        "baseline": 4.54500503,
+        "record": 4.79589752,
+        "staticScore": -0.62484497,
+        "recordChange": -0.37395248
+      }
     },
     {
       "team": "UCF",
@@ -4067,7 +4928,14 @@
         0
       ],
       "wins_out": 5.98,
-      "projected_rank": 58.07
+      "projected_rank": 58.07,
+      "predicted_resume_score": 6.78945646,
+      "resume_score_parts": {
+        "baseline": 6.80367354,
+        "record": 5.15563291,
+        "staticScore": 1.63382354,
+        "recordChange": -0.01421709
+      }
     },
     {
       "team": "UConn",
@@ -4099,7 +4967,14 @@
       ],
       "projected_rank": 94.38,
       "g6_bid": 0,
-      "wins_out": 6.22
+      "wins_out": 6.22,
+      "predicted_resume_score": 4.60100994,
+      "resume_score_parts": {
+        "baseline": 4.41446452,
+        "record": 5.35639542,
+        "staticScore": -0.75538548,
+        "recordChange": 0.18654542
+      }
     },
     {
       "team": "UL Monroe",
@@ -4131,7 +5006,14 @@
         0
       ],
       "wins_out": 2.05,
-      "projected_rank": 133.61
+      "projected_rank": 133.61,
+      "predicted_resume_score": 0.71384451,
+      "resume_score_parts": {
+        "baseline": 0.23994159,
+        "record": 1.76636542,
+        "staticScore": -1.05252091,
+        "recordChange": 0.47390292
+      }
     },
     {
       "team": "UNLV",
@@ -4163,7 +5045,14 @@
         0
       ],
       "wins_out": 6.89,
-      "projected_rank": 85.8
+      "projected_rank": 85.8,
+      "predicted_resume_score": 5.14849612,
+      "resume_score_parts": {
+        "baseline": 5.11716929,
+        "record": 5.93972683,
+        "staticScore": -0.79123071,
+        "recordChange": 0.03132683
+      }
     },
     {
       "team": "Utah State",
@@ -4195,7 +5084,14 @@
         0
       ],
       "wins_out": 4.09,
-      "projected_rank": 108.29
+      "projected_rank": 108.29,
+      "predicted_resume_score": 3.65329741,
+      "resume_score_parts": {
+        "baseline": 3.68995635,
+        "record": 3.84072856,
+        "staticScore": -0.18743115,
+        "recordChange": -0.03665894
+      }
     },
     {
       "team": "UTEP",
@@ -4227,7 +5123,14 @@
       ],
       "projected_rank": 133.12,
       "g6_bid": 0,
-      "wins_out": 1.85
+      "wins_out": 1.85,
+      "predicted_resume_score": 0.81846856,
+      "resume_score_parts": {
+        "baseline": 0.51387824,
+        "record": 1.59705283,
+        "staticScore": -0.77858426,
+        "recordChange": 0.30459033
+      }
     },
     {
       "team": "Vanderbilt",
@@ -4259,7 +5162,14 @@
         0
       ],
       "wins_out": 3.84,
-      "projected_rank": 80.13
+      "projected_rank": 80.13,
+      "predicted_resume_score": 5.51215453,
+      "resume_score_parts": {
+        "baseline": 6.0782531,
+        "record": 3.31128892,
+        "staticScore": 2.2008656,
+        "recordChange": -0.56609858
+      }
     },
     {
       "team": "Virginia",
@@ -4291,7 +5201,14 @@
         0
       ],
       "wins_out": 5.52,
-      "projected_rank": 68.6
+      "projected_rank": 68.6,
+      "predicted_resume_score": 6.1486568,
+      "resume_score_parts": {
+        "baseline": 5.98867866,
+        "record": 4.75540036,
+        "staticScore": 1.39325644,
+        "recordChange": 0.15997814
+      }
     },
     {
       "team": "Virginia Tech",
@@ -4323,7 +5240,14 @@
         0
       ],
       "wins_out": 8,
-      "projected_rank": 39.01
+      "projected_rank": 39.01,
+      "predicted_resume_score": 7.85477645,
+      "resume_score_parts": {
+        "baseline": 8.71857222,
+        "record": 6.89097923,
+        "staticScore": 0.96379722,
+        "recordChange": -0.86379577
+      }
     },
     {
       "team": "Washington",
@@ -4355,7 +5279,14 @@
         0
       ],
       "wins_out": 6.6,
-      "projected_rank": 45.84
+      "projected_rank": 45.84,
+      "predicted_resume_score": 7.44593213,
+      "resume_score_parts": {
+        "baseline": 8.22097881,
+        "record": 5.68726582,
+        "staticScore": 1.75866631,
+        "recordChange": -0.77504668
+      }
     },
     {
       "team": "Washington State",
@@ -4387,7 +5318,14 @@
         0
       ],
       "wins_out": 1.83,
-      "projected_rank": 129.01
+      "projected_rank": 129.01,
+      "predicted_resume_score": 1.5663306,
+      "resume_score_parts": {
+        "baseline": 0.99738599,
+        "record": 1.71780016,
+        "staticScore": -0.15146956,
+        "recordChange": 0.5689446
+      }
     },
     {
       "team": "Western Kentucky",
@@ -4419,7 +5357,14 @@
         0
       ],
       "wins_out": 4.06,
-      "projected_rank": 117.2
+      "projected_rank": 117.2,
+      "predicted_resume_score": 2.90517093,
+      "resume_score_parts": {
+        "baseline": 3.28041587,
+        "record": 3.50214255,
+        "staticScore": -0.59697163,
+        "recordChange": -0.37524495
+      }
     },
     {
       "team": "Western Michigan",
@@ -4451,7 +5396,14 @@
         0
       ],
       "wins_out": 8.47,
-      "projected_rank": 67.95
+      "projected_rank": 67.95,
+      "predicted_resume_score": 6.22611627,
+      "resume_score_parts": {
+        "baseline": 5.81855977,
+        "record": 7.30068984,
+        "staticScore": -1.07457357,
+        "recordChange": 0.40755651
+      }
     },
     {
       "team": "West Virginia",
@@ -4483,7 +5435,14 @@
         0
       ],
       "wins_out": 5.91,
-      "projected_rank": 55.48
+      "projected_rank": 55.48,
+      "predicted_resume_score": 6.85734089,
+      "resume_score_parts": {
+        "baseline": 8.22950525,
+        "record": 5.09014815,
+        "staticScore": 1.76719275,
+        "recordChange": -1.37216435
+      }
     },
     {
       "team": "Wyoming",
@@ -4515,7 +5474,14 @@
         0
       ],
       "wins_out": 6.82,
-      "projected_rank": 93.75
+      "projected_rank": 93.75,
+      "predicted_resume_score": 4.66743321,
+      "resume_score_parts": {
+        "baseline": 5.25291873,
+        "record": 5.87682699,
+        "staticScore": -1.20939377,
+        "recordChange": -0.58548551
+      }
     }
   ],
   "bracket": {
@@ -6708,7 +7674,7 @@
     "rank_spacing": 0.12530368
   },
   "record_odds": {
-    "generated_at": "2026-11-05T20:09:51Z",
+    "generated_at": "2026-11-05T20:15:43Z",
     "min_samples": 30,
     "checkpoints": [
       {
@@ -78981,5 +79947,11 @@
         }
       }
     ]
+  },
+  "selection_weights": {
+    "win_pct": 10.3397,
+    "rating": 0.2262,
+    "sos": 0.7362,
+    "power_conf": 1.0864
   }
 }
