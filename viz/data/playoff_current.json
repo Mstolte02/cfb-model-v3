@@ -1047,7 +1047,7 @@
       ],
       "wins_in": 10,
       "wins_out": 8.04,
-      "projected_rank": 36.92
+      "projected_rank": 36.86
     },
     {
       "team": "Baylor",
@@ -1277,7 +1277,7 @@
         0
       ],
       "wins_out": 7.64,
-      "projected_rank": 41.96,
+      "projected_rank": 41.87,
       "wins_in": 10
     },
     {
@@ -2787,7 +2787,7 @@
         0
       ],
       "wins_out": 6.52,
-      "projected_rank": 97.37
+      "projected_rank": 97.39
     },
     {
       "team": "Michigan State",
@@ -3203,7 +3203,7 @@
         0
       ],
       "wins_out": 8.91,
-      "projected_rank": 64.16
+      "projected_rank": 64.15
     },
     {
       "team": "Old Dominion",
@@ -3587,7 +3587,7 @@
         0
       ],
       "wins_out": 7.92,
-      "projected_rank": 37.42
+      "projected_rank": 37.58
     },
     {
       "team": "South Alabama",
@@ -3787,7 +3787,7 @@
       "power_rank": 105,
       "rating": 0.324,
       "avg_wins": 3.69,
-      "avg_losses": 8.31,
+      "avg_losses": 8.3,
       "conf_champ": 0,
       "playoff": 0,
       "bye": 0,
@@ -5547,9 +5547,9 @@
       0,
       0,
       126,
-      900,
+      901,
       776,
-      198,
+      197,
       0,
       0,
       0,
@@ -5849,8 +5849,8 @@
       0,
       0,
       59,
-      521,
-      962,
+      520,
+      963,
       458,
       0,
       0
@@ -6220,8 +6220,8 @@
       0,
       160,
       662,
-      841,
-      303,
+      840,
+      304,
       34,
       0,
       0,
@@ -6370,8 +6370,8 @@
       0,
       0,
       0,
-      165,
-      817,
+      166,
+      816,
       760,
       236,
       22,
@@ -6643,8 +6643,8 @@
       0,
       0,
       9,
-      156,
-      716,
+      155,
+      717,
       1119,
       0,
       0,
@@ -6705,10 +6705,10 @@
     "games_through": "2026-10-31",
     "source_url": "https://collegefootballplayoff.com/rankings",
     "method": "Current CFP Top 25 order, with fixed committee residuals carried into simulated final records",
-    "rank_spacing": 0.12530379
+    "rank_spacing": 0.12530368
   },
   "record_odds": {
-    "generated_at": "2026-11-05T07:03:07Z",
+    "generated_at": "2026-11-05T20:09:51Z",
     "min_samples": 30,
     "checkpoints": [
       {
@@ -16488,10 +16488,10 @@
             {
               "wins": 8,
               "losses": 4,
-              "samples": 198,
+              "samples": 197,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.099
+              "record_probability": 0.0985
             },
             {
               "wins": 7,
@@ -16504,10 +16504,10 @@
             {
               "wins": 6,
               "losses": 6,
-              "samples": 900,
+              "samples": 901,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.45
+              "record_probability": 0.4505
             },
             {
               "wins": 5,
@@ -16532,36 +16532,36 @@
             {
               "wins": 6,
               "losses": 4,
-              "samples": 831,
+              "samples": 830,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.4155
+              "record_probability": 0.415
             },
             {
               "wins": 5,
               "losses": 5,
-              "samples": 1169,
+              "samples": 1170,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.5845
+              "record_probability": 0.585
             }
           ],
           "week-12": [
             {
               "wins": 7,
               "losses": 4,
-              "samples": 680,
+              "samples": 679,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.34
+              "record_probability": 0.3395
             },
             {
               "wins": 6,
               "losses": 5,
-              "samples": 1141,
+              "samples": 1142,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.5705
+              "record_probability": 0.571
             },
             {
               "wins": 5,
@@ -16576,10 +16576,10 @@
             {
               "wins": 8,
               "losses": 4,
-              "samples": 198,
+              "samples": 197,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.099
+              "record_probability": 0.0985
             },
             {
               "wins": 7,
@@ -16592,10 +16592,10 @@
             {
               "wins": 6,
               "losses": 6,
-              "samples": 900,
+              "samples": 901,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.45
+              "record_probability": 0.4505
             },
             {
               "wins": 5,
@@ -19772,18 +19772,18 @@
             {
               "wins": 9,
               "losses": 3,
-              "samples": 962,
+              "samples": 963,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.481
+              "record_probability": 0.4815
             },
             {
               "wins": 8,
               "losses": 4,
-              "samples": 521,
+              "samples": 520,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.2605
+              "record_probability": 0.26
             },
             {
               "wins": 7,
@@ -19808,36 +19808,36 @@
             {
               "wins": 8,
               "losses": 2,
-              "samples": 1169,
+              "samples": 1170,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.5845
+              "record_probability": 0.585
             },
             {
               "wins": 7,
               "losses": 3,
-              "samples": 831,
+              "samples": 830,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.4155
+              "record_probability": 0.415
             }
           ],
           "week-12": [
             {
               "wins": 9,
               "losses": 2,
-              "samples": 998,
+              "samples": 999,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.499
+              "record_probability": 0.4995
             },
             {
               "wins": 8,
               "losses": 3,
-              "samples": 888,
+              "samples": 887,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.444
+              "record_probability": 0.4435
             },
             {
               "wins": 7,
@@ -19860,18 +19860,18 @@
             {
               "wins": 9,
               "losses": 3,
-              "samples": 962,
+              "samples": 963,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.481
+              "record_probability": 0.4815
             },
             {
               "wins": 8,
               "losses": 4,
-              "samples": 521,
+              "samples": 520,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.2605
+              "record_probability": 0.26
             },
             {
               "wins": 7,
@@ -23709,18 +23709,18 @@
             {
               "wins": 5,
               "losses": 7,
-              "samples": 303,
+              "samples": 304,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.1515
+              "record_probability": 0.152
             },
             {
               "wins": 4,
               "losses": 8,
-              "samples": 841,
+              "samples": 840,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.4205
+              "record_probability": 0.42
             },
             {
               "wins": 3,
@@ -23761,18 +23761,18 @@
             {
               "wins": 4,
               "losses": 6,
-              "samples": 370,
+              "samples": 371,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.185
+              "record_probability": 0.1855
             },
             {
               "wins": 3,
               "losses": 7,
-              "samples": 1078,
+              "samples": 1077,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.539
+              "record_probability": 0.5385
             },
             {
               "wins": 2,
@@ -23787,18 +23787,18 @@
             {
               "wins": 5,
               "losses": 6,
-              "samples": 231,
+              "samples": 232,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.1155
+              "record_probability": 0.116
             },
             {
               "wins": 4,
               "losses": 7,
-              "samples": 828,
+              "samples": 827,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.414
+              "record_probability": 0.4135
             },
             {
               "wins": 3,
@@ -23829,18 +23829,18 @@
             {
               "wins": 5,
               "losses": 7,
-              "samples": 303,
+              "samples": 304,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.1515
+              "record_probability": 0.152
             },
             {
               "wins": 4,
               "losses": 8,
-              "samples": 841,
+              "samples": 840,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.4205
+              "record_probability": 0.42
             },
             {
               "wins": 3,
@@ -25359,18 +25359,18 @@
             {
               "wins": 5,
               "losses": 7,
-              "samples": 817,
+              "samples": 816,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.4085
+              "record_probability": 0.408
             },
             {
               "wins": 4,
               "losses": 8,
-              "samples": 165,
+              "samples": 166,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.0825
+              "record_probability": 0.083
             }
           ],
           "week-10": [
@@ -25403,18 +25403,18 @@
             {
               "wins": 5,
               "losses": 5,
-              "samples": 1120,
+              "samples": 1119,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.56
+              "record_probability": 0.5595
             },
             {
               "wins": 4,
               "losses": 6,
-              "samples": 279,
+              "samples": 280,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.1395
+              "record_probability": 0.14
             }
           ],
           "week-12": [
@@ -25437,18 +25437,18 @@
             {
               "wins": 5,
               "losses": 6,
-              "samples": 917,
+              "samples": 916,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.4585
+              "record_probability": 0.458
             },
             {
               "wins": 4,
               "losses": 7,
-              "samples": 200,
+              "samples": 201,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.1
+              "record_probability": 0.1005
             }
           ],
           "week-13": [
@@ -25479,18 +25479,18 @@
             {
               "wins": 5,
               "losses": 7,
-              "samples": 817,
+              "samples": 816,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.4085
+              "record_probability": 0.408
             },
             {
               "wins": 4,
               "losses": 8,
-              "samples": 165,
+              "samples": 166,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.0825
+              "record_probability": 0.083
             }
           ]
         }
@@ -28233,18 +28233,18 @@
             {
               "wins": 8,
               "losses": 4,
-              "samples": 716,
+              "samples": 717,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.358
+              "record_probability": 0.3585
             },
             {
               "wins": 7,
               "losses": 5,
-              "samples": 156,
+              "samples": 155,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.078
+              "record_probability": 0.0775
             },
             {
               "wins": 6,
@@ -28321,18 +28321,18 @@
             {
               "wins": 8,
               "losses": 4,
-              "samples": 716,
+              "samples": 717,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.358
+              "record_probability": 0.3585
             },
             {
               "wins": 7,
               "losses": 5,
-              "samples": 156,
+              "samples": 155,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.078
+              "record_probability": 0.0775
             },
             {
               "wins": 6,
@@ -40126,179 +40126,179 @@
         "date": "2026-11-10",
         "home": "Miami (OH)",
         "away": "Ohio",
-        "samples_home": 831,
-        "samples_away": 1169,
-        "home_win_probability": 0.4155,
+        "samples_home": 830,
+        "samples_away": 1170,
+        "home_win_probability": 0.415,
         "supported": true,
         "combined_swing": 0,
         "effects": {
           "Alabama": {
-            "home_win": 0.97472924,
-            "away_win": 0.98973482,
-            "swing": -0.01500557,
-            "standard_error": 0.00619133
+            "home_win": 0.9746988,
+            "away_win": 0.98974359,
+            "swing": -0.01504479,
+            "standard_error": 0.00619583
           },
           "Arizona": {
-            "home_win": 0.05054152,
-            "away_win": 0.05389222,
-            "swing": -0.0033507,
-            "standard_error": 0.01006791
+            "home_win": 0.05060241,
+            "away_win": 0.05384615,
+            "swing": -0.00324374,
+            "standard_error": 0.01007104
           },
           "Boise State": {
-            "home_win": 0.72322503,
-            "away_win": 0.70145423,
-            "swing": 0.0217708,
-            "standard_error": 0.0204944
+            "home_win": 0.72409639,
+            "away_win": 0.7008547,
+            "swing": 0.02324168,
+            "standard_error": 0.02049132
           },
           "BYU": {
-            "home_win": 0.47412756,
-            "away_win": 0.42172797,
-            "swing": 0.05239958,
-            "standard_error": 0.02255336
+            "home_win": 0.4746988,
+            "away_win": 0.42136752,
+            "swing": 0.05333127,
+            "standard_error": 0.02255713
           },
           "Florida": {
-            "home_win": 0.08182912,
-            "away_win": 0.07271172,
-            "swing": 0.0091174,
-            "standard_error": 0.01216923
+            "home_win": 0.08192771,
+            "away_win": 0.07264957,
+            "swing": 0.00927814,
+            "standard_error": 0.0121739
           },
           "Georgia": {
-            "home_win": 0.96269555,
-            "away_win": 0.94781865,
-            "swing": 0.0148769,
-            "standard_error": 0.00924796
+            "home_win": 0.9626506,
+            "away_win": 0.94786325,
+            "swing": 0.01478735,
+            "standard_error": 0.00924968
           },
           "Houston": {
-            "home_win": 0.32370638,
-            "away_win": 0.30282293,
-            "swing": 0.02088345,
-            "standard_error": 0.02107231
+            "home_win": 0.32289157,
+            "away_win": 0.3034188,
+            "swing": 0.01947276,
+            "standard_error": 0.0210727
           },
           "Indiana": {
-            "home_win": 0.9253911,
-            "away_win": 0.92899914,
-            "swing": -0.00360805,
-            "standard_error": 0.01181133
+            "home_win": 0.9253012,
+            "away_win": 0.92905983,
+            "swing": -0.00375862,
+            "standard_error": 0.01181554
           },
           "Iowa": {
-            "home_win": 0.17809868,
-            "away_win": 0.18819504,
-            "swing": -0.01009636,
-            "standard_error": 0.01751684
+            "home_win": 0.17831325,
+            "away_win": 0.18803419,
+            "swing": -0.00972094,
+            "standard_error": 0.01752201
           },
           "Kentucky": {
-            "home_win": 0.3032491,
-            "away_win": 0.30111206,
-            "swing": 0.00213704,
-            "standard_error": 0.02083936
+            "home_win": 0.30240964,
+            "away_win": 0.3017094,
+            "swing": 0.00070024,
+            "standard_error": 0.02083832
           },
           "Liberty": {
-            "home_win": 0.02647413,
-            "away_win": 0.02822926,
-            "swing": -0.00175513,
-            "standard_error": 0.00738114
+            "home_win": 0.02650602,
+            "away_win": 0.02820513,
+            "swing": -0.0016991,
+            "standard_error": 0.00738346
           },
           "LSU": {
-            "home_win": 0.45728039,
-            "away_win": 0.49443969,
-            "swing": -0.03715931,
-            "standard_error": 0.02263797
+            "home_win": 0.45662651,
+            "away_win": 0.49487179,
+            "swing": -0.03824529,
+            "standard_error": 0.02264047
           },
           "Miami": {
-            "home_win": 0.9843562,
-            "away_win": 0.99486741,
-            "swing": -0.01051121,
-            "standard_error": 0.00478527
+            "home_win": 0.98433735,
+            "away_win": 0.99487179,
+            "swing": -0.01053445,
+            "standard_error": 0.00478912
           },
           "Missouri": {
-            "home_win": 0.03128761,
-            "away_win": 0.02822926,
-            "swing": 0.00305835,
-            "standard_error": 0.00774203
+            "home_win": 0.0313253,
+            "away_win": 0.02820513,
+            "swing": 0.00312017,
+            "standard_error": 0.00774507
           },
           "New Mexico": {
-            "home_win": 0.14199759,
-            "away_win": 0.14371257,
-            "swing": -0.00171498,
-            "standard_error": 0.01587074
+            "home_win": 0.14216867,
+            "away_win": 0.14358974,
+            "swing": -0.00142107,
+            "standard_error": 0.01587576
           },
           "Notre Dame": {
-            "home_win": 0.8423586,
-            "away_win": 0.83746792,
-            "swing": 0.00489068,
-            "standard_error": 0.01662028
+            "home_win": 0.84216867,
+            "away_win": 0.83760684,
+            "swing": 0.00456184,
+            "standard_error": 0.01662538
           },
           "Ohio State": {
-            "home_win": 0.77256318,
-            "away_win": 0.7673225,
-            "swing": 0.00524068,
-            "standard_error": 0.01908326
+            "home_win": 0.77349398,
+            "away_win": 0.76666667,
+            "swing": 0.00682731,
+            "standard_error": 0.01907831
           },
           "Ole Miss": {
-            "home_win": 0.75812274,
-            "away_win": 0.80923867,
-            "swing": -0.05111592,
-            "standard_error": 0.01878082
+            "home_win": 0.75903614,
+            "away_win": 0.80854701,
+            "swing": -0.04951086,
+            "standard_error": 0.01877947
           },
           "Oregon": {
-            "home_win": 0.07581227,
-            "away_win": 0.0615911,
-            "swing": 0.01422117,
-            "standard_error": 0.01156528
+            "home_win": 0.07590361,
+            "away_win": 0.06153846,
+            "swing": 0.01436515,
+            "standard_error": 0.01157018
           },
           "South Carolina": {
-            "home_win": 0.08784597,
-            "away_win": 0.0829769,
-            "swing": 0.00486907,
-            "standard_error": 0.0127089
+            "home_win": 0.08795181,
+            "away_win": 0.08290598,
+            "swing": 0.00504582,
+            "standard_error": 0.01271343
           },
           "Tennessee": {
-            "home_win": 0.33212996,
-            "away_win": 0.31308811,
-            "swing": 0.01904185,
-            "standard_error": 0.02123449
+            "home_win": 0.33253012,
+            "away_win": 0.31282051,
+            "swing": 0.01970961,
+            "standard_error": 0.02124015
           },
           "Texas": {
-            "home_win": 0.56558363,
-            "away_win": 0.57656116,
-            "swing": -0.01097753,
-            "standard_error": 0.0224613
+            "home_win": 0.56626506,
+            "away_win": 0.57606838,
+            "swing": -0.00980332,
+            "standard_error": 0.02246428
           },
           "Texas Tech": {
-            "home_win": 0.28760529,
-            "away_win": 0.28742515,
-            "swing": 0.00018015,
-            "standard_error": 0.02053678
+            "home_win": 0.28795181,
+            "away_win": 0.28717949,
+            "swing": 0.00077232,
+            "standard_error": 0.0205425
           },
           "UCLA": {
-            "home_win": 0.30204573,
-            "away_win": 0.30795552,
-            "swing": -0.00590979,
-            "standard_error": 0.02088052
+            "home_win": 0.30240964,
+            "away_win": 0.30769231,
+            "swing": -0.00528267,
+            "standard_error": 0.02088619
           },
           "USC": {
-            "home_win": 0.04933815,
-            "away_win": 0.0641574,
-            "swing": -0.01481925,
-            "standard_error": 0.01038287
+            "home_win": 0.04939759,
+            "away_win": 0.06410256,
+            "swing": -0.01470497,
+            "standard_error": 0.01038517
           },
           "Utah": {
-            "home_win": 0.77858002,
-            "away_win": 0.77159966,
-            "swing": 0.00698037,
-            "standard_error": 0.0189264
+            "home_win": 0.77831325,
+            "away_win": 0.77179487,
+            "swing": 0.00651838,
+            "standard_error": 0.01893193
           },
           "UTSA": {
-            "home_win": 0.10589651,
-            "away_win": 0.12318221,
-            "swing": -0.0172857,
-            "standard_error": 0.01436425
+            "home_win": 0.10481928,
+            "away_win": 0.12393162,
+            "swing": -0.01911235,
+            "standard_error": 0.0143474
           },
           "Wake Forest": {
-            "home_win": 0.377858,
-            "away_win": 0.38152267,
-            "swing": -0.00366467,
-            "standard_error": 0.02201681
+            "home_win": 0.37710843,
+            "away_win": 0.38205128,
+            "swing": -0.00494285,
+            "standard_error": 0.02201804
           },
           "Miami (OH)": {
             "home_win": 0,
@@ -47396,179 +47396,179 @@
         "date": "2026-11-14",
         "home": "Temple",
         "away": "UAB",
-        "samples_home": 1219,
-        "samples_away": 781,
-        "home_win_probability": 0.6095,
+        "samples_home": 1220,
+        "samples_away": 780,
+        "home_win_probability": 0.61,
         "supported": true,
         "combined_swing": 0,
         "effects": {
           "Alabama": {
-            "home_win": 0.97949139,
-            "away_win": 0.98975672,
-            "swing": -0.01026534,
-            "standard_error": 0.00542774
+            "home_win": 0.9795082,
+            "away_win": 0.98974359,
+            "swing": -0.01023539,
+            "standard_error": 0.00542833
           },
           "Arizona": {
-            "home_win": 0.05250205,
-            "away_win": 0.0524968,
-            "swing": 5.25188569e-06,
-            "standard_error": 0.01022239
+            "home_win": 0.05245902,
+            "away_win": 0.0525641,
+            "swing": -0.00010509,
+            "standard_error": 0.01022698
           },
           "Boise State": {
-            "home_win": 0.72026251,
-            "away_win": 0.69526248,
-            "swing": 0.02500003,
-            "standard_error": 0.02089427
+            "home_win": 0.7204918,
+            "away_win": 0.69487179,
+            "swing": 0.02562001,
+            "standard_error": 0.02090204
           },
           "BYU": {
-            "home_win": 0.44790812,
-            "away_win": 0.43661972,
-            "swing": 0.0112884,
-            "standard_error": 0.02275564
+            "home_win": 0.44836066,
+            "away_win": 0.43589744,
+            "swing": 0.01246322,
+            "standard_error": 0.02275911
           },
           "Florida": {
-            "home_win": 0.08367514,
-            "away_win": 0.0653009,
-            "swing": 0.01837425,
-            "standard_error": 0.01187648
+            "home_win": 0.08360656,
+            "away_win": 0.06538462,
+            "swing": 0.01822194,
+            "standard_error": 0.01188048
           },
           "Georgia": {
-            "home_win": 0.95077933,
-            "away_win": 0.95902689,
-            "swing": -0.00824756,
-            "standard_error": 0.00941824
+            "home_win": 0.95081967,
+            "away_win": 0.95897436,
+            "swing": -0.00815469,
+            "standard_error": 0.0094217
           },
           "Houston": {
-            "home_win": 0.31665299,
-            "away_win": 0.30345711,
-            "swing": 0.01319589,
-            "standard_error": 0.02116957
+            "home_win": 0.31721311,
+            "away_win": 0.3025641,
+            "swing": 0.01464901,
+            "standard_error": 0.02116764
           },
           "Indiana": {
-            "home_win": 0.92780968,
-            "away_win": 0.92701665,
-            "swing": 0.00079303,
-            "standard_error": 0.01189849
+            "home_win": 0.92786885,
+            "away_win": 0.92692308,
+            "swing": 0.00094578,
+            "standard_error": 0.01190383
           },
           "Iowa": {
-            "home_win": 0.17145201,
-            "away_win": 0.20358515,
-            "swing": -0.03213314,
-            "standard_error": 0.01800384
+            "home_win": 0.17131148,
+            "away_win": 0.20384615,
+            "swing": -0.03253468,
+            "standard_error": 0.01801199
           },
           "Kentucky": {
-            "home_win": 0.30516817,
-            "away_win": 0.29705506,
-            "swing": 0.00811311,
-            "standard_error": 0.02100745
+            "home_win": 0.30491803,
+            "away_win": 0.2974359,
+            "swing": 0.00748214,
+            "standard_error": 0.02101502
           },
           "Liberty": {
-            "home_win": 0.02707137,
-            "away_win": 0.02816901,
-            "swing": -0.00109764,
-            "standard_error": 0.00752719
+            "home_win": 0.02704918,
+            "away_win": 0.02820513,
+            "swing": -0.00115595,
+            "standard_error": 0.00753075
           },
           "LSU": {
-            "home_win": 0.47744053,
-            "away_win": 0.48143406,
-            "swing": -0.00399353,
-            "standard_error": 0.02289825
+            "home_win": 0.47704918,
+            "away_win": 0.48205128,
+            "swing": -0.0050021,
+            "standard_error": 0.02290384
           },
           "Miami": {
-            "home_win": 0.99015587,
-            "away_win": 0.99103713,
-            "swing": -0.00088127,
-            "standard_error": 0.00440106
+            "home_win": 0.99016393,
+            "away_win": 0.99102564,
+            "swing": -0.00086171,
+            "standard_error": 0.00440288
           },
           "Missouri": {
-            "home_win": 0.0295324,
-            "away_win": 0.02944942,
-            "swing": 0.00008298,
-            "standard_error": 0.00775294
+            "home_win": 0.0295082,
+            "away_win": 0.02948718,
+            "swing": 0.00002102,
+            "standard_error": 0.00775646
           },
           "New Mexico": {
-            "home_win": 0.14191961,
-            "away_win": 0.1446863,
-            "swing": -0.00276669,
-            "standard_error": 0.01607339
+            "home_win": 0.14180328,
+            "away_win": 0.14487179,
+            "swing": -0.00306852,
+            "standard_error": 0.01608029
           },
           "Notre Dame": {
-            "home_win": 0.84577523,
-            "away_win": 0.82970551,
-            "swing": 0.01606972,
-            "standard_error": 0.0169682
+            "home_win": 0.84590164,
+            "away_win": 0.82948718,
+            "swing": 0.01641446,
+            "standard_error": 0.01697578
           },
           "Ohio State": {
-            "home_win": 0.77768663,
-            "away_win": 0.75672215,
-            "swing": 0.02096448,
-            "standard_error": 0.01943051
+            "home_win": 0.77786885,
+            "away_win": 0.75641026,
+            "swing": 0.0214586,
+            "standard_error": 0.01943844
           },
           "Ole Miss": {
-            "home_win": 0.78342904,
-            "away_win": 0.79513444,
-            "swing": -0.0117054,
-            "standard_error": 0.01864831
+            "home_win": 0.78278689,
+            "away_win": 0.79615385,
+            "swing": -0.01336696,
+            "standard_error": 0.01863969
           },
           "Oregon": {
-            "home_win": 0.05578343,
-            "away_win": 0.08578745,
-            "swing": -0.03000402,
-            "standard_error": 0.01198452
+            "home_win": 0.05655738,
+            "away_win": 0.08461538,
+            "swing": -0.02805801,
+            "standard_error": 0.01195988
           },
           "South Carolina": {
-            "home_win": 0.08695652,
-            "away_win": 0.08194622,
-            "swing": 0.0050103,
-            "standard_error": 0.01270661
+            "home_win": 0.08688525,
+            "away_win": 0.08205128,
+            "swing": 0.00483396,
+            "standard_error": 0.0127119
           },
           "Tennessee": {
-            "home_win": 0.32895816,
-            "away_win": 0.30857875,
-            "swing": 0.02037942,
-            "standard_error": 0.02131366
+            "home_win": 0.32868852,
+            "away_win": 0.30897436,
+            "swing": 0.01971417,
+            "standard_error": 0.02132117
           },
           "Texas": {
-            "home_win": 0.58162428,
-            "away_win": 0.55697823,
-            "swing": 0.02464605,
-            "standard_error": 0.02270608
+            "home_win": 0.58196721,
+            "away_win": 0.55641026,
+            "swing": 0.02555696,
+            "standard_error": 0.0227122
           },
           "Texas Tech": {
-            "home_win": 0.27563577,
-            "away_win": 0.30601793,
-            "swing": -0.03038216,
-            "standard_error": 0.02087373
+            "home_win": 0.27540984,
+            "away_win": 0.30641026,
+            "swing": -0.03100042,
+            "standard_error": 0.02088154
           },
           "UCLA": {
-            "home_win": 0.30352748,
-            "away_win": 0.30857875,
-            "swing": -0.00505126,
-            "standard_error": 0.02113304
+            "home_win": 0.30327869,
+            "away_win": 0.30897436,
+            "swing": -0.00569567,
+            "standard_error": 0.02114065
           },
           "USC": {
-            "home_win": 0.05578343,
-            "away_win": 0.06145967,
-            "swing": -0.00567624,
-            "standard_error": 0.0108197
+            "home_win": 0.0557377,
+            "away_win": 0.06153846,
+            "swing": -0.00580076,
+            "standard_error": 0.010825
           },
           "Utah": {
-            "home_win": 0.78096801,
-            "away_win": 0.76440461,
-            "swing": 0.0165634,
-            "standard_error": 0.01925915
+            "home_win": 0.78114754,
+            "away_win": 0.76410256,
+            "swing": 0.01704498,
+            "standard_error": 0.019267
           },
           "UTSA": {
-            "home_win": 0.10746514,
-            "away_win": 0.12932138,
-            "swing": -0.02185625,
-            "standard_error": 0.01492834
+            "home_win": 0.10737705,
+            "away_win": 0.12948718,
+            "swing": -0.02211013,
+            "standard_error": 0.01493574
           },
           "Wake Forest": {
-            "home_win": 0.37079573,
-            "away_win": 0.3943662,
-            "swing": -0.02357046,
-            "standard_error": 0.02229813
+            "home_win": 0.3704918,
+            "away_win": 0.39487179,
+            "swing": -0.02437999,
+            "standard_error": 0.02230502
           },
           "Temple": {
             "home_win": 0,
@@ -66538,179 +66538,179 @@
         "date": "2026-11-24",
         "home": "Western Michigan",
         "away": "Miami (OH)",
-        "samples_home": 1455,
-        "samples_away": 545,
-        "home_win_probability": 0.7275,
+        "samples_home": 1456,
+        "samples_away": 544,
+        "home_win_probability": 0.728,
         "supported": true,
         "combined_swing": 0,
         "effects": {
           "Alabama": {
-            "home_win": 0.98487973,
-            "away_win": 0.97981651,
-            "swing": 0.00506321,
-            "standard_error": 0.00682065
+            "home_win": 0.98489011,
+            "away_win": 0.97977941,
+            "swing": 0.0051107,
+            "standard_error": 0.00682931
           },
           "Arizona": {
-            "home_win": 0.04948454,
-            "away_win": 0.06055046,
-            "swing": -0.01106592,
-            "standard_error": 0.01169194
+            "home_win": 0.04945055,
+            "away_win": 0.06066176,
+            "swing": -0.01121122,
+            "standard_error": 0.01170598
           },
           "Boise State": {
-            "home_win": 0.71134021,
-            "away_win": 0.70825688,
-            "swing": 0.00308333,
-            "standard_error": 0.02280921
+            "home_win": 0.71085165,
+            "away_win": 0.70955882,
+            "swing": 0.00129282,
+            "standard_error": 0.02280354
           },
           "BYU": {
-            "home_win": 0.43986254,
-            "away_win": 0.45321101,
-            "swing": -0.01334847,
-            "standard_error": 0.02498068
+            "home_win": 0.43956044,
+            "away_win": 0.45404412,
+            "swing": -0.01448368,
+            "standard_error": 0.02499742
           },
           "Florida": {
-            "home_win": 0.07216495,
-            "away_win": 0.08807339,
-            "swing": -0.01590845,
-            "standard_error": 0.01390641
+            "home_win": 0.07211538,
+            "away_win": 0.08823529,
+            "swing": -0.01611991,
+            "standard_error": 0.01392277
           },
           "Georgia": {
-            "home_win": 0.94982818,
-            "away_win": 0.96513761,
-            "swing": -0.01530944,
-            "standard_error": 0.00972059
+            "home_win": 0.94986264,
+            "away_win": 0.96507353,
+            "swing": -0.01521089,
+            "standard_error": 0.00972981
           },
           "Houston": {
-            "home_win": 0.31134021,
-            "away_win": 0.31192661,
-            "swing": -0.0005864,
-            "standard_error": 0.02326312
+            "home_win": 0.31181319,
+            "away_win": 0.31066176,
+            "swing": 0.00115142,
+            "standard_error": 0.02326027
           },
           "Indiana": {
-            "home_win": 0.9257732,
-            "away_win": 0.93211009,
-            "swing": -0.0063369,
-            "standard_error": 0.01278045
+            "home_win": 0.92582418,
+            "away_win": 0.93198529,
+            "swing": -0.00616112,
+            "standard_error": 0.01279412
           },
           "Iowa": {
-            "home_win": 0.18487973,
-            "away_win": 0.18165138,
-            "swing": 0.00322835,
-            "standard_error": 0.01939931
+            "home_win": 0.18475275,
+            "away_win": 0.18198529,
+            "swing": 0.00276745,
+            "standard_error": 0.01941904
           },
           "Kentucky": {
-            "home_win": 0.29415808,
-            "away_win": 0.32293578,
-            "swing": -0.0287777,
-            "standard_error": 0.02332145
+            "home_win": 0.29395604,
+            "away_win": 0.32352941,
+            "swing": -0.02957337,
+            "standard_error": 0.02334219
           },
           "Liberty": {
-            "home_win": 0.03024055,
-            "away_win": 0.02018349,
-            "swing": 0.01005706,
-            "standard_error": 0.00751278
+            "home_win": 0.03021978,
+            "away_win": 0.02022059,
+            "swing": 0.00999919,
+            "standard_error": 0.00751976
           },
           "LSU": {
-            "home_win": 0.47835052,
-            "away_win": 0.48073394,
-            "swing": -0.00238343,
-            "standard_error": 0.02509051
+            "home_win": 0.47802198,
+            "away_win": 0.48161765,
+            "swing": -0.00359567,
+            "standard_error": 0.02510596
           },
           "Miami": {
-            "home_win": 0.98969072,
-            "away_win": 0.99266055,
-            "swing": -0.00296983,
-            "standard_error": 0.00451447
+            "home_win": 0.9896978,
+            "away_win": 0.99264706,
+            "swing": -0.00294926,
+            "standard_error": 0.00451883
           },
           "Missouri": {
-            "home_win": 0.03367698,
-            "away_win": 0.01834862,
-            "swing": 0.01532835,
-            "standard_error": 0.00744417
+            "home_win": 0.03434066,
+            "away_win": 0.01654412,
+            "swing": 0.01779654,
+            "standard_error": 0.00725841
           },
           "New Mexico": {
-            "home_win": 0.14570447,
-            "away_win": 0.13577982,
-            "swing": 0.00992465,
-            "standard_error": 0.01734529
+            "home_win": 0.14629121,
+            "away_win": 0.13419118,
+            "swing": 0.01210003,
+            "standard_error": 0.01730172
           },
           "Notre Dame": {
-            "home_win": 0.84054983,
-            "away_win": 0.83669725,
-            "swing": 0.00385258,
-            "standard_error": 0.01851541
+            "home_win": 0.84065934,
+            "away_win": 0.83639706,
+            "swing": 0.00426228,
+            "standard_error": 0.01853478
           },
           "Ohio State": {
-            "home_win": 0.77938144,
-            "away_win": 0.74311927,
-            "swing": 0.03626218,
-            "standard_error": 0.02164344
+            "home_win": 0.77953297,
+            "away_win": 0.74264706,
+            "swing": 0.03688591,
+            "standard_error": 0.02166482
           },
           "Ole Miss": {
-            "home_win": 0.78487973,
-            "away_win": 0.79633028,
-            "swing": -0.01145055,
-            "standard_error": 0.02033807
+            "home_win": 0.78502747,
+            "away_win": 0.79595588,
+            "swing": -0.01092841,
+            "standard_error": 0.02035815
           },
           "Oregon": {
-            "home_win": 0.07285223,
-            "away_win": 0.05321101,
-            "swing": 0.01964122,
-            "standard_error": 0.01178398
+            "home_win": 0.0728022,
+            "away_win": 0.05330882,
+            "swing": 0.01949337,
+            "standard_error": 0.0117954
           },
           "South Carolina": {
-            "home_win": 0.08041237,
-            "away_win": 0.09724771,
-            "swing": -0.01683534,
-            "standard_error": 0.01455698
+            "home_win": 0.08035714,
+            "away_win": 0.09742647,
+            "swing": -0.01706933,
+            "standard_error": 0.01457394
           },
           "Tennessee": {
-            "home_win": 0.31683849,
-            "away_win": 0.33211009,
-            "swing": -0.0152716,
-            "standard_error": 0.02357457
+            "home_win": 0.31730769,
+            "away_win": 0.33088235,
+            "swing": -0.01357466,
+            "standard_error": 0.02357464
           },
           "Texas": {
-            "home_win": 0.57594502,
-            "away_win": 0.56146789,
-            "swing": 0.01447713,
-            "standard_error": 0.02489257
+            "home_win": 0.57554945,
+            "away_win": 0.5625,
+            "swing": 0.01304945,
+            "standard_error": 0.02490304
           },
           "Texas Tech": {
-            "home_win": 0.29209622,
-            "away_win": 0.27522936,
-            "swing": 0.01686686,
-            "standard_error": 0.02254172
+            "home_win": 0.2918956,
+            "away_win": 0.27573529,
+            "swing": 0.01616031,
+            "standard_error": 0.02256246
           },
           "UCLA": {
-            "home_win": 0.30584192,
-            "away_win": 0.30458716,
-            "swing": 0.00125477,
-            "standard_error": 0.02312059
+            "home_win": 0.30563187,
+            "away_win": 0.30514706,
+            "swing": 0.00048481,
+            "standard_error": 0.02314134
           },
           "USC": {
-            "home_win": 0.05704467,
-            "away_win": 0.06055046,
-            "swing": -0.00350579,
-            "standard_error": 0.01188882
+            "home_win": 0.05700549,
+            "away_win": 0.06066176,
+            "swing": -0.00365627,
+            "standard_error": 0.01190237
           },
           "Utah": {
-            "home_win": 0.7814433,
-            "away_win": 0.7559633,
-            "swing": 0.02548,
-            "standard_error": 0.02135139
+            "home_win": 0.78159341,
+            "away_win": 0.75551471,
+            "swing": 0.0260787,
+            "standard_error": 0.02137258
           },
           "UTSA": {
-            "home_win": 0.10927835,
-            "away_win": 0.13394495,
-            "swing": -0.0246666,
-            "standard_error": 0.01672569
+            "home_win": 0.1092033,
+            "away_win": 0.13419118,
+            "swing": -0.02498788,
+            "standard_error": 0.0167447
           },
           "Wake Forest": {
-            "home_win": 0.38075601,
-            "away_win": 0.37798165,
-            "swing": 0.00277436,
-            "standard_error": 0.02436075
+            "home_win": 0.38049451,
+            "away_win": 0.37867647,
+            "swing": 0.00181803,
+            "standard_error": 0.02438023
           },
           "Western Michigan": {
             "home_win": 0,
