@@ -9741,7 +9741,7 @@
   "engine": "cfbseedR::cfb_simulations() v0.2.0 regular season + committee-proxy selection",
   "basis": "Week-0 ensemble and Preseason Power Ratings; every game simulated",
   "record_odds": {
-    "generated_at": "2026-11-05T20:12:25Z",
+    "generated_at": "2026-11-06T06:59:54Z",
     "min_samples": 30,
     "checkpoints": [
       {
