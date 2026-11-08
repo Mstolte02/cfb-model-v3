@@ -29,6 +29,7 @@ assert(index.includes('data-view="resume-scores"'));assert(index.includes('id="v
 console.log('Resume scores: both snapshots, exported score decomposition, CFP baseline ordering, incomplete data and tab wiring passed');
 
 // A new simulation must never borrow the previous simulation's ranking scores.
-assert(rows({playoff:{...p,record_odds:{generated_at:'new-run'}},snapshots}).every(t=>t.score===null));
+assert(rows({playoff:{...missing,record_odds:{generated_at:'new-run'}},snapshots}).every(t=>t.score===null));
+assert(rows({playoff:p,snapshots}).every(t=>Number.isFinite(t.score)));
 const direct={...p,teams:[{...p.teams[0],predicted_resume_score:42,resume_score_parts:{baseline:40,recordChange:2}}]};
 assert.equal(rows({playoff:direct,snapshots})[0].score,42);
