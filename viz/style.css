@@ -1323,3 +1323,5 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
 .resume-score-table small { display:block; font-weight:400; opacity:.7; margin-left:36px; }
 .resume-score-table .in-field { background:rgba(65,111,74,.06); }
 .resume-score-table tr:hover { background:rgba(65,111,74,.12); }
+
+.movers-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}.movers-grid article{min-width:0}.movers-grid h4{margin-top:24px}.mover-row{display:grid;grid-template-columns:minmax(100px,1.4fr) 1fr 1fr;gap:12px;align-items:center;padding:12px 8px;border-bottom:1px solid var(--line,#ddd);font-size:12px}.mover-row small{display:block;opacity:.65}.mover-row .team-link img{width:24px;height:24px;object-fit:contain}.mover-change{display:flex;gap:6px;align-items:center}.mover-change span{height:12px;min-width:2px;border-radius:2px;background:currentColor}.mover-change b{white-space:nowrap}.mover-change.gain{color:#28844c}.mover-change.drop{color:#c34242}@media(max-width:800px){.movers-grid{grid-template-columns:1fr}.mover-row{gap:8px}}

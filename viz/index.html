@@ -50,11 +50,13 @@
     <button class="tab" data-view="scenario">Scenario builder</button>
     <button class="tab" data-view="playoff">Projected bracket</button>
     <button class="tab" data-view="resume-scores">Predicted Resume Scores</button>
+    <button class="tab" data-view="movers">Biggest movers</button>
     <button class="tab" data-view="record-odds">Playoff paths</button>
   </nav>
 </div>
 
 <main>
+<section id="view-movers" class="view"><div class="view-head"><span class="eyebrow">The changing field</span><h2>Biggest movers</h2><p class="sub">Track the biggest gains and drops in our published season odds.</p></div><label class="history-toolbar">Compare with <select id="movers-baseline"><option value="weekly">Weekly baseline</option><option value="preseason">Preseason · locked</option></select></label><div id="movers-board"></div></section>
   <section id="view-record-odds" class="view sim-view"><div id="paths-studio"></div></section>
   <section id="view-playoff" class="view">
     <div class="view-head"><span class="eyebrow">The projected field</span><h2>2026–27 College Football Playoff</h2><p class="sub" id="playoff-meta"></p></div>
@@ -199,6 +201,7 @@
 <script src="marks-playoff.js"></script>
 <script src="scenario-lab.js"></script>
 <script src="simulation-studio.js"></script>
+<script src="movers.js"></script>
 <script src="resume-scores.js"></script>
 <script src="app.js?v=67"></script>
 </body>

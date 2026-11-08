@@ -555,6 +555,20 @@ def main(n_sims=20000, seed=2026):
     }
     viz = ROOT / "viz" / "data"
     viz.mkdir(parents=True, exist_ok=True)
+    # Freeze the first published projection each Monday (America/New_York).
+    # Keep its exact probabilities throughout the week so reruns cannot reset movers.
+    from datetime import datetime, timedelta, timezone
+    from zoneinfo import ZoneInfo
+    now = datetime.now(timezone.utc)
+    local = now.astimezone(ZoneInfo("America/New_York"))
+    week_key = (local.date() - timedelta(days=local.weekday())).isoformat()
+    result["generated_at"] = now.isoformat()
+    baseline_path = viz / "playoff_weekly_baseline.json"
+    baseline = json.loads(baseline_path.read_text()) if baseline_path.exists() else {}
+    if baseline.get("tracking_week") != week_key or baseline.get("season") != result.get("season"):
+        baseline = {"season": result["season"], "tracking_week": week_key,
+                    "captured_at": now.isoformat(), "teams": out}
+        baseline_path.write_text(json.dumps(baseline, indent=1))
     (viz / "playoff_current.json").write_text(json.dumps(result, indent=1))
 
     print(f"\n=== 2026-27 CFP odds ({n_sims:,} sims) — top 20 ===")

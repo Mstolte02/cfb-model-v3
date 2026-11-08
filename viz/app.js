@@ -952,6 +952,16 @@
     pathsMounted=true;
   }
 
+  async function renderMovers() {
+    const host=document.getElementById("movers-board");
+    const mode=document.getElementById("movers-baseline").value;
+    const baseline=mode==='preseason'?playoffPreseason:await fetchJSON('data/playoff_weekly_baseline.json').catch(()=>null);
+    if(document.getElementById('movers-baseline').value!==mode)return;
+    host.innerHTML=OddsMovers.html({current:playoffCurrent,baseline,esc,crestOf,mode});
+    wireTeamLinks();
+  }
+  document.getElementById('movers-baseline').addEventListener('change',renderMovers);
+
   function renderResumeScores() {
     const preseason = document.getElementById("resume-score-version").value === "preseason";
     document.getElementById("resume-scores").innerHTML = ResumeScores.html({
@@ -3353,7 +3363,8 @@
   /* All five playoff views use the current published season draws, independently
      of the bracket's current/preseason toggle and the roster what-if editor. */
   function render(view) {
-    if (view === "record-odds") renderRecordOdds();
+    if (view === "movers") renderMovers();
+    else if (view === "record-odds") renderRecordOdds();
     else if (view === "tracking") renderTracking();
     else if (view === "playoff") renderPlayoff();
     else if (view === "resume-scores") renderResumeScores();
