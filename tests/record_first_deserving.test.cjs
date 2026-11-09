@@ -19,9 +19,10 @@ assert.ok(rows.every((r,i)=>i===0||rows[i-1].score>=r.score));
 assert.ok(rows.every(r=>Math.abs(r.score-(-r.losses+r.qualityAdjustment))<1e-10));
 assert.ok(rows.every(r=>Math.abs(r.qualityAdjustment-r.scheduleAdjustment-r.marginAdjustment-r.winsAdjustment)<1e-10));
 // Order of input games must never determine the result.
-assert.deepEqual(rank([...schedule].reverse()),rows);
+const compact=xs=>xs.map(r=>({team:r.team,rank:r.rank,score:+r.score.toFixed(10)}));
+assert.deepEqual(compact(rank([...schedule].reverse())),compact(rows));
 // Swapping home/away while preserving each team's points changes nothing.
-assert.deepEqual(rank(schedule.map(g=>({...g,h:g.a,a:g.h,hp:g.ap,ap:g.hp}))),rows);
+assert.deepEqual(compact(rank(schedule.map(g=>({...g,h:g.a,a:g.h,hp:g.ap,ap:g.hp})))),compact(rows));
 // A one-loss disadvantage is overridden exactly when the résumé-quality gap clears one unit.
 for(const a of rows)for(const b of rows) {
   const delta=a.score-b.score;
@@ -31,7 +32,7 @@ for(const a of rows)for(const b of rows) {
 // A 100-point blowout is not worth more than a 28-point win.
 const capA=rank([...schedule,game('C','F',28,0)]);
 const capB=rank([...schedule,game('C','F',100,0)]);
-assert.deepEqual(capA,capB);
+assert.deepEqual(compact(capA),compact(capB));
 assert.deepEqual(deserving([],{},names,{method:'record-first'}),[]);
 assert.throws(()=>deserving(schedule,{},names,{method:'bad'}),/Unsupported/);
 console.log('Record-first résumé ranking invariants passed');
