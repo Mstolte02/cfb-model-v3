@@ -98,23 +98,30 @@ const allGrid=calibrateRatings(ALL);
 const calProd={...pick(allGrid[0])};Object.assign(calProd,dominanceScale(ALL,calProd));
 const naive={ridge_games:3,margin_cap:1000,home_field:2.5},naiveP=TEST.flatMap(y=>predictions(seasons.get(y),naive)),naiveSigma=fitSigma(naiveP);
 
-/* ---------- 2. Playoff-caliber reference strength (fixed per season, prior seasons only) ---------- */
-// End-of-season rating of the k-th best FBS team, per season.
-const endRatings=new Map(ALL.map(y=>{
+/* ---------- 2. Playoff-caliber reference strength: a distribution, prior seasons only ---------- */
+// End-of-season ratings of the 30 best FBS teams, per season.
+const endSorted=new Map(ALL.map(y=>{
   const S=seasons.get(y),cal=TEST.includes(y)?calTrain:calProd;
-  const r=[...R.fitRatings(S.teams.length,indexGames(S,cal),cal)].sort((a,b)=>b-a);
-  return [y,Object.fromEntries(RANKS.map(k=>[k,r[k-1]]))];
+  return [y,[...R.fitRatings(S.teams.length,indexGames(S,cal),cal)].sort((a,b)=>b-a).slice(0,30)];
 }));
-function referenceFor(y){
-  // Chronological: average of seasons strictly before y. The first three seasons
-  // have too little history and use 2014-2016 (flagged as in-sample).
-  let prior=ALL.filter(s=>s<y);const inSample=prior.length<3;if(inSample)prior=ALL.slice(0,3);
-  return {ratings:Object.fromEntries(RANKS.map(k=>[k,mean(prior.map(s=>endRatings.get(s)[k]))])),
-    sd:Object.fromEntries(RANKS.map(k=>[k,sd(prior.map(s=>endRatings.get(s)[k]))])),from:prior,inSample};
+const endRatings=new Map(ALL.map(y=>[y,Object.fromEntries(RANKS.map(k=>[k,endSorted.get(y)[k-1]]))]));
+const BAND=4; // "playoff-caliber around #k" = the teams ranked k-4 .. k+4
+function bandStats(years){
+  const out={ratings:{},sd:{},season_sd:{}};
+  for(const k of RANKS){
+    const pool=years.flatMap(s=>endSorted.get(s).slice(Math.max(0,k-1-BAND),k+BAND));
+    out.ratings[k]=mean(pool);out.sd[k]=sd(pool);out.season_sd[k]=sd(years.map(s=>endRatings.get(s)[k]));
+  }
+  return out;
 }
-const refProd={ratings:Object.fromEntries(RANKS.map(k=>[k,mean(ALL.map(s=>endRatings.get(s)[k]))])),
-  sd:Object.fromEntries(RANKS.map(k=>[k,sd(ALL.map(s=>endRatings.get(s)[k]))]))};
-const calFor=y=>({...(TEST.includes(y)?calTrain:calProd),reference_ratings:referenceFor(y).ratings});
+function referenceFor(y){
+  // Chronological: seasons strictly before y. The first three seasons have too
+  // little history and use 2014-2016 (flagged as in-sample).
+  let prior=ALL.filter(s=>s<y);const inSample=prior.length<3;if(inSample)prior=ALL.slice(0,3);
+  return {...bandStats(prior),from:prior,inSample};
+}
+const refProd=bandStats(ALL);
+const calFor=y=>{const f=referenceFor(y);return {...(TEST.includes(y)?calTrain:calProd),reference_ratings:f.ratings,reference_sd:f.sd};};
 
 /* ---------- 3. Snapshots ---------- */
 const modelFor=cal=>({method:'earned-results',calibrated:cal});
@@ -143,7 +150,33 @@ function ranked(rows,key){
   const s=rows.map(r=>({...r,score:r[key]})).sort((a,b)=>b.score-a.score||a.team.localeCompare(b.team));
   s.forEach((r,i)=>r.rank=i>0&&Math.abs(r.score-s[i-1].score)<1e-9?s[i-1].rank:i+1);return s;
 }
-const A0={benchmark_rank:12,convincingness_weight:0,loss_aversion:1,performance_cap:28};
+/* Head-to-head closeness window. "Close" is measured, not guessed: the standard
+   deviation of the score gap between two nearby top-25 teams when opponent ratings
+   move by one standard error and the reference strength is redrawn. Two résumés
+   closer than one SD are not reliably different, so head-to-head may order them. */
+function residualNoise(reps=40){
+  const r=rng(5),sds=[];
+  const base={benchmark_rank:12,convincingness_weight:0,loss_aversion:1,performance_cap:28,reference_uncertainty:false,head_to_head_window:0};
+  for(const y of ALL){
+    const ctx=finals.get(y),cal=ctx.cal,top=R.score(ctx,base,{light:true}).filter(x=>x.rank<=25).map(x=>x.team);
+    const gamesOf=new Map(ctx.teams.map(t=>[t.team,t.games.length])),draws=new Map(top.map(t=>[t,[]]));
+    for(let k=0;k<reps;k++){
+      const noise=new Map(ctx.names.map(t=>[t,gauss(r)*cal.game_noise_sd/Math.sqrt((gamesOf.get(t)||0)+cal.ridge_games)]));
+      const pert={...ctx,teams:ctx.teams.map(t=>({...t,games:t.games.map(g=>({...g,oppRating:g.oppRating+noise.get(g.opponent)}))}))};
+      const refDraw=cal.reference_ratings[12]+gauss(r)*cal.reference_sd[12];
+      const sc=new Map(R.score(pert,{...base,reference_rating:refDraw},{light:true}).map(x=>[x.team,x.score]));
+      for(const t of top)draws.get(t).push(sc.get(t));
+    }
+    for(let i=0;i<top.length;i++)for(let j=i+1;j<Math.min(top.length,i+6);j++){
+      const d=draws.get(top[i]).map((v,k)=>v-draws.get(top[j])[k]);sds.push(sd(d));
+    }
+  }
+  return {pairwise_gap_sd:mean(sds),pairs:sds.length};
+}
+const noise=residualNoise();
+const H2H_WINDOW=round(noise.pairwise_gap_sd,2);
+log('Head-to-head window',H2H_WINDOW,'from pairwise gap SD',round(noise.pairwise_gap_sd,3));
+const A0={benchmark_rank:12,convincingness_weight:0,loss_aversion:1,performance_cap:28,reference_uncertainty:true,head_to_head_window:H2H_WINDOW};
 const modelA=(y,a=A0)=>R.score(finals.get(y),a);
 const modelB=(y,a=A0)=>ranked(R.score(finals.get(y),a),'rarity');
 
@@ -186,7 +219,7 @@ function benchmarkStability(method){
   // One season-to-season SD of the #12 reference strength, either way.
   const ov=[];for(const y of ALL){const base=calFor(y).reference_ratings[12],s=referenceFor(y).sd[12];
     const a=method(y,{...A0,reference_rating:base-s}),b=method(y,{...A0,reference_rating:base+s});ov.push(topOverlap(a,b));}
-  out['#12 reference -1 SD vs +1 SD']={top12_overlap:round(mean(ov),2)};
+  out['#12 reference distribution -1 SD vs +1 SD']={top12_overlap:round(mean(ov),2)};
   return out;
 }
 function rng(seed){let s=seed>>>0;return()=>{s=(s+0x6D2B79F5)>>>0;let t=s;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};}
@@ -351,9 +384,22 @@ function sweepTable(){
   }
   return out;
 }
+// Every order that head-to-head reversed, and close meetings it could not reverse
+// because the two teams were not neighbours or the gap was too large.
+function headToHeadBacktest(a){
+  const reversed=[];let swapsAll=0;
+  for(const y of ALL){
+    const rows=modelA(y,a),by=new Map(rows.map(r=>[r.team,r]));
+    for(const r of rows)for(const p of r.headToHeadPassed){
+      swapsAll++;const o=by.get(p.team);
+      if(Math.min(r.rank,o.rank)<=25)reversed.push({season:y,winner:r.team+' '+r.wins+'-'+r.losses+' (#'+r.rank+')',loser:o.team+' '+o.wins+'-'+o.losses+' (#'+o.rank+')',score_gap:round(r.score-o.score,3)});
+    }
+  }
+  return {orders_reversed_all:swapsAll,orders_reversed_top25:reversed.length,reversed};
+}
 function seasonTables(a){
   return Object.fromEntries(ALL.map(y=>{const rows=modelA(y,a);return [y,rows.slice(0,16).map(r=>({rank:r.rank,team:r.team,record:`${r.wins}-${r.losses}`,
-    score:round(r.score,3),losses:round(r.lossPenalty,2),schedule:round(r.schedule,3),performance:round(r.performance,3),
+    score:round(r.score,3),range:[round(r.scoreLow,2),round(r.scoreHigh,2)],head_to_head_passed:r.headToHeadPassed.map(p=>p.team),top12_probability:round(r.topProbability,2),losses:round(r.lossPenalty,2),schedule:round(r.schedule,3),performance:round(r.performance,3),
     reference_wins:round(r.referenceWins,2),match_probability:round(r.matchProbability,4),rarity:round(r.rarity,3),rarity_rank:r.rarityRank}))];}));
 }
 
@@ -361,12 +407,14 @@ module.exports={seasons,finals,calTrain,calProd,calFor,referenceFor,refProd,endR
   benchmarkStability,opponentUncertainty,manipulation,leakageCheck,earlySeason,fairness,simulate,impliedLossUnit,sweepTable,seasonTables,bySeason,A0,ALL,TRAIN,TEST,round};
 
 if(require.main===module){
-  const DEFAULT=JSON.parse(process.env.DESERVING_DEFAULT||'{"benchmark_rank":12,"convincingness_weight":0,"loss_aversion":1,"performance_cap":28}');
+  const DEFAULT=process.env.DESERVING_DEFAULT?JSON.parse(process.env.DESERVING_DEFAULT):A0;
   log('Default assumptions',DEFAULT);
   const candidates={
     'Colley (former production)':bySeason(y=>ranked(colleyRows(seasons.get(y)),'colley')),
     'Record-first v1 branch':bySeason(y=>ranked(colleyRows(seasons.get(y)),'v1')),
     'Model A: wins above playoff-caliber (alpha 0)':bySeason(y=>modelA(y)),
+    'Model A without head-to-head':bySeason(y=>modelA(y,{...A0,head_to_head_window:0})),
+    'Model A, point reference (no uncertainty)':bySeason(y=>modelA(y,{...A0,reference_uncertainty:false})),
     'Model B: résumé rarity -log10 P(W*>=W)':bySeason(y=>modelB(y)),
     'Model A + 5% convincingness (rejected)':bySeason(y=>modelA(y,{...DEFAULT,convincingness_weight:0.05})),
   };
@@ -381,8 +429,9 @@ if(require.main===module){
       test_reference_uncapped_ridge3:{log_loss:round(logLoss(naiveP,naiveSigma)),brier:round(brier(naiveP,naiveSigma))},
       top_train_configs:trainGrid.slice(0,6).map(roundObj),production:roundObj(calProd)},
     reference_strength:{definition:'average end-of-season rating (points vs average FBS team, neutral field) of the k-th best FBS team in earlier seasons',
-      per_season_end_ratings:Object.fromEntries(ALL.map(y=>[y,roundObj(endRatings.get(y))])),production:roundObj(refProd.ratings),production_sd:roundObj(refProd.sd)},
+      per_season_end_ratings:Object.fromEntries(ALL.map(y=>[y,roundObj(endRatings.get(y))])),production:roundObj(refProd.ratings),production_sd:roundObj(refProd.sd),production_season_sd:roundObj(refProd.season_sd),band:`ranks k-${BAND}..k+${BAND}`},
     default_assumptions:DEFAULT,
+    head_to_head:{window:H2H_WINDOW,noise:{pairwise_gap_sd:round(noise.pairwise_gap_sd,4),pairs:noise.pairs},backtest:headToHeadBacktest(DEFAULT)},
     candidates:candidateReport,
     implied_loss_unit:impliedLossUnit(),
     stability:{benchmark_A:benchmarkStability(modelA),benchmark_B:benchmarkStability(modelB),opponent_uncertainty:opponentUncertainty()},
@@ -399,14 +448,18 @@ if(require.main===module){
   const model={version:3,method:'earned-results',
     description:'Wins above a playoff-caliber reference team, in loss-equivalent units, with exact résumé rarity',
     games:'completed regular-season FBS-versus-FBS only (conference title games included)',
-    calibrated:{...roundObj(calProd),reference_ratings:roundObj(refProd.ratings),reference_sd:roundObj(refProd.sd),
+    calibrated:{...roundObj(calProd),reference_ratings:roundObj(refProd.ratings),reference_sd:roundObj(refProd.sd),reference_season_sd:roundObj(refProd.season_sd),
+      reference_band:`end-of-season strengths of the teams ranked k-${BAND}..k+${BAND}, pooled over calibration seasons`,
+      score_gap_noise_sd:round(noise.pairwise_gap_sd,4),
       calibration_seasons:ALL,source:'scripts/deserving_calibration.cjs'},
     assumptions:DEFAULT,
     assumption_notes:{benchmark_rank:'Reference team = the k-th best FBS team (12 = playoff cutoff). Philosophical.',
       convincingness_weight:'Share of each game decided by how clearly it was won rather than whether it was won. Philosophical.',
       loss_aversion:'Loss-equivalent penalty per loss. 1 keeps the score schedule-fair for a reference-caliber team. Philosophical.',
-      performance_cap:'Margins beyond this many points earn nothing more. Philosophical.'},
-    sensitivity:{benchmark_rank:[8,12,16],convincingness_weight:[0,0.05,0.1],loss_aversion:[1,1.25]},
+      performance_cap:'Margins beyond this many points earn nothing more. Philosophical.',
+      reference_uncertainty:'Judge against the whole playoff-caliber distribution (true) or only its mean (false).',
+      head_to_head_window:'Score gap (loss units) inside which a neighbour that won the head-to-head game moves ahead: one SD of the measured score-gap noise. Scores are unchanged.'},
+    sensitivity:{benchmark_rank:[8,12,16],convincingness_weight:[0,0.05,0.1],loss_aversion:[1,1.25],head_to_head_window:[0,H2H_WINDOW]},
     equal_scores:'shared rank',report:'audit/MOST_DESERVING_V2.md'};
   // A compact summary the page shows in "How it works". Every number is from the report above.
   const fin=candidateReport['Model A: wins above playoff-caliber (alpha 0)'],rb=candidateReport['Model B: résumé rarity -log10 P(W*>=W)'];
@@ -419,7 +472,9 @@ if(require.main===module){
     rarity_agreement_at_loss_weight_1:report.implied_loss_unit.find(x=>x.loss_aversion===1).pairwise_agreement_with_B,
     schedule_bias_reference_caliber:{loss_weight_1:report.fairness.model_A_alpha0['#12-caliber team'].A_hardest_minus_easiest_quintile_loss_units_per_12,
       loss_weight_1_5:report.fairness.loss_aversion_1_5['#12-caliber team'].A_hardest_minus_easiest_quintile_loss_units_per_12},
-    future_results_leak:report.leakage.snapshots_changed_by_future_results};
+    future_results_leak:report.leakage.snapshots_changed_by_future_results,
+    head_to_head:{window:H2H_WINDOW,noise_sd:round(noise.pairwise_gap_sd,3),orders_reversed:report.head_to_head.backtest.orders_reversed_top25,
+      examples:report.head_to_head.backtest.reversed.slice(0,10).map(e=>`${e.season}: ${e.winner} over ${e.loser} (score gap ${e.score_gap})`)}};
   fs.writeFileSync(path.join(ROOT,'viz','data','deserving-model.json'),JSON.stringify(model,null,2)+'\n');
   log('Wrote audit/output/deserving_calibration.json and viz/data/deserving-model.json');
 }

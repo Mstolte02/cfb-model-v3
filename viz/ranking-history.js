@@ -52,8 +52,9 @@
      ------------------------------------------------------------------------ */
   const RESUME_DEFAULTS = Object.freeze({
     calibrated: Object.freeze({ridge_games:2, margin_cap:60, home_field:3, win_sigma:15.0465, dominance_scale:25.5903,
-      reference_ratings:Object.freeze({4:21.2893,8:16.5856,12:14.3922,16:12.1457,25:9.1906})}),
-    assumptions: Object.freeze({benchmark_rank:12, convincingness_weight:0, loss_aversion:1, performance_cap:28})
+      reference_ratings:Object.freeze({4:21.2893,8:16.5856,12:14.3922,16:12.1457,25:9.1906}),
+      reference_sd:Object.freeze({4:3,8:2.5,12:2.3,16:2,25:1.5})}),
+    assumptions: Object.freeze({benchmark_rank:12, convincingness_weight:0, loss_aversion:1, performance_cap:28, reference_uncertainty:true, head_to_head_window:0.39})
   });
   const METHODS = new Set(['earned-results']);
   function erfc(x) { // Numerical Recipes erfcc: fractional error below 1.2e-7 everywhere.
@@ -126,6 +127,7 @@
     if(!METHODS.has(model?.method))throw new Error('Unsupported résumé method');
     const calibrated={...RESUME_DEFAULTS.calibrated,...(model.calibrated||{})};
     calibrated.reference_ratings={...RESUME_DEFAULTS.calibrated.reference_ratings,...(model.calibrated?.reference_ratings||{})};
+    calibrated.reference_sd={...RESUME_DEFAULTS.calibrated.reference_sd,...(model.calibrated?.reference_sd||{})};
     return {calibrated,assumptions:{...RESUME_DEFAULTS.assumptions,...(model.assumptions||{})},
       sensitivity:model.sensitivity||null};
   }
@@ -149,67 +151,146 @@
     });
     return {cal,names,teams};
   }
-  function referenceRating(cal,a) {
-    if(Number.isFinite(a.reference_rating))return a.reference_rating;
-    const table=cal.reference_ratings,keys=Object.keys(table).map(Number).sort((x,y)=>x-y),k=a.benchmark_rank;
+  /* The playoff-caliber reference team is a distribution, not one number:
+     N(mean, sd) fitted to the end-of-season strengths of the teams ranked
+     k-4 .. k+4 in earlier seasons (both the width of "playoff-caliber" and its
+     year-to-year drift). Every team is judged against the same distribution. */
+  function lookupRank(table,k) {
+    const keys=Object.keys(table||{}).map(Number).filter(Number.isFinite).sort((x,y)=>x-y);
+    if(!keys.length)return NaN;
     if(Number.isFinite(table[k]))return table[k];
-    // Linear interpolation between tabulated ranks; flat beyond the ends.
     if(k<=keys[0])return table[keys[0]];if(k>=keys.at(-1))return table[keys.at(-1)];
     const hi=keys.find(x=>x>k),lo=keys.filter(x=>x<k).at(-1);
     return table[lo]+(table[hi]-table[lo])*(k-lo)/(hi-lo);
   }
-  function score(ctx,assumptions) {
-    const cal=ctx.cal,a={...RESUME_DEFAULTS.assumptions,...(assumptions||{})};
-    const omega=a.loss_aversion,alpha=a.convincingness_weight,ref=referenceRating(cal,a);
-    const rows=ctx.teams.map(t=>{
+  function referenceDistribution(cal,a) {
+    const mean=Number.isFinite(a.reference_rating)?a.reference_rating:lookupRank(cal.reference_ratings,a.benchmark_rank);
+    const sd=a.reference_uncertainty===false?0:Number.isFinite(a.reference_sd)?a.reference_sd:(lookupRank(cal.reference_sd,a.benchmark_rank)||0);
+    return {mean,sd};
+  }
+  function referenceRating(cal,a){return referenceDistribution(cal,a).mean;}
+  // Standard-normal quantiles at equal-probability midpoints, for ranks and rarity
+  // under reference uncertainty. Bisection on normalCdf: deterministic everywhere.
+  function normalQuantile(u){let lo=-9,hi=9;for(let k=0;k<80;k++){const m=(lo+hi)/2;if(normalCdf(m)<u)lo=m;else hi=m;}return (lo+hi)/2;}
+  const NODES=25,NODE_Z=Array.from({length:NODES},(_,j)=>normalQuantile((j+0.5)/NODES)),Z80=normalQuantile(0.9);
+
+  // Résumé components for one reference strength. sigma = win-probability scale.
+  function evaluate(ctx,a,ref,sigma,withLedger) {
+    const cal=ctx.cal,omega=a.loss_aversion,alpha=a.convincingness_weight;
+    return ctx.teams.map(t=>{
       let wins=0,losses=0,ties=0,lossPenalty=0,fromWins=0,fromLosses=0,performance=0;
-      const ledger=t.games.map(g=>{
+      const qs=[],ledger=[];
+      for(const g of t.games) {
         const margin=g.pf-g.pa,W=margin>0?1:margin<0?0:0.5;
-        const q=normalCdf((ref-g.oppRating+cal.home_field*g.venue)/cal.win_sigma);
+        const q=normalCdf((ref-g.oppRating+cal.home_field*g.venue)/sigma);
         // Venue-adjusted, capped margin: how clearly the game showed the better team.
         const s=normalCdf((clip(margin,a.performance_cap)-cal.home_field*g.venue)/cal.dominance_scale);
         const lossTerm=-omega*(1-W),scheduleTerm=1-q,performanceTerm=alpha*(s-W);
         if(W===1){wins++;fromWins+=scheduleTerm;}
         else if(W===0){losses++;fromLosses+=scheduleTerm;}
         else {ties++;fromWins+=scheduleTerm/2;fromLosses+=scheduleTerm/2;}
-        lossPenalty+=lossTerm;performance+=performanceTerm;
-        return {...g,result:W===1?'W':W===0?'L':'T',refWin:q,dominance:s,lossTerm,scheduleTerm,performanceTerm,
-          total:lossTerm+scheduleTerm+performanceTerm};
+        lossPenalty+=lossTerm;performance+=performanceTerm;qs.push(q);
+        if(withLedger)ledger.push({...g,result:W===1?'W':W===0?'L':'T',refWin:q,dominance:s,lossTerm,scheduleTerm,performanceTerm,
+          total:lossTerm+scheduleTerm+performanceTerm});
+      }
+      return {team:t.team,wins,losses,ties,games:t.games.length,lossPenalty,fromWins,fromLosses,performance,qs,ledger,
+        base:lossPenalty+fromWins+fromLosses+performance};
+    });
+  }
+  /* Head-to-head between close résumés. The score itself never changes.
+     After sorting by score, a team moves directly above the team just ahead of it
+     when (1) it won their games against each other on balance and (2) the two
+     scores differ by less than the closeness window. Passes repeat until nothing
+     moves. A pair can swap only once, so a three-way cycle cannot loop, and only
+     neighbours swap, so no third team moves because of a game it did not play.
+     The result is one strict, deterministic order. */
+  function headToHeadNet(ctx) { // per team: opponent -> wins minus losses against it
+    return ctx.teams.map(t=>{const m=new Map();for(const g of t.games){if(g.pf===g.pa)continue;m.set(g.opponent,(m.get(g.opponent)||0)+(g.pf>g.pa?1:-1));}return m;});
+  }
+  function orderTeams(names,scores,net,window) {
+    const order=scores.map((_,i)=>i).sort((x,y)=>scores[y]-scores[x]||names[x].localeCompare(names[y]));
+    const swaps=[];
+    if(window>0) {
+      const used=new Set();let moved=true;
+      while(moved) {
+        moved=false;
+        for(let k=0;k+1<order.length;k++) {
+          const up=order[k],low=order[k+1],gap=scores[up]-scores[low],key=Math.min(up,low)+'|'+Math.max(up,low);
+          if(gap>=window||used.has(key)||!((net[low].get(names[up])||0)>0))continue;
+          order[k]=low;order[k+1]=up;used.add(key);swaps.push({winner:low,over:up,gap});moved=true;
+        }
+      }
+    }
+    // Competition ranks. Equal scores share a rank only when head-to-head does not separate them.
+    const ranks=Array(order.length);
+    order.forEach((i,k)=>{
+      const p=order[k-1];
+      const tied=k>0&&Math.abs(scores[i]-scores[p])<=1e-9&&!(net[i].get(names[p])||net[p].get(names[i]));
+      ranks[i]=tied?ranks[p]:k+1;
+    });
+    return {order,swaps,ranks};
+  }
+  function nodeRanks(ctx,a,ref,sigma,net) {
+    const ev=evaluate(ctx,a,ref,sigma,false),scores=ev.map(e=>e.base);
+    return {ev,scores,ranks:orderTeams(ctx.names.length?ev.map(e=>e.team):[],scores,net,a.head_to_head_window).ranks};
+  }
+  function score(ctx,assumptions,options={}) {
+    const cal=ctx.cal,a={...RESUME_DEFAULTS.assumptions,...(assumptions||{})},cutoff=options.cutoff||12;
+    const dist=referenceDistribution(cal,a),net=headToHeadNet(ctx);
+    // Expected credit over the reference distribution: E[Phi((R - r + hv)/s)] with
+    // R ~ N(mean, sd^2) is exactly Phi((mean - r + hv)/sqrt(s^2 + sd^2)).
+    const sigmaEff=Math.sqrt(cal.win_sigma**2+dist.sd**2);
+    const ev=evaluate(ctx,a,dist.mean,sigmaEff,true);
+    const rows=ev.map(e=>{
+      const schedule=e.fromWins+e.fromLosses,earned=e.wins+e.ties/2;
+      return {team:e.team,wins:e.wins,losses:e.losses,ties:e.ties,games:e.games,win_pct:earned/e.games,
+        lossPenalty:e.lossPenalty,schedule,scheduleFromWins:e.fromWins,scheduleFromLosses:e.fromLosses,performance:e.performance,
+        score:e.base,sos:schedule,ledger:e.ledger,referenceRating:dist.mean,referenceSd:dist.sd,referenceWins:e.games-schedule,
+        headToHeadPassed:[],headToHeadPassedBy:[]};
+    });
+    const names=rows.map(r=>r.team),scores=rows.map(r=>r.score);
+    const {order,swaps,ranks}=orderTeams(names,scores,net,a.head_to_head_window);
+    for(const s of swaps){rows[s.winner].headToHeadPassed.push({team:names[s.over],gap:s.gap});rows[s.over].headToHeadPassedBy.push({team:names[s.winner],gap:s.gap});}
+    rows.forEach((r,i)=>{r.rank=ranks[i];});
+    if(!options.light) {
+      // Range and rarity under reference uncertainty. A stronger reference team
+      // expects fewer losses, so the low end of the range uses the 90th-percentile reference.
+      const lo=nodeRanks(ctx,a,dist.mean+Z80*dist.sd,cal.win_sigma,net),hi=nodeRanks(ctx,a,dist.mean-Z80*dist.sd,cal.win_sigma,net);
+      const nodes=dist.sd>0?NODE_Z.map(zz=>nodeRanks(ctx,a,dist.mean+zz*dist.sd,cal.win_sigma,net)):[nodeRanks(ctx,a,dist.mean,cal.win_sigma,net)];
+      rows.forEach((r,i)=>{
+        r.scoreLow=lo.scores[i];r.scoreHigh=hi.scores[i];
+        const earned=r.wins+r.ties/2,tail=nd=>upperTail(poissonBinomial(nd.ev[i].qs),earned);
+        r.matchProbability=nodes.reduce((s,nd)=>s+tail(nd),0)/nodes.length;
+        // A weaker reference team matches a record less often: that end is the rarer one.
+        r.matchProbabilityLow=tail(hi);r.matchProbabilityHigh=tail(lo);
+        r.rarity=-Math.log10(Math.max(r.matchProbability,1e-300));
+        r.topProbability=nodes.filter(nd=>nd.ranks[i]<=cutoff).length/nodes.length;
+        r.rankRangeReference=[Math.min(lo.ranks[i],hi.ranks[i],r.rank),Math.max(lo.ranks[i],hi.ranks[i],r.rank)];
       });
-      const schedule=fromWins+fromLosses,games=ledger.length;
-      const dist=poissonBinomial(ledger.map(g=>g.refWin)),earned=wins+ties/2;
-      const matchProbability=upperTail(dist,earned);
-      return {team:t.team,wins,losses,ties,games,win_pct:earned/games,
-        lossPenalty,schedule,scheduleFromWins:fromWins,scheduleFromLosses:fromLosses,performance,
-        score:lossPenalty+schedule+performance,sos:schedule,ledger,referenceRating:ref,
-        referenceWins:games-schedule,matchProbability,rarity:-Math.log10(Math.max(matchProbability,1e-300))};
-    });
-    // Equal résumés share a rank. Alphabetical order only arranges ties on screen.
-    rows.sort((x,y)=>y.score-x.score||x.team.localeCompare(y.team));
-    let tieScore;
-    rows.forEach((r,i)=>{
-      if(i===0||Math.abs(r.score-tieScore)>1e-9){r.rank=i+1;tieScore=r.score;}
-      else r.rank=rows[i-1].rank;
-    });
-    const bySchedule=rows.map(r=>r.schedule),byRarity=rows.map(r=>r.rarity);
-    rows.forEach(r=>{
+    }
+    const sorted=order.map(i=>rows[i]);
+    const bySchedule=sorted.map(r=>r.schedule),byRarity=sorted.map(r=>r.rarity);
+    sorted.forEach(r=>{
       r.scheduleRank=1+bySchedule.filter(v=>v>r.schedule+1e-12).length;
-      r.rarityRank=1+byRarity.filter(v=>v>r.rarity+1e-12).length;
+      if(r.rarity!==undefined)r.rarityRank=1+byRarity.filter(v=>v>r.rarity+1e-12).length;
     });
-    return rows;
+    return sorted;
   }
   function deserving(schedule,metadata,fbsNames,model,options={}) {
     const resolved=resolveModel(model);
     const ctx=options.context||prepare(schedule,fbsNames,model);
-    return score(ctx,{...resolved.assumptions,...(options.assumptions||{})});
+    return score(ctx,{...resolved.assumptions,...(options.assumptions||{})},options);
   }
   // Why does A rank ahead of B? Uses the same components as the score, so the
-  // net always equals the score difference exactly.
+  // net always equals the score difference exactly; head-to-head is reported separately.
   function compare(a,b) {
+    const meetings=a.ledger.filter(g=>g.opponent===b.team);
+    const decidedBy=a.headToHeadPassed.some(x=>x.team===b.team)?a.team:b.headToHeadPassed.some(x=>x.team===a.team)?b.team:null;
     return {losses:a.lossPenalty-b.lossPenalty,schedule:a.schedule-b.schedule,
       scheduleFromWins:a.scheduleFromWins-b.scheduleFromWins,scheduleFromLosses:a.scheduleFromLosses-b.scheduleFromLosses,
       performance:a.performance-b.performance,net:a.score-b.score,lossGap:a.losses-b.losses,
-      rarity:a.rarity-b.rarity,referenceWins:a.referenceWins-b.referenceWins};
+      meetings,headToHeadNet:meetings.reduce((s,g)=>s+(g.result==='W'?1:g.result==='L'?-1:0),0),decidedBy,
+      rarity:(a.rarity??NaN)-(b.rarity??NaN),referenceWins:a.referenceWins-b.referenceWins};
   }
   function cartesian(grid) {
     return Object.entries(grid).reduce((acc,[k,vals])=>acc.flatMap(c=>vals.map(v=>({...c,[k]:v}))),[{}]);
@@ -219,7 +300,7 @@
     const {assumptions,sensitivity:grid}=resolveModel(model);
     const configs=cartesian({...Object.fromEntries(Object.entries(assumptions).map(([k,v])=>[k,[v]])),...(grid||{})});
     const ranks=new Map(ctx.teams.map(t=>[t.team,[]]));
-    for(const c of configs)for(const r of score(ctx,c))ranks.get(r.team).push(r.rank);
+    for(const c of configs)for(const r of score(ctx,c,{light:true}))ranks.get(r.team).push(r.rank);
     const out=new Map();
     for(const [team,rs] of ranks) {
       const sorted=[...rs].sort((x,y)=>x-y);
@@ -229,6 +310,6 @@
     return {configs,byTeam:out};
   }
   root.RankingHistory={movement,deserving,z,prepare,score,compare,sensitivity,fitRatings,normalCdf,eligible,
-    poissonBinomial,upperTail,referenceRating,RESUME_DEFAULTS};
+    poissonBinomial,upperTail,referenceRating,referenceDistribution,orderTeams,RESUME_DEFAULTS};
   if(typeof module!=='undefined')module.exports=root.RankingHistory;
 })(typeof window!=='undefined'?window:globalThis);

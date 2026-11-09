@@ -4,7 +4,8 @@
   const P4=['ACC','Big Ten','Big 12','SEC'];
   const G6=['American Athletic','Conference USA','Mid-American','Mountain West','Pac-12','Sun Belt'];
   function selectField(rows,meta,champions={}) {
-    const ranked=rows.slice().sort((a,b)=>b.score-a.score||a.team.localeCompare(b.team));
+    // Résumé order, including head-to-head between close neighbours.
+    const ranked=rows.slice().sort((a,b)=>(a.rank??0)-(b.rank??0)||b.score-a.score||a.team.localeCompare(b.team));
     const autos=new Map();
     for(const conf of P4) {
       const actual=ranked.find(r=>r.team===champions[conf]&&meta[r.team]?.conference===conf);

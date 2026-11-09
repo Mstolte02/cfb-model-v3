@@ -45,11 +45,23 @@ q_g = Φ( (r_ref − r_opp(−i) + h·v_g) / σ )
 
 - `r_opp(−i)`: opponent rating from a ridge fit of this season's capped FBS margins
   **with every game of team i removed** (leave-team-out).
-- `r_ref`: a fixed reference strength for the whole snapshot (section 4).
+- `r_ref`: the playoff-caliber reference strength. It is a **distribution**,
+  `r_ref ~ N(μ, s²)`, the same for every team in a snapshot (section 4). The score
+  is the expectation over it, which is exact in closed form:
+  `E[Φ((r_ref − r + h·v)/σ)] = Φ((μ − r + h·v)/√(σ² + s²))`.
 - `v_g` = +1 home, −1 away, 0 neutral. `h` = home field. `σ` = win-probability scale.
 
-Shown beside the score (not used to rank): exact résumé rarity
-`p_i = P(W*_i ≥ W_i)`, `R_i = −log10 p_i` (section 5).
+Shown beside the score (not used to rank):
+
+- an **80% score range**: the score against the 10th- and 90th-percentile
+  playoff-caliber team;
+- exact résumé rarity `p_i = P(W*_i ≥ W_i)`, `R_i = −log10 p_i`, averaged over the
+  reference distribution (exact Poisson-binomial at 25 equal-probability points),
+  with its own range (section 5);
+- the **top-12 chance**: the share of the reference distribution under which the
+  team ranks in the top 12.
+
+Head-to-head (section 2a) then orders close neighbours. It never changes a score.
 
 ## 2. Conditional overrides
 
@@ -70,16 +82,21 @@ Historical frequency, final regular season, all pairs inside each season's top 2
 | Override | Model A (production) | Model B (rarity) | Colley (old) | v1 branch |
 |---|---|---|---|---|
 | 1 loss over unbeaten | 19 of 83 | 15 of 83 | 16 of 83 | 0 of 83 |
-| 2 losses over unbeaten | 5 of 179 | 2 of 177 | 8 of 173 | 0 of 197 |
-| 2 losses over 1 loss | 57 of 417 | 57 of 406 | 57 of 394 | 0 of 460 |
+| 2 losses over unbeaten | 4 of 179 | 2 of 177 | 8 of 173 | 0 of 197 |
+| 2 losses over 1 loss | 57 of 417 | 56 of 406 | 57 of 394 | 0 of 460 |
 | 3 losses over unbeaten | 0 of 159 | 0 of 157 | 0 of 154 | 0 of 185 |
+
+(Model A here is the production model: reference distribution and head-to-head on.
+Head-to-head changes none of these counts; with a point reference instead of the
+distribution, 2-loss-over-unbeaten is 5 of 179.)
 
 All five two-loss-over-unbeaten cases are weak-schedule unbeatens:
 
 - 2016 Penn State 11-2 over Western Michigan 12-0 (+0.53)
 - 2017 Ohio State 11-2 over UCF 11-0 (+0.09)
 - 2018 Georgia 10-2 over UCF 11-0 (+0.83)
-- 2023 Missouri 9-2 and Oregon 10-2 over Liberty 13-0 (+0.03, +0.01)
+- 2023 Missouri 9-2 over Liberty 13-0 (+0.01; Oregon 10-2 was also above Liberty
+  with a point reference, and now sits 0.01 below it)
 
 Examples of one-loss over unbeaten (score gap, schedule gap):
 
@@ -93,6 +110,48 @@ Examples of one-loss over unbeaten (score gap, schedule gap):
 
 The v1 branch claimed conditional overrides. In 11 seasons it produced none: its
 `4 × (Colley SOS − .5)` term never exceeded one loss, so it was a sort by loss count.
+
+## 2a. Head-to-head between close résumés
+
+**Rule.** After sorting by score, a team moves directly above the team just ahead
+of it when (1) it won their games against each other on balance and (2) the two
+scores differ by less than the closeness window, **0.39** loss units. Passes repeat
+until nothing moves. A pair swaps at most once.
+
+**Why 0.39.** It is measured, not chosen: the standard deviation of the score gap
+between two nearby top-25 teams (within five places) when every opponent rating
+moves by one standard error and the reference strength is redrawn from its
+distribution (1,210 pairs, 40 draws each, 2014–2025). Closer than one SD, two
+résumés are not reliably different, so the game between them decides.
+
+**Why a reorder and not a bonus.** I first built head-to-head as a zero-sum score
+bonus that faded with the gap. It failed two of the brief's requirements, and the
+backtest showed both:
+
+- With the window from the noise measurement, one team had **9** head-to-head games
+  inside it. Each one's bonus shrinks as the team pulls away, so a better result
+  elsewhere could *lower* that team's score (result sensitivity broken).
+- The bonus moved winners and losers relative to teams they never played: with it
+  on, 2019 Georgia 10-2 ranked above Clemson 12-0 (Georgia had close wins over
+  Florida and Auburn); with it off, it did not. Georgia and Clemson did not play.
+
+The reorder keeps the score pure (all score properties hold unchanged), keeps one
+strict deterministic order, cannot loop on a cycle (A beat B, B beat C, C beat A),
+and moves no team because of a game it did not play. The cost: head-to-head only
+acts between neighbours. If a third team sits between the two, the game does not
+reorder them; the head-to-head view says so.
+
+**Effect.** Across 2014–2025 it reversed 65 final orders, 15 inside the top 25,
+for example:
+
+- 2014 Baylor 10-1 over TCU 10-1 (scores 0.04 apart)
+- 2017 Ohio State 11-2 over Wisconsin 12-1 (0.22; Big Ten title game)
+- 2017 Michigan State 9-3 over Penn State 10-2 (0.24)
+- 2021 Ohio State 10-2 over Michigan State 9-2 (0.06)
+- 2025 Texas Tech 11-1 over BYU 10-2 (0.001; Big 12 title game)
+
+It changed none of the override counts in section 2. The page marks swapped teams
+with **H2H**, and "Why is A ahead?" names the game and the gap.
 
 ## 3. Review of the v1 branch
 
@@ -131,18 +190,34 @@ games removed. Team *i*'s results therefore cannot change how strong its opponen
 look to it. This gives a strict proof of result sensitivity: changing one of *i*'s
 results changes only that game's term, and a better result raises that term.
 
-**Reference team (playoff-caliber), not circular.** The current #12 team is not
-used. `r_ref` is the average end-of-season rating of the k-th best FBS team in
-**earlier seasons only**. It is fixed for every team in a snapshot and does not
-depend on any current record.
+**Reference team (playoff-caliber): a distribution, not circular.** The current
+#12 team is not used. "Playoff-caliber around #k" is the pooled set of
+end-of-season ratings of the teams ranked **k−4 … k+4 in earlier seasons only**,
+summarised as `N(μ_k, s_k²)`. The spread `s_k` carries two kinds of uncertainty at
+once: how different playoff-caliber teams are from each other, and how the bar
+moves from year to year. The distribution is fixed for every team in a snapshot
+and does not depend on any current record.
 
-| k | Production rating (points vs average FBS, neutral) | Season-to-season SD |
-|---|---|---|
-| 4 | 21.3 | 2.1 |
-| 8 | 16.6 | 1.8 |
-| **12 (production)** | **14.4** | **1.6** |
-| 16 | 12.1 | 1.1 |
-| 25 | 9.2 | 0.7 |
+| k (centre) | Ranks pooled | μ: points vs average FBS, neutral | s: SD of the pool | SD of the k-th team across seasons |
+|---|---|---|---|---|
+| 4 | 1–8 | 20.8 | 4.1 | 2.1 |
+| 8 | 4–12 | 17.1 | 2.7 | 1.8 |
+| **12 (production)** | **8–16** | **14.4** | **2.1** | **1.6** |
+| 16 | 12–20 | 12.4 | 1.7 | 1.1 |
+| 25 | 21–29 | 9.2 | 1.2 | 0.7 |
+
+How the uncertainty is used:
+
+- **Score (ranking):** the expected score over the distribution, exact in closed form
+  (the win-probability scale widens from 15.05 to √(15.05² + 2.05²) = 15.19 points).
+- **80% range:** the score against the 10th- and 90th-percentile playoff-caliber
+  team. A stronger reference team expects fewer losses, so every score falls
+  together; the range is wide (about ±0.4 for a top team) but ranks move much less.
+- **Top-12 chance and rank range:** the full ranking, head-to-head included, at 25
+  equal-probability points of the distribution.
+- **Rarity:** exact Poisson-binomial tail at each of the 25 points, averaged. Games
+  are independent *given* the reference strength; averaging over it is what makes
+  them correlated, and this handles that correctly without Monte Carlo noise.
 
 Backtests use only prior seasons for each test season (2014–2016 use 2014–2016,
 flagged in-sample).
@@ -172,11 +247,11 @@ Evaluation against Model A:
 |---|---|---|
 | Distinguishes a bad loss from a good loss | **Yes** | No: only the count of wins matters |
 | Exact additive per-game explanation | **Yes** | No |
-| Top-12 overlap, reference #8 vs #12 / #4 vs #12 | 11.9 / 11.2 | 11.9 / **11.7** |
-| Top-12 overlap, reference −1 SD vs +1 SD | 11.4 | **11.8** |
+| Top-12 overlap, reference #8 vs #12 / #4 vs #12 | 11.7 / 11.3 | 11.9 / **11.8** |
+| Top-12 overlap, reference distribution −1 SD vs +1 SD | 11.3 | **11.8** |
 | Opponent-rating noise (one SE per team), top-12 overlap | 10.9 | 10.9 |
 | Weekly rank movement, top 25, week 9 | 4.7 | 4.5 |
-| 2 losses over unbeaten | 5 | 2 |
+| 2 losses over unbeaten | 4 | 2 |
 | Schedule bias for a #12-caliber team (hardest − easiest quintile) | 0.08 loss units | 0.06 rarity units |
 
 B is slightly more stable and a little more record-first, but it cannot tell
@@ -192,7 +267,7 @@ of every season:
 
 | ω | 0.6 | 0.8 | **0.9** | 1.0 | 1.1 | 1.2 | 1.4 | 1.7 | 2.0 |
 |---|---|---|---|---|---|---|---|---|---|
-| Agreement | .908 | .967 | **.975** | .968 | .955 | .944 | .920 | .899 | .885 |
+| Agreement | .908 | .967 | **.973** | .966 | .954 | .942 | .919 | .898 | .884 |
 
 The tail-probability view agrees best with ω ≈ 0.9–1.0. It does **not** support a
 loss premium above 1. The record-first behavior comes from the size of the unit
@@ -276,16 +351,17 @@ by week 5, 8; by week 11, 9.8. Weekly top-25 movement falls from 13 places
 | Parameter | Value | Type | Source |
 |---|---|---|---|
 | Ridge λ, margin cap C, home field h, scale σ | 2, 60, 3.0, 15.05 | **Calibrated** | Chronological log loss |
-| Reference strength r_ref(k) | 14.4 (k = 12) | **Calibrated** given k | Prior seasons |
-| Reference rank k | 12 | Philosophical, justified | Fairness at the playoff cutoff |
+| Reference distribution N(μ_k, s_k²) | 14.4 ± 2.1 (k = 12) | **Calibrated** given k | Prior seasons, ranks k−4…k+4 |
+| Head-to-head window | 0.39 | **Calibrated** (1 SD of score-gap noise); "1 SD" is the assumption | Noise measurement, section 2a |
+| Reference centre k | 12 | Philosophical, justified | Fairness at the playoff cutoff |
 | Loss weight ω | 1.00 | Philosophical, supported | Schedule fairness; rarity implies 0.9–1.0 |
 | Convincingness α | 0 | Philosophical, tested | No measured benefit |
 | Performance cap | 28 | Philosophical | Only used if α > 0 |
 
 The data cannot identify a unique "correct" k or ω, because deservingness is
 normative. They are shown as assumptions, and the page's Cutoff sensitivity view
-re-ranks every team under 18 combinations (k ∈ {8,12,16}, α ∈ {0, 5%, 10%},
-ω ∈ {1, 1.25}).
+re-ranks every team under 36 combinations (k ∈ {8,12,16}, α ∈ {0, 5%, 10%},
+ω ∈ {1, 1.25}, head-to-head off/on).
 
 ## 11. Separation from other systems
 
@@ -299,12 +375,13 @@ cutoff with the same model.
 
 1. FCS games are excluded, so an FCS loss costs nothing. Adding FCS opponents to the
    rating fit as one pooled team would fix this.
-2. The reference strength is a point value. A distribution over it (Gauss–Hermite
-   over the 1.6-point SD) would give rarity with honest uncertainty; today it is a
-   sensitivity check.
+2. Uncertainty covers the reference strength only. Opponent-rating uncertainty is
+   measured (section 5, and it sets the head-to-head window) but is not added to the
+   displayed range. Adding it would widen every range by roughly the 0.39 noise SD.
+   Head-to-head acts only between neighbours, by design (section 2a).
 3. Opponent ratings early in the season shrink toward average, so early scores are
    compressed. This is honest but makes early rankings noisy.
-4. 2023 Alabama vs FSU and 2023 Missouri/Oregon vs Liberty are within 0.12 points.
+4. 2023 Alabama vs FSU and 2023 Missouri vs Liberty are within 0.12 points.
    Ties this close are inside the opponent-rating noise (section 5). The sensitivity
    view shows these teams as "bubble"; the page should not imply false precision.
 5. Historical committee rankings are only used for description; a separate study of

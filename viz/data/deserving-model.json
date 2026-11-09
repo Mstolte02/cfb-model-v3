@@ -12,19 +12,28 @@
     "game_noise_sd": 16.2033,
     "true_spread_sd": 13.2552,
     "reference_ratings": {
-      "4": 21.2893,
-      "8": 16.5856,
-      "12": 14.3922,
-      "16": 12.1457,
-      "25": 9.1906
+      "4": 20.8249,
+      "8": 17.0632,
+      "12": 14.3788,
+      "16": 12.3531,
+      "25": 9.1552
     },
     "reference_sd": {
+      "4": 4.0874,
+      "8": 2.7415,
+      "12": 2.0513,
+      "16": 1.7011,
+      "25": 1.1866
+    },
+    "reference_season_sd": {
       "4": 2.052,
       "8": 1.8356,
       "12": 1.5958,
       "16": 1.0688,
       "25": 0.6758
     },
+    "reference_band": "end-of-season strengths of the teams ranked k-4..k+4, pooled over calibration seasons",
+    "score_gap_noise_sd": 0.386,
     "calibration_seasons": [
       2014,
       2015,
@@ -44,13 +53,17 @@
     "benchmark_rank": 12,
     "convincingness_weight": 0,
     "loss_aversion": 1,
-    "performance_cap": 28
+    "performance_cap": 28,
+    "reference_uncertainty": true,
+    "head_to_head_window": 0.39
   },
   "assumption_notes": {
     "benchmark_rank": "Reference team = the k-th best FBS team (12 = playoff cutoff). Philosophical.",
     "convincingness_weight": "Share of each game decided by how clearly it was won rather than whether it was won. Philosophical.",
     "loss_aversion": "Loss-equivalent penalty per loss. 1 keeps the score schedule-fair for a reference-caliber team. Philosophical.",
-    "performance_cap": "Margins beyond this many points earn nothing more. Philosophical."
+    "performance_cap": "Margins beyond this many points earn nothing more. Philosophical.",
+    "reference_uncertainty": "Judge against the whole playoff-caliber distribution (true) or only its mean (false).",
+    "head_to_head_window": "Score gap (loss units) inside which a neighbour that won the head-to-head game moves ahead: one SD of the measured score-gap noise. Scores are unchanged."
   },
   "sensitivity": {
     "benchmark_rank": [
@@ -66,6 +79,10 @@
     "loss_aversion": [
       1,
       1.25
+    ],
+    "head_to_head_window": [
+      0,
+      0.39
     ]
   },
   "equal_scores": "shared rank",
@@ -85,7 +102,7 @@
         "model_b": "15 of 83"
       },
       "2 losses over unbeaten": {
-        "model_a": "5 of 179",
+        "model_a": "4 of 179",
         "model_b": "2 of 177"
       },
       "3 losses over unbeaten": {
@@ -95,17 +112,33 @@
     },
     "two_loss_over_unbeaten": [
       "2016: Penn State 11-2 (#5) over Western Michigan 12-0 (#6)",
-      "2017: Ohio State 11-2 (#5) over UCF 11-0 (#6)",
+      "2017: Ohio State 11-2 (#4) over UCF 11-0 (#6)",
       "2018: Georgia 10-2 (#4) over UCF 11-0 (#7)",
-      "2023: Missouri 9-2 (#8) over Liberty 13-0 (#10)",
-      "2023: Oregon 10-2 (#9) over Liberty 13-0 (#10)"
+      "2023: Missouri 9-2 (#8) over Liberty 13-0 (#9)"
     ],
     "implied_loss_weight_from_rarity": 0.9,
-    "rarity_agreement_at_loss_weight_1": 0.9675,
+    "rarity_agreement_at_loss_weight_1": 0.9655,
     "schedule_bias_reference_caliber": {
       "loss_weight_1": 0.079,
-      "loss_weight_1_5": -1.024
+      "loss_weight_1_5": -1.022
     },
-    "future_results_leak": 0
+    "future_results_leak": 0,
+    "head_to_head": {
+      "window": 0.39,
+      "noise_sd": 0.386,
+      "orders_reversed": 15,
+      "examples": [
+        "2014: Baylor 10-1 (#5) over TCU 10-1 (#6) (score gap -0.036)",
+        "2014: Auburn 7-4 (#8) over Ole Miss 8-3 (#9) (score gap -0.121)",
+        "2015: Oklahoma State 9-2 (#9) over TCU 9-2 (#10) (score gap -0.264)",
+        "2015: LSU 8-3 (#16) over Florida 10-3 (#17) (score gap -0.124)",
+        "2016: Stanford 9-3 (#11) over USC 9-3 (#12) (score gap -0.317)",
+        "2017: Ohio State 11-2 (#4) over Wisconsin 12-1 (#5) (score gap -0.221)",
+        "2017: Michigan State 9-3 (#11) over Penn State 10-2 (#12) (score gap -0.244)",
+        "2018: West Virginia 7-3 (#23) over Texas 9-4 (#24) (score gap -0.027)",
+        "2021: Ohio State 10-2 (#8) over Michigan State 9-2 (#9) (score gap -0.06)",
+        "2022: Washington 9-2 (#13) over Oregon 8-3 (#14) (score gap -0.03)"
+      ]
+    }
   }
 }

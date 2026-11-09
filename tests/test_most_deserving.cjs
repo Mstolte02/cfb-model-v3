@@ -65,13 +65,13 @@ test('score decomposes exactly into its displayed components',()=>{
     close(c.net,a.score-b.score,1e-12);close(c.losses+c.schedule+c.performance,c.net,1e-12);
     // Conditional override, stated in loss units: A ranks above B with more losses
     // only when its schedule plus performance edge exceeds the extra losses.
-    if(a.losses>b.losses&&a.rank<b.rank)assert.ok(c.schedule+c.performance>-c.losses);
+    if(a.losses>b.losses&&a.rank<b.rank&&!c.decidedBy)assert.ok(c.schedule+c.performance>-c.losses);
   }
 });
 
 test('ranking is transitive, deterministic and independent of game order',()=>{
   const rows=rank(LEAGUE,NAMES);
-  rows.forEach((r,i)=>{if(i)assert.ok(rows[i-1].score>=r.score);});
+  rows.forEach((r,i)=>{if(i&&!r.headToHeadPassed.length)assert.ok(rows[i-1].score>=r.score||rows[i-1].headToHeadPassed.length);});
   rows.forEach((r,i)=>{if(i&&rows[i-1].score-r.score>1e-9)assert.ok(r.rank>rows[i-1].rank);});
   assert.deepEqual(compact(rank([...LEAGUE].reverse(),NAMES)),compact(rows));
   const r=rng(3),shuffled=[...LEAGUE].sort(()=>r()-.5);
@@ -156,7 +156,7 @@ test('sensitivity summarises every assumption combination',()=>{
   assert.equal(s.configs.length,expected);
   for(const v of s.byTeam.values()){assert.ok(v.min<=v.median&&v.median<=v.max);assert.ok(v.inTop>=0&&v.inTop<=1);assert.equal(v.configs,expected);}
   // A stronger reference team expects fewer losses on every schedule; the reference is the same for every team.
-  const lo=R.score(ctx,{...model.assumptions,benchmark_rank:25}),hi=R.score(ctx,{...model.assumptions,benchmark_rank:4});
+  const lo=R.score(ctx,{...model.assumptions,benchmark_rank:25,head_to_head_window:0}),hi=R.score(ctx,{...model.assumptions,benchmark_rank:4,head_to_head_window:0});
   assert.ok(new Set(hi.map(r=>r.referenceRating)).size===1);
   for(const r of hi)assert.ok(r.schedule<lo.find(x=>x.team===r.team).schedule+1e-12);
 });
@@ -175,4 +175,76 @@ test('head-to-head explanation reconciles and states the override in loss units'
   if(a.losses>b.losses){assert.ok(a.rank<b.rank);assert.match(Lab.explain(a,b,model.assumptions).conclusion,/despite \d+ more loss/);}
   assert.equal(Lab.band(1).key,'secure');assert.equal(Lab.band(.5).key,'bubble');assert.equal(Lab.band(0).key,'out');
   assert.equal(Lab.signed(0.5),'+0.50');assert.equal(Lab.signed(-1),'−1.00');assert.equal(Lab.signed(0),'0.00');
+});
+
+test('reference uncertainty: exact expected credit, honest range and averaged rarity',()=>{
+  const ctx=R.prepare(LEAGUE,NAMES,model),a=model.assumptions,dist=R.referenceDistribution(ctx.cal,a);
+  assert.ok(dist.sd>0,'the reference team is a distribution');
+  const rows=R.score(ctx,a),point=R.score(ctx,{...a,reference_uncertainty:false});
+  // Closed form E[Phi((R-r)/s)] = Phi((mean-r)/sqrt(s^2+sd^2)) agrees with brute-force averaging.
+  const rr=rng(17),N=4000,draws=Array.from({length:N},()=>{let u=0,v=0;while(!u)u=rr();while(!v)v=rr();return dist.mean+dist.sd*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);});
+  for(const r of rows){
+    const avg=draws.reduce((s,ref)=>s+R.score(ctx,{...a,reference_rating:ref,reference_uncertainty:false,head_to_head_window:0},{light:true}).find(x=>x.team===r.team).schedule,0)/N;
+    close(r.schedule,avg,0.02,r.team+' expected schedule credit');
+    assert.ok(r.scoreLow<=r.score+0.05&&r.score<=r.scoreHigh+0.05,r.team+' range brackets the score');
+    assert.ok(r.matchProbabilityLow<=r.matchProbability+1e-12&&r.matchProbability<=r.matchProbabilityHigh+1e-12,r.team+' rarity range');
+    assert.ok(r.topProbability>=0&&r.topProbability<=1);
+  }
+  assert.ok(point.every(r=>Math.abs(r.scoreHigh-r.scoreLow)<1e-12),'no uncertainty, no range');
+});
+
+test('head-to-head reorders only close neighbours and never changes a score (live)',()=>{
+  const schedule=require('../viz/data/schedule.json'),names=require('../viz/data/ratings.json').teams.map(t=>t.team);
+  const a=model.assumptions,ctx=R.prepare(schedule,names,model);
+  assert.ok(a.head_to_head_window>0,'head-to-head is on in production');
+  const on=R.score(ctx,a,{light:true}),off=R.score(ctx,{...a,head_to_head_window:0},{light:true});
+  const offBy=new Map(off.map(r=>[r.team,r]));
+  for(const r of on)close(r.score,offBy.get(r.team).score,1e-12,'score unchanged');
+  on.forEach((r,i)=>{if(i)assert.ok(r.rank>=on[i-1].rank,'ranks follow the order');});
+  for(const r of on)for(const p of r.headToHeadPassed){
+    const o=on.find(x=>x.team===p.team);
+    assert.ok(o.score-r.score<a.head_to_head_window,'only inside the window');
+    assert.ok(r.ledger.filter(g=>g.opponent===o.team).reduce((s,g)=>s+(g.result==='W'?1:-1),0)>0,'won the head-to-head');
+    assert.ok(r.rank<o.rank);
+  }
+});
+test('head-to-head reverses a near-tie, and only a near-tie between neighbours',()=>{
+  // Opponent strengths are set directly so the score gaps are exact.
+  const cal=R.prepare(LEAGUE,NAMES,model).cal,a={...model.assumptions,reference_uncertainty:false},tau=a.head_to_head_window;
+  const ref=R.referenceRating(cal,a),q=r=>R.normalCdf((ref-r)/cal.win_sigma);
+  const g=(opponent,pf,pa,oppRating)=>({opponent,pf,pa,oppRating,venue:0,site:'neutral',date:'2026-09-01'});
+  const ratingFor=target=>{let lo=-60,hi=60;for(let k=0;k<200;k++){const m=(lo+hi)/2;if(q(m)<target)hi=m;else lo=m;}return (lo+hi)/2;};
+  // X beat Y. X: win over Y, loss to Z. Y: loss to X, win over V. Gap X - Y = q(V) - q(Z) = -d.
+  const make=(d,extra=[])=>({cal,names:['X','Y'],teams:[{team:'X',games:[g('Y',17,16,10),g('Z',10,20,ratingFor(q(25)+d))]},{team:'Y',games:[g('X',16,17,10),g('V',20,10,25)]},...extra]});
+  const ord=c=>R.score(c,a,{light:true}).map(r=>r.team);
+  assert.deepEqual(ord(make(0.05)),['X','Y'],'inside the window: the head-to-head winner goes first');
+  const near=R.score(make(0.05),a,{light:true});close(near[1].score-near[0].score,0.05,1e-6,'scores keep their real gap');
+  assert.deepEqual(near[0].headToHeadPassed.map(p=>p.team),['Y']);
+  assert.deepEqual(ord(make(tau+0.01)),['Y','X'],'outside the window: score decides');
+  // C sits between them (0.02 behind Y) and played neither: X cannot jump over C, and C is not pushed down.
+  const C={team:'C',games:[g('W',20,10,ratingFor(q(25)+0.02)),g('U',10,20,10)]};
+  assert.deepEqual(ord(make(0.05,[C])),['Y','C','X']);
+});
+
+test('head-to-head cycles terminate in one strict order',()=>{
+  const names=['A','B','C'],cal=R.prepare(LEAGUE,NAMES,model).cal,a={...model.assumptions,reference_uncertainty:false};
+  const g=(opponent,pf,pa)=>({opponent,pf,pa,oppRating:10,venue:0,site:'neutral',date:'2026-09-01'});
+  // A beat B, B beat C, C beat A: identical résumés, a perfect cycle.
+  const ctx={cal,names,teams:[{team:'A',games:[g('B',2,1),g('C',1,2)]},{team:'B',games:[g('C',2,1),g('A',1,2)]},{team:'C',games:[g('A',2,1),g('B',1,2)]}]};
+  const rows=R.score(ctx,a,{light:true});
+  assert.equal(new Set(rows.map(r=>r.team)).size,3);assert.deepEqual(rows.map(r=>r.rank),[1,2,3]);
+  const again=R.score(ctx,a,{light:true});assert.deepEqual(again.map(r=>r.team),rows.map(r=>r.team),'deterministic');
+});
+
+test('the head-to-head explanation names the game and the closeness window',()=>{
+  const Lab=require('../viz/deserving-lab.js');
+  const cal=R.prepare(LEAGUE,NAMES,model).cal,a={...model.assumptions,reference_uncertainty:false};
+  const ref=R.referenceRating(cal,a),q=r=>R.normalCdf((ref-r)/cal.win_sigma);
+  const ratingFor=target=>{let lo=-60,hi=60;for(let k=0;k<200;k++){const m=(lo+hi)/2;if(q(m)<target)hi=m;else lo=m;}return (lo+hi)/2;};
+  const g=(opponent,pf,pa,oppRating)=>({opponent,pf,pa,oppRating,venue:0,site:'neutral',date:'2026-10-03'});
+  const ctx={cal,names:['X','Y'],teams:[{team:'X',games:[g('Y',17,16,10),g('Z',10,20,ratingFor(q(25)+0.05))]},{team:'Y',games:[g('X',16,17,10),g('V',20,10,25)]}]};
+  const rows=R.score(ctx,a),x=rows.find(r=>r.team==='X'),y=rows.find(r=>r.team==='Y');
+  const e=Lab.explain(x,y,a);
+  assert.match(e.conclusion,/X ranks ahead on head-to-head/);assert.match(e.headToHead,/X won 17–16/);assert.match(e.headToHead,/inside the/);
+  close(e.rows.find(r=>r.total).value,x.score-y.score,1e-12,'table still reconciles to the score gap');
 });
