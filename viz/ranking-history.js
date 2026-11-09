@@ -198,27 +198,36 @@
     });
   }
   /* Head-to-head between close résumés. The score itself never changes.
-     After sorting by score, a team moves directly above the team just ahead of it
-     when (1) it won their games against each other on balance and (2) the two
-     scores differ by less than the closeness window. Passes repeat until nothing
-     moves. A pair can swap only once, so a three-way cycle cannot loop, and only
-     neighbours swap, so no third team moves because of a game it did not play.
-     The result is one strict, deterministic order. */
+     After sorting by score, a team that beat a team ranked above it (on balance)
+     moves directly above that team when every team it passes, the beaten team
+     included, has a score within the closeness window of its own, and none of
+     them beat it. Teams it passes keep their order among themselves; each
+     passed team was already statistically tied with it. Each winner-loser pair
+     is used once, so a three-way cycle cannot loop. The result is one strict,
+     deterministic order. */
   function headToHeadNet(ctx) { // per team: opponent -> wins minus losses against it
     return ctx.teams.map(t=>{const m=new Map();for(const g of t.games){if(g.pf===g.pa)continue;m.set(g.opponent,(m.get(g.opponent)||0)+(g.pf>g.pa?1:-1));}return m;});
   }
   function orderTeams(names,scores,net,window) {
     const order=scores.map((_,i)=>i).sort((x,y)=>scores[y]-scores[x]||names[x].localeCompare(names[y]));
-    const swaps=[];
+    const beat=(x,y)=>(net[x].get(names[y])||0)>0;
     if(window>0) {
-      const used=new Set();let moved=true;
-      while(moved) {
-        moved=false;
-        for(let k=0;k+1<order.length;k++) {
-          const up=order[k],low=order[k+1],gap=scores[up]-scores[low],key=Math.min(up,low)+'|'+Math.max(up,low);
-          if(gap>=window||used.has(key)||!((net[low].get(names[up])||0)>0))continue;
-          order[k]=low;order[k+1]=up;used.add(key);swaps.push({winner:low,over:up,gap});moved=true;
+      const used=new Set();
+      for(let guard=0;guard<order.length*order.length;guard++) {
+        let move=null;
+        for(let k=1;k<order.length&&!move;k++) {
+          const w=order[k];
+          // Walk up from w. Stop at the first team it may not pass: too far ahead, or one that beat it.
+          // The highest team it beat along the way is where it lands.
+          for(let i=k-1;i>=0;i--) {
+            const t=order[i];
+            if(scores[t]-scores[w]>=window||beat(t,w))break;
+            if(beat(w,t)&&!used.has(w+'>'+t))move={k,i,w,t};
+          }
         }
+        if(!move)break;
+        used.add(move.w+'>'+move.t);
+        order.splice(move.k,1);order.splice(move.i,0,move.w);
       }
     }
     // Competition ranks. Equal scores share a rank only when head-to-head does not separate them.
@@ -228,7 +237,7 @@
       const tied=k>0&&Math.abs(scores[i]-scores[p])<=1e-9&&!(net[i].get(names[p])||net[p].get(names[i]));
       ranks[i]=tied?ranks[p]:k+1;
     });
-    return {order,swaps,ranks};
+    return {order,ranks,beat};
   }
   function nodeRanks(ctx,a,ref,sigma,net) {
     const ev=evaluate(ctx,a,ref,sigma,false),scores=ev.map(e=>e.base);
@@ -249,8 +258,18 @@
         headToHeadPassed:[],headToHeadPassedBy:[]};
     });
     const names=rows.map(r=>r.team),scores=rows.map(r=>r.score);
-    const {order,swaps,ranks}=orderTeams(names,scores,net,a.head_to_head_window);
-    for(const s of swaps){rows[s.winner].headToHeadPassed.push({team:names[s.over],gap:s.gap});rows[s.over].headToHeadPassedBy.push({team:names[s.winner],gap:s.gap});}
+    const {order,ranks,beat}=orderTeams(names,scores,net,a.head_to_head_window);
+    // Record every team placed above a higher score, and why: it won the game (won), or it
+    // was carried past a statistically tied team on its way above a team it beat (because).
+    for(let p=0;p<order.length;p++)for(let q=p+1;q<order.length;q++){
+      const x=order[p],y=order[q];if(!(scores[x]<scores[y]-1e-12))continue;
+      rows[x].headToHeadPassed.push({team:names[y],gap:scores[y]-scores[x],won:beat(x,y)});
+    }
+    rows.forEach((r,x)=>{
+      const won=r.headToHeadPassed.filter(p=>p.won).sort((m,n)=>n.gap-m.gap);
+      for(const p of r.headToHeadPassed){if(!p.won)p.because=won[0]?.team||null;
+        rows[names.indexOf(p.team)].headToHeadPassedBy.push({team:r.team,gap:p.gap,won:p.won,because:p.because});}
+    });
     rows.forEach((r,i)=>{r.rank=ranks[i];});
     if(!options.light) {
       // Range and rarity under reference uncertainty. A stronger reference team

@@ -385,12 +385,12 @@ function sweepTable(){
   return out;
 }
 // Every order that head-to-head reversed, and close meetings it could not reverse
-// because the two teams were not neighbours or the gap was too large.
+// counting only pairs where the winner was placed above the team it beat.
 function headToHeadBacktest(a){
   const reversed=[];let swapsAll=0;
   for(const y of ALL){
     const rows=modelA(y,a),by=new Map(rows.map(r=>[r.team,r]));
-    for(const r of rows)for(const p of r.headToHeadPassed){
+    for(const r of rows)for(const p of r.headToHeadPassed.filter(x=>x.won)){
       swapsAll++;const o=by.get(p.team);
       if(Math.min(r.rank,o.rank)<=25)reversed.push({season:y,winner:r.team+' '+r.wins+'-'+r.losses+' (#'+r.rank+')',loser:o.team+' '+o.wins+'-'+o.losses+' (#'+o.rank+')',score_gap:round(r.score-o.score,3)});
     }
@@ -458,7 +458,7 @@ if(require.main===module){
       loss_aversion:'Loss-equivalent penalty per loss. 1 keeps the score schedule-fair for a reference-caliber team. Philosophical.',
       performance_cap:'Margins beyond this many points earn nothing more. Philosophical.',
       reference_uncertainty:'Judge against the whole playoff-caliber distribution (true) or only its mean (false).',
-      head_to_head_window:'Score gap (loss units) inside which a neighbour that won the head-to-head game moves ahead: one SD of the measured score-gap noise. Scores are unchanged.'},
+      head_to_head_window:'Score gap (loss units) inside which a team that won the head-to-head game moves directly above the team it beat, passing only teams also within this gap that did not beat it: one SD of the measured score-gap noise. Scores are unchanged.'},
     sensitivity:{benchmark_rank:[8,12,16],convincingness_weight:[0,0.05,0.1],loss_aversion:[1,1.25],head_to_head_window:[0,H2H_WINDOW]},
     equal_scores:'shared rank',report:'audit/MOST_DESERVING_V2.md'};
   // A compact summary the page shows in "How it works". Every number is from the report above.

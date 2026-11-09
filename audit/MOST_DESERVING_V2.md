@@ -81,16 +81,16 @@ Historical frequency, final regular season, all pairs inside each season's top 2
 
 | Override | Model A (production) | Model B (rarity) | Colley (old) | v1 branch |
 |---|---|---|---|---|
-| 1 loss over unbeaten | 19 of 83 | 15 of 83 | 16 of 83 | 0 of 83 |
-| 2 losses over unbeaten | 4 of 179 | 2 of 177 | 8 of 173 | 0 of 197 |
-| 2 losses over 1 loss | 57 of 417 | 56 of 406 | 57 of 394 | 0 of 460 |
-| 3 losses over unbeaten | 0 of 159 | 0 of 157 | 0 of 154 | 0 of 185 |
+| 1 loss over unbeaten | 20 of 83 | 15 of 83 | 16 of 83 | 0 of 83 |
+| 2 losses over unbeaten | 4 of 178 | 2 of 177 | 8 of 173 | 0 of 197 |
+| 2 losses over 1 loss | 58 of 412 | 56 of 406 | 57 of 394 | 0 of 460 |
+| 3 losses over unbeaten | 0 of 160 | 0 of 157 | 0 of 154 | 0 of 185 |
 
 (Model A here is the production model: reference distribution and head-to-head on.
-Head-to-head changes none of these counts; with a point reference instead of the
-distribution, 2-loss-over-unbeaten is 5 of 179.)
+With head-to-head off the counts are 19, 4, 57 and 0; with a point reference instead
+of the distribution, 2-loss-over-unbeaten is 5 of 179.)
 
-All five two-loss-over-unbeaten cases are weak-schedule unbeatens:
+All four two-loss-over-unbeaten cases are weak-schedule unbeatens:
 
 - 2016 Penn State 11-2 over Western Michigan 12-0 (+0.53)
 - 2017 Ohio State 11-2 over UCF 11-0 (+0.09)
@@ -113,10 +113,18 @@ The v1 branch claimed conditional overrides. In 11 seasons it produced none: its
 
 ## 2a. Head-to-head between close résumés
 
-**Rule.** After sorting by score, a team moves directly above the team just ahead
-of it when (1) it won their games against each other on balance and (2) the two
-scores differ by less than the closeness window, **0.39** loss units. Passes repeat
-until nothing moves. A pair swaps at most once.
+**Rule.** After sorting by score, a team that beat (on balance) a team ranked less
+than **0.39** loss units ahead of it moves directly above that team. Teams between
+them are passed only if each is also within 0.39 of the winner (statistically tied
+with it) and none of them beat it; otherwise the move is blocked. Passed teams keep
+their order among themselves. Each winner-loser pair is used once, and moves repeat
+until none is left.
+
+Example, 2026 after week 10: Notre Dame (1.402) beat Miami (1.594, gap 0.19).
+Georgia (1.440) sat between them, played neither, and is 0.04 from Notre Dame, so
+Notre Dame moves directly above Miami. Georgia had already moved above Alabama and
+Miami the same way (it beat Alabama, gap 0.18). Order: Georgia, Alabama, Notre Dame,
+Miami.
 
 **Why 0.39.** It is measured, not chosen: the standard deviation of the score gap
 between two nearby top-25 teams (within five places) when every opponent rating
@@ -137,21 +145,26 @@ backtest showed both:
 
 The reorder keeps the score pure (all score properties hold unchanged), keeps one
 strict deterministic order, cannot loop on a cycle (A beat B, B beat C, C beat A),
-and moves no team because of a game it did not play. The cost: head-to-head only
-acts between neighbours. If a third team sits between the two, the game does not
-reorder them; the head-to-head view says so.
+and never places a team above a team that beat it. A team it passes moves down one
+place without losing a game; that is allowed only when the passed team's score is
+within 0.39 of the winner's, inside the noise. The first version allowed only
+neighbours to swap; it let a statistically tied team in between (Georgia, 0.04 from
+Notre Dame) cancel the Notre Dame-Miami result, so it was replaced.
 
-**Effect.** Across 2014–2025 it reversed 65 final orders, 15 inside the top 25,
-for example:
+**Effect.** Across 2014–2025 it placed 237 winners above the team they beat at
+season's end, 32 inside the top 25, for example:
 
 - 2014 Baylor 10-1 over TCU 10-1 (scores 0.04 apart)
 - 2017 Ohio State 11-2 over Wisconsin 12-1 (0.22; Big Ten title game)
 - 2017 Michigan State 9-3 over Penn State 10-2 (0.24)
 - 2021 Ohio State 10-2 over Michigan State 9-2 (0.06)
+- 2023 Texas 12-1 over Alabama 11-1 (0.20)
+- 2024 Ohio State 10-2 over Penn State 11-2 (0.17)
 - 2025 Texas Tech 11-1 over BYU 10-2 (0.001; Big 12 title game)
 
-It changed none of the override counts in section 2. The page marks swapped teams
-with **H2H**, and "Why is A ahead?" names the game and the gap.
+It added one 1-loss-over-unbeaten and one 2-over-1 case to section 2. The page marks
+moved teams with **H2H**, and "Why is A ahead?" names the game, the gap, and, for a
+passed team, the team that was beaten.
 
 ## 3. Review of the v1 branch
 
@@ -378,7 +391,8 @@ cutoff with the same model.
 2. Uncertainty covers the reference strength only. Opponent-rating uncertainty is
    measured (section 5, and it sets the head-to-head window) but is not added to the
    displayed range. Adding it would widen every range by roughly the 0.39 noise SD.
-   Head-to-head acts only between neighbours, by design (section 2a).
+   Head-to-head can be blocked by a team in between that is more than 0.39 ahead
+   of the winner or that beat it (section 2a).
 3. Opponent ratings early in the season shrink toward average, so early scores are
    compressed. This is honest but makes early rankings noisy.
 4. 2023 Alabama vs FSU and 2023 Missouri vs Liberty are within 0.12 points.

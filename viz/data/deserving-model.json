@@ -63,7 +63,7 @@
     "loss_aversion": "Loss-equivalent penalty per loss. 1 keeps the score schedule-fair for a reference-caliber team. Philosophical.",
     "performance_cap": "Margins beyond this many points earn nothing more. Philosophical.",
     "reference_uncertainty": "Judge against the whole playoff-caliber distribution (true) or only its mean (false).",
-    "head_to_head_window": "Score gap (loss units) inside which a neighbour that won the head-to-head game moves ahead: one SD of the measured score-gap noise. Scores are unchanged."
+    "head_to_head_window": "Score gap (loss units) inside which a team that won the head-to-head game moves directly above the team it beat, passing only teams also within this gap that did not beat it: one SD of the measured score-gap noise. Scores are unchanged."
   },
   "sensitivity": {
     "benchmark_rank": [
@@ -98,15 +98,15 @@
     },
     "overrides": {
       "1 loss over unbeaten": {
-        "model_a": "19 of 83",
+        "model_a": "20 of 83",
         "model_b": "15 of 83"
       },
       "2 losses over unbeaten": {
-        "model_a": "4 of 179",
+        "model_a": "4 of 178",
         "model_b": "2 of 177"
       },
       "3 losses over unbeaten": {
-        "model_a": "0 of 159",
+        "model_a": "0 of 160",
         "model_b": "0 of 157"
       }
     },
@@ -117,27 +117,27 @@
       "2023: Missouri 9-2 (#8) over Liberty 13-0 (#9)"
     ],
     "implied_loss_weight_from_rarity": 0.9,
-    "rarity_agreement_at_loss_weight_1": 0.9655,
+    "rarity_agreement_at_loss_weight_1": 0.96,
     "schedule_bias_reference_caliber": {
-      "loss_weight_1": 0.079,
-      "loss_weight_1_5": -1.022
+      "loss_weight_1": 0.078,
+      "loss_weight_1_5": -1.02
     },
     "future_results_leak": 0,
     "head_to_head": {
       "window": 0.39,
       "noise_sd": 0.386,
-      "orders_reversed": 15,
+      "orders_reversed": 32,
       "examples": [
         "2014: Baylor 10-1 (#5) over TCU 10-1 (#6) (score gap -0.036)",
         "2014: Auburn 7-4 (#8) over Ole Miss 8-3 (#9) (score gap -0.121)",
         "2015: Oklahoma State 9-2 (#9) over TCU 9-2 (#10) (score gap -0.264)",
         "2015: LSU 8-3 (#16) over Florida 10-3 (#17) (score gap -0.124)",
-        "2016: Stanford 9-3 (#11) over USC 9-3 (#12) (score gap -0.317)",
-        "2017: Ohio State 11-2 (#4) over Wisconsin 12-1 (#5) (score gap -0.221)",
-        "2017: Michigan State 9-3 (#11) over Penn State 10-2 (#12) (score gap -0.244)",
-        "2018: West Virginia 7-3 (#23) over Texas 9-4 (#24) (score gap -0.027)",
-        "2021: Ohio State 10-2 (#8) over Michigan State 9-2 (#9) (score gap -0.06)",
-        "2022: Washington 9-2 (#13) over Oregon 8-3 (#14) (score gap -0.03)"
+        "2015: Memphis 8-3 (#18) over Ole Miss 8-3 (#19) (score gap -0.302)",
+        "2015: Utah 9-3 (#20) over Oregon 8-3 (#21) (score gap -0.2)",
+        "2016: USC 9-3 (#9) over Colorado 9-3 (#10) (score gap -0.311)",
+        "2016: Iowa 8-3 (#15) over Nebraska 9-3 (#16) (score gap -0.229)",
+        "2016: Houston 8-3 (#20) over Tulsa 8-3 (#21) (score gap -0.304)",
+        "2016: Houston 8-3 (#20) over Louisville 9-3 (#23) (score gap -0.027)"
       ]
     }
   }

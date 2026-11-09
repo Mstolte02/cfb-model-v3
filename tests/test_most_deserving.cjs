@@ -193,7 +193,7 @@ test('reference uncertainty: exact expected credit, honest range and averaged ra
   assert.ok(point.every(r=>Math.abs(r.scoreHigh-r.scoreLow)<1e-12),'no uncertainty, no range');
 });
 
-test('head-to-head reorders only close neighbours and never changes a score (live)',()=>{
+test('head-to-head reorders only inside the window and never changes a score (live)',()=>{
   const schedule=require('../viz/data/schedule.json'),names=require('../viz/data/ratings.json').teams.map(t=>t.team);
   const a=model.assumptions,ctx=R.prepare(schedule,names,model);
   assert.ok(a.head_to_head_window>0,'head-to-head is on in production');
@@ -203,12 +203,15 @@ test('head-to-head reorders only close neighbours and never changes a score (liv
   on.forEach((r,i)=>{if(i)assert.ok(r.rank>=on[i-1].rank,'ranks follow the order');});
   for(const r of on)for(const p of r.headToHeadPassed){
     const o=on.find(x=>x.team===p.team);
+    const net=r.ledger.filter(g=>g.opponent===o.team).reduce((s,g)=>s+(g.result==='W'?1:g.result==='L'?-1:0),0);
     assert.ok(o.score-r.score<a.head_to_head_window,'only inside the window');
-    assert.ok(r.ledger.filter(g=>g.opponent===o.team).reduce((s,g)=>s+(g.result==='W'?1:-1),0)>0,'won the head-to-head');
+    assert.ok(net>=0,'never placed above a team that beat it');
+    if(p.won)assert.ok(net>0,'won the head-to-head');
+    else assert.ok(on.find(x=>x.team===p.because),'a pass names the team it beat');
     assert.ok(r.rank<o.rank);
   }
 });
-test('head-to-head reverses a near-tie, and only a near-tie between neighbours',()=>{
+test('head-to-head reverses a near-tie, passes tied teams, and is blocked by a team that beat the winner',()=>{
   // Opponent strengths are set directly so the score gaps are exact.
   const cal=R.prepare(LEAGUE,NAMES,model).cal,a={...model.assumptions,reference_uncertainty:false},tau=a.head_to_head_window;
   const ref=R.referenceRating(cal,a),q=r=>R.normalCdf((ref-r)/cal.win_sigma);
@@ -221,9 +224,20 @@ test('head-to-head reverses a near-tie, and only a near-tie between neighbours',
   const near=R.score(make(0.05),a,{light:true});close(near[1].score-near[0].score,0.05,1e-6,'scores keep their real gap');
   assert.deepEqual(near[0].headToHeadPassed.map(p=>p.team),['Y']);
   assert.deepEqual(ord(make(tau+0.01)),['Y','X'],'outside the window: score decides');
-  // C sits between them (0.02 behind Y) and played neither: X cannot jump over C, and C is not pushed down.
+  // C sits between them (0.02 behind Y, 0.03 ahead of X) and played neither: X passes C to land above Y.
   const C={team:'C',games:[g('W',20,10,ratingFor(q(25)+0.02)),g('U',10,20,10)]};
-  assert.deepEqual(ord(make(0.05,[C])),['Y','C','X']);
+  const withC=R.score(make(0.05,[C]),a,{light:true});
+  assert.deepEqual(withC.map(r=>r.team),['X','Y','C']);
+  const passC=withC[0].headToHeadPassed.find(p=>p.team==='C');assert.equal(passC.won,false);assert.equal(passC.because,'Y');
+  const Lab=require('../viz/deserving-lab.js');
+  assert.match(Lab.explain(withC[0],withC[2],a).conclusion,/because it beat Y/);
+  // Now C beat X (X's loss is to a very strong C, so X's score barely moves): C blocks the jump.
+  const strongC=ratingFor(0.0012),cancel=ratingFor(1-q(10));
+  const blocker={team:'C',games:[...C.games,g('X',20,10,10),g('T',10,20,cancel)]};
+  const blocked=make(0.05,[blocker]);blocked.teams[0].games.push(g('C',10,20,strongC));
+  const bs=R.score(blocked,a,{light:true});
+  assert.ok(bs.find(r=>r.team==='Y').score>bs.find(r=>r.team==='C').score&&bs.find(r=>r.team==='C').score>bs.find(r=>r.team==='X').score,'C still sits between');
+  assert.deepEqual(bs.map(r=>r.team),['Y','C','X'],'a team that beat X blocks the jump');
 });
 
 test('head-to-head cycles terminate in one strict order',()=>{
