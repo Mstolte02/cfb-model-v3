@@ -30,36 +30,58 @@
     }
     const x=Array(n).fill(0);for(let i=n-1;i>=0;i--) {let v=a[i][n];for(let j=i+1;j<n;j++)v-=a[i][j]*x[j];x[i]=v/a[i][i];}return x;
   }
-  // Colley: (games + 2) * rating - sum(opponent ratings) = 1 + (wins - losses)/2.
-  // Conference metadata and predictive power ratings are deliberately unused.
+  // Schedule-adjusted Colley opponent ratings are an input, NOT the final rank.
+  // All adjustments below are in loss-equivalent units, so comparing two
+  // teams never requires a pairwise override (which could be non-transitive).
+  const DESERVING_V1 = Object.freeze({
+    sosPerRatingPoint: 4.0,  // provisional: 0.25 SOS gap cancels one loss
+    marginWeight: 0.30,     // smaller than a loss; capped and saturating
+    winWeight: 0.16,        // rewards additional earned wins at the same losses
+    marginScale: 21
+  });
   function deserving(schedule, metadata, fbsNames, model) {
-    if (model?.method !== 'colley') throw new Error('Unsupported résumé method');
+    if (model?.method !== 'colley' && model?.method !== 'record-first')
+      throw new Error('Unsupported résumé method');
     const fbs=new Set(fbsNames);
     const finals=schedule.filter(g=>g.f && Number.isFinite(g.hp) && Number.isFinite(g.ap)
-      && g.st!=='postseason' && fbs.has(g.h) && fbs.has(g.a));
+      && g.st!=='postseason' && fbs.has(g.h) && fbs.has(g.a) && g.h!==g.a);
     const names=[...new Set(finals.flatMap(g=>[g.h,g.a]))].sort(),n=names.length;
     if(!n)return [];
     const idx=new Map(names.map((team,i)=>[team,i]));
-    const wins=Array(n).fill(0),losses=Array(n).fill(0),ties=Array(n).fill(0),opps=names.map(()=>[]);
+    const wins=Array(n).fill(0),losses=Array(n).fill(0),ties=Array(n).fill(0);
+    const opps=names.map(()=>[]),played=names.map(()=>[]);
     const matrix=names.map((_,i)=>names.map((_,j)=>i===j?2:0));
     for(const g of finals) {
-      const i=idx.get(g.h),j=idx.get(g.a);
+      const i=idx.get(g.h),j=idx.get(g.a),margin=g.hp-g.ap;
       opps[i].push(j);opps[j].push(i);
+      played[i].push({opponent:j,margin});
+      played[j].push({opponent:i,margin:-margin});
       matrix[i][i]++;matrix[j][j]++;matrix[i][j]--;matrix[j][i]--;
-      if(g.hp>g.ap){wins[i]++;losses[j]++;}
-      else if(g.hp<g.ap){wins[j]++;losses[i]++;}
+      if(margin>0){wins[i]++;losses[j]++;}
+      else if(margin<0){wins[j]++;losses[i]++;}
       else {ties[i]++;ties[j]++;}
     }
     const rating=solve(matrix,wins.map((w,i)=>1+(w-losses[i])/2));
+    const cfg=DESERVING_V1;
     const rows=names.map((team,i)=>{
-      const games=opps[i].length,sos=opps[i].reduce((s,j)=>s+rating[j],0)/games;
-      const recordBase=(wins[i]+ties[i]/2+1)/(games+2);
-      const scheduleAdjustment=games/(games+2)*(sos-.5);
+      const games=opps[i].length;
+      const sos=opps[i].reduce((s,j)=>s+rating[j],0)/games;
+      const cappedMargin=played[i].reduce((s,g)=>
+        s+Math.tanh(Math.max(-28,Math.min(28,g.margin))/cfg.marginScale),0)/games;
+      const recordBase=-losses[i];
+      const scheduleAdjustment=cfg.sosPerRatingPoint*(sos-0.5);
+      const marginAdjustment=cfg.marginWeight*cappedMargin;
+      const winsAdjustment=cfg.winWeight*wins[i]/12;
+      const qualityAdjustment=scheduleAdjustment+marginAdjustment+winsAdjustment;
+      const score=recordBase+qualityAdjustment;
       return {team,wins:wins[i],losses:losses[i],ties:ties[i],games,
         win_pct:(wins[i]+ties[i]/2)/games,rating:rating[i],sos,
-        recordBase,scheduleAdjustment,score:100*rating[i]};
+        recordBase,scheduleAdjustment,marginAdjustment,winsAdjustment,
+        qualityAdjustment,score,
+        // For a team with one fewer loss to pass this team, compare the
+        // quality difference with the loss gap, not with an arbitrary rank.
+        rankingMethod:'record-first-v1'};
     });
-    // Equal résumés share a rank. Alphabetical ordering is display-only.
     rows.sort((a,b)=>b.score-a.score||a.team.localeCompare(b.team));
     let tieScore;
     rows.forEach((r,i)=>{
