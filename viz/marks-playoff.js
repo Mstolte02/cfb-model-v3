@@ -28,7 +28,7 @@
       // Positive = committee places this team too high relative to Mark.
       delta:official.has(r.team)?r.rank-official.get(r.team):null}));
   }
-  function mount({rows,meta,schedule,poll,season,host,esc,crestOf,wireTeamLinks}) {
+  function mount({rows,model,meta,schedule,poll,season,host,esc,crestOf,wireTeamLinks}) {
     if(!rows.length){host.innerHTML='<p class="stock-empty">The playoff board opens after completed FBS games.</p>';return;}
     const champions={};
     for(const g of schedule) {
@@ -52,7 +52,7 @@
       if(!poll||poll.season!==season||!poll.rankings?.length){compareHost.innerHTML='<p class="stock-empty">No verified committee rankings are available for this season yet. The résumé bracket is ready.</p>';return;}
       const cutoff=poll.games_through;
       const aligned=cutoff?schedule.filter(g=>g.d&&g.d.slice(0,10)<=cutoff):schedule;
-      const alignedRows=root.RankingHistory.deserving(aligned,meta,rows.map(r=>r.team),{method:'colley'});
+      const alignedRows=root.RankingHistory.deserving(aligned,meta,rows.map(r=>r.team),model);
       const all=comparison(alignedRows,poll);
       const draw=()=>{
         const query=compareHost.querySelector('input').value.toLowerCase().trim();

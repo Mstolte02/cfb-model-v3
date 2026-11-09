@@ -1,12 +1,111 @@
 {
-  "version": 2,
-  "method": "colley",
-  "description": "Results-only opponent-adjusted win percentage index; Colley matrix",
-  "games": "completed regular-season FBS-versus-FBS only",
-  "score_scale": 100,
-  "prior_wins": 1,
-  "prior_losses": 1,
-  "ties": "half win, half loss",
+  "version": 3,
+  "method": "earned-results",
+  "description": "Wins above a playoff-caliber reference team, in loss-equivalent units, with exact résumé rarity",
+  "games": "completed regular-season FBS-versus-FBS only (conference title games included)",
+  "calibrated": {
+    "ridge_games": 2,
+    "margin_cap": 60,
+    "home_field": 3,
+    "win_sigma": 15.0465,
+    "dominance_scale": 25.5903,
+    "game_noise_sd": 16.2033,
+    "true_spread_sd": 13.2552,
+    "reference_ratings": {
+      "4": 21.2893,
+      "8": 16.5856,
+      "12": 14.3922,
+      "16": 12.1457,
+      "25": 9.1906
+    },
+    "reference_sd": {
+      "4": 2.052,
+      "8": 1.8356,
+      "12": 1.5958,
+      "16": 1.0688,
+      "25": 0.6758
+    },
+    "calibration_seasons": [
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "source": "scripts/deserving_calibration.cjs"
+  },
+  "assumptions": {
+    "benchmark_rank": 12,
+    "convincingness_weight": 0,
+    "loss_aversion": 1,
+    "performance_cap": 28
+  },
+  "assumption_notes": {
+    "benchmark_rank": "Reference team = the k-th best FBS team (12 = playoff cutoff). Philosophical.",
+    "convincingness_weight": "Share of each game decided by how clearly it was won rather than whether it was won. Philosophical.",
+    "loss_aversion": "Loss-equivalent penalty per loss. 1 keeps the score schedule-fair for a reference-caliber team. Philosophical.",
+    "performance_cap": "Margins beyond this many points earn nothing more. Philosophical."
+  },
+  "sensitivity": {
+    "benchmark_rank": [
+      8,
+      12,
+      16
+    ],
+    "convincingness_weight": [
+      0,
+      0.05,
+      0.1
+    ],
+    "loss_aversion": [
+      1,
+      1.25
+    ]
+  },
   "equal_scores": "shared rank",
-  "reference": "https://www.colleyrankings.com/matrate.pdf"
+  "report": "audit/MOST_DESERVING_V2.md",
+  "validation": {
+    "seasons": "2014-2025 (2020 excluded)",
+    "opponent_model": {
+      "test_seasons": "2022-2025",
+      "test_games": 2613,
+      "log_loss": 0.5641,
+      "brier": 0.1924,
+      "accuracy": 0.7114
+    },
+    "overrides": {
+      "1 loss over unbeaten": {
+        "model_a": "19 of 83",
+        "model_b": "15 of 83"
+      },
+      "2 losses over unbeaten": {
+        "model_a": "5 of 179",
+        "model_b": "2 of 177"
+      },
+      "3 losses over unbeaten": {
+        "model_a": "0 of 159",
+        "model_b": "0 of 157"
+      }
+    },
+    "two_loss_over_unbeaten": [
+      "2016: Penn State 11-2 (#5) over Western Michigan 12-0 (#6)",
+      "2017: Ohio State 11-2 (#5) over UCF 11-0 (#6)",
+      "2018: Georgia 10-2 (#4) over UCF 11-0 (#7)",
+      "2023: Missouri 9-2 (#8) over Liberty 13-0 (#10)",
+      "2023: Oregon 10-2 (#9) over Liberty 13-0 (#10)"
+    ],
+    "implied_loss_weight_from_rarity": 0.9,
+    "rarity_agreement_at_loss_weight_1": 0.9675,
+    "schedule_bias_reference_caliber": {
+      "loss_weight_1": 0.079,
+      "loss_weight_1_5": -1.024
+    },
+    "future_results_leak": 0
+  }
 }

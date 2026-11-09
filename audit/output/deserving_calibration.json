@@ -1,0 +1,5962 @@
+{
+ "generated": "2026-11-09",
+ "data": "CFBD regular-season FBS-v-FBS results 2014-2025 (2020 excluded), conference title games included",
+ "rating_model": {
+  "train_seasons": [
+   2014,
+   2015,
+   2016,
+   2017,
+   2018,
+   2019,
+   2021
+  ],
+  "test_seasons": [
+   2022,
+   2023,
+   2024,
+   2025
+  ],
+  "grid": {
+   "ridge_games": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    9
+   ],
+   "margin_cap": [
+    14,
+    21,
+    28,
+    38,
+    60
+   ],
+   "home_field": [
+    1.5,
+    2,
+    2.5,
+    3,
+    3.5
+   ]
+  },
+  "selected_on_train": {
+   "ridge_games": 2,
+   "margin_cap": 60,
+   "home_field": 2.5,
+   "win_sigma": 14.8006,
+   "dominance_scale": 25.4433,
+   "game_noise_sd": 16.3746,
+   "true_spread_sd": 13.7685
+  },
+  "train_log_loss": 0.5481,
+  "test": {
+   "games": 2613,
+   "log_loss": 0.5641,
+   "brier": 0.1924,
+   "accuracy": 0.7114,
+   "by_phase": [
+    {
+     "phase": "Weeks 3-5",
+     "games": 646,
+     "log_loss": 0.5564,
+     "brier": 0.1884
+    },
+    {
+     "phase": "Weeks 6-9",
+     "games": 853,
+     "log_loss": 0.584,
+     "brier": 0.2012
+    },
+    {
+     "phase": "Weeks 10+",
+     "games": 1114,
+     "log_loss": 0.5534,
+     "brier": 0.188
+    }
+   ],
+   "calibration": [
+    {
+     "range": "0.5-0.6",
+     "games": 684,
+     "predicted": 0.5516,
+     "observed": 0.5848
+    },
+    {
+     "range": "0.6-0.7",
+     "games": 667,
+     "predicted": 0.6495,
+     "observed": 0.6552
+    },
+    {
+     "range": "0.7-0.8",
+     "games": 583,
+     "predicted": 0.749,
+     "observed": 0.7307
+    },
+    {
+     "range": "0.8-0.9",
+     "games": 428,
+     "predicted": 0.8454,
+     "observed": 0.8318
+    },
+    {
+     "range": "0.9-1.0",
+     "games": 251,
+     "predicted": 0.9381,
+     "observed": 0.9522
+    }
+   ]
+  },
+  "test_reference_uncapped_ridge3": {
+   "log_loss": 0.5648,
+   "brier": 0.1926
+  },
+  "top_train_configs": [
+   {
+    "ridge_games": 2,
+    "margin_cap": 60,
+    "home_field": 2.5,
+    "win_sigma": 14.8006,
+    "log_loss": 0.5481,
+    "brier": 0.1857,
+    "n": 4469
+   },
+   {
+    "ridge_games": 2,
+    "margin_cap": 60,
+    "home_field": 3,
+    "win_sigma": 14.9916,
+    "log_loss": 0.5482,
+    "brier": 0.1858,
+    "n": 4469
+   },
+   {
+    "ridge_games": 3,
+    "margin_cap": 60,
+    "home_field": 2.5,
+    "win_sigma": 13.15,
+    "log_loss": 0.5486,
+    "brier": 0.186,
+    "n": 4469
+   },
+   {
+    "ridge_games": 2,
+    "margin_cap": 60,
+    "home_field": 2,
+    "win_sigma": 14.698,
+    "log_loss": 0.5486,
+    "brier": 0.186,
+    "n": 4469
+   },
+   {
+    "ridge_games": 3,
+    "margin_cap": 60,
+    "home_field": 2,
+    "win_sigma": 13.0091,
+    "log_loss": 0.5489,
+    "brier": 0.1861,
+    "n": 4469
+   },
+   {
+    "ridge_games": 1,
+    "margin_cap": 60,
+    "home_field": 3,
+    "win_sigma": 17.5241,
+    "log_loss": 0.549,
+    "brier": 0.186,
+    "n": 4469
+   }
+  ],
+  "production": {
+   "ridge_games": 2,
+   "margin_cap": 60,
+   "home_field": 3,
+   "win_sigma": 15.0465,
+   "dominance_scale": 25.5903,
+   "game_noise_sd": 16.2033,
+   "true_spread_sd": 13.2552
+  }
+ },
+ "reference_strength": {
+  "definition": "average end-of-season rating (points vs average FBS team, neutral field) of the k-th best FBS team in earlier seasons",
+  "per_season_end_ratings": {
+   "2014": {
+    "4": 21.325,
+    "8": 18.3027,
+    "12": 15.2127,
+    "16": 12.4076,
+    "25": 9.2351
+   },
+   "2015": {
+    "4": 18.2326,
+    "8": 14.2936,
+    "12": 13.1489,
+    "16": 12.158,
+    "25": 9.8412
+   },
+   "2016": {
+    "4": 24.1582,
+    "8": 15.534,
+    "12": 14.312,
+    "16": 12.8227,
+    "25": 8.7023
+   },
+   "2017": {
+    "4": 22.5522,
+    "8": 20.3813,
+    "12": 15.6061,
+    "16": 11.8812,
+    "25": 9.4127
+   },
+   "2018": {
+    "4": 18.4319,
+    "8": 15.5265,
+    "12": 14.1287,
+    "16": 12.6926,
+    "25": 9.7999
+   },
+   "2019": {
+    "4": 23.5229,
+    "8": 17.8193,
+    "12": 16.6632,
+    "16": 13.6343,
+    "25": 9.952
+   },
+   "2021": {
+    "4": 20.0971,
+    "8": 14.0062,
+    "12": 11.0509,
+    "16": 10.4988,
+    "25": 8.5882
+   },
+   "2022": {
+    "4": 22.9944,
+    "8": 15.701,
+    "12": 12.4082,
+    "16": 10.0714,
+    "25": 7.5707
+   },
+   "2023": {
+    "4": 21.2703,
+    "8": 18.3212,
+    "12": 16.2281,
+    "16": 11.7281,
+    "25": 9.0289
+   },
+   "2024": {
+    "4": 18.6558,
+    "8": 16.0947,
+    "12": 15.1773,
+    "16": 12.06,
+    "25": 9.1855
+   },
+   "2025": {
+    "4": 22.9419,
+    "8": 16.461,
+    "12": 14.3776,
+    "16": 13.6477,
+    "25": 9.7797
+   }
+  },
+  "production": {
+   "4": 21.2893,
+   "8": 16.5856,
+   "12": 14.3922,
+   "16": 12.1457,
+   "25": 9.1906
+  },
+  "production_sd": {
+   "4": 2.052,
+   "8": 1.8356,
+   "12": 1.5958,
+   "16": 1.0688,
+   "25": 0.6758
+  }
+ },
+ "default_assumptions": {
+  "benchmark_rank": 12,
+  "convincingness_weight": 0,
+  "loss_aversion": 1,
+  "performance_cap": 28
+ },
+ "candidates": {
+  "Colley (former production)": {
+   "overrides": {
+    "1 loss over unbeaten": {
+     "pairs": 83,
+     "overrides": 16,
+     "rate": 0.193,
+     "examples": [
+      {
+       "season": 2015,
+       "above": "Alabama 11-1 (#1)",
+       "below": "Clemson 12-0 (#2)",
+       "score_gap": 0.012
+      },
+      {
+       "season": 2016,
+       "above": "Ohio State 11-1 (#2)",
+       "below": "Western Michigan 12-0 (#7)",
+       "score_gap": 0.103
+      },
+      {
+       "season": 2016,
+       "above": "Clemson 11-1 (#3)",
+       "below": "Western Michigan 12-0 (#7)",
+       "score_gap": 0.09
+      },
+      {
+       "season": 2016,
+       "above": "Washington 11-1 (#4)",
+       "below": "Western Michigan 12-0 (#7)",
+       "score_gap": 0.058
+      },
+      {
+       "season": 2017,
+       "above": "Clemson 11-1 (#1)",
+       "below": "UCF 11-0 (#3)",
+       "score_gap": 0.018
+      },
+      {
+       "season": 2017,
+       "above": "Georgia 11-1 (#2)",
+       "below": "UCF 11-0 (#3)",
+       "score_gap": 0.008
+      },
+      {
+       "season": 2018,
+       "above": "Oklahoma 12-1 (#5)",
+       "below": "UCF 11-0 (#6)",
+       "score_gap": 0.012
+      },
+      {
+       "season": 2021,
+       "above": "Alabama 11-1 (#1)",
+       "below": "Cincinnati 12-0 (#4)",
+       "score_gap": 0.021
+      },
+      {
+       "season": 2021,
+       "above": "Georgia 11-1 (#2)",
+       "below": "Cincinnati 12-0 (#4)",
+       "score_gap": 0.02
+      },
+      {
+       "season": 2021,
+       "above": "Michigan 12-1 (#3)",
+       "below": "Cincinnati 12-0 (#4)",
+       "score_gap": 0.016
+      },
+      {
+       "season": 2022,
+       "above": "TCU 11-1 (#2)",
+       "below": "Michigan 13-0 (#3)",
+       "score_gap": 0.007
+      },
+      {
+       "season": 2023,
+       "above": "Alabama 11-1 (#4)",
+       "below": "Liberty 13-0 (#14)",
+       "score_gap": 0.136
+      },
+      {
+       "season": 2023,
+       "above": "Texas 12-1 (#5)",
+       "below": "Liberty 13-0 (#14)",
+       "score_gap": 0.121
+      },
+      {
+       "season": 2023,
+       "above": "Ohio State 10-1 (#6)",
+       "below": "Liberty 13-0 (#14)",
+       "score_gap": 0.109
+      },
+      {
+       "season": 2023,
+       "above": "Georgia 11-1 (#7)",
+       "below": "Liberty 13-0 (#14)",
+       "score_gap": 0.09
+      },
+      {
+       "season": 2023,
+       "above": "James Madison 10-1 (#12)",
+       "below": "Liberty 13-0 (#14)",
+       "score_gap": 0.008
+      }
+     ]
+    },
+    "2 losses over unbeaten": {
+     "pairs": 173,
+     "overrides": 8,
+     "rate": 0.046,
+     "examples": [
+      {
+       "season": 2016,
+       "above": "Penn State 11-2 (#5)",
+       "below": "Western Michigan 12-0 (#7)",
+       "score_gap": 0.027
+      },
+      {
+       "season": 2016,
+       "above": "Michigan 10-2 (#6)",
+       "below": "Western Michigan 12-0 (#7)",
+       "score_gap": 0.01
+      },
+      {
+       "season": 2018,
+       "above": "Georgia 10-2 (#4)",
+       "below": "UCF 11-0 (#6)",
+       "score_gap": 0.035
+      },
+      {
+       "season": 2023,
+       "above": "Oregon 10-2 (#8)",
+       "below": "Liberty 13-0 (#14)",
+       "score_gap": 0.051
+      },
+      {
+       "season": 2023,
+       "above": "Penn State 9-2 (#9)",
+       "below": "Liberty 13-0 (#14)",
+       "score_gap": 0.034
+      },
+      {
+       "season": 2023,
+       "above": "Ole Miss 9-2 (#10)",
+       "below": "Liberty 13-0 (#14)",
+       "score_gap": 0.013
+      },
+      {
+       "season": 2023,
+       "above": "Oklahoma 10-2 (#11)",
+       "below": "Liberty 13-0 (#14)",
+       "score_gap": 0.011
+      },
+      {
+       "season": 2023,
+       "above": "Missouri 9-2 (#13)",
+       "below": "Liberty 13-0 (#14)",
+       "score_gap": 0.002
+      }
+     ]
+    },
+    "2 losses over 1 loss": {
+     "pairs": 394,
+     "overrides": 57,
+     "rate": 0.145,
+     "examples": [
+      {
+       "season": 2014,
+       "above": "Mississippi State 9-2 (#7)",
+       "below": "Marshall 11-1 (#20)",
+       "score_gap": 0.092
+      },
+      {
+       "season": 2014,
+       "above": "Boise State 11-2 (#11)",
+       "below": "Marshall 11-1 (#20)",
+       "score_gap": 0.05
+      },
+      {
+       "season": 2014,
+       "above": "Michigan State 9-2 (#12)",
+       "below": "Marshall 11-1 (#20)",
+       "score_gap": 0.043
+      },
+      {
+       "season": 2015,
+       "above": "Stanford 11-2 (#7)",
+       "below": "Houston 11-1 (#10)",
+       "score_gap": 0.063
+      },
+      {
+       "season": 2015,
+       "above": "Northwestern 9-2 (#8)",
+       "below": "Houston 11-1 (#10)",
+       "score_gap": 0.023
+      },
+      {
+       "season": 2015,
+       "above": "Notre Dame 10-2 (#9)",
+       "below": "Houston 11-1 (#10)",
+       "score_gap": 0.015
+      },
+      {
+       "season": 2017,
+       "above": "Ohio State 11-2 (#6)",
+       "below": "Oklahoma 12-1 (#7)",
+       "score_gap": 0.026
+      },
+      {
+       "season": 2018,
+       "above": "Georgia 10-2 (#4)",
+       "below": "Oklahoma 12-1 (#5)",
+       "score_gap": 0.023
+      },
+      {
+       "season": 2018,
+       "above": "Georgia 10-2 (#4)",
+       "below": "Ohio State 12-1 (#7)",
+       "score_gap": 0.043
+      },
+      {
+       "season": 2019,
+       "above": "Georgia 10-2 (#6)",
+       "below": "Boise State 11-1 (#8)",
+       "score_gap": 0.038
+      },
+      {
+       "season": 2019,
+       "above": "Georgia 10-2 (#6)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.078
+      },
+      {
+       "season": 2019,
+       "above": "Penn State 9-2 (#7)",
+       "below": "Boise State 11-1 (#8)",
+       "score_gap": 0.016
+      },
+      {
+       "season": 2019,
+       "above": "Penn State 9-2 (#7)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.055
+      },
+      {
+       "season": 2019,
+       "above": "Notre Dame 10-2 (#9)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.037
+      },
+      {
+       "season": 2019,
+       "above": "Florida 8-2 (#10)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.037
+      },
+      {
+       "season": 2019,
+       "above": "Oregon 10-2 (#11)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.034
+      },
+      {
+       "season": 2019,
+       "above": "Utah 10-2 (#13)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.009
+      },
+      {
+       "season": 2021,
+       "above": "Oklahoma State 10-2 (#6)",
+       "below": "Louisiana 11-1 (#16)",
+       "score_gap": 0.109
+      },
+      {
+       "season": 2021,
+       "above": "Oklahoma State 10-2 (#6)",
+       "below": "UTSA 11-1 (#18)",
+       "score_gap": 0.122
+      },
+      {
+       "season": 2021,
+       "above": "Baylor 10-2 (#7)",
+       "below": "Louisiana 11-1 (#16)",
+       "score_gap": 0.103
+      },
+      {
+       "season": 2021,
+       "above": "Baylor 10-2 (#7)",
+       "below": "UTSA 11-1 (#18)",
+       "score_gap": 0.115
+      },
+      {
+       "season": 2021,
+       "above": "Ohio State 10-2 (#8)",
+       "below": "Louisiana 11-1 (#16)",
+       "score_gap": 0.081
+      },
+      {
+       "season": 2021,
+       "above": "Ohio State 10-2 (#8)",
+       "below": "UTSA 11-1 (#18)",
+       "score_gap": 0.094
+      },
+      {
+       "season": 2021,
+       "above": "Ole Miss 9-2 (#9)",
+       "below": "Louisiana 11-1 (#16)",
+       "score_gap": 0.064
+      },
+      {
+       "season": 2021,
+       "above": "Ole Miss 9-2 (#9)",
+       "below": "UTSA 11-1 (#18)",
+       "score_gap": 0.076
+      },
+      {
+       "season": 2021,
+       "above": "Michigan State 9-2 (#10)",
+       "below": "Louisiana 11-1 (#16)",
+       "score_gap": 0.063
+      },
+      {
+       "season": 2021,
+       "above": "Michigan State 9-2 (#10)",
+       "below": "UTSA 11-1 (#18)",
+       "score_gap": 0.075
+      },
+      {
+       "season": 2021,
+       "above": "Oklahoma 9-2 (#11)",
+       "below": "Louisiana 11-1 (#16)",
+       "score_gap": 0.032
+      },
+      {
+       "season": 2021,
+       "above": "Oklahoma 9-2 (#11)",
+       "below": "UTSA 11-1 (#18)",
+       "score_gap": 0.045
+      },
+      {
+       "season": 2021,
+       "above": "BYU 9-2 (#12)",
+       "below": "Louisiana 11-1 (#16)",
+       "score_gap": 0.02
+      },
+      {
+       "season": 2021,
+       "above": "BYU 9-2 (#12)",
+       "below": "UTSA 11-1 (#18)",
+       "score_gap": 0.032
+      },
+      {
+       "season": 2021,
+       "above": "Pittsburgh 10-2 (#13)",
+       "below": "Louisiana 11-1 (#16)",
+       "score_gap": 0.01
+      },
+      {
+       "season": 2021,
+       "above": "Pittsburgh 10-2 (#13)",
+       "below": "UTSA 11-1 (#18)",
+       "score_gap": 0.023
+      },
+      {
+       "season": 2021,
+       "above": "San Diego State 10-2 (#15)",
+       "below": "Louisiana 11-1 (#16)",
+       "score_gap": 0.004
+      },
+      {
+       "season": 2021,
+       "above": "San Diego State 10-2 (#15)",
+       "below": "UTSA 11-1 (#18)",
+       "score_gap": 0.017
+      },
+      {
+       "season": 2023,
+       "above": "Oregon 10-2 (#8)",
+       "below": "James Madison 10-1 (#12)",
+       "score_gap": 0.043
+      },
+      {
+       "season": 2023,
+       "above": "Penn State 9-2 (#9)",
+       "below": "James Madison 10-1 (#12)",
+       "score_gap": 0.026
+      },
+      {
+       "season": 2023,
+       "above": "Ole Miss 9-2 (#10)",
+       "below": "James Madison 10-1 (#12)",
+       "score_gap": 0.005
+      },
+      {
+       "season": 2023,
+       "above": "Oklahoma 10-2 (#11)",
+       "below": "James Madison 10-1 (#12)",
+       "score_gap": 0.003
+      },
+      {
+       "season": 2024,
+       "above": "Georgia 10-2 (#3)",
+       "below": "Boise State 11-1 (#7)",
+       "score_gap": 0.043
+      }
+     ]
+    },
+    "3 losses over 1 loss": {
+     "pairs": 385,
+     "overrides": 16,
+     "rate": 0.042,
+     "examples": [
+      {
+       "season": 2014,
+       "above": "Ole Miss 8-3 (#8)",
+       "below": "Marshall 11-1 (#20)",
+       "score_gap": 0.089
+      },
+      {
+       "season": 2014,
+       "above": "UCLA 9-3 (#9)",
+       "below": "Marshall 11-1 (#20)",
+       "score_gap": 0.077
+      },
+      {
+       "season": 2014,
+       "above": "Arizona 10-3 (#10)",
+       "below": "Marshall 11-1 (#20)",
+       "score_gap": 0.053
+      },
+      {
+       "season": 2014,
+       "above": "Georgia Tech 9-3 (#13)",
+       "below": "Marshall 11-1 (#20)",
+       "score_gap": 0.04
+      },
+      {
+       "season": 2014,
+       "above": "Missouri 9-3 (#14)",
+       "below": "Marshall 11-1 (#20)",
+       "score_gap": 0.032
+      },
+      {
+       "season": 2014,
+       "above": "Kansas State 8-3 (#16)",
+       "below": "Marshall 11-1 (#20)",
+       "score_gap": 0.022
+      },
+      {
+       "season": 2014,
+       "above": "Wisconsin 9-3 (#17)",
+       "below": "Marshall 11-1 (#20)",
+       "score_gap": 0.012
+      },
+      {
+       "season": 2014,
+       "above": "Georgia 8-3 (#18)",
+       "below": "Marshall 11-1 (#20)",
+       "score_gap": 0.011
+      },
+      {
+       "season": 2014,
+       "above": "Arizona State 8-3 (#19)",
+       "below": "Marshall 11-1 (#20)",
+       "score_gap": 0.006
+      },
+      {
+       "season": 2019,
+       "above": "Wisconsin 10-3 (#12)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.027
+      },
+      {
+       "season": 2019,
+       "above": "Auburn 8-3 (#14)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.007
+      },
+      {
+       "season": 2021,
+       "above": "Iowa 10-3 (#14)",
+       "below": "Louisiana 11-1 (#16)",
+       "score_gap": 0.008
+      },
+      {
+       "season": 2021,
+       "above": "Iowa 10-3 (#14)",
+       "below": "UTSA 11-1 (#18)",
+       "score_gap": 0.02
+      },
+      {
+       "season": 2021,
+       "above": "Utah 9-3 (#17)",
+       "below": "UTSA 11-1 (#18)",
+       "score_gap": 0.009
+      },
+      {
+       "season": 2025,
+       "above": "Alabama 9-3 (#11)",
+       "below": "James Madison 11-1 (#17)",
+       "score_gap": 0.044
+      },
+      {
+       "season": 2025,
+       "above": "USC 9-3 (#16)",
+       "below": "James Madison 11-1 (#17)",
+       "score_gap": 0.006
+      }
+     ]
+    },
+    "3 losses over unbeaten": {
+     "pairs": 154,
+     "overrides": 0,
+     "rate": 0,
+     "examples": []
+    }
+   },
+   "committee": {
+    "mean_top12_overlap": 10.36,
+    "per_season": [
+     {
+      "season": 2014,
+      "overlap": 10
+     },
+     {
+      "season": 2015,
+      "overlap": 9
+     },
+     {
+      "season": 2016,
+      "overlap": 11
+     },
+     {
+      "season": 2017,
+      "overlap": 11
+     },
+     {
+      "season": 2018,
+      "overlap": 11
+     },
+     {
+      "season": 2019,
+      "overlap": 9
+     },
+     {
+      "season": 2021,
+      "overlap": 10
+     },
+     {
+      "season": 2022,
+      "overlap": 11
+     },
+     {
+      "season": 2023,
+      "overlap": 9
+     },
+     {
+      "season": 2024,
+      "overlap": 11
+     },
+     {
+      "season": 2025,
+      "overlap": 12
+     }
+    ]
+   }
+  },
+  "Record-first v1 branch": {
+   "overrides": {
+    "1 loss over unbeaten": {
+     "pairs": 83,
+     "overrides": 0,
+     "rate": 0,
+     "examples": []
+    },
+    "2 losses over unbeaten": {
+     "pairs": 197,
+     "overrides": 0,
+     "rate": 0,
+     "examples": []
+    },
+    "2 losses over 1 loss": {
+     "pairs": 460,
+     "overrides": 0,
+     "rate": 0,
+     "examples": []
+    },
+    "3 losses over 1 loss": {
+     "pairs": 423,
+     "overrides": 0,
+     "rate": 0,
+     "examples": []
+    },
+    "3 losses over unbeaten": {
+     "pairs": 185,
+     "overrides": 0,
+     "rate": 0,
+     "examples": []
+    }
+   },
+   "committee": {
+    "mean_top12_overlap": 9.36,
+    "per_season": [
+     {
+      "season": 2014,
+      "overlap": 9
+     },
+     {
+      "season": 2015,
+      "overlap": 9
+     },
+     {
+      "season": 2016,
+      "overlap": 8
+     },
+     {
+      "season": 2017,
+      "overlap": 11
+     },
+     {
+      "season": 2018,
+      "overlap": 8
+     },
+     {
+      "season": 2019,
+      "overlap": 8
+     },
+     {
+      "season": 2021,
+      "overlap": 10
+     },
+     {
+      "season": 2022,
+      "overlap": 10
+     },
+     {
+      "season": 2023,
+      "overlap": 9
+     },
+     {
+      "season": 2024,
+      "overlap": 10
+     },
+     {
+      "season": 2025,
+      "overlap": 11
+     }
+    ]
+   }
+  },
+  "Model A: wins above playoff-caliber (alpha 0)": {
+   "overrides": {
+    "1 loss over unbeaten": {
+     "pairs": 83,
+     "overrides": 19,
+     "rate": 0.229,
+     "examples": [
+      {
+       "season": 2014,
+       "above": "Alabama 11-1 (#1)",
+       "below": "Florida State 12-0 (#2)",
+       "score_gap": 0.589,
+       "schedule_gap": 1.589
+      },
+      {
+       "season": 2016,
+       "above": "Ohio State 11-1 (#2)",
+       "below": "Western Michigan 12-0 (#6)",
+       "score_gap": 1.298,
+       "schedule_gap": 2.298
+      },
+      {
+       "season": 2016,
+       "above": "Clemson 11-1 (#3)",
+       "below": "Western Michigan 12-0 (#6)",
+       "score_gap": 0.775,
+       "schedule_gap": 1.775
+      },
+      {
+       "season": 2016,
+       "above": "Washington 11-1 (#4)",
+       "below": "Western Michigan 12-0 (#6)",
+       "score_gap": 0.636,
+       "schedule_gap": 1.636
+      },
+      {
+       "season": 2017,
+       "above": "Oklahoma 12-1 (#1)",
+       "below": "UCF 11-0 (#6)",
+       "score_gap": 1.039,
+       "schedule_gap": 2.039
+      },
+      {
+       "season": 2017,
+       "above": "Clemson 11-1 (#2)",
+       "below": "UCF 11-0 (#6)",
+       "score_gap": 0.976,
+       "schedule_gap": 1.976
+      },
+      {
+       "season": 2017,
+       "above": "Georgia 11-1 (#3)",
+       "below": "UCF 11-0 (#6)",
+       "score_gap": 0.715,
+       "schedule_gap": 1.715
+      },
+      {
+       "season": 2017,
+       "above": "Wisconsin 12-1 (#4)",
+       "below": "UCF 11-0 (#6)",
+       "score_gap": 0.304,
+       "schedule_gap": 1.304
+      },
+      {
+       "season": 2018,
+       "above": "Oklahoma 12-1 (#5)",
+       "below": "UCF 11-0 (#7)",
+       "score_gap": 0.461,
+       "schedule_gap": 1.461
+      },
+      {
+       "season": 2018,
+       "above": "Ohio State 12-1 (#6)",
+       "below": "UCF 11-0 (#7)",
+       "score_gap": 0.347,
+       "schedule_gap": 1.347
+      },
+      {
+       "season": 2019,
+       "above": "Oklahoma 11-1 (#3)",
+       "below": "Clemson 12-0 (#4)",
+       "score_gap": 0.666,
+       "schedule_gap": 1.666
+      },
+      {
+       "season": 2021,
+       "above": "Alabama 11-1 (#1)",
+       "below": "Cincinnati 12-0 (#4)",
+       "score_gap": 0.555,
+       "schedule_gap": 1.555
+      },
+      {
+       "season": 2021,
+       "above": "Georgia 11-1 (#2)",
+       "below": "Cincinnati 12-0 (#4)",
+       "score_gap": 0.158,
+       "schedule_gap": 1.158
+      },
+      {
+       "season": 2021,
+       "above": "Michigan 12-1 (#3)",
+       "below": "Cincinnati 12-0 (#4)",
+       "score_gap": 0.073,
+       "schedule_gap": 1.073
+      },
+      {
+       "season": 2023,
+       "above": "Alabama 11-1 (#3)",
+       "below": "Florida State 12-0 (#4)",
+       "score_gap": 0.12,
+       "schedule_gap": 1.12
+      },
+      {
+       "season": 2023,
+       "above": "Alabama 11-1 (#3)",
+       "below": "Liberty 13-0 (#10)",
+       "score_gap": 1.739,
+       "schedule_gap": 2.739
+      },
+      {
+       "season": 2023,
+       "above": "Texas 12-1 (#5)",
+       "below": "Liberty 13-0 (#10)",
+       "score_gap": 1.533,
+       "schedule_gap": 2.533
+      },
+      {
+       "season": 2023,
+       "above": "Ohio State 10-1 (#6)",
+       "below": "Liberty 13-0 (#10)",
+       "score_gap": 1.232,
+       "schedule_gap": 2.232
+      },
+      {
+       "season": 2023,
+       "above": "Georgia 11-1 (#7)",
+       "below": "Liberty 13-0 (#10)",
+       "score_gap": 0.912,
+       "schedule_gap": 1.912
+      }
+     ]
+    },
+    "2 losses over unbeaten": {
+     "pairs": 179,
+     "overrides": 5,
+     "rate": 0.028,
+     "examples": [
+      {
+       "season": 2016,
+       "above": "Penn State 11-2 (#5)",
+       "below": "Western Michigan 12-0 (#6)",
+       "score_gap": 0.533,
+       "schedule_gap": 2.533
+      },
+      {
+       "season": 2017,
+       "above": "Ohio State 11-2 (#5)",
+       "below": "UCF 11-0 (#6)",
+       "score_gap": 0.088,
+       "schedule_gap": 2.088
+      },
+      {
+       "season": 2018,
+       "above": "Georgia 10-2 (#4)",
+       "below": "UCF 11-0 (#7)",
+       "score_gap": 0.83,
+       "schedule_gap": 2.83
+      },
+      {
+       "season": 2023,
+       "above": "Missouri 9-2 (#8)",
+       "below": "Liberty 13-0 (#10)",
+       "score_gap": 0.033,
+       "schedule_gap": 2.033
+      },
+      {
+       "season": 2023,
+       "above": "Oregon 10-2 (#9)",
+       "below": "Liberty 13-0 (#10)",
+       "score_gap": 0.012,
+       "schedule_gap": 2.012
+      }
+     ]
+    },
+    "2 losses over 1 loss": {
+     "pairs": 417,
+     "overrides": 57,
+     "rate": 0.137,
+     "examples": [
+      {
+       "season": 2014,
+       "above": "Mississippi State 9-2 (#7)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 1.284,
+       "schedule_gap": 2.284
+      },
+      {
+       "season": 2014,
+       "above": "Michigan State 9-2 (#11)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 0.32,
+       "schedule_gap": 1.32
+      },
+      {
+       "season": 2015,
+       "above": "Stanford 11-2 (#7)",
+       "below": "Houston 11-1 (#11)",
+       "score_gap": 0.664,
+       "schedule_gap": 1.664
+      },
+      {
+       "season": 2015,
+       "above": "Notre Dame 10-2 (#8)",
+       "below": "Houston 11-1 (#11)",
+       "score_gap": 0.592,
+       "schedule_gap": 1.592
+      },
+      {
+       "season": 2015,
+       "above": "TCU 9-2 (#9)",
+       "below": "Houston 11-1 (#11)",
+       "score_gap": 0.518,
+       "schedule_gap": 1.518
+      },
+      {
+       "season": 2015,
+       "above": "Oklahoma State 9-2 (#10)",
+       "below": "Houston 11-1 (#11)",
+       "score_gap": 0.254,
+       "schedule_gap": 1.254
+      },
+      {
+       "season": 2017,
+       "above": "Ohio State 11-2 (#5)",
+       "below": "Alabama 10-1 (#7)",
+       "score_gap": 0.434,
+       "schedule_gap": 1.434
+      },
+      {
+       "season": 2018,
+       "above": "Georgia 10-2 (#4)",
+       "below": "Oklahoma 12-1 (#5)",
+       "score_gap": 0.369,
+       "schedule_gap": 1.369
+      },
+      {
+       "season": 2018,
+       "above": "Georgia 10-2 (#4)",
+       "below": "Ohio State 12-1 (#6)",
+       "score_gap": 0.483,
+       "schedule_gap": 1.483
+      },
+      {
+       "season": 2019,
+       "above": "Georgia 10-2 (#5)",
+       "below": "Memphis 11-1 (#8)",
+       "score_gap": 0.132,
+       "schedule_gap": 1.132
+      },
+      {
+       "season": 2019,
+       "above": "Georgia 10-2 (#5)",
+       "below": "App State 11-1 (#14)",
+       "score_gap": 0.662,
+       "schedule_gap": 1.662
+      },
+      {
+       "season": 2019,
+       "above": "Georgia 10-2 (#5)",
+       "below": "Boise State 11-1 (#18)",
+       "score_gap": 0.919,
+       "schedule_gap": 1.919
+      },
+      {
+       "season": 2019,
+       "above": "Penn State 9-2 (#6)",
+       "below": "Memphis 11-1 (#8)",
+       "score_gap": 0.034,
+       "schedule_gap": 1.034
+      },
+      {
+       "season": 2019,
+       "above": "Penn State 9-2 (#6)",
+       "below": "App State 11-1 (#14)",
+       "score_gap": 0.564,
+       "schedule_gap": 1.564
+      },
+      {
+       "season": 2019,
+       "above": "Penn State 9-2 (#6)",
+       "below": "Boise State 11-1 (#18)",
+       "score_gap": 0.82,
+       "schedule_gap": 1.82
+      },
+      {
+       "season": 2019,
+       "above": "Baylor 10-2 (#7)",
+       "below": "Memphis 11-1 (#8)",
+       "score_gap": 0.028,
+       "schedule_gap": 1.028
+      },
+      {
+       "season": 2019,
+       "above": "Baylor 10-2 (#7)",
+       "below": "App State 11-1 (#14)",
+       "score_gap": 0.557,
+       "schedule_gap": 1.557
+      },
+      {
+       "season": 2019,
+       "above": "Baylor 10-2 (#7)",
+       "below": "Boise State 11-1 (#18)",
+       "score_gap": 0.814,
+       "schedule_gap": 1.814
+      },
+      {
+       "season": 2019,
+       "above": "Oregon 10-2 (#11)",
+       "below": "App State 11-1 (#14)",
+       "score_gap": 0.312,
+       "schedule_gap": 1.312
+      },
+      {
+       "season": 2019,
+       "above": "Oregon 10-2 (#11)",
+       "below": "Boise State 11-1 (#18)",
+       "score_gap": 0.569,
+       "schedule_gap": 1.569
+      },
+      {
+       "season": 2019,
+       "above": "Florida 8-2 (#12)",
+       "below": "App State 11-1 (#14)",
+       "score_gap": 0.306,
+       "schedule_gap": 1.306
+      },
+      {
+       "season": 2019,
+       "above": "Florida 8-2 (#12)",
+       "below": "Boise State 11-1 (#18)",
+       "score_gap": 0.562,
+       "schedule_gap": 1.562
+      },
+      {
+       "season": 2019,
+       "above": "Utah 10-2 (#15)",
+       "below": "Boise State 11-1 (#18)",
+       "score_gap": 0.256,
+       "schedule_gap": 1.256
+      },
+      {
+       "season": 2019,
+       "above": "Notre Dame 10-2 (#16)",
+       "below": "Boise State 11-1 (#18)",
+       "score_gap": 0.252,
+       "schedule_gap": 1.252
+      },
+      {
+       "season": 2019,
+       "above": "Alabama 9-2 (#17)",
+       "below": "Boise State 11-1 (#18)",
+       "score_gap": 0.245,
+       "schedule_gap": 1.245
+      },
+      {
+       "season": 2021,
+       "above": "Ole Miss 9-2 (#6)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.45,
+       "schedule_gap": 1.45
+      },
+      {
+       "season": 2021,
+       "above": "Ole Miss 9-2 (#6)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.452,
+       "schedule_gap": 1.452
+      },
+      {
+       "season": 2021,
+       "above": "Oklahoma State 10-2 (#7)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.421,
+       "schedule_gap": 1.421
+      },
+      {
+       "season": 2021,
+       "above": "Oklahoma State 10-2 (#7)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.424,
+       "schedule_gap": 1.424
+      },
+      {
+       "season": 2021,
+       "above": "Michigan State 9-2 (#8)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.389,
+       "schedule_gap": 1.389
+      },
+      {
+       "season": 2021,
+       "above": "Michigan State 9-2 (#8)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.392,
+       "schedule_gap": 1.392
+      },
+      {
+       "season": 2021,
+       "above": "Ohio State 10-2 (#9)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.327,
+       "schedule_gap": 1.327
+      },
+      {
+       "season": 2021,
+       "above": "Ohio State 10-2 (#9)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.33,
+       "schedule_gap": 1.33
+      },
+      {
+       "season": 2021,
+       "above": "Baylor 10-2 (#10)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.254,
+       "schedule_gap": 1.254
+      },
+      {
+       "season": 2021,
+       "above": "Baylor 10-2 (#10)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.256,
+       "schedule_gap": 1.256
+      },
+      {
+       "season": 2023,
+       "above": "Missouri 9-2 (#8)",
+       "below": "James Madison 10-1 (#14)",
+       "score_gap": 0.576,
+       "schedule_gap": 1.576
+      },
+      {
+       "season": 2023,
+       "above": "Oregon 10-2 (#9)",
+       "below": "James Madison 10-1 (#14)",
+       "score_gap": 0.555,
+       "schedule_gap": 1.555
+      },
+      {
+       "season": 2023,
+       "above": "Ole Miss 9-2 (#11)",
+       "below": "James Madison 10-1 (#14)",
+       "score_gap": 0.512,
+       "schedule_gap": 1.512
+      },
+      {
+       "season": 2023,
+       "above": "Penn State 9-2 (#12)",
+       "below": "James Madison 10-1 (#14)",
+       "score_gap": 0.277,
+       "schedule_gap": 1.277
+      },
+      {
+       "season": 2023,
+       "above": "Oklahoma 10-2 (#13)",
+       "below": "James Madison 10-1 (#14)",
+       "score_gap": 0.22,
+       "schedule_gap": 1.22
+      }
+     ]
+    },
+    "3 losses over 1 loss": {
+     "pairs": 390,
+     "overrides": 13,
+     "rate": 0.033,
+     "examples": [
+      {
+       "season": 2014,
+       "above": "Ole Miss 8-3 (#8)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 0.792,
+       "schedule_gap": 2.792
+      },
+      {
+       "season": 2014,
+       "above": "UCLA 9-3 (#10)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 0.354,
+       "schedule_gap": 2.354
+      },
+      {
+       "season": 2014,
+       "above": "Arizona 10-3 (#12)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 0.315,
+       "schedule_gap": 2.315
+      },
+      {
+       "season": 2014,
+       "above": "Missouri 9-3 (#13)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 0.31,
+       "schedule_gap": 2.31
+      },
+      {
+       "season": 2014,
+       "above": "Kansas State 8-3 (#14)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 0.174,
+       "schedule_gap": 2.174
+      },
+      {
+       "season": 2019,
+       "above": "Wisconsin 10-3 (#9)",
+       "below": "App State 11-1 (#14)",
+       "score_gap": 0.408,
+       "schedule_gap": 2.408
+      },
+      {
+       "season": 2019,
+       "above": "Wisconsin 10-3 (#9)",
+       "below": "Boise State 11-1 (#18)",
+       "score_gap": 0.665,
+       "schedule_gap": 2.665
+      },
+      {
+       "season": 2019,
+       "above": "Auburn 8-3 (#10)",
+       "below": "App State 11-1 (#14)",
+       "score_gap": 0.407,
+       "schedule_gap": 2.407
+      },
+      {
+       "season": 2019,
+       "above": "Auburn 8-3 (#10)",
+       "below": "Boise State 11-1 (#18)",
+       "score_gap": 0.664,
+       "schedule_gap": 2.664
+      },
+      {
+       "season": 2019,
+       "above": "Michigan 9-3 (#13)",
+       "below": "App State 11-1 (#14)",
+       "score_gap": 0.298,
+       "schedule_gap": 2.298
+      },
+      {
+       "season": 2019,
+       "above": "Michigan 9-3 (#13)",
+       "below": "Boise State 11-1 (#18)",
+       "score_gap": 0.555,
+       "schedule_gap": 2.555
+      },
+      {
+       "season": 2025,
+       "above": "Alabama 9-3 (#10)",
+       "below": "James Madison 11-1 (#16)",
+       "score_gap": 0.653,
+       "schedule_gap": 2.653
+      },
+      {
+       "season": 2025,
+       "above": "Texas 9-3 (#14)",
+       "below": "James Madison 11-1 (#16)",
+       "score_gap": 0.234,
+       "schedule_gap": 2.234
+      }
+     ]
+    },
+    "3 losses over unbeaten": {
+     "pairs": 159,
+     "overrides": 0,
+     "rate": 0,
+     "examples": []
+    }
+   },
+   "committee": {
+    "mean_top12_overlap": 10.27,
+    "per_season": [
+     {
+      "season": 2014,
+      "overlap": 10
+     },
+     {
+      "season": 2015,
+      "overlap": 9
+     },
+     {
+      "season": 2016,
+      "overlap": 10
+     },
+     {
+      "season": 2017,
+      "overlap": 11
+     },
+     {
+      "season": 2018,
+      "overlap": 10
+     },
+     {
+      "season": 2019,
+      "overlap": 11
+     },
+     {
+      "season": 2021,
+      "overlap": 10
+     },
+     {
+      "season": 2022,
+      "overlap": 10
+     },
+     {
+      "season": 2023,
+      "overlap": 10
+     },
+     {
+      "season": 2024,
+      "overlap": 10
+     },
+     {
+      "season": 2025,
+      "overlap": 12
+     }
+    ]
+   }
+  },
+  "Model B: résumé rarity -log10 P(W*>=W)": {
+   "overrides": {
+    "1 loss over unbeaten": {
+     "pairs": 83,
+     "overrides": 15,
+     "rate": 0.181,
+     "examples": [
+      {
+       "season": 2014,
+       "above": "Alabama 11-1 (#1)",
+       "below": "Florida State 12-0 (#2)",
+       "score_gap": 0.174,
+       "schedule_gap": 1.589
+      },
+      {
+       "season": 2016,
+       "above": "Ohio State 11-1 (#2)",
+       "below": "Western Michigan 12-0 (#6)",
+       "score_gap": 0.65,
+       "schedule_gap": 2.298
+      },
+      {
+       "season": 2016,
+       "above": "Clemson 11-1 (#3)",
+       "below": "Western Michigan 12-0 (#6)",
+       "score_gap": 0.28,
+       "schedule_gap": 1.775
+      },
+      {
+       "season": 2016,
+       "above": "Washington 11-1 (#4)",
+       "below": "Western Michigan 12-0 (#6)",
+       "score_gap": 0.228,
+       "schedule_gap": 1.636
+      },
+      {
+       "season": 2017,
+       "above": "Oklahoma 12-1 (#1)",
+       "below": "UCF 11-0 (#4)",
+       "score_gap": 0.507,
+       "schedule_gap": 2.039
+      },
+      {
+       "season": 2017,
+       "above": "Clemson 11-1 (#2)",
+       "below": "UCF 11-0 (#4)",
+       "score_gap": 0.342,
+       "schedule_gap": 1.976
+      },
+      {
+       "season": 2017,
+       "above": "Georgia 11-1 (#3)",
+       "below": "UCF 11-0 (#4)",
+       "score_gap": 0.319,
+       "schedule_gap": 1.715
+      },
+      {
+       "season": 2018,
+       "above": "Oklahoma 12-1 (#5)",
+       "below": "UCF 11-0 (#7)",
+       "score_gap": 0.065,
+       "schedule_gap": 1.461
+      },
+      {
+       "season": 2018,
+       "above": "Ohio State 12-1 (#6)",
+       "below": "UCF 11-0 (#7)",
+       "score_gap": 0.051,
+       "schedule_gap": 1.347
+      },
+      {
+       "season": 2019,
+       "above": "Oklahoma 11-1 (#3)",
+       "below": "Clemson 12-0 (#4)",
+       "score_gap": 0.219,
+       "schedule_gap": 1.666
+      },
+      {
+       "season": 2021,
+       "above": "Alabama 11-1 (#1)",
+       "below": "Cincinnati 12-0 (#2)",
+       "score_gap": 0.108,
+       "schedule_gap": 1.555
+      },
+      {
+       "season": 2023,
+       "above": "Alabama 11-1 (#4)",
+       "below": "Liberty 13-0 (#8)",
+       "score_gap": 0.818,
+       "schedule_gap": 2.739
+      },
+      {
+       "season": 2023,
+       "above": "Ohio State 10-1 (#5)",
+       "below": "Liberty 13-0 (#8)",
+       "score_gap": 0.704,
+       "schedule_gap": 2.232
+      },
+      {
+       "season": 2023,
+       "above": "Texas 12-1 (#6)",
+       "below": "Liberty 13-0 (#8)",
+       "score_gap": 0.695,
+       "schedule_gap": 2.533
+      },
+      {
+       "season": 2023,
+       "above": "Georgia 11-1 (#7)",
+       "below": "Liberty 13-0 (#8)",
+       "score_gap": 0.36,
+       "schedule_gap": 1.912
+      }
+     ]
+    },
+    "2 losses over unbeaten": {
+     "pairs": 177,
+     "overrides": 2,
+     "rate": 0.011,
+     "examples": [
+      {
+       "season": 2016,
+       "above": "Penn State 11-2 (#5)",
+       "below": "Western Michigan 12-0 (#6)",
+       "score_gap": 0.146,
+       "schedule_gap": 2.533
+      },
+      {
+       "season": 2018,
+       "above": "Georgia 10-2 (#4)",
+       "below": "UCF 11-0 (#7)",
+       "score_gap": 0.261,
+       "schedule_gap": 2.83
+      }
+     ]
+    },
+    "2 losses over 1 loss": {
+     "pairs": 406,
+     "overrides": 57,
+     "rate": 0.14,
+     "examples": [
+      {
+       "season": 2014,
+       "above": "Mississippi State 9-2 (#7)",
+       "below": "Marshall 11-1 (#17)",
+       "score_gap": 0.515,
+       "schedule_gap": 2.284
+      },
+      {
+       "season": 2014,
+       "above": "Michigan State 9-2 (#10)",
+       "below": "Marshall 11-1 (#17)",
+       "score_gap": 0.116,
+       "schedule_gap": 1.32
+      },
+      {
+       "season": 2015,
+       "above": "Stanford 11-2 (#7)",
+       "below": "Houston 11-1 (#11)",
+       "score_gap": 0.209,
+       "schedule_gap": 1.664
+      },
+      {
+       "season": 2015,
+       "above": "Notre Dame 10-2 (#8)",
+       "below": "Houston 11-1 (#11)",
+       "score_gap": 0.207,
+       "schedule_gap": 1.592
+      },
+      {
+       "season": 2015,
+       "above": "TCU 9-2 (#9)",
+       "below": "Houston 11-1 (#11)",
+       "score_gap": 0.206,
+       "schedule_gap": 1.518
+      },
+      {
+       "season": 2015,
+       "above": "Oklahoma State 9-2 (#10)",
+       "below": "Houston 11-1 (#11)",
+       "score_gap": 0.087,
+       "schedule_gap": 1.254
+      },
+      {
+       "season": 2017,
+       "above": "Ohio State 11-2 (#6)",
+       "below": "Alabama 10-1 (#7)",
+       "score_gap": 0.122,
+       "schedule_gap": 1.434
+      },
+      {
+       "season": 2018,
+       "above": "Georgia 10-2 (#4)",
+       "below": "Oklahoma 12-1 (#5)",
+       "score_gap": 0.196,
+       "schedule_gap": 1.369
+      },
+      {
+       "season": 2018,
+       "above": "Georgia 10-2 (#4)",
+       "below": "Ohio State 12-1 (#6)",
+       "score_gap": 0.21,
+       "schedule_gap": 1.483
+      },
+      {
+       "season": 2019,
+       "above": "Georgia 10-2 (#5)",
+       "below": "Memphis 11-1 (#8)",
+       "score_gap": 0.082,
+       "schedule_gap": 1.132
+      },
+      {
+       "season": 2019,
+       "above": "Georgia 10-2 (#5)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.261,
+       "schedule_gap": 1.662
+      },
+      {
+       "season": 2019,
+       "above": "Georgia 10-2 (#5)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.361,
+       "schedule_gap": 1.919
+      },
+      {
+       "season": 2019,
+       "above": "Penn State 9-2 (#6)",
+       "below": "Memphis 11-1 (#8)",
+       "score_gap": 0.064,
+       "schedule_gap": 1.034
+      },
+      {
+       "season": 2019,
+       "above": "Penn State 9-2 (#6)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.243,
+       "schedule_gap": 1.564
+      },
+      {
+       "season": 2019,
+       "above": "Penn State 9-2 (#6)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.343,
+       "schedule_gap": 1.82
+      },
+      {
+       "season": 2019,
+       "above": "Baylor 10-2 (#7)",
+       "below": "Memphis 11-1 (#8)",
+       "score_gap": 0.005,
+       "schedule_gap": 1.028
+      },
+      {
+       "season": 2019,
+       "above": "Baylor 10-2 (#7)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.184,
+       "schedule_gap": 1.557
+      },
+      {
+       "season": 2019,
+       "above": "Baylor 10-2 (#7)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.284,
+       "schedule_gap": 1.814
+      },
+      {
+       "season": 2019,
+       "above": "Florida 8-2 (#11)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.124,
+       "schedule_gap": 1.306
+      },
+      {
+       "season": 2019,
+       "above": "Florida 8-2 (#11)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.224,
+       "schedule_gap": 1.562
+      },
+      {
+       "season": 2019,
+       "above": "Oregon 10-2 (#13)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.105,
+       "schedule_gap": 1.312
+      },
+      {
+       "season": 2019,
+       "above": "Oregon 10-2 (#13)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.206,
+       "schedule_gap": 1.569
+      },
+      {
+       "season": 2019,
+       "above": "Alabama 9-2 (#14)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0,
+       "schedule_gap": 0.988
+      },
+      {
+       "season": 2019,
+       "above": "Alabama 9-2 (#14)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.101,
+       "schedule_gap": 1.245
+      },
+      {
+       "season": 2019,
+       "above": "Notre Dame 10-2 (#16)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.093,
+       "schedule_gap": 1.252
+      },
+      {
+       "season": 2019,
+       "above": "Utah 10-2 (#17)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.085,
+       "schedule_gap": 1.256
+      },
+      {
+       "season": 2019,
+       "above": "Minnesota 9-2 (#18)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.015,
+       "schedule_gap": 0.993
+      },
+      {
+       "season": 2021,
+       "above": "Ole Miss 9-2 (#6)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.146,
+       "schedule_gap": 1.45
+      },
+      {
+       "season": 2021,
+       "above": "Ole Miss 9-2 (#6)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.153,
+       "schedule_gap": 1.452
+      },
+      {
+       "season": 2021,
+       "above": "Michigan State 9-2 (#7)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.131,
+       "schedule_gap": 1.389
+      },
+      {
+       "season": 2021,
+       "above": "Michigan State 9-2 (#7)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.138,
+       "schedule_gap": 1.392
+      },
+      {
+       "season": 2021,
+       "above": "Oklahoma State 10-2 (#8)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.122,
+       "schedule_gap": 1.421
+      },
+      {
+       "season": 2021,
+       "above": "Oklahoma State 10-2 (#8)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.129,
+       "schedule_gap": 1.424
+      },
+      {
+       "season": 2021,
+       "above": "Ohio State 10-2 (#9)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.1,
+       "schedule_gap": 1.327
+      },
+      {
+       "season": 2021,
+       "above": "Ohio State 10-2 (#9)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.107,
+       "schedule_gap": 1.33
+      },
+      {
+       "season": 2021,
+       "above": "Baylor 10-2 (#10)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.076,
+       "schedule_gap": 1.254
+      },
+      {
+       "season": 2021,
+       "above": "Baylor 10-2 (#10)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.083,
+       "schedule_gap": 1.256
+      },
+      {
+       "season": 2023,
+       "above": "Missouri 9-2 (#9)",
+       "below": "James Madison 10-1 (#14)",
+       "score_gap": 0.202,
+       "schedule_gap": 1.576
+      },
+      {
+       "season": 2023,
+       "above": "Ole Miss 9-2 (#10)",
+       "below": "James Madison 10-1 (#14)",
+       "score_gap": 0.192,
+       "schedule_gap": 1.512
+      },
+      {
+       "season": 2023,
+       "above": "Oregon 10-2 (#11)",
+       "below": "James Madison 10-1 (#14)",
+       "score_gap": 0.183,
+       "schedule_gap": 1.555
+      }
+     ]
+    },
+    "3 losses over 1 loss": {
+     "pairs": 387,
+     "overrides": 15,
+     "rate": 0.039,
+     "examples": [
+      {
+       "season": 2014,
+       "above": "Ole Miss 8-3 (#8)",
+       "below": "Marshall 11-1 (#17)",
+       "score_gap": 0.251,
+       "schedule_gap": 2.792
+      },
+      {
+       "season": 2014,
+       "above": "UCLA 9-3 (#11)",
+       "below": "Marshall 11-1 (#17)",
+       "score_gap": 0.108,
+       "schedule_gap": 2.354
+      },
+      {
+       "season": 2014,
+       "above": "Arizona 10-3 (#12)",
+       "below": "Marshall 11-1 (#17)",
+       "score_gap": 0.107,
+       "schedule_gap": 2.315
+      },
+      {
+       "season": 2014,
+       "above": "Missouri 9-3 (#13)",
+       "below": "Marshall 11-1 (#17)",
+       "score_gap": 0.106,
+       "schedule_gap": 2.31
+      },
+      {
+       "season": 2014,
+       "above": "Kansas State 8-3 (#14)",
+       "below": "Marshall 11-1 (#17)",
+       "score_gap": 0.079,
+       "schedule_gap": 2.174
+      },
+      {
+       "season": 2014,
+       "above": "Georgia 8-3 (#16)",
+       "below": "Marshall 11-1 (#17)",
+       "score_gap": 0.001,
+       "schedule_gap": 1.894
+      },
+      {
+       "season": 2019,
+       "above": "Auburn 8-3 (#9)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.146,
+       "schedule_gap": 2.407
+      },
+      {
+       "season": 2019,
+       "above": "Auburn 8-3 (#9)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.247,
+       "schedule_gap": 2.664
+      },
+      {
+       "season": 2019,
+       "above": "Wisconsin 10-3 (#10)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.146,
+       "schedule_gap": 2.408
+      },
+      {
+       "season": 2019,
+       "above": "Wisconsin 10-3 (#10)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.246,
+       "schedule_gap": 2.665
+      },
+      {
+       "season": 2019,
+       "above": "Michigan 9-3 (#12)",
+       "below": "App State 11-1 (#15)",
+       "score_gap": 0.11,
+       "schedule_gap": 2.298
+      },
+      {
+       "season": 2019,
+       "above": "Michigan 9-3 (#12)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.21,
+       "schedule_gap": 2.555
+      },
+      {
+       "season": 2025,
+       "above": "Alabama 9-3 (#12)",
+       "below": "James Madison 11-1 (#19)",
+       "score_gap": 0.195,
+       "schedule_gap": 2.653
+      },
+      {
+       "season": 2025,
+       "above": "Texas 9-3 (#14)",
+       "below": "James Madison 11-1 (#19)",
+       "score_gap": 0.089,
+       "schedule_gap": 2.234
+      },
+      {
+       "season": 2025,
+       "above": "USC 9-3 (#17)",
+       "below": "James Madison 11-1 (#19)",
+       "score_gap": 0.013,
+       "schedule_gap": 1.973
+      }
+     ]
+    },
+    "3 losses over unbeaten": {
+     "pairs": 157,
+     "overrides": 0,
+     "rate": 0,
+     "examples": []
+    }
+   },
+   "committee": {
+    "mean_top12_overlap": 10.18,
+    "per_season": [
+     {
+      "season": 2014,
+      "overlap": 10
+     },
+     {
+      "season": 2015,
+      "overlap": 9
+     },
+     {
+      "season": 2016,
+      "overlap": 10
+     },
+     {
+      "season": 2017,
+      "overlap": 11
+     },
+     {
+      "season": 2018,
+      "overlap": 10
+     },
+     {
+      "season": 2019,
+      "overlap": 10
+     },
+     {
+      "season": 2021,
+      "overlap": 10
+     },
+     {
+      "season": 2022,
+      "overlap": 10
+     },
+     {
+      "season": 2023,
+      "overlap": 10
+     },
+     {
+      "season": 2024,
+      "overlap": 10
+     },
+     {
+      "season": 2025,
+      "overlap": 12
+     }
+    ]
+   }
+  },
+  "Model A + 5% convincingness (rejected)": {
+   "overrides": {
+    "1 loss over unbeaten": {
+     "pairs": 83,
+     "overrides": 19,
+     "rate": 0.229,
+     "examples": [
+      {
+       "season": 2014,
+       "above": "Alabama 11-1 (#1)",
+       "below": "Florida State 12-0 (#2)",
+       "score_gap": 0.677,
+       "schedule_gap": 1.589
+      },
+      {
+       "season": 2016,
+       "above": "Ohio State 11-1 (#2)",
+       "below": "Western Michigan 12-0 (#7)",
+       "score_gap": 1.321,
+       "schedule_gap": 2.298
+      },
+      {
+       "season": 2016,
+       "above": "Clemson 11-1 (#3)",
+       "below": "Western Michigan 12-0 (#7)",
+       "score_gap": 0.777,
+       "schedule_gap": 1.775
+      },
+      {
+       "season": 2016,
+       "above": "Washington 11-1 (#4)",
+       "below": "Western Michigan 12-0 (#7)",
+       "score_gap": 0.692,
+       "schedule_gap": 1.636
+      },
+      {
+       "season": 2017,
+       "above": "Oklahoma 12-1 (#1)",
+       "below": "UCF 11-0 (#6)",
+       "score_gap": 1.038,
+       "schedule_gap": 2.039
+      },
+      {
+       "season": 2017,
+       "above": "Clemson 11-1 (#2)",
+       "below": "UCF 11-0 (#6)",
+       "score_gap": 0.993,
+       "schedule_gap": 1.976
+      },
+      {
+       "season": 2017,
+       "above": "Georgia 11-1 (#3)",
+       "below": "UCF 11-0 (#6)",
+       "score_gap": 0.744,
+       "schedule_gap": 1.715
+      },
+      {
+       "season": 2017,
+       "above": "Wisconsin 12-1 (#4)",
+       "below": "UCF 11-0 (#6)",
+       "score_gap": 0.314,
+       "schedule_gap": 1.304
+      },
+      {
+       "season": 2018,
+       "above": "Oklahoma 12-1 (#5)",
+       "below": "UCF 11-0 (#7)",
+       "score_gap": 0.44,
+       "schedule_gap": 1.461
+      },
+      {
+       "season": 2018,
+       "above": "Ohio State 12-1 (#6)",
+       "below": "UCF 11-0 (#7)",
+       "score_gap": 0.322,
+       "schedule_gap": 1.347
+      },
+      {
+       "season": 2019,
+       "above": "Oklahoma 11-1 (#3)",
+       "below": "Clemson 12-0 (#4)",
+       "score_gap": 0.634,
+       "schedule_gap": 1.666
+      },
+      {
+       "season": 2021,
+       "above": "Alabama 11-1 (#1)",
+       "below": "Cincinnati 12-0 (#4)",
+       "score_gap": 0.575,
+       "schedule_gap": 1.555
+      },
+      {
+       "season": 2021,
+       "above": "Georgia 11-1 (#2)",
+       "below": "Cincinnati 12-0 (#4)",
+       "score_gap": 0.214,
+       "schedule_gap": 1.158
+      },
+      {
+       "season": 2021,
+       "above": "Michigan 12-1 (#3)",
+       "below": "Cincinnati 12-0 (#4)",
+       "score_gap": 0.092,
+       "schedule_gap": 1.073
+      },
+      {
+       "season": 2023,
+       "above": "Alabama 11-1 (#3)",
+       "below": "Florida State 12-0 (#4)",
+       "score_gap": 0.129,
+       "schedule_gap": 1.12
+      },
+      {
+       "season": 2023,
+       "above": "Alabama 11-1 (#3)",
+       "below": "Liberty 13-0 (#11)",
+       "score_gap": 1.755,
+       "schedule_gap": 2.739
+      },
+      {
+       "season": 2023,
+       "above": "Texas 12-1 (#5)",
+       "below": "Liberty 13-0 (#11)",
+       "score_gap": 1.573,
+       "schedule_gap": 2.533
+      },
+      {
+       "season": 2023,
+       "above": "Ohio State 10-1 (#6)",
+       "below": "Liberty 13-0 (#11)",
+       "score_gap": 1.309,
+       "schedule_gap": 2.232
+      },
+      {
+       "season": 2023,
+       "above": "Georgia 11-1 (#7)",
+       "below": "Liberty 13-0 (#11)",
+       "score_gap": 0.974,
+       "schedule_gap": 1.912
+      }
+     ]
+    },
+    "2 losses over unbeaten": {
+     "pairs": 177,
+     "overrides": 7,
+     "rate": 0.04,
+     "examples": [
+      {
+       "season": 2016,
+       "above": "Penn State 11-2 (#5)",
+       "below": "Western Michigan 12-0 (#7)",
+       "score_gap": 0.557,
+       "schedule_gap": 2.533
+      },
+      {
+       "season": 2016,
+       "above": "Michigan 10-2 (#6)",
+       "below": "Western Michigan 12-0 (#7)",
+       "score_gap": 0.003,
+       "schedule_gap": 1.925
+      },
+      {
+       "season": 2017,
+       "above": "Ohio State 11-2 (#5)",
+       "below": "UCF 11-0 (#6)",
+       "score_gap": 0.118,
+       "schedule_gap": 2.088
+      },
+      {
+       "season": 2018,
+       "above": "Georgia 10-2 (#4)",
+       "below": "UCF 11-0 (#7)",
+       "score_gap": 0.892,
+       "schedule_gap": 2.83
+      },
+      {
+       "season": 2023,
+       "above": "Oregon 10-2 (#8)",
+       "below": "Liberty 13-0 (#11)",
+       "score_gap": 0.125,
+       "schedule_gap": 2.012
+      },
+      {
+       "season": 2023,
+       "above": "Missouri 9-2 (#9)",
+       "below": "Liberty 13-0 (#11)",
+       "score_gap": 0.099,
+       "schedule_gap": 2.033
+      },
+      {
+       "season": 2023,
+       "above": "Ole Miss 9-2 (#10)",
+       "below": "Liberty 13-0 (#11)",
+       "score_gap": 0.025,
+       "schedule_gap": 1.97
+      }
+     ]
+    },
+    "2 losses over 1 loss": {
+     "pairs": 406,
+     "overrides": 60,
+     "rate": 0.148,
+     "examples": [
+      {
+       "season": 2014,
+       "above": "Mississippi State 9-2 (#7)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 1.298,
+       "schedule_gap": 2.284
+      },
+      {
+       "season": 2014,
+       "above": "Michigan State 9-2 (#10)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 0.351,
+       "schedule_gap": 1.32
+      },
+      {
+       "season": 2015,
+       "above": "Stanford 11-2 (#6)",
+       "below": "Iowa 11-1 (#7)",
+       "score_gap": 0.033,
+       "schedule_gap": 0.991
+      },
+      {
+       "season": 2015,
+       "above": "Stanford 11-2 (#6)",
+       "below": "Houston 11-1 (#11)",
+       "score_gap": 0.683,
+       "schedule_gap": 1.664
+      },
+      {
+       "season": 2015,
+       "above": "Notre Dame 10-2 (#8)",
+       "below": "Houston 11-1 (#11)",
+       "score_gap": 0.616,
+       "schedule_gap": 1.592
+      },
+      {
+       "season": 2015,
+       "above": "TCU 9-2 (#9)",
+       "below": "Houston 11-1 (#11)",
+       "score_gap": 0.55,
+       "schedule_gap": 1.518
+      },
+      {
+       "season": 2015,
+       "above": "Oklahoma State 9-2 (#10)",
+       "below": "Houston 11-1 (#11)",
+       "score_gap": 0.267,
+       "schedule_gap": 1.254
+      },
+      {
+       "season": 2017,
+       "above": "Ohio State 11-2 (#5)",
+       "below": "Alabama 10-1 (#7)",
+       "score_gap": 0.432,
+       "schedule_gap": 1.434
+      },
+      {
+       "season": 2018,
+       "above": "Georgia 10-2 (#4)",
+       "below": "Oklahoma 12-1 (#5)",
+       "score_gap": 0.452,
+       "schedule_gap": 1.369
+      },
+      {
+       "season": 2018,
+       "above": "Georgia 10-2 (#4)",
+       "below": "Ohio State 12-1 (#6)",
+       "score_gap": 0.571,
+       "schedule_gap": 1.483
+      },
+      {
+       "season": 2019,
+       "above": "Georgia 10-2 (#5)",
+       "below": "Memphis 11-1 (#8)",
+       "score_gap": 0.173,
+       "schedule_gap": 1.132
+      },
+      {
+       "season": 2019,
+       "above": "Georgia 10-2 (#5)",
+       "below": "App State 11-1 (#17)",
+       "score_gap": 0.682,
+       "schedule_gap": 1.662
+      },
+      {
+       "season": 2019,
+       "above": "Georgia 10-2 (#5)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.953,
+       "schedule_gap": 1.919
+      },
+      {
+       "season": 2019,
+       "above": "Penn State 9-2 (#6)",
+       "below": "Memphis 11-1 (#8)",
+       "score_gap": 0.092,
+       "schedule_gap": 1.034
+      },
+      {
+       "season": 2019,
+       "above": "Penn State 9-2 (#6)",
+       "below": "App State 11-1 (#17)",
+       "score_gap": 0.601,
+       "schedule_gap": 1.564
+      },
+      {
+       "season": 2019,
+       "above": "Penn State 9-2 (#6)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.872,
+       "schedule_gap": 1.82
+      },
+      {
+       "season": 2019,
+       "above": "Baylor 10-2 (#7)",
+       "below": "Memphis 11-1 (#8)",
+       "score_gap": 0.049,
+       "schedule_gap": 1.028
+      },
+      {
+       "season": 2019,
+       "above": "Baylor 10-2 (#7)",
+       "below": "App State 11-1 (#17)",
+       "score_gap": 0.559,
+       "schedule_gap": 1.557
+      },
+      {
+       "season": 2019,
+       "above": "Baylor 10-2 (#7)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.83,
+       "schedule_gap": 1.814
+      },
+      {
+       "season": 2019,
+       "above": "Florida 8-2 (#11)",
+       "below": "App State 11-1 (#17)",
+       "score_gap": 0.354,
+       "schedule_gap": 1.306
+      },
+      {
+       "season": 2019,
+       "above": "Florida 8-2 (#11)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.625,
+       "schedule_gap": 1.562
+      },
+      {
+       "season": 2019,
+       "above": "Oregon 10-2 (#13)",
+       "below": "App State 11-1 (#17)",
+       "score_gap": 0.346,
+       "schedule_gap": 1.312
+      },
+      {
+       "season": 2019,
+       "above": "Oregon 10-2 (#13)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.617,
+       "schedule_gap": 1.569
+      },
+      {
+       "season": 2019,
+       "above": "Alabama 9-2 (#14)",
+       "below": "App State 11-1 (#17)",
+       "score_gap": 0.08,
+       "schedule_gap": 0.988
+      },
+      {
+       "season": 2019,
+       "above": "Alabama 9-2 (#14)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.351,
+       "schedule_gap": 1.245
+      },
+      {
+       "season": 2019,
+       "above": "Utah 10-2 (#15)",
+       "below": "App State 11-1 (#17)",
+       "score_gap": 0.051,
+       "schedule_gap": 1
+      },
+      {
+       "season": 2019,
+       "above": "Utah 10-2 (#15)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.322,
+       "schedule_gap": 1.256
+      },
+      {
+       "season": 2019,
+       "above": "Notre Dame 10-2 (#16)",
+       "below": "App State 11-1 (#17)",
+       "score_gap": 0.023,
+       "schedule_gap": 0.995
+      },
+      {
+       "season": 2019,
+       "above": "Notre Dame 10-2 (#16)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.294,
+       "schedule_gap": 1.252
+      },
+      {
+       "season": 2019,
+       "above": "Minnesota 9-2 (#18)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.031,
+       "schedule_gap": 0.993
+      },
+      {
+       "season": 2021,
+       "above": "Ole Miss 9-2 (#6)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.488,
+       "schedule_gap": 1.45
+      },
+      {
+       "season": 2021,
+       "above": "Ole Miss 9-2 (#6)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.504,
+       "schedule_gap": 1.452
+      },
+      {
+       "season": 2021,
+       "above": "Oklahoma State 10-2 (#7)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.469,
+       "schedule_gap": 1.421
+      },
+      {
+       "season": 2021,
+       "above": "Oklahoma State 10-2 (#7)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.484,
+       "schedule_gap": 1.424
+      },
+      {
+       "season": 2021,
+       "above": "Michigan State 9-2 (#8)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.424,
+       "schedule_gap": 1.389
+      },
+      {
+       "season": 2021,
+       "above": "Michigan State 9-2 (#8)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.44,
+       "schedule_gap": 1.392
+      },
+      {
+       "season": 2021,
+       "above": "Ohio State 10-2 (#9)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.414,
+       "schedule_gap": 1.327
+      },
+      {
+       "season": 2021,
+       "above": "Ohio State 10-2 (#9)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.429,
+       "schedule_gap": 1.33
+      },
+      {
+       "season": 2021,
+       "above": "Baylor 10-2 (#10)",
+       "below": "Louisiana 11-1 (#11)",
+       "score_gap": 0.283,
+       "schedule_gap": 1.254
+      },
+      {
+       "season": 2021,
+       "above": "Baylor 10-2 (#10)",
+       "below": "UTSA 11-1 (#12)",
+       "score_gap": 0.299,
+       "schedule_gap": 1.256
+      }
+     ]
+    },
+    "3 losses over 1 loss": {
+     "pairs": 393,
+     "overrides": 14,
+     "rate": 0.036,
+     "examples": [
+      {
+       "season": 2014,
+       "above": "Ole Miss 8-3 (#8)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 0.846,
+       "schedule_gap": 2.792
+      },
+      {
+       "season": 2014,
+       "above": "UCLA 9-3 (#11)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 0.339,
+       "schedule_gap": 2.354
+      },
+      {
+       "season": 2014,
+       "above": "Missouri 9-3 (#12)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 0.301,
+       "schedule_gap": 2.31
+      },
+      {
+       "season": 2014,
+       "above": "Arizona 10-3 (#13)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 0.291,
+       "schedule_gap": 2.315
+      },
+      {
+       "season": 2014,
+       "above": "Kansas State 8-3 (#14)",
+       "below": "Marshall 11-1 (#15)",
+       "score_gap": 0.216,
+       "schedule_gap": 2.174
+      },
+      {
+       "season": 2019,
+       "above": "Auburn 8-3 (#9)",
+       "below": "App State 11-1 (#17)",
+       "score_gap": 0.47,
+       "schedule_gap": 2.407
+      },
+      {
+       "season": 2019,
+       "above": "Auburn 8-3 (#9)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.741,
+       "schedule_gap": 2.664
+      },
+      {
+       "season": 2019,
+       "above": "Wisconsin 10-3 (#10)",
+       "below": "App State 11-1 (#17)",
+       "score_gap": 0.46,
+       "schedule_gap": 2.408
+      },
+      {
+       "season": 2019,
+       "above": "Wisconsin 10-3 (#10)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.731,
+       "schedule_gap": 2.665
+      },
+      {
+       "season": 2019,
+       "above": "Michigan 9-3 (#12)",
+       "below": "App State 11-1 (#17)",
+       "score_gap": 0.352,
+       "schedule_gap": 2.298
+      },
+      {
+       "season": 2019,
+       "above": "Michigan 9-3 (#12)",
+       "below": "Boise State 11-1 (#19)",
+       "score_gap": 0.623,
+       "schedule_gap": 2.555
+      },
+      {
+       "season": 2025,
+       "above": "Alabama 9-3 (#12)",
+       "below": "James Madison 11-1 (#17)",
+       "score_gap": 0.679,
+       "schedule_gap": 2.653
+      },
+      {
+       "season": 2025,
+       "above": "Texas 9-3 (#15)",
+       "below": "James Madison 11-1 (#17)",
+       "score_gap": 0.266,
+       "schedule_gap": 2.234
+      },
+      {
+       "season": 2025,
+       "above": "USC 9-3 (#16)",
+       "below": "James Madison 11-1 (#17)",
+       "score_gap": 0.029,
+       "schedule_gap": 1.973
+      }
+     ]
+    },
+    "3 losses over unbeaten": {
+     "pairs": 158,
+     "overrides": 0,
+     "rate": 0,
+     "examples": []
+    }
+   },
+   "committee": {
+    "mean_top12_overlap": 10.18,
+    "per_season": [
+     {
+      "season": 2014,
+      "overlap": 9
+     },
+     {
+      "season": 2015,
+      "overlap": 10
+     },
+     {
+      "season": 2016,
+      "overlap": 10
+     },
+     {
+      "season": 2017,
+      "overlap": 11
+     },
+     {
+      "season": 2018,
+      "overlap": 10
+     },
+     {
+      "season": 2019,
+      "overlap": 10
+     },
+     {
+      "season": 2021,
+      "overlap": 10
+     },
+     {
+      "season": 2022,
+      "overlap": 10
+     },
+     {
+      "season": 2023,
+      "overlap": 10
+     },
+     {
+      "season": 2024,
+      "overlap": 10
+     },
+     {
+      "season": 2025,
+      "overlap": 12
+     }
+    ]
+   }
+  }
+ },
+ "implied_loss_unit": [
+  {
+   "loss_aversion": 0.6,
+   "pairwise_agreement_with_B": 0.908
+  },
+  {
+   "loss_aversion": 0.8,
+   "pairwise_agreement_with_B": 0.967
+  },
+  {
+   "loss_aversion": 0.9,
+   "pairwise_agreement_with_B": 0.9748
+  },
+  {
+   "loss_aversion": 1,
+   "pairwise_agreement_with_B": 0.9675
+  },
+  {
+   "loss_aversion": 1.1,
+   "pairwise_agreement_with_B": 0.9551
+  },
+  {
+   "loss_aversion": 1.2,
+   "pairwise_agreement_with_B": 0.944
+  },
+  {
+   "loss_aversion": 1.4,
+   "pairwise_agreement_with_B": 0.9204
+  },
+  {
+   "loss_aversion": 1.7,
+   "pairwise_agreement_with_B": 0.899
+  },
+  {
+   "loss_aversion": 2,
+   "pairwise_agreement_with_B": 0.8851
+  }
+ ],
+ "stability": {
+  "benchmark_A": {
+   "#8 vs #12": {
+    "top12_overlap": 11.91,
+    "spearman_top25": 0.992
+   },
+   "#12 vs #16": {
+    "top12_overlap": 11.27,
+    "spearman_top25": 0.993
+   },
+   "#4 vs #12": {
+    "top12_overlap": 11.18,
+    "spearman_top25": 0.953
+   },
+   "#12 vs #25": {
+    "top12_overlap": 11.27,
+    "spearman_top25": 0.982
+   },
+   "#12 reference -1 SD vs +1 SD": {
+    "top12_overlap": 11.36
+   }
+  },
+  "benchmark_B": {
+   "#8 vs #12": {
+    "top12_overlap": 11.91,
+    "spearman_top25": 0.997
+   },
+   "#12 vs #16": {
+    "top12_overlap": 11.82,
+    "spearman_top25": 0.996
+   },
+   "#4 vs #12": {
+    "top12_overlap": 11.73,
+    "spearman_top25": 0.99
+   },
+   "#12 vs #25": {
+    "top12_overlap": 11.45,
+    "spearman_top25": 0.991
+   },
+   "#12 reference -1 SD vs +1 SD": {
+    "top12_overlap": 11.82
+   }
+  },
+  "opponent_uncertainty": {
+   "A_top12_overlap": 10.94,
+   "B_top12_overlap": 10.94,
+   "A_mean_abs_rank_move_top25": 1.88,
+   "B_mean_abs_rank_move_top25": 1.94
+  }
+ },
+ "manipulation": {
+  "max_gain_all_wins_by_70": 0,
+  "mean_gain_all_wins_by_70": 0,
+  "max_gain_extra_cupcake_A": 0.003,
+  "max_gain_extra_cupcake_B_rarity": 0.001
+ },
+ "leakage": {
+  "snapshots_checked": 8,
+  "snapshots_changed_by_future_results": 0,
+  "reference_strength_uses": {
+   "2014": "2014-2016 (in-sample)",
+   "2015": "2014-2016 (in-sample)",
+   "2016": "2014-2016 (in-sample)",
+   "2017": "2014-2016",
+   "2018": "2014-2017",
+   "2019": "2014-2018",
+   "2021": "2014-2019",
+   "2022": "2014-2021",
+   "2023": "2014-2022",
+   "2024": "2014-2023",
+   "2025": "2014-2024"
+  }
+ },
+ "early_season": [
+  {
+   "through_week": 3,
+   "top12_overlap_with_final_A": 4.25,
+   "weekly_abs_rank_move_top25_A": 13.13,
+   "weekly_abs_rank_move_top25_B": 12.89,
+   "top12_teams_with_few_games": 6.5
+  },
+  {
+   "through_week": 5,
+   "top12_overlap_with_final_A": 8,
+   "weekly_abs_rank_move_top25_A": 7.25,
+   "weekly_abs_rank_move_top25_B": 6.87,
+   "top12_teams_with_few_games": 0
+  },
+  {
+   "through_week": 7,
+   "top12_overlap_with_final_A": 7.75,
+   "weekly_abs_rank_move_top25_A": 4.99,
+   "weekly_abs_rank_move_top25_B": 4.8,
+   "top12_teams_with_few_games": 0.25
+  },
+  {
+   "through_week": 9,
+   "top12_overlap_with_final_A": 8.75,
+   "weekly_abs_rank_move_top25_A": 4.7,
+   "weekly_abs_rank_move_top25_B": 4.48,
+   "top12_teams_with_few_games": 2
+  },
+  {
+   "through_week": 11,
+   "top12_overlap_with_final_A": 9.75,
+   "weekly_abs_rank_move_top25_A": 2.99,
+   "weekly_abs_rank_move_top25_B": 2.75,
+   "top12_teams_with_few_games": 2.25
+  }
+ ],
+ "fairness": {
+  "model_A_alpha0": {
+   "#4-caliber team": {
+    "A_hardest_minus_easiest_quintile_loss_units_per_12": 0.586,
+    "B_hardest_minus_easiest_quintile_rarity": 0.222
+   },
+   "#12-caliber team": {
+    "A_hardest_minus_easiest_quintile_loss_units_per_12": 0.079,
+    "B_hardest_minus_easiest_quintile_rarity": 0.057
+   },
+   "#25-caliber team": {
+    "A_hardest_minus_easiest_quintile_loss_units_per_12": -0.187,
+    "B_hardest_minus_easiest_quintile_rarity": 0.012
+   }
+  },
+  "convincingness_0_05": {
+   "#4-caliber team": {
+    "A_hardest_minus_easiest_quintile_loss_units_per_12": 0.607,
+    "B_hardest_minus_easiest_quintile_rarity": 0.221
+   },
+   "#12-caliber team": {
+    "A_hardest_minus_easiest_quintile_loss_units_per_12": 0.118,
+    "B_hardest_minus_easiest_quintile_rarity": 0.056
+   },
+   "#25-caliber team": {
+    "A_hardest_minus_easiest_quintile_loss_units_per_12": -0.139,
+    "B_hardest_minus_easiest_quintile_rarity": 0.012
+   }
+  },
+  "loss_aversion_1_5": {
+   "#4-caliber team": {
+    "A_hardest_minus_easiest_quintile_loss_units_per_12": -0.205,
+    "B_hardest_minus_easiest_quintile_rarity": 0.243
+   },
+   "#12-caliber team": {
+    "A_hardest_minus_easiest_quintile_loss_units_per_12": -1.024,
+    "B_hardest_minus_easiest_quintile_rarity": 0.062
+   },
+   "#25-caliber team": {
+    "A_hardest_minus_easiest_quintile_loss_units_per_12": -1.467,
+    "B_hardest_minus_easiest_quintile_rarity": 0.013
+   }
+  },
+  "top4_reference": {
+   "#4-caliber team": {
+    "A_hardest_minus_easiest_quintile_loss_units_per_12": 0.008,
+    "B_hardest_minus_easiest_quintile_rarity": 0.086
+   },
+   "#12-caliber team": {
+    "A_hardest_minus_easiest_quintile_loss_units_per_12": -0.506,
+    "B_hardest_minus_easiest_quintile_rarity": 0.008
+   },
+   "#25-caliber team": {
+    "A_hardest_minus_easiest_quintile_loss_units_per_12": -0.771,
+    "B_hardest_minus_easiest_quintile_rarity": -0.003
+   }
+  }
+ },
+ "simulation": {
+  "model_A_alpha0": {
+   "simulated_seasons": 1650,
+   "one_loss_over_unbeaten_rate": 0.189,
+   "when_overridden_one_loss_team_truly_stronger": 0.765,
+   "when_not_overridden_unbeaten_truly_stronger": 0.723,
+   "two_loss_over_unbeaten_per_season": 0.323,
+   "when_two_loss_over_unbeaten_truly_stronger": 0.786
+  },
+  "model_B": {
+   "simulated_seasons": 1650,
+   "one_loss_over_unbeaten_rate": 0.143,
+   "when_overridden_one_loss_team_truly_stronger": 0.784,
+   "when_not_overridden_unbeaten_truly_stronger": 0.699,
+   "two_loss_over_unbeaten_per_season": 0.175,
+   "when_two_loss_over_unbeaten_truly_stronger": 0.761
+  },
+  "convincingness_0_05": {
+   "simulated_seasons": 1650,
+   "one_loss_over_unbeaten_rate": 0.193,
+   "when_overridden_one_loss_team_truly_stronger": 0.768,
+   "when_not_overridden_unbeaten_truly_stronger": 0.726,
+   "two_loss_over_unbeaten_per_season": 0.359,
+   "when_two_loss_over_unbeaten_truly_stronger": 0.782
+  },
+  "loss_aversion_1_5": {
+   "simulated_seasons": 1650,
+   "one_loss_over_unbeaten_rate": 0.104,
+   "when_overridden_one_loss_team_truly_stronger": 0.807,
+   "when_not_overridden_unbeaten_truly_stronger": 0.682,
+   "two_loss_over_unbeaten_per_season": 0.012,
+   "when_two_loss_over_unbeaten_truly_stronger": 0.895
+  },
+  "top4_reference": {
+   "simulated_seasons": 1650,
+   "one_loss_over_unbeaten_rate": 0.12,
+   "when_overridden_one_loss_team_truly_stronger": 0.775,
+   "when_not_overridden_unbeaten_truly_stronger": 0.687,
+   "two_loss_over_unbeaten_per_season": 0.049,
+   "when_two_loss_over_unbeaten_truly_stronger": 0.481
+  }
+ },
+ "sweep": [
+  {
+   "benchmark_rank": 4,
+   "convincingness_weight": 0,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.157,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.078,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 4,
+   "convincingness_weight": 0,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.096,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.026,
+   "committee_top12_overlap": 10
+  },
+  {
+   "benchmark_rank": 4,
+   "convincingness_weight": 0,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.06,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.015,
+   "committee_top12_overlap": 9.82
+  },
+  {
+   "benchmark_rank": 4,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.157,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.091,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 4,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.108,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.033,
+   "committee_top12_overlap": 10
+  },
+  {
+   "benchmark_rank": 4,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.06,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.015,
+   "committee_top12_overlap": 9.91
+  },
+  {
+   "benchmark_rank": 4,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.157,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.098,
+   "committee_top12_overlap": 10.45
+  },
+  {
+   "benchmark_rank": 4,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.12,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.041,
+   "committee_top12_overlap": 10.09
+  },
+  {
+   "benchmark_rank": 4,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.06,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.015,
+   "committee_top12_overlap": 10.09
+  },
+  {
+   "benchmark_rank": 4,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.169,
+   "two_over_unbeaten": 0.01,
+   "two_over_one": 0.109,
+   "committee_top12_overlap": 10.18
+  },
+  {
+   "benchmark_rank": 4,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.12,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.057,
+   "committee_top12_overlap": 10
+  },
+  {
+   "benchmark_rank": 4,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.072,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.024,
+   "committee_top12_overlap": 9.91
+  },
+  {
+   "benchmark_rank": 8,
+   "convincingness_weight": 0,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.217,
+   "two_over_unbeaten": 0.011,
+   "two_over_one": 0.116,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 8,
+   "convincingness_weight": 0,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.157,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.073,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 8,
+   "convincingness_weight": 0,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.145,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.028,
+   "committee_top12_overlap": 10.09
+  },
+  {
+   "benchmark_rank": 8,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.217,
+   "two_over_unbeaten": 0.011,
+   "two_over_one": 0.125,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 8,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.157,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.087,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 8,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.133,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.039,
+   "committee_top12_overlap": 10.18
+  },
+  {
+   "benchmark_rank": 8,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.229,
+   "two_over_unbeaten": 0.027,
+   "two_over_one": 0.134,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 8,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.157,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.094,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 8,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.133,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.046,
+   "committee_top12_overlap": 10.18
+  },
+  {
+   "benchmark_rank": 8,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.229,
+   "two_over_unbeaten": 0.049,
+   "two_over_one": 0.162,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 8,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.169,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.107,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 8,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.145,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.061,
+   "committee_top12_overlap": 10.09
+  },
+  {
+   "benchmark_rank": 12,
+   "convincingness_weight": 0,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.229,
+   "two_over_unbeaten": 0.028,
+   "two_over_one": 0.137,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 12,
+   "convincingness_weight": 0,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.193,
+   "two_over_unbeaten": 0.01,
+   "two_over_one": 0.1,
+   "committee_top12_overlap": 10.18
+  },
+  {
+   "benchmark_rank": 12,
+   "convincingness_weight": 0,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.157,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.048,
+   "committee_top12_overlap": 10.09
+  },
+  {
+   "benchmark_rank": 12,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.229,
+   "two_over_unbeaten": 0.04,
+   "two_over_one": 0.148,
+   "committee_top12_overlap": 10.18
+  },
+  {
+   "benchmark_rank": 12,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.193,
+   "two_over_unbeaten": 0.01,
+   "two_over_one": 0.107,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 12,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.157,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.053,
+   "committee_top12_overlap": 10.09
+  },
+  {
+   "benchmark_rank": 12,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.229,
+   "two_over_unbeaten": 0.045,
+   "two_over_one": 0.163,
+   "committee_top12_overlap": 10.18
+  },
+  {
+   "benchmark_rank": 12,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.205,
+   "two_over_unbeaten": 0.01,
+   "two_over_one": 0.109,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 12,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.157,
+   "two_over_unbeaten": 0,
+   "two_over_one": 0.068,
+   "committee_top12_overlap": 10.09
+  },
+  {
+   "benchmark_rank": 12,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.241,
+   "two_over_unbeaten": 0.057,
+   "two_over_one": 0.175,
+   "committee_top12_overlap": 10.45
+  },
+  {
+   "benchmark_rank": 12,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.193,
+   "two_over_unbeaten": 0.011,
+   "two_over_one": 0.121,
+   "committee_top12_overlap": 10.45
+  },
+  {
+   "benchmark_rank": 12,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.157,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.079,
+   "committee_top12_overlap": 10.18
+  },
+  {
+   "benchmark_rank": 16,
+   "convincingness_weight": 0,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.229,
+   "two_over_unbeaten": 0.034,
+   "two_over_one": 0.165,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 16,
+   "convincingness_weight": 0,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.205,
+   "two_over_unbeaten": 0.01,
+   "two_over_one": 0.114,
+   "committee_top12_overlap": 10.45
+  },
+  {
+   "benchmark_rank": 16,
+   "convincingness_weight": 0,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.169,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.068,
+   "committee_top12_overlap": 10.09
+  },
+  {
+   "benchmark_rank": 16,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.241,
+   "two_over_unbeaten": 0.045,
+   "two_over_one": 0.175,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 16,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.205,
+   "two_over_unbeaten": 0.011,
+   "two_over_one": 0.115,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 16,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.169,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.075,
+   "committee_top12_overlap": 10.09
+  },
+  {
+   "benchmark_rank": 16,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.241,
+   "two_over_unbeaten": 0.056,
+   "two_over_one": 0.17,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 16,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.205,
+   "two_over_unbeaten": 0.011,
+   "two_over_one": 0.119,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 16,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.169,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.077,
+   "committee_top12_overlap": 10.09
+  },
+  {
+   "benchmark_rank": 16,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.241,
+   "two_over_unbeaten": 0.064,
+   "two_over_one": 0.186,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 16,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.205,
+   "two_over_unbeaten": 0.016,
+   "two_over_one": 0.131,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 16,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.181,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.1,
+   "committee_top12_overlap": 10.18
+  },
+  {
+   "benchmark_rank": 25,
+   "convincingness_weight": 0,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.241,
+   "two_over_unbeaten": 0.046,
+   "two_over_one": 0.186,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 25,
+   "convincingness_weight": 0,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.217,
+   "two_over_unbeaten": 0.011,
+   "two_over_one": 0.123,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 25,
+   "convincingness_weight": 0,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.193,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.092,
+   "committee_top12_overlap": 10.09
+  },
+  {
+   "benchmark_rank": 25,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.241,
+   "two_over_unbeaten": 0.051,
+   "two_over_one": 0.194,
+   "committee_top12_overlap": 10.27
+  },
+  {
+   "benchmark_rank": 25,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.217,
+   "two_over_unbeaten": 0.016,
+   "two_over_one": 0.132,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 25,
+   "convincingness_weight": 0.05,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.193,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.094,
+   "committee_top12_overlap": 10.18
+  },
+  {
+   "benchmark_rank": 25,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.241,
+   "two_over_unbeaten": 0.058,
+   "two_over_one": 0.195,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 25,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.217,
+   "two_over_unbeaten": 0.017,
+   "two_over_one": 0.134,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 25,
+   "convincingness_weight": 0.1,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.205,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.094,
+   "committee_top12_overlap": 10.18
+  },
+  {
+   "benchmark_rank": 25,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.241,
+   "two_over_unbeaten": 0.072,
+   "two_over_one": 0.208,
+   "committee_top12_overlap": 10.45
+  },
+  {
+   "benchmark_rank": 25,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1.25,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.229,
+   "two_over_unbeaten": 0.028,
+   "two_over_one": 0.148,
+   "committee_top12_overlap": 10.36
+  },
+  {
+   "benchmark_rank": 25,
+   "convincingness_weight": 0.2,
+   "loss_aversion": 1.5,
+   "performance_cap": 28,
+   "one_over_unbeaten": 0.205,
+   "two_over_unbeaten": 0.005,
+   "two_over_one": 0.112,
+   "committee_top12_overlap": 10.27
+  }
+ ],
+ "season_tables": {
+  "2014": [
+   {
+    "rank": 1,
+    "team": "Alabama",
+    "record": "11-1",
+    "score": 3.698,
+    "losses": -1,
+    "schedule": 4.698,
+    "performance": 0,
+    "reference_wins": 7.3,
+    "match_probability": 0.0149,
+    "rarity": 1.828,
+    "rarity_rank": 1
+   },
+   {
+    "rank": 2,
+    "team": "Florida State",
+    "record": "12-0",
+    "score": 3.109,
+    "losses": 0,
+    "schedule": 3.109,
+    "performance": 0,
+    "reference_wins": 8.89,
+    "match_probability": 0.0222,
+    "rarity": 1.654,
+    "rarity_rank": 2
+   },
+   {
+    "rank": 3,
+    "team": "Oregon",
+    "record": "11-1",
+    "score": 2.378,
+    "losses": -1,
+    "schedule": 3.378,
+    "performance": 0,
+    "reference_wins": 8.62,
+    "match_probability": 0.0923,
+    "rarity": 1.035,
+    "rarity_rank": 3
+   },
+   {
+    "rank": 4,
+    "team": "Ohio State",
+    "record": "12-1",
+    "score": 2.146,
+    "losses": -1,
+    "schedule": 3.146,
+    "performance": 0,
+    "reference_wins": 9.85,
+    "match_probability": 0.1059,
+    "rarity": 0.975,
+    "rarity_rank": 4
+   },
+   {
+    "rank": 5,
+    "team": "TCU",
+    "record": "10-1",
+    "score": 1.993,
+    "losses": -1,
+    "schedule": 2.993,
+    "performance": 0,
+    "reference_wins": 8.01,
+    "match_probability": 0.1217,
+    "rarity": 0.915,
+    "rarity_rank": 6
+   },
+   {
+    "rank": 6,
+    "team": "Baylor",
+    "record": "10-1",
+    "score": 1.957,
+    "losses": -1,
+    "schedule": 2.957,
+    "performance": 0,
+    "reference_wins": 8.04,
+    "match_probability": 0.1154,
+    "rarity": 0.938,
+    "rarity_rank": 5
+   },
+   {
+    "rank": 7,
+    "team": "Mississippi State",
+    "record": "9-2",
+    "score": 1.768,
+    "losses": -2,
+    "schedule": 3.768,
+    "performance": 0,
+    "reference_wins": 7.23,
+    "match_probability": 0.1675,
+    "rarity": 0.776,
+    "rarity_rank": 7
+   },
+   {
+    "rank": 8,
+    "team": "Ole Miss",
+    "record": "8-3",
+    "score": 1.276,
+    "losses": -3,
+    "schedule": 4.276,
+    "performance": 0,
+    "reference_wins": 6.72,
+    "match_probability": 0.3073,
+    "rarity": 0.512,
+    "rarity_rank": 8
+   },
+   {
+    "rank": 9,
+    "team": "Auburn",
+    "record": "7-4",
+    "score": 1.159,
+    "losses": -4,
+    "schedule": 5.159,
+    "performance": 0,
+    "reference_wins": 5.84,
+    "match_probability": 0.3248,
+    "rarity": 0.488,
+    "rarity_rank": 9
+   },
+   {
+    "rank": 10,
+    "team": "UCLA",
+    "record": "9-3",
+    "score": 0.837,
+    "losses": -3,
+    "schedule": 3.837,
+    "performance": 0,
+    "reference_wins": 8.16,
+    "match_probability": 0.4271,
+    "rarity": 0.369,
+    "rarity_rank": 11
+   },
+   {
+    "rank": 11,
+    "team": "Michigan State",
+    "record": "9-2",
+    "score": 0.803,
+    "losses": -2,
+    "schedule": 2.803,
+    "performance": 0,
+    "reference_wins": 8.2,
+    "match_probability": 0.4195,
+    "rarity": 0.377,
+    "rarity_rank": 10
+   },
+   {
+    "rank": 12,
+    "team": "Arizona",
+    "record": "10-3",
+    "score": 0.799,
+    "losses": -3,
+    "schedule": 3.799,
+    "performance": 0,
+    "reference_wins": 9.2,
+    "match_probability": 0.4278,
+    "rarity": 0.369,
+    "rarity_rank": 12
+   },
+   {
+    "rank": 13,
+    "team": "Missouri",
+    "record": "9-3",
+    "score": 0.794,
+    "losses": -3,
+    "schedule": 3.794,
+    "performance": 0,
+    "reference_wins": 8.21,
+    "match_probability": 0.4297,
+    "rarity": 0.367,
+    "rarity_rank": 13
+   },
+   {
+    "rank": 14,
+    "team": "Kansas State",
+    "record": "8-3",
+    "score": 0.657,
+    "losses": -3,
+    "schedule": 3.657,
+    "performance": 0,
+    "reference_wins": 7.34,
+    "match_probability": 0.4572,
+    "rarity": 0.34,
+    "rarity_rank": 14
+   },
+   {
+    "rank": 15,
+    "team": "Marshall",
+    "record": "11-1",
+    "score": 0.484,
+    "losses": -1,
+    "schedule": 1.484,
+    "performance": 0,
+    "reference_wins": 10.52,
+    "match_probability": 0.5479,
+    "rarity": 0.261,
+    "rarity_rank": 17
+   },
+   {
+    "rank": 16,
+    "team": "Georgia Tech",
+    "record": "9-3",
+    "score": 0.382,
+    "losses": -3,
+    "schedule": 3.382,
+    "performance": 0,
+    "reference_wins": 8.62,
+    "match_probability": 0.55,
+    "rarity": 0.26,
+    "rarity_rank": 18
+   }
+  ],
+  "2015": [
+   {
+    "rank": 1,
+    "team": "Clemson",
+    "record": "12-0",
+    "score": 3.562,
+    "losses": 0,
+    "schedule": 3.562,
+    "performance": 0,
+    "reference_wins": 8.44,
+    "match_probability": 0.0111,
+    "rarity": 1.956,
+    "rarity_rank": 1
+   },
+   {
+    "rank": 2,
+    "team": "Alabama",
+    "record": "11-1",
+    "score": 2.935,
+    "losses": -1,
+    "schedule": 3.935,
+    "performance": 0,
+    "reference_wins": 8.07,
+    "match_probability": 0.0517,
+    "rarity": 1.286,
+    "rarity_rank": 2
+   },
+   {
+    "rank": 3,
+    "team": "Oklahoma",
+    "record": "11-1",
+    "score": 2.655,
+    "losses": -1,
+    "schedule": 3.655,
+    "performance": 0,
+    "reference_wins": 8.34,
+    "match_probability": 0.0557,
+    "rarity": 1.254,
+    "rarity_rank": 3
+   },
+   {
+    "rank": 4,
+    "team": "Michigan State",
+    "record": "12-1",
+    "score": 2.577,
+    "losses": -1,
+    "schedule": 3.577,
+    "performance": 0,
+    "reference_wins": 9.42,
+    "match_probability": 0.0674,
+    "rarity": 1.171,
+    "rarity_rank": 4
+   },
+   {
+    "rank": 5,
+    "team": "Ohio State",
+    "record": "11-1",
+    "score": 1.739,
+    "losses": -1,
+    "schedule": 2.739,
+    "performance": 0,
+    "reference_wins": 9.26,
+    "match_probability": 0.1818,
+    "rarity": 0.74,
+    "rarity_rank": 5
+   },
+   {
+    "rank": 6,
+    "team": "Iowa",
+    "record": "11-1",
+    "score": 1.691,
+    "losses": -1,
+    "schedule": 2.691,
+    "performance": 0,
+    "reference_wins": 9.31,
+    "match_probability": 0.1907,
+    "rarity": 0.72,
+    "rarity_rank": 6
+   },
+   {
+    "rank": 7,
+    "team": "Stanford",
+    "record": "11-2",
+    "score": 1.682,
+    "losses": -2,
+    "schedule": 3.682,
+    "performance": 0,
+    "reference_wins": 9.32,
+    "match_probability": 0.2212,
+    "rarity": 0.655,
+    "rarity_rank": 7
+   },
+   {
+    "rank": 8,
+    "team": "Notre Dame",
+    "record": "10-2",
+    "score": 1.61,
+    "losses": -2,
+    "schedule": 3.61,
+    "performance": 0,
+    "reference_wins": 8.39,
+    "match_probability": 0.2225,
+    "rarity": 0.653,
+    "rarity_rank": 8
+   },
+   {
+    "rank": 9,
+    "team": "TCU",
+    "record": "9-2",
+    "score": 1.536,
+    "losses": -2,
+    "schedule": 3.536,
+    "performance": 0,
+    "reference_wins": 7.46,
+    "match_probability": 0.2232,
+    "rarity": 0.651,
+    "rarity_rank": 9
+   },
+   {
+    "rank": 10,
+    "team": "Oklahoma State",
+    "record": "9-2",
+    "score": 1.272,
+    "losses": -2,
+    "schedule": 3.272,
+    "performance": 0,
+    "reference_wins": 7.73,
+    "match_probability": 0.2933,
+    "rarity": 0.533,
+    "rarity_rank": 10
+   },
+   {
+    "rank": 11,
+    "team": "Houston",
+    "record": "11-1",
+    "score": 1.018,
+    "losses": -1,
+    "schedule": 2.018,
+    "performance": 0,
+    "reference_wins": 9.98,
+    "match_probability": 0.3583,
+    "rarity": 0.446,
+    "rarity_rank": 11
+   },
+   {
+    "rank": 12,
+    "team": "Northwestern",
+    "record": "9-2",
+    "score": 0.932,
+    "losses": -2,
+    "schedule": 2.932,
+    "performance": 0,
+    "reference_wins": 8.07,
+    "match_probability": 0.3908,
+    "rarity": 0.408,
+    "rarity_rank": 12
+   },
+   {
+    "rank": 13,
+    "team": "North Carolina",
+    "record": "9-2",
+    "score": 0.929,
+    "losses": -2,
+    "schedule": 2.929,
+    "performance": 0,
+    "reference_wins": 8.07,
+    "match_probability": 0.3932,
+    "rarity": 0.405,
+    "rarity_rank": 13
+   },
+   {
+    "rank": 14,
+    "team": "Florida State",
+    "record": "9-2",
+    "score": 0.843,
+    "losses": -2,
+    "schedule": 2.843,
+    "performance": 0,
+    "reference_wins": 8.16,
+    "match_probability": 0.4158,
+    "rarity": 0.381,
+    "rarity_rank": 14
+   },
+   {
+    "rank": 15,
+    "team": "Navy",
+    "record": "9-2",
+    "score": 0.8,
+    "losses": -2,
+    "schedule": 2.8,
+    "performance": 0,
+    "reference_wins": 8.2,
+    "match_probability": 0.4204,
+    "rarity": 0.376,
+    "rarity_rank": 15
+   },
+   {
+    "rank": 16,
+    "team": "Florida",
+    "record": "10-3",
+    "score": 0.545,
+    "losses": -3,
+    "schedule": 3.545,
+    "performance": 0,
+    "reference_wins": 9.46,
+    "match_probability": 0.5015,
+    "rarity": 0.3,
+    "rarity_rank": 16
+   }
+  ],
+  "2016": [
+   {
+    "rank": 1,
+    "team": "Alabama",
+    "record": "12-0",
+    "score": 3.865,
+    "losses": 0,
+    "schedule": 3.865,
+    "performance": 0,
+    "reference_wins": 8.13,
+    "match_probability": 0.0066,
+    "rarity": 2.181,
+    "rarity_rank": 1
+   },
+   {
+    "rank": 2,
+    "team": "Ohio State",
+    "record": "11-1",
+    "score": 2.909,
+    "losses": -1,
+    "schedule": 3.909,
+    "performance": 0,
+    "reference_wins": 8.09,
+    "match_probability": 0.0363,
+    "rarity": 1.44,
+    "rarity_rank": 2
+   },
+   {
+    "rank": 3,
+    "team": "Clemson",
+    "record": "11-1",
+    "score": 2.386,
+    "losses": -1,
+    "schedule": 3.386,
+    "performance": 0,
+    "reference_wins": 8.61,
+    "match_probability": 0.0852,
+    "rarity": 1.07,
+    "rarity_rank": 3
+   },
+   {
+    "rank": 4,
+    "team": "Washington",
+    "record": "11-1",
+    "score": 2.247,
+    "losses": -1,
+    "schedule": 3.247,
+    "performance": 0,
+    "reference_wins": 8.75,
+    "match_probability": 0.0959,
+    "rarity": 1.018,
+    "rarity_rank": 4
+   },
+   {
+    "rank": 5,
+    "team": "Penn State",
+    "record": "11-2",
+    "score": 2.144,
+    "losses": -2,
+    "schedule": 4.144,
+    "performance": 0,
+    "reference_wins": 8.86,
+    "match_probability": 0.116,
+    "rarity": 0.936,
+    "rarity_rank": 5
+   },
+   {
+    "rank": 6,
+    "team": "Western Michigan",
+    "record": "12-0",
+    "score": 1.611,
+    "losses": 0,
+    "schedule": 1.611,
+    "performance": 0,
+    "reference_wins": 10.39,
+    "match_probability": 0.1623,
+    "rarity": 0.79,
+    "rarity_rank": 6
+   },
+   {
+    "rank": 7,
+    "team": "Michigan",
+    "record": "10-2",
+    "score": 1.535,
+    "losses": -2,
+    "schedule": 3.535,
+    "performance": 0,
+    "reference_wins": 8.46,
+    "match_probability": 0.2204,
+    "rarity": 0.657,
+    "rarity_rank": 7
+   },
+   {
+    "rank": 8,
+    "team": "Wisconsin",
+    "record": "10-3",
+    "score": 1.501,
+    "losses": -3,
+    "schedule": 4.501,
+    "performance": 0,
+    "reference_wins": 8.5,
+    "match_probability": 0.2407,
+    "rarity": 0.618,
+    "rarity_rank": 8
+   },
+   {
+    "rank": 9,
+    "team": "Colorado",
+    "record": "9-3",
+    "score": 1.24,
+    "losses": -3,
+    "schedule": 4.24,
+    "performance": 0,
+    "reference_wins": 7.76,
+    "match_probability": 0.3073,
+    "rarity": 0.512,
+    "rarity_rank": 9
+   },
+   {
+    "rank": 10,
+    "team": "Oklahoma",
+    "record": "10-2",
+    "score": 1.22,
+    "losses": -2,
+    "schedule": 3.22,
+    "performance": 0,
+    "reference_wins": 8.78,
+    "match_probability": 0.3124,
+    "rarity": 0.505,
+    "rarity_rank": 10
+   },
+   {
+    "rank": 11,
+    "team": "USC",
+    "record": "9-3",
+    "score": 0.926,
+    "losses": -3,
+    "schedule": 3.926,
+    "performance": 0,
+    "reference_wins": 8.07,
+    "match_probability": 0.3882,
+    "rarity": 0.411,
+    "rarity_rank": 11
+   },
+   {
+    "rank": 12,
+    "team": "Stanford",
+    "record": "9-3",
+    "score": 0.609,
+    "losses": -3,
+    "schedule": 3.609,
+    "performance": 0,
+    "reference_wins": 8.39,
+    "match_probability": 0.4846,
+    "rarity": 0.315,
+    "rarity_rank": 12
+   },
+   {
+    "rank": 13,
+    "team": "West Virginia",
+    "record": "9-2",
+    "score": 0.427,
+    "losses": -2,
+    "schedule": 2.427,
+    "performance": 0,
+    "reference_wins": 8.57,
+    "match_probability": 0.5462,
+    "rarity": 0.263,
+    "rarity_rank": 13
+   },
+   {
+    "rank": 14,
+    "team": "Florida State",
+    "record": "8-3",
+    "score": 0.33,
+    "losses": -3,
+    "schedule": 3.33,
+    "performance": 0,
+    "reference_wins": 7.67,
+    "match_probability": 0.561,
+    "rarity": 0.251,
+    "rarity_rank": 14
+   },
+   {
+    "rank": 15,
+    "team": "Nebraska",
+    "record": "9-3",
+    "score": 0.207,
+    "losses": -3,
+    "schedule": 3.207,
+    "performance": 0,
+    "reference_wins": 8.79,
+    "match_probability": 0.6053,
+    "rarity": 0.218,
+    "rarity_rank": 15
+   },
+   {
+    "rank": 16,
+    "team": "South Florida",
+    "record": "9-2",
+    "score": 0.087,
+    "losses": -2,
+    "schedule": 2.087,
+    "performance": 0,
+    "reference_wins": 8.91,
+    "match_probability": 0.655,
+    "rarity": 0.184,
+    "rarity_rank": 17
+   }
+  ],
+  "2017": [
+   {
+    "rank": 1,
+    "team": "Oklahoma",
+    "record": "12-1",
+    "score": 3.16,
+    "losses": -1,
+    "schedule": 4.16,
+    "performance": 0,
+    "reference_wins": 8.84,
+    "match_probability": 0.0251,
+    "rarity": 1.6,
+    "rarity_rank": 1
+   },
+   {
+    "rank": 2,
+    "team": "Clemson",
+    "record": "11-1",
+    "score": 3.097,
+    "losses": -1,
+    "schedule": 4.097,
+    "performance": 0,
+    "reference_wins": 7.9,
+    "match_probability": 0.0368,
+    "rarity": 1.434,
+    "rarity_rank": 2
+   },
+   {
+    "rank": 3,
+    "team": "Georgia",
+    "record": "11-1",
+    "score": 2.837,
+    "losses": -1,
+    "schedule": 3.837,
+    "performance": 0,
+    "reference_wins": 8.16,
+    "match_probability": 0.0388,
+    "rarity": 1.412,
+    "rarity_rank": 3
+   },
+   {
+    "rank": 4,
+    "team": "Wisconsin",
+    "record": "12-1",
+    "score": 2.425,
+    "losses": -1,
+    "schedule": 3.425,
+    "performance": 0,
+    "reference_wins": 9.57,
+    "match_probability": 0.0843,
+    "rarity": 1.074,
+    "rarity_rank": 5
+   },
+   {
+    "rank": 5,
+    "team": "Ohio State",
+    "record": "11-2",
+    "score": 2.21,
+    "losses": -2,
+    "schedule": 4.21,
+    "performance": 0,
+    "reference_wins": 8.79,
+    "match_probability": 0.1196,
+    "rarity": 0.922,
+    "rarity_rank": 6
+   },
+   {
+    "rank": 6,
+    "team": "UCF",
+    "record": "11-0",
+    "score": 2.122,
+    "losses": 0,
+    "schedule": 2.122,
+    "performance": 0,
+    "reference_wins": 8.88,
+    "match_probability": 0.0808,
+    "rarity": 1.092,
+    "rarity_rank": 4
+   },
+   {
+    "rank": 7,
+    "team": "Alabama",
+    "record": "10-1",
+    "score": 1.776,
+    "losses": -1,
+    "schedule": 2.776,
+    "performance": 0,
+    "reference_wins": 8.22,
+    "match_probability": 0.1582,
+    "rarity": 0.801,
+    "rarity_rank": 7
+   },
+   {
+    "rank": 8,
+    "team": "USC",
+    "record": "11-2",
+    "score": 1.666,
+    "losses": -2,
+    "schedule": 3.666,
+    "performance": 0,
+    "reference_wins": 9.33,
+    "match_probability": 0.2269,
+    "rarity": 0.644,
+    "rarity_rank": 9
+   },
+   {
+    "rank": 9,
+    "team": "Auburn",
+    "record": "9-3",
+    "score": 1.658,
+    "losses": -3,
+    "schedule": 4.658,
+    "performance": 0,
+    "reference_wins": 7.34,
+    "match_probability": 0.2079,
+    "rarity": 0.682,
+    "rarity_rank": 8
+   },
+   {
+    "rank": 10,
+    "team": "Miami",
+    "record": "9-2",
+    "score": 1.344,
+    "losses": -2,
+    "schedule": 3.344,
+    "performance": 0,
+    "reference_wins": 7.66,
+    "match_probability": 0.2823,
+    "rarity": 0.549,
+    "rarity_rank": 11
+   },
+   {
+    "rank": 11,
+    "team": "Penn State",
+    "record": "10-2",
+    "score": 1.313,
+    "losses": -2,
+    "schedule": 3.313,
+    "performance": 0,
+    "reference_wins": 8.69,
+    "match_probability": 0.2756,
+    "rarity": 0.56,
+    "rarity_rank": 10
+   },
+   {
+    "rank": 12,
+    "team": "Michigan State",
+    "record": "9-3",
+    "score": 1.074,
+    "losses": -3,
+    "schedule": 4.074,
+    "performance": 0,
+    "reference_wins": 7.93,
+    "match_probability": 0.3473,
+    "rarity": 0.459,
+    "rarity_rank": 12
+   },
+   {
+    "rank": 13,
+    "team": "TCU",
+    "record": "9-3",
+    "score": 1.07,
+    "losses": -3,
+    "schedule": 4.07,
+    "performance": 0,
+    "reference_wins": 7.93,
+    "match_probability": 0.3521,
+    "rarity": 0.453,
+    "rarity_rank": 13
+   },
+   {
+    "rank": 14,
+    "team": "Notre Dame",
+    "record": "9-3",
+    "score": 0.9,
+    "losses": -3,
+    "schedule": 3.9,
+    "performance": 0,
+    "reference_wins": 8.1,
+    "match_probability": 0.406,
+    "rarity": 0.391,
+    "rarity_rank": 14
+   },
+   {
+    "rank": 15,
+    "team": "Memphis",
+    "record": "9-2",
+    "score": 0.448,
+    "losses": -2,
+    "schedule": 2.448,
+    "performance": 0,
+    "reference_wins": 8.55,
+    "match_probability": 0.5389,
+    "rarity": 0.268,
+    "rarity_rank": 15
+   },
+   {
+    "rank": 16,
+    "team": "Washington",
+    "record": "9-2",
+    "score": 0.352,
+    "losses": -2,
+    "schedule": 2.352,
+    "performance": 0,
+    "reference_wins": 8.65,
+    "match_probability": 0.5708,
+    "rarity": 0.244,
+    "rarity_rank": 16
+   }
+  ],
+  "2018": [
+   {
+    "rank": 1,
+    "team": "Alabama",
+    "record": "12-0",
+    "score": 3.764,
+    "losses": 0,
+    "schedule": 3.764,
+    "performance": 0,
+    "reference_wins": 8.24,
+    "match_probability": 0.0055,
+    "rarity": 2.256,
+    "rarity_rank": 1
+   },
+   {
+    "rank": 2,
+    "team": "Clemson",
+    "record": "12-0",
+    "score": 2.856,
+    "losses": 0,
+    "schedule": 2.856,
+    "performance": 0,
+    "reference_wins": 9.14,
+    "match_probability": 0.0334,
+    "rarity": 1.476,
+    "rarity_rank": 2
+   },
+   {
+    "rank": 3,
+    "team": "Notre Dame",
+    "record": "12-0",
+    "score": 2.608,
+    "losses": 0,
+    "schedule": 2.608,
+    "performance": 0,
+    "reference_wins": 9.39,
+    "match_probability": 0.0427,
+    "rarity": 1.37,
+    "rarity_rank": 3
+   },
+   {
+    "rank": 4,
+    "team": "Georgia",
+    "record": "10-2",
+    "score": 2.497,
+    "losses": -2,
+    "schedule": 4.497,
+    "performance": 0,
+    "reference_wins": 7.5,
+    "match_probability": 0.081,
+    "rarity": 1.091,
+    "rarity_rank": 4
+   },
+   {
+    "rank": 5,
+    "team": "Oklahoma",
+    "record": "12-1",
+    "score": 2.129,
+    "losses": -1,
+    "schedule": 3.129,
+    "performance": 0,
+    "reference_wins": 9.87,
+    "match_probability": 0.1273,
+    "rarity": 0.895,
+    "rarity_rank": 5
+   },
+   {
+    "rank": 6,
+    "team": "Ohio State",
+    "record": "12-1",
+    "score": 2.014,
+    "losses": -1,
+    "schedule": 3.014,
+    "performance": 0,
+    "reference_wins": 9.99,
+    "match_probability": 0.1315,
+    "rarity": 0.881,
+    "rarity_rank": 6
+   },
+   {
+    "rank": 7,
+    "team": "UCF",
+    "record": "11-0",
+    "score": 1.667,
+    "losses": 0,
+    "schedule": 1.667,
+    "performance": 0,
+    "reference_wins": 9.33,
+    "match_probability": 0.1478,
+    "rarity": 0.83,
+    "rarity_rank": 7
+   },
+   {
+    "rank": 8,
+    "team": "Michigan",
+    "record": "10-2",
+    "score": 1.067,
+    "losses": -2,
+    "schedule": 3.067,
+    "performance": 0,
+    "reference_wins": 8.93,
+    "match_probability": 0.3511,
+    "rarity": 0.455,
+    "rarity_rank": 9
+   },
+   {
+    "rank": 9,
+    "team": "LSU",
+    "record": "8-3",
+    "score": 1.053,
+    "losses": -3,
+    "schedule": 4.053,
+    "performance": 0,
+    "reference_wins": 6.95,
+    "match_probability": 0.3437,
+    "rarity": 0.464,
+    "rarity_rank": 8
+   },
+   {
+    "rank": 10,
+    "team": "Kentucky",
+    "record": "8-3",
+    "score": 0.681,
+    "losses": -3,
+    "schedule": 3.681,
+    "performance": 0,
+    "reference_wins": 7.32,
+    "match_probability": 0.4538,
+    "rarity": 0.343,
+    "rarity_rank": 10
+   },
+   {
+    "rank": 11,
+    "team": "Florida",
+    "record": "7-3",
+    "score": 0.489,
+    "losses": -3,
+    "schedule": 3.489,
+    "performance": 0,
+    "reference_wins": 6.51,
+    "match_probability": 0.5135,
+    "rarity": 0.289,
+    "rarity_rank": 11
+   },
+   {
+    "rank": 12,
+    "team": "Texas A&M",
+    "record": "7-4",
+    "score": 0.254,
+    "losses": -4,
+    "schedule": 4.254,
+    "performance": 0,
+    "reference_wins": 6.75,
+    "match_probability": 0.5804,
+    "rarity": 0.236,
+    "rarity_rank": 12
+   },
+   {
+    "rank": 13,
+    "team": "Washington",
+    "record": "9-3",
+    "score": 0.251,
+    "losses": -3,
+    "schedule": 3.251,
+    "performance": 0,
+    "reference_wins": 8.75,
+    "match_probability": 0.5839,
+    "rarity": 0.234,
+    "rarity_rank": 13
+   },
+   {
+    "rank": 14,
+    "team": "Fresno State",
+    "record": "10-2",
+    "score": 0.153,
+    "losses": -2,
+    "schedule": 2.153,
+    "performance": 0,
+    "reference_wins": 9.85,
+    "match_probability": 0.6351,
+    "rarity": 0.197,
+    "rarity_rank": 14
+   },
+   {
+    "rank": 15,
+    "team": "Washington State",
+    "record": "9-2",
+    "score": 0.096,
+    "losses": -2,
+    "schedule": 2.096,
+    "performance": 0,
+    "reference_wins": 8.9,
+    "match_probability": 0.6497,
+    "rarity": 0.187,
+    "rarity_rank": 15
+   },
+   {
+    "rank": 16,
+    "team": "Missouri",
+    "record": "7-4",
+    "score": 0.001,
+    "losses": -4,
+    "schedule": 4.001,
+    "performance": 0,
+    "reference_wins": 7,
+    "match_probability": 0.6501,
+    "rarity": 0.187,
+    "rarity_rank": 16
+   }
+  ],
+  "2019": [
+   {
+    "rank": 1,
+    "team": "Ohio State",
+    "record": "13-0",
+    "score": 4.335,
+    "losses": 0,
+    "schedule": 4.335,
+    "performance": 0,
+    "reference_wins": 8.67,
+    "match_probability": 0.0019,
+    "rarity": 2.726,
+    "rarity_rank": 1
+   },
+   {
+    "rank": 2,
+    "team": "LSU",
+    "record": "12-0",
+    "score": 4.081,
+    "losses": 0,
+    "schedule": 4.081,
+    "performance": 0,
+    "reference_wins": 7.92,
+    "match_probability": 0.0025,
+    "rarity": 2.602,
+    "rarity_rank": 2
+   },
+   {
+    "rank": 3,
+    "team": "Oklahoma",
+    "record": "11-1",
+    "score": 2.632,
+    "losses": -1,
+    "schedule": 3.632,
+    "performance": 0,
+    "reference_wins": 8.37,
+    "match_probability": 0.0666,
+    "rarity": 1.177,
+    "rarity_rank": 3
+   },
+   {
+    "rank": 4,
+    "team": "Clemson",
+    "record": "12-0",
+    "score": 1.965,
+    "losses": 0,
+    "schedule": 1.965,
+    "performance": 0,
+    "reference_wins": 10.03,
+    "match_probability": 0.1102,
+    "rarity": 0.958,
+    "rarity_rank": 4
+   },
+   {
+    "rank": 5,
+    "team": "Georgia",
+    "record": "10-2",
+    "score": 1.607,
+    "losses": -2,
+    "schedule": 3.607,
+    "performance": 0,
+    "reference_wins": 8.39,
+    "match_probability": 0.2073,
+    "rarity": 0.683,
+    "rarity_rank": 5
+   },
+   {
+    "rank": 6,
+    "team": "Penn State",
+    "record": "9-2",
+    "score": 1.508,
+    "losses": -2,
+    "schedule": 3.508,
+    "performance": 0,
+    "reference_wins": 7.49,
+    "match_probability": 0.2159,
+    "rarity": 0.666,
+    "rarity_rank": 6
+   },
+   {
+    "rank": 7,
+    "team": "Baylor",
+    "record": "10-2",
+    "score": 1.502,
+    "losses": -2,
+    "schedule": 3.502,
+    "performance": 0,
+    "reference_wins": 8.5,
+    "match_probability": 0.2475,
+    "rarity": 0.606,
+    "rarity_rank": 7
+   },
+   {
+    "rank": 8,
+    "team": "Memphis",
+    "record": "11-1",
+    "score": 1.474,
+    "losses": -1,
+    "schedule": 2.474,
+    "performance": 0,
+    "reference_wins": 9.53,
+    "match_probability": 0.2502,
+    "rarity": 0.602,
+    "rarity_rank": 8
+   },
+   {
+    "rank": 9,
+    "team": "Wisconsin",
+    "record": "10-3",
+    "score": 1.353,
+    "losses": -3,
+    "schedule": 4.353,
+    "performance": 0,
+    "reference_wins": 8.65,
+    "match_probability": 0.2701,
+    "rarity": 0.568,
+    "rarity_rank": 10
+   },
+   {
+    "rank": 10,
+    "team": "Auburn",
+    "record": "8-3",
+    "score": 1.352,
+    "losses": -3,
+    "schedule": 4.352,
+    "performance": 0,
+    "reference_wins": 6.65,
+    "match_probability": 0.2698,
+    "rarity": 0.569,
+    "rarity_rank": 9
+   },
+   {
+    "rank": 11,
+    "team": "Oregon",
+    "record": "10-2",
+    "score": 1.257,
+    "losses": -2,
+    "schedule": 3.257,
+    "performance": 0,
+    "reference_wins": 8.74,
+    "match_probability": 0.2965,
+    "rarity": 0.528,
+    "rarity_rank": 13
+   },
+   {
+    "rank": 12,
+    "team": "Florida",
+    "record": "8-2",
+    "score": 1.25,
+    "losses": -2,
+    "schedule": 3.25,
+    "performance": 0,
+    "reference_wins": 6.75,
+    "match_probability": 0.2839,
+    "rarity": 0.547,
+    "rarity_rank": 11
+   },
+   {
+    "rank": 13,
+    "team": "Michigan",
+    "record": "9-3",
+    "score": 1.243,
+    "losses": -3,
+    "schedule": 4.243,
+    "performance": 0,
+    "reference_wins": 7.76,
+    "match_probability": 0.2935,
+    "rarity": 0.532,
+    "rarity_rank": 12
+   },
+   {
+    "rank": 14,
+    "team": "App State",
+    "record": "11-1",
+    "score": 0.944,
+    "losses": -1,
+    "schedule": 1.944,
+    "performance": 0,
+    "reference_wins": 10.06,
+    "match_probability": 0.3777,
+    "rarity": 0.423,
+    "rarity_rank": 15
+   },
+   {
+    "rank": 15,
+    "team": "Utah",
+    "record": "10-2",
+    "score": 0.944,
+    "losses": -2,
+    "schedule": 2.944,
+    "performance": 0,
+    "reference_wins": 9.06,
+    "match_probability": 0.3914,
+    "rarity": 0.407,
+    "rarity_rank": 17
+   },
+   {
+    "rank": 16,
+    "team": "Notre Dame",
+    "record": "10-2",
+    "score": 0.939,
+    "losses": -2,
+    "schedule": 2.939,
+    "performance": 0,
+    "reference_wins": 9.06,
+    "match_probability": 0.3843,
+    "rarity": 0.415,
+    "rarity_rank": 16
+   }
+  ],
+  "2021": [
+   {
+    "rank": 1,
+    "team": "Alabama",
+    "record": "11-1",
+    "score": 2.739,
+    "losses": -1,
+    "schedule": 3.739,
+    "performance": 0,
+    "reference_wins": 8.26,
+    "match_probability": 0.05,
+    "rarity": 1.301,
+    "rarity_rank": 1
+   },
+   {
+    "rank": 2,
+    "team": "Georgia",
+    "record": "11-1",
+    "score": 2.342,
+    "losses": -1,
+    "schedule": 3.342,
+    "performance": 0,
+    "reference_wins": 8.66,
+    "match_probability": 0.0917,
+    "rarity": 1.038,
+    "rarity_rank": 3
+   },
+   {
+    "rank": 3,
+    "team": "Michigan",
+    "record": "12-1",
+    "score": 2.256,
+    "losses": -1,
+    "schedule": 3.256,
+    "performance": 0,
+    "reference_wins": 9.74,
+    "match_probability": 0.0948,
+    "rarity": 1.023,
+    "rarity_rank": 4
+   },
+   {
+    "rank": 4,
+    "team": "Cincinnati",
+    "record": "12-0",
+    "score": 2.183,
+    "losses": 0,
+    "schedule": 2.183,
+    "performance": 0,
+    "reference_wins": 9.82,
+    "match_probability": 0.0642,
+    "rarity": 1.193,
+    "rarity_rank": 2
+   },
+   {
+    "rank": 5,
+    "team": "Notre Dame",
+    "record": "11-1",
+    "score": 1.73,
+    "losses": -1,
+    "schedule": 2.73,
+    "performance": 0,
+    "reference_wins": 9.27,
+    "match_probability": 0.1887,
+    "rarity": 0.724,
+    "rarity_rank": 5
+   },
+   {
+    "rank": 6,
+    "team": "Ole Miss",
+    "record": "9-2",
+    "score": 1.212,
+    "losses": -2,
+    "schedule": 3.212,
+    "performance": 0,
+    "reference_wins": 7.79,
+    "match_probability": 0.3126,
+    "rarity": 0.505,
+    "rarity_rank": 6
+   },
+   {
+    "rank": 7,
+    "team": "Oklahoma State",
+    "record": "10-2",
+    "score": 1.184,
+    "losses": -2,
+    "schedule": 3.184,
+    "performance": 0,
+    "reference_wins": 8.82,
+    "match_probability": 0.3301,
+    "rarity": 0.481,
+    "rarity_rank": 8
+   },
+   {
+    "rank": 8,
+    "team": "Michigan State",
+    "record": "9-2",
+    "score": 1.152,
+    "losses": -2,
+    "schedule": 3.152,
+    "performance": 0,
+    "reference_wins": 7.85,
+    "match_probability": 0.3234,
+    "rarity": 0.49,
+    "rarity_rank": 7
+   },
+   {
+    "rank": 9,
+    "team": "Ohio State",
+    "record": "10-2",
+    "score": 1.09,
+    "losses": -2,
+    "schedule": 3.09,
+    "performance": 0,
+    "reference_wins": 8.91,
+    "match_probability": 0.3472,
+    "rarity": 0.459,
+    "rarity_rank": 9
+   },
+   {
+    "rank": 10,
+    "team": "Baylor",
+    "record": "10-2",
+    "score": 1.016,
+    "losses": -2,
+    "schedule": 3.016,
+    "performance": 0,
+    "reference_wins": 8.98,
+    "match_probability": 0.367,
+    "rarity": 0.435,
+    "rarity_rank": 10
+   },
+   {
+    "rank": 11,
+    "team": "Louisiana",
+    "record": "11-1",
+    "score": 0.763,
+    "losses": -1,
+    "schedule": 1.763,
+    "performance": 0,
+    "reference_wins": 10.24,
+    "match_probability": 0.4373,
+    "rarity": 0.359,
+    "rarity_rank": 11
+   },
+   {
+    "rank": 12,
+    "team": "UTSA",
+    "record": "11-1",
+    "score": 0.76,
+    "losses": -1,
+    "schedule": 1.76,
+    "performance": 0,
+    "reference_wins": 10.24,
+    "match_probability": 0.4446,
+    "rarity": 0.352,
+    "rarity_rank": 12
+   },
+   {
+    "rank": 13,
+    "team": "Oklahoma",
+    "record": "9-2",
+    "score": 0.697,
+    "losses": -2,
+    "schedule": 2.697,
+    "performance": 0,
+    "reference_wins": 8.3,
+    "match_probability": 0.4567,
+    "rarity": 0.34,
+    "rarity_rank": 13
+   },
+   {
+    "rank": 14,
+    "team": "BYU",
+    "record": "9-2",
+    "score": 0.558,
+    "losses": -2,
+    "schedule": 2.558,
+    "performance": 0,
+    "reference_wins": 8.44,
+    "match_probability": 0.5037,
+    "rarity": 0.298,
+    "rarity_rank": 14
+   },
+   {
+    "rank": 15,
+    "team": "Pittsburgh",
+    "record": "10-2",
+    "score": 0.38,
+    "losses": -2,
+    "schedule": 2.38,
+    "performance": 0,
+    "reference_wins": 9.62,
+    "match_probability": 0.5605,
+    "rarity": 0.251,
+    "rarity_rank": 15
+   },
+   {
+    "rank": 16,
+    "team": "Iowa",
+    "record": "10-3",
+    "score": 0.291,
+    "losses": -3,
+    "schedule": 3.291,
+    "performance": 0,
+    "reference_wins": 9.71,
+    "match_probability": 0.5732,
+    "rarity": 0.242,
+    "rarity_rank": 16
+   }
+  ],
+  "2022": [
+   {
+    "rank": 1,
+    "team": "Georgia",
+    "record": "12-0",
+    "score": 3.708,
+    "losses": 0,
+    "schedule": 3.708,
+    "performance": 0,
+    "reference_wins": 8.29,
+    "match_probability": 0.0071,
+    "rarity": 2.151,
+    "rarity_rank": 1
+   },
+   {
+    "rank": 2,
+    "team": "Michigan",
+    "record": "13-0",
+    "score": 3.048,
+    "losses": 0,
+    "schedule": 3.048,
+    "performance": 0,
+    "reference_wins": 9.95,
+    "match_probability": 0.0116,
+    "rarity": 1.935,
+    "rarity_rank": 2
+   },
+   {
+    "rank": 3,
+    "team": "TCU",
+    "record": "11-1",
+    "score": 2.803,
+    "losses": -1,
+    "schedule": 3.803,
+    "performance": 0,
+    "reference_wins": 8.2,
+    "match_probability": 0.0522,
+    "rarity": 1.282,
+    "rarity_rank": 3
+   },
+   {
+    "rank": 4,
+    "team": "Ohio State",
+    "record": "11-1",
+    "score": 2.158,
+    "losses": -1,
+    "schedule": 3.158,
+    "performance": 0,
+    "reference_wins": 8.84,
+    "match_probability": 0.102,
+    "rarity": 0.992,
+    "rarity_rank": 4
+   },
+   {
+    "rank": 5,
+    "team": "Tennessee",
+    "record": "9-2",
+    "score": 1.496,
+    "losses": -2,
+    "schedule": 3.496,
+    "performance": 0,
+    "reference_wins": 7.5,
+    "match_probability": 0.2283,
+    "rarity": 0.642,
+    "rarity_rank": 5
+   },
+   {
+    "rank": 6,
+    "team": "Alabama",
+    "record": "9-2",
+    "score": 1.415,
+    "losses": -2,
+    "schedule": 3.415,
+    "performance": 0,
+    "reference_wins": 7.58,
+    "match_probability": 0.2473,
+    "rarity": 0.607,
+    "rarity_rank": 6
+   },
+   {
+    "rank": 7,
+    "team": "Penn State",
+    "record": "10-2",
+    "score": 1.195,
+    "losses": -2,
+    "schedule": 3.195,
+    "performance": 0,
+    "reference_wins": 8.81,
+    "match_probability": 0.3098,
+    "rarity": 0.509,
+    "rarity_rank": 7
+   },
+   {
+    "rank": 8,
+    "team": "USC",
+    "record": "11-2",
+    "score": 1.046,
+    "losses": -2,
+    "schedule": 3.046,
+    "performance": 0,
+    "reference_wins": 9.95,
+    "match_probability": 0.3606,
+    "rarity": 0.443,
+    "rarity_rank": 8
+   },
+   {
+    "rank": 9,
+    "team": "Kansas State",
+    "record": "9-3",
+    "score": 1.038,
+    "losses": -3,
+    "schedule": 4.038,
+    "performance": 0,
+    "reference_wins": 7.96,
+    "match_probability": 0.3759,
+    "rarity": 0.425,
+    "rarity_rank": 9
+   },
+   {
+    "rank": 10,
+    "team": "Clemson",
+    "record": "10-2",
+    "score": 0.691,
+    "losses": -2,
+    "schedule": 2.691,
+    "performance": 0,
+    "reference_wins": 9.31,
+    "match_probability": 0.4639,
+    "rarity": 0.334,
+    "rarity_rank": 10
+   },
+   {
+    "rank": 11,
+    "team": "Tulane",
+    "record": "10-2",
+    "score": 0.581,
+    "losses": -2,
+    "schedule": 2.581,
+    "performance": 0,
+    "reference_wins": 9.42,
+    "match_probability": 0.4986,
+    "rarity": 0.302,
+    "rarity_rank": 11
+   },
+   {
+    "rank": 12,
+    "team": "LSU",
+    "record": "8-4",
+    "score": 0.511,
+    "losses": -4,
+    "schedule": 4.511,
+    "performance": 0,
+    "reference_wins": 7.49,
+    "match_probability": 0.5043,
+    "rarity": 0.297,
+    "rarity_rank": 12
+   },
+   {
+    "rank": 13,
+    "team": "Oregon",
+    "record": "8-3",
+    "score": 0.212,
+    "losses": -3,
+    "schedule": 3.212,
+    "performance": 0,
+    "reference_wins": 7.79,
+    "match_probability": 0.5977,
+    "rarity": 0.224,
+    "rarity_rank": 13
+   },
+   {
+    "rank": 14,
+    "team": "Utah",
+    "record": "9-3",
+    "score": 0.18,
+    "losses": -3,
+    "schedule": 3.18,
+    "performance": 0,
+    "reference_wins": 8.82,
+    "match_probability": 0.6025,
+    "rarity": 0.22,
+    "rarity_rank": 14
+   },
+   {
+    "rank": 15,
+    "team": "Washington",
+    "record": "9-2",
+    "score": 0.176,
+    "losses": -2,
+    "schedule": 2.176,
+    "performance": 0,
+    "reference_wins": 8.82,
+    "match_probability": 0.6256,
+    "rarity": 0.204,
+    "rarity_rank": 15
+   },
+   {
+    "rank": 16,
+    "team": "Troy",
+    "record": "10-2",
+    "score": -0.028,
+    "losses": -2,
+    "schedule": 1.972,
+    "performance": 0,
+    "reference_wins": 10.03,
+    "match_probability": 0.6891,
+    "rarity": 0.162,
+    "rarity_rank": 16
+   }
+  ],
+  "2023": [
+   {
+    "rank": 1,
+    "team": "Washington",
+    "record": "13-0",
+    "score": 3.991,
+    "losses": 0,
+    "schedule": 3.991,
+    "performance": 0,
+    "reference_wins": 9.01,
+    "match_probability": 0.0034,
+    "rarity": 2.468,
+    "rarity_rank": 1
+   },
+   {
+    "rank": 2,
+    "team": "Michigan",
+    "record": "13-0",
+    "score": 3.306,
+    "losses": 0,
+    "schedule": 3.306,
+    "performance": 0,
+    "reference_wins": 9.69,
+    "match_probability": 0.0091,
+    "rarity": 2.041,
+    "rarity_rank": 2
+   },
+   {
+    "rank": 3,
+    "team": "Alabama",
+    "record": "11-1",
+    "score": 3.029,
+    "losses": -1,
+    "schedule": 4.029,
+    "performance": 0,
+    "reference_wins": 7.97,
+    "match_probability": 0.0376,
+    "rarity": 1.425,
+    "rarity_rank": 4
+   },
+   {
+    "rank": 4,
+    "team": "Florida State",
+    "record": "12-0",
+    "score": 2.908,
+    "losses": 0,
+    "schedule": 2.908,
+    "performance": 0,
+    "reference_wins": 9.09,
+    "match_probability": 0.0262,
+    "rarity": 1.581,
+    "rarity_rank": 3
+   },
+   {
+    "rank": 5,
+    "team": "Texas",
+    "record": "12-1",
+    "score": 2.822,
+    "losses": -1,
+    "schedule": 3.822,
+    "performance": 0,
+    "reference_wins": 9.18,
+    "match_probability": 0.0499,
+    "rarity": 1.302,
+    "rarity_rank": 6
+   },
+   {
+    "rank": 6,
+    "team": "Ohio State",
+    "record": "10-1",
+    "score": 2.522,
+    "losses": -1,
+    "schedule": 3.522,
+    "performance": 0,
+    "reference_wins": 7.48,
+    "match_probability": 0.0489,
+    "rarity": 1.311,
+    "rarity_rank": 5
+   },
+   {
+    "rank": 7,
+    "team": "Georgia",
+    "record": "11-1",
+    "score": 2.202,
+    "losses": -1,
+    "schedule": 3.202,
+    "performance": 0,
+    "reference_wins": 8.8,
+    "match_probability": 0.1079,
+    "rarity": 0.967,
+    "rarity_rank": 7
+   },
+   {
+    "rank": 8,
+    "team": "Missouri",
+    "record": "9-2",
+    "score": 1.323,
+    "losses": -2,
+    "schedule": 3.323,
+    "performance": 0,
+    "reference_wins": 7.68,
+    "match_probability": 0.2825,
+    "rarity": 0.549,
+    "rarity_rank": 9
+   },
+   {
+    "rank": 9,
+    "team": "Oregon",
+    "record": "10-2",
+    "score": 1.301,
+    "losses": -2,
+    "schedule": 3.301,
+    "performance": 0,
+    "reference_wins": 8.7,
+    "match_probability": 0.2952,
+    "rarity": 0.53,
+    "rarity_rank": 11
+   },
+   {
+    "rank": 10,
+    "team": "Liberty",
+    "record": "13-0",
+    "score": 1.289,
+    "losses": 0,
+    "schedule": 1.289,
+    "performance": 0,
+    "reference_wins": 11.71,
+    "match_probability": 0.2473,
+    "rarity": 0.607,
+    "rarity_rank": 8
+   },
+   {
+    "rank": 11,
+    "team": "Ole Miss",
+    "record": "9-2",
+    "score": 1.259,
+    "losses": -2,
+    "schedule": 3.259,
+    "performance": 0,
+    "reference_wins": 7.74,
+    "match_probability": 0.2892,
+    "rarity": 0.539,
+    "rarity_rank": 10
+   },
+   {
+    "rank": 12,
+    "team": "Penn State",
+    "record": "9-2",
+    "score": 1.024,
+    "losses": -2,
+    "schedule": 3.024,
+    "performance": 0,
+    "reference_wins": 7.98,
+    "match_probability": 0.3484,
+    "rarity": 0.458,
+    "rarity_rank": 12
+   },
+   {
+    "rank": 13,
+    "team": "Oklahoma",
+    "record": "10-2",
+    "score": 0.966,
+    "losses": -2,
+    "schedule": 2.966,
+    "performance": 0,
+    "reference_wins": 9.03,
+    "match_probability": 0.3853,
+    "rarity": 0.414,
+    "rarity_rank": 13
+   },
+   {
+    "rank": 14,
+    "team": "James Madison",
+    "record": "10-1",
+    "score": 0.747,
+    "losses": -1,
+    "schedule": 1.747,
+    "performance": 0,
+    "reference_wins": 9.25,
+    "match_probability": 0.45,
+    "rarity": 0.347,
+    "rarity_rank": 14
+   },
+   {
+    "rank": 15,
+    "team": "LSU",
+    "record": "8-3",
+    "score": 0.342,
+    "losses": -3,
+    "schedule": 3.342,
+    "performance": 0,
+    "reference_wins": 7.66,
+    "match_probability": 0.5572,
+    "rarity": 0.254,
+    "rarity_rank": 15
+   },
+   {
+    "rank": 16,
+    "team": "Louisville",
+    "record": "9-3",
+    "score": 0.23,
+    "losses": -3,
+    "schedule": 3.23,
+    "performance": 0,
+    "reference_wins": 8.77,
+    "match_probability": 0.5917,
+    "rarity": 0.228,
+    "rarity_rank": 16
+   }
+  ],
+  "2024": [
+   {
+    "rank": 1,
+    "team": "Oregon",
+    "record": "12-0",
+    "score": 3.076,
+    "losses": 0,
+    "schedule": 3.076,
+    "performance": 0,
+    "reference_wins": 8.92,
+    "match_probability": 0.0177,
+    "rarity": 1.752,
+    "rarity_rank": 1
+   },
+   {
+    "rank": 2,
+    "team": "Georgia",
+    "record": "10-2",
+    "score": 2.937,
+    "losses": -2,
+    "schedule": 4.937,
+    "performance": 0,
+    "reference_wins": 7.06,
+    "match_probability": 0.0433,
+    "rarity": 1.364,
+    "rarity_rank": 2
+   },
+   {
+    "rank": 3,
+    "team": "Notre Dame",
+    "record": "11-1",
+    "score": 1.712,
+    "losses": -1,
+    "schedule": 2.712,
+    "performance": 0,
+    "reference_wins": 9.29,
+    "match_probability": 0.184,
+    "rarity": 0.735,
+    "rarity_rank": 3
+   },
+   {
+    "rank": 4,
+    "team": "Texas",
+    "record": "11-2",
+    "score": 1.38,
+    "losses": -2,
+    "schedule": 3.38,
+    "performance": 0,
+    "reference_wins": 9.62,
+    "match_probability": 0.2875,
+    "rarity": 0.541,
+    "rarity_rank": 4
+   },
+   {
+    "rank": 5,
+    "team": "Penn State",
+    "record": "11-2",
+    "score": 1.278,
+    "losses": -2,
+    "schedule": 3.278,
+    "performance": 0,
+    "reference_wins": 9.72,
+    "match_probability": 0.2973,
+    "rarity": 0.527,
+    "rarity_rank": 6
+   },
+   {
+    "rank": 6,
+    "team": "Boise State",
+    "record": "11-1",
+    "score": 1.186,
+    "losses": -1,
+    "schedule": 2.186,
+    "performance": 0,
+    "reference_wins": 9.81,
+    "match_probability": 0.2916,
+    "rarity": 0.535,
+    "rarity_rank": 5
+   },
+   {
+    "rank": 7,
+    "team": "Ohio State",
+    "record": "10-2",
+    "score": 1.116,
+    "losses": -2,
+    "schedule": 3.116,
+    "performance": 0,
+    "reference_wins": 8.88,
+    "match_probability": 0.3265,
+    "rarity": 0.486,
+    "rarity_rank": 8
+   },
+   {
+    "rank": 8,
+    "team": "Arizona State",
+    "record": "11-2",
+    "score": 1.088,
+    "losses": -2,
+    "schedule": 3.088,
+    "performance": 0,
+    "reference_wins": 9.91,
+    "match_probability": 0.3606,
+    "rarity": 0.443,
+    "rarity_rank": 9
+   },
+   {
+    "rank": 9,
+    "team": "Indiana",
+    "record": "10-1",
+    "score": 1.076,
+    "losses": -1,
+    "schedule": 2.076,
+    "performance": 0,
+    "reference_wins": 8.92,
+    "match_probability": 0.3248,
+    "rarity": 0.488,
+    "rarity_rank": 7
+   },
+   {
+    "rank": 10,
+    "team": "BYU",
+    "record": "9-2",
+    "score": 0.861,
+    "losses": -2,
+    "schedule": 2.861,
+    "performance": 0,
+    "reference_wins": 8.14,
+    "match_probability": 0.4079,
+    "rarity": 0.389,
+    "rarity_rank": 10
+   },
+   {
+    "rank": 11,
+    "team": "South Carolina",
+    "record": "8-3",
+    "score": 0.842,
+    "losses": -3,
+    "schedule": 3.842,
+    "performance": 0,
+    "reference_wins": 7.16,
+    "match_probability": 0.4176,
+    "rarity": 0.379,
+    "rarity_rank": 11
+   },
+   {
+    "rank": 12,
+    "team": "Tennessee",
+    "record": "9-2",
+    "score": 0.792,
+    "losses": -2,
+    "schedule": 2.792,
+    "performance": 0,
+    "reference_wins": 8.21,
+    "match_probability": 0.4262,
+    "rarity": 0.37,
+    "rarity_rank": 12
+   },
+   {
+    "rank": 13,
+    "team": "SMU",
+    "record": "10-2",
+    "score": 0.777,
+    "losses": -2,
+    "schedule": 2.777,
+    "performance": 0,
+    "reference_wins": 9.22,
+    "match_probability": 0.4417,
+    "rarity": 0.355,
+    "rarity_rank": 13
+   },
+   {
+    "rank": 14,
+    "team": "Alabama",
+    "record": "8-3",
+    "score": 0.58,
+    "losses": -3,
+    "schedule": 3.58,
+    "performance": 0,
+    "reference_wins": 7.42,
+    "match_probability": 0.4906,
+    "rarity": 0.309,
+    "rarity_rank": 14
+   },
+   {
+    "rank": 15,
+    "team": "Miami",
+    "record": "9-2",
+    "score": 0.564,
+    "losses": -2,
+    "schedule": 2.564,
+    "performance": 0,
+    "reference_wins": 8.44,
+    "match_probability": 0.5015,
+    "rarity": 0.3,
+    "rarity_rank": 15
+   },
+   {
+    "rank": 16,
+    "team": "Clemson",
+    "record": "9-3",
+    "score": 0.127,
+    "losses": -3,
+    "schedule": 3.127,
+    "performance": 0,
+    "reference_wins": 8.87,
+    "match_probability": 0.6189,
+    "rarity": 0.208,
+    "rarity_rank": 16
+   }
+  ],
+  "2025": [
+   {
+    "rank": 1,
+    "team": "Indiana",
+    "record": "12-0",
+    "score": 3.897,
+    "losses": 0,
+    "schedule": 3.897,
+    "performance": 0,
+    "reference_wins": 8.1,
+    "match_probability": 0.003,
+    "rarity": 2.529,
+    "rarity_rank": 1
+   },
+   {
+    "rank": 2,
+    "team": "Ohio State",
+    "record": "11-1",
+    "score": 2.816,
+    "losses": -1,
+    "schedule": 3.816,
+    "performance": 0,
+    "reference_wins": 8.18,
+    "match_probability": 0.0411,
+    "rarity": 1.386,
+    "rarity_rank": 2
+   },
+   {
+    "rank": 3,
+    "team": "Oregon",
+    "record": "10-1",
+    "score": 2.614,
+    "losses": -1,
+    "schedule": 3.614,
+    "performance": 0,
+    "reference_wins": 7.39,
+    "match_probability": 0.0501,
+    "rarity": 1.3,
+    "rarity_rank": 3
+   },
+   {
+    "rank": 4,
+    "team": "Georgia",
+    "record": "11-1",
+    "score": 2.513,
+    "losses": -1,
+    "schedule": 3.513,
+    "performance": 0,
+    "reference_wins": 8.49,
+    "match_probability": 0.0795,
+    "rarity": 1.1,
+    "rarity_rank": 5
+   },
+   {
+    "rank": 5,
+    "team": "Texas A&M",
+    "record": "10-1",
+    "score": 2.427,
+    "losses": -1,
+    "schedule": 3.427,
+    "performance": 0,
+    "reference_wins": 7.57,
+    "match_probability": 0.0733,
+    "rarity": 1.135,
+    "rarity_rank": 4
+   },
+   {
+    "rank": 6,
+    "team": "BYU",
+    "record": "10-2",
+    "score": 2.169,
+    "losses": -2,
+    "schedule": 4.169,
+    "performance": 0,
+    "reference_wins": 7.83,
+    "match_probability": 0.115,
+    "rarity": 0.939,
+    "rarity_rank": 7
+   },
+   {
+    "rank": 7,
+    "team": "Texas Tech",
+    "record": "11-1",
+    "score": 2.166,
+    "losses": -1,
+    "schedule": 3.166,
+    "performance": 0,
+    "reference_wins": 8.83,
+    "match_probability": 0.0969,
+    "rarity": 1.014,
+    "rarity_rank": 6
+   },
+   {
+    "rank": 8,
+    "team": "Ole Miss",
+    "record": "10-1",
+    "score": 1.81,
+    "losses": -1,
+    "schedule": 2.81,
+    "performance": 0,
+    "reference_wins": 8.19,
+    "match_probability": 0.1601,
+    "rarity": 0.796,
+    "rarity_rank": 8
+   },
+   {
+    "rank": 9,
+    "team": "Oklahoma",
+    "record": "9-2",
+    "score": 1.408,
+    "losses": -2,
+    "schedule": 3.408,
+    "performance": 0,
+    "reference_wins": 7.59,
+    "match_probability": 0.2745,
+    "rarity": 0.561,
+    "rarity_rank": 9
+   },
+   {
+    "rank": 10,
+    "team": "Alabama",
+    "record": "9-3",
+    "score": 1.19,
+    "losses": -3,
+    "schedule": 4.19,
+    "performance": 0,
+    "reference_wins": 7.81,
+    "match_probability": 0.3356,
+    "rarity": 0.474,
+    "rarity_rank": 12
+   },
+   {
+    "rank": 11,
+    "team": "Miami",
+    "record": "9-2",
+    "score": 1.166,
+    "losses": -2,
+    "schedule": 3.166,
+    "performance": 0,
+    "reference_wins": 7.83,
+    "match_probability": 0.322,
+    "rarity": 0.492,
+    "rarity_rank": 10
+   },
+   {
+    "rank": 12,
+    "team": "Notre Dame",
+    "record": "10-2",
+    "score": 1.153,
+    "losses": -2,
+    "schedule": 3.153,
+    "performance": 0,
+    "reference_wins": 8.85,
+    "match_probability": 0.3289,
+    "rarity": 0.483,
+    "rarity_rank": 11
+   },
+   {
+    "rank": 13,
+    "team": "Vanderbilt",
+    "record": "9-2",
+    "score": 0.993,
+    "losses": -2,
+    "schedule": 2.993,
+    "performance": 0,
+    "reference_wins": 8.01,
+    "match_probability": 0.3747,
+    "rarity": 0.426,
+    "rarity_rank": 13
+   },
+   {
+    "rank": 14,
+    "team": "Texas",
+    "record": "9-3",
+    "score": 0.772,
+    "losses": -3,
+    "schedule": 3.772,
+    "performance": 0,
+    "reference_wins": 8.23,
+    "match_probability": 0.4288,
+    "rarity": 0.368,
+    "rarity_rank": 14
+   },
+   {
+    "rank": 15,
+    "team": "Utah",
+    "record": "9-2",
+    "score": 0.771,
+    "losses": -2,
+    "schedule": 2.771,
+    "performance": 0,
+    "reference_wins": 8.23,
+    "match_probability": 0.4383,
+    "rarity": 0.358,
+    "rarity_rank": 15
+   },
+   {
+    "rank": 16,
+    "team": "James Madison",
+    "record": "11-1",
+    "score": 0.538,
+    "losses": -1,
+    "schedule": 1.538,
+    "performance": 0,
+    "reference_wins": 10.46,
+    "match_probability": 0.5258,
+    "rarity": 0.279,
+    "rarity_rank": 19
+   }
+  ]
+ }
+}

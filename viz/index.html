@@ -10,7 +10,7 @@
 <meta property="og:image" content="https://cfb-model-v3.vercel.app/social-preview.png">
 <meta name="twitter:card" content="summary_large_image">
 <title>CFB Model v4 — 2026 Forecast Lab</title>
-<link rel="stylesheet" href="style.css?v=50">
+<link rel="stylesheet" href="style.css?v=51">
 <link rel="stylesheet" href="simulation-studio.css">
 </head>
 <body data-hub="rankings">
@@ -82,9 +82,9 @@
     <article class="ranking-board"><div class="board-head"><span>Model</span><h3>Neutral-field Top 25</h3><small>Ordered by neutral win rate</small></div><div id="power-top25"></div><p class="board-note">Neutral win rate is the average chance of beating every other rated FBS team on a neutral field.</p></article>
   </section>
   <section id="view-deserving" class="view">
-    <div class="view-head editorial-head"><span class="eyebrow">The résumé register / results earned</span><h2>Most Deserving</h2><p class="sub">Wins and losses, adjusted for the strength of the opponents you played.</p></div>
-    <article class="ranking-board deserving"><div class="board-head"><span>Opponent-adjusted record</span><h3>The earned Top 25</h3><small id="deserving-date"></small></div><div id="deserving-top25"></div><p class="board-note">Only completed regular-season FBS-versus-FBS games count. Every team starts equally. Equal scores share a rank, including ties at the Top 25 cutoff. Early rankings can move sharply as schedules connect.</p></article>
-    <details class="stock-method"><summary>Inside the résumé score</summary><p>This experimental record-first model starts teams with a one-point penalty per FBS loss. Opponent-adjusted schedule quality and a small, capped margin-of-victory contribution can overcome that penalty. A team with one more loss only passes another if its quality advantage exceeds one loss equivalent. Conference affiliation, polls and preseason power ratings are excluded.</p><p>Résumé score = −FBS losses + 4 × (mean opponent Colley rating − 0.50) + 0.30 × average tanh(capped margin / 21) + 0.16 × FBS wins / 12. Margins are capped at ±28. All scores are in loss-equivalent units, not probabilities or percentage points. These coefficients are provisional and have not yet been historically calibrated. SOS rank 1 is the toughest played schedule.</p><div id="deserving-ledger"></div></details>
+    <div class="view-head editorial-head"><span class="eyebrow">The résumé register / results earned</span><h2>Most Deserving</h2><p class="sub">Who earned a playoff spot? Wins above a playoff-caliber team on the same schedule. Losses come first; a schedule must be worth a full extra loss to pay one back.</p></div>
+    <article class="ranking-board deserving"><div class="board-head"><span>Wins above a playoff-caliber team</span><h3>The earned Top 25</h3><small id="deserving-date"></small></div><div id="deserving-top25"></div><p class="board-note">Résumé score in loss units: −1 for each FBS loss, plus the number of games a playoff-caliber team would be expected to lose on the same schedule. Only completed regular-season FBS-versus-FBS games count. Equal scores share a rank. Early rankings can move sharply as schedules connect.</p></article>
+    <div id="deserving-lab"></div>
   </section>
   <section id="view-marks-playoff" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">The résumé selection room</span><h2>Mark's Playoff</h2><p class="sub">Twelve bids, earned on the field. My résumé scores meet the playoff rules.</p></div>
@@ -196,14 +196,15 @@
 <footer><span>CFB Model v4 · 2026 Forecast Lab</span><span>Model probabilities are estimates. Sportsbook prices are dated snapshots, not live quotes. Gamble responsibly.</span></footer>
 <script src="team-card.js"></script>
 <script src="team-overview.js"></script>
-<script src="ranking-history.js?v=3"></script>
+<script src="ranking-history.js?v=4"></script>
+<script src="deserving-lab.js"></script>
 <script src="playoff-paths.js"></script>
 <script src="marks-playoff.js"></script>
 <script src="scenario-lab.js"></script>
 <script src="simulation-studio.js"></script>
 <script src="movers.js"></script>
 <script src="resume-scores.js"></script>
-<script src="app.js?v=68"></script>
+<script src="app.js?v=69"></script>
 </body>
 </html>
 

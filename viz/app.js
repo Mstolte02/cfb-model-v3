@@ -2428,21 +2428,31 @@
     stockMeasure=b.dataset.stockMeasure;document.querySelectorAll('[data-stock-measure]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});renderStockWatch();
   }));
   document.getElementById('stock-search').addEventListener('input',renderStockWatch);
-  let deservingRows=null;
+  // Most Deserving: one prepared snapshot (opponent strength) shared by the board,
+  // the résumé lab and Mark's Playoff. Assumption changes reuse it without refitting.
+  let deservingRows=null,deservingContext=null,deservingLabMounted=false;
+  function deservingData() {
+    if(!deservingContext){deservingContext=RankingHistory.prepare(schedule,[...FBS],deservingModel);
+      deservingRows=RankingHistory.deserving(schedule,meta,[...FBS],deservingModel,{context:deservingContext});}
+    return deservingRows;
+  }
   function renderDeserving() {
     const host=document.getElementById('deserving-top25');
     if(!deservingModel){host.innerHTML='<p class="stock-empty">Résumé model unavailable. Reload to try again.</p>';return;}
-    if(!deservingRows)deservingRows=RankingHistory.deserving(schedule,meta,[...FBS],deservingModel);
-    document.getElementById('deserving-date').textContent=`${ratings.season} finals · ${ratings.history?.at(-1)?.label||'Season to date'}`;
-    host.innerHTML=deservingRows.length?rankingGrid(deservingRows.filter(r=>r.rank<=25),'Résumé score',r=>r.score.toFixed(2)):'<p class="stock-empty">The board opens after the first completed FBS matchup.</p>';
-    document.getElementById('deserving-ledger').innerHTML=`<div class="stock-table-wrap"><table><thead><tr><th>Rank</th><th>Team</th><th>FBS record</th><th>Win %</th><th>SOS rank</th><th>Opponent rating</th><th>Loss base</th><th>Schedule</th><th>Convincingness</th><th>Extra wins</th><th>Résumé score</th></tr></thead><tbody>${deservingRows.map(r=>`<tr><td>${r.rank}</td><td><button class="stock-team team-link" data-team="${esc(r.team)}">${esc(r.team)}</button></td><td>${r.wins}–${r.losses}${r.ties?'–'+r.ties:''}</td><td>${pct(r.win_pct,1)}</td><td>${1+deservingRows.filter(o=>o.sos>r.sos+1e-10).length}</td><td>${r.sos.toFixed(3)}</td><td>${r.recordBase.toFixed(2)}</td><td>${signedMove(r.scheduleAdjustment,2)}</td><td>${signedMove(r.marginAdjustment,2)}</td><td>${signedMove(r.winsAdjustment,2)}</td><td>${r.score.toFixed(2)}</td></tr>`).join('')}</tbody></table></div>`;
+    const rows=deservingData(),through=`${ratings.season} · ${ratings.history?.at(-1)?.label||'Season to date'}`;
+    document.getElementById('deserving-date').textContent=through;
+    host.innerHTML=rows.length?rankingGrid(rows.filter(r=>r.rank<=25),'Résumé score',r=>DeservingLab.signed(r.score)):'<p class="stock-empty">The board opens after the first completed FBS matchup.</p>';
+    if(rows.length&&!deservingLabMounted){
+      DeservingLab.mount({host:document.getElementById('deserving-lab'),ctx:deservingContext,model:deservingModel,esc,crestOf,wireTeamLinks,games_through:`Games through ${through}`});
+      deservingLabMounted=true;
+    }
     wireTeamLinks();
   }
 
   function renderMarksPlayoff() {
     if(!deservingModel) { document.getElementById("marks-playoff").innerHTML="<p>Résumé model unavailable.</p>"; return; }
-    if(!deservingRows)deservingRows=RankingHistory.deserving(schedule,meta,[...FBS],deservingModel);
-    MarksPlayoff.mount({rows:deservingRows,meta,schedule,poll:committeeRankings,season:ratings.season,host:document.getElementById("marks-playoff"),esc,crestOf,wireTeamLinks});
+    deservingData();
+    MarksPlayoff.mount({rows:deservingRows,model:deservingModel,meta,schedule,poll:committeeRankings,season:ratings.season,host:document.getElementById("marks-playoff"),esc,crestOf,wireTeamLinks});
   }
 
   function fillPowerHistoryTeams() {
