@@ -1548,3 +1548,22 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px
 .md-mode .seg-btn:hover{background:#f6f2e7;color:var(--text)}
 .md-mode .seg-btn.active{background:#18332f;color:#f3e7c4}
 @media(max-width:760px){.md-wf-zero{top:0;bottom:0}.md-wf-link{display:none}}
+
+/* Projected bracket and analysis are separate views. */
+#projected-bracket-panel[hidden],#projected-analysis-panel[hidden]{display:none}
+.projected-display{margin:18px 0 24px}
+.ccg-more summary,.conference-method summary{cursor:pointer;font-size:13px;font-weight:600;padding:12px 0;color:var(--muted)}
+.ccg-more .show-less{display:none}.ccg-more[open] .show-more{display:none}.ccg-more[open] .show-less{display:inline}
+.ccg-card .ccg-row .team-link{width:120px;font-size:12px}
+.ccg-card .ccg-row .pct{min-width:48px;text-align:right}
+.projected-selection-table .selection-route{white-space:normal;min-width:190px;text-align:left}
+.mp-projected .mp-field h4 small{font-size:9px;color:#a8bcb1;display:block;letter-spacing:.5px;font-weight:400;margin-top:5px}
+#view-playoff{--muted:#b5c6bc;--text:#f1f4ed;--line:#35504a;--line2:#3a5145}
+#view-playoff .sub b,#view-playoff .sub a{color:#e4c36b}
+#projected-analysis-panel .ccg-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));align-items:start}
+#projected-analysis-panel .ccg-row{display:grid;grid-template-columns:18px minmax(85px,1fr) minmax(65px,1fr) 48px;gap:7px}
+#projected-analysis-panel .ccg-row .team-link{width:auto;min-width:0}
+#projected-analysis-panel .ccg-row .bar{width:100%;min-width:0}
+#projected-analysis-panel .resume-score-table thead{background:#1b3532;color:#e4c36b}
+#projected-analysis-panel .resume-score-table .in-field{background:#d8bd7510}
+#projected-analysis-panel .resume-score-table tr:hover{background:#d8bd751c}

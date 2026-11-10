@@ -880,54 +880,8 @@
     </div>`;
   }
 
-  function renderResumes(P, byTeam, br) {
-    const el = document.getElementById("playoff-resumes");
-    if (!el) return;
-    const seeds = (br && br.seeds) || [];
-    if(cur().playoff.committee_anchor) {
-      el.innerHTML=`<div class="res-grid">${seeds.map((team,i)=>{
-        const t=byTeam[team];if(!t)return "";
-        return `<div class="res-card"><div class="res-head"><span class="res-seed">${i+1}</span><img src="${logoURL(team)}" alt=""><div class="res-name"><button class="team-link" data-team="${esc(team)}">${esc(team)}</button><div class="conf">Current CFP ${t.current_cfp_rank?'#'+t.current_cfp_rank:'NR'}</div></div><div class="res-odds"><b>${pct(t.playoff,0)}</b><span>to make it</span></div></div><div class="res-route">Projected record: <b>${t.avg_wins.toFixed(1)}–${t.avg_losses.toFixed(1)}</b></div><div class="res-rec"><span>${pct(t.bye,0)} bye</span><span>${pct(t.champ,1)} title</span></div></div>`;
-      }).join("")}</div><p class="board-note">Current committee rankings establish the starting order. Completed games are locked; the live football model simulates the remaining schedule and conference titles, then applies the playoff qualification rules.</p>`;
-      return;
-    }
-
-    const cards = seeds.map((t, i) => (byTeam[t] ? resumeCard(byTeam[t], i + 1) : ""))
-                       .join("");
-
-    const legend = PART_META.map(([, lab, c]) =>
-      `<span class="res-key"><i style="background:${c}"></i>${lab}</span>`).join("");
-
-    // The bubble. Exactly one team is the last one in and exactly one is the first one
-    // out in every simulated season, so these two columns each sum to 100% across the
-    // league and are directly comparable.
-    const li = P.filter(t => (t.last_in || 0) > 0)
-                .sort((a, b) => b.last_in - a.last_in).slice(0, 6);
-    const fo = P.filter(t => (t.first_out || 0) > 0)
-                .sort((a, b) => b.first_out - a.first_out).slice(0, 6);
-    const strip = (list, key, max) => list.map(t => `<div class="ccg-row">
-        <img src="${logoURL(t.team)}" alt="" loading="lazy">
-        <button class="team-link" data-team="${esc(t.team)}">${esc(abbr(t.team))}</button>
-        <div class="bar"><i style="width:${100 * (t[key] || 0) / max}%;
-          background:${color(t.team)}"></i></div>
-        <span class="pct">${pct(t[key] || 0, 0)}</span></div>`).join("");
-    const liMax = Math.max(...li.map(t => t.last_in), 0.01);
-    const foMax = Math.max(...fo.map(t => t.first_out), 0.01);
-
-    el.innerHTML = `
-      <div class="res-legend">Each bar splits that team's committee score into the
-        terms that produced it: ${legend}</div>
-      <div class="res-legend sub-note">The row of figures under each bar is those
-        same terms as ranking points, in the same order and colours, and the bold
-        figure on the right is the committee score they sum to.</div>
-      <div class="res-grid">${cards}</div>
-      <div class="bubble-wrap">
-        <div class="ccg-card"><div class="ccg-name">Last team in</div>${strip(li, "last_in", liMax)}</div>
-        <div class="ccg-card"><div class="ccg-name">First team out</div>${strip(fo, "first_out", foMax)}</div>
-      </div>
-      <div class="wd-foot">The twelfth seed and the best team left behind, as a share
-        of all ${cur().playoff.n_sims.toLocaleString()} simulated seasons. Each column
-        sums to 100%: every season has exactly one of each.</div>`;
+  function renderResumes() {
+    document.getElementById("playoff-resumes").innerHTML = ProjectedAnalysis.table({playoff:cur().playoff,esc,crestOf});
   }
 
   /* Winner-only scenario builder and unified playoff paths. */
@@ -970,48 +924,17 @@
   }
   document.getElementById("resume-score-version").addEventListener("change", renderResumeScores);
 
-  function renderSelection(P, byTeam, br) {
-    const P4_CONFS = cur().playoff.p4_confs || [...P4];
-    const G6_CONFS = cur().playoff.g6_confs || ["American Athletic", "Conference USA", "Mid-American", "Mountain West", "Pac-12", "Sun Belt"];
-    const ccg = document.getElementById("playoff-ccg");
-    if (!ccg) return;
-    const block = (title, confs, auto) => `
-      <h4 class="ccg-h">${title}</h4>
-      <div class="ccg-grid">${confs.map(c => {
-        const pool = P.filter(t => t.conference === c)
-                      .sort((a, b) => b.conf_champ - a.conf_champ).slice(0, 4);
-        if (!pool.length) return "";
-        return `<div class="ccg-card">
-          <div class="ccg-name">${esc(c)}
-            <span class="ccg-tag">${auto ? "champion is in" : "no auto bid"}</span></div>
-          ${pool.map(t => `<div class="ccg-row">
-            <img src="${logoURL(t.team)}" alt="" loading="lazy">
-            <button class="team-link" data-team="${esc(t.team)}">${esc(abbr(t.team))}</button>
-            <div class="bar"><i style="width:${100 * t.conf_champ}%;
-              background:${color(t.team)}"></i></div>
-            <span class="pct">${pct(t.conf_champ, 0)}</span></div>`).join("")}
-        </div>`;
-      }).join("")}</div>`;
-
-    const g6all = P.filter(t => G6_CONFS.includes(t.conference))
-                   .sort((a, b) => (b.g6_bid || 0) - (a.g6_bid || 0));
-    const g6 = g6all.slice(0, 8);
-    // The bid rotates across a dozen candidates, so no one team is near 100% and a
-    // raw percentage scale leaves every bar a stub. Scale to the leader.
-    const g6max = Math.max(...g6.map(t => t.g6_bid || 0), 0.01);
-    ccg.innerHTML = block("Power 4 — champion is in automatically", P4_CONFS, true)
-      + block("Group of 6 — one bid, and it goes to the ranking, not the trophy",
-              G6_CONFS, false)
-      + `<h4 class="ccg-h">Who takes the Group of 6 bid</h4>
-         <div class="ccg-card wide">${g6.map(t => `<div class="ccg-row">
-           <img src="${logoURL(t.team)}" alt="" loading="lazy">
-           <button class="team-link" data-team="${esc(t.team)}">${esc(t.team)}</button>
-           <div class="bar"><i style="width:${100 * (t.g6_bid || 0) / g6max}%;
-             background:${color(t.team)}"></i></div>
-           <span class="pct">${pct(t.g6_bid || 0, 0)}</span></div>`).join("")}</div>
-         <div class="wd-foot">Share of simulated seasons in which this team is the
-           highest-ranked Group of 6 team, and therefore the one that goes.</div>`;
+  function renderSelection() {
+    document.getElementById("playoff-ccg").innerHTML = ProjectedAnalysis.races({playoff:cur().playoff,esc,logoURL,color});
   }
+  document.querySelectorAll('[data-projected-mode]').forEach(button=>button.addEventListener('click',()=>{
+    const analysis=button.dataset.projectedMode==='analysis';
+    document.getElementById('projected-bracket-panel').hidden=analysis;
+    document.getElementById('projected-analysis-panel').hidden=!analysis;
+    document.querySelectorAll('[data-projected-mode]').forEach(b=>{
+      b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button));
+    });
+  }));
 
   /* =======================================================================
      MATCHUP SIMULATOR

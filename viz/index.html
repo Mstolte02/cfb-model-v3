@@ -65,11 +65,15 @@
       <button class="seg-btn active" data-version="current">Current projection</button>
       <button class="seg-btn" data-version="preseason">Preseason · locked</button>
     </div>
-    <h3 class="bracket-title">Projected Bracket <span class="hint">— starting from the committee, forecasting the finish</span></h3>
-    <div id="bracket"></div>
-    <p class="board-note"><a href="#resume-scores">View Predicted Resume Scores →</a> to see the ranking points behind the simulation’s field and seeds.</p>
-    <h3 class="bracket-title">Conference title races <span class="hint">— four Power 4 champions receive automatic bids</span></h3><div id="playoff-ccg"></div>
-    <h3 class="bracket-title">How each of the twelve got in</h3><div id="playoff-resumes"></div>
+    <div class="seg projected-display" role="group" aria-label="Projected playoff display">
+      <button class="seg-btn active" data-projected-mode="bracket" aria-pressed="true" aria-controls="projected-bracket-panel">Bracket</button>
+      <button class="seg-btn" data-projected-mode="analysis" aria-pressed="false" aria-controls="projected-analysis-panel">Analysis</button>
+    </div>
+    <div id="projected-bracket-panel"><div id="bracket"></div></div>
+    <div id="projected-analysis-panel" hidden>
+      <h3 class="bracket-title">Conference title races</h3><div id="playoff-ccg"></div>
+      <h3 class="bracket-title">How they get in — the full field</h3><div id="playoff-resumes"></div>
+    </div>
   </section>
 
   <section id="view-resume-scores" class="view">
@@ -205,6 +209,7 @@
 <script src="ranking-history.js?v=6"></script>
 <script src="deserving-lab.js?v=3"></script>
 <script src="playoff-paths.js"></script>
+<script src="projected-analysis.js"></script>
 <script src="marks-playoff.js"></script>
 <script src="committee-watch.js"></script>
 <script src="scenario-lab.js"></script>

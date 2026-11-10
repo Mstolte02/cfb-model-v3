@@ -29,6 +29,7 @@ root <- normalizePath(file.path(dirname(sub("^--file=", "", grep("^--file=", com
 viz <- file.path(root, "viz", "data")
 source(file.path(root, "scripts", "playoff_record_odds.R"))
 source(file.path(root, "scripts", "committee_anchor.R"))
+source(file.path(root, "scripts", "conference_titles.R"))
 
 # cfbseedR splits work into chunks but deliberately leaves execution sequential
 # unless the caller selects a future plan. Use the runner's available cores while
@@ -158,6 +159,7 @@ make_inputs <- function(mode) {
     data.frame(
       season = 2026L,
       game_type = "REG",
+      conference_game = isTRUE(as.logical(g$c)),
       week = as.integer(g$w),
       home_team = g$h,
       away_team = g$a,
@@ -181,6 +183,8 @@ make_inputs <- function(mode) {
     postseason_eligible = all_teams %in% fbs,
     stringsAsFactors = FALSE
   )
+
+  teams <- conference_teams(teams)
 
   # Unlisted opponents still need a probability while their games are simulated.
   fallback_logit <- min(static_logit) - 3
@@ -409,7 +413,10 @@ export_run <- function(mode) {
   template_path <- file.path(viz, paste0("playoff_", mode, ".json"))
   template <- if (file.exists(template_path)) read_json(template_path) else list(teams = list())
   old <- setNames(template$teams %||% list(), vapply(template$teams %||% list(), function(x) x$team, character(1)))
-  standings <- select_and_play(sim$standings, input)
+  titles <- simulate_conference_titles(sim$games, input$teams, input$games,
+                                       input$analytics, model_results, input$spec)
+  sim$games <- titles$games
+  standings <- select_and_play(titles$standings, input)
   anchor <- attr(standings, "committee_anchor")
   max_exit <- 5L
   cm <- static_committee(input)
@@ -431,6 +438,13 @@ export_run <- function(mode) {
     base$final <- round(event_rate(st$exit >= 4), 4)
     base$champ <- round(event_rate(st$exit == max_exit), 4)
     base$seeds <- as.list(round(seeds, 4))
+    # Keep record and score from the SAME seed-conditioned draws for Analysis.
+    base$seed_outlooks <- lapply(seq_len(12), function(seed) {
+      at <- !is.na(st$seed) & st$seed == seed
+      if (!any(at)) return(NULL)
+      list(samples = sum(at), score = mean(st$selection_score[at]),
+           wins = mean(st$wins[at]), losses = mean(st$losses[at]))
+    })
     base$predicted_resume_score <- round(mean(st$selection_score), 8)
     static <- cm$static[match(team, cm$team)]
     record <- W_WINPCT * mean(st$win_pct)
@@ -475,6 +489,13 @@ export_run <- function(mode) {
     out$committee_proxy <- "Starts in actual CFP Top 25 order; current committee residuals are retained while simulated final records change the ranking. Unranked teams start below No. 25."
     out$engine <- paste0("cfbseedR::cfb_simulations() v", sim$sim_params$cfbseedR_version, " + current CFP ranking baseline")
   }
+  out$conference_method <- paste(
+    "Conference-only standings and cfbseedR's registered tiebreaker cascades select the finalists;",
+    "Sun Belt selects one East and one West winner. Championship games are simulated before CFP selection,",
+    "and their results count toward final committee records. Explicit non-conference games are excluded from conference races.",
+    "Model Power Ratings proxy unavailable external analytics composites. Future CFP ranking inputs are unavailable;",
+    "score-based tiebreakers are skipped where simulated per-game points are unavailable.",
+    "Pac-12 uses the generic cascade; campus title sites use conference seed order.")
   out$teams <- rows
   out$bracket <- build_bracket(rows)
   out$tossups <- list()
