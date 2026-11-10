@@ -1,4 +1,5 @@
 suppressPackageStartupMessages(library(cfbseedR))
+stopifnot(utils::packageVersion('cfbseedR') >= '0.3.0')
 source('scripts/conference_titles.R')
 teams <- data.frame(team = c('East A','East B','West A','West B'), conference = 'SEC',
                     division = 'FBS', postseason_eligible = TRUE)
@@ -40,3 +41,18 @@ stopifnot(nrow(batched) == 404L, length(unique(batched$sim)) == 101L,
           all(batched$conf_rank[batched$team == 'East A'] == 2L),
           all(tapply(batched$conf_champ, batched$sim, sum) == 1L))
 cat('Batched conference standings preserve all 101 independent draws\n')
+
+# Public-API regression for upstream's multi-team restart bug (cfbseedR, MIT).
+# A/B/C tie at 3-2; common opponents eliminate A. B then advances over C
+# on their head-to-head, even though descending further would favor C's SOS.
+tie_games <- data.frame(sim=1L, week=seq_len(20), game_type='REG',
+  home_team=c('A','C','A','A','H','B','B','E','B','C',
+              'F','C','D','F','D','H','F','E','F','G'),
+  away_team=c('B','A','F','G','A','C','D','B','H','E',
+              'C','H','E','D','G','D','E','G','G','H'),
+  result=rep(7,20),neutral=0L)
+tie_teams <- data.frame(team=c('A','B','C','D','E','F','G','H'),conference='Zeta')
+tied <- cfbseedR::cfb_standings(tie_games,tie_teams,tiebreaker_depth='POINTS',verbosity='NONE')
+rank <- setNames(tied$conf_rank,tied$team)
+stopifnot(rank[['F']]==1L,rank[['B']]==2L,rank[['C']]==3L,rank[['A']]==4L)
+cat('Reduced multi-team ties restart at head-to-head before SOS\n')

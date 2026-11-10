@@ -15,8 +15,8 @@ suppressPackageStartupMessages({
   library(cfbseedR)
   library(jsonlite)
 })
-if (utils::packageVersion("cfbseedR") < "0.2.0") {
-  stop("cfbseedR >= 0.2.0 is required for the 2026 autobid policy")
+if (utils::packageVersion("cfbseedR") < "0.3.0") {
+  stop("cfbseedR >= 0.3.0 is required for corrected multi-team and common-opponent tiebreakers")
 }
 
 args <- commandArgs(trailingOnly = TRUE)
@@ -408,7 +408,7 @@ export_run <- function(mode) {
     compute_results = model_results, spec = input$spec,
     simulations = n_sims, playoff_seeds = 12L, sim_include = "REG", autobid = "2026",
     tiebreaker_data = list(analytics_ratings = input$analytics),
-    chunks = min(max(4L, workers * 2L), n_sims), verbosity = "NONE"
+    chunks = min(max(4L, workers * 2L, ceiling(n_sims / 100L)), n_sims), verbosity = "NONE"
   )
   template_path <- file.path(viz, paste0("playoff_", mode, ".json"))
   template <- if (file.exists(template_path)) read_json(template_path) else list(teams = list())
