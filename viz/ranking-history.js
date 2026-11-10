@@ -86,9 +86,11 @@
   }
   // Ridge least squares on capped margins: r_i - r_j + h*v = clip(margin) + noise.
   // skip = a team whose games are all removed (leave-team-out fit).
-  function fitRatings(n,games,cal,skip=-1) {
+  // priorMean (optional): the ridge pulls each rating toward this value instead of 0
+  // (early-season prior-season blend; see priorWeight).
+  function fitRatings(n,games,cal,skip=-1,priorMean=null) {
     const A=new Float64Array(n*n),b=new Float64Array(n);
-    for(let k=0;k<n;k++)A[k*n+k]=cal.ridge_games;
+    for(let k=0;k<n;k++){A[k*n+k]=cal.ridge_games;if(priorMean)b[k]+=cal.ridge_games*(priorMean[k]||0);}
     for(const g of games) {
       if(g.i===skip||g.j===skip)continue;
       A[g.i*n+g.i]++;A[g.j*n+g.j]++;A[g.i*n+g.j]--;A[g.j*n+g.i]--;
@@ -118,7 +120,8 @@
       // Canonical form: a neutral-site game is the same game whichever side is listed first.
       .map(g=>{
         const neutral=!!g.n,swap=neutral&&g.a<g.h;
-        return swap?{h:g.a,a:g.h,hp:g.ap,ap:g.hp,n:true,d:g.d||'',id:g.id}:{h:g.h,a:g.a,hp:g.hp,ap:g.ap,n:neutral,d:g.d||'',id:g.id};
+        const w=Number.isFinite(g.w)?g.w:null;
+        return swap?{h:g.a,a:g.h,hp:g.ap,ap:g.hp,n:true,d:g.d||'',id:g.id,w}:{h:g.h,a:g.a,hp:g.hp,ap:g.ap,n:neutral,d:g.d||'',id:g.id,w};
       })
       // Fixed order: identical inputs in any order give bit-identical sums.
       .sort((x,y)=>String(x.d).localeCompare(String(y.d))||x.h.localeCompare(y.h)||x.a.localeCompare(y.a)||x.hp-y.hp||x.ap-y.ap);
@@ -131,25 +134,43 @@
     return {calibrated,assumptions:{...RESUME_DEFAULTS.assumptions,...(model.assumptions||{})},
       sensitivity:model.sensitivity||null};
   }
+  /* Early-season stability: through the first weeks the ridge pulls each opponent
+     toward a share of its prior-season rating instead of toward average. The share
+     decays linearly to zero:  weight(week) = max(0, 1 - (week - 1) / decay_weeks).
+     Both the share (regression) and decay_weeks are fitted on chronological
+     out-of-sample log loss (scripts/deserving_calibration.cjs). Prior-season ratings
+     come from last season's FBS results only: no talent, recruiting or polls. */
+  function priorWeight(prior,week) {
+    if(!prior||!prior.ratings||!(prior.decay_weeks>0)||!Number.isFinite(week))return 0;
+    return Math.max(0,Math.min(1,1-(week-1)/prior.decay_weeks));
+  }
   // Opponent strength for every team's games. This is the only expensive step and
   // it does not depend on the philosophical assumptions, so sensitivity reuses it.
-  function prepare(schedule,fbsNames,model) {
+  function prepare(schedule,fbsNames,model,options={}) {
     const {calibrated:cal}=resolveModel(model);
     const finals=eligible(schedule,fbsNames);
     const names=[...new Set(finals.flatMap(g=>[g.h,g.a]))].sort(),n=names.length;
-    if(!n)return {cal,names,teams:[]};
+    const prior=options.prior===undefined?model.prior||null:options.prior;
+    const weeks=finals.map(g=>g.w).filter(Number.isFinite),week=weeks.length?Math.max(...weeks):null;
+    const pw=priorWeight(prior,week);
+    if(!n)return {cal,names,teams:[],week,priorWeight:pw};
     const idx=new Map(names.map((t,i)=>[t,i]));
     const games=finals.map(g=>({i:idx.get(g.h),j:idx.get(g.a),y:clip(g.hp-g.ap,cal.margin_cap),v:g.n?0:1,g}));
+    const priorMean=pw>0?Float64Array.from(names,t=>pw*(prior.regression??1)*(Number(prior.ratings[t])||0)):null;
+    // This season's playoff-caliber band so far (ranks k-4..k+4 of a full fit), shown beside
+    // the fixed reference as a drift check. It never enters any score.
+    const full=[...fitRatings(n,games,cal,-1,priorMean)].sort((x,y)=>y-x);
+    const band=k=>{const v=full.slice(Math.max(0,k-5),k+4),m=v.reduce((s,x)=>s+x,0)/v.length;return {mean:m,sd:Math.sqrt(v.reduce((s,x)=>s+(x-m)**2,0)/v.length),teams:v.length};};
     const teams=names.map((team,t)=>{
       const own=games.filter(x=>x.i===t||x.j===t);
-      const loo=fitRatings(n,games,cal,t);
+      const loo=fitRatings(n,games,cal,t,priorMean);
       return {team,games:own.map(x=>{
         const home=x.i===t,opp=home?x.j:x.i,g=x.g;
         return {opponent:names[opp],date:g.d,id:g.id,site:g.n?'neutral':home?'home':'away',venue:g.n?0:home?1:-1,
           pf:home?g.hp:g.ap,pa:home?g.ap:g.hp,oppRating:loo[opp]};
       })};
     });
-    return {cal,names,teams};
+    return {cal,names,teams,week,priorWeight:pw,inSeasonBand:n>=20?band(12):null};
   }
   /* The playoff-caliber reference team is a distribution, not one number:
      N(mean, sd) fitted to the end-of-season strengths of the teams ranked
@@ -197,51 +218,64 @@
         base:lossPenalty+fromWins+fromLosses+performance};
     });
   }
-  /* Head-to-head between close résumés. The score itself never changes.
-     After sorting by score, a team that beat a team ranked above it (on balance)
-     moves directly above that team when every team it passes, the beaten team
-     included, has a score within the closeness window of its own, and none of
-     them beat it. Teams it passes keep their order among themselves; each
-     passed team was already statistically tied with it. Each winner-loser pair
-     is used once, so a three-way cycle cannot loop. The result is one strict,
-     deterministic order. */
+  /* Head-to-head between close résumés: a capped, soft Bayesian update.
+
+     The résumé score D is noisy: the gap between two nearby résumés has a measured
+     standard deviation W (the head-to-head window, 0.39 loss units). When team w beat
+     team l (on balance), the result is evidence that w's résumé is the better one.
+     With base gap g = D_l - D_w (positive when the winner is behind):
+
+       prior on the true gap   Delta = D_w - D_l + noise,  noise ~ N(0, W^2)
+       evidence                P(w beat l | Delta) = Phi(Delta / W)
+       posterior mean shift    m(g) = (W / sqrt2) * phi(z) / Phi(z),  z = -g / (W sqrt2)
+
+     The update only operates inside the noise band: full strength while the winner
+     trails by less than W/2, fading linearly to zero at W (no jump), and nothing
+     beyond. The pair's gap closes by t = min(W, m(g) * taper(g)); the winner gains
+     t/2 and the loser gives up t/2. A team's net head-to-head adjustment is capped at
+     +/- W/2, so an extra win (+1) or tie (+0.5) can never be cancelled by it.
+
+     Ranking = résumé score + head-to-head adjustment: one number per team, so the
+     order is transitive, deterministic and independent of the order pairs are visited
+     (no path dependence). A winner within ~0.24 of the team it beat passes it;
+     further apart, the gap only narrows. */
   function headToHeadNet(ctx) { // per team: opponent -> wins minus losses against it
     return ctx.teams.map(t=>{const m=new Map();for(const g of t.games){if(g.pf===g.pa)continue;m.set(g.opponent,(m.get(g.opponent)||0)+(g.pf>g.pa?1:-1));}return m;});
   }
-  function orderTeams(names,scores,net,window) {
-    const order=scores.map((_,i)=>i).sort((x,y)=>scores[y]-scores[x]||names[x].localeCompare(names[y]));
-    const beat=(x,y)=>(net[x].get(names[y])||0)>0;
-    if(window>0) {
-      const used=new Set();
-      for(let guard=0;guard<order.length*order.length;guard++) {
-        let move=null;
-        for(let k=1;k<order.length&&!move;k++) {
-          const w=order[k];
-          // Walk up from w. Stop at the first team it may not pass: too far ahead, or one that beat it.
-          // The highest team it beat along the way is where it lands.
-          for(let i=k-1;i>=0;i--) {
-            const t=order[i];
-            if(scores[t]-scores[w]>=window||beat(t,w))break;
-            if(beat(w,t)&&!used.has(w+'>'+t))move={k,i,w,t};
-          }
-        }
-        if(!move)break;
-        used.add(move.w+'>'+move.t);
-        order.splice(move.k,1);order.splice(move.i,0,move.w);
+  const phi=x=>Math.exp(-x*x/2)/Math.sqrt(2*Math.PI);
+  function headToHeadTransfer(gap,window) {
+    if(!(window>0)||!(gap<window))return 0;
+    const S=window*Math.SQRT2,zz=-gap/S,m=window/Math.SQRT2*phi(zz)/Math.max(1e-300,normalCdf(zz));
+    const taper=gap<=window/2?1:(window-gap)/(window/2);
+    return Math.max(0,Math.min(window,m*taper));
+  }
+  function headToHeadAdjust(names,scores,net,window) {
+    const n=names.length,raw=new Float64Array(n),detail=names.map(()=>[]);
+    if(window>0){
+      const idx=new Map(names.map((t,i)=>[t,i]));
+      for(let w=0;w<n;w++)for(const [opp,v] of net[w]){
+        const l=idx.get(opp);if(l===undefined||!(v>0))continue;
+        const gap=scores[l]-scores[w],t=headToHeadTransfer(gap,window);
+        if(t<=0)continue;
+        raw[w]+=t/2;raw[l]-=t/2;
+        detail[w].push({team:opp,won:true,gap,value:t/2});detail[l].push({team:names[w],won:false,gap:-gap,value:-t/2});
       }
     }
-    // Competition ranks. Equal scores share a rank only when head-to-head does not separate them.
+    const cap=window/2,adj=Float64Array.from(raw,x=>clip(x,cap));
+    detail.forEach((d,i)=>{d.sort((x,y)=>Math.abs(y.value)-Math.abs(x.value)||x.team.localeCompare(y.team));
+      if(Math.abs(adj[i]-raw[i])>1e-15)d.push({team:null,cap:true,value:adj[i]-raw[i]});});
+    return {adj,detail,cap};
+  }
+  function orderTeams(names,scores) {
+    const order=scores.map((_,i)=>i).sort((x,y)=>scores[y]-scores[x]||names[x].localeCompare(names[y]));
     const ranks=Array(order.length);
-    order.forEach((i,k)=>{
-      const p=order[k-1];
-      const tied=k>0&&Math.abs(scores[i]-scores[p])<=1e-9&&!(net[i].get(names[p])||net[p].get(names[i]));
-      ranks[i]=tied?ranks[p]:k+1;
-    });
-    return {order,ranks,beat};
+    order.forEach((i,k)=>{const p=order[k-1];ranks[i]=k>0&&Math.abs(scores[i]-scores[p])<=1e-9?ranks[p]:k+1;});
+    return {order,ranks};
   }
   function nodeRanks(ctx,a,ref,sigma,net) {
-    const ev=evaluate(ctx,a,ref,sigma,false),scores=ev.map(e=>e.base);
-    return {ev,scores,ranks:orderTeams(ctx.names.length?ev.map(e=>e.team):[],scores,net,a.head_to_head_window).ranks};
+    const ev=evaluate(ctx,a,ref,sigma,false),names=ev.map(e=>e.team),base=ev.map(e=>e.base);
+    const {adj}=headToHeadAdjust(names,base,net,a.head_to_head_window),scores=base.map((x,i)=>x+adj[i]);
+    return {ev,scores,ranks:orderTeams(names,scores).ranks};
   }
   function score(ctx,assumptions,options={}) {
     const cal=ctx.cal,a={...RESUME_DEFAULTS.assumptions,...(assumptions||{})},cutoff=options.cutoff||12;
@@ -250,26 +284,25 @@
     // R ~ N(mean, sd^2) is exactly Phi((mean - r + hv)/sqrt(s^2 + sd^2)).
     const sigmaEff=Math.sqrt(cal.win_sigma**2+dist.sd**2);
     const ev=evaluate(ctx,a,dist.mean,sigmaEff,true);
-    const rows=ev.map(e=>{
+    const names=ev.map(e=>e.team),base=ev.map(e=>e.base);
+    const h2h=headToHeadAdjust(names,base,net,a.head_to_head_window);
+    const rows=ev.map((e,i)=>{
       const schedule=e.fromWins+e.fromLosses,earned=e.wins+e.ties/2;
       return {team:e.team,wins:e.wins,losses:e.losses,ties:e.ties,games:e.games,win_pct:earned/e.games,
         lossPenalty:e.lossPenalty,schedule,scheduleFromWins:e.fromWins,scheduleFromLosses:e.fromLosses,performance:e.performance,
-        score:e.base,sos:schedule,ledger:e.ledger,referenceRating:dist.mean,referenceSd:dist.sd,referenceWins:e.games-schedule,
-        headToHeadPassed:[],headToHeadPassedBy:[]};
+        resumeScore:e.base,headToHead:h2h.adj[i],headToHeadGames:h2h.detail[i],score:e.base+h2h.adj[i],
+        sos:schedule,ledger:e.ledger,referenceRating:dist.mean,referenceSd:dist.sd,referenceWins:e.games-schedule,
+        quality:qualitySummary(e.ledger,cal,a),headToHeadPassed:[],headToHeadPassedBy:[]};
     });
-    const names=rows.map(r=>r.team),scores=rows.map(r=>r.score);
-    const {order,ranks,beat}=orderTeams(names,scores,net,a.head_to_head_window);
-    // Record every team placed above a higher score, and why: it won the game (won), or it
-    // was carried past a statistically tied team on its way above a team it beat (because).
+    const scores=rows.map(r=>r.score),{order,ranks}=orderTeams(names,scores);
+    // Every pair whose order the head-to-head adjustment reversed (résumé score says
+    // one thing, the ranking the other), and whether the team placed higher won the game.
+    const beat=(x,y)=>(net[x].get(names[y])||0)>0;
     for(let p=0;p<order.length;p++)for(let q=p+1;q<order.length;q++){
-      const x=order[p],y=order[q];if(!(scores[x]<scores[y]-1e-12))continue;
-      rows[x].headToHeadPassed.push({team:names[y],gap:scores[y]-scores[x],won:beat(x,y)});
+      const x=order[p],y=order[q];if(!(base[x]<base[y]-1e-12&&scores[x]>scores[y]+1e-12))continue;
+      rows[x].headToHeadPassed.push({team:names[y],gap:base[y]-base[x],won:beat(x,y)});
+      rows[y].headToHeadPassedBy.push({team:names[x],gap:base[y]-base[x],won:beat(x,y)});
     }
-    rows.forEach((r,x)=>{
-      const won=r.headToHeadPassed.filter(p=>p.won).sort((m,n)=>n.gap-m.gap);
-      for(const p of r.headToHeadPassed){if(!p.won)p.because=won[0]?.team||null;
-        rows[names.indexOf(p.team)].headToHeadPassedBy.push({team:r.team,gap:p.gap,won:p.won,because:p.because});}
-    });
     rows.forEach((r,i)=>{r.rank=ranks[i];});
     if(!options.light) {
       // Range and rarity under reference uncertainty. A stronger reference team
@@ -295,19 +328,38 @@
     });
     return sorted;
   }
+  /* Quality wins and losses, judged with the same leave-team-out opponent strengths
+     and the same venue adjustment as the score. Tiers are set by the calibrated
+     reference table: "playoff-caliber" = at least as strong (venue-adjusted) as the
+     reference team; "top-25 caliber" = at least the #25 reference; "bad loss" = a
+     loss to a below-average FBS team. */
+  function qualitySummary(ledger,cal,a) {
+    const top=lookupRank(cal.reference_ratings,a.benchmark_rank),t25=lookupRank(cal.reference_ratings,25);
+    const out={playoffWins:0,top25Wins:0,playoffLosses:0,top25Losses:0,badLosses:0,tiers:[]};
+    for(const g of ledger){
+      const s=g.oppRating-cal.home_field*g.venue; // opponent strength from this team's side of the venue
+      const tier=s>=top?'playoff':s>=t25?'top25':s<0?'below-average':'average';
+      g.tier=tier;g.adjustedOpp=s;
+      if(g.result==='W'){if(tier==='playoff')out.playoffWins++;if(tier==='playoff'||tier==='top25')out.top25Wins++;}
+      if(g.result==='L'){if(tier==='playoff')out.playoffLosses++;if(tier==='playoff'||tier==='top25')out.top25Losses++;if(tier==='below-average')out.badLosses++;}
+    }
+    return out;
+  }
   function deserving(schedule,metadata,fbsNames,model,options={}) {
     const resolved=resolveModel(model);
     const ctx=options.context||prepare(schedule,fbsNames,model);
     return score(ctx,{...resolved.assumptions,...(options.assumptions||{})},options);
   }
-  // Why does A rank ahead of B? Uses the same components as the score, so the
-  // net always equals the score difference exactly; head-to-head is reported separately.
+  // Why does A rank ahead of B? Uses the same components as the ranking score, so the
+  // net always equals the score difference exactly, head-to-head adjustment included.
   function compare(a,b) {
     const meetings=a.ledger.filter(g=>g.opponent===b.team);
-    const decidedBy=a.headToHeadPassed.some(x=>x.team===b.team)?a.team:b.headToHeadPassed.some(x=>x.team===a.team)?b.team:null;
+    const resume=a.resumeScore-b.resumeScore,net=a.score-b.score;
+    // The adjustment decided the order when it reversed the sign of the résumé gap.
+    const decidedBy=resume<-1e-12&&net>1e-12?a.team:resume>1e-12&&net<-1e-12?b.team:null;
     return {losses:a.lossPenalty-b.lossPenalty,schedule:a.schedule-b.schedule,
       scheduleFromWins:a.scheduleFromWins-b.scheduleFromWins,scheduleFromLosses:a.scheduleFromLosses-b.scheduleFromLosses,
-      performance:a.performance-b.performance,net:a.score-b.score,lossGap:a.losses-b.losses,
+      performance:a.performance-b.performance,resume,headToHead:a.headToHead-b.headToHead,net,lossGap:a.losses-b.losses,
       meetings,headToHeadNet:meetings.reduce((s,g)=>s+(g.result==='W'?1:g.result==='L'?-1:0),0),decidedBy,
       rarity:(a.rarity??NaN)-(b.rarity??NaN),referenceWins:a.referenceWins-b.referenceWins};
   }
@@ -329,6 +381,6 @@
     return {configs,byTeam:out};
   }
   root.RankingHistory={movement,deserving,z,prepare,score,compare,sensitivity,fitRatings,normalCdf,eligible,
-    poissonBinomial,upperTail,referenceRating,referenceDistribution,orderTeams,RESUME_DEFAULTS};
+    poissonBinomial,upperTail,referenceRating,referenceDistribution,orderTeams,headToHeadTransfer,headToHeadAdjust,priorWeight,RESUME_DEFAULTS};
   if(typeof module!=='undefined')module.exports=root.RankingHistory;
 })(typeof window!=='undefined'?window:globalThis);

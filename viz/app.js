@@ -2441,7 +2441,7 @@
     if(!deservingModel){host.innerHTML='<p class="stock-empty">Résumé model unavailable. Reload to try again.</p>';return;}
     const rows=deservingData(),through=`${ratings.season} · ${ratings.history?.at(-1)?.label||'Season to date'}`;
     document.getElementById('deserving-date').textContent=through;
-    host.innerHTML=rows.length?rankingGrid(rows.filter(r=>r.rank<=25),'Résumé score',r=>DeservingLab.signed(r.score)):'<p class="stock-empty">The board opens after the first completed FBS matchup.</p>';
+    host.innerHTML=rows.length?rankingGrid(rows.filter(r=>r.rank<=25),'Ranking score',r=>DeservingLab.signed(r.score)):'<p class="stock-empty">The board opens after the first completed FBS matchup.</p>';
     if(rows.length&&!deservingLabMounted){
       DeservingLab.mount({host:document.getElementById('deserving-lab'),ctx:deservingContext,model:deservingModel,esc,crestOf,wireTeamLinks,games_through:`Games through ${through}`});
       deservingLabMounted=true;

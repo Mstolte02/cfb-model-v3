@@ -3,7 +3,9 @@
 
    Usage:  node scripts/deserving_calibration.cjs [rawDir]
            (rawDir defaults to $CFB_RAW_DIR, then data/raw; it needs CFBD
-           games_YYYY.json and, optionally, committee_rankings.json)
+           games_YYYY.json and teams_YYYY.json, and optionally committee_rankings.json
+           plus postseason_/sp_/fpi_YYYY.json from scripts/pull_deserving_benchmarks.py
+           for the committee and outside-ranking backtest)
 
    Writes  viz/data/deserving-model.json            calibrated + assumed parameters
            audit/output/deserving_calibration.json  every number in the report
@@ -27,16 +29,32 @@ const round=(x,d=4)=>Number.isFinite(x)?+x.toFixed(d):x;
 const roundObj=o=>Object.fromEntries(Object.entries(o).map(([k,v])=>[k,typeof v==='number'?round(v):v]));
 const log=(...a)=>console.error(...a);
 
+const readRaw=(name,fallback)=>{try{return JSON.parse(fs.readFileSync(path.join(RAW,name),'utf8'));}catch{return fallback;}};
+const toGame=x=>({h:x.homeTeam,a:x.awayTeam,hp:x.homePoints,ap:x.awayPoints,n:x.neutralSite?1:0,d:x.startDate.slice(0,10),w:x.week,id:x.id,f:1,
+  notes:x.notes||'',conf:!!x.conferenceGame,hc:x.homeClassification,ac:x.awayClassification});
 function load(y) {
   const G=JSON.parse(fs.readFileSync(path.join(RAW,`games_${y}.json`),'utf8'));
-  const games=G.filter(x=>x.completed&&x.seasonType==='regular'&&x.homeClassification==='fbs'&&x.awayClassification==='fbs'
-      &&Number.isFinite(x.homePoints)&&Number.isFinite(x.awayPoints))
-    .map(x=>({h:x.homeTeam,a:x.awayTeam,hp:x.homePoints,ap:x.awayPoints,n:x.neutralSite?1:0,d:x.startDate.slice(0,10),w:x.week,id:x.id,f:1}));
-  return {season:y,games,teams:[...new Set(games.flatMap(g=>[g.h,g.a]))].sort()};
+  const done=G.filter(x=>x.completed&&x.seasonType==='regular'&&Number.isFinite(x.homePoints)&&Number.isFinite(x.awayPoints));
+  const games=done.filter(x=>x.homeClassification==='fbs'&&x.awayClassification==='fbs').map(toGame);
+  // FBS against FCS, for the robustness check that pools every FCS opponent into one team.
+  const fcsGames=done.filter(x=>(x.homeClassification==='fbs')!==(x.awayClassification==='fbs')&&[x.homeClassification,x.awayClassification].includes('fcs')).map(toGame);
+  return {season:y,games,fcsGames,teams:[...new Set(games.flatMap(g=>[g.h,g.a]))].sort()};
 }
+// FBS membership by season (CFBD teams_YYYY.json), for the "FBS loss" definition checks.
+const fbsMembers=y=>new Set((readRaw(`teams_${y}.json`,[])||[]).filter(t=>t.classification==='fbs').map(t=>t.school));
 const seasons=new Map(ALL.map(y=>[y,load(y)]));
 let committee={};
 try{committee=JSON.parse(fs.readFileSync(path.join(RAW,'committee_rankings.json'),'utf8'));}catch{log('No committee file; descriptive comparison skipped');}
+// Prefer the last regular-season committee poll in CFBD's rankings_YYYY.json (selection day).
+// The cached committee_rankings.json has 2023 wrong (Georgia #4, Alabama #5); Alabama was #4
+// and played Michigan in the semifinal.
+for(const y of ALL){
+  const weeks=readRaw(`rankings_${y}.json`,null);if(!weeks)continue;
+  const polls=weeks.filter(w=>w.seasonType==='regular').flatMap(w=>(w.polls||[]).filter(p=>p.poll==='Playoff Committee Rankings').map(p=>({week:w.week,p})));
+  if(!polls.length)continue;
+  const last=polls.reduce((a,b)=>b.week>a.week?b:a).p;
+  committee[y]=last.ranks.map(r=>({rank:r.rank,team:r.school}));
+}
 
 /* ---------- 1. Opponent-strength model: chronological, out-of-sample ---------- */
 function indexGames(S,cal){
@@ -98,6 +116,57 @@ const allGrid=calibrateRatings(ALL);
 const calProd={...pick(allGrid[0])};Object.assign(calProd,dominanceScale(ALL,calProd));
 const naive={ridge_games:3,margin_cap:1000,home_field:2.5},naiveP=TEST.flatMap(y=>predictions(seasons.get(y),naive)),naiveSigma=fitSigma(naiveP);
 
+/* ---------- 1b. Early-season prior: blend last season's ratings, decaying to zero ---------- */
+// Prior-season ratings: last season's full regular-season fit. 2021 uses 2019 (2020 is excluded).
+const prevSeason=y=>y===2021?2019:y-1;
+const fullRatings=(y,cal)=>{const S=seasons.get(y)||load(y);const r=R.fitRatings(S.teams.length,indexGames(S,cal),cal);return Object.fromEntries(S.teams.map((t,i)=>[t,r[i]]));};
+const priorCache=new Map();
+function priorRatings(y,cal){
+  const p=prevSeason(y),key=p+':'+cal.ridge_games+':'+cal.margin_cap+':'+cal.home_field;
+  if(!fs.existsSync(path.join(RAW,`games_${p}.json`)))return null;
+  if(!priorCache.has(key))priorCache.set(key,fullRatings(p,cal));
+  return priorCache.get(key);
+}
+// Out-of-sample predictions with the prior: fit on weeks < w (snapshot week w-1), predict week w.
+function predictionsPrior(S,cal,prior,minWeek=2,maxWeek=99) {
+  const n=S.teams.length,gs=indexGames(S,cal),out=[];
+  const weeks=[...new Set(gs.map(g=>g.w))].sort((a,b)=>a-b);
+  for(const w of weeks){
+    if(w<minWeek||w>maxWeek)continue;
+    const train=gs.filter(g=>g.w<w);if(!train.length)continue;
+    const pw=prior?R.priorWeight(prior,Math.max(...train.map(g=>g.w))):0;
+    const pm=pw>0?Float64Array.from(S.teams,t=>pw*prior.regression*(prior.ratings[t]||0)):null;
+    const r=R.fitRatings(n,train,cal,-1,pm);
+    for(const g of gs)if(g.w===w&&g.m!==0)out.push({mu:r[g.i]-r[g.j]+cal.home_field*g.v,win:g.m>0?1:0,y:g.y,w});
+  }
+  return out;
+}
+const PRIOR_GRID={regression:[0.3,0.45,0.6,0.75,0.9,1],decay_weeks:[2,3,4,5,6,8,10,14]};
+// Philosophical limit: a résumé is judged on this season alone from week 6 on. Log loss
+// alone would keep last season's ratings all year (reported as the unconstrained optimum).
+const MAX_PRIOR_WEEKS=5;
+function calibratePrior(years,cal){
+  const res=[];
+  const base=years.flatMap(y=>predictionsPrior(seasons.get(y),cal,null,2,9)),bs=fitSigma(base);
+  for(const regression of PRIOR_GRID.regression)for(const decay_weeks of PRIOR_GRID.decay_weeks){
+    const P=years.flatMap(y=>{const rt=priorRatings(y,cal);return predictionsPrior(seasons.get(y),cal,rt&&{ratings:rt,regression,decay_weeks},2,9);});
+    const s=fitSigma(P);res.push({regression,decay_weeks,log_loss:logLoss(P,s),win_sigma:s,n:P.length});
+  }
+  res.sort((a,b)=>a.log_loss-b.log_loss);
+  return {best:res.find(r=>r.decay_weeks<=MAX_PRIOR_WEEKS),unconstrained:res[0],grid:res,no_prior:{log_loss:logLoss(base,bs),n:base.length}};
+}
+log('Calibrating the early-season prior');
+const PRIOR_TRAIN=TRAIN.filter(y=>y>2014);
+const priorFit=calibratePrior(PRIOR_TRAIN,calTrain);
+const PRIOR={regression:priorFit.best.regression,decay_weeks:priorFit.best.decay_weeks};
+function priorTest(cal){
+  const by=(lo,hi,prior)=>TEST.flatMap(y=>predictionsPrior(seasons.get(y),cal,prior?{...PRIOR,ratings:priorRatings(y,cal)}:null,lo,hi));
+  const row=(lo,hi)=>{const a=by(lo,hi,false),b=by(lo,hi,true),sa=fitSigma(a),sb=fitSigma(b);
+    return {weeks:`${lo}-${hi===99?'end':hi}`,games:a.length,log_loss_no_prior:round(logLoss(a,sa)),log_loss_prior:round(logLoss(b,sb)),brier_no_prior:round(brier(a,sa)),brier_prior:round(brier(b,sb))};};
+  return [row(2,3),row(4,5),row(6,7),row(8,99),row(2,99)];
+}
+const priorForSeason=(y,cal)=>{const rt=priorRatings(y,cal);return rt?{...PRIOR,season:prevSeason(y),ratings:rt}:null;};
+
 /* ---------- 2. Playoff-caliber reference strength: a distribution, prior seasons only ---------- */
 // End-of-season ratings of the 30 best FBS teams, per season.
 const endSorted=new Map(ALL.map(y=>{
@@ -114,19 +183,55 @@ function bandStats(years){
   }
   return out;
 }
-function referenceFor(y){
-  // Chronological: seasons strictly before y. The first three seasons have too
-  // little history and use 2014-2016 (flagged as in-sample).
-  let prior=ALL.filter(s=>s<y);const inSample=prior.length<3;if(inSample)prior=ALL.slice(0,3);
+/* Adaptive band. The reference can be pooled over every earlier season or only the most
+   recent few (rolling), which would follow changes in parity and conference strength.
+   The window is chosen here, every recalibration, by how well each rule anticipated the
+   band each season actually ended with (ranks 8-16, mean): smallest mean absolute error. */
+const WINDOWS=[3,4,6,99];
+function windowError(window){
+  const errs=[];for(const y of ALL){const prior=ALL.filter(s=>s<y);if(prior.length<4)continue;
+    errs.push(Math.abs(bandStats(prior.slice(-window)).ratings[12]-mean(endSorted.get(y).slice(7,16))));}
+  return mean(errs);
+}
+const windowErrors=Object.fromEntries(WINDOWS.map(w=>[w===99?'all':String(w),round(windowError(w),3)]));
+const REFERENCE_WINDOW=WINDOWS.reduce((b,w)=>windowError(w)<windowError(b)-1e-9?w:b,99);
+log('Reference window',REFERENCE_WINDOW===99?'all earlier seasons':REFERENCE_WINDOW,windowErrors);
+function referenceFor(y,window=REFERENCE_WINDOW){
+  // Chronological: seasons strictly before y, the most recent `window` of them. The
+  // first three seasons have too little history and use 2014-2016 (flagged as in-sample).
+  let prior=ALL.filter(s=>s<y).slice(-window);const inSample=prior.length<3;if(inSample)prior=ALL.slice(0,3);
   return {...bandStats(prior),from:prior,inSample};
 }
-const refProd=bandStats(ALL);
-const calFor=y=>{const f=referenceFor(y);return {...(TEST.includes(y)?calTrain:calProd),reference_ratings:f.ratings,reference_sd:f.sd};};
+const refProd=bandStats(ALL.slice(-REFERENCE_WINDOW)),refPooledAll=bandStats(ALL);
+const windowLabel=w=>w>=ALL.length?'every earlier season':`the ${w} most recent seasons`;
+const calFor=(y,window=REFERENCE_WINDOW)=>{const f=referenceFor(y,window);return {...(TEST.includes(y)?calTrain:calProd),reference_ratings:f.ratings,reference_sd:f.sd};};
+// How well each rule anticipates the band a season actually ends with (ranks 8-16, mean).
+function bandTracking(){
+  const rows=[];
+  for(const y of ALL){
+    const truth=mean(endSorted.get(y).slice(7,16));
+    const prior=ALL.filter(s=>s<y);if(prior.length<4)continue;
+    const pooled=bandStats(prior).ratings[12],rolling=bandStats(prior.slice(-4)).ratings[12],rolling3=bandStats(prior.slice(-3)).ratings[12];
+    // In-season estimate after week 9 (full fit of games through week 9, prior on), ranks 8-16.
+    const S=seasons.get(y),ctx=R.prepare(S.games.filter(g=>g.w<=9),S.teams,{method:'earned-results',calibrated:calFor(y),prior:priorForSeason(y,calFor(y))});
+    rows.push({season:y,actual:round(truth,2),pooled_all_prior:round(pooled,2),rolling_4:round(rolling,2),rolling_3:round(rolling3,2),in_season_week9:round(ctx.inSeasonBand.mean,2)});
+  }
+  const mae=k=>round(mean(rows.map(r=>Math.abs(r[k]-r.actual))),2);
+  // The in-season fit is shrunk toward average, so it reads low; the page compares this
+  // season's reading with the same week's reading in past seasons, not with the reference.
+  const byWeek={};
+  for(const w of [6,7,8,9,10,11,12,13,14]){const v=[];for(const y of ALL){const S=seasons.get(y);if(!S.games.some(g=>g.w>w))continue;
+    const c=R.prepare(S.games.filter(g=>g.w<=w),S.teams,{method:'earned-results',calibrated:calFor(y),prior:priorForSeason(y,calFor(y))});v.push(c.inSeasonBand.mean);}
+    byWeek[w]={mean:round(mean(v),2),sd:round(sd(v),2),seasons:v.length};}
+  return {seasons:rows,mean_abs_error:{pooled_all_prior:mae('pooled_all_prior'),rolling_4:mae('rolling_4'),rolling_3:mae('rolling_3'),in_season_week9:mae('in_season_week9')},
+    window_errors:windowErrors,selected_window:REFERENCE_WINDOW===99?'all':REFERENCE_WINDOW,in_season_by_week:byWeek};
+}
 
 /* ---------- 3. Snapshots ---------- */
-const modelFor=cal=>({method:'earned-results',calibrated:cal});
-function snapshot(y,uptoWeek=99,games=null){
-  const S=seasons.get(y);return R.prepare((games||S.games).filter(g=>g.w<=uptoWeek),S.teams,modelFor(calFor(y)));
+const modelFor=(cal,prior=null)=>({method:'earned-results',calibrated:cal,prior});
+function snapshot(y,uptoWeek=99,games=null,opts={}){
+  const S=seasons.get(y),cal=calFor(y,opts.window),prior=opts.noPrior?null:priorForSeason(y,cal);
+  return R.prepare((games||S.games).filter(g=>g.w<=uptoWeek),opts.names||S.teams,modelFor(cal,prior));
 }
 log('Building end-of-season snapshots');
 const finals=new Map(ALL.map(y=>[y,snapshot(y)]));
@@ -275,15 +380,16 @@ function leakageCheck(){
   return {snapshots_checked:checked,snapshots_changed_by_future_results:changed,
     reference_strength_uses:Object.fromEntries(ALL.map(y=>{const f=referenceFor(y);return [y,f.inSample?'2014-2016 (in-sample)':`${f.from[0]}-${f.from.at(-1)}`];}))};
 }
-// Early season: weekly volatility and how small samples behave.
-function earlySeason(){
+// Early season: weekly volatility and how small samples behave. opts.noPrior turns the
+// prior-season blend off, to measure what it buys.
+function earlySeason(opts={}){
   const out=[];
-  for(const w of [3,5,7,9,11]){
+  for(const w of [3,4,5,6,7,9,11]){
     const ov=[],moveA=[],moveB=[],thin=[];
     for(const y of TEST){
-      const a=R.score(snapshot(y,w),A0),b=ranked(a,'rarity'),fa=modelA(y);
+      const a=R.score(snapshot(y,w,null,opts),A0),b=ranked(a,'rarity'),fa=modelA(y);
       ov.push(topOverlap(a,fa));thin.push(a.filter(r=>r.rank<=12&&r.games<=Math.max(2,w-3)).length);
-      const nextA=R.score(snapshot(y,w+1),A0),nextB=ranked(nextA,'rarity');
+      const nextA=R.score(snapshot(y,w+1,null,opts),A0),nextB=ranked(nextA,'rarity');
       const mv=(x,z)=>{const m=new Map(z.map(r=>[r.team,r.rank]));return mean(x.filter(r=>r.rank<=25).map(r=>Math.abs(m.get(r.team)-r.rank)));};
       moveA.push(mv(a,nextA));moveB.push(mv(b,nextB));
     }
@@ -384,26 +490,171 @@ function sweepTable(){
   }
   return out;
 }
-// Every order that head-to-head reversed, and close meetings it could not reverse
-// counting only pairs where the winner was placed above the team it beat.
+// What the soft head-to-head update did: pairs where the winner now ranks above the
+// team it beat although its résumé score is lower, pairs it only narrowed, third-party
+// reorders (two teams that did not play swapped order), and the size of the adjustments.
 function headToHeadBacktest(a){
-  const reversed=[];let swapsAll=0;
+  const reversed=[],narrowed=[];let reversedAll=0,thirdParty=0,thirdPartyTop25=0;const adj=[];
   for(const y of ALL){
     const rows=modelA(y,a),by=new Map(rows.map(r=>[r.team,r]));
-    for(const r of rows)for(const p of r.headToHeadPassed.filter(x=>x.won)){
-      swapsAll++;const o=by.get(p.team);
-      if(Math.min(r.rank,o.rank)<=25)reversed.push({season:y,winner:r.team+' '+r.wins+'-'+r.losses+' (#'+r.rank+')',loser:o.team+' '+o.wins+'-'+o.losses+' (#'+o.rank+')',score_gap:round(r.score-o.score,3)});
+    for(const r of rows){
+      if(r.rank<=25)adj.push(Math.abs(r.headToHead));
+      for(const p of r.headToHeadPassed){
+        if(!p.won){thirdParty++;if(r.rank<=25)thirdPartyTop25++;continue;}
+        reversedAll++;const o=by.get(p.team);
+        if(Math.min(r.rank,o.rank)<=25)reversed.push({season:y,winner:r.team+' '+r.wins+'-'+r.losses+' (#'+r.rank+')',loser:o.team+' '+o.wins+'-'+o.losses+' (#'+o.rank+')',resume_gap:round(o.resumeScore-r.resumeScore,3),adjusted_gap:round(r.score-o.score,3)});
+      }
+      for(const g of r.headToHeadGames)if(g.won&&g.gap>0&&r.rank<=25&&by.get(g.team).rank<r.rank)narrowed.push({season:y,winner:r.team,loser:g.team,resume_gap:round(g.gap,3),closed_by:round(2*g.value,3)});
     }
   }
-  return {orders_reversed_all:swapsAll,orders_reversed_top25:reversed.length,reversed};
+  return {orders_reversed_all:reversedAll,orders_reversed_top25:reversed.length,narrowed_not_reversed_top25:narrowed.length,
+    third_party_reorders_all:thirdParty,third_party_reorders_top25:thirdPartyTop25,
+    mean_abs_adjustment_top25:round(mean(adj),3),share_top25_at_cap:round(adj.filter(x=>x>=a.head_to_head_window/2-1e-9).length/adj.length,3),
+    reversed,narrowed:narrowed.slice(0,30)};
 }
+
+/* ---------- 11. Committee and outside-ranking backtest ---------- */
+// Actual CFP field: 2014-2023 the committee's final top 4; 2024+ every team in a CFP game.
+const outside=Object.fromEntries(ALL.map(y=>[y,{post:readRaw(`postseason_${y}.json`,null),sp:readRaw(`sp_${y}.json`,null),fpi:readRaw(`fpi_${y}.json`,null)}]));
+const haveOutside=ALL.every(y=>outside[y].post&&outside[y].sp&&outside[y].fpi);
+function cfpGames(y){
+  const post=outside[y].post||[],c=committee[y]||[],top4=new Set(c.filter(r=>r.rank<=4).map(r=>r.team));
+  return post.filter(g=>Number.isFinite(g.homePoints)&&Number.isFinite(g.awayPoints)&&(y>=2024?/Playoff/i.test(g.notes||''):top4.has(g.homeTeam)&&top4.has(g.awayTeam)))
+    .map(g=>({w:g.homePoints>g.awayPoints?g.homeTeam:g.awayTeam,l:g.homePoints>g.awayPoints?g.awayTeam:g.homeTeam}));
+}
+function actualField(y){
+  if(y<2024)return new Set((committee[y]||[]).filter(r=>r.rank<=4).map(r=>r.team));
+  return new Set(cfpGames(y).flatMap(g=>[g.w,g.l]));
+}
+// Conference champions = winners of regular-season conference championship games.
+function champions(y){
+  return new Set(seasons.get(y).games.filter(g=>/championship/i.test(g.notes)&&g.hp!==g.ap).map(g=>g.hp>g.ap?g.h:g.a));
+}
+// A method's field under the format of the time: top 4; or, from 2024, the five
+// highest-ranked conference champions plus the seven highest-ranked others.
+function methodField(rows,y){
+  const order=[...rows].sort((a,b)=>a.rank-b.rank||a.team.localeCompare(b.team)).map(r=>r.team);
+  if(y<2024)return new Set(order.slice(0,4));
+  const champs=champions(y),auto=order.filter(t=>champs.has(t)).slice(0,5),rest=order.filter(t=>!auto.includes(t)).slice(0,7);
+  return new Set([...auto,...rest]);
+}
+function spearman(x,y){const rk=a=>{const s=a.map((v,i)=>[v,i]).sort((p,q)=>p[0]-q[0]),r=Array(a.length);s.forEach(([,i],k)=>r[i]=k+1);return r;};
+  const a=rk(x),b=rk(y),ma=mean(a),mb=mean(b);return mean(a.map((v,i)=>(v-ma)*(b[i]-mb)))/(sd(a)*sd(b));}
+const rankRows=(list,key,lowerBetter=false)=>{const s=list.filter(r=>Number.isFinite(r[key])).sort((a,b)=>lowerBetter?a[key]-b[key]:b[key]-a[key]);return s.map((r,i)=>({team:r.team,rank:i+1}));};
+function outsideRows(y){
+  const o=outside[y];
+  return {
+    'ESPN Strength of Record (post-bowl)':rankRows(o.fpi.filter(r=>r.resumeRanks?.strengthOfRecord).map(r=>({team:r.team,v:r.resumeRanks.strengthOfRecord})),'v',true),
+    'ESPN FPI (post-bowl)':rankRows(o.fpi.map(r=>({team:r.team,v:r.fpi})),'v'),
+    'SP+ (post-bowl)':rankRows(o.sp.filter(r=>r.team!=='nationalAverages').map(r=>({team:r.team,v:r.rating})),'v'),
+  };
+}
+const v2Engine=require(path.join(ROOT,'audit','legacy','ranking-history-v2.cjs'));
+const V2A={benchmark_rank:12,convincingness_weight:0,loss_aversion:1,performance_cap:28,reference_uncertainty:true,head_to_head_window:0.39};
+function v2Rows(y){ // the previous production model: pooled band, no prior, hard head-to-head reorder
+  const S=seasons.get(y),f=(()=>{let prior=ALL.filter(s=>s<y);if(prior.length<3)prior=ALL.slice(0,3);return bandStats(prior);})();
+  const cal={...(TEST.includes(y)?calTrain:calProd),reference_ratings:f.ratings,reference_sd:f.sd};
+  return v2Engine.score(v2Engine.prepare(S.games,S.teams,{method:'earned-results',calibrated:cal}),V2A);
+}
+function powerRows(y){ // end-of-regular-season strength (same ridge fit): the predictive baseline
+  const S=seasons.get(y),cal=calFor(y),r=R.fitRatings(S.teams.length,indexGames(S,cal),cal);
+  return rankRows(S.teams.map((t,i)=>({team:t,v:r[i]})),'v');
+}
+function committeeBacktest(methods){
+  const out={};
+  for(const [name,fn] of Object.entries(methods)){
+    let top4=0,top12=0,field=0,fieldSize=0,n=0,cfpRight=0,cfpCount=0;const sp=[],per=[],winsRank=[];
+    for(const y of ALL){
+      const c=committee[y];if(!c)continue;const rows=fn(y);if(!rows)continue;n++;
+      const rank=new Map(rows.map(r=>[r.team,r.rank])),worst=rows.length+1,rk=t=>rank.get(t)??worst;
+      const c4=new Set(c.filter(r=>r.rank<=4).map(r=>r.team)),c12=new Set(c.filter(r=>r.rank<=12).map(r=>r.team));
+      const m4=rows.filter(r=>r.rank<=4).map(r=>r.team),m12=rows.filter(r=>r.rank<=12).map(r=>r.team);
+      top4+=m4.filter(t=>c4.has(t)).length;top12+=m12.filter(t=>c12.has(t)).length;
+      sp.push(spearman(c.map(r=>r.rank),c.map(r=>rk(r.team))));
+      const actual=actualField(y),mine=methodField(rows,y),hit=[...mine].filter(t=>actual.has(t)).length;
+      field+=hit;fieldSize+=actual.size;per.push({season:y,field_match:`${hit}/${actual.size}`,missed:[...actual].filter(t=>!mine.has(t)),instead:[...mine].filter(t=>!actual.has(t))});
+      // Later performance: in CFP games, did the team this method ranked higher win?
+      const games=cfpGames(y);
+      for(const g of games){if(rk(g.w)===rk(g.l))continue;cfpCount++;if(rk(g.w)<rk(g.l))cfpRight++;}
+      const wins=new Map();for(const g of games){wins.set(g.w,(wins.get(g.w)||0)+1);if(!wins.has(g.l))wins.set(g.l,0);}
+      for(const [t,w] of wins)winsRank.push([rk(t),w,y]);
+    }
+    const within=winsRank.map(([r,w,y])=>[r,w,y]);
+    out[name]={seasons:n,committee_top4_overlap:round(top4/n,2),committee_top12_overlap:round(top12/n,2),spearman_with_committee_top25:round(mean(sp),3),
+      cfp_field_match:`${field} of ${fieldSize}`,cfp_field_match_rate:round(field/fieldSize,3),
+      cfp_games_higher_ranked_won:`${cfpRight} of ${cfpCount}`,cfp_games_accuracy:round(cfpRight/Math.max(1,cfpCount),3),
+      spearman_rank_vs_cfp_wins:round(-spearman(within.map(x=>x[0]),within.map(x=>x[1])),3),per_season:per};
+  }
+  return out;
+}
+
+/* ---------- 12. Robustness ---------- */
+function compareRuns(base,alt,label){ // base/alt: Map season -> rows
+  const ov=[],sp=[],mv=[],changed=[];
+  for(const y of ALL){let a=base.get(y),b=alt.get(y);if(!a||!b)continue;
+    const bm=new Map(b.map(r=>[r.team,r.rank]));
+    // Teams missing from one run (dropped by a definition) are left out of the correlation.
+    const both=new Set(a.filter(r=>bm.has(r.team)).map(r=>r.team));a=a.filter(r=>both.has(r.team));
+    ov.push(topOverlap(a,b));sp.push(spearmanTop(a,b));
+    const top=a.filter(r=>r.rank<=25);mv.push(mean(top.map(r=>Math.abs((bm.get(r.team)??99)-r.rank))));
+    for(const r of a.filter(r=>r.rank<=12))if(!b.find(x=>x.team===r.team&&x.rank<=12))changed.push(`${y}: ${r.team} (#${r.rank} -> #${bm.get(r.team)??'—'})`);
+  }
+  return {label,top12_overlap:round(mean(ov),2),spearman_top25:round(mean(sp),3),mean_abs_rank_move_top25:round(mean(mv),2),top12_changes:changed};
+}
+function windowSensitivity(prod){
+  const out={};
+  for(const w of [0.29,0.34,0.44,0.49]){out[`window ${w}`]=compareRuns(prod,bySeason(y=>modelA(y,{...A0,head_to_head_window:w})),`head-to-head window ${w} vs ${A0.head_to_head_window}`);}
+  out['head-to-head off']=compareRuns(prod,bySeason(y=>modelA(y,{...A0,head_to_head_window:0})),'head-to-head off');
+  return out;
+}
+// FCS games: excluded (production) vs every FCS opponent pooled into one team, "FCS".
+function fcsCheck(prod){
+  const alt=bySeason(y=>{const S=seasons.get(y);
+    const pooled=S.fcsGames.map(g=>({...g,h:g.hc==='fbs'?g.h:'FCS',a:g.ac==='fbs'?g.a:'FCS'}));
+    const ctx=R.prepare([...S.games,...pooled],[...S.teams,'FCS'],modelFor(calFor(y),priorForSeason(y,calFor(y))));
+    const rows=R.score(ctx,A0).filter(r=>r.team!=='FCS');rows.forEach((r,i)=>{r.rank=i+1;});return rows;});
+  const losers=[];for(const y of ALL){const S=seasons.get(y),pm=new Map(prod.get(y).map(r=>[r.team,r.rank])),am=new Map(alt.get(y).map(r=>[r.team,r.rank]));
+    for(const g of S.fcsGames){const fbs=g.hc==='fbs'?g.h:g.a,lost=g.hc==='fbs'?g.hp<g.ap:g.ap<g.hp;if(lost&&pm.get(fbs)<=25)losers.push(`${y}: ${fbs} lost to an FCS team, #${pm.get(fbs)} -> #${am.get(fbs)}`);}}
+  return {...compareRuns(prod,alt,'FCS games pooled into one opponent vs excluded'),top25_teams_with_fcs_losses:losers,
+    fcs_games_per_season:round(mean(ALL.map(y=>seasons.get(y).fcsGames.length)),0)};
+}
+// "FBS loss" definitions: (b) drop games against opponents that were FBS this season but
+// not the next (left FBS); (c) count opponents in their first two FBS seasons as non-FBS.
+function fbsDefinitionCheck(prod){
+  const firstSeen=new Map();for(const y of [...ALL].sort())for(const t of seasons.get(y).teams)if(!firstSeen.has(t))firstSeen.set(t,y);
+  const leftFbs=y=>{const next=fbsMembers(y===2019?2021:y+1);return next.size?new Set(seasons.get(y).teams.filter(t=>!next.has(t))):new Set();};
+  const run=excluded=>bySeason(y=>{const S=seasons.get(y),x=excluded(y);
+    const ctx=R.prepare(S.games.filter(g=>!x.has(g.h)&&!x.has(g.a)),S.teams.filter(t=>!x.has(t)),modelFor(calFor(y),priorForSeason(y,calFor(y))));return R.score(ctx,A0);});
+  const transition=y=>new Set(seasons.get(y).teams.filter(t=>firstSeen.get(t)>2014&&y-firstSeen.get(t)<2));
+  return {left_fbs_next_season:{teams:Object.fromEntries(ALL.map(y=>[y,[...leftFbs(y)]]).filter(([,v])=>v.length)),...compareRuns(prod,run(leftFbs),'opponents that left FBS the next season excluded')},
+    transition_teams:{teams:Object.fromEntries(ALL.map(y=>[y,[...transition(y)]]).filter(([,v])=>v.length)),...compareRuns(prod,run(transition),'first- and second-year FBS teams treated as non-FBS')}};
+}
+// Vacated wins: remove a top-12 team's best win from its own ledger only (the loser's
+// loss stands, as the NCAA does). How far does that team fall, and does anyone else move?
+function vacatedWins(){
+  const drop=[],others=[];
+  for(const y of ALL){
+    const ctx=finals.get(y),base=R.score(ctx,A0,{light:true}),bm=new Map(base.map(r=>[r.team,r.rank]));
+    for(const r of base.filter(x=>x.rank<=12)){
+      const t=ctx.teams.find(x=>x.team===r.team),full=r.ledger.filter(g=>g.result==='W').sort((p,q)=>q.total-p.total)[0];if(!full)continue;
+      const alt={...ctx,teams:ctx.teams.map(x=>x!==t?x:{...x,games:x.games.filter(g=>!(g.opponent===full.opponent&&g.date===full.date))})};
+      const after=R.score(alt,A0,{light:true}),am=new Map(after.map(x=>[x.team,x.rank]));
+      drop.push(am.get(r.team)-r.rank);
+      const moved=base.filter(x=>x.rank<=25&&x.team!==r.team).filter(x=>Math.abs(am.get(x.team)-x.rank)>1).length;
+      others.push(moved);
+    }
+  }
+  return {cases:drop.length,mean_rank_drop_of_team:round(mean(drop),2),max_rank_drop:Math.max(...drop),
+    mean_other_top25_teams_moving_more_than_one_place:round(mean(others),3),note:'only the vacating team loses the game; others move only by being passed'};
+}
+
 function seasonTables(a){
   return Object.fromEntries(ALL.map(y=>{const rows=modelA(y,a);return [y,rows.slice(0,16).map(r=>({rank:r.rank,team:r.team,record:`${r.wins}-${r.losses}`,
     score:round(r.score,3),range:[round(r.scoreLow,2),round(r.scoreHigh,2)],head_to_head_passed:r.headToHeadPassed.map(p=>p.team),top12_probability:round(r.topProbability,2),losses:round(r.lossPenalty,2),schedule:round(r.schedule,3),performance:round(r.performance,3),
     reference_wins:round(r.referenceWins,2),match_probability:round(r.matchProbability,4),rarity:round(r.rarity,3),rarity_rank:r.rarityRank}))];}));
 }
 
-module.exports={seasons,finals,calTrain,calProd,calFor,referenceFor,refProd,endRatings,modelA,modelB,ranked,colleyRows,overrides,committeeOverlap,
+module.exports={seasons,finals,calTrain,calProd,calFor,referenceFor,refProd,endRatings,modelA,modelB,ranked,colleyRows,overrides,committeeOverlap,PRIOR,priorFit,priorForSeason,
   benchmarkStability,opponentUncertainty,manipulation,leakageCheck,earlySeason,fairness,simulate,impliedLossUnit,sweepTable,seasonTables,bySeason,A0,ALL,TRAIN,TEST,round};
 
 if(require.main===module){
@@ -413,12 +664,32 @@ if(require.main===module){
     'Colley (former production)':bySeason(y=>ranked(colleyRows(seasons.get(y)),'colley')),
     'Record-first v1 branch':bySeason(y=>ranked(colleyRows(seasons.get(y)),'v1')),
     'Model A: wins above playoff-caliber (alpha 0)':bySeason(y=>modelA(y)),
+    'Model A v2 (hard head-to-head reorder, pooled band, no prior)':bySeason(y=>v2Rows(y)),
     'Model A without head-to-head':bySeason(y=>modelA(y,{...A0,head_to_head_window:0})),
     'Model A, point reference (no uncertainty)':bySeason(y=>modelA(y,{...A0,reference_uncertainty:false})),
     'Model B: résumé rarity -log10 P(W*>=W)':bySeason(y=>modelB(y)),
     'Model A + 5% convincingness (rejected)':bySeason(y=>modelA(y,{...DEFAULT,convincingness_weight:0.05})),
   };
   const candidateReport=Object.fromEntries(Object.entries(candidates).map(([k,rs])=>[k,{overrides:overrides(rs),committee:committeeOverlap(rs)}]));
+  log('Committee and outside-ranking backtest');
+  const prod=candidates['Model A: wins above playoff-caliber (alpha 0)'];
+  const fromMap=m=>y=>m.get(y);
+  const backtestMethods={
+    'Most Deserving v3 (production)':fromMap(prod),
+    'Most Deserving v2 (previous production)':fromMap(candidates['Model A v2 (hard head-to-head reorder, pooled band, no prior)']),
+    'Most Deserving v3 without head-to-head':fromMap(candidates['Model A without head-to-head']),
+    'Résumé rarity (Model B)':fromMap(candidates['Model B: résumé rarity -log10 P(W*>=W)']),
+    'Colley (former production)':fromMap(candidates['Colley (former production)']),
+    'Power rating, end of regular season (predictive baseline)':powerRows,
+  };
+  if(haveOutside)for(const k of ['ESPN Strength of Record (post-bowl)','SP+ (post-bowl)','ESPN FPI (post-bowl)'])backtestMethods[k]=y=>outsideRows(y)[k];
+  else log('Outside rankings missing: run scripts/pull_deserving_benchmarks.py');
+  const committeeReport=haveOutside||Object.keys(committee).length?committeeBacktest(backtestMethods):null;
+  log('Robustness');
+  const robustness={head_to_head_window:windowSensitivity(prod),fcs:fcsCheck(prod),fbs_definition:fbsDefinitionCheck(prod),vacated_wins:vacatedWins(),
+    reference_window:Object.fromEntries(WINDOWS.filter(w=>w!==REFERENCE_WINDOW).map(w=>[`${windowLabel(REFERENCE_WINDOW)} vs ${windowLabel(w)}`,
+      compareRuns(prod,bySeason(y=>R.score(snapshot(y,99,null,{window:w}),A0)),`reference pooled over ${windowLabel(w)}`)])),
+    band_tracking:bandTracking()};
   log('Stress tests');
   const report={
     generated:new Date().toISOString().slice(0,10),
@@ -428,8 +699,14 @@ if(require.main===module){
         accuracy:round(mean(testP.map(p=>(p.mu>0)===(p.win===1)?1:0))),by_phase:byPhase(testP,calTrain.win_sigma),calibration:calibrationTable(testP,calTrain.win_sigma)},
       test_reference_uncapped_ridge3:{log_loss:round(logLoss(naiveP,naiveSigma)),brier:round(brier(naiveP,naiveSigma))},
       top_train_configs:trainGrid.slice(0,6).map(roundObj),production:roundObj(calProd)},
-    reference_strength:{definition:'average end-of-season rating (points vs average FBS team, neutral field) of the k-th best FBS team in earlier seasons',
-      per_season_end_ratings:Object.fromEntries(ALL.map(y=>[y,roundObj(endRatings.get(y))])),production:roundObj(refProd.ratings),production_sd:roundObj(refProd.sd),production_season_sd:roundObj(refProd.season_sd),band:`ranks k-${BAND}..k+${BAND}`},
+    reference_strength:{definition:`end-of-season ratings (points vs average FBS team, neutral field) of the teams ranked k-${BAND}..k+${BAND} in ${windowLabel(REFERENCE_WINDOW)} before the season`,
+      per_season_end_ratings:Object.fromEntries(ALL.map(y=>[y,roundObj(endRatings.get(y))])),production:roundObj(refProd.ratings),production_sd:roundObj(refProd.sd),production_season_sd:roundObj(refProd.season_sd),
+      production_seasons:ALL.slice(-REFERENCE_WINDOW),pooled_all_seasons:roundObj(refPooledAll.ratings),pooled_all_seasons_sd:roundObj(refPooledAll.sd),band:`ranks k-${BAND}..k+${BAND}`},
+    early_season_prior:{train_seasons:PRIOR_TRAIN,selected:PRIOR,max_decay_weeks:MAX_PRIOR_WEEKS,unconstrained_optimum:roundObj(priorFit.unconstrained),
+      train:{log_loss_prior:round(priorFit.best.log_loss),log_loss_no_prior:round(priorFit.no_prior.log_loss),games:priorFit.best.n,weeks:'2-9'},
+      grid:priorFit.grid.slice(0,12).map(roundObj),test:priorTest(calTrain)},
+    committee_backtest:committeeReport,
+    robustness,
     default_assumptions:DEFAULT,
     head_to_head:{window:H2H_WINDOW,noise:{pairwise_gap_sd:round(noise.pairwise_gap_sd,4),pairs:noise.pairs},backtest:headToHeadBacktest(DEFAULT)},
     candidates:candidateReport,
@@ -437,7 +714,7 @@ if(require.main===module){
     stability:{benchmark_A:benchmarkStability(modelA),benchmark_B:benchmarkStability(modelB),opponent_uncertainty:opponentUncertainty()},
     manipulation:manipulation(DEFAULT),
     leakage:leakageCheck(),
-    early_season:earlySeason(),
+    early_season:earlySeason(),early_season_without_prior:earlySeason({noPrior:true}),
     fairness:{model_A_alpha0:fairness(A0),convincingness_0_05:fairness({...DEFAULT,convincingness_weight:0.05}),loss_aversion_1_5:fairness({...DEFAULT,loss_aversion:1.5}),top4_reference:fairness({...DEFAULT,benchmark_rank:4})},
     simulation:{model_A_alpha0:simulate(A0),model_B:simulate(A0,150,'B'),convincingness_0_05:simulate({...DEFAULT,convincingness_weight:0.05}),loss_aversion_1_5:simulate({...DEFAULT,loss_aversion:1.5}),top4_reference:simulate({...DEFAULT,benchmark_rank:4})},
     sweep:sweepTable(),
@@ -445,22 +722,27 @@ if(require.main===module){
   };
   fs.mkdirSync(path.join(ROOT,'audit','output'),{recursive:true});
   fs.writeFileSync(path.join(ROOT,'audit','output','deserving_calibration.json'),JSON.stringify(report,null,1));
-  const model={version:3,method:'earned-results',
+  const prodPrior=priorForSeason(2026,calProd);
+  const model={version:4,method:'earned-results',
     description:'Wins above a playoff-caliber reference team, in loss-equivalent units, with exact résumé rarity',
     games:'completed regular-season FBS-versus-FBS only (conference title games included)',
     calibrated:{...roundObj(calProd),reference_ratings:roundObj(refProd.ratings),reference_sd:roundObj(refProd.sd),reference_season_sd:roundObj(refProd.season_sd),
-      reference_band:`end-of-season strengths of the teams ranked k-${BAND}..k+${BAND}, pooled over calibration seasons`,
+      reference_band:`end-of-season strengths of the teams ranked k-${BAND}..k+${BAND}, pooled over ${windowLabel(REFERENCE_WINDOW)}`,
+      reference_seasons:ALL.slice(-REFERENCE_WINDOW),reference_window:REFERENCE_WINDOW===99?'all':REFERENCE_WINDOW,
       score_gap_noise_sd:round(noise.pairwise_gap_sd,4),
       calibration_seasons:ALL,source:'scripts/deserving_calibration.cjs'},
+    prior:{season:prodPrior.season,regression:PRIOR.regression,decay_weeks:PRIOR.decay_weeks,
+      note:'Early weeks: opponent ratings are pulled toward regression x last season\'s rating, with weight 1 - (week - 1)/decay_weeks, reaching zero after decay_weeks weeks. Fitted on chronological out-of-sample log loss.',
+      ratings:Object.fromEntries(Object.entries(prodPrior.ratings).map(([t,v])=>[t,round(v,3)]))},
     assumptions:DEFAULT,
     assumption_notes:{benchmark_rank:'Reference team = the k-th best FBS team (12 = playoff cutoff). Philosophical.',
       convincingness_weight:'Share of each game decided by how clearly it was won rather than whether it was won. Philosophical.',
       loss_aversion:'Loss-equivalent penalty per loss. 1 keeps the score schedule-fair for a reference-caliber team. Philosophical.',
       performance_cap:'Margins beyond this many points earn nothing more. Philosophical.',
       reference_uncertainty:'Judge against the whole playoff-caliber distribution (true) or only its mean (false).',
-      head_to_head_window:'Score gap (loss units) inside which a team that won the head-to-head game moves directly above the team it beat, passing only teams also within this gap that did not beat it: one SD of the measured score-gap noise. Scores are unchanged.'},
+      head_to_head_window:'W: one SD of the measured score-gap noise (loss units). A head-to-head result moves the two teams toward the winner by a capped Bayesian update that operates only inside this band (full strength under W/2, fading to zero at W). No pair closes by more than W; no team moves by more than W/2.'},
     sensitivity:{benchmark_rank:[8,12,16],convincingness_weight:[0,0.05,0.1],loss_aversion:[1,1.25],head_to_head_window:[0,H2H_WINDOW]},
-    equal_scores:'shared rank',report:'audit/MOST_DESERVING_V2.md'};
+    equal_scores:'shared rank',report:'audit/MOST_DESERVING_V3.md'};
   // A compact summary the page shows in "How it works". Every number is from the report above.
   const fin=candidateReport['Model A: wins above playoff-caliber (alpha 0)'],rb=candidateReport['Model B: résumé rarity -log10 P(W*>=W)'];
   const best=report.implied_loss_unit.reduce((a,b)=>b.pairwise_agreement_with_B>a.pairwise_agreement_with_B?b:a);
@@ -474,7 +756,18 @@ if(require.main===module){
       loss_weight_1_5:report.fairness.loss_aversion_1_5['#12-caliber team'].A_hardest_minus_easiest_quintile_loss_units_per_12},
     future_results_leak:report.leakage.snapshots_changed_by_future_results,
     head_to_head:{window:H2H_WINDOW,noise_sd:round(noise.pairwise_gap_sd,3),orders_reversed:report.head_to_head.backtest.orders_reversed_top25,
-      examples:report.head_to_head.backtest.reversed.slice(0,10).map(e=>`${e.season}: ${e.winner} over ${e.loser} (score gap ${e.score_gap})`)}};
+      narrowed:report.head_to_head.backtest.narrowed_not_reversed_top25,third_party_top25:report.head_to_head.backtest.third_party_reorders_top25,
+      mean_abs_adjustment_top25:report.head_to_head.backtest.mean_abs_adjustment_top25,
+      examples:report.head_to_head.backtest.reversed.slice(0,10).map(e=>`${e.season}: ${e.winner} over ${e.loser} (résumé gap ${e.resume_gap})`)},
+    early_season_prior:{selected:PRIOR,test:report.early_season_prior.test},
+    reference_band:{seasons:ALL.slice(-REFERENCE_WINDOW),window:REFERENCE_WINDOW===99?'all':REFERENCE_WINDOW,window_errors:windowErrors,tracking_error:report.robustness.band_tracking.mean_abs_error,
+      in_season_by_week:report.robustness.band_tracking.in_season_by_week},
+    committee_backtest:committeeReport&&Object.fromEntries(Object.entries(committeeReport).map(([k,v])=>[k,{field:v.cfp_field_match,field_rate:v.cfp_field_match_rate,top4:v.committee_top4_overlap,top12:v.committee_top12_overlap,
+      spearman:v.spearman_with_committee_top25,cfp_games:v.cfp_games_higher_ranked_won,cfp_accuracy:v.cfp_games_accuracy}])),
+    robustness:{window:Object.fromEntries(Object.entries(report.robustness.head_to_head_window).map(([k,v])=>[k,{top12_overlap:v.top12_overlap,spearman_top25:v.spearman_top25}])),
+      fcs:{top12_overlap:report.robustness.fcs.top12_overlap,spearman_top25:report.robustness.fcs.spearman_top25},
+      left_fbs:{top12_overlap:report.robustness.fbs_definition.left_fbs_next_season.top12_overlap},transition:{top12_overlap:report.robustness.fbs_definition.transition_teams.top12_overlap},
+      vacated:{mean_rank_drop:report.robustness.vacated_wins.mean_rank_drop_of_team,others_moving:report.robustness.vacated_wins.mean_other_top25_teams_moving_more_than_one_place}}};
   fs.writeFileSync(path.join(ROOT,'viz','data','deserving-model.json'),JSON.stringify(model,null,2)+'\n');
   log('Wrote audit/output/deserving_calibration.json and viz/data/deserving-model.json');
 }

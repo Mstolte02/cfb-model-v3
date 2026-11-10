@@ -1,6 +1,7 @@
 # Most Deserving v2: wins above a playoff-caliber team
 
-Status: production. Replaces the Colley ranking and the unmerged
+Status: superseded in part by [MOST_DESERVING_V3.md](MOST_DESERVING_V3.md) (head-to-head is now a capped
+score adjustment, §2a below is history; early-season prior; backtests). Replaces the Colley ranking and the unmerged
 `feature/record-first-deserving-v1` branch.
 
 Every number in this report comes from `scripts/deserving_calibration.cjs`, which
