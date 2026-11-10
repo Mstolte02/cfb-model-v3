@@ -56,3 +56,14 @@ tied <- cfbseedR::cfb_standings(tie_games,tie_teams,tiebreaker_depth='POINTS',ve
 rank <- setNames(tied$conf_rank,tied$team)
 stopifnot(rank[['F']]==1L,rank[['B']]==2L,rank[['C']]==3L,rank[['A']]==4L)
 cat('Reduced multi-team ties restart at head-to-head before SOS\n')
+
+# Exercise the production path: reuse engine standings, correcting the explicit
+# non-conference game, then update records without another tiebreaker walk.
+initial <- cfbseedR::cfb_standings(with_extra,teams,verbosity='NONE')
+reused <- simulate_conference_titles(with_extra,teams,with_extra,analytics,
+                                    force_upset,NULL,standings=initial)
+stopifnot(reused$standings$team[reused$standings$conf_champ]=='East A',
+          reused$standings$wins[reused$standings$team=='East A']==2L,
+          reused$standings$losses[reused$standings$team=='East A']==2L,
+          reused$standings$conf_wins[reused$standings$team=='East A']==1L)
+cat('Reused standings correct nonconference designations and retain title-game outcomes\n')

@@ -407,6 +407,7 @@ export_run <- function(mode) {
     input$games, input$teams,
     compute_results = model_results, spec = input$spec,
     simulations = n_sims, playoff_seeds = 12L, sim_include = "REG", autobid = "2026",
+    tiebreaker_depth = "POINTS",
     tiebreaker_data = list(analytics_ratings = input$analytics),
     chunks = min(max(4L, workers * 2L, ceiling(n_sims / 100L)), n_sims), verbosity = "NONE"
   )
@@ -414,7 +415,7 @@ export_run <- function(mode) {
   template <- if (file.exists(template_path)) read_json(template_path) else list(teams = list())
   old <- setNames(template$teams %||% list(), vapply(template$teams %||% list(), function(x) x$team, character(1)))
   titles <- simulate_conference_titles(sim$games, input$teams, input$games,
-                                       input$analytics, model_results, input$spec)
+                                       input$analytics, model_results, input$spec, standings = sim$standings)
   sim$games <- titles$games
   standings <- select_and_play(titles$standings, input)
   anchor <- attr(standings, "committee_anchor")

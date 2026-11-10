@@ -30,16 +30,35 @@ conference_standings <- function(games, teams, scheduled, analytics) {
   race_games <- games[!(games$game_type == "REG" & pair(games) %in% pair(nonconf)), ]
   ranked <- cfbseedR::cfb_standings(race_games, teams, tiebreaker_depth = "POINTS",
     tiebreaker_data = list(analytics_ratings = analytics), verbosity = "NONE")
-  overall <- cfbseedR::cfb_standings(games, teams, ranks = "NONE")
+  overall <- cfbseedR::cfb_standings(games, teams, ranks = "NONE", verbosity = "NONE")
   ix <- match(paste(ranked$sim, ranked$team), paste(overall$sim, overall$team))
   # Non-conference games still count toward committee records.
   for (key in c("games", "wins", "losses", "ties", "win_pct", "pd")) ranked[[key]] <- overall[[key]][ix]
   ranked
 }
 
-simulate_conference_titles <- function(games, teams, scheduled, analytics, results, spec) {
+simulate_conference_titles <- function(games, teams, scheduled, analytics, results, spec,
+                                       standings = NULL) {
   teams <- conference_teams(teams)
-  standings <- conference_standings(games, teams, scheduled, analytics)
+  if (is.null(standings)) {
+    standings <- conference_standings(games, teams, scheduled, analytics)
+  } else {
+    # Reuse the simulator's already-resolved regular-season standings. Revisit
+    # only leagues with explicitly non-conference games between league members.
+    conf <- setNames(teams$conference, teams$team)
+    same <- !is.na(conf[scheduled$home_team]) & !is.na(conf[scheduled$away_team]) &
+      conf[scheduled$home_team] == conf[scheduled$away_team]
+    affected <- unique(unname(conf[scheduled$home_team[!scheduled$conference_game & same]]))
+    affected <- setdiff(affected, 'FBS Independents')
+    if (length(affected)) {
+      race_teams <- teams
+      race_teams$conference[!race_teams$conference %in% affected] <- 'FBS Independents'
+      corrected <- conference_standings(games, race_teams, scheduled, analytics)
+      corrected <- corrected[corrected$team %in% teams$team[teams$conference %in% affected], ]
+      ix <- match(paste(corrected$sim, corrected$team), paste(standings$sim, standings$team))
+      for (key in intersect(names(corrected), names(standings))) standings[[key]][ix] <- corrected[[key]]
+    }
+  }
   candidates <- standings[standings$conf_rank %in% 1:2 & !is.na(standings$conf_rank), ]
   pools <- split(candidates, paste(candidates$sim, candidates$conference))
   title_week <- max(scheduled$week) + 1L
@@ -57,7 +76,14 @@ simulate_conference_titles <- function(games, teams, scheduled, analytics, resul
   titles <- results(teams, titles, title_week, spec)$games
   stopifnot(!anyNA(titles$result), all(titles$result != 0))
   combined <- dplyr::bind_rows(games, titles)
-  final <- conference_standings(combined, teams, scheduled, analytics)
+  # A title game changes overall records and the champion, not REG conference
+  # standings or the already-resolved finalist tiebreakers. Do not rank twice.
+  final <- standings
+  overall <- cfbseedR::cfb_standings(combined, teams, ranks = 'NONE', verbosity = 'NONE')
+  ix <- match(paste(final$sim, final$team), paste(overall$sim, overall$team))
+  for (key in c('games','wins','losses','ties','win_pct','pd')) final[[key]] <- overall[[key]][ix]
+  winner <- ifelse(titles$result > 0, titles$home_team, titles$away_team)
+  final$conf_champ <- paste(final$sim, final$team) %in% paste(titles$sim, winner)
   # Every conference has exactly one champion in every draw, decided by its game.
   winners <- final[final$conf_champ %in% TRUE, ]
   stopifnot(nrow(winners) == length(pools),
