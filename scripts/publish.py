@@ -52,7 +52,7 @@ def fingerprint_assets(site: Path):
     index = site / "index.html"
     html = index.read_text()
     versions = {}
-    for name in ("app.js", "movers.js", "resume-scores.js", "style.css", "team-card.js", "ranking-history.js", "deserving-lab.js", "playoff-paths.js", "marks-playoff.js", "scenario-lab.js", "simulation-studio.js", "simulation-studio.css"):
+    for name in ("app.js", "movers.js", "resume-scores.js", "style.css", "team-card.js", "ranking-history.js", "deserving-lab.js", "playoff-paths.js", "marks-playoff.js", "committee-watch.js", "scenario-lab.js", "simulation-studio.js", "simulation-studio.css"):
         source = site / name
         digest = hashlib.sha256(source.read_bytes()).hexdigest()[:12]
         target_name = f"{source.stem}.{digest}{source.suffix}"

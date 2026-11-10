@@ -142,18 +142,22 @@ Every other season matches CFBD. The backtest now reads CFBD's final poll direct
 
 ## 4. The page
 
-- **"Why is A ahead of B?"** is the default view. The component table now has the
-  résumé subtotal, the head-to-head adjustment (each team's games named), and the net
-  ranking difference; it reconciles exactly. Below it, both teams' games are listed
-  with each game's exact value and the reference team's expected losses, summing to
-  the résumé score and then, with the head-to-head lines, the ranking score.
-- **Ledger.** Columns for résumé score, H2H and ranking score. "Quality W" counts wins
-  over playoff-caliber / top-25-caliber opponents, plus top-25 and bad losses. It
-  uses the same leave-team-out, venue-adjusted strengths as the score. Each game row
-  shows the reference team's win chance, its expected losses (1 − q, summing to the
-  schedule credit) and an opponent tier tag.
-- **How it works** shows the backtest table and robustness results from
-  `deserving-model.json`; nothing is hand-typed.
+The public page is deliberately plain. The numbers, formulas and backtests live in this report, not on the site.
+
+- **Most Deserving** opens on the Top 25. A **Résumé Lab** toggle swaps in the lab.
+- **Why is A ahead of B?** gives a one-sentence verdict, then a step chart: start at
+  team B's score, add each reason (losses, who they beat, who they lost to,
+  head-to-head), end at team A's score. Below it, each team's games are listed with
+  their values.
+- **Résumé scores** shows rank, team, record, score and the likely range (80%, against a
+  stronger or weaker playoff-caliber benchmark) on one shared axis.
+- **Cutoff sensitivity** shows each team's best and worst rank across all 36 assumption
+  combinations, with the official rank and the share of combinations in the top 12.
+- **How it works** has five plain-language cards and links here.
+- **Committee Watch** (separate tab) puts the committee's latest Top 25 next to the
+  committee model's projection after the newest results. It is a browser port of the
+  proxy and anchor in `scripts/simulate_playoff.R` / `committee_anchor.R`, tested
+  against that run's stored scores (`tests/test_committee_watch.cjs`).
 
 ## 5. Early season: last season's ratings as a decaying anchor
 

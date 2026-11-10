@@ -10,5 +10,6 @@ node --test \
   tests/test_power_xray.cjs \
   tests/test_war_research.cjs \
   tests/test_playoff_paths.cjs \
-  tests/test_scenario_lab.cjs
+  tests/test_scenario_lab.cjs \
+  tests/test_committee_watch.cjs
 python3 scripts/publish.py

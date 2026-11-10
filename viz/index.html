@@ -43,6 +43,7 @@
     <button class="tab active" data-view="power">Power Ratings</button>
     <button class="tab" data-view="deserving">Most Deserving</button>
     <button class="tab" data-view="marks-playoff">Mark's Playoff</button>
+    <button class="tab" data-view="committee">Committee Watch</button>
     <button class="tab" data-view="stock-watch">Stock Watch</button>
     <button class="tab" data-view="power-history">Team history</button>
   </nav>
@@ -83,12 +84,17 @@
   </section>
   <section id="view-deserving" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">The résumé register / results earned</span><h2>Most Deserving</h2><p class="sub">Who earned a playoff spot? Wins above a playoff-caliber team on the same schedule. Losses come first; a schedule must be worth a full extra loss to pay one back.</p></div>
-    <article class="ranking-board deserving"><div class="board-head"><span>Wins above a playoff-caliber team</span><h3>The earned Top 25</h3><small id="deserving-date"></small></div><div id="deserving-top25"></div><p class="board-note">Ranking score in loss units: −1 for each FBS loss, plus the number of games a playoff-caliber team would be expected to lose on the same schedule, plus a small capped head-to-head adjustment between close résumés. Only completed regular-season FBS-versus-FBS games count. Equal scores share a rank. Early rankings can move sharply as schedules connect; through week 5, opponent strength is partly anchored to last season.</p></article>
-    <div id="deserving-lab"></div>
+    <div class="seg md-mode" role="group" aria-label="Most Deserving view"><button type="button" class="seg-btn active" aria-pressed="true" data-md-mode="board">Top 25</button><button type="button" class="seg-btn" aria-pressed="false" data-md-mode="lab">Résumé Lab</button></div>
+    <article class="ranking-board deserving" id="deserving-board"><div class="board-head"><span>Wins above a playoff-caliber team</span><h3>The earned Top 25</h3><small id="deserving-date"></small></div><div id="deserving-top25"></div><p class="board-note">Ranking score in loss units: −1 for each FBS loss, plus the number of games a playoff-caliber team would be expected to lose on the same schedule, plus a small capped head-to-head adjustment between close résumés. Only completed regular-season FBS-versus-FBS games count. Equal scores share a rank. Early rankings can move sharply as schedules connect; through week 5, opponent strength is partly anchored to last season.</p></article>
+    <div id="deserving-lab" hidden></div>
   </section>
   <section id="view-marks-playoff" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">The résumé selection room</span><h2>Mark's Playoff</h2><p class="sub">Twelve bids, earned on the field. My résumé scores meet the playoff rules.</p></div>
     <div id="marks-playoff"></div>
+  </section>
+  <section id="view-committee" class="view">
+    <div class="view-head editorial-head"><span class="eyebrow">The selection committee</span><h2>Committee Watch</h2><p class="sub">The committee's latest Top 25, and where our committee model expects this week's results to move it.</p></div>
+    <div id="committee-watch"></div>
   </section>
   <section id="view-stock-watch" class="view">
     <div class="view-head editorial-head"><span class="eyebrow">The college football exchange</span><h2>Stock Watch</h2><p class="sub">Every climb. Every slide. Follow the full field through the season.</p></div>
@@ -200,6 +206,7 @@
 <script src="deserving-lab.js?v=3"></script>
 <script src="playoff-paths.js"></script>
 <script src="marks-playoff.js"></script>
+<script src="committee-watch.js"></script>
 <script src="scenario-lab.js"></script>
 <script src="simulation-studio.js"></script>
 <script src="movers.js"></script>

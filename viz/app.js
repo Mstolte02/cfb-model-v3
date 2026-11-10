@@ -2441,12 +2441,27 @@
     if(!deservingModel){host.innerHTML='<p class="stock-empty">Résumé model unavailable. Reload to try again.</p>';return;}
     const rows=deservingData(),through=`${ratings.season} · ${ratings.history?.at(-1)?.label||'Season to date'}`;
     document.getElementById('deserving-date').textContent=through;
-    host.innerHTML=rows.length?rankingGrid(rows.filter(r=>r.rank<=25),'Ranking score',r=>DeservingLab.signed(r.score)):'<p class="stock-empty">The board opens after the first completed FBS matchup.</p>';
-    if(rows.length&&!deservingLabMounted){
+    host.innerHTML=rows.length?rankingGrid(rows.filter(r=>r.rank<=25),'Résumé score',r=>DeservingLab.signed(r.score)):'<p class="stock-empty">The board opens after the first completed FBS matchup.</p>';
+    // The lab is built only when someone opens it.
+    if(rows.length&&deservingMode==='lab'&&!deservingLabMounted){
       DeservingLab.mount({host:document.getElementById('deserving-lab'),ctx:deservingContext,model:deservingModel,esc,crestOf,wireTeamLinks,games_through:`Games through ${through}`});
       deservingLabMounted=true;
     }
     wireTeamLinks();
+  }
+  let deservingMode='board';
+  document.querySelectorAll('[data-md-mode]').forEach(b=>b.addEventListener('click',()=>{
+    deservingMode=b.dataset.mdMode;
+    document.querySelectorAll('[data-md-mode]').forEach(x=>{const on=x===b;x.classList.toggle('active',on);x.setAttribute('aria-pressed',String(on));});
+    document.getElementById('deserving-board').hidden=deservingMode!=='board';
+    document.getElementById('deserving-lab').hidden=deservingMode!=='lab';
+    renderDeserving();
+  }));
+  function renderCommittee() {
+    const host=document.getElementById('committee-watch'),list=Array.isArray(playoffCurrent?.teams)?playoffCurrent.teams:Object.values(playoffCurrent?.teams||{});
+    if(!committeeRankings||committeeRankings.season!==ratings.season||!list.length){host.innerHTML='<p class="stock-empty">The committee has not released rankings for this season yet.</p>';return;}
+    CommitteeWatch.mount({host,schedule,poll:committeeRankings,teams:list.map(t=>({team:t.team,conference:t.conference,rating:t.rating})),
+      weights:playoffCurrent.selection_weights,esc,crestOf,wireTeamLinks});
   }
 
   function renderMarksPlayoff() {
@@ -3386,6 +3401,7 @@
     else if (view === "power") renderPower();
     else if (view === "deserving") renderDeserving();
     else if (view === "marks-playoff") renderMarksPlayoff();
+    else if (view === "committee") renderCommittee();
     else if (view === "stock-watch") renderStockWatch();
     else if (view === "power-history") renderPowerHistory();
     else if (view === "market") renderWeeklyLines();
