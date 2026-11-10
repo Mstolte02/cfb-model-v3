@@ -3,6 +3,7 @@
 # This lives in a script because Vercel rejects a buildCommand longer than 256 characters.
 set -euo pipefail
 node --test \
+  tests/test_projected_analysis.cjs \
   tests/test_resume_scores.cjs \
   tests/test_ranking_history.cjs \
   tests/test_most_deserving.cjs \

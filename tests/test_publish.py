@@ -18,6 +18,16 @@ class PublishFingerprintTests(unittest.TestCase):
             (site / "index.html").write_text(
                 '<link rel="stylesheet" href="style.css?v=old">\n'
                 '<script src="ranking-history.js"></script>\n<script src="team-card.js"></script>\n<script src="playoff-paths.js"></script>\n<script src="app.js?v=27"></script>')
+            # Keep this fixture complete as the browser gains additional modules.
+            import re
+            source_html = (Path(__file__).parents[1] / "viz" / "index.html").read_text()
+            names = re.findall(r'(?:src|href)="([^"/?]+\.(?:js|css))(?:\?[^" ]*)?"', source_html)
+            html = (site / "index.html").read_text()
+            for name in names:
+                if not (site / name).exists():
+                    (site / name).write_text("/* fixture */")
+                    html += f'\n<script src="{name}"></script>' if name.endswith('.js') else f'\n<link href="{name}">'
+            (site / "index.html").write_text(html)
             versions = fingerprint_assets(site)
             html = (site / "index.html").read_text()
             expected = {
