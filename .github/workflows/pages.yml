@@ -27,7 +27,8 @@ permissions:
 
 concurrency:
   group: playoff-data-refresh
-  cancel-in-progress: false
+  # New code/data supersedes the previous forecast; do not block a release behind an obsolete run.
+  cancel-in-progress: true
 
 jobs:
   deploy:
