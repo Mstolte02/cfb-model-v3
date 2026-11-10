@@ -9,6 +9,17 @@ conference_teams <- function(teams) {
 }
 
 conference_standings <- function(games, teams, scheduled, analytics) {
+  # The engine scans game rows while resolving each tied conference. Bound that
+  # working set, as cfb_simulations itself does, rather than making every draw
+  # scan every other draw's schedule. Simulation IDs and RNG order are retained.
+  ids <- unique(games$sim)
+  if (length(ids) > 100L) {
+    chunks <- split(ids, ceiling(seq_along(ids) / 100L))
+    return(dplyr::bind_rows(lapply(chunks, function(chunk) {
+      conference_standings(games[games$sim %in% chunk, , drop = FALSE],
+                           teams, scheduled, analytics)
+    })))
+  }
   # cfbseedR otherwise infers conference games from conference membership. Respect
   # explicit non-conference designations, notably Army-Navy, for the race only.
   conf <- setNames(teams$conference, teams$team)

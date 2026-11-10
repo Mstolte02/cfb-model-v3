@@ -29,3 +29,14 @@ stopifnot(st$conf_wins[st$team=='East A']==1,st$losses[st$team=='East A']==2)
 sun <- conference_teams(data.frame(team=c('App State','James Madison','Louisiana Tech','Troy'),conference='Sun Belt'))
 stopifnot(identical(sun$conf_division,c('East','East','West','West')))
 cat('Conference title upset, head-to-head, nonconference exclusion and Sun Belt divisions passed\n')
+
+# Chunking preserves simulation IDs and each draw's standings across the boundary.
+many <- do.call(rbind, lapply(seq_len(101), function(id) {
+  draw <- games; draw$sim <- id; draw
+}))
+batched <- conference_standings(many, teams, games, analytics)
+stopifnot(nrow(batched) == 404L, length(unique(batched$sim)) == 101L,
+          all(batched$conf_rank[batched$team == 'West A'] == 1L),
+          all(batched$conf_rank[batched$team == 'East A'] == 2L),
+          all(tapply(batched$conf_champ, batched$sim, sum) == 1L))
+cat('Batched conference standings preserve all 101 independent draws\n')
