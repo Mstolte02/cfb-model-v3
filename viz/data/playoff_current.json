@@ -67,72 +67,72 @@
       "wins_out": 9,
       "projected_rank": 2.43,
       "current_cfp_rank": 5,
-      "predicted_resume_score": 11.57935759,
+      "predicted_resume_score": 11.57938152,
       "resume_score_parts": {
-        "baseline": 11.27433644,
+        "baseline": 11.27436037,
         "record": 9.35225865,
-        "staticScore": 1.92318999,
+        "staticScore": 1.92321321,
         "recordChange": 0.30502115
       },
       "seed_outlooks": [
         {
           "samples": 307,
-          "score": 11.70515728,
+          "score": 11.7051812,
           "wins": 11,
           "losses": 1
         },
         {
           "samples": 1133,
-          "score": 11.7013548,
+          "score": 11.70137873,
           "wins": 10.99558694,
           "losses": 1.00441306
         },
         {
           "samples": 303,
-          "score": 11.65112694,
+          "score": 11.65115087,
           "wins": 10.93729373,
           "losses": 1.06270627
         },
         {
           "samples": 71,
-          "score": 10.84351561,
+          "score": 10.84353954,
           "wins": 10,
           "losses": 2
         },
         {
           "samples": 93,
-          "score": 10.84351561,
+          "score": 10.84353954,
           "wins": 10,
           "losses": 2
         },
         {
           "samples": 66,
-          "score": 10.84351561,
+          "score": 10.84353954,
           "wins": 10,
           "losses": 2
         },
         {
           "samples": 14,
-          "score": 10.84351561,
+          "score": 10.84353954,
           "wins": 10,
           "losses": 2
         },
         {
           "samples": 3,
-          "score": 10.55630172,
+          "score": 10.55632565,
           "wins": 9.66666667,
           "losses": 2.33333333
         },
         null,
         {
           "samples": 3,
-          "score": 9.98187394,
+          "score": 9.98189787,
           "wins": 9,
           "losses": 3
         },
         {
           "samples": 4,
-          "score": 9.98187394,
+          "score": 9.98189787,
           "wins": 9,
           "losses": 3
         },
@@ -171,71 +171,71 @@
       "wins_in": 10.05,
       "projected_rank": 2.46,
       "current_cfp_rank": 3,
-      "predicted_resume_score": 11.69031895,
+      "predicted_resume_score": 11.69034661,
       "resume_score_parts": {
-        "baseline": 11.51638884,
+        "baseline": 11.51641651,
         "record": 8.21591899,
-        "staticScore": 2.63548004,
+        "staticScore": 2.63549129,
         "recordChange": 0.1739301
       },
       "seed_outlooks": [
         {
           "samples": 649,
-          "score": 12.17170085,
+          "score": 12.17172851,
           "wins": 10.78120185,
           "losses": 2.03389831
         },
         {
           "samples": 452,
-          "score": 11.8006211,
+          "score": 11.80064877,
           "wins": 9.94911504,
           "losses": 2.42256637
         },
         {
           "samples": 536,
-          "score": 11.38201495,
+          "score": 11.38204261,
           "wins": 9.76865672,
           "losses": 3
         },
         {
           "samples": 232,
-          "score": 11.30459717,
+          "score": 11.30462483,
           "wins": 9.44396552,
           "losses": 3.02155172
         },
         {
           "samples": 58,
-          "score": 11.18346452,
+          "score": 11.18349218,
           "wins": 9.29310345,
           "losses": 3.17241379
         },
         {
           "samples": 19,
-          "score": 10.90475117,
+          "score": 10.90477883,
           "wins": 9.10526316,
           "losses": 3.57894737
         },
         {
           "samples": 28,
-          "score": 10.56637367,
+          "score": 10.56640133,
           "wins": 8.75,
           "losses": 4
         },
         {
           "samples": 12,
-          "score": 10.5442803,
+          "score": 10.54430796,
           "wins": 8.66666667,
           "losses": 4
         },
         {
           "samples": 5,
-          "score": 10.42055739,
+          "score": 10.42058505,
           "wins": 8.2,
           "losses": 4
         },
         {
           "samples": 5,
-          "score": 10.42055739,
+          "score": 10.42058505,
           "wins": 8.2,
           "losses": 4
         },
@@ -277,77 +277,77 @@
       "wins_out": 9.38,
       "projected_rank": 2.71,
       "current_cfp_rank": 1,
-      "predicted_resume_score": 11.61277961,
+      "predicted_resume_score": 11.61281101,
       "resume_score_parts": {
-        "baseline": 11.75844124,
+        "baseline": 11.75847264,
         "record": 9.04518282,
-        "staticScore": 2.29757267,
+        "staticScore": 2.2975908,
         "recordChange": -0.14566163
       },
       "seed_outlooks": [
         {
           "samples": 990,
-          "score": 12.1039013,
+          "score": 12.1039327,
           "wins": 11.98989899,
           "losses": 1.01010101
         },
         {
           "samples": 103,
-          "score": 11.31657372,
+          "score": 11.31660512,
           "wins": 11,
           "losses": 2
         },
         {
           "samples": 372,
-          "score": 11.30730876,
+          "score": 11.30734015,
           "wins": 10.93010753,
           "losses": 2
         },
         {
           "samples": 266,
-          "score": 11.29514481,
+          "score": 11.29517621,
           "wins": 10.87593985,
           "losses": 2.0075188
         },
         {
           "samples": 52,
-          "score": 11.22735047,
+          "score": 11.22738187,
           "wins": 10.71153846,
           "losses": 2.07692308
         },
         {
           "samples": 42,
-          "score": 10.7847546,
+          "score": 10.78478599,
           "wins": 10.21428571,
           "losses": 2.64285714
         },
         {
           "samples": 35,
-          "score": 10.49848757,
+          "score": 10.49851897,
           "wins": 9.88571429,
           "losses": 3
         },
         {
           "samples": 49,
-          "score": 10.49280641,
+          "score": 10.49283781,
           "wins": 9.85714286,
           "losses": 3
         },
         {
           "samples": 48,
-          "score": 10.48392961,
+          "score": 10.48396101,
           "wins": 9.8125,
           "losses": 3
         },
         {
           "samples": 20,
-          "score": 10.40190795,
+          "score": 10.40193935,
           "wins": 9.55,
           "losses": 3.05
         },
         {
           "samples": 2,
-          "score": 10.3223718,
+          "score": 10.3224032,
           "wins": 9,
           "losses": 3
         },
@@ -387,77 +387,77 @@
       "wins_out": 10.46,
       "projected_rank": 7.38,
       "current_cfp_rank": 2,
-      "predicted_resume_score": 10.71741372,
+      "predicted_resume_score": 10.71744325,
       "resume_score_parts": {
-        "baseline": 11.63741504,
+        "baseline": 11.63744457,
         "record": 9.41969868,
-        "staticScore": 1.90320809,
+        "staticScore": 1.9032372,
         "recordChange": -0.92000132
       },
       "seed_outlooks": [
         {
           "samples": 8,
-          "score": 11.63741504,
+          "score": 11.63744457,
           "wins": 13,
           "losses": 0
         },
         {
           "samples": 113,
-          "score": 11.63741504,
+          "score": 11.63744457,
           "wins": 13,
           "losses": 0
         },
         {
           "samples": 291,
-          "score": 11.58001782,
+          "score": 11.58004735,
           "wins": 12.92783505,
           "losses": 0.07216495
         },
         {
           "samples": 164,
-          "score": 11.16213803,
+          "score": 11.16216756,
           "wins": 12.40243902,
           "losses": 0.59756098
         },
         {
           "samples": 274,
-          "score": 10.8420535,
+          "score": 10.84208303,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 324,
-          "score": 10.8420535,
+          "score": 10.84208303,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 148,
-          "score": 10.83130538,
+          "score": 10.83133491,
           "wins": 11.98648649,
           "losses": 1.01351351
         },
         {
           "samples": 33,
-          "score": 10.52471228,
+          "score": 10.52474181,
           "wins": 11.57575758,
           "losses": 1.39393939
         },
         {
           "samples": 42,
-          "score": 10.07825393,
+          "score": 10.07828346,
           "wins": 11,
           "losses": 1.95238095
         },
         {
           "samples": 97,
-          "score": 10.02482636,
+          "score": 10.02485589,
           "wins": 10.83505155,
           "losses": 2
         },
         {
           "samples": 90,
-          "score": 10.03785462,
+          "score": 10.03788415,
           "wins": 10.93333333,
           "losses": 2
         },
@@ -497,77 +497,77 @@
       "wins_out": 7.9,
       "projected_rank": 7.38,
       "current_cfp_rank": 6,
-      "predicted_resume_score": 10.60982424,
+      "predicted_resume_score": 10.6098463,
       "resume_score_parts": {
-        "baseline": 11.15331024,
+        "baseline": 11.1533323,
         "record": 7.49850288,
-        "staticScore": 2.99022788,
+        "staticScore": 2.99023315,
         "recordChange": -0.543486
       },
       "seed_outlooks": [
         {
           "samples": 35,
-          "score": 11.77318725,
+          "score": 11.77320931,
           "wins": 10.34285714,
           "losses": 2
         },
         {
           "samples": 87,
-          "score": 11.72240514,
+          "score": 11.7224272,
           "wins": 10.27586207,
           "losses": 2.05747126
         },
         {
           "samples": 60,
-          "score": 10.8892944,
+          "score": 10.88931646,
           "wins": 9.11666667,
           "losses": 3
         },
         {
           "samples": 283,
-          "score": 10.90052455,
+          "score": 10.90054661,
           "wins": 9.17314488,
           "losses": 3
         },
         {
           "samples": 452,
-          "score": 10.89425075,
+          "score": 10.89427281,
           "wins": 9.14159292,
           "losses": 3
         },
         {
           "samples": 309,
-          "score": 10.88604474,
+          "score": 10.8860668,
           "wins": 9.10032362,
           "losses": 3
         },
         {
           "samples": 64,
-          "score": 10.84124131,
+          "score": 10.84126337,
           "wins": 9.03125,
           "losses": 3.046875
         },
         {
           "samples": 25,
-          "score": 10.28813364,
+          "score": 10.2881557,
           "wins": 8.36,
           "losses": 3.68
         },
         {
           "samples": 46,
-          "score": 10.01021818,
+          "score": 10.01024024,
           "wins": 8.02173913,
           "losses": 4
         },
         {
           "samples": 85,
-          "score": 10.00445469,
+          "score": 10.00447675,
           "wins": 8,
           "losses": 4
         },
         {
           "samples": 78,
-          "score": 10.00445469,
+          "score": 10.00447675,
           "wins": 8,
           "losses": 4
         },
@@ -607,77 +607,77 @@
       "wins_out": 8.27,
       "projected_rank": 8.83,
       "current_cfp_rank": 10,
-      "predicted_resume_score": 10.50789066,
+      "predicted_resume_score": 10.50790525,
       "resume_score_parts": {
-        "baseline": 10.66920545,
+        "baseline": 10.66922003,
         "record": 7.8806741,
-        "staticScore": 2.02103519,
+        "staticScore": 2.02105839,
         "recordChange": -0.16131479
       },
       "seed_outlooks": [
         {
           "samples": 2,
-          "score": 11.30991335,
+          "score": 11.30992794,
           "wins": 10.5,
           "losses": 2
         },
         {
           "samples": 31,
-          "score": 11.34626052,
+          "score": 11.34627511,
           "wins": 10.77419355,
           "losses": 2
         },
         {
           "samples": 172,
-          "score": 11.29449937,
+          "score": 11.29451396,
           "wins": 10.38372093,
           "losses": 2
         },
         {
           "samples": 288,
-          "score": 11.2786144,
+          "score": 11.27862899,
           "wins": 10.26388889,
           "losses": 2
         },
         {
           "samples": 92,
-          "score": 11.14133129,
+          "score": 11.14134587,
           "wins": 9.93478261,
           "losses": 2.13043478
         },
         {
           "samples": 65,
-          "score": 10.67872259,
+          "score": 10.67873718,
           "wins": 9.63076923,
           "losses": 2.73846154
         },
         {
           "samples": 149,
-          "score": 10.47451684,
+          "score": 10.47453142,
           "wins": 9.37583893,
           "losses": 2.97315436
         },
         {
           "samples": 248,
-          "score": 10.43410698,
+          "score": 10.43412157,
           "wins": 9.26209677,
           "losses": 3
         },
         {
           "samples": 249,
-          "score": 10.42830779,
+          "score": 10.42832238,
           "wins": 9.23293173,
           "losses": 3
         },
         {
           "samples": 181,
-          "score": 10.40396287,
+          "score": 10.40397746,
           "wins": 9.12707182,
           "losses": 3.00552486
         },
         {
           "samples": 31,
-          "score": 10.36916315,
+          "score": 10.36917773,
           "wins": 9.12903226,
           "losses": 3.06451613
         },
@@ -717,77 +717,77 @@
       "wins_out": 7.96,
       "projected_rank": 9.32,
       "current_cfp_rank": 8,
-      "predicted_resume_score": 10.47491367,
+      "predicted_resume_score": 10.47493199,
       "resume_score_parts": {
-        "baseline": 10.91125785,
+        "baseline": 10.91127617,
         "record": 7.60564471,
-        "staticScore": 2.42098841,
+        "staticScore": 2.42100259,
         "recordChange": -0.43634418
       },
       "seed_outlooks": [
         {
           "samples": 8,
-          "score": 11.61824588,
+          "score": 11.6182642,
           "wins": 11,
           "losses": 2
         },
         {
           "samples": 54,
-          "score": 11.58633323,
+          "score": 11.58635155,
           "wins": 10.75925926,
           "losses": 2
         },
         {
           "samples": 86,
-          "score": 11.58279372,
+          "score": 11.58281204,
           "wins": 10.73255814,
           "losses": 2
         },
         {
           "samples": 66,
-          "score": 11.31797681,
+          "score": 11.31799514,
           "wins": 10.07575758,
           "losses": 2.25757576
         },
         {
           "samples": 107,
-          "score": 10.7411182,
+          "score": 10.74113652,
           "wins": 9.4953271,
           "losses": 2.97196262
         },
         {
           "samples": 244,
-          "score": 10.704721,
+          "score": 10.70473932,
           "wins": 9.4057377,
           "losses": 3
         },
         {
           "samples": 336,
-          "score": 10.6808555,
+          "score": 10.68087382,
           "wins": 9.28571429,
           "losses": 3
         },
         {
           "samples": 273,
-          "score": 10.64370949,
+          "score": 10.64372781,
           "wins": 9.0989011,
           "losses": 3
         },
         {
           "samples": 146,
-          "score": 10.60497707,
+          "score": 10.60499539,
           "wins": 9.00684932,
           "losses": 3.03424658
         },
         {
           "samples": 69,
-          "score": 10.58850244,
+          "score": 10.58852076,
           "wins": 9,
           "losses": 3.05797101
         },
         {
           "samples": 20,
-          "score": 10.31915537,
+          "score": 10.31917369,
           "wins": 8.75,
           "losses": 3.4
         },
@@ -827,72 +827,72 @@
       "wins_out": 9.88,
       "projected_rank": 8.91,
       "current_cfp_rank": 9,
-      "predicted_resume_score": 10.51429643,
+      "predicted_resume_score": 10.51431288,
       "resume_score_parts": {
-        "baseline": 10.79023165,
+        "baseline": 10.7902481,
         "record": 8.91490922,
-        "staticScore": 1.86957894,
+        "staticScore": 1.86960843,
         "recordChange": -0.27593522
       },
       "seed_outlooks": [
         null,
         {
           "samples": 5,
-          "score": 11.14372566,
+          "score": 11.14374212,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 87,
-          "score": 11.14372566,
+          "score": 11.14374212,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 323,
-          "score": 11.14372566,
+          "score": 11.14374212,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 297,
-          "score": 11.14104768,
+          "score": 11.14106413,
           "wins": 11.996633,
           "losses": 1.003367
         },
         {
           "samples": 73,
-          "score": 10.96758395,
+          "score": 10.96760041,
           "wins": 11.76712329,
           "losses": 1.21917808
         },
         {
           "samples": 56,
-          "score": 10.45962005,
+          "score": 10.45963651,
           "wins": 10.94642857,
           "losses": 1.82142857
         },
         {
           "samples": 103,
-          "score": 10.30331938,
+          "score": 10.30333583,
           "wins": 10.66019417,
           "losses": 2
         },
         {
           "samples": 166,
-          "score": 10.28607678,
+          "score": 10.28609323,
           "wins": 10.53012048,
           "losses": 2
         },
         {
           "samples": 190,
-          "score": 10.2723164,
+          "score": 10.27233285,
           "wins": 10.42631579,
           "losses": 2
         },
         {
           "samples": 104,
-          "score": 10.24384546,
+          "score": 10.24386192,
           "wins": 10.21153846,
           "losses": 2
         },
@@ -932,11 +932,11 @@
       "wins_out": 10.76,
       "projected_rank": 15.02,
       "current_cfp_rank": 7,
-      "predicted_resume_score": 9.75055893,
+      "predicted_resume_score": 9.75057912,
       "resume_score_parts": {
-        "baseline": 11.03228405,
+        "baseline": 11.03230424,
         "record": 9.05797488,
-        "staticScore": 1.99411959,
+        "staticScore": 1.99414303,
         "recordChange": -1.28172512
       },
       "seed_outlooks": [
@@ -947,43 +947,43 @@
         null,
         {
           "samples": 7,
-          "score": 10.23692251,
+          "score": 10.2369427,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 29,
-          "score": 10.23692251,
+          "score": 10.2369427,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 79,
-          "score": 10.23692251,
+          "score": 10.2369427,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 165,
-          "score": 10.23692251,
+          "score": 10.2369427,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 303,
-          "score": 10.23429755,
+          "score": 10.23431774,
           "wins": 11.99669967,
           "losses": 1.00330033
         },
         {
           "samples": 679,
-          "score": 9.89136779,
+          "score": 9.89138798,
           "wins": 11.56553756,
           "losses": 1.43446244
         },
         {
           "samples": 11,
-          "score": 8.64619943,
+          "score": 8.64621962,
           "wins": 10,
           "losses": 3
         }
@@ -1022,72 +1022,72 @@
       "wins_out": 7.9,
       "projected_rank": 9.99,
       "current_cfp_rank": 16,
-      "predicted_resume_score": 10.31073726,
+      "predicted_resume_score": 10.31074064,
       "resume_score_parts": {
-        "baseline": 9.94304825,
+        "baseline": 9.94305163,
         "record": 7.26082234,
-        "staticScore": 2.27966445,
+        "staticScore": 2.27968614,
         "recordChange": 0.36768901
       },
       "seed_outlooks": [
         null,
         {
           "samples": 3,
-          "score": 11.0035303,
+          "score": 11.00353368,
           "wins": 10,
           "losses": 3
         },
         {
           "samples": 34,
-          "score": 10.95674433,
+          "score": 10.95674771,
           "wins": 9.76470588,
           "losses": 3
         },
         {
           "samples": 131,
-          "score": 10.96861939,
+          "score": 10.96862277,
           "wins": 9.82442748,
           "losses": 3
         },
         {
           "samples": 193,
-          "score": 10.90668576,
+          "score": 10.90668914,
           "wins": 9.51295337,
           "losses": 3
         },
         {
           "samples": 238,
-          "score": 10.82474105,
+          "score": 10.82474443,
           "wins": 9.10084034,
           "losses": 3
         },
         {
           "samples": 207,
-          "score": 10.8056505,
+          "score": 10.80565388,
           "wins": 9.00483092,
           "losses": 3
         },
         {
           "samples": 115,
-          "score": 10.70901599,
+          "score": 10.70901937,
           "wins": 8.97391304,
           "losses": 3.14782609
         },
         {
           "samples": 65,
-          "score": 10.23060204,
+          "score": 10.23060542,
           "wins": 8.6,
           "losses": 3.78461538
         },
         {
           "samples": 92,
-          "score": 10.03238234,
+          "score": 10.03238571,
           "wins": 8.33695652,
           "losses": 4
         },
         {
           "samples": 88,
-          "score": 10.01836658,
+          "score": 10.01836996,
           "wins": 8.28409091,
           "losses": 4
         },
@@ -1127,11 +1127,11 @@
       "wins_out": 9.68,
       "projected_rank": 28.5,
       "current_cfp_rank": 24,
-      "predicted_resume_score": 8.6489945,
+      "predicted_resume_score": 8.64898293,
       "resume_score_parts": {
-        "baseline": 8.97483865,
+        "baseline": 8.97482709,
         "record": 8.86500029,
-        "staticScore": 0.10490606,
+        "staticScore": 0.10494501,
         "recordChange": -0.32584416
       },
       "seed_outlooks": [
@@ -1147,13 +1147,13 @@
         null,
         {
           "samples": 32,
-          "score": 9.26205254,
+          "score": 9.26204098,
           "wins": 11,
           "losses": 1
         },
         {
           "samples": 981,
-          "score": 9.14523466,
+          "score": 9.1452231,
           "wins": 10.86442406,
           "losses": 1.13557594
         }
@@ -1192,11 +1192,11 @@
       "wins_out": 8.84,
       "projected_rank": 12.09,
       "current_cfp_rank": 15,
-      "predicted_resume_score": 10.09232083,
+      "predicted_resume_score": 10.09232608,
       "resume_score_parts": {
-        "baseline": 10.06407445,
+        "baseline": 10.0640797,
         "record": 8.07023527,
-        "staticScore": 1.68706504,
+        "staticScore": 1.68709787,
         "recordChange": 0.02824638
       },
       "seed_outlooks": [
@@ -1204,55 +1204,55 @@
         null,
         {
           "samples": 1,
-          "score": 10.63850223,
+          "score": 10.63850747,
           "wins": 10,
           "losses": 2
         },
         {
           "samples": 18,
-          "score": 10.66796006,
+          "score": 10.66796531,
           "wins": 10.22222222,
           "losses": 2
         },
         {
           "samples": 72,
-          "score": 10.66243672,
+          "score": 10.66244196,
           "wins": 10.18055556,
           "losses": 2
         },
         {
           "samples": 173,
-          "score": 10.6484634,
+          "score": 10.64846865,
           "wins": 10.07514451,
           "losses": 2
         },
         {
           "samples": 255,
-          "score": 10.64474036,
+          "score": 10.6447456,
           "wins": 10.04705882,
           "losses": 2
         },
         {
           "samples": 213,
-          "score": 10.63663518,
+          "score": 10.63664043,
           "wins": 10.00938967,
           "losses": 2.00469484
         },
         {
           "samples": 138,
-          "score": 10.6192906,
+          "score": 10.61929584,
           "wins": 10,
           "losses": 2.02898551
         },
         {
           "samples": 57,
-          "score": 10.47687174,
+          "score": 10.47687699,
           "wins": 9.94736842,
           "losses": 2.22807018
         },
         {
           "samples": 16,
-          "score": 10.07926365,
+          "score": 10.07926889,
           "wins": 9.6875,
           "losses": 2.75
         },
@@ -1292,11 +1292,11 @@
       "wins_out": 8.06,
       "projected_rank": 13.55,
       "current_cfp_rank": 19,
-      "predicted_resume_score": 9.91627502,
+      "predicted_resume_score": 9.9162728,
       "resume_score_parts": {
-        "baseline": 9.57996965,
+        "baseline": 9.57996743,
         "record": 7.2294387,
-        "staticScore": 2.47097644,
+        "staticScore": 2.47098925,
         "recordChange": 0.33630537
       },
       "seed_outlooks": [
@@ -1305,49 +1305,49 @@
         null,
         {
           "samples": 2,
-          "score": 10.54103151,
+          "score": 10.54102929,
           "wins": 9.5,
           "losses": 3
         },
         {
           "samples": 1,
-          "score": 10.44161132,
+          "score": 10.44160909,
           "wins": 9,
           "losses": 3
         },
         {
           "samples": 51,
-          "score": 10.45330781,
+          "score": 10.45330559,
           "wins": 9.05882353,
           "losses": 3
         },
         {
           "samples": 106,
-          "score": 10.44161132,
+          "score": 10.44160909,
           "wins": 9,
           "losses": 3
         },
         {
           "samples": 176,
-          "score": 10.44274109,
+          "score": 10.44273887,
           "wins": 9.00568182,
           "losses": 3
         },
         {
           "samples": 223,
-          "score": 10.44339464,
+          "score": 10.44339242,
           "wins": 9.00896861,
           "losses": 3
         },
         {
           "samples": 151,
-          "score": 10.43897767,
+          "score": 10.43897545,
           "wins": 9.00662252,
           "losses": 3.00662252
         },
         {
           "samples": 30,
-          "score": 10.38416854,
+          "score": 10.38416632,
           "wins": 8.93333333,
           "losses": 3.06666667
         },
@@ -1387,11 +1387,11 @@
       "wins_out": 10.35,
       "projected_rank": 14.52,
       "current_cfp_rank": 13,
-      "predicted_resume_score": 9.80364615,
+      "predicted_resume_score": 9.80365513,
       "resume_score_parts": {
-        "baseline": 10.30612685,
+        "baseline": 10.30613583,
         "record": 8.68836375,
-        "staticScore": 1.374093,
+        "staticScore": 1.37412526,
         "recordChange": -0.5024807
       },
       "seed_outlooks": [
@@ -1400,49 +1400,49 @@
         null,
         {
           "samples": 12,
-          "score": 10.65962087,
+          "score": 10.65962985,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 31,
-          "score": 10.65962087,
+          "score": 10.65962985,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 99,
-          "score": 10.65962087,
+          "score": 10.65962985,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 117,
-          "score": 10.65962087,
+          "score": 10.65962985,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 99,
-          "score": 10.65962087,
+          "score": 10.65962985,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 62,
-          "score": 10.58265039,
+          "score": 10.58265938,
           "wins": 11.90322581,
           "losses": 1.09677419
         },
         {
           "samples": 48,
-          "score": 10.04652968,
+          "score": 10.04653866,
           "wins": 11.22916667,
           "losses": 1.77083333
         },
         {
           "samples": 222,
-          "score": 9.84634578,
+          "score": 9.84635476,
           "wins": 10.97747748,
           "losses": 2.02252252
         },
@@ -1482,77 +1482,77 @@
       "wins_out": 10.44,
       "projected_rank": 13.55,
       "current_cfp_rank": 4,
-      "predicted_resume_score": 9.95781294,
+      "predicted_resume_score": 9.95783874,
       "resume_score_parts": {
-        "baseline": 11.39536264,
+        "baseline": 11.39538844,
         "record": 8.9021503,
-        "staticScore": 1.54429943,
+        "staticScore": 1.54433442,
         "recordChange": -1.4375497
       },
       "seed_outlooks": [
         {
           "samples": 1,
-          "score": 11.39536264,
+          "score": 11.39538844,
           "wins": 13,
           "losses": 0
         },
         {
           "samples": 16,
-          "score": 11.39536264,
+          "score": 11.39538844,
           "wins": 13,
           "losses": 0
         },
         {
           "samples": 38,
-          "score": 11.39536264,
+          "score": 11.39538844,
           "wins": 13,
           "losses": 0
         },
         {
           "samples": 37,
-          "score": 11.30937761,
+          "score": 11.30940341,
           "wins": 12.89189189,
           "losses": 0.10810811
         },
         {
           "samples": 42,
-          "score": 10.8840588,
+          "score": 10.88408459,
           "wins": 12.35714286,
           "losses": 0.64285714
         },
         {
           "samples": 41,
-          "score": 10.60000111,
+          "score": 10.6000269,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 100,
-          "score": 10.60000111,
+          "score": 10.6000269,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 143,
-          "score": 10.60000111,
+          "score": 10.6000269,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 130,
-          "score": 10.58776477,
+          "score": 10.58779057,
           "wins": 11.98461538,
           "losses": 1.01538462
         },
         {
           "samples": 76,
-          "score": 10.45348714,
+          "score": 10.45351293,
           "wins": 11.81578947,
           "losses": 1.18421053
         },
         {
           "samples": 53,
-          "score": 9.8946805,
+          "score": 9.89470629,
           "wins": 11.11320755,
           "losses": 1.88679245
         },
@@ -1592,72 +1592,72 @@
       "wins_out": 8.78,
       "projected_rank": 13.23,
       "current_cfp_rank": 14,
-      "predicted_resume_score": 9.94461425,
+      "predicted_resume_score": 9.94462137,
       "resume_score_parts": {
-        "baseline": 10.18510065,
+        "baseline": 10.18510776,
         "record": 7.80150249,
-        "staticScore": 1.90146909,
+        "staticScore": 1.90149625,
         "recordChange": -0.2404864
       },
       "seed_outlooks": [
         null,
         {
           "samples": 1,
-          "score": 10.89208868,
+          "score": 10.8920958,
           "wins": 11,
           "losses": 2
         },
         {
           "samples": 7,
-          "score": 10.89208868,
+          "score": 10.8920958,
           "wins": 11,
           "losses": 2
         },
         {
           "samples": 39,
-          "score": 10.86489684,
+          "score": 10.86490395,
           "wins": 10.79487179,
           "losses": 2
         },
         {
           "samples": 96,
-          "score": 10.83823608,
+          "score": 10.83824319,
           "wins": 10.59375,
           "losses": 2
         },
         {
           "samples": 103,
-          "score": 10.78655528,
+          "score": 10.78656239,
           "wins": 10.2038835,
           "losses": 2
         },
         {
           "samples": 122,
-          "score": 10.76061499,
+          "score": 10.7606221,
           "wins": 10.09016393,
           "losses": 2.01639344
         },
         {
           "samples": 100,
-          "score": 10.73566758,
+          "score": 10.7356747,
           "wins": 10.02,
           "losses": 2.04
         },
         {
           "samples": 47,
-          "score": 10.51274072,
+          "score": 10.51274783,
           "wins": 9.89361702,
           "losses": 2.34042553
         },
         {
           "samples": 63,
-          "score": 10.07147757,
+          "score": 10.07148469,
           "wins": 9.55555556,
           "losses": 2.9047619
         },
         {
           "samples": 75,
-          "score": 9.98272532,
+          "score": 9.98273244,
           "wins": 9.42666667,
           "losses": 3
         },
@@ -1697,72 +1697,72 @@
       "wins_out": 8.01,
       "projected_rank": 16.57,
       "current_cfp_rank": 11,
-      "predicted_resume_score": 9.69874417,
+      "predicted_resume_score": 9.69875689,
       "resume_score_parts": {
-        "baseline": 10.54817925,
+        "baseline": 10.54819197,
         "record": 7.19255381,
-        "staticScore": 2.63570033,
+        "staticScore": 2.63570742,
         "recordChange": -0.84943508
       },
       "seed_outlooks": [
         null,
         {
           "samples": 2,
-          "score": 11.25516728,
+          "score": 11.25518,
           "wins": 11,
           "losses": 2
         },
         {
           "samples": 12,
-          "score": 11.15574709,
+          "score": 11.15575981,
           "wins": 10.25,
           "losses": 2
         },
         {
           "samples": 44,
-          "score": 11.12561976,
+          "score": 11.12563248,
           "wins": 10.02272727,
           "losses": 2
         },
         {
           "samples": 59,
-          "score": 11.10013919,
+          "score": 11.1001519,
           "wins": 10,
           "losses": 2.03389831
         },
         {
           "samples": 35,
-          "score": 10.9408101,
+          "score": 10.94082282,
           "wins": 9.94285714,
           "losses": 2.25714286
         },
         {
           "samples": 34,
-          "score": 10.47345165,
+          "score": 10.47346437,
           "wins": 9.38235294,
           "losses": 2.79411765
         },
         {
           "samples": 83,
-          "score": 10.29769892,
+          "score": 10.29771164,
           "wins": 9.14457831,
           "losses": 2.98795181
         },
         {
           "samples": 138,
-          "score": 10.2796967,
+          "score": 10.27970942,
           "wins": 9.0942029,
           "losses": 3
         },
         {
           "samples": 125,
-          "score": 10.27687259,
+          "score": 10.27688531,
           "wins": 9.08,
           "losses": 3
         },
         {
           "samples": 25,
-          "score": 10.16552197,
+          "score": 10.16553469,
           "wins": 9,
           "losses": 3.16
         },
@@ -1801,11 +1801,11 @@
       "wins_in": 11.97,
       "wins_out": 11.02,
       "projected_rank": 32.36,
-      "predicted_resume_score": 8.2167518,
+      "predicted_resume_score": 8.21679778,
       "resume_score_parts": {
-        "baseline": 8.44466707,
+        "baseline": 8.44471305,
         "record": 8.96292918,
-        "staticScore": -0.74617737,
+        "staticScore": -0.74613139,
         "recordChange": -0.22791527
       },
       "seed_outlooks": [
@@ -1821,13 +1821,13 @@
         null,
         {
           "samples": 10,
-          "score": 8.79816109,
+          "score": 8.79820707,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 478,
-          "score": 8.77320204,
+          "score": 8.77324802,
           "wins": 11.96861925,
           "losses": 1.03138075
         }
@@ -1866,11 +1866,11 @@
       "wins_out": 8.04,
       "projected_rank": 15.97,
       "current_cfp_rank": 20,
-      "predicted_resume_score": 9.66215833,
+      "predicted_resume_score": 9.66215423,
       "resume_score_parts": {
-        "baseline": 9.45894345,
+        "baseline": 9.45893936,
         "record": 7.09634821,
-        "staticScore": 2.32365341,
+        "staticScore": 2.32367064,
         "recordChange": 0.20321487
       },
       "seed_outlooks": [
@@ -1879,49 +1879,49 @@
         null,
         {
           "samples": 3,
-          "score": 10.5194255,
+          "score": 10.51942141,
           "wins": 10,
           "losses": 3
         },
         {
           "samples": 1,
-          "score": 10.5194255,
+          "score": 10.51942141,
           "wins": 10,
           "losses": 3
         },
         {
           "samples": 13,
-          "score": 10.42765302,
+          "score": 10.42764893,
           "wins": 9.53846154,
           "losses": 3
         },
         {
           "samples": 47,
-          "score": 10.40519805,
+          "score": 10.40519396,
           "wins": 9.42553191,
           "losses": 3
         },
         {
           "samples": 99,
-          "score": 10.40494165,
+          "score": 10.40493755,
           "wins": 9.42424242,
           "losses": 3
         },
         {
           "samples": 151,
-          "score": 10.37720854,
+          "score": 10.37720445,
           "wins": 9.28476821,
           "losses": 3
         },
         {
           "samples": 133,
-          "score": 10.36693137,
+          "score": 10.36692728,
           "wins": 9.23308271,
           "losses": 3
         },
         {
           "samples": 29,
-          "score": 10.25887603,
+          "score": 10.25887194,
           "wins": 9.20689655,
           "losses": 3.17241379
         },
@@ -1961,11 +1961,11 @@
       "wins_out": 9.63,
       "projected_rank": 17.32,
       "current_cfp_rank": 12,
-      "predicted_resume_score": 9.54021447,
+      "predicted_resume_score": 9.54022532,
       "resume_score_parts": {
-        "baseline": 10.42715305,
+        "baseline": 10.4271639,
         "record": 8.30390586,
-        "staticScore": 1.79082385,
+        "staticScore": 1.79085305,
         "recordChange": -0.88693858
       },
       "seed_outlooks": [
@@ -1974,55 +1974,55 @@
         null,
         {
           "samples": 13,
-          "score": 10.78064706,
+          "score": 10.78065792,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 38,
-          "score": 10.78064706,
+          "score": 10.78065792,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 52,
-          "score": 10.78064706,
+          "score": 10.78065792,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 54,
-          "score": 10.78064706,
+          "score": 10.78065792,
           "wins": 12,
           "losses": 1
         },
         {
           "samples": 32,
-          "score": 10.70608192,
+          "score": 10.70609277,
           "wins": 11.90625,
           "losses": 1.09375
         },
         {
           "samples": 22,
-          "score": 10.3829663,
+          "score": 10.38297715,
           "wins": 11.5,
           "losses": 1.5
         },
         {
           "samples": 87,
-          "score": 9.98071448,
+          "score": 9.98072533,
           "wins": 10.96551724,
           "losses": 2
         },
         {
           "samples": 139,
-          "score": 9.96144375,
+          "score": 9.9614546,
           "wins": 10.92805755,
           "losses": 2.02158273
         },
         {
           "samples": 3,
-          "score": 9.18992399,
+          "score": 9.18993484,
           "wins": 10,
           "losses": 3
         }
@@ -2060,11 +2060,11 @@
       "wins_in": 11.99,
       "wins_out": 11.41,
       "projected_rank": 34.06,
-      "predicted_resume_score": 8.15063097,
+      "predicted_resume_score": 8.1506781,
       "resume_score_parts": {
-        "baseline": 8.17642498,
+        "baseline": 8.17647211,
         "record": 9.16505043,
-        "staticScore": -1.01441946,
+        "staticScore": -1.01437233,
         "recordChange": -0.02579402
       },
       "seed_outlooks": [
@@ -2081,7 +2081,7 @@
         null,
         {
           "samples": 392,
-          "score": 8.52180307,
+          "score": 8.5218502,
           "wins": 11.98979592,
           "losses": 1.01020408
         }
@@ -2120,11 +2120,11 @@
       "wins_out": 8.03,
       "projected_rank": 18.41,
       "current_cfp_rank": 21,
-      "predicted_resume_score": 9.49350985,
+      "predicted_resume_score": 9.49350389,
       "resume_score_parts": {
-        "baseline": 9.33791725,
+        "baseline": 9.33791129,
         "record": 7.04872593,
-        "staticScore": 2.69631347,
+        "staticScore": 2.69599489,
         "recordChange": 0.1555926
       },
       "seed_outlooks": [
@@ -2135,37 +2135,37 @@
         null,
         {
           "samples": 1,
-          "score": 10.19955892,
+          "score": 10.19955296,
           "wins": 9,
           "losses": 3
         },
         {
           "samples": 8,
-          "score": 10.19955892,
+          "score": 10.19955296,
           "wins": 9,
           "losses": 3
         },
         {
           "samples": 32,
-          "score": 10.22441397,
+          "score": 10.22440801,
           "wins": 9.125,
           "losses": 3
         },
         {
           "samples": 84,
-          "score": 10.19955892,
+          "score": 10.19955296,
           "wins": 9,
           "losses": 3
         },
         {
           "samples": 119,
-          "score": 10.20290077,
+          "score": 10.20289481,
           "wins": 9.01680672,
           "losses": 3
         },
         {
           "samples": 73,
-          "score": 10.19955892,
+          "score": 10.19955296,
           "wins": 9,
           "losses": 3
         },
@@ -2205,11 +2205,11 @@
       "wins_out": 7.44,
       "projected_rank": 17.73,
       "current_cfp_rank": 17,
-      "predicted_resume_score": 9.48210441,
+      "predicted_resume_score": 9.48210592,
       "resume_score_parts": {
-        "baseline": 9.82202205,
+        "baseline": 9.82202356,
         "record": 6.5532157,
-        "staticScore": 2.31871197,
+        "staticScore": 2.31872532,
         "recordChange": -0.33991764
       },
       "seed_outlooks": [
@@ -2217,55 +2217,55 @@
         null,
         {
           "samples": 1,
-          "score": 10.68366372,
+          "score": 10.68366523,
           "wins": 9,
           "losses": 3
         },
         {
           "samples": 8,
-          "score": 10.68366372,
+          "score": 10.68366523,
           "wins": 9,
           "losses": 3
         },
         {
           "samples": 35,
-          "score": 10.68934487,
+          "score": 10.68934638,
           "wins": 9.02857143,
           "losses": 3
         },
         {
           "samples": 38,
-          "score": 10.68366372,
+          "score": 10.68366523,
           "wins": 9,
           "losses": 3
         },
         {
           "samples": 57,
-          "score": 10.68366372,
+          "score": 10.68366523,
           "wins": 9,
           "losses": 3
         },
         {
           "samples": 44,
-          "score": 10.68366372,
+          "score": 10.68366523,
           "wins": 9,
           "losses": 3
         },
         {
           "samples": 21,
-          "score": 10.64263316,
+          "score": 10.64263467,
           "wins": 8.95238095,
           "losses": 3.04761905
         },
         {
           "samples": 13,
-          "score": 9.84241594,
+          "score": 9.84241745,
           "wins": 8.07692308,
           "losses": 4
         },
         {
           "samples": 25,
-          "score": 9.83262687,
+          "score": 9.83262838,
           "wins": 8.04,
           "losses": 4
         },
@@ -2305,11 +2305,11 @@
       "wins_out": 8.64,
       "projected_rank": 20.94,
       "current_cfp_rank": 18,
-      "predicted_resume_score": 9.18200035,
+      "predicted_resume_score": 9.182,
       "resume_score_parts": {
-        "baseline": 9.70099585,
+        "baseline": 9.70099549,
         "record": 7.52299339,
-        "staticScore": 2.23214033,
+        "staticScore": 2.23216338,
         "recordChange": -0.5189955
       },
       "seed_outlooks": [
@@ -2319,43 +2319,43 @@
         null,
         {
           "samples": 7,
-          "score": 10.40798389,
+          "score": 10.40798353,
           "wins": 11,
           "losses": 2
         },
         {
           "samples": 7,
-          "score": 10.40798389,
+          "score": 10.40798353,
           "wins": 11,
           "losses": 2
         },
         {
           "samples": 34,
-          "score": 10.40018622,
+          "score": 10.40018587,
           "wins": 10.94117647,
           "losses": 2
         },
         {
           "samples": 39,
-          "score": 10.38419102,
+          "score": 10.38419066,
           "wins": 10.82051282,
           "losses": 2
         },
         {
           "samples": 47,
-          "score": 10.36849785,
+          "score": 10.36849749,
           "wins": 10.70212766,
           "losses": 2
         },
         {
           "samples": 38,
-          "score": 10.38356489,
+          "score": 10.38356453,
           "wins": 10.81578947,
           "losses": 2
         },
         {
           "samples": 14,
-          "score": 10.22808068,
+          "score": 10.22808032,
           "wins": 10.71428571,
           "losses": 2.21428571
         },
@@ -2395,11 +2395,11 @@
       "wins_out": 8.9,
       "projected_rank": 25.83,
       "current_cfp_rank": 23,
-      "predicted_resume_score": 8.70899879,
+      "predicted_resume_score": 8.7089891,
       "resume_score_parts": {
-        "baseline": 9.09586485,
+        "baseline": 9.09585516,
         "record": 7.65512283,
-        "staticScore": 1.54195192,
+        "staticScore": 1.54198168,
         "recordChange": -0.38686606
       },
       "seed_outlooks": [
@@ -2414,19 +2414,19 @@
         null,
         {
           "samples": 13,
-          "score": 9.80285289,
+          "score": 9.80284319,
           "wins": 11,
           "losses": 2
         },
         {
           "samples": 50,
-          "score": 9.80285289,
+          "score": 9.80284319,
           "wins": 11,
           "losses": 2
         },
         {
           "samples": 1,
-          "score": 9.00749135,
+          "score": 9.00748165,
           "wins": 10,
           "losses": 3
         }
@@ -2436,10 +2436,10 @@
       "team": "Louisiana Tech",
       "conference": "Sun Belt",
       "power_rank": 54,
-      "rating": 0.582,
+      "rating": 0.581,
       "avg_wins": 9.78,
       "avg_losses": 3.22,
-      "conf_champ": 0.5465,
+      "conf_champ": 0.546,
       "playoff": 0.0275,
       "bye": 0,
       "qf": 0.0015,
@@ -2462,13 +2462,13 @@
         0.0275
       ],
       "wins_out": 9.74,
-      "projected_rank": 46.14,
-      "predicted_resume_score": 7.4431849,
+      "projected_rank": 46.17,
+      "predicted_resume_score": 7.4409786,
       "resume_score_parts": {
-        "baseline": 7.70494722,
-        "record": 7.78022657,
-        "staticScore": -0.33704167,
-        "recordChange": -0.26176232
+        "baseline": 7.70433164,
+        "record": 7.77863585,
+        "staticScore": -0.33765725,
+        "recordChange": -0.26335304
       },
       "wins_in": 11,
       "seed_outlooks": [
@@ -2485,7 +2485,7 @@
         null,
         {
           "samples": 55,
-          "score": 8.41193526,
+          "score": 8.41131968,
           "wins": 11,
           "losses": 2
         }
@@ -2523,11 +2523,11 @@
       "wins_in": 10,
       "wins_out": 8.15,
       "projected_rank": 27.96,
-      "predicted_resume_score": 8.66043335,
+      "predicted_resume_score": 8.66046157,
       "resume_score_parts": {
-        "baseline": 8.53774883,
+        "baseline": 8.53777706,
         "record": 7.01581785,
-        "staticScore": 1.6446155,
+        "staticScore": 1.64464372,
         "recordChange": 0.12268452
       },
       "seed_outlooks": [
@@ -2542,13 +2542,13 @@
         null,
         {
           "samples": 4,
-          "score": 9.59823088,
+          "score": 9.59825911,
           "wins": 10,
           "losses": 3
         },
         {
           "samples": 38,
-          "score": 9.59823088,
+          "score": 9.59825911,
           "wins": 10,
           "losses": 3
         },
@@ -2586,11 +2586,11 @@
       ],
       "wins_out": 8.26,
       "projected_rank": 40.24,
-      "predicted_resume_score": 7.76113062,
+      "predicted_resume_score": 7.76111532,
       "resume_score_parts": {
-        "baseline": 8.73278626,
+        "baseline": 8.73277095,
         "record": 7.07033326,
-        "staticScore": 1.44343265,
+        "staticScore": 1.44346179,
         "recordChange": -0.97165563
       },
       "seed_outlooks": [
@@ -2606,13 +2606,13 @@
         null,
         {
           "samples": 18,
-          "score": 8.82115976,
+          "score": 8.82114446,
           "wins": 10.22222222,
           "losses": 2.77777778
         },
         {
           "samples": 23,
-          "score": 8.64441275,
+          "score": 8.64439745,
           "wins": 10,
           "losses": 3
         }
@@ -2651,11 +2651,11 @@
       "wins_in": 10,
       "wins_out": 7.77,
       "projected_rank": 26.82,
-      "predicted_resume_score": 8.64907314,
+      "predicted_resume_score": 8.64905971,
       "resume_score_parts": {
-        "baseline": 8.85381245,
+        "baseline": 8.85379902,
         "record": 6.68839402,
-        "staticScore": 1.72983517,
+        "staticScore": 1.72986564,
         "recordChange": -0.20473932
       },
       "seed_outlooks": [
@@ -2670,13 +2670,13 @@
         null,
         {
           "samples": 13,
-          "score": 9.91429451,
+          "score": 9.91428107,
           "wins": 10,
           "losses": 3
         },
         {
           "samples": 24,
-          "score": 9.91429451,
+          "score": 9.91428107,
           "wins": 10,
           "losses": 3
         },
@@ -2715,11 +2715,11 @@
       ],
       "wins_out": 8.63,
       "projected_rank": 52.47,
-      "predicted_resume_score": 7.04917027,
+      "predicted_resume_score": 7.04920523,
       "resume_score_parts": {
-        "baseline": 7.77757784,
+        "baseline": 7.77761279,
         "record": 7.31358133,
-        "staticScore": -0.26441105,
+        "staticScore": -0.26437609,
         "recordChange": -0.72840756
       },
       "seed_outlooks": [
@@ -2736,7 +2736,7 @@
         null,
         {
           "samples": 22,
-          "score": 8.44841307,
+          "score": 8.44844803,
           "wins": 10.95454545,
           "losses": 2.04545455
         }
@@ -2775,11 +2775,11 @@
       "wins_out": 7.29,
       "projected_rank": 29.15,
       "current_cfp_rank": 22,
-      "predicted_resume_score": 8.61771869,
+      "predicted_resume_score": 8.61771087,
       "resume_score_parts": {
-        "baseline": 9.21689105,
+        "baseline": 9.21688322,
         "record": 6.29396097,
-        "staticScore": 2.31577339,
+        "staticScore": 2.31578841,
         "recordChange": -0.59917236
       },
       "seed_outlooks": [
@@ -2793,19 +2793,19 @@
         null,
         {
           "samples": 5,
-          "score": 10.07853272,
+          "score": 10.07852489,
           "wins": 9,
           "losses": 3
         },
         {
           "samples": 11,
-          "score": 10.09660912,
+          "score": 10.09660129,
           "wins": 9.09090909,
           "losses": 3
         },
         {
           "samples": 5,
-          "score": 10.07853272,
+          "score": 10.07852489,
           "wins": 9,
           "losses": 3
         },
@@ -2845,11 +2845,11 @@
       "wins_in": 9.88,
       "wins_out": 7.01,
       "projected_rank": 36.79,
-      "predicted_resume_score": 7.87416033,
+      "predicted_resume_score": 7.87414503,
       "resume_score_parts": {
-        "baseline": 8.73278626,
+        "baseline": 8.73277095,
         "record": 6.03450741,
-        "staticScore": 1.9435175,
+        "staticScore": 1.94321574,
         "recordChange": -0.85862592
       },
       "seed_outlooks": [
@@ -2864,13 +2864,13 @@
         null,
         {
           "samples": 4,
-          "score": 9.79326831,
+          "score": 9.79325301,
           "wins": 10,
           "losses": 3
         },
         {
           "samples": 12,
-          "score": 9.66070805,
+          "score": 9.66069275,
           "wins": 9.83333333,
           "losses": 3.16666667
         },
@@ -2908,11 +2908,11 @@
       ],
       "wins_out": 7.9,
       "projected_rank": 27.57,
-      "predicted_resume_score": 8.59414723,
+      "predicted_resume_score": 8.59417535,
       "resume_score_parts": {
-        "baseline": 8.68882839,
+        "baseline": 8.68885651,
         "record": 6.79845217,
-        "staticScore": 1.79569506,
+        "staticScore": 1.79572318,
         "recordChange": -0.09468116
       },
       "seed_outlooks": [
@@ -2928,13 +2928,13 @@
         null,
         {
           "samples": 11,
-          "score": 9.53239366,
+          "score": 9.53242178,
           "wins": 9.72727273,
           "losses": 3.27272727
         },
         {
           "samples": 4,
-          "score": 8.95394891,
+          "score": 8.95397703,
           "wins": 9,
           "losses": 4
         }
@@ -2948,7 +2948,7 @@
       "rating": 0.614,
       "avg_wins": 9.93,
       "avg_losses": 2.85,
-      "conf_champ": 0.3635,
+      "conf_champ": 0.364,
       "playoff": 0.0055,
       "bye": 0,
       "qf": 0.001,
@@ -2972,12 +2972,12 @@
       ],
       "wins_out": 9.92,
       "projected_rank": 46.12,
-      "predicted_resume_score": 7.31716566,
+      "predicted_resume_score": 7.31761083,
       "resume_score_parts": {
-        "baseline": 7.55709973,
-        "record": 8.03182594,
-        "staticScore": -0.71466027,
-        "recordChange": -0.23993406
+        "baseline": 7.55714722,
+        "record": 8.03222362,
+        "staticScore": -0.71461278,
+        "recordChange": -0.23953638
       },
       "wins_in": 11,
       "seed_outlooks": [
@@ -2994,7 +2994,7 @@
         null,
         {
           "samples": 11,
-          "score": 8.03431665,
+          "score": 8.03436414,
           "wins": 11,
           "losses": 2
         }
@@ -3031,11 +3031,11 @@
       ],
       "wins_out": 9.35,
       "projected_rank": 51.66,
-      "predicted_resume_score": 7.09922234,
+      "predicted_resume_score": 7.09926426,
       "resume_score_parts": {
-        "baseline": 7.54882254,
+        "baseline": 7.54886447,
         "record": 7.59238869,
-        "staticScore": -0.49316635,
+        "staticScore": -0.49312442,
         "recordChange": -0.4496002
       },
       "seed_outlooks": [
@@ -3052,7 +3052,7 @@
         null,
         {
           "samples": 10,
-          "score": 8.25581058,
+          "score": 8.2558525,
           "wins": 11,
           "losses": 2
         }
@@ -3090,11 +3090,11 @@
       ],
       "wins_out": 9.66,
       "projected_rank": 47.83,
-      "predicted_resume_score": 7.36711067,
+      "predicted_resume_score": 7.36714988,
       "resume_score_parts": {
-        "baseline": 7.66774628,
+        "baseline": 7.66778549,
         "record": 7.74135327,
-        "staticScore": -0.37424261,
+        "staticScore": -0.3742034,
         "recordChange": -0.30063561
       },
       "seed_outlooks": [
@@ -3111,7 +3111,7 @@
         null,
         {
           "samples": 8,
-          "score": 8.37473432,
+          "score": 8.37477352,
           "wins": 11,
           "losses": 2
         }
@@ -3149,11 +3149,11 @@
       ],
       "wins_out": 8.09,
       "projected_rank": 42.58,
-      "predicted_resume_score": 7.65852898,
+      "predicted_resume_score": 7.65851368,
       "resume_score_parts": {
-        "baseline": 8.73278626,
+        "baseline": 8.73277095,
         "record": 6.96773162,
-        "staticScore": 1.39090388,
+        "staticScore": 1.39093724,
         "recordChange": -1.07425727
       },
       "wins_in": 11,
@@ -3170,7 +3170,7 @@
         null,
         {
           "samples": 3,
-          "score": 9.43977429,
+          "score": 9.43975899,
           "wins": 11,
           "losses": 2
         },
@@ -3208,11 +3208,11 @@
       ],
       "wins_out": 9.57,
       "projected_rank": 57.84,
-      "predicted_resume_score": 6.60880841,
+      "predicted_resume_score": 6.60885578,
       "resume_score_parts": {
-        "baseline": 6.75177465,
+        "baseline": 6.75182202,
         "record": 7.61180876,
-        "staticScore": -1.00300035,
+        "staticScore": -1.00295298,
         "recordChange": -0.14296624
       },
       "seed_outlooks": [
@@ -3229,7 +3229,7 @@
         null,
         {
           "samples": 1,
-          "score": 7.74597657,
+          "score": 7.74602394,
           "wins": 11,
           "losses": 2
         }
@@ -3267,11 +3267,11 @@
       ],
       "wins_out": 8.9,
       "projected_rank": 57.12,
-      "predicted_resume_score": 6.71774243,
+      "predicted_resume_score": 6.71778436,
       "resume_score_parts": {
-        "baseline": 6.86077495,
+        "baseline": 6.86081688,
         "record": 7.61174248,
-        "staticScore": -0.89400005,
+        "staticScore": -0.89395812,
         "recordChange": -0.14303252
       },
       "seed_outlooks": [
@@ -3320,11 +3320,11 @@
       ],
       "wins_out": 1.58,
       "projected_rank": 136.17,
-      "predicted_resume_score": 0.13412862,
+      "predicted_resume_score": 0.13416498,
       "resume_score_parts": {
-        "baseline": -0.08228704,
+        "baseline": -0.08225069,
         "record": 1.36527122,
-        "staticScore": -1.2311426,
+        "staticScore": -1.23110625,
         "recordChange": 0.21641567
       },
       "seed_outlooks": [
@@ -3373,11 +3373,11 @@
       ],
       "wins_out": 6.63,
       "projected_rank": 94.33,
-      "predicted_resume_score": 4.64300946,
+      "predicted_resume_score": 4.64305399,
       "resume_score_parts": {
-        "baseline": 4.67427158,
+        "baseline": 4.67431612,
         "record": 5.71301565,
-        "staticScore": -1.07000619,
+        "staticScore": -1.06996166,
         "recordChange": -0.03126213
       },
       "seed_outlooks": [
@@ -3426,11 +3426,11 @@
       ],
       "wins_out": 6.01,
       "projected_rank": 54.05,
-      "predicted_resume_score": 6.88079507,
+      "predicted_resume_score": 6.88082115,
       "resume_score_parts": {
-        "baseline": 7.44617561,
+        "baseline": 7.44620169,
         "record": 5.17889724,
-        "staticScore": 1.70189783,
+        "staticScore": 1.70192391,
         "recordChange": -0.56538054
       },
       "seed_outlooks": [
@@ -3479,11 +3479,11 @@
       "projected_rank": 76.9,
       "g6_bid": 0,
       "wins_out": 3.43,
-      "predicted_resume_score": 5.59102124,
+      "predicted_resume_score": 5.59102482,
       "resume_score_parts": {
-        "baseline": 6.07914125,
+        "baseline": 6.07914483,
         "record": 2.95844666,
-        "staticScore": 2.63257458,
+        "staticScore": 2.63257816,
         "recordChange": -0.48812
       },
       "seed_outlooks": [
@@ -3532,11 +3532,11 @@
       ],
       "wins_out": 5.41,
       "projected_rank": 104.18,
-      "predicted_resume_score": 3.9441179,
+      "predicted_resume_score": 3.94382536,
       "resume_score_parts": {
-        "baseline": 3.88067677,
+        "baseline": 3.88038423,
         "record": 4.65886335,
-        "staticScore": -0.71474545,
+        "staticScore": -0.71503799,
         "recordChange": 0.06344113
       },
       "seed_outlooks": [
@@ -3585,11 +3585,11 @@
       ],
       "wins_out": 7.1,
       "projected_rank": 75.8,
-      "predicted_resume_score": 5.70116473,
+      "predicted_resume_score": 5.70087373,
       "resume_score_parts": {
-        "baseline": 6.11462017,
+        "baseline": 6.11432917,
         "record": 6.04885706,
-        "staticScore": -0.34769233,
+        "staticScore": -0.34798333,
         "recordChange": -0.41345544
       },
       "seed_outlooks": [
@@ -3638,11 +3638,11 @@
       ],
       "wins_out": 6.8,
       "projected_rank": 33.47,
-      "predicted_resume_score": 8.26338925,
+      "predicted_resume_score": 8.26340143,
       "resume_score_parts": {
-        "baseline": 8.14936534,
+        "baseline": 8.14937752,
         "record": 5.85830169,
-        "staticScore": 2.40508756,
+        "staticScore": 2.40509974,
         "recordChange": 0.11402391
       },
       "seed_outlooks": [
@@ -3691,11 +3691,11 @@
       ],
       "wins_out": 3.93,
       "projected_rank": 123.48,
-      "predicted_resume_score": 2.30730075,
+      "predicted_resume_score": 2.30733512,
       "resume_score_parts": {
-        "baseline": 2.37020059,
+        "baseline": 2.37023497,
         "record": 3.38366683,
-        "staticScore": -1.07636607,
+        "staticScore": -1.0763317,
         "recordChange": -0.06289984
       },
       "seed_outlooks": [
@@ -3744,11 +3744,11 @@
       "projected_rank": 78.57,
       "g6_bid": 0,
       "wins_out": 4.58,
-      "predicted_resume_score": 5.57437163,
+      "predicted_resume_score": 5.57439225,
       "resume_score_parts": {
-        "baseline": 6.21959763,
+        "baseline": 6.21961825,
         "record": 3.95019622,
-        "staticScore": 1.62417541,
+        "staticScore": 1.62419603,
         "recordChange": -0.645226
       },
       "seed_outlooks": [
@@ -3797,11 +3797,11 @@
       ],
       "wins_out": 3.59,
       "projected_rank": 127.7,
-      "predicted_resume_score": 1.89997932,
+      "predicted_resume_score": 1.90001692,
       "resume_score_parts": {
-        "baseline": 1.10051947,
+        "baseline": 1.10055706,
         "record": 3.09717097,
-        "staticScore": -1.19719165,
+        "staticScore": -1.19715405,
         "recordChange": 0.79945986
       },
       "seed_outlooks": [
@@ -3850,11 +3850,11 @@
       ],
       "wins_out": 7.84,
       "projected_rank": 83.95,
-      "predicted_resume_score": 5.24166479,
+      "predicted_resume_score": 5.24170783,
       "resume_score_parts": {
-        "baseline": 5.49548454,
+        "baseline": 5.49552758,
         "record": 6.63931358,
-        "staticScore": -1.3976488,
+        "staticScore": -1.39760576,
         "recordChange": -0.25381975
       },
       "seed_outlooks": [
@@ -3903,11 +3903,11 @@
       ],
       "wins_out": 3.98,
       "projected_rank": 95.57,
-      "predicted_resume_score": 4.49281068,
+      "predicted_resume_score": 4.49284042,
       "resume_score_parts": {
-        "baseline": 4.50745859,
+        "baseline": 4.50748833,
         "record": 3.43191876,
-        "staticScore": 1.06089192,
+        "staticScore": 1.06092166,
         "recordChange": -0.01464791
       },
       "seed_outlooks": [
@@ -3956,11 +3956,11 @@
       ],
       "wins_out": 5.95,
       "projected_rank": 103.29,
-      "predicted_resume_score": 4.07780922,
+      "predicted_resume_score": 4.07784723,
       "resume_score_parts": {
-        "baseline": 3.54947927,
+        "baseline": 3.54951728,
         "record": 5.12375217,
-        "staticScore": -1.04594295,
+        "staticScore": -1.04590494,
         "recordChange": 0.52832995
       },
       "seed_outlooks": [
@@ -4009,11 +4009,11 @@
       "projected_rank": 133.82,
       "g6_bid": 0,
       "wins_out": 1.45,
-      "predicted_resume_score": 0.64333282,
+      "predicted_resume_score": 0.64336537,
       "resume_score_parts": {
-        "baseline": 0.54625452,
+        "baseline": 0.54628708,
         "record": 1.24593385,
-        "staticScore": -0.60260103,
+        "staticScore": -0.60256848,
         "recordChange": 0.09707829
       },
       "seed_outlooks": [
@@ -4062,11 +4062,11 @@
       ],
       "wins_out": 6.46,
       "projected_rank": 48.92,
-      "predicted_resume_score": 7.24025794,
+      "predicted_resume_score": 7.24028382,
       "resume_score_parts": {
-        "baseline": 7.41746891,
+        "baseline": 7.41749479,
         "record": 5.56706681,
-        "staticScore": 1.67319113,
+        "staticScore": 1.67321702,
         "recordChange": -0.17721097
       },
       "seed_outlooks": [
@@ -4115,11 +4115,11 @@
       ],
       "wins_out": 7.44,
       "projected_rank": 32.97,
-      "predicted_resume_score": 8.17378835,
+      "predicted_resume_score": 8.1738141,
       "resume_score_parts": {
-        "baseline": 8.654253,
+        "baseline": 8.65427875,
         "record": 6.41266868,
-        "staticScore": 1.76111967,
+        "staticScore": 1.76114542,
         "recordChange": -0.48046465
       },
       "seed_outlooks": [
@@ -4168,11 +4168,11 @@
       ],
       "wins_out": 3.8,
       "projected_rank": 120.13,
-      "predicted_resume_score": 2.64153285,
+      "predicted_resume_score": 2.64157017,
       "resume_score_parts": {
-        "baseline": 2.81495481,
+        "baseline": 2.81499213,
         "record": 3.27314471,
-        "staticScore": -0.63161186,
+        "staticScore": -0.63157454,
         "recordChange": -0.17342196
       },
       "seed_outlooks": [
@@ -4221,11 +4221,11 @@
       ],
       "wins_out": 4.02,
       "projected_rank": 85.85,
-      "predicted_resume_score": 5.13295389,
+      "predicted_resume_score": 5.13297831,
       "resume_score_parts": {
-        "baseline": 5.1187368,
+        "baseline": 5.11876122,
         "record": 3.46078375,
-        "staticScore": 1.67217014,
+        "staticScore": 1.67219455,
         "recordChange": 0.01421709
       },
       "seed_outlooks": [
@@ -4274,11 +4274,11 @@
       ],
       "wins_out": 3.5,
       "projected_rank": 117.14,
-      "predicted_resume_score": 2.9782126,
+      "predicted_resume_score": 2.9782442,
       "resume_score_parts": {
-        "baseline": 3.1391046,
+        "baseline": 3.13913619,
         "record": 3.28567467,
-        "staticScore": -0.30746207,
+        "staticScore": -0.30743047,
         "recordChange": -0.160892
       },
       "seed_outlooks": [
@@ -4327,11 +4327,11 @@
       ],
       "wins_out": 5.67,
       "projected_rank": 103.05,
-      "predicted_resume_score": 4.06386579,
+      "predicted_resume_score": 4.06390693,
       "resume_score_parts": {
-        "baseline": 3.77606643,
+        "baseline": 3.77610757,
         "record": 4.88322159,
-        "staticScore": -0.8193558,
+        "staticScore": -0.81931466,
         "recordChange": 0.28779936
       },
       "seed_outlooks": [
@@ -4380,11 +4380,11 @@
       ],
       "wins_out": 6.65,
       "projected_rank": 85.67,
-      "predicted_resume_score": 5.10082251,
+      "predicted_resume_score": 5.10085923,
       "resume_score_parts": {
-        "baseline": 5.1235345,
+        "baseline": 5.12357122,
         "record": 5.72156579,
-        "staticScore": -0.62074328,
+        "staticScore": -0.62070655,
         "recordChange": -0.02271199
       },
       "seed_outlooks": [
@@ -4433,11 +4433,11 @@
       ],
       "wins_out": 4.83,
       "projected_rank": 119.17,
-      "predicted_resume_score": 2.78146818,
+      "predicted_resume_score": 2.78150876,
       "resume_score_parts": {
-        "baseline": 2.75518811,
+        "baseline": 2.75522869,
         "record": 4.16216007,
-        "staticScore": -1.38069189,
+        "staticScore": -1.38065131,
         "recordChange": 0.02628007
       },
       "seed_outlooks": [
@@ -4486,11 +4486,11 @@
       ],
       "wins_out": 6.86,
       "projected_rank": 30.89,
-      "predicted_resume_score": 8.42410183,
+      "predicted_resume_score": 8.42411487,
       "resume_score_parts": {
-        "baseline": 8.25881024,
+        "baseline": 8.25882327,
         "record": 5.90956937,
-        "staticScore": 2.51453246,
+        "staticScore": 2.5145455,
         "recordChange": 0.16529159
       },
       "seed_outlooks": [
@@ -4539,11 +4539,11 @@
       ],
       "wins_out": 7.02,
       "projected_rank": 76.44,
-      "predicted_resume_score": 5.67871079,
+      "predicted_resume_score": 5.67874588,
       "resume_score_parts": {
-        "baseline": 6.52149576,
+        "baseline": 6.52153085,
         "record": 6.05034836,
-        "staticScore": -0.37163757,
+        "staticScore": -0.37160248,
         "recordChange": -0.84278497
       },
       "seed_outlooks": [
@@ -4592,11 +4592,11 @@
       ],
       "wins_out": 5.48,
       "projected_rank": 107.66,
-      "predicted_resume_score": 3.76895484,
+      "predicted_resume_score": 3.76899363,
       "resume_score_parts": {
-        "baseline": 3.64214991,
+        "baseline": 3.6421887,
         "record": 4.72222715,
-        "staticScore": -0.95327231,
+        "staticScore": -0.95323353,
         "recordChange": 0.12680493
       },
       "seed_outlooks": [
@@ -4645,11 +4645,11 @@
       ],
       "wins_out": 5.62,
       "projected_rank": 55.72,
-      "predicted_resume_score": 6.69629441,
+      "predicted_resume_score": 6.69631696,
       "resume_score_parts": {
-        "baseline": 6.45230621,
+        "baseline": 6.45232876,
         "record": 4.83941042,
-        "staticScore": 1.85688399,
+        "staticScore": 1.85690654,
         "recordChange": 0.2439882
       },
       "seed_outlooks": [
@@ -4698,11 +4698,11 @@
       ],
       "wins_out": 6.05,
       "projected_rank": 81.79,
-      "predicted_resume_score": 5.3468204,
+      "predicted_resume_score": 5.34685636,
       "resume_score_parts": {
-        "baseline": 6.14489641,
+        "baseline": 6.14493237,
         "record": 5.66423649,
-        "staticScore": -0.31741609,
+        "staticScore": -0.31738013,
         "recordChange": -0.79807601
       },
       "seed_outlooks": [
@@ -4724,7 +4724,7 @@
       "team": "Georgia Southern",
       "conference": "Sun Belt",
       "power_rank": 70,
-      "rating": 0.497,
+      "rating": 0.498,
       "avg_wins": 6.8,
       "avg_losses": 5.42,
       "conf_champ": 0.087,
@@ -4751,12 +4751,12 @@
       ],
       "wins_out": 6.8,
       "projected_rank": 81.59,
-      "predicted_resume_score": 5.36912955,
+      "predicted_resume_score": 5.36926985,
       "resume_score_parts": {
-        "baseline": 5.37444301,
-        "record": 5.73896432,
-        "staticScore": -0.36983477,
-        "recordChange": -0.00531346
+        "baseline": 5.37415249,
+        "record": 5.73939514,
+        "staticScore": -0.37012529,
+        "recordChange": -0.00488264
       },
       "seed_outlooks": [
         null,
@@ -4804,11 +4804,11 @@
       ],
       "wins_out": 6.66,
       "projected_rank": 89.97,
-      "predicted_resume_score": 4.89171954,
+      "predicted_resume_score": 4.89176358,
       "resume_score_parts": {
-        "baseline": 4.90177203,
+        "baseline": 4.90181607,
         "record": 5.73422529,
-        "staticScore": -0.84250575,
+        "staticScore": -0.84246171,
         "recordChange": -0.01005249
       },
       "seed_outlooks": [
@@ -4857,11 +4857,11 @@
       ],
       "wins_out": 2.2,
       "projected_rank": 110.83,
-      "predicted_resume_score": 3.56105528,
+      "predicted_resume_score": 3.56107114,
       "resume_score_parts": {
-        "baseline": 3.9605698,
+        "baseline": 3.96058566,
         "record": 1.89819659,
-        "staticScore": 1.66285868,
+        "staticScore": 1.66287455,
         "recordChange": -0.39951452
       },
       "seed_outlooks": [
@@ -4910,11 +4910,11 @@
       ],
       "wins_out": 4.56,
       "projected_rank": 120.51,
-      "predicted_resume_score": 2.69665601,
+      "predicted_resume_score": 2.69669788,
       "resume_score_parts": {
-        "baseline": 2.21629078,
+        "baseline": 2.21633265,
         "record": 3.9269319,
-        "staticScore": -1.23027589,
+        "staticScore": -1.23023402,
         "recordChange": 0.48036523
       },
       "seed_outlooks": [
@@ -4963,11 +4963,11 @@
       ],
       "wins_out": 6.65,
       "projected_rank": 43.72,
-      "predicted_resume_score": 7.48124671,
+      "predicted_resume_score": 7.48127024,
       "resume_score_parts": {
-        "baseline": 8.64542402,
+        "baseline": 8.64544755,
         "record": 5.72895602,
-        "staticScore": 1.75229069,
+        "staticScore": 1.75231422,
         "recordChange": -1.16417731
       },
       "seed_outlooks": [
@@ -5016,11 +5016,11 @@
       ],
       "wins_out": 5.49,
       "projected_rank": 63.9,
-      "predicted_resume_score": 6.39041967,
+      "predicted_resume_score": 6.39044329,
       "resume_score_parts": {
-        "baseline": 6.25844489,
+        "baseline": 6.25846851,
         "record": 4.727397,
-        "staticScore": 1.66302267,
+        "staticScore": 1.66304629,
         "recordChange": 0.13197478
       },
       "seed_outlooks": [
@@ -5068,12 +5068,12 @@
         0
       ],
       "wins_out": 4.12,
-      "projected_rank": 82.73,
-      "predicted_resume_score": 5.2960321,
+      "projected_rank": 82.74,
+      "predicted_resume_score": 5.29605822,
       "resume_score_parts": {
-        "baseline": 5.19349674,
+        "baseline": 5.19352286,
         "record": 3.54910203,
-        "staticScore": 1.74693007,
+        "staticScore": 1.74695619,
         "recordChange": 0.10253536
       },
       "seed_outlooks": [
@@ -5122,11 +5122,11 @@
       ],
       "wins_out": 4.73,
       "projected_rank": 81.93,
-      "predicted_resume_score": 5.3463855,
+      "predicted_resume_score": 5.3464161,
       "resume_score_parts": {
-        "baseline": 5.86495018,
+        "baseline": 5.86498077,
         "record": 4.07685755,
-        "staticScore": 1.26952796,
+        "staticScore": 1.26955855,
         "recordChange": -0.51856468
       },
       "seed_outlooks": [
@@ -5175,11 +5175,11 @@
       ],
       "wins_out": 5.1,
       "projected_rank": 108.12,
-      "predicted_resume_score": 3.6772699,
+      "predicted_resume_score": 3.67730591,
       "resume_score_parts": {
-        "baseline": 2.72664716,
+        "baseline": 2.72668317,
         "record": 4.39718941,
-        "staticScore": -0.71991951,
+        "staticScore": -0.71988349,
         "recordChange": 0.95062274
       },
       "seed_outlooks": [
@@ -5228,11 +5228,11 @@
       ],
       "wins_out": 3.42,
       "projected_rank": 127.87,
-      "predicted_resume_score": 1.77540657,
+      "predicted_resume_score": 1.7754397,
       "resume_score_parts": {
-        "baseline": 2.27386628,
+        "baseline": 2.2738994,
         "record": 2.94810696,
-        "staticScore": -1.17270039,
+        "staticScore": -1.17266727,
         "recordChange": -0.4984597
       },
       "seed_outlooks": [
@@ -5281,11 +5281,11 @@
       ],
       "wins_out": 8.04,
       "projected_rank": 68.97,
-      "predicted_resume_score": 6.05180211,
+      "predicted_resume_score": 6.05151319,
       "resume_score_parts": {
-        "baseline": 6.02343421,
+        "baseline": 6.02314529,
         "record": 6.92150123,
-        "staticScore": -0.86969912,
+        "staticScore": -0.86998804,
         "recordChange": 0.02836789
       },
       "seed_outlooks": [
@@ -5334,11 +5334,11 @@
       ],
       "wins_out": 6.33,
       "projected_rank": 97.45,
-      "predicted_resume_score": 4.45881716,
+      "predicted_resume_score": 4.45885729,
       "resume_score_parts": {
-        "baseline": 4.75148811,
+        "baseline": 4.75152824,
         "record": 5.45160682,
-        "staticScore": -0.99278967,
+        "staticScore": -0.99274953,
         "recordChange": -0.29267095
       },
       "seed_outlooks": [
@@ -5387,11 +5387,11 @@
       ],
       "wins_out": 3.74,
       "projected_rank": 90.6,
-      "predicted_resume_score": 4.88538813,
+      "predicted_resume_score": 4.88541398,
       "resume_score_parts": {
-        "baseline": 5.11113824,
+        "baseline": 5.1111641,
         "record": 3.22081655,
-        "staticScore": 1.66457158,
+        "staticScore": 1.66459743,
         "recordChange": -0.22575012
       },
       "seed_outlooks": [
@@ -5440,11 +5440,11 @@
       ],
       "wins_out": 6.33,
       "projected_rank": 110.01,
-      "predicted_resume_score": 3.62680198,
+      "predicted_resume_score": 3.62684692,
       "resume_score_parts": {
-        "baseline": 3.91947293,
+        "baseline": 3.91951787,
         "record": 5.45160682,
-        "staticScore": -1.82480485,
+        "staticScore": -1.82475991,
         "recordChange": -0.29267095
       },
       "seed_outlooks": [
@@ -5493,11 +5493,11 @@
       ],
       "wins_out": 7.11,
       "projected_rank": 89.5,
-      "predicted_resume_score": 4.91709668,
+      "predicted_resume_score": 4.91714085,
       "resume_score_parts": {
-        "baseline": 4.58481231,
+        "baseline": 4.58485647,
         "record": 6.07656215,
-        "staticScore": -1.15946547,
+        "staticScore": -1.15942131,
         "recordChange": 0.33228438
       },
       "seed_outlooks": [
@@ -5546,11 +5546,11 @@
       ],
       "wins_out": 5.87,
       "projected_rank": 49.65,
-      "predicted_resume_score": 7.16314857,
+      "predicted_resume_score": 7.16317083,
       "resume_score_parts": {
-        "baseline": 7.84657402,
+        "baseline": 7.84659627,
         "record": 5.06085233,
-        "staticScore": 2.10229624,
+        "staticScore": 2.1023185,
         "recordChange": -0.68342545
       },
       "seed_outlooks": [
@@ -5599,11 +5599,11 @@
       ],
       "wins_out": 3.98,
       "projected_rank": 82.89,
-      "predicted_resume_score": 5.27351193,
+      "predicted_resume_score": 5.27353229,
       "resume_score_parts": {
-        "baseline": 5.29376051,
+        "baseline": 5.29378087,
         "record": 3.42631809,
-        "staticScore": 1.84719384,
+        "staticScore": 1.84721421,
         "recordChange": -0.02024858
       },
       "seed_outlooks": [
@@ -5652,11 +5652,11 @@
       ],
       "wins_out": 6.28,
       "projected_rank": 98.76,
-      "predicted_resume_score": 4.38585332,
+      "predicted_resume_score": 4.38589173,
       "resume_score_parts": {
-        "baseline": 4.71898829,
+        "baseline": 4.7190267,
         "record": 5.41114281,
-        "staticScore": -1.02528948,
+        "staticScore": -1.02525108,
         "recordChange": -0.33313497
       },
       "seed_outlooks": [
@@ -5705,11 +5705,11 @@
       ],
       "wins_out": 5.83,
       "projected_rank": 59.15,
-      "predicted_resume_score": 6.67927371,
+      "predicted_resume_score": 6.67930148,
       "resume_score_parts": {
-        "baseline": 7.40018057,
+        "baseline": 7.40020834,
         "record": 5.02337092,
-        "staticScore": 1.6559028,
+        "staticScore": 1.65593056,
         "recordChange": -0.72090686
       },
       "seed_outlooks": [
@@ -5758,11 +5758,11 @@
       ],
       "wins_out": 5.42,
       "projected_rank": 55.3,
-      "predicted_resume_score": 6.87730403,
+      "predicted_resume_score": 6.87731652,
       "resume_score_parts": {
-        "baseline": 6.80262842,
+        "baseline": 6.8026409,
         "record": 4.67009783,
-        "staticScore": 2.2072062,
+        "staticScore": 2.20721868,
         "recordChange": 0.07467561
       },
       "seed_outlooks": [
@@ -5811,11 +5811,11 @@
       ],
       "wins_out": 3.71,
       "projected_rank": 122.47,
-      "predicted_resume_score": 2.44980464,
+      "predicted_resume_score": 2.44983684,
       "resume_score_parts": {
-        "baseline": 2.69968072,
+        "baseline": 2.69971292,
         "record": 3.19669058,
-        "staticScore": -0.74688594,
+        "staticScore": -0.74685374,
         "recordChange": -0.24987608
       },
       "seed_outlooks": [
@@ -5864,11 +5864,11 @@
       ],
       "wins_out": 4.63,
       "projected_rank": 107.79,
-      "predicted_resume_score": 3.77936656,
+      "predicted_resume_score": 3.77939847,
       "resume_score_parts": {
-        "baseline": 3.23610148,
+        "baseline": 3.2361334,
         "record": 3.98983174,
-        "staticScore": -0.21046518,
+        "staticScore": -0.21043327,
         "recordChange": 0.54326507
       },
       "seed_outlooks": [
@@ -5917,11 +5917,11 @@
       ],
       "wins_out": 4.92,
       "projected_rank": 80.23,
-      "predicted_resume_score": 5.45784172,
+      "predicted_resume_score": 5.45787317,
       "resume_score_parts": {
-        "baseline": 5.81140201,
+        "baseline": 5.81143346,
         "record": 4.24186193,
-        "staticScore": 1.21597979,
+        "staticScore": 1.21601124,
         "recordChange": -0.3535603
       },
       "seed_outlooks": [
@@ -5970,11 +5970,11 @@
       ],
       "wins_out": 6.5,
       "projected_rank": 50.29,
-      "predicted_resume_score": 7.20733651,
+      "predicted_resume_score": 7.20736559,
       "resume_score_parts": {
-        "baseline": 7.35439002,
+        "baseline": 7.3544191,
         "record": 5.59722427,
-        "staticScore": 1.61011225,
+        "staticScore": 1.61014132,
         "recordChange": -0.14705351
       },
       "seed_outlooks": [
@@ -6023,11 +6023,11 @@
       ],
       "wins_out": 4.63,
       "projected_rank": 118.4,
-      "predicted_resume_score": 2.8844794,
+      "predicted_resume_score": 2.88451964,
       "resume_score_parts": {
-        "baseline": 2.34078351,
+        "baseline": 2.34082375,
         "record": 3.99026256,
-        "staticScore": -1.10578316,
+        "staticScore": -1.10574291,
         "recordChange": 0.54369589
       },
       "seed_outlooks": [
@@ -6076,11 +6076,11 @@
       ],
       "wins_out": 4.31,
       "projected_rank": 118.21,
-      "predicted_resume_score": 2.81625018,
+      "predicted_resume_score": 2.81628711,
       "resume_score_parts": {
-        "baseline": 2.54526387,
+        "baseline": 2.5453008,
         "record": 3.71755297,
-        "staticScore": -0.90130279,
+        "staticScore": -0.90126586,
         "recordChange": 0.2709863
       },
       "seed_outlooks": [
@@ -6129,11 +6129,11 @@
       ],
       "wins_out": 6.86,
       "projected_rank": 36.83,
-      "predicted_resume_score": 7.90823226,
+      "predicted_resume_score": 7.90825563,
       "resume_score_parts": {
-        "baseline": 7.74509478,
+        "baseline": 7.74511814,
         "record": 5.90741527,
-        "staticScore": 2.000817,
+        "staticScore": 2.00084036,
         "recordChange": 0.16313749
       },
       "seed_outlooks": [
@@ -6182,11 +6182,11 @@
       ],
       "wins_out": 9.39,
       "projected_rank": 58.35,
-      "predicted_resume_score": 6.68715041,
+      "predicted_resume_score": 6.68719613,
       "resume_score_parts": {
-        "baseline": 6.92031285,
+        "baseline": 6.92035858,
         "record": 7.80882644,
-        "staticScore": -1.12167604,
+        "staticScore": -1.12163031,
         "recordChange": -0.23316244
       },
       "seed_outlooks": [
@@ -6235,11 +6235,11 @@
       ],
       "wins_out": 1.01,
       "projected_rank": 136.69,
-      "predicted_resume_score": -0.1049811,
+      "predicted_resume_score": -0.10494693,
       "resume_score_parts": {
-        "baseline": -0.9735159,
+        "baseline": -0.97348173,
         "record": 0.8685348,
-        "staticScore": -0.9735159,
+        "staticScore": -0.97348173,
         "recordChange": 0.8685348
       },
       "seed_outlooks": [
@@ -6288,11 +6288,11 @@
       ],
       "wins_out": 7.55,
       "projected_rank": 33.41,
-      "predicted_resume_score": 8.18552941,
+      "predicted_resume_score": 8.18555774,
       "resume_score_parts": {
-        "baseline": 8.57055068,
+        "baseline": 8.57057901,
         "record": 6.50811207,
-        "staticScore": 1.67741734,
+        "staticScore": 1.67744567,
         "recordChange": -0.38502126
       },
       "seed_outlooks": [
@@ -6341,11 +6341,11 @@
       ],
       "wins_out": 8.4,
       "projected_rank": 74.69,
-      "predicted_resume_score": 5.77344665,
+      "predicted_resume_score": 5.77349157,
       "resume_score_parts": {
-        "baseline": 6.7837436,
+        "baseline": 6.78378852,
         "record": 7.03169194,
-        "staticScore": -1.25824529,
+        "staticScore": -1.25820037,
         "recordChange": -1.01029695
       },
       "seed_outlooks": [
@@ -6394,11 +6394,11 @@
       ],
       "wins_out": 6.46,
       "projected_rank": 31.92,
-      "predicted_resume_score": 8.26016384,
+      "predicted_resume_score": 8.26017316,
       "resume_score_parts": {
-        "baseline": 8.44410225,
+        "baseline": 8.44411156,
         "record": 5.56033938,
-        "staticScore": 2.69982447,
+        "staticScore": 2.69983378,
         "recordChange": -0.1839384
       },
       "seed_outlooks": [
@@ -6447,11 +6447,11 @@
       ],
       "wins_out": 3.72,
       "projected_rank": 121.87,
-      "predicted_resume_score": 2.48123554,
+      "predicted_resume_score": 2.48094453,
       "resume_score_parts": {
-        "baseline": 2.37568443,
+        "baseline": 2.37539342,
         "record": 3.2074611,
-        "staticScore": -0.72622557,
+        "staticScore": -0.72651658,
         "recordChange": 0.1055511
       },
       "seed_outlooks": [
@@ -6500,11 +6500,11 @@
       ],
       "wins_out": 6.19,
       "projected_rank": 76.96,
-      "predicted_resume_score": 5.6508974,
+      "predicted_resume_score": 5.65093485,
       "resume_score_parts": {
-        "baseline": 6.35724774,
+        "baseline": 6.35728519,
         "record": 5.75596216,
-        "staticScore": -0.10506476,
+        "staticScore": -0.10502731,
         "recordChange": -0.70635034
       },
       "seed_outlooks": [
@@ -6553,11 +6553,11 @@
       ],
       "wins_out": 7.35,
       "projected_rank": 40.43,
-      "predicted_resume_score": 7.80569587,
+      "predicted_resume_score": 7.80573204,
       "resume_score_parts": {
-        "baseline": 7.21561493,
+        "baseline": 7.21565111,
         "record": 6.33435871,
-        "staticScore": 1.47133715,
+        "staticScore": 1.47137333,
         "recordChange": 0.59008093
       },
       "seed_outlooks": [
@@ -6606,11 +6606,11 @@
       ],
       "wins_out": 7.6,
       "projected_rank": 38.85,
-      "predicted_resume_score": 7.89077574,
+      "predicted_resume_score": 7.89080856,
       "resume_score_parts": {
-        "baseline": 8.23500158,
+        "baseline": 8.23503441,
         "record": 6.54890749,
-        "staticScore": 1.34186825,
+        "staticScore": 1.34190108,
         "recordChange": -0.34422585
       },
       "seed_outlooks": [
@@ -6659,11 +6659,11 @@
       ],
       "wins_out": 3.42,
       "projected_rank": 87.13,
-      "predicted_resume_score": 5.04055747,
+      "predicted_resume_score": 5.04057228,
       "resume_score_parts": {
-        "baseline": 5.53815554,
+        "baseline": 5.53817035,
         "record": 2.9489686,
-        "staticScore": 2.09158887,
+        "staticScore": 2.09160368,
         "recordChange": -0.49759806
       },
       "seed_outlooks": [
@@ -6712,11 +6712,11 @@
       ],
       "wins_out": 2.05,
       "projected_rank": 130.02,
-      "predicted_resume_score": 1.43872325,
+      "predicted_resume_score": 1.43875394,
       "resume_score_parts": {
-        "baseline": 0.82465995,
+        "baseline": 0.82469065,
         "record": 1.76291885,
-        "staticScore": -0.3241956,
+        "staticScore": -0.32416491,
         "recordChange": 0.61406329
       },
       "seed_outlooks": [
@@ -6765,11 +6765,11 @@
       ],
       "wins_out": 2.82,
       "projected_rank": 106.47,
-      "predicted_resume_score": 3.87094387,
+      "predicted_resume_score": 3.87096882,
       "resume_score_parts": {
-        "baseline": 3.74011794,
+        "baseline": 3.74014289,
         "record": 2.42853704,
-        "staticScore": 1.44240683,
+        "staticScore": 1.44243178,
         "recordChange": 0.13082593
       },
       "seed_outlooks": [
@@ -6818,11 +6818,11 @@
       ],
       "wins_out": 2.31,
       "projected_rank": 135.36,
-      "predicted_resume_score": 0.32610993,
+      "predicted_resume_score": 0.32615243,
       "resume_score_parts": {
-        "baseline": 0.40365768,
+        "baseline": 0.40370018,
         "record": 1.99039225,
-        "staticScore": -1.66428232,
+        "staticScore": -1.66423982,
         "recordChange": -0.07754775
       },
       "seed_outlooks": [
@@ -6871,11 +6871,11 @@
       ],
       "wins_out": 1.74,
       "projected_rank": 134.22,
-      "predicted_resume_score": 0.54245709,
+      "predicted_resume_score": 0.54248965,
       "resume_score_parts": {
-        "baseline": 0.33307816,
+        "baseline": 0.33311073,
         "record": 1.50184143,
-        "staticScore": -0.95938434,
+        "staticScore": -0.95935177,
         "recordChange": 0.20937892
       },
       "seed_outlooks": [
@@ -6924,11 +6924,11 @@
       ],
       "wins_out": 4.52,
       "projected_rank": 102.31,
-      "predicted_resume_score": 4.06201287,
+      "predicted_resume_score": 4.06204618,
       "resume_score_parts": {
-        "baseline": 4.45685364,
+        "baseline": 4.45688695,
         "record": 4.20058146,
-        "staticScore": -0.13856858,
+        "staticScore": -0.13853527,
         "recordChange": -0.39484077
       },
       "seed_outlooks": [
@@ -6977,11 +6977,11 @@
       ],
       "wins_out": 6.16,
       "projected_rank": 104.37,
-      "predicted_resume_score": 3.91726667,
+      "predicted_resume_score": 3.91730589,
       "resume_score_parts": {
-        "baseline": 4.18598524,
+        "baseline": 4.18602447,
         "record": 4.90113142,
-        "staticScore": -0.98386476,
+        "staticScore": -0.98382553,
         "recordChange": -0.26871858
       },
       "seed_outlooks": [
@@ -7030,11 +7030,11 @@
       ],
       "wins_out": 5.72,
       "projected_rank": 103.6,
-      "predicted_resume_score": 4.01596744,
+      "predicted_resume_score": 4.01567734,
       "resume_score_parts": {
-        "baseline": 3.67892195,
+        "baseline": 3.67863184,
         "record": 4.93246772,
-        "staticScore": -0.91650028,
+        "staticScore": -0.91679038,
         "recordChange": 0.3370455
       },
       "seed_outlooks": [
@@ -7082,13 +7082,13 @@
         0
       ],
       "wins_out": 4.16,
-      "projected_rank": 119.05,
-      "predicted_resume_score": 2.79594887,
+      "projected_rank": 119.04,
+      "predicted_resume_score": 2.79651959,
       "resume_score_parts": {
-        "baseline": 2.65914668,
-        "record": 3.58336885,
-        "staticScore": -0.78741998,
-        "recordChange": 0.13680218
+        "baseline": 2.65885576,
+        "record": 3.58423049,
+        "staticScore": -0.78771091,
+        "recordChange": 0.13766383
       },
       "seed_outlooks": [
         null,
@@ -7136,11 +7136,11 @@
       ],
       "wins_out": 8.02,
       "projected_rank": 67.7,
-      "predicted_resume_score": 6.08847189,
+      "predicted_resume_score": 6.08851737,
       "resume_score_parts": {
-        "baseline": 6.07617692,
+        "baseline": 6.07622241,
         "record": 6.9054283,
-        "staticScore": -0.81695641,
+        "staticScore": -0.81691093,
         "recordChange": 0.01229496
       },
       "seed_outlooks": [
@@ -7189,11 +7189,11 @@
       "projected_rank": 80.96,
       "g6_bid": 0,
       "wins_out": 4.57,
-      "predicted_resume_score": 5.36951265,
+      "predicted_resume_score": 5.369528,
       "resume_score_parts": {
-        "baseline": 6.02593999,
+        "baseline": 6.02595534,
         "record": 3.93899488,
-        "staticScore": 1.43051777,
+        "staticScore": 1.43053312,
         "recordChange": -0.65642734
       },
       "seed_outlooks": [
@@ -7242,11 +7242,11 @@
       ],
       "wins_out": 4.97,
       "projected_rank": 76.07,
-      "predicted_resume_score": 5.69463126,
+      "predicted_resume_score": 5.69465974,
       "resume_score_parts": {
-        "baseline": 6.01157179,
+        "baseline": 6.01160027,
         "record": 4.2784817,
-        "staticScore": 1.41614957,
+        "staticScore": 1.41617805,
         "recordChange": -0.31694053
       },
       "seed_outlooks": [
@@ -7295,11 +7295,11 @@
       ],
       "wins_out": 5.42,
       "projected_rank": 58.27,
-      "predicted_resume_score": 6.58688511,
+      "predicted_resume_score": 6.58690998,
       "resume_score_parts": {
-        "baseline": 6.50790129,
+        "baseline": 6.50792616,
         "record": 4.67440604,
-        "staticScore": 1.91247907,
+        "staticScore": 1.91250394,
         "recordChange": 0.07898382
       },
       "seed_outlooks": [
@@ -7348,11 +7348,11 @@
       ],
       "wins_out": 3.43,
       "projected_rank": 122.46,
-      "predicted_resume_score": 2.400489,
+      "predicted_resume_score": 2.40052557,
       "resume_score_parts": {
-        "baseline": 1.73932263,
+        "baseline": 1.7393592,
         "record": 2.95887748,
-        "staticScore": -0.55838848,
+        "staticScore": -0.55835191,
         "recordChange": 0.66116637
       },
       "seed_outlooks": [
@@ -7401,11 +7401,11 @@
       ],
       "wins_out": 5.28,
       "projected_rank": 51.02,
-      "predicted_resume_score": 7.09896107,
+      "predicted_resume_score": 7.09897008,
       "resume_score_parts": {
-        "baseline": 7.14233037,
+        "baseline": 7.14233938,
         "record": 4.55205293,
-        "staticScore": 2.54690815,
+        "staticScore": 2.54691715,
         "recordChange": -0.0433693
       },
       "seed_outlooks": [
@@ -7454,11 +7454,11 @@
       ],
       "wins_out": 6.95,
       "projected_rank": 65.83,
-      "predicted_resume_score": 6.18328866,
+      "predicted_resume_score": 6.18332502,
       "resume_score_parts": {
-        "baseline": 5.23669696,
+        "baseline": 5.23673332,
         "record": 6.1164417,
-        "staticScore": 0.06684696,
+        "staticScore": 0.06688332,
         "recordChange": 0.9465917
       },
       "seed_outlooks": [
@@ -7507,11 +7507,11 @@
       ],
       "wins_out": 9.75,
       "projected_rank": 59.58,
-      "predicted_resume_score": 6.62637448,
+      "predicted_resume_score": 6.62642503,
       "resume_score_parts": {
-        "baseline": 6.68929642,
+        "baseline": 6.68934697,
         "record": 7.97906695,
-        "staticScore": -1.35269247,
+        "staticScore": -1.35264192,
         "recordChange": -0.06292194
       },
       "seed_outlooks": [
@@ -7560,11 +7560,11 @@
       ],
       "wins_out": 4.85,
       "projected_rank": 111.69,
-      "predicted_resume_score": 3.42417655,
+      "predicted_resume_score": 3.42388168,
       "resume_score_parts": {
-        "baseline": 3.83934423,
+        "baseline": 3.83904936,
         "record": 4.18025455,
-        "staticScore": -0.75607799,
+        "staticScore": -0.75637286,
         "recordChange": -0.41516768
       },
       "seed_outlooks": [
@@ -7613,11 +7613,11 @@
       ],
       "wins_out": 4.91,
       "projected_rank": 105.83,
-      "predicted_resume_score": 3.93186031,
+      "predicted_resume_score": 3.9318954,
       "resume_score_parts": {
-        "baseline": 4.29576031,
+        "baseline": 4.2957954,
         "record": 4.23152222,
-        "staticScore": -0.29966192,
+        "staticScore": -0.29962683,
         "recordChange": -0.3639
       },
       "seed_outlooks": [
@@ -7666,11 +7666,11 @@
       ],
       "wins_out": 7.2,
       "projected_rank": 76.46,
-      "predicted_resume_score": 5.67172647,
+      "predicted_resume_score": 5.67176787,
       "resume_score_parts": {
-        "baseline": 5.21056038,
+        "baseline": 5.21060178,
         "record": 6.20544386,
-        "staticScore": -0.5337174,
+        "staticScore": -0.533676,
         "recordChange": 0.46116609
       },
       "seed_outlooks": [
@@ -7719,11 +7719,11 @@
       ],
       "wins_out": 5.86,
       "projected_rank": 96.78,
-      "predicted_resume_score": 4.41339073,
+      "predicted_resume_score": 4.41342671,
       "resume_score_parts": {
-        "baseline": 5.11146409,
+        "baseline": 5.11150007,
         "record": 5.04620442,
-        "staticScore": -0.63281369,
+        "staticScore": -0.63277771,
         "recordChange": -0.69807336
       },
       "seed_outlooks": [
@@ -7772,11 +7772,11 @@
       ],
       "wins_out": 6.72,
       "projected_rank": 44.1,
-      "predicted_resume_score": 7.49161461,
+      "predicted_resume_score": 7.49164347,
       "resume_score_parts": {
-        "baseline": 7.4459255,
+        "baseline": 7.44595437,
         "record": 5.78996688,
-        "staticScore": 1.70164773,
+        "staticScore": 1.70167659,
         "recordChange": 0.0456891
       },
       "seed_outlooks": [
@@ -7825,11 +7825,11 @@
       "projected_rank": 100.92,
       "g6_bid": 0,
       "wins_out": 5.63,
-      "predicted_resume_score": 4.15689775,
+      "predicted_resume_score": 4.15694016,
       "resume_score_parts": {
-        "baseline": 3.89998493,
+        "baseline": 3.90002734,
         "record": 4.85233505,
-        "staticScore": -0.69543729,
+        "staticScore": -0.69539488,
         "recordChange": 0.25691282
       },
       "seed_outlooks": [
@@ -7878,11 +7878,11 @@
       ],
       "wins_out": 3.07,
       "projected_rank": 129,
-      "predicted_resume_score": 1.56509207,
+      "predicted_resume_score": 1.56480053,
       "resume_score_parts": {
-        "baseline": 1.21713244,
+        "baseline": 1.2168409,
         "record": 2.64567074,
-        "staticScore": -1.08057867,
+        "staticScore": -1.08087021,
         "recordChange": 0.34795963
       },
       "seed_outlooks": [
@@ -7931,11 +7931,11 @@
       ],
       "wins_out": 6.21,
       "projected_rank": 95.3,
-      "predicted_resume_score": 4.56450266,
+      "predicted_resume_score": 4.56454151,
       "resume_score_parts": {
-        "baseline": 5.67708089,
+        "baseline": 5.67711974,
         "record": 5.34973427,
-        "staticScore": -0.78523161,
+        "staticScore": -0.78519276,
         "recordChange": -1.11257823
       },
       "seed_outlooks": [
@@ -7984,11 +7984,11 @@
       ],
       "wins_out": 4.74,
       "projected_rank": 100.06,
-      "predicted_resume_score": 4.24120186,
+      "predicted_resume_score": 4.24123617,
       "resume_score_parts": {
-        "baseline": 3.68152643,
+        "baseline": 3.68156074,
         "record": 4.43706293,
-        "staticScore": -0.19586107,
+        "staticScore": -0.19582676,
         "recordChange": 0.55967543
       },
       "seed_outlooks": [
@@ -8037,11 +8037,11 @@
       "projected_rank": 133.75,
       "g6_bid": 0,
       "wins_out": 1.64,
-      "predicted_resume_score": 0.64182537,
+      "predicted_resume_score": 0.64185749,
       "resume_score_parts": {
-        "baseline": 0.3818968,
+        "baseline": 0.38192892,
         "record": 1.40878412,
-        "staticScore": -0.76695876,
+        "staticScore": -0.76692663,
         "recordChange": 0.25992857
       },
       "seed_outlooks": [
@@ -8090,11 +8090,11 @@
       ],
       "wins_out": 4.43,
       "projected_rank": 71.1,
-      "predicted_resume_score": 5.9571838,
+      "predicted_resume_score": 5.95719846,
       "resume_score_parts": {
-        "baseline": 6.73811836,
+        "baseline": 6.73813303,
         "record": 3.81448766,
-        "staticScore": 2.14269614,
+        "staticScore": 2.1427108,
         "recordChange": -0.78093456
       },
       "seed_outlooks": [
@@ -8143,11 +8143,11 @@
       ],
       "wins_out": 5.54,
       "projected_rank": 66.82,
-      "predicted_resume_score": 6.19458356,
+      "predicted_resume_score": 6.19461534,
       "resume_score_parts": {
-        "baseline": 6.0134952,
+        "baseline": 6.01352698,
         "record": 4.77651058,
-        "staticScore": 1.41807298,
+        "staticScore": 1.41810476,
         "recordChange": 0.18108836
       },
       "seed_outlooks": [
@@ -8196,11 +8196,11 @@
       ],
       "wins_out": 7.65,
       "projected_rank": 40.87,
-      "predicted_resume_score": 7.57145821,
+      "predicted_resume_score": 7.57149559,
       "resume_score_parts": {
-        "baseline": 7.87174033,
+        "baseline": 7.87177772,
         "record": 6.59285121,
-        "staticScore": 0.978607,
+        "staticScore": 0.97864438,
         "recordChange": -0.30028212
       },
       "seed_outlooks": [
@@ -8249,11 +8249,11 @@
       ],
       "wins_out": 6.03,
       "projected_rank": 52.23,
-      "predicted_resume_score": 6.95796063,
+      "predicted_resume_score": 6.95798691,
       "resume_score_parts": {
-        "baseline": 7.50998572,
+        "baseline": 7.51001201,
         "record": 5.19225268,
-        "staticScore": 1.76570795,
+        "staticScore": 1.76573423,
         "recordChange": -0.55202509
       },
       "seed_outlooks": [
@@ -8302,11 +8302,11 @@
       ],
       "wins_out": 1.78,
       "projected_rank": 129.93,
-      "predicted_resume_score": 1.46704216,
+      "predicted_resume_score": 1.46707596,
       "resume_score_parts": {
-        "baseline": 0.93992635,
+        "baseline": 0.93996015,
         "record": 1.67597137,
-        "staticScore": -0.20892921,
+        "staticScore": -0.20889541,
         "recordChange": 0.52711582
       },
       "seed_outlooks": [
@@ -8355,11 +8355,11 @@
       ],
       "wins_out": 3.61,
       "projected_rank": 121.51,
-      "predicted_resume_score": 2.52277743,
+      "predicted_resume_score": 2.52280468,
       "resume_score_parts": {
-        "baseline": 2.86011014,
+        "baseline": 2.86013739,
         "record": 3.10923395,
-        "staticScore": -0.58645652,
+        "staticScore": -0.58642927,
         "recordChange": -0.33733271
       },
       "seed_outlooks": [
@@ -8408,11 +8408,11 @@
       ],
       "wins_out": 9.12,
       "projected_rank": 63.36,
-      "predicted_resume_score": 6.33153337,
+      "predicted_resume_score": 6.33157846,
       "resume_score_parts": {
-        "baseline": 5.85077046,
+        "baseline": 5.85081555,
         "record": 7.37389624,
-        "staticScore": -1.04236288,
+        "staticScore": -1.04231779,
         "recordChange": 0.48076291
       },
       "seed_outlooks": [
@@ -8461,11 +8461,11 @@
       ],
       "wins_out": 5.9,
       "projected_rank": 52.85,
-      "predicted_resume_score": 6.87385169,
+      "predicted_resume_score": 6.87387493,
       "resume_score_parts": {
-        "baseline": 7.53702856,
+        "baseline": 7.53705179,
         "record": 5.08110091,
-        "staticScore": 1.79275079,
+        "staticScore": 1.79277402,
         "recordChange": -0.66317687
       },
       "seed_outlooks": [
@@ -8514,11 +8514,11 @@
       ],
       "wins_out": 7.58,
       "projected_rank": 87.14,
-      "predicted_resume_score": 5.08453146,
+      "predicted_resume_score": 5.08457487,
       "resume_score_parts": {
-        "baseline": 5.28794518,
+        "baseline": 5.28798858,
         "record": 6.25889879,
-        "staticScore": -1.17436732,
+        "staticScore": -1.17432392,
         "recordChange": -0.20341371
       },
       "seed_outlooks": [
@@ -9210,8 +9210,8 @@
       0,
       0,
       0,
-      139,
-      634,
+      138,
+      635,
       860,
       224,
       143,
@@ -9375,8 +9375,8 @@
       0,
       69,
       472,
-      998,
-      461,
+      997,
+      462,
       0,
       0
     ],
@@ -9502,9 +9502,9 @@
       0,
       18,
       157,
-      504,
-      892,
-      429,
+      505,
+      894,
+      426,
       0,
       0
     ],
@@ -10265,9 +10265,9 @@
       0,
       0,
       403,
-      945,
+      944,
       583,
-      68,
+      69,
       1,
       0,
       0,
@@ -10862,10 +10862,10 @@
     "games_through": "2026-11-07",
     "source_url": "https://collegefootballplayoff.com/rankings",
     "method": "Current CFP Top 25 order, with fixed committee residuals carried into simulated final records",
-    "rank_spacing": 0.1210262
+    "rank_spacing": 0.12102807
   },
   "record_odds": {
-    "generated_at": "2026-11-11T06:47:51Z",
+    "generated_at": "2026-11-11T19:54:07Z",
     "min_samples": 30,
     "checkpoints": [
       {
@@ -14912,18 +14912,18 @@
             {
               "wins": 6,
               "losses": 6,
-              "samples": 635,
+              "samples": 636,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.3175
+              "record_probability": 0.318
             },
             {
               "wins": 5,
               "losses": 7,
-              "samples": 139,
+              "samples": 138,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.0695
+              "record_probability": 0.069
             }
           ],
           "week-11": [
@@ -14990,18 +14990,18 @@
             {
               "wins": 6,
               "losses": 6,
-              "samples": 635,
+              "samples": 636,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.3175
+              "record_probability": 0.318
             },
             {
               "wins": 5,
               "losses": 7,
-              "samples": 139,
+              "samples": 138,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.0695
+              "record_probability": 0.069
             }
           ]
         }
@@ -16982,18 +16982,18 @@
             {
               "wins": 10,
               "losses": 2,
-              "samples": 771,
+              "samples": 768,
               "made": 55,
-              "playoff": 0.07133593,
-              "record_probability": 0.3855
+              "playoff": 0.07161458,
+              "record_probability": 0.384
             },
             {
               "wins": 9,
               "losses": 3,
-              "samples": 945,
+              "samples": 948,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.4725
+              "record_probability": 0.474
             },
             {
               "wins": 8,
@@ -17016,36 +17016,36 @@
             {
               "wins": 8,
               "losses": 2,
-              "samples": 1733,
+              "samples": 1731,
               "made": 55,
-              "playoff": 0.03173687,
-              "record_probability": 0.8665
+              "playoff": 0.03177354,
+              "record_probability": 0.8655
             },
             {
               "wins": 7,
               "losses": 3,
-              "samples": 267,
+              "samples": 269,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.1335
+              "record_probability": 0.1345
             }
           ],
           "week-12": [
             {
               "wins": 9,
               "losses": 2,
-              "samples": 1431,
+              "samples": 1429,
               "made": 55,
-              "playoff": 0.03843466,
-              "record_probability": 0.7155
+              "playoff": 0.03848845,
+              "record_probability": 0.7145
             },
             {
               "wins": 8,
               "losses": 3,
-              "samples": 514,
+              "samples": 516,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.257
+              "record_probability": 0.258
             },
             {
               "wins": 7,
@@ -17060,18 +17060,18 @@
             {
               "wins": 10,
               "losses": 2,
-              "samples": 771,
+              "samples": 768,
               "made": 55,
-              "playoff": 0.07133593,
-              "record_probability": 0.3855
+              "playoff": 0.07161458,
+              "record_probability": 0.384
             },
             {
               "wins": 9,
               "losses": 3,
-              "samples": 945,
+              "samples": 948,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.4725
+              "record_probability": 0.474
             },
             {
               "wins": 8,
@@ -22518,10 +22518,10 @@
             {
               "wins": 6,
               "losses": 6,
-              "samples": 69,
+              "samples": 70,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.0345
+              "record_probability": 0.035
             },
             {
               "wins": 5,
@@ -22534,10 +22534,10 @@
             {
               "wins": 4,
               "losses": 8,
-              "samples": 945,
+              "samples": 944,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.4725
+              "record_probability": 0.472
             },
             {
               "wins": 3,
@@ -22552,36 +22552,36 @@
             {
               "wins": 4,
               "losses": 6,
-              "samples": 267,
+              "samples": 269,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.1335
+              "record_probability": 0.1345
             },
             {
               "wins": 3,
               "losses": 7,
-              "samples": 1733,
+              "samples": 1731,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.8665
+              "record_probability": 0.8655
             }
           ],
           "week-12": [
             {
               "wins": 5,
               "losses": 6,
-              "samples": 137,
+              "samples": 139,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.0685
+              "record_probability": 0.0695
             },
             {
               "wins": 4,
               "losses": 7,
-              "samples": 1060,
+              "samples": 1058,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.53
+              "record_probability": 0.529
             },
             {
               "wins": 3,
@@ -22596,10 +22596,10 @@
             {
               "wins": 6,
               "losses": 6,
-              "samples": 69,
+              "samples": 70,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.0345
+              "record_probability": 0.035
             },
             {
               "wins": 5,
@@ -22612,10 +22612,10 @@
             {
               "wins": 4,
               "losses": 8,
-              "samples": 945,
+              "samples": 944,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.4725
+              "record_probability": 0.472
             },
             {
               "wins": 3,
@@ -32023,197 +32023,197 @@
         "date": "2026-11-14",
         "home": "Louisiana Tech",
         "away": "Southern Miss",
-        "samples_home": 1733,
-        "samples_away": 267,
-        "home_win_probability": 0.8665,
+        "samples_home": 1731,
+        "samples_away": 269,
+        "home_win_probability": 0.8655,
         "supported": true,
-        "combined_swing": 0.03173687,
+        "combined_swing": 0.03177354,
         "effects": {
           "Alabama": {
-            "home_win": 0.99769186,
+            "home_win": 0.9976892,
             "away_win": 1,
-            "swing": -0.00230814,
-            "standard_error": 0.00115274
+            "swing": -0.0023108,
+            "standard_error": 0.00115407
           },
           "Arizona": {
-            "home_win": 0.03000577,
-            "away_win": 0.04494382,
-            "swing": -0.01493805,
-            "standard_error": 0.0133251
+            "home_win": 0.03004044,
+            "away_win": 0.04460967,
+            "swing": -0.01456923,
+            "standard_error": 0.01323897
           },
           "Boise State": {
-            "home_win": 0.50605886,
-            "away_win": 0.5093633,
-            "swing": -0.00330444,
-            "standard_error": 0.03286698
+            "home_win": 0.50664356,
+            "away_win": 0.50557621,
+            "swing": 0.00106735,
+            "standard_error": 0.03276663
           },
           "BYU": {
-            "home_win": 0.75302943,
-            "away_win": 0.76029963,
-            "swing": -0.0072702,
-            "standard_error": 0.02810475
+            "home_win": 0.75274408,
+            "away_win": 0.76208178,
+            "swing": -0.00933771,
+            "standard_error": 0.02795619
           },
           "Georgia": {
-            "home_win": 0.98961339,
-            "away_win": 0.98876404,
-            "swing": 0.00084934,
-            "standard_error": 0.00689497
+            "home_win": 0.98960139,
+            "away_win": 0.98884758,
+            "swing": 0.0007538,
+            "standard_error": 0.00685137
           },
           "Houston": {
-            "home_win": 0.3237161,
-            "away_win": 0.34456929,
-            "swing": -0.02085319,
-            "standard_error": 0.03117971
+            "home_win": 0.32351242,
+            "away_win": 0.34572491,
+            "swing": -0.02221249,
+            "standard_error": 0.03110177
           },
           "Indiana": {
-            "home_win": 0.69705713,
-            "away_win": 0.7340824,
-            "swing": -0.03702527,
-            "standard_error": 0.02920544
+            "home_win": 0.69728481,
+            "away_win": 0.73234201,
+            "swing": -0.0350572,
+            "standard_error": 0.02916554
           },
           "Iowa": {
-            "home_win": 0.47605309,
-            "away_win": 0.44194757,
-            "swing": 0.03410552,
-            "standard_error": 0.03267469
+            "home_win": 0.47602542,
+            "away_win": 0.44237918,
+            "swing": 0.03364624,
+            "standard_error": 0.03257481
           },
           "Kentucky": {
-            "home_win": 0.27870744,
-            "away_win": 0.27715356,
-            "swing": 0.00155389,
-            "standard_error": 0.02943359
+            "home_win": 0.27845176,
+            "away_win": 0.27881041,
+            "swing": -0.00035865,
+            "standard_error": 0.02938641
           },
           "Liberty": {
-            "home_win": 0.19619158,
-            "away_win": 0.19475655,
-            "swing": 0.00143502,
-            "standard_error": 0.02604541
+            "home_win": 0.19584055,
+            "away_win": 0.19702602,
+            "swing": -0.00118547,
+            "standard_error": 0.02605973
           },
           "Louisiana Tech": {
-            "home_win": 0.03173687,
+            "home_win": 0.03177354,
             "away_win": 0,
-            "swing": 0.03173687,
-            "standard_error": 0.00421094
+            "swing": 0.03177354,
+            "standard_error": 0.00421573
           },
           "LSU": {
-            "home_win": 0.16041546,
-            "away_win": 0.14606742,
-            "swing": 0.01434805,
-            "standard_error": 0.02334259
+            "home_win": 0.16060081,
+            "away_win": 0.14498141,
+            "swing": 0.0156194,
+            "standard_error": 0.02320998
           },
           "Miami": {
-            "home_win": 0.63531448,
-            "away_win": 0.64419476,
-            "swing": -0.00888027,
-            "standard_error": 0.0314984
+            "home_win": 0.63547083,
+            "away_win": 0.64312268,
+            "swing": -0.00765185,
+            "standard_error": 0.03141722
           },
           "Missouri": {
-            "home_win": 0.01154068,
-            "away_win": 0.00374532,
-            "swing": 0.00779536,
-            "standard_error": 0.00453403
+            "home_win": 0.01155402,
+            "away_win": 0.00371747,
+            "swing": 0.00783654,
+            "standard_error": 0.00451286
           },
           "New Mexico": {
-            "home_win": 0.2423543,
-            "away_win": 0.25468165,
-            "swing": -0.01232735,
-            "standard_error": 0.02858123
+            "home_win": 0.24205661,
+            "away_win": 0.25650558,
+            "swing": -0.01444896,
+            "standard_error": 0.02854731
           },
           "Notre Dame": {
-            "home_win": 0.99884593,
-            "away_win": 0.99625468,
-            "swing": 0.00259125,
-            "standard_error": 0.00382623
+            "home_win": 0.9988446,
+            "away_win": 0.99628253,
+            "swing": 0.00256207,
+            "standard_error": 0.00379933
           },
           "Ohio State": {
-            "home_win": 0.24350837,
-            "away_win": 0.20224719,
-            "swing": 0.04126118,
-            "standard_error": 0.02665668
+            "home_win": 0.24321202,
+            "away_win": 0.20446097,
+            "swing": 0.03875105,
+            "standard_error": 0.02666464
           },
           "Oklahoma State": {
-            "home_win": 0.01731102,
-            "away_win": 0.02621723,
-            "swing": -0.00890621,
-            "standard_error": 0.01026809
+            "home_win": 0.01733102,
+            "away_win": 0.0260223,
+            "swing": -0.00869128,
+            "standard_error": 0.01020091
           },
           "Ole Miss": {
-            "home_win": 0.37507213,
-            "away_win": 0.33707865,
-            "swing": 0.03799348,
-            "standard_error": 0.03117962
+            "home_win": 0.37550549,
+            "away_win": 0.33457249,
+            "swing": 0.040933,
+            "standard_error": 0.03103395
           },
           "Oregon": {
-            "home_win": 0.57991922,
-            "away_win": 0.60299625,
-            "swing": -0.02307704,
-            "standard_error": 0.03220514
+            "home_win": 0.58001155,
+            "away_win": 0.60223048,
+            "swing": -0.02221893,
+            "standard_error": 0.03211298
           },
           "SMU": {
-            "home_win": 0.02019619,
-            "away_win": 0.02247191,
-            "swing": -0.00227572,
-            "standard_error": 0.00967944
+            "home_win": 0.02021953,
+            "away_win": 0.02230483,
+            "swing": -0.00208531,
+            "standard_error": 0.00961836
           },
           "South Carolina": {
-            "home_win": 0.12290825,
-            "away_win": 0.10861423,
-            "swing": 0.01429402,
-            "standard_error": 0.02061108
+            "home_win": 0.12305026,
+            "away_win": 0.10780669,
+            "swing": 0.01524357,
+            "standard_error": 0.02049151
           },
           "Tennessee": {
-            "home_win": 0.70225043,
-            "away_win": 0.71910112,
-            "swing": -0.01685069,
-            "standard_error": 0.02961738
+            "home_win": 0.70190641,
+            "away_win": 0.72118959,
+            "swing": -0.01928318,
+            "standard_error": 0.02946805
           },
           "Texas": {
-            "home_win": 0.7593768,
-            "away_win": 0.77902622,
-            "swing": -0.01964941,
-            "standard_error": 0.02738929
+            "home_win": 0.75909879,
+            "away_win": 0.78066914,
+            "swing": -0.02157036,
+            "standard_error": 0.02724273
           },
           "Texas Tech": {
-            "home_win": 0.22042701,
-            "away_win": 0.21722846,
-            "swing": 0.00319854,
-            "standard_error": 0.02712954
+            "home_win": 0.22068169,
+            "away_win": 0.21561338,
+            "swing": 0.0050683,
+            "standard_error": 0.02698274
           },
           "UCLA": {
-            "home_win": 0.34218119,
-            "away_win": 0.31460674,
-            "swing": 0.02757445,
-            "standard_error": 0.03061841
+            "home_win": 0.34257655,
+            "away_win": 0.31226766,
+            "swing": 0.03030889,
+            "standard_error": 0.03047064
           },
           "USC": {
-            "home_win": 0.08770917,
-            "away_win": 0.12734082,
-            "swing": -0.03963165,
-            "standard_error": 0.02150282
+            "home_win": 0.08781051,
+            "away_win": 0.12639405,
+            "swing": -0.03858354,
+            "standard_error": 0.02137175
           },
           "Utah": {
-            "home_win": 0.79226774,
-            "away_win": 0.79026217,
-            "swing": 0.00200557,
-            "standard_error": 0.02675344
+            "home_win": 0.79202773,
+            "away_win": 0.79182156,
+            "swing": 0.00020617,
+            "standard_error": 0.02660728
           },
           "UTSA": {
-            "home_win": 0.01038661,
-            "away_win": 0.01498127,
-            "swing": -0.00459466,
-            "standard_error": 0.00782306
+            "home_win": 0.01039861,
+            "away_win": 0.01486989,
+            "swing": -0.00447127,
+            "standard_error": 0.00777182
           },
           "Wake Forest": {
-            "home_win": 0.34622043,
-            "away_win": 0.33707865,
-            "swing": 0.00914178,
-            "standard_error": 0.03110513
+            "home_win": 0.34604275,
+            "away_win": 0.33828996,
+            "swing": 0.00775279,
+            "standard_error": 0.03103043
           },
           "Wisconsin": {
-            "home_win": 0.02135026,
-            "away_win": 0.01872659,
-            "swing": 0.00262367,
-            "standard_error": 0.00899335
+            "home_win": 0.02137493,
+            "away_win": 0.01858736,
+            "swing": 0.00278757,
+            "standard_error": 0.00893857
           },
           "Southern Miss": {
             "home_win": 0,
@@ -67589,197 +67589,197 @@
         "date": "2026-11-28",
         "home": "Georgia Southern",
         "away": "Louisiana Tech",
-        "samples_home": 912,
-        "samples_away": 1088,
-        "home_win_probability": 0.456,
+        "samples_home": 913,
+        "samples_away": 1087,
+        "home_win_probability": 0.4565,
         "supported": true,
-        "combined_swing": 0.05055147,
+        "combined_swing": 0.05059798,
         "effects": {
           "Alabama": {
-            "home_win": 0.99671053,
-            "away_win": 0.99908088,
-            "swing": -0.00237036,
-            "standard_error": 0.0021069
+            "home_win": 0.99671413,
+            "away_win": 0.99908004,
+            "swing": -0.00236591,
+            "standard_error": 0.0021054
           },
           "Arizona": {
-            "home_win": 0.02850877,
-            "away_win": 0.03492647,
-            "swing": -0.0064177,
-            "standard_error": 0.00783255
+            "home_win": 0.02957284,
+            "away_win": 0.03403864,
+            "swing": -0.0044658,
+            "standard_error": 0.00785375
           },
           "Boise State": {
-            "home_win": 0.51644737,
-            "away_win": 0.49816176,
-            "swing": 0.0182856,
-            "standard_error": 0.02244109
+            "home_win": 0.51588171,
+            "away_win": 0.49862006,
+            "swing": 0.01726165,
+            "standard_error": 0.02243959
           },
           "BYU": {
-            "home_win": 0.74890351,
-            "away_win": 0.75827206,
-            "swing": -0.00936855,
-            "standard_error": 0.01935619
+            "home_win": 0.74917853,
+            "away_win": 0.75804968,
+            "swing": -0.00887115,
+            "standard_error": 0.01935321
           },
           "Georgia": {
-            "home_win": 0.98684211,
-            "away_win": 0.99172794,
-            "swing": -0.00488584,
-            "standard_error": 0.00466667
+            "home_win": 0.98685652,
+            "away_win": 0.99172033,
+            "swing": -0.00486381,
+            "standard_error": 0.00466483
           },
           "Houston": {
-            "home_win": 0.32236842,
-            "away_win": 0.32996324,
-            "swing": -0.00759481,
-            "standard_error": 0.02104117
+            "home_win": 0.32311062,
+            "away_win": 0.32934683,
+            "swing": -0.0062362,
+            "standard_error": 0.02104163
           },
           "Indiana": {
-            "home_win": 0.70285088,
-            "away_win": 0.70128676,
-            "swing": 0.00156411,
-            "standard_error": 0.02053154
+            "home_win": 0.70317634,
+            "away_win": 0.70101196,
+            "swing": 0.00216438,
+            "standard_error": 0.02052869
           },
           "Iowa": {
-            "home_win": 0.46491228,
-            "away_win": 0.47702206,
-            "swing": -0.01210978,
-            "standard_error": 0.02240685
+            "home_win": 0.46549836,
+            "away_win": 0.47654094,
+            "swing": -0.01104258,
+            "standard_error": 0.02240543
           },
           "Kentucky": {
-            "home_win": 0.29057018,
-            "away_win": 0.26838235,
-            "swing": 0.02218782,
-            "standard_error": 0.02016188
+            "home_win": 0.29025192,
+            "away_win": 0.26862925,
+            "swing": 0.02162266,
+            "standard_error": 0.02015884
           },
           "Liberty": {
-            "home_win": 0.20285088,
-            "away_win": 0.19025735,
-            "swing": 0.01259352,
-            "standard_error": 0.01785789
+            "home_win": 0.20372399,
+            "away_win": 0.18951242,
+            "swing": 0.01421157,
+            "standard_error": 0.01786008
           },
           "Louisiana Tech": {
             "home_win": 0,
-            "away_win": 0.05055147,
-            "swing": -0.05055147,
-            "standard_error": 0.00664184
+            "away_win": 0.05059798,
+            "swing": -0.05059798,
+            "standard_error": 0.00664778
           },
           "LSU": {
-            "home_win": 0.16008772,
-            "away_win": 0.15716912,
-            "swing": 0.0029186,
-            "standard_error": 0.01640691
+            "home_win": 0.15991238,
+            "away_win": 0.15731371,
+            "swing": 0.00259867,
+            "standard_error": 0.0164042
           },
           "Miami": {
-            "home_win": 0.62390351,
-            "away_win": 0.64705882,
-            "swing": -0.02315531,
-            "standard_error": 0.02161462
+            "home_win": 0.62431544,
+            "away_win": 0.64673413,
+            "swing": -0.02241869,
+            "standard_error": 0.021612
           },
           "Missouri": {
-            "home_win": 0.01315789,
-            "away_win": 0.00827206,
-            "swing": 0.00488584,
-            "standard_error": 0.00466667
+            "home_win": 0.01314348,
+            "away_win": 0.00827967,
+            "swing": 0.00486381,
+            "standard_error": 0.00466483
           },
           "New Mexico": {
-            "home_win": 0.25,
-            "away_win": 0.23897059,
-            "swing": 0.01102941,
-            "standard_error": 0.01930664
+            "home_win": 0.24972618,
+            "away_win": 0.23919043,
+            "swing": 0.01053575,
+            "standard_error": 0.01930363
           },
           "Notre Dame": {
-            "home_win": 0.99890351,
-            "away_win": 0.99816176,
-            "swing": 0.00074174,
-            "standard_error": 0.00169924
+            "home_win": 0.99890471,
+            "away_win": 0.99816007,
+            "swing": 0.00074464,
+            "standard_error": 0.00169938
           },
           "Ohio State": {
-            "home_win": 0.24451754,
-            "away_win": 0.23253676,
-            "swing": 0.01198078,
-            "standard_error": 0.01914634
+            "home_win": 0.24534502,
+            "away_win": 0.23183073,
+            "swing": 0.01351429,
+            "standard_error": 0.01914747
           },
           "Oklahoma State": {
-            "home_win": 0.01754386,
-            "away_win": 0.01930147,
-            "swing": -0.00175761,
-            "standard_error": 0.00602471
+            "home_win": 0.01752464,
+            "away_win": 0.01931923,
+            "swing": -0.00179458,
+            "standard_error": 0.00602394
           },
           "Ole Miss": {
-            "home_win": 0.37719298,
-            "away_win": 0.36397059,
-            "swing": 0.01322239,
-            "standard_error": 0.02168774
+            "home_win": 0.37677985,
+            "away_win": 0.36430543,
+            "swing": 0.01247442,
+            "standard_error": 0.02168511
           },
           "Oregon": {
-            "home_win": 0.56798246,
-            "away_win": 0.59558824,
-            "swing": -0.02760578,
-            "standard_error": 0.0221458
+            "home_win": 0.56736035,
+            "away_win": 0.59613615,
+            "swing": -0.0287758,
+            "standard_error": 0.02214365
           },
           "SMU": {
-            "home_win": 0.01973684,
-            "away_win": 0.02113971,
-            "swing": -0.00140286,
-            "standard_error": 0.00634297
+            "home_win": 0.01971522,
+            "away_win": 0.02115915,
+            "swing": -0.00144393,
+            "standard_error": 0.00634208
           },
           "South Carolina": {
-            "home_win": 0.12280702,
-            "away_win": 0.11948529,
-            "swing": 0.00332172,
-            "standard_error": 0.01465671
+            "home_win": 0.12267251,
+            "away_win": 0.11959522,
+            "swing": 0.00307729,
+            "standard_error": 0.01465416
           },
           "Tennessee": {
-            "home_win": 0.70614035,
-            "away_win": 0.703125,
-            "swing": 0.00301535,
-            "standard_error": 0.0204789
+            "home_win": 0.70646221,
+            "away_win": 0.70285189,
+            "swing": 0.00361033,
+            "standard_error": 0.02047607
           },
           "Texas": {
-            "home_win": 0.75877193,
-            "away_win": 0.76470588,
-            "swing": -0.00593395,
-            "standard_error": 0.01913312
+            "home_win": 0.75794085,
+            "away_win": 0.76540938,
+            "swing": -0.00746853,
+            "standard_error": 0.01913467
           },
           "Texas Tech": {
-            "home_win": 0.21820175,
-            "away_win": 0.22150735,
-            "swing": -0.0033056,
-            "standard_error": 0.01858883
+            "home_win": 0.21796276,
+            "away_win": 0.22171113,
+            "swing": -0.00374837,
+            "standard_error": 0.01858608
           },
           "UCLA": {
-            "home_win": 0.34868421,
-            "away_win": 0.32996324,
-            "swing": 0.01872098,
-            "standard_error": 0.02126552
+            "home_win": 0.3483023,
+            "away_win": 0.33026679,
+            "swing": 0.01803551,
+            "standard_error": 0.02126276
           },
           "USC": {
-            "home_win": 0.08881579,
-            "away_win": 0.09650735,
-            "swing": -0.00769156,
-            "standard_error": 0.01299529
+            "home_win": 0.08871851,
+            "away_win": 0.09659614,
+            "swing": -0.00787763,
+            "standard_error": 0.01299355
           },
           "Utah": {
-            "home_win": 0.79385965,
-            "away_win": 0.79044118,
-            "swing": 0.00341847,
-            "standard_error": 0.01821217
+            "home_win": 0.79299014,
+            "away_win": 0.79116835,
+            "swing": 0.00182179,
+            "standard_error": 0.01821528
           },
           "UTSA": {
-            "home_win": 0.01315789,
-            "away_win": 0.00919118,
-            "swing": 0.00396672,
-            "standard_error": 0.00475477
+            "home_win": 0.01314348,
+            "away_win": 0.00919963,
+            "swing": 0.00394385,
+            "standard_error": 0.00475312
           },
           "Wake Forest": {
-            "home_win": 0.35745614,
-            "away_win": 0.33455882,
-            "swing": 0.02289732,
-            "standard_error": 0.02136506
+            "home_win": 0.35706462,
+            "away_win": 0.33486661,
+            "swing": 0.02219802,
+            "standard_error": 0.02136234
           },
           "Wisconsin": {
-            "home_win": 0.02302632,
-            "away_win": 0.01930147,
-            "swing": 0.00372485,
-            "standard_error": 0.00648573
+            "home_win": 0.0230011,
+            "away_win": 0.01931923,
+            "swing": 0.00368187,
+            "standard_error": 0.00648406
           },
           "Georgia Southern": {
             "home_win": 0,
