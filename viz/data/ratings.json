@@ -1433,7 +1433,7 @@
    "rank": 69,
    "team": "Virginia",
    "conference": "ACC",
-   "power": 0.497826,
+   "power": 0.497825,
    "vs_average": 0.492745,
    "O": 0.369,
    "D": 0.824,
@@ -2189,7 +2189,7 @@
    "rank": 105,
    "team": "Central Michigan",
    "conference": "Mid-American",
-   "power": 0.309886,
+   "power": 0.309885,
    "vs_average": 0.255429,
    "O": -1.273,
    "D": -0.321,
@@ -2273,8 +2273,8 @@
    "rank": 109,
    "team": "Buffalo",
    "conference": "Mid-American",
-   "power": 0.303236,
-   "vs_average": 0.247985,
+   "power": 0.303239,
+   "vs_average": 0.247988,
    "O": -1.349,
    "D": -0.634,
    "talent": -0.901,
@@ -2295,7 +2295,7 @@
    "team": "Southern Miss",
    "conference": "Sun Belt",
    "power": 0.296661,
-   "vs_average": 0.240582,
+   "vs_average": 0.240581,
    "O": -0.547,
    "D": -0.172,
    "talent": -0.323,
@@ -2672,7 +2672,7 @@
    "rank": 128,
    "team": "Massachusetts",
    "conference": "Mid-American",
-   "power": 0.176273,
+   "power": 0.176272,
    "vs_average": 0.120935,
    "O": -2.809,
    "D": -2.81,
@@ -12501,7 +12501,7 @@
     },
     {
      "team": "Virginia",
-     "power": 0.497826,
+     "power": 0.497825,
      "vs_average": 0.492745,
      "rank": 69
     },
@@ -12717,7 +12717,7 @@
     },
     {
      "team": "Central Michigan",
-     "power": 0.309886,
+     "power": 0.309885,
      "vs_average": 0.255429,
      "rank": 105
     },
@@ -12741,14 +12741,14 @@
     },
     {
      "team": "Buffalo",
-     "power": 0.303236,
-     "vs_average": 0.247985,
+     "power": 0.303239,
+     "vs_average": 0.247988,
      "rank": 109
     },
     {
      "team": "Southern Miss",
      "power": 0.296661,
-     "vs_average": 0.240582,
+     "vs_average": 0.240581,
      "rank": 110
     },
     {
@@ -12855,7 +12855,7 @@
     },
     {
      "team": "Massachusetts",
-     "power": 0.176273,
+     "power": 0.176272,
      "vs_average": 0.120935,
      "rank": 128
     },
