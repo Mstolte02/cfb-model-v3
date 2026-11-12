@@ -50,16 +50,53 @@ test('restored weeks have genuine pregame model and DraftKings observations', ()
 
 for (const week of [1,2,7,8]) {
   for (const flip of [true,false]) {
-    test(`full thresholds apply in week ${week}, opposite winner ${flip}`, () => {
+    test(`gap exception applies in week ${week}, opposite winner ${flip}`, () => {
       const ctx = vm.createContext({BET_RULES:{spread:{minGap:8},moneyline:{minGap:.2,minModelP:.5}},
         picksOtherSide:g=>g.flip,esc:x=>x,abbr:x=>x,americanOdds:String});
       vm.runInContext(bet,ctx);
       const g={...game,week,home:'A',away:'B',flip};
-      for (const gap of [4,-4,7.999,-7.999]) assert.equal(ctx.betToPlace({...g,gap},'spread'),null);
+      for (const gap of [4,-4,7.999,-7.999]) assert.equal(Boolean(ctx.betToPlace({...g,gap},'spread')),flip);
       for (const gap of [8,-8]) assert(ctx.betToPlace({...g,gap},'spread'));
-      for (const gap of [.1,-.1,.1999,-.1999]) assert.equal(ctx.betToPlace({...g,gap,modelValue:.6},'moneyline'),null);
+      for (const gap of [.1,-.1,.1999,-.1999]) assert.equal(Boolean(ctx.betToPlace({...g,gap,modelValue:.6},'moneyline')),flip);
       for (const gap of [.2,-.2]) assert(ctx.betToPlace({...g,gap,modelValue:.6},'moneyline'));
       assert.equal(ctx.betToPlace({...g,gap:.2,modelValue:.5},'moneyline'),null);
     });
   }
 }
+
+const disagreement = source.slice(source.indexOf('  function picksOtherSide('),
+  source.indexOf('  let weeklyMarket'));
+function actualRules() {
+  const ctx = vm.createContext({BET_RULES:{spread:{minGap:8},moneyline:{minGap:.2,minModelP:.5}},
+    esc:x=>x,abbr:x=>x,americanOdds:String});
+  vm.runInContext(disagreement,ctx);
+  return ctx;
+}
+test('wrong team favored qualifies either side for spread and moneyline below the gap', () => {
+  const ctx = actualRules();
+  for (const home of [true,false]) {
+    const sign = home ? 1 : -1;
+    const side = home ? 'A' : 'B';
+    const spread = {...game,gap:sign*3,marketValue:sign*2,
+      modelSpread:-sign,consensus:sign*2};
+    assert.equal(ctx.betToPlace(spread,'spread'),`${side} +2.0`);
+    const ml = {...game,gap:sign*.07,marketValue:120,modelValue:.52,
+      r:{pA:home ? .52 : .48},marketHomeP:home ? .45 : .55};
+    assert.equal(ctx.betToPlace(ml,'moneyline'),`${side} 120`);
+    for (const g of [spread,ml]) {
+      const market = g.r ? 'moneyline' : 'spread';
+      assert.equal(ctx.betToPlace({...g,bettingExcluded:true},market),null);
+      assert.equal(ctx.betToPlace({...g,marketValue:null},market),null);
+      assert.equal(ctx.betToPlace({...g,gap:null},market),null);
+    }
+    for (const p of [.5,.49])
+      assert.equal(ctx.betToPlace({...ml,modelValue:p},'moneyline'),null);
+  }
+});
+test('a pickem or exactly 50% is not a disagreement and cannot waive the gap', () => {
+  const ctx = actualRules();
+  for (const [modelSpread,consensus] of [[0,2],[-2,0],[-2,-1],[2,1]])
+    assert.equal(ctx.betToPlace({...game,gap:1,modelSpread,consensus},'spread'),null);
+  for (const [pA,marketHomeP] of [[.5,.45],[.55,.5],[.55,.52],[.45,.42]])
+    assert.equal(ctx.betToPlace({...game,gap:.03,modelValue:.55,r:{pA},marketHomeP},'moneyline'),null);
+});

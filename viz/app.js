@@ -2940,14 +2940,14 @@
     return false;
   }
 
-  /* Retrospective rule applied uniformly to every 2026 week. Every selection requires the full
-     gap; saved lines and predictions stay fixed. */
+  /* Apply the same rule to every 2026 week: require the standard gap unless the
+     model and book favor different teams. Saved lines and predictions stay fixed. */
   function betToPlace(g, market) {
     const RULE = BET_RULES[market];
     if (g.bettingExcluded) return null;
     if (g.gap == null || g.marketValue == null) return null;
     const requiredGap = RULE.minGap;
-    if (Math.abs(g.gap) + 1e-12 < requiredGap) return null;
+    if (!picksOtherSide(g, market) && Math.abs(g.gap) + 1e-12 < requiredGap) return null;
     const home = g.gap >= 0, side = home ? g.home : g.away;
     if (market === "moneyline") {
       if (g.modelValue == null || g.modelValue <= RULE.minModelP) return null;
