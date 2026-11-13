@@ -71,7 +71,7 @@ stopifnot(!thin$supported, thin$samples_away == 0, is.null(thin$combined_swing),
           is.null(thin$effects$A$away_win), is.null(thin$effects$A$swing))
 # Rooting threshold restricts eligible teams, but both game participants retain odds.
 limited <- playoff_game_impacts(standings, games, scheduled, c("A", "B", "C"), threshold = .6)
-stopifnot(identical(limited$rooting_teams, list("C")), !"B" %in% names(limited$games[[1]]$effects),
+stopifnot(identical(limited$rooting_teams, list("C")), "B" %in% names(limited$games[[1]]$effects),
           "B" %in% names(limited$games[[2]]$effects))
 stopifnot(length(playoff_game_impacts(standings, fixed_games, fixed, c("A", "B", "C"))$games) == 0)
 cat("Game impacts: conditional denominators, third-party rooting effects, simulation alignment, absent outcomes, eligibility and completed games passed\n")
@@ -100,12 +100,24 @@ for (s in route$steps) {
   stopifnot(s$samples == sum(at), s$playoff == mean(selected[at, 1]))
 }
 stopifnot(identical(route, playoff_likely_paths(selected[20:1,,drop=FALSE], outcomes[20:1,], fixture, 1)$A))
-stopifnot(length(playoff_likely_paths(selected, outcomes, fixture, 1, max_games=2)$A$steps) == 2)
+# There is no game cap or extra significance gate; the 2.5 pp rule is strict.
+many <- rep(fixture, 3)
+for (i in seq_along(many)) many[[i]]$id <- as.character(i)
+many[[1]]$effects$A$swing <- .025
+many[[2]]$effects$A$swing <- -.02501
+many[[2]]$supported <- FALSE
+many[[2]]$home <- "Other team"
+many[[2]]$effects$A$standard_error <- 1
+all_games <- playoff_likely_paths(selected, outcomes[, rep(1:3, 3)], many, 1)$A
+stopifnot(length(all_games$steps) == 8,
+          !"1" %in% vapply(all_games$steps, `[[`, character(1), "id"),
+          "2" %in% vapply(all_games$steps, `[[`, character(1), "id"),
+          !all_games$steps[[which(vapply(all_games$steps, `[[`, character(1), "id") == "2")]]$supported)
 selected[,] <- FALSE
 stopifnot(playoff_likely_paths(selected, outcomes, fixture, 1)$A$status == "no_qualifying_draws")
 selected[,] <- TRUE
-fixture[[1]]$supported <- FALSE
+fixture[[1]]$effects$A$swing <- .025
 fixture[[2]]$effects$A$swing <- .001
-fixture[[3]]$home <- "B"; fixture[[3]]$effects$A$standard_error <- 1
+fixture[[3]]$effects$A$swing <- .01
 stopifnot(playoff_likely_paths(selected, outcomes, fixture, 1)$A$status == "no_material_games")
 cat("Likely paths: exact joint mode, chronological prefixes, alignment, limits and uncertainty passed\n")

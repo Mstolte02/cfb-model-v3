@@ -186,14 +186,15 @@ with an injury feed prohibits automated access.
 
 ### Path to playoff
 
-In **Simulation > Playoff paths > Path to playoff**, select a team to see its
-most common qualifying combination across up to five remaining games with the
-largest playoff swings (at least two percentage points). Other teams' games must
-also clear the simultaneous uncertainty threshold used for rooting interests.
-The combination is counted jointly among qualifying season draws; each displayed
-step recomputes CFP odds after every earlier result. Unlisted games and conference
-championships remain simulated. This compressed route can include a loss and is
-not a guarantee; tied routes and small samples are labeled.
+In **Simulation > Playoff paths > Path to playoff**, use the dedicated team
+selector to see a probability chart for every remaining game with an individual
+CFP swing strictly above 2.5 percentage points, including other teams' games.
+There is no game cap or additional significance filter. Each row compares CFP odds
+with either winner, using all simulations with that result. Gold marks the winner
+most common in qualifying seasons (via Bayes' rule), and grey marks the other
+winner. These per-game comparisons keep usable sample sizes even when the full
+combination has very few matching draws. Other games and conference championships
+remain simulated. Swings cannot be added; small samples are labeled.
 
 ### Refresh player ratings
 

@@ -8,17 +8,41 @@ body[data-hub="simulation"]{background:#0c1819;color:#f1f4ed}body[data-hub="simu
 @media(prefers-reduced-motion:reduce){.sim-team-card{transition:none}}
 
 .sim-more{margin:24px 28px}body[data-hub="simulation"] .step p{color:#afc3b5}body[data-hub="simulation"] #view-playoff>.view-head h2{font:800 clamp(28px,4vw,44px)/1.15 var(--sans);letter-spacing:-1px}
-
-/* A short, chronological route through the highest-impact playoff results. */
-.sim-likely-path{margin:24px 0}
-.sim-path-steps{padding-left:28px;margin:24px 0;display:grid;gap:12px}
-.sim-path-steps li{padding:18px;border:1px solid #3a5349;border-radius:12px}
-.sim-path-steps li::marker{font-weight:800}
-.sim-path-steps h5{font-size:18px;margin:6px 0}
-.sim-path-steps p{margin:6px 0;font-size:13px}
-.sim-path-odds{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:12px}
-.sim-path-odds strong{font-size:26px}
-.sim-path-odds span,.sim-path-odds small{font-size:12px}
-
-.sim-likely-path .sim-metrics{margin:20px 0}
-.sim-path-steps h5{color:#f2f5ee}
+.sim-filters[hidden]{display:none}
+.sim-route-picker{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:24px 28px;border-bottom:1px solid #30483e}
+.sim-route-picker label{color:#c2d3ca;font-size:13px}
+.sim-route-picker select{font:600 16px var(--sans);background:#1a302d;color:#edf2e8;border:1px solid #486151;border-radius:6px;padding:12px;min-width:230px;max-width:100%}
+.sim-route-picker>span{color:#b6c9be;font-size:12px}
+.sim-route-visual{padding:30px 28px}
+.sim-route-visual .eyebrow{color:#e4c36b}
+.sim-route-visual>h3{font:800 clamp(25px,4vw,42px)/1.2 var(--sans);color:#f2f5ee;margin:12px 0}
+.sim-route-visual>p{color:#b6c9be;line-height:1.7;font-size:14px}
+.sim-route-summary{display:flex;gap:28px;align-items:center;flex-wrap:wrap;margin:28px 0 12px}
+.sim-route-summary small,.sim-route-value small{display:block;color:#b6c9be;font-size:12px}
+.sim-route-summary strong{font:800 34px var(--sans);color:#e4c36b}
+.sim-route-summary>span{font-size:28px;color:#9fb6a8}
+.sim-route-summary>div:last-child{margin-left:auto}
+.sim-route-context{font-size:12px!important}
+.sim-route-legend{display:flex;gap:22px;flex-wrap:wrap;margin:28px 0 18px;color:#c2d3ca;font-size:12px}
+.sim-route-legend>span{display:flex;gap:8px;align-items:center}
+.sim-route-key{display:inline-block;width:10px;height:10px;border-radius:50%}
+.sim-route-key.before{background:#8fa9a0}.sim-route-key.after{background:#e4c36b}
+.sim-route-axis,.sim-route-step{display:grid;grid-template-columns:minmax(230px,1fr) minmax(180px,1.4fr) 105px;gap:20px;align-items:center}
+.sim-route-axis{font-size:11px;color:#9fb6a8;padding-bottom:18px}
+.sim-route-axis>div{position:relative;height:16px;margin:0 8px}
+.sim-route-axis>div>span{position:absolute;transform:translateX(-50%)}
+.sim-route-axis>span:last-child{text-align:right}
+.sim-route-ladder{list-style:none;margin:0;padding:0}
+.sim-route-step{border-top:1px solid #30483e;padding:20px 0;row-gap:8px}
+.sim-route-game{display:flex;gap:12px;align-items:start}
+.sim-route-number{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#28413a;color:#e4c36b;font-size:12px}
+.sim-route-game h5{font:700 15px var(--sans);margin:6px 0;color:#f2f5ee}
+.sim-route-game small{font-size:11px;color:#b6c9be}
+.sim-route-track{position:relative;height:36px;margin:0 8px;background:repeating-linear-gradient(90deg,#b6c9be15 0,#b6c9be15 1px,transparent 1px,transparent 25%)}
+.sim-route-track::before{content:'';position:absolute;left:0;right:0;top:17px;height:2px;background:#ffffff12}
+.sim-route-link{position:absolute;top:15px;height:6px;background:#e4c36b77;border-radius:4px}
+.sim-route-dot{position:absolute;top:13px;width:10px;height:10px;border-radius:50%;transform:translateX(-50%)}
+.sim-route-dot.before{background:#8fa9a0}.sim-route-dot.after{background:#e4c36b}
+.sim-route-value{text-align:right}.sim-route-value strong{font:800 25px var(--sans);color:#e4c36b}
+.sim-route-detail{grid-column:1/-1;margin:0 0 0 38px;font-size:11px;color:#9fb6a8}
+@media(max-width:760px){.sim-route-visual{padding:24px 16px}.sim-route-picker{padding:20px 16px}.sim-route-picker select{min-width:0;flex:1}.sim-route-picker>span{width:100%}.sim-route-axis{grid-template-columns:1fr 80px}.sim-route-axis>span:first-child{display:none}.sim-route-step{grid-template-columns:minmax(0,1fr) 80px}.sim-route-game{grid-column:1/-1}.sim-route-track{grid-column:1;grid-row:2}.sim-route-value{grid-column:2;grid-row:2}.sim-route-detail{margin-left:0}.sim-route-summary{gap:15px}.sim-route-summary strong{font-size:28px}.sim-route-summary>div:last-child{margin-left:0}}

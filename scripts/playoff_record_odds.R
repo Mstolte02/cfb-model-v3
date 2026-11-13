@@ -55,28 +55,23 @@ playoff_record_odds <- function(standings, games, scheduled, fbs, min_samples = 
        min_samples = min_samples, checkpoints = checkpoints, teams = rows)
 }
 
-# The modal JOINT pattern among qualifying seasons on at most five important
-# games. This is an exact mode on that compressed schedule, not independently
+# The modal JOINT pattern among qualifying seasons on every material
+# game. This is an exact mode on that compressed schedule, not independently
 # chosen favorites. All unlisted games (including championships) stay integrated.
 playoff_likely_paths <- function(selected, outcomes, games, min_samples = 30L,
-                                max_games = 5L, min_swing = .02) {
+                                min_swing = .025) {
   n <- nrow(selected)
-  z <- qnorm(1 - .05 / (2 * max(1L, length(games))))
   setNames(lapply(colnames(selected), function(team) {
     made <- selected[, team]
     base <- list(baseline = mean(made), qualifying_samples = sum(made),
-                 steps = list(), min_samples = min_samples)
+                 steps = list(), min_samples = min_samples, min_swing = min_swing)
     if (!any(made)) { base$status <- "no_qualifying_draws"; return(base) }
     eligible <- which(vapply(games, function(g) {
       e <- g$effects[[team]]
-      own <- team %in% c(g$home, g$away)
-      isTRUE(g$supported) && !is.null(e$swing) && abs(e$swing) >= min_swing &&
-        (own || (!is.null(e$standard_error) && abs(e$swing) > z * e$standard_error))
+      !is.null(e$swing) && is.finite(e$swing) && abs(e$swing) > min_swing
     }, logical(1)))
     if (!length(eligible)) { base$status <- "no_material_games"; return(base) }
-    swings <- vapply(games[eligible], function(g) abs(g$effects[[team]]$swing), numeric(1))
-    ids <- vapply(games[eligible], `[[`, character(1), "id")
-    chosen <- head(eligible[order(-swings, ids)], max_games)
+    chosen <- eligible
     # Present the exact same joint pattern in calendar order.
     chosen <- chosen[order(vapply(games[chosen], `[[`, numeric(1), "week"),
                            vapply(games[chosen], function(g) if (is.null(g$date)) "" else g$date, character(1)),
@@ -98,7 +93,7 @@ playoff_likely_paths <- function(selected, outcomes, games, min_samples = 30L,
            own_game = team %in% c(g$home, g$away),
            swing = abs(g$effects[[team]]$swing), result_probability = chance,
            before = before, playoff = mean(made[at]), samples = samples,
-           made = sum(made[at]), supported = samples >= min_samples)
+           made = sum(made[at]), supported = samples >= min_samples && isTRUE(g$supported))
     })
     base$status <- "available"
     base$pattern_probability <- mean(at)
@@ -147,7 +142,7 @@ playoff_game_impacts <- function(standings, games, scheduled, fbs,
     names(ph) <- names(pa) <- fbs
     delta <- ph - pa
     null_if_na <- function(x) if (is.finite(x)) unname(x) else NULL
-    keep <- union(eligible, intersect(c(g$home_team, g$away_team), fbs))
+    keep <- fbs
     effects <- setNames(lapply(keep, function(team) {
       se <- if (nh && na) sqrt(ph[team] * (1 - ph[team]) / nh + pa[team] * (1 - pa[team]) / na) else NA_real_
       list(home_win = null_if_na(ph[team]), away_win = null_if_na(pa[team]),
