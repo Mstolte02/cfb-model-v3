@@ -364,29 +364,23 @@ build_bracket <- function(rows) {
     score <- vapply(pool, row_number, numeric(1), key = "g6_bid")
     take(pool[[which.max(score)]]$team)
   }
-  # Protect Notre Dame when the representative projected ranking has it in the Top 12.
-  projected_order <- rows[order(vapply(rows, row_number, numeric(1), key = "projected_rank", fallback = Inf))]
-  if (any(vapply(head(projected_order, 12), function(x) identical(x$team, "Notre Dame"), logical(1)))) take("Notre Dame")
+  # Select and seed from ONE committee-score order. Independent seed modes can
+  # combine incompatible forecasts (e.g. ND's #2 mode with Alabama's #3 mode).
+  # The point estimate uses the same all-draw mean scores shown in Analysis.
+  scores <- vapply(rows, row_number, numeric(1), key = "predicted_resume_score", fallback = -Inf)
+  if (any(!is.finite(scores))) stop("projected bracket requires committee scores for every team")
+  ordered <- rows[order(-scores, vapply(rows, `[[`, character(1), "team"))]
+  if (any(vapply(head(ordered, 12), function(x) identical(x$team, "Notre Dame"), logical(1)))) take("Notre Dame")
   auto_teams <- chosen
-  ordered <- rows[order(-vapply(rows, row_number, numeric(1), key = "playoff"),
-                        vapply(rows, row_number, numeric(1), key = "power_rank", fallback = Inf))]
   for (row in ordered) if (length(chosen) < 12) take(row$team)
-  field <- rows[vapply(rows, function(x) x$team %in% chosen[seq_len(min(12, length(chosen)))], logical(1))]
-  if (length(field) < 12) stop("cannot build a 12-team bracket: only ", length(field), " teams selected")
-  seeds <- rep(NA_character_, 12)
-  remaining <- field
-  for (seed in seq_len(12)) {
-    if (!length(remaining)) break
-    score <- vapply(remaining, function(x) row_number(list(value = x$seeds[[seed]]), "value", -Inf), numeric(1))
-    pick <- which.max(score)
-    if (!length(pick)) pick <- 1L
-    seeds[[seed]] <- remaining[[pick]]$team
-    remaining <- remaining[-pick]
-  }
+  field <- ordered[vapply(ordered, function(x) x$team %in% chosen, logical(1))]
+  if (length(field) != 12) stop("cannot build a twelve-team projected bracket")
+  seeds <- vapply(field, `[[`, character(1), "team")
   game <- function(round, top = NULL, bottom = NULL, site = NULL) list(round = round, top = top, bottom = bottom, site = site)
   list(
     seeds = unname(seeds),
     auto_bids = as.list(auto_teams),
+    selection_method = "Projected automatic qualifiers plus at-large teams by mean committee score; all twelve seeded in that same score order",
     games = list(
       game("R1", seeds[[8]], seeds[[9]], seeds[[8]]), game("R1", seeds[[5]], seeds[[12]], seeds[[5]]),
       game("R1", seeds[[6]], seeds[[11]], seeds[[6]]), game("R1", seeds[[7]], seeds[[10]], seeds[[7]]),

@@ -184,6 +184,15 @@ its code and the steps to put it back are in
 Injuries are manual, in `war_model/availability_2026.csv`. The one depth-chart source
 with an injury feed prohibits automated access.
 
+### Projected playoff bracket
+
+The current bracket starts from the published CFP committee rankings. Simulated
+remaining results produce a mean final committee score for every team. Projected
+automatic qualifiers are included, at-large places follow that score order, and
+all twelve seeds use the same score order. The Analysis table shows the same
+all-season scores and records. Individual seed probabilities remain available as
+uncertainty estimates; their separate modes do not determine the displayed seeds.
+
 ### Path to playoff
 
 In **Simulation > Playoff paths > Path to playoff**, use the dedicated team

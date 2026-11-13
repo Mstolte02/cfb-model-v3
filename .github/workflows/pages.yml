@@ -12,6 +12,7 @@ on:
       - scripts/committee_anchor.R
       - scripts/playoff_record_odds.R
       - tests/test_committee_anchor.R
+      - tests/test_projected_bracket.R
       - tests/test_playoff_record_odds.R
       - viz/data/model_v4.json
       - viz/data/ratings.json
@@ -55,6 +56,7 @@ jobs:
         run: |
           Rscript tests/test_playoff_record_odds.R
           Rscript tests/test_committee_anchor.R
+          Rscript tests/test_projected_bracket.R
           Rscript tests/test_conference_titles.R
       - name: Build CFP projections
         run: |

@@ -8587,7 +8587,7 @@
     }
   ],
   "bracket": {
-    "seeds": ["Georgia", "Notre Dame", "Alabama", "Indiana", "Texas", "Utah", "Tennessee", "Iowa", "BYU", "Miami", "Oregon", "Boise State"],
+    "seeds": ["Alabama", "Georgia", "Notre Dame", "Utah", "Texas", "Indiana", "Tennessee", "BYU", "Oregon", "Iowa", "Miami", "Boise State"],
     "auto_bids": [
       "Miami",
       "Utah",
@@ -8596,12 +8596,13 @@
       "Boise State",
       "Notre Dame"
     ],
+    "selection_method": "Projected automatic qualifiers plus at-large teams by mean committee score; all twelve seeded in that same score order",
     "games": [
       {
         "round": "R1",
-        "top": "Iowa",
-        "bottom": "BYU",
-        "site": "Iowa"
+        "top": "BYU",
+        "bottom": "Oregon",
+        "site": "BYU"
       },
       {
         "round": "R1",
@@ -8611,27 +8612,15 @@
       },
       {
         "round": "R1",
-        "top": "Utah",
-        "bottom": "Oregon",
-        "site": "Utah"
+        "top": "Indiana",
+        "bottom": "Miami",
+        "site": "Indiana"
       },
       {
         "round": "R1",
         "top": "Tennessee",
-        "bottom": "Miami",
+        "bottom": "Iowa",
         "site": "Tennessee"
-      },
-      {
-        "round": "QF",
-        "top": "Georgia",
-        "bottom": null,
-        "site": null
-      },
-      {
-        "round": "QF",
-        "top": "Indiana",
-        "bottom": null,
-        "site": null
       },
       {
         "round": "QF",
@@ -8641,7 +8630,19 @@
       },
       {
         "round": "QF",
+        "top": "Utah",
+        "bottom": null,
+        "site": null
+      },
+      {
+        "round": "QF",
         "top": "Notre Dame",
+        "bottom": null,
+        "site": null
+      },
+      {
+        "round": "QF",
+        "top": "Georgia",
         "bottom": null,
         "site": null
       },
