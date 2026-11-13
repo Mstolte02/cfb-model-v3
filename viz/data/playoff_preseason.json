@@ -11904,7 +11904,7 @@
     }
   ],
   "bracket": {
-    "seeds": ["Ohio State", "Notre Dame", "Oregon", "Texas Tech", "Miami", "Texas A&M", "Georgia", "LSU", "Texas", "Oklahoma", "Alabama", "James Madison"],
+    "seeds": ["Ohio State", "Notre Dame", "Oregon", "Miami", "Texas Tech", "Texas A&M", "Texas", "Georgia", "Alabama", "LSU", "Oklahoma", "James Madison"],
     "auto_bids": [
       "Miami",
       "Texas Tech",
@@ -11913,30 +11913,31 @@
       "James Madison",
       "Notre Dame"
     ],
+    "selection_method": "Projected automatic qualifiers plus at-large teams by mean committee score; all twelve seeded in that same score order",
     "games": [
       {
         "round": "R1",
-        "top": "LSU",
-        "bottom": "Texas",
-        "site": "LSU"
+        "top": "Georgia",
+        "bottom": "Alabama",
+        "site": "Georgia"
       },
       {
         "round": "R1",
-        "top": "Miami",
+        "top": "Texas Tech",
         "bottom": "James Madison",
-        "site": "Miami"
+        "site": "Texas Tech"
       },
       {
         "round": "R1",
         "top": "Texas A&M",
-        "bottom": "Alabama",
+        "bottom": "Oklahoma",
         "site": "Texas A&M"
       },
       {
         "round": "R1",
-        "top": "Georgia",
-        "bottom": "Oklahoma",
-        "site": "Georgia"
+        "top": "Texas",
+        "bottom": "LSU",
+        "site": "Texas"
       },
       {
         "round": "QF",
@@ -11946,7 +11947,7 @@
       },
       {
         "round": "QF",
-        "top": "Texas Tech",
+        "top": "Miami",
         "bottom": null,
         "site": null
       },
@@ -14362,7 +14363,7 @@
   "engine": "cfbseedR::cfb_simulations() v0.3.0 regular season + committee-proxy selection",
   "basis": "Week-0 ensemble and Preseason Power Ratings; every game simulated",
   "record_odds": {
-    "generated_at": "2026-11-13T20:51:17Z",
+    "generated_at": "2026-11-13T21:02:21Z",
     "min_samples": 30,
     "checkpoints": [
       {
