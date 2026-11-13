@@ -769,11 +769,20 @@ def _replay_ensemble(schedule, model, ratings, model_path, ratings_path,
         history.append({"week": key, "label": label + (" to date" if unfinished else ""),
                         "completed_games": completed,
                         "teams": ER.power_table(ensemble, snapshot, names)})
+    # Fresh PFF charting can revise the inputs for a week already in progress.
+    # Keep published pregame probabilities for completed games while rebuilding
+    # the current rating state. Match participants as well as ID to avoid reusing
+    # a stale probability for a corrected schedule entry.
+    published = {(str(g.get("id")), g.get("home"), g.get("away")): g["p_home"]
+                 for g in ratings.get("game_history", [])
+                 if g.get("id") is not None and isinstance(g.get("p_home"), (int, float))
+                 and 0 <= g["p_home"] <= 1}
     game_history = [{
         "id": e.get("id"), "week": e["week"], "season_type": e["season_type"],
         "date": e.get("date"), "home": e["home"], "away": e["away"],
         "neutral": e["neutral"], "home_score": e["home_score"],
-        "away_score": e["away_score"], "p_home": e["p_home"],
+        "away_score": e["away_score"],
+        "p_home": published.get((str(e.get("id")), e["home"], e["away"]), e["p_home"]),
         "home_rating_delta": round(e["home_rating_delta"], 8)}
         for e in result["events"]]
 

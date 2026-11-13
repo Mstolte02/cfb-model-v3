@@ -184,6 +184,26 @@ its code and the steps to put it back are in
 Injuries are manual, in `war_model/availability_2026.csv`. The one depth-chart source
 with an injury feed prohibits automated access.
 
+### Path to playoff
+
+In **Simulation > Playoff paths > Path to playoff**, select a team to see its
+most common qualifying combination across up to five remaining games with the
+largest playoff swings (at least two percentage points). Other teams' games must
+also clear the simultaneous uncertainty threshold used for rooting interests.
+The combination is counted jointly among qualifying season draws; each displayed
+step recomputes CFP odds after every earlier result. Unlisted games and conference
+championships remain simulated. This compressed route can include a loss and is
+not a guarantee; tied routes and small samples are labeled.
+
+### Refresh player ratings
+
+Refresh the live player ratings with `python -m scripts.update_inseason_war`.
+It downloads all ten PFF player reports through the latest fully completed week,
+then publishes updated player WAR and the team inputs. Replay the live ensemble
+with `scripts.capture_market_snapshot.replay_published_results()` and rebuild
+the current playoff projection with `Rscript scripts/simulate_playoff.R 2000 current`
+so the path and headline odds use the refreshed team inputs.
+
 ### PFF API staging
 
 PFF API downloads go to `source-data/pff_api`, outside Git and separate from the

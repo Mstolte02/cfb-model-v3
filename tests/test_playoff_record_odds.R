@@ -77,3 +77,35 @@ stopifnot(length(playoff_game_impacts(standings, fixed_games, fixed, c("A", "B",
 cat("Game impacts: conditional denominators, third-party rooting effects, simulation alignment, absent outcomes, eligibility and completed games passed\n")
 
 stopifnot(impacts$rooting_z > 1.96)
+
+# Joint mode differs from stitching together marginal winners: among qualifiers
+# 110 occurs 4 times, 101 three times and 011 three times; 111 never occurs.
+patterns <- c(rep("110", 4), rep("101", 3), rep("011", 3), rep("000", 10))
+outcomes <- t(vapply(strsplit(patterns, ""), function(x) x == "1", logical(3)))
+selected <- matrix(c(rep(TRUE, 10), rep(FALSE, 10)), ncol = 1, dimnames = list(NULL, "A"))
+fixture <- lapply(1:3, function(i) list(id = as.character(i), week = as.integer(4-i),
+  home = "A", away = paste0("Opponent", i), date = NULL, supported = TRUE,
+  effects = list(A = list(swing = .5, standard_error = .001))))
+route <- playoff_likely_paths(selected, outcomes, fixture, min_samples = 1)$A
+stopifnot(route$status == "available", route$pattern_probability == .2,
+          route$share_of_qualifying == .4, route$playoff == 1,
+          identical(vapply(route$steps, `[[`, integer(1), "week"), 1:3),
+          identical(vapply(route$steps, `[[`, character(1), "winner"), c("Opponent3", "A", "A")),
+          route$steps[[3]]$samples == 4, route$steps[[3]]$made == 4)
+# Every prefix recomputes its own denominator; no independent odds multiplication.
+at <- rep(TRUE, 20)
+for (s in route$steps) {
+  i <- as.integer(s$id)
+  at <- at & (outcomes[, i] == (s$winner == "A"))
+  stopifnot(s$samples == sum(at), s$playoff == mean(selected[at, 1]))
+}
+stopifnot(identical(route, playoff_likely_paths(selected[20:1,,drop=FALSE], outcomes[20:1,], fixture, 1)$A))
+stopifnot(length(playoff_likely_paths(selected, outcomes, fixture, 1, max_games=2)$A$steps) == 2)
+selected[,] <- FALSE
+stopifnot(playoff_likely_paths(selected, outcomes, fixture, 1)$A$status == "no_qualifying_draws")
+selected[,] <- TRUE
+fixture[[1]]$supported <- FALSE
+fixture[[2]]$effects$A$swing <- .001
+fixture[[3]]$home <- "B"; fixture[[3]]$effects$A$standard_error <- 1
+stopifnot(playoff_likely_paths(selected, outcomes, fixture, 1)$A$status == "no_material_games")
+cat("Likely paths: exact joint mode, chronological prefixes, alignment, limits and uncertainty passed\n")

@@ -8,3 +8,17 @@ body[data-hub="simulation"]{background:#0c1819;color:#f1f4ed}body[data-hub="simu
 @media(prefers-reduced-motion:reduce){.sim-team-card{transition:none}}
 
 .sim-more{margin:24px 28px}body[data-hub="simulation"] .step p{color:#afc3b5}body[data-hub="simulation"] #view-playoff>.view-head h2{font:800 clamp(28px,4vw,44px)/1.15 var(--sans);letter-spacing:-1px}
+
+/* A short, chronological route through the highest-impact playoff results. */
+.sim-likely-path{margin:24px 0}
+.sim-path-steps{padding-left:28px;margin:24px 0;display:grid;gap:12px}
+.sim-path-steps li{padding:18px;border:1px solid #3a5349;border-radius:12px}
+.sim-path-steps li::marker{font-weight:800}
+.sim-path-steps h5{font-size:18px;margin:6px 0}
+.sim-path-steps p{margin:6px 0;font-size:13px}
+.sim-path-odds{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:12px}
+.sim-path-odds strong{font-size:26px}
+.sim-path-odds span,.sim-path-odds small{font-size:12px}
+
+.sim-likely-path .sim-metrics{margin:20px 0}
+.sim-path-steps h5{color:#f2f5ee}

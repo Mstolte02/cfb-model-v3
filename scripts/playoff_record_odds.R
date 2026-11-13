@@ -55,6 +55,61 @@ playoff_record_odds <- function(standings, games, scheduled, fbs, min_samples = 
        min_samples = min_samples, checkpoints = checkpoints, teams = rows)
 }
 
+# The modal JOINT pattern among qualifying seasons on at most five important
+# games. This is an exact mode on that compressed schedule, not independently
+# chosen favorites. All unlisted games (including championships) stay integrated.
+playoff_likely_paths <- function(selected, outcomes, games, min_samples = 30L,
+                                max_games = 5L, min_swing = .02) {
+  n <- nrow(selected)
+  z <- qnorm(1 - .05 / (2 * max(1L, length(games))))
+  setNames(lapply(colnames(selected), function(team) {
+    made <- selected[, team]
+    base <- list(baseline = mean(made), qualifying_samples = sum(made),
+                 steps = list(), min_samples = min_samples)
+    if (!any(made)) { base$status <- "no_qualifying_draws"; return(base) }
+    eligible <- which(vapply(games, function(g) {
+      e <- g$effects[[team]]
+      own <- team %in% c(g$home, g$away)
+      isTRUE(g$supported) && !is.null(e$swing) && abs(e$swing) >= min_swing &&
+        (own || (!is.null(e$standard_error) && abs(e$swing) > z * e$standard_error))
+    }, logical(1)))
+    if (!length(eligible)) { base$status <- "no_material_games"; return(base) }
+    swings <- vapply(games[eligible], function(g) abs(g$effects[[team]]$swing), numeric(1))
+    ids <- vapply(games[eligible], `[[`, character(1), "id")
+    chosen <- head(eligible[order(-swings, ids)], max_games)
+    # Present the exact same joint pattern in calendar order.
+    chosen <- chosen[order(vapply(games[chosen], `[[`, numeric(1), "week"),
+                           vapply(games[chosen], function(g) if (is.null(g$date)) "" else g$date, character(1)),
+                           vapply(games[chosen], `[[`, character(1), "id"))]
+    codes <- apply(outcomes[, chosen, drop = FALSE], 1, function(x) paste(as.integer(x), collapse = ""))
+    counts <- table(codes[made])
+    pattern <- names(counts)[order(-as.integer(counts), names(counts))][1]
+    winners <- strsplit(pattern, "", fixed = TRUE)[[1]] == "1"
+    at <- rep(TRUE, n)
+    base$steps <- lapply(seq_along(chosen), function(i) {
+      g <- games[[chosen[i]]]
+      before <- mean(made[at])
+      take <- outcomes[, chosen[i]] == winners[i]
+      chance <- mean(take[at])
+      at <<- at & take
+      samples <- sum(at)
+      list(id = g$id, week = g$week, date = g$date, home = g$home, away = g$away,
+           winner = if (winners[i]) g$home else g$away,
+           own_game = team %in% c(g$home, g$away),
+           swing = abs(g$effects[[team]]$swing), result_probability = chance,
+           before = before, playoff = mean(made[at]), samples = samples,
+           made = sum(made[at]), supported = samples >= min_samples)
+    })
+    base$status <- "available"
+    base$pattern_probability <- mean(at)
+    base$share_of_qualifying <- sum(made[at]) / sum(made)
+    base$playoff <- mean(made[at])
+    base$samples <- sum(at)
+    base$tied_paths <- sum(counts == max(counts))
+    base
+  }), colnames(selected))
+}
+
 # Pair each game's winner with each team's eventual playoff selection, using the
 # identical simulation IDs. These are conditional comparisons, not independent
 # reruns with a forced winner. Retain both denominators and null unsampled outcomes.
@@ -76,6 +131,7 @@ playoff_game_impacts <- function(standings, games, scheduled, fbs,
   pending <- scheduled[scheduled$game_type == "REG" & is.na(scheduled$result), , drop = FALSE]
   draws <- split(seq_len(nrow(reg)), key(reg$week, reg$home_team, reg$away_team))
   meta <- setNames(metadata, vapply(metadata, function(g) key(g$w, g$h, g$a), character(1)))
+  outcomes <- matrix(FALSE, nrow = n, ncol = nrow(pending))
   rows <- lapply(seq_len(nrow(pending)), function(i) {
     g <- pending[i, ]
     id <- key(g$week, g$home_team, g$away_team)
@@ -84,6 +140,7 @@ playoff_game_impacts <- function(standings, games, scheduled, fbs,
       stop("expected one untied game result per simulation: ", id)
     }
     home_won <- sim_game$result[match(sim_ids, sim_game$sim)] > 0
+    outcomes[, i] <<- home_won
     nh <- sum(home_won); na <- n - nh
     ph <- if (nh) colMeans(selected[home_won, , drop = FALSE]) else rep(NA_real_, length(fbs))
     pa <- if (na) colMeans(selected[!home_won, , drop = FALSE]) else rep(NA_real_, length(fbs))
@@ -113,5 +170,6 @@ playoff_game_impacts <- function(standings, games, scheduled, fbs,
        rooting_min_swing = .02,
        rooting_z = qnorm(1 - .05 / (2 * max(1L, length(rows)))),
        rooting_teams = as.list(eligible),
-       baseline = as.list(baseline), games = rows)
+       baseline = as.list(baseline), games = rows,
+       paths = playoff_likely_paths(selected, outcomes, rows, min_samples))
 }

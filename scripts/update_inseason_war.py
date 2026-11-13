@@ -118,15 +118,18 @@ def write_team_tables(params: dict, week: int, history: bool, skip_pull: bool):
     cutoffs = {}
     # Keep the fitted checkpoints for historical replay, plus the latest completed
     # week so current power ratings never wait three weeks for a roster change.
-    publish_cuts = sorted(set(c for c in IW.MODEL_CUTS if c <= week) | {week})
-    # Cuts before FROZEN_BEFORE_CUT fed games that are already graded. They keep the
-    # values they were published with; the October 2026 method (pooled WAR, opponent
-    # adjustment, sample-weighted update, 2026 playing time) applies from there on.
+    # Keep the values earlier forecasts actually read, including the old-method
+    # cuts before FROZEN_BEFORE_CUT. Only the latest cutoff gets fresh data.
     old = {}
     if IW.team_payload_path(SEASON).exists():
         old = json.loads(IW.team_payload_path(SEASON).read_text()).get("cutoffs", {})
+    # Once published, an earlier cutoff is a historical pregame input. Preserve
+    # even nonstandard cuts (e.g. week 8), and never insert a newly downloaded
+    # week-9 checkpoint into games that were forecast before this refresh.
+    publish_cuts = (sorted({int(c) for c in old if int(c) <= week} | {week})
+                    if old else sorted({c for c in IW.MODEL_CUTS if c <= week} | {week}))
     for c in publish_cuts:
-        if c < IW.FROZEN_BEFORE_CUT and str(c) in old:
+        if c < week and str(c) in old:
             cutoffs[str(c)] = old[str(c)]
             continue
         d = SW.window_dir(SEASON, 1, c)

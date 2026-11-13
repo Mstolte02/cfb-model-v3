@@ -135,6 +135,26 @@ class ReplayParity(unittest.TestCase):
 
 
 class PublishedReplay(unittest.TestCase):
+    def test_refresh_keeps_completed_game_probabilities(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._write(root)
+            args = (root / "schedule.json", root / "model.json", root / "ratings.json",
+                    None, None, root / "form.json")
+            replay_published_results(*args)
+            before = json.loads((root / "ratings.json").read_text())
+            model = json.loads((root / "model.json").read_text())
+            # A revised fitted input changes today's predictions, but cannot
+            # rewrite the probabilities we already published for played games.
+            for member in model["ensemble"]["members"]:
+                member["initial"]["A"] += 2
+            (root / "model.json").write_text(json.dumps(model))
+            replay_published_results(*args)
+            after = json.loads((root / "ratings.json").read_text())
+            self.assertEqual([g["p_home"] for g in after["game_history"]],
+                             [g["p_home"] for g in before["game_history"]])
+            self.assertNotEqual(after["teams"], before["teams"])
+
     def _write(self, root: Path):
         games, stats = synthetic_season(weeks=3)
         schedule = [{"id": i, "h": g.home_team, "a": g.away_team, "w": g.week,
