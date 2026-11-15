@@ -140,7 +140,7 @@
 
     /* ---- Why is A ahead of B? ---- */
     let pair=defaultPair(rows);
-    // Step chart: start at B's score, add each reason, land on A's score.
+    // Tug of war: positive differences pull left toward A; negative toward B.
     function gapChart(a,b) {
       const c=R.compare(a,b),lossWord2=n=>`${Math.abs(n)} ${n>0?'more':'fewer'} loss${Math.abs(n)===1?'':'es'}`;
       const steps=[
@@ -149,18 +149,24 @@
         {label:'Who they lost to',note:'Losses to good teams cost less',v:c.scheduleFromLosses}];
       if(Math.abs(c.performance)>1e-9)steps.push({label:'Margin',note:'How convincingly games were won',v:c.performance});
       steps.push({label:'Head-to-head',note:'Nudge between close résumés',v:c.headToHead});
-      let cum=b.score;const pts=[0,b.score,a.score];
-      for(const st of steps){st.from=cum;cum+=st.v;st.to=cum;pts.push(cum);}
-      const lo=Math.min(...pts),hi=Math.max(...pts),pad=(hi-lo||1)*0.08,min=lo-pad,max=hi+pad,x=v=>(v-min)/(max-min)*100;
-      const plate=t=>crestOf(t).plate;
-      const anchorRow=(r,label)=>`<div class="md-wf-row md-wf-anchor"><div class="md-wf-label">${crest(r.team)}<span><b>${esc(r.team)}</b><small>${label}</small></span></div>
-        <div class="md-wf-track"><i class="md-wf-zero" style="left:${x(0)}%"></i><span class="md-wf-bar" style="left:${Math.min(x(0),x(r.score))}%;width:${Math.abs(x(r.score)-x(0))}%;background:${plate(r.team)}" title="${esc(r.team)} résumé score ${signed(r.score)}"></span><em style="left:${x(Math.max(0,r.score))}%">${signed(r.score)}</em></div></div>`;
-      const stepRow=st=>{const fav=st.v>0.0005?a:st.v<-0.0005?b:null,l=Math.min(x(st.from),x(st.to)),w=Math.max(0.4,Math.abs(x(st.to)-x(st.from)));
-        return `<div class="md-wf-row"><div class="md-wf-label"><span><b>${st.label}</b><small>${esc(st.note)}</small></span></div>
-        <div class="md-wf-track"><i class="md-wf-zero" style="left:${x(0)}%"></i><i class="md-wf-link" style="left:${x(st.from)}%"></i>
-        <span class="md-wf-bar ${fav===a?'up':fav===b?'down':'flat'}" style="left:${l}%;width:${w}%" title="${esc(`${st.label}: ${signed(st.v)}${fav?` in ${fav.team}'s favour`:''}`)}"></span>
-        <em style="left:${l+w}%">${Math.abs(st.v)<0.005?'even':`${signed(st.v)} <small>${esc(fav.team)}</small>`}</em></div></div>`;};
-      return `<div class="md-wf">${anchorRow(b,'starting point')}${steps.map(stepRow).join('')}${anchorRow(a,'where it ends up')}</div>`;
+      const scale=Math.max(...steps.map(st=>Math.abs(st.v)),Math.abs(c.net),0.001);
+      const pullRow=(st,total=false)=>{
+        const even=Math.abs(st.v)<1e-9,fav=st.v>0?a:b,side=st.v>0?'a':'b';
+        const width=even?0:Math.abs(st.v)/scale*46;
+        const detail=even?'Even':`${gapText(st.v)} toward ${fav.team}`;
+        return `<div class="md-tug-row${total?' md-tug-total':''}">
+          <div class="md-tug-label"><b>${st.label}</b><small>${esc(st.note)}</small></div>
+          <div class="md-tug-reading ${even?'':`md-tug-${side}`}">${even?'Even':`${side==='a'?'← ':''}${esc(detail)}${side==='b'?' →':''}`}</div>
+          <div class="md-tug-track" role="img" aria-label="${esc(`${st.label}: ${detail}`)}">
+            <i class="md-tug-center"></i>${even?'<span class="md-tug-even"></span>':`<span class="md-tug-pull md-tug-${side}" style="left:${side==='a'?50-width:50}%;width:${width}%"></span>`}
+          </div></div>`;
+      };
+      return `<div class="md-tug">
+        <div class="md-tug-teams"><div>${teamBtn(a.team)}<small>Pulls left</small></div><span>EVEN</span><div>${teamBtn(b.team)}<small>Pulls right</small></div></div>
+        <p class="md-tug-help">Each factor pulls toward the team it favors. Longer pulls mean a bigger advantage, measured in loss equivalents.</p>
+        ${steps.map(st=>pullRow(st)).join('')}
+        ${pullRow({label:'Net ranking advantage',note:'All pulls combined',v:c.net},true)}
+      </div>`;
     }
     function drawH2H() {
       const [ta,tb]=pair,a=byTeam.get(ta),b=byTeam.get(tb);
