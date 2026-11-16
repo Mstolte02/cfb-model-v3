@@ -10,7 +10,7 @@ class CommitteeDataTests(unittest.TestCase):
 
     def test_real_release_cutoff(self):
         data = parse(self.payload(), 2026, {f'T{i}': {} for i in range(1,26)})
-        self.assertEqual(data['games_through'], '2026-10-31')
+        self.assertEqual(data['games_through'], '2026-11-02')
         self.assertEqual(len(data['rankings']),25)
 
     def test_reject_ap_stale_missing_and_unknown(self):

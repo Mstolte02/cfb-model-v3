@@ -21,6 +21,19 @@
   const day=g=>String(g.d||'').slice(0,10);
   const final=g=>g.f&&Number.isFinite(g.hp)&&Number.isFinite(g.ap)&&g.st!=='postseason';
 
+  const shift=(date,n)=>{const d=new Date(date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);};
+  // Calendar boundaries always use Eastern Time, independent of the viewer's zone.
+  function weeklyWindow(now=new Date()) {
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(now));
+    const part=t=>parts.find(p=>p.type===t).value;
+    const today=`${part('year')}-${part('month')}-${part('day')}`;
+    const weekday=new Date(today+'T12:00:00Z').getUTCDay();
+    const active=weekday===0||weekday===1;
+    // Sunday/Monday cover Tuesday through today. Other days hold the official board.
+    const baseline=shift(today,weekday===0?-6:weekday===1?-7:1-weekday);
+    return {today,active,baseline,through:active?today:baseline};
+  }
+
   // The schedule-only terms, as static_committee() in simulate_playoff.R.
   function staticScores(teams,schedule,o) {
     const names=teams.map(t=>t.team),ratings=teams.map(t=>t.rating),m=mean(ratings),s=sampleSd(ratings);
@@ -50,14 +63,19 @@
       const pf=g.h===team?g.hp:g.ap,pa=g.h===team?g.ap:g.hp;if(pf>pa)w++;else if(pf<pa)l++;else t++;}
     return `${w}–${l}${t?'–'+t:''}`;
   }
-  function project({schedule,teams,poll,options={}}) {
+  function project({schedule,teams,poll,options={},now=new Date()}) {
     const o={...DEFAULTS,...options,weights:{...DEFAULTS.weights,...(options.weights||{})}};
     if(!poll?.rankings?.length||!poll.games_through)return {error:'No committee rankings have been released yet.'};
     const names=teams.map(t=>t.team),known=new Set(names);
     const ranked=poll.rankings.filter(r=>known.has(r.team));
     if(ranked.length<poll.rankings.length)return {error:'The committee rankings name teams the model does not know.'};
     const cutoff=String(poll.games_through).slice(0,10);
-    const st=staticScores(teams,schedule,o),then=winPct(names,schedule,cutoff),now=winPct(names,schedule,null);
+    const window=weeklyWindow(now);
+    const stale=window.active&&cutoff!==window.baseline;
+    const pending=window.active&&!stale&&schedule.some(g=>g.st!=='postseason'&&day(g)>cutoff&&day(g)<=window.through&&!final(g));
+    const status=!window.active?'static':stale?'stale':pending?'pending':'projection';
+    const through=status==='projection'?window.through:cutoff;
+    const st=staticScores(teams,schedule,o),then=winPct(names,schedule,cutoff),currentPct=winPct(names,schedule,through);
     const proxy=new Map(names.map(t=>[t,o.weights.win_pct*then.get(t)+st.get(t).static]));
     // committee_anchor.R: spacing from the least-squares slope of score on committee rank.
     const xs=ranked.map(r=>r.rank),ys=ranked.map(r=>proxy.get(r.team)),mx=mean(xs),my=mean(ys);
@@ -67,16 +85,16 @@
     const cfp=new Map(ranked.map(r=>[r.team,r.rank]));
     const anchor=new Map(names.map(t=>[t,cfp.has(t)?intercept-spacing*cfp.get(t):Math.min(proxy.get(t),intercept-spacing*26)]));
     const rows=names.map(t=>({team:t,current:cfp.get(t)??null,anchor:anchor.get(t),
-      score:anchor.get(t)+o.weights.win_pct*(now.get(t)-then.get(t)),pctThen:then.get(t),pctNow:now.get(t),static:st.get(t).static}));
+      score:anchor.get(t)+o.weights.win_pct*(currentPct.get(t)-then.get(t)),pctThen:then.get(t),pctNow:currentPct.get(t),static:st.get(t).static}));
     rows.sort((a,b)=>b.score-a.score||a.team.localeCompare(b.team));
     rows.forEach((r,i)=>{r.projected=i+1;r.change=r.current?r.current-r.projected:null;
-      r.recordThen=record(schedule,r.team,cutoff);r.recordNow=record(schedule,r.team,null);
-      r.results=schedule.filter(g=>final(g)&&(g.h===r.team||g.a===r.team)&&day(g)>cutoff).map(g=>{
+      r.recordThen=record(schedule,r.team,cutoff);r.recordNow=record(schedule,r.team,through);
+      r.results=schedule.filter(g=>final(g)&&(g.h===r.team||g.a===r.team)&&day(g)>cutoff&&day(g)<=through).map(g=>{
         const home=g.h===r.team,pf=home?g.hp:g.ap,pa=home?g.ap:g.hp;
         return {opponent:home?g.a:g.h,site:g.n?'vs':home?'':'at',result:pf>pa?'W':pf<pa?'L':'T',pf,pa,date:day(g)};});});
-    const through=schedule.filter(final).map(day).sort().at(-1)||cutoff;
-    return {rows,spacing,cutoff,through,released:poll.released,
-      newResults:through>cutoff,dropped:ranked.filter(r=>rows.find(x=>x.team===r.team).projected>25).map(r=>r.team)};
+    const newResults=schedule.some(g=>final(g)&&day(g)>cutoff&&day(g)<=through);
+    return {rows,spacing,cutoff,through,status,released:poll.released,
+      newResults,dropped:ranked.filter(r=>rows.find(x=>x.team===r.team).projected>25).map(r=>r.team)};
   }
 
   function mount({host,schedule,teams,poll,weights,esc,crestOf,wireTeamLinks}) {
@@ -88,7 +106,8 @@
     const current=poll.rankings.map(r=>by.get(r.team));
     const projected=res.rows.slice(0,25);
     const move=r=>r.current==null?'<span class="cw-move cw-new">NEW</span>':r.change>0?`<span class="cw-move up">▲ ${r.change}</span>`:r.change<0?`<span class="cw-move down">▼ ${-r.change}</span>`:'<span class="cw-move">—</span>';
-    const games=r=>r.results.map(g=>`<span class="cw-game cw-${g.result}">${g.result} ${g.pf}–${g.pa} ${g.site?g.site+' ':''}${esc(g.opponent)}</span>`).join('')||'<span class="cw-game cw-idle">No game</span>';
+    const statusText=res.status==='static'?'Static · projections update Sunday after games finish (Eastern Time)':res.status==='stale'?'Waiting for an updated official poll before projecting this week':res.status==='pending'?'Waiting for this week’s games to finish before updating':res.newResults?`After results through ${fmt(res.through)} · updates Sunday and Monday`:'No new results yet: matches the official order';
+    const games=r=>r.results.map(g=>`<span class="cw-game cw-${g.result}">${g.result} ${g.pf}–${g.pa} ${g.site?g.site+' ':''}${esc(g.opponent)}</span>`).join('')||`<span class="cw-game cw-idle">${res.status==='projection'?'No game':'—'}</span>`;
     const row=(r,rank,side)=>`<li class="cw-row${side==='proj'&&r.change<0?' cw-fell':''}${side==='proj'&&(r.change>0||r.current==null)?' cw-rose':''}">
       <b class="cw-rank">${rank}</b>${crest(r.team)}<button type="button" class="team-link cw-team" data-team="${esc(r.team)}">${esc(r.team)}<small>${side==='proj'?r.recordNow:r.recordThen}</small></button>
       ${side==='proj'?`<span class="cw-last">${games(r)}</span>${move(r)}`:''}</li>`;
@@ -96,13 +115,13 @@
       <div class="cw-cols">
         <section class="cw-col"><header><span class="eyebrow">Official</span><h3>Current committee rankings</h3><p>Released ${esc(fmt(res.released))} · games through ${esc(fmt(res.cutoff))}</p></header>
           <ol class="cw-list">${current.map((r,i)=>row(r,poll.rankings[i].rank,'cur')).join('')}</ol></section>
-        <section class="cw-col cw-proj"><header><span class="eyebrow">Our committee model</span><h3>Projected next rankings</h3><p>${res.newResults?`After results through ${esc(fmt(res.through))}`:'No new results yet: matches the official order'}</p></header>
+        <section class="cw-col cw-proj"><header><span class="eyebrow">Our committee model</span><h3>Projected next rankings</h3><p>${esc(statusText)}</p></header>
           <ol class="cw-list">${projected.map(r=>row(r,r.projected,'proj')).join('')}</ol>
           ${res.dropped.length?`<p class="cw-out">Projected to drop out: ${res.dropped.map(t=>`<b>${esc(t)}</b> <small>(${by.get(t).recordNow}, ${games(by.get(t)).replace(/<[^>]+>/g,' ').trim()})</small>`).join(', ')}</p>`:''}</section>
       </div>
       <p class="board-note">The projection starts from the committee's own order and moves each team by what its new results change in our committee model: record first, then team strength, schedule strength and power-conference membership, weighted the way the committee has weighted them since 2014. It does not know who a team lost to, so a loss to a top-10 team and a loss to an unranked team move a team the same amount.</p></div>`;
     wireTeamLinks();
   }
-  root.CommitteeWatch={project,mount,staticScores,winPct};
+  root.CommitteeWatch={project,mount,staticScores,winPct,weeklyWindow};
   if(typeof module!=='undefined')module.exports=root.CommitteeWatch;
 })(typeof window!=='undefined'?window:globalThis);

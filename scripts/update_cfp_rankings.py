@@ -26,8 +26,8 @@ def parse(payload, season, names):
         rankings.append({'rank': int(row['current']), 'team': name})
     if len(rankings) != 25 or {r['rank'] for r in rankings} != set(range(1, 26)) or len({r['team'] for r in rankings}) != 25:
         raise ValueError('Incomplete or duplicate CFP rankings')
-    # Weekly Tuesday release evaluates games through the preceding Saturday.
-    through = released - timedelta(days=(released.weekday() - 5) % 7)
+    # Include Sunday games already evaluated by the Tuesday committee release.
+    through = released - timedelta(days=1)
     return {'season': season, 'released': released.isoformat(), 'games_through': through.isoformat(),
             'source': 'CFP Selection Committee via ESPN', 'source_url': 'https://collegefootballplayoff.com/rankings',
             'provider_url': URL, 'rankings': sorted(rankings, key=lambda r: r['rank'])}
