@@ -58,9 +58,11 @@ jobs:
           Rscript tests/test_committee_anchor.R
           Rscript tests/test_projected_bracket.R
           Rscript tests/test_conference_titles.R
+          Rscript tests/test_preseason_snapshot.R
       - name: Build CFP projections
         run: |
-          Rscript scripts/simulate_playoff.R 500 preseason
+          # Rebuild once, then the simulator preserves the completed snapshot.
+          Rscript scripts/simulate_playoff.R 2000 preseason
           Rscript scripts/simulate_playoff.R 2000 current
       - name: Commit refreshed projections for Vercel
         if: github.ref_name == 'main'

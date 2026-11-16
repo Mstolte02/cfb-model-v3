@@ -9,7 +9,8 @@
 # actual CFP Top 25 baseline once published, evolving with simulated final records.
 # Matchup probabilities go through cfbseedR's compute_results.
 #
-# Run: Rscript scripts/simulate_playoff.R [simulations] [both|preseason|current]
+# Run: Rscript scripts/simulate_playoff.R [simulations] [both|preseason|current] [--rebuild-preseason]
+# A completed preseason snapshot is never rewritten without the explicit rebuild flag.
 
 suppressPackageStartupMessages({
   library(cfbseedR)
@@ -392,7 +393,39 @@ build_bracket <- function(rows) {
   )
 }
 
+# Resolve the displayed path with the SAME week-zero model used for the draws.
+# Persist every matchup probability and winner so browsers never use live ratings.
+resolve_snapshot_bracket <- function(bracket, spec) {
+  games <- bracket$games
+  for (i in seq_along(games)) {
+    g <- games[[i]]
+    src <- bracket$feeds[[as.character(i - 1L)]]
+    if (length(src)) {
+      winners <- vapply(src, function(k) games[[k + 1L]]$winner, character(1))
+      if (is.null(g$top)) g$top <- winners[[1]]
+      if (is.null(g$bottom)) g$bottom <- tail(winners, 1)
+    }
+    away_site <- !is.null(g$site) && identical(g$site, g$bottom)
+    p <- if (away_site) 1 - probability(g$bottom, g$top, FALSE, spec) else
+      probability(g$top, g$bottom, is.null(g$site), spec)
+    g$p <- as.numeric(p)
+    g$winner <- if (g$p >= .5) g$top else g$bottom
+    games[[i]] <- g
+  }
+  bracket$games <- games
+  bracket
+}
+
 export_run <- function(mode) {
+  template_path <- file.path(viz, paste0("playoff_", mode, ".json"))
+  if (mode == "preseason" && file.exists(template_path) && !"--rebuild-preseason" %in% args) {
+    saved <- read_json(template_path)
+    if (isTRUE(saved$locked) && identical(saved$snapshot_lock$version, 1L) &&
+        identical(as.integer(saved$season), 2026L)) {
+      message("Preserving locked preseason snapshot; use --rebuild-preseason to replace it explicitly")
+      return(invisible(NULL))
+    }
+  }
   started <- Sys.time()
   message("starting ", mode, " projection")
   input <- make_inputs(mode)
@@ -493,6 +526,14 @@ export_run <- function(mode) {
     "Pac-12 uses the generic cascade; campus title sites use conference seed order.")
   out$teams <- rows
   out$bracket <- build_bracket(rows)
+  if (mode == "preseason") {
+    out$bracket <- resolve_snapshot_bracket(out$bracket, input$spec)
+    input_files <- c("model_v4.json", "ratings.json", "schedule.json", "teams.json")
+    input_hashes <- setNames(unname(tools::md5sum(file.path(viz, input_files))), input_files)
+    out$snapshot_lock <- list(version = 1L, locked_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"),
+      seed = 20260825L, model_state = "week-zero", completed_results_used = 0L,
+      inputs_md5 = as.list(input_hashes))
+  }
   out$tossups <- list()
   out$win_dist <- win_dist
   out$record_odds <- playoff_record_odds(standings, sim$games, input$games, fbs)

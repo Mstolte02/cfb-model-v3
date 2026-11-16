@@ -791,10 +791,16 @@
       document.getElementById("bracket").innerHTML =
         `<p class="sub">No bracket in this export — re-run <code>scripts/simulate_playoff.R</code>.</p>`;
     } else {
-      const G = resolveBracket(br.games, br.feeds);
+      // The preseason snapshot owns its complete path, probabilities and winners.
+      // Calling resolveBracket here would silently apply today's live ratings.
+      const G = playoffVersion === "preseason" ? br.games : resolveBracket(br.games, br.feeds);
+      if (playoffVersion === "preseason" && !playoff.snapshot_lock) {
+        document.getElementById("bracket").innerHTML = '<p class="sub">The full-season preseason snapshot is being rebuilt.</p>';
+      } else {
       document.getElementById("bracket").innerHTML = MarksPlayoff.projectedHTML({
         games:G,seeds:br.seeds,teams:P,autoBids:br.auto_bids||[],season:playoff.season,
         anchor,preseason:playoffVersion==="preseason",esc,crestOf,meta});
+      }
     }
 
     renderSelection(P, byTeam, br);
