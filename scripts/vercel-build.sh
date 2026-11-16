@@ -12,5 +12,6 @@ node --test \
   tests/test_war_research.cjs \
   tests/test_playoff_paths.cjs \
   tests/test_scenario_lab.cjs \
+  tests/test_preseason_bracket.cjs \
   tests/test_committee_watch.cjs
 python3 scripts/publish.py
