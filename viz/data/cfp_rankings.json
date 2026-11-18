@@ -1,7 +1,7 @@
 {
   "season": 2026,
-  "released": "2026-11-10",
-  "games_through": "2026-11-09",
+  "released": "2026-11-17",
+  "games_through": "2026-11-16",
   "source": "CFP Selection Committee via ESPN",
   "source_url": "https://collegefootballplayoff.com/rankings",
   "provider_url": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings",
@@ -24,11 +24,11 @@
     },
     {
       "rank": 5,
-      "team": "Notre Dame"
+      "team": "Texas"
     },
     {
       "rank": 6,
-      "team": "Texas"
+      "team": "Notre Dame"
     },
     {
       "rank": 7,
@@ -36,11 +36,11 @@
     },
     {
       "rank": 8,
-      "team": "Tennessee"
+      "team": "Indiana"
     },
     {
       "rank": 9,
-      "team": "Indiana"
+      "team": "Tennessee"
     },
     {
       "rank": 10,
@@ -48,7 +48,7 @@
     },
     {
       "rank": 11,
-      "team": "Kentucky"
+      "team": "Wake Forest"
     },
     {
       "rank": 12,
@@ -56,11 +56,11 @@
     },
     {
       "rank": 13,
-      "team": "Wake Forest"
+      "team": "Oregon"
     },
     {
       "rank": 14,
-      "team": "Houston"
+      "team": "Ohio State"
     },
     {
       "rank": 15,
@@ -68,11 +68,11 @@
     },
     {
       "rank": 16,
-      "team": "Oregon"
+      "team": "Kentucky"
     },
     {
       "rank": 17,
-      "team": "South Carolina"
+      "team": "Boise State"
     },
     {
       "rank": 18,
@@ -80,31 +80,31 @@
     },
     {
       "rank": 19,
-      "team": "Ole Miss"
-    },
-    {
-      "rank": 20,
-      "team": "Ohio State"
-    },
-    {
-      "rank": 21,
-      "team": "LSU"
-    },
-    {
-      "rank": 22,
-      "team": "Missouri"
-    },
-    {
-      "rank": 23,
       "team": "Arizona"
     },
     {
+      "rank": 20,
+      "team": "Houston"
+    },
+    {
+      "rank": 21,
+      "team": "South Carolina"
+    },
+    {
+      "rank": 22,
+      "team": "Oklahoma"
+    },
+    {
+      "rank": 23,
+      "team": "Louisville"
+    },
+    {
       "rank": 24,
-      "team": "Boise State"
+      "team": "Florida"
     },
     {
       "rank": 25,
-      "team": "Oklahoma State"
+      "team": "Ole Miss"
     }
   ]
 }
