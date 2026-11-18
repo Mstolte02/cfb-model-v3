@@ -56,6 +56,7 @@ jobs:
       # ensemble and Power Ratings, the current one from today's.
       - name: Check conditional playoff probabilities
         run: |
+          node --test tests/test_committee_watch.cjs tests/test_committee_archive.cjs
           Rscript tests/test_playoff_record_odds.R
           Rscript tests/test_committee_anchor.R
           Rscript tests/test_committee_timeline.R

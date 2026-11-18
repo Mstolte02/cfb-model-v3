@@ -126,13 +126,16 @@
       newResults,dropped:ranked.filter(r=>rows.find(x=>x.team===r.team).projected>25).map(r=>r.team)};
   }
 
-  function historicalHTML(history,esc) {
+  function historicalHTML(history,archive,esc) {
     const weeks=history?.weeks||[];
     if(!weeks.length)return '';
     const years=[...new Set(weeks.map(w=>w.season))].sort((a,b)=>b-a);
     const recent=weeks.filter(w=>w.season>=2024&&w.season<=2025),current=weeks.filter(w=>w.season===2026);
     const avg=(rows,key)=>mean(rows.map(w=>w[key]));
+    const logged=[...(archive?.entries||[])].reverse();
+    const logHTML=`<div class="cw-live-log"><h4>Published forecast history</h4>${logged.length?logged.map(e=>`<details><summary><b>${esc(e.target_release)} release</b> · ${e.actual?`${e.metrics.rank_mae.toFixed(2)} average rank error · ${e.metrics.top12_overlap}/12 top-12 agreement`:'Awaiting official rankings'}</summary><div class="cw-history-scroll"><table><thead><tr><th>Predicted</th><th>Team</th><th>Actual</th></tr></thead><tbody>${e.predicted.map((t,i)=>`<tr><td>#${i+1}</td><th>${esc(t)}</th><td>${e.actual?(e.actual.includes(t)?'#'+(e.actual.indexOf(t)+1):'NR'):'—'}</td></tr>`).join('')}</tbody></table></div></details>`).join(''):'<p>Forecasts will be recorded after the next completed weekend, then scored when the committee publishes its next rankings.</p>'}</div>`;
     return `<section class="cw-history"><header><span class="eyebrow">Historical accuracy</span><h3>How the model would have ranked them</h3><p>Each week uses only earlier seasons for training and results available at that poll. The 2024–25 releases were held out of the head-to-head adjustment choice; 2026 was excluded from all training.</p></header>
+      ${logHTML}
       <div class="cw-history-stats"><div><b>${current.length?avg(current,'mae').toFixed(2):'—'}</b><span>Avg. rank error · 2026 replay</span></div><div><b>${avg(recent,'mae').toFixed(2)}</b><span>Avg. rank error · 2024–25</span></div><div><b>${avg(recent,'top12_overlap').toFixed(1)} / 12</b><span>Top-12 agreement · 2024–25</span></div></div>
       <div class="cw-history-controls"><label>Season <select data-cw-season>${years.map(y=>`<option value="${y}">${y}</option>`).join('')}</select></label><label>Release <select data-cw-week></select></label></div>
       <div data-cw-history-table></div><p class="board-note">Retrospective out-of-season replay, not a log of forecasts published at the time. A predicted place beyond No. 25 is shown as NR. The comparison uses the published Top 25 and the model's entire eligible team pool.</p></section>`;
@@ -153,7 +156,7 @@
     season.addEventListener('change',changeSeason);week.addEventListener('change',render);changeSeason();
   }
 
-  function mount({host,schedule,teams,poll,model,history,weights,esc,crestOf,wireTeamLinks}) {
+  function mount({host,schedule,teams,poll,model,history,archive,weights,esc,crestOf,wireTeamLinks}) {
     const res=project({schedule,teams,poll,model,options:weights?{weights}:{}});
     if(res.error){host.innerHTML=`<p class="stock-empty">${esc(res.error)}</p>`;return;}
     const fmt=d=>{const [y,m,dd]=String(d).split('-').map(Number);return new Date(Date.UTC(y,m-1,dd)).toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'});};
@@ -175,7 +178,7 @@
           <ol class="cw-list">${projected.map(r=>row(r,r.projected,'proj')).join('')}</ol>
           ${res.dropped.length?`<p class="cw-out">Projected to drop out: ${res.dropped.map(t=>`<b>${esc(t)}</b> <small>(${by.get(t).recordNow}, ${games(by.get(t)).replace(/<[^>]+>/g,' ').trim()})</small>`).join(', ')}</p>`:''}</section>
       </div>
-      <p class="board-note">The projection starts from the published order and uses a historical weekly transition model. It considers the timing and opponent quality of results, schedule, conference, and head-to-head among teams in the same committee comparison pool. The projected order is an estimate, not an official committee vote.</p>${historicalHTML(history,esc)}</div>`;
+      <p class="board-note">The projection starts from the published order and uses a historical weekly transition model. It considers the timing and opponent quality of results, schedule, conference, and head-to-head among teams in the same committee comparison pool. The projected order is an estimate, not an official committee vote.</p>${historicalHTML(history,archive,esc)}</div>`;
     wireHistory(host,history,esc);
     wireTeamLinks();
   }

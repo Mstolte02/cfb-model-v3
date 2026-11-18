@@ -23,7 +23,7 @@
      diagnostics.json is not fetched: the Method page was its only reader, and pulling
      25KB on every load to render nothing is a cost with no page behind it.
      scripts/export_diagnostics.py still writes the file. */
-  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel, inseason, marketTracking, committeeRankings, resumeScoreSnapshots, committeeTimeline, committeeBacktest] = await Promise.all([
+  const [teams, schedule, players, ratings, playoffCurrent, playoffPreseason, model, odds, editorial, bettingValidation, warValidity, betTracking, lockedResults, deservingModel, inseason, marketTracking, committeeRankings, resumeScoreSnapshots, committeeTimeline, committeeBacktest, committeeArchive] = await Promise.all([
     fetchJSON("data/teams.json"),
     fetchJSON("data/schedule.json"),
     fetchJSON("data/players.json").catch(() => ({})),
@@ -46,6 +46,7 @@
     fetchJSON("data/resume_scores.json").catch(() => null),
     fetchJSON("data/committee_timeline_model.json").catch(() => null),
     fetchJSON("data/committee_backtest.json").catch(() => null),
+    fetchJSON("data/committee_forecast_archive.json").catch(() => null),
   ]);
   /* In-season WAR joins by team and player name, the key the exporter writes. Every
      projected roster player is present; PFF updates the measured players while an
@@ -2392,7 +2393,7 @@
     const host=document.getElementById('committee-watch'),list=Array.isArray(playoffCurrent?.teams)?playoffCurrent.teams:Object.values(playoffCurrent?.teams||{});
     if(!committeeRankings||committeeRankings.season!==ratings.season||!list.length){host.innerHTML='<p class="stock-empty">The committee has not released rankings for this season yet.</p>';return;}
     CommitteeWatch.mount({host,schedule,poll:committeeRankings,teams:list.map(t=>({team:t.team,conference:t.conference,rating:t.rating})),
-      model:committeeTimeline,history:committeeBacktest,esc,crestOf,wireTeamLinks});
+      model:committeeTimeline,history:committeeBacktest,archive:committeeArchive,esc,crestOf,wireTeamLinks});
   }
 
   function renderMarksPlayoff() {
