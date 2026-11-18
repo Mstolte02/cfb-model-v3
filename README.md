@@ -194,7 +194,11 @@ separate title-game effect. Six-team comparison pools place four teams at a time
 through No. 16 and three thereafter. Head-to-head applies within each pool.
 The historical weights and chronological validation are in
 `viz/data/committee_timeline_model.json`; the compact ESPN snapshots are in
-`data/committee_history.json`. Simulated results produce a mean final rank score
+`data/committee_history.json`. `viz/data/committee_backtest.json` contains
+chronological held-out weekly rankings and is rendered in Committee Watch with
+season/release controls, rank errors, and top-12 agreement. The 2024-25 releases
+were not used to choose the head-to-head pool adjustment. The 2026 releases are
+retrospective replays excluded from all fitting. Simulated results produce a mean final rank score
 for every team. Projected
 automatic qualifiers are included, at-large places follow that score order, and
 all twelve seeds use the same score order. The Analysis table shows the same

@@ -4,6 +4,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const C=require('../viz/committee-watch.js');
 const timeline=require('../viz/data/committee_timeline_model.json');
+const backtest=require('../viz/data/committee_backtest.json');
 const playoff=require('../viz/data/playoff_current.json'),schedule=require('../viz/data/schedule.json'),poll=require('../viz/data/cfp_rankings.json');
 const list=Array.isArray(playoff.teams)?playoff.teams:Object.values(playoff.teams);
 const teams=list.map(t=>({team:t.team,conference:t.conference,rating:t.rating}));
@@ -62,6 +63,17 @@ test('Sunday projects through the fitted weekly transition model',()=>{
   assert.equal(new Set(res.rows.map(r=>r.score)).size,fixtureTeams.length);
   assert.ok(res.rows.find(r=>r.team==='Notre Dame').score>res.rows.find(r=>r.team==='Boston College').score);
   assert.equal(res.rows.find(r=>r.team==='Notre Dame').recordNow,'3–0');
+});
+test('historical accuracy includes held-out rankings and cutoff misses',()=>{
+  assert.equal(backtest.model_version,timeline.version);
+  assert.ok(backtest.weeks.length>=30);
+  for(const w of backtest.weeks){
+    assert.ok(w.mae>=0&&w.top12_overlap>=0&&w.top12_overlap<=12);
+    assert.equal(w.rows.filter(r=>r.actual<=25).length,25);
+    assert.equal(new Set(w.rows.map(r=>r.team)).size,w.rows.length);
+  }
+  const final=backtest.weeks.find(w=>w.season===2025&&w.week===16);
+  assert.equal(final.rows.find(r=>r.actual===1).team,'Indiana');
 });
 test('Tuesday through Saturday hold the official order, regardless of new finals',()=>{
   for(let d=17;d<=21;d++){

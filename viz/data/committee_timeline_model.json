@@ -16,21 +16,21 @@
     "power",
     "games"
   ],
-  "intercept": 6.46371209397857,
+  "intercept": 6.463712093978582,
   "weights": {
-    "prior_rank": 0.7581193519554922,
-    "win_pct": -0.23654228529212198,
-    "sos": 0.05150868757360352,
-    "quality_wins": -1.1209105634937013,
-    "bad_losses": 0.7347030240757388,
-    "recent_win": -1.5811370690717446,
-    "recent_loss": 2.5107601047962587,
-    "recent_win_quality": -0.9570390797897198,
-    "recent_loss_badness": 0.8595750232690806,
-    "title_win": -0.31200869878234105,
-    "title_loss": 0.22394658678795398,
-    "power": -0.5769582021955268,
-    "games": 0.2178527762564388
+    "prior_rank": 0.7581193519554912,
+    "win_pct": -0.23654228529212099,
+    "sos": 0.05150868757360365,
+    "quality_wins": -1.1209105634937078,
+    "bad_losses": 0.7347030240757455,
+    "recent_win": -1.5811370690717426,
+    "recent_loss": 2.510760104796258,
+    "recent_win_quality": -0.9570390797897184,
+    "recent_loss_badness": 0.8595750232690802,
+    "title_win": -0.31200869878234033,
+    "title_loss": 0.22394658678795365,
+    "power": -0.5769582021955301,
+    "games": 0.21785277625644114
   },
   "training_seasons": [
     2014,
@@ -98,11 +98,11 @@
   ],
   "pod_head_to_head_bonus": 0.25,
   "pod_validation_mae": {
-    "0": 1.6087,
-    "0.25": 1.5958,
-    "0.5": 1.604,
-    "1": 1.6186,
-    "2": 1.7027
+    "0": 1.328,
+    "0.25": 1.3143,
+    "0.5": 1.3223,
+    "1": 1.3383,
+    "2": 1.4377
   },
   "notes": "Rank 30 denotes teams outside a Top 25; scores are predicted rank (lower is better). Title win/loss terms replace ordinary recent win/loss terms. Opponent winning percentages are computed as of each poll."
 }

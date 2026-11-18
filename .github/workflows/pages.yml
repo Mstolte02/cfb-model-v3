@@ -67,6 +67,13 @@ jobs:
           # Rebuild once, then the simulator preserves the completed snapshot.
           Rscript scripts/simulate_playoff.R 2000 preseason
           Rscript scripts/simulate_playoff.R 2000 current
+      - name: Keep proposed projection for review
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playoff-projection-review
+          path: viz/data/playoff_current.json
+          retention-days: 2
       - name: Commit refreshed projections for Vercel
         if: github.ref_name == 'main'
         shell: bash

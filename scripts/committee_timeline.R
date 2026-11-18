@@ -30,7 +30,7 @@ committee_timeline_scores <- function(standings, games, poll, model, fbs, conf) 
   first_week <- max(as.integer(vapply(schedule, function(x)
     if (as.Date(substr(x$d, 1, 10)) <= cutoff) as.integer(x$w) else 0L, integer(1))))
   stopifnot(all(names(official) %in% fbs))
-  power <- conf %in% P4_CONFS | names(conf) == 'Notre Dame'
+  power <- setNames(conf %in% P4_CONFS | names(conf) == 'Notre Dame', names(conf))
   scores <- numeric(nrow(standings))
   ids <- unique(standings$sim)
   game_ix <- split(seq_len(nrow(games)), games$sim)
