@@ -30,6 +30,7 @@ root <- normalizePath(file.path(dirname(sub("^--file=", "", grep("^--file=", com
 viz <- file.path(root, "viz", "data")
 source(file.path(root, "scripts", "playoff_record_odds.R"))
 source(file.path(root, "scripts", "committee_anchor.R"))
+source(file.path(root, "scripts", "committee_timeline.R"))
 source(file.path(root, "scripts", "conference_titles.R"))
 
 # cfbseedR splits work into chunks but deliberately leaves execution sequential
@@ -155,7 +156,10 @@ model_results <- function(teams, games, week_num, spec) {
 }
 
 make_inputs <- function(mode) {
-  rows <- lapply(schedule, function(g) {
+  # Selection Day precedes Army-Navy in 2026. Results after it cannot affect CFP.
+  eligible_schedule <- if (mode == 'current') Filter(function(g)
+    as.Date(substr(g$d, 1, 10)) <= as.Date('2026-12-06'), schedule) else schedule
+  rows <- lapply(eligible_schedule, function(g) {
     played <- mode == "current" && isTRUE(as.logical(g$f)) && !is.null(g$hp) && !is.null(g$ap)
     data.frame(
       season = 2026L,
@@ -271,7 +275,7 @@ static_committee <- function(input) {
 # Selection and bracket for every simulation: four P4 champions, the best-scoring G6
 # team, then at-large by score; straight seeding; first round at the higher seed,
 # quarterfinals on at neutral sites. Returns one row per (sim, team) with seed and exit.
-select_and_play <- function(standings, input) {
+select_and_play <- function(standings, input, sim_games = NULL) {
   cm <- static_committee(input)
   st <- standings[standings$team %in% fbs, c("sim", "team", "win_pct", "conf_champ")]
   poll_path <- file.path(viz, "cfp_rankings.json")
@@ -279,6 +283,14 @@ select_and_play <- function(standings, input) {
     committee_anchor(cm, schedule, read_json(poll_path), 2026L, W_WINPCT) else NULL
   st$score <- W_WINPCT * st$win_pct + cm$static[match(st$team, cm$team)]
   if (!is.null(anchor)) st$score <- st$score + anchor$offset[st$team]
+  timeline_path <- file.path(viz, 'committee_timeline_model.json')
+  if (!is.null(anchor) && !is.null(sim_games) && file.exists(timeline_path)) {
+    conf <- setNames(input$teams$conference, input$teams$team)
+    forecast <- committee_timeline_scores(st, sim_games, read_json(poll_path),
+                                          read_json(timeline_path), fbs, conf)
+    st$score <- forecast$score
+    anchor$method <- forecast$method
+  }
   st$conference <- cm$conference[match(st$team, cm$team)]
   sims <- split(st, st$sim)
   seeds <- t(vapply(sims, function(s) {
@@ -444,7 +456,7 @@ export_run <- function(mode) {
   titles <- simulate_conference_titles(sim$games, input$teams, input$games,
                                        input$analytics, model_results, input$spec, standings = sim$standings)
   sim$games <- titles$games
-  standings <- select_and_play(titles$standings, input)
+  standings <- select_and_play(titles$standings, input, sim$games)
   anchor <- attr(standings, "committee_anchor")
   max_exit <- 5L
   cm <- static_committee(input)
@@ -480,6 +492,10 @@ export_run <- function(mode) {
       baseline = if (is.null(anchor)) NULL else unname(anchor$baseline[team]),
       record = record, staticScore = static,
       recordChange = if (is.null(anchor)) NULL else unname(W_WINPCT * (mean(st$win_pct) - anchor$win_pct[team])))
+    if (!is.null(anchor) && startsWith(anchor$method, 'Weekly')) {
+      base$resume_score_parts <- list(priorRank = unname(anchor$rank[team]),
+                                      projectedRank = round(mean(st$selection_rank), 2))
+    }
     base$projected_rank <- round(mean(st$selection_rank), 2)
     base$current_cfp_rank <- if (!is.null(anchor) && team %in% names(anchor$rank)) unname(anchor$rank[team]) else NULL
     base$g6_bid <- round(event_rate(st$g6_auto), 4)
@@ -511,11 +527,22 @@ export_run <- function(mode) {
     W_WINPCT, W_RATING, W_SOS, W_P4)
   out$committee_anchor <- if (is.null(anchor)) NULL else list(
     released = anchor$released, games_through = anchor$games_through,
-    source_url = anchor$source_url, method = anchor$method, rank_spacing = anchor$rank_spacing)
+    source_url = anchor$source_url, method = anchor$method,
+    rank_spacing = if (startsWith(anchor$method, 'Weekly')) NULL else anchor$rank_spacing)
   if (!is.null(anchor)) {
     out$basis <- paste0("Actual CFP rankings released ", anchor$released, "; completed results locked; remaining games simulated with the live football model")
     out$committee_proxy <- "Starts in actual CFP Top 25 order; current committee residuals are retained while simulated final records change the ranking. Unranked teams start below No. 25."
     out$engine <- paste0("cfbseedR::cfb_simulations() v", sim$sim_params$cfbseedR_version, " + current CFP ranking baseline")
+    if (startsWith(anchor$method, 'Weekly')) {
+      out$committee_proxy <- paste('Weekly rank transitions from the current CFP order;',
+        'as-of record and opponent quality, conference context, recent wins/losses,',
+        'title-game results and head-to-head in six-team comparison pools.')
+      out$selection_weights <- read_json(file.path(viz, 'committee_timeline_model.json'))$weights
+      out$committee_weights <- NULL
+      out$provisional_weights <- NULL
+      out$h2h_within <- NULL
+      out$engine <- paste0(out$engine, ' + historical weekly transition model')
+    }
   }
   out$conference_method <- paste(
     "Conference-only standings and cfbseedR's registered tiebreaker cascades select the finalists;",

@@ -3,11 +3,13 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
 const C=require('../viz/committee-watch.js');
+const timeline=require('../viz/data/committee_timeline_model.json');
 const playoff=require('../viz/data/playoff_current.json'),schedule=require('../viz/data/schedule.json'),poll=require('../viz/data/cfp_rankings.json');
 const list=Array.isArray(playoff.teams)?playoff.teams:Object.values(playoff.teams);
 const teams=list.map(t=>({team:t.team,conference:t.conference,rating:t.rating}));
 
-test('matches the R committee proxy and anchor (scripts/simulate_playoff.R)',()=>{
+test('matches the legacy R committee proxy and anchor when the saved run uses it',()=>{
+  if(playoff.committee_anchor?.method?.startsWith('Weekly'))return;
   // The stored R run can predate a corrected poll cutoff; compare its own snapshot.
   const snapshotPoll={...poll,games_through:playoff.committee_anchor.games_through};
   const res=C.project({schedule,teams,poll:snapshotPoll,options:{weights:playoff.selection_weights}}),by=new Map(res.rows.map(r=>[r.team,r]));
@@ -20,7 +22,7 @@ test('matches the R committee proxy and anchor (scripts/simulate_playoff.R)',()=
 
 test('with no new results the projection is the committee order',()=>{
   const cut=String(poll.games_through).slice(0,10),old=schedule.map(g=>String(g.d).slice(0,10)>cut?{...g,f:0,hp:null,ap:null}:g);
-  const res=C.project({schedule:old,teams,poll,options:{weights:playoff.selection_weights}});
+  const res=C.project({schedule:old,teams,poll,model:timeline});
   assert.deepEqual(res.rows.slice(0,25).map(r=>r.team),poll.rankings.map(r=>r.team));
   assert.equal(res.newResults,false);
 });
@@ -30,7 +32,7 @@ test('a new loss drops a team and a new win never drops it',()=>{
   const team=poll.rankings[0].team,d=C.weeklyWindow(new Date(cut+'T12:00:00Z').getTime()+7*86400000).today;
   const projectionDate=d+'T12:00:00Z';
   const lose=[...base,{h:team,a:'Nobody FCS',hp:0,ap:7,f:1,d}],win=[...base,{h:team,a:'Nobody FCS',hp:7,ap:0,f:1,d}];
-  const o={weights:playoff.selection_weights};
+  const o={weights:playoff.committee_anchor?.method?.startsWith('Weekly')?undefined:playoff.selection_weights};
   const L=C.project({schedule:lose,teams,poll,options:o,now:projectionDate}).rows.find(r=>r.team===team),W=C.project({schedule:win,teams,poll,options:o,now:projectionDate}).rows.find(r=>r.team===team);
   assert.ok(L.projected>1);assert.equal(W.projected,1);assert.equal(L.results[0].result,'L');
 });
@@ -53,6 +55,13 @@ test('Sunday and Monday include only Notre Dame’s Boston College result',()=>{
     assert.deepEqual(nd.results.map(g=>g.opponent),['Boston College']);
     assert.equal(nd.recordThen,'2–0');assert.equal(nd.recordNow,'3–0');
   }
+});
+test('Sunday projects through the fitted weekly transition model',()=>{
+  const res=runAt('2026-11-15T12:00:00Z',{model:timeline});
+  assert.equal(res.status,'projection');
+  assert.equal(new Set(res.rows.map(r=>r.score)).size,fixtureTeams.length);
+  assert.ok(res.rows.find(r=>r.team==='Notre Dame').score>res.rows.find(r=>r.team==='Boston College').score);
+  assert.equal(res.rows.find(r=>r.team==='Notre Dame').recordNow,'3–0');
 });
 test('Tuesday through Saturday hold the official order, regardless of new finals',()=>{
   for(let d=17;d<=21;d++){

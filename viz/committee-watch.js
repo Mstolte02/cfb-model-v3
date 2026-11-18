@@ -1,17 +1,6 @@
-/* Committee Watch: the committee's last published Top 25 next to where our committee
-   model expects it to move after the results since then.
-
-   The model is the same committee proxy the projected bracket uses
-   (scripts/simulate_playoff.R + scripts/committee_anchor.R, fitted by
-   scripts/fit_committee.py on every published CFP ranking 2014-2025):
-
-     score = w_win * win% + w_rating * strength_z + w_sos * schedule_z + w_p4 * power league
-
-   Anchored to the committee: at the published ranking, every team is placed exactly
-   where the committee put it (evenly spaced, spacing taken from today's score-vs-rank
-   fit; unranked teams sit below #25). Each team then moves by what its new results
-   change in the score. Strength and schedule terms use the season's ratings and full
-   schedule, so between releases only the record moves a team, as in the simulation. */
+/* Committee Watch: weekly predictions from the same historical transition model
+   used by the playoff simulation. The published Top 25 remains exact until new
+   results are complete. Legacy proxy helpers remain for older snapshots. */
 (function(root) {
   'use strict';
   const DEFAULTS={weights:{win_pct:10.3397,rating:0.2262,sos:0.7362,power_conf:1.0864},fcsOppRating:-2,
@@ -63,7 +52,45 @@
       const pf=g.h===team?g.hp:g.ap,pa=g.h===team?g.ap:g.hp;if(pf>pa)w++;else if(pf<pa)l++;else t++;}
     return `${w}–${l}${t?'–'+t:''}`;
   }
-  function project({schedule,teams,poll,options={},now=new Date()}) {
+  function timelineOrder(scores,wins,bonus) {
+    const remaining=new Set(scores.keys()),placed=[];let carry=[];
+    while(remaining.size){
+      const available=[...remaining].filter(t=>!carry.includes(t)).sort((a,b)=>scores.get(a)-scores.get(b)||a.localeCompare(b));
+      const pool=[...carry,...available.slice(0,Math.max(0,6-carry.length))];
+      const adjusted=new Map(pool.map(t=>[t,scores.get(t)-bonus*pool.filter(o=>o!==t&&wins.has(t+'\r'+o)).length]));
+      const ordered=pool.sort((a,b)=>adjusted.get(a)-adjusted.get(b)||scores.get(a)-scores.get(b)||a.localeCompare(b));
+      const take=placed.length<16?4:3;
+      placed.push(...ordered.slice(0,take));carry=ordered.slice(take);
+      for(const t of ordered.slice(0,take))remaining.delete(t);
+    }
+    return placed;
+  }
+  function timelineScores(schedule,teams,poll,through,model) {
+    const names=teams.map(t=>t.team),cutoff=String(poll.games_through).slice(0,10);
+    const games=schedule.filter(g=>final(g)&&day(g)<=through&&day(g)<='2026-12-06');
+    const played=new Map([...new Set([...names,...games.flatMap(g=>[g.h,g.a])])].map(t=>[t,[]]));
+    for(const g of games){played.get(g.h).push({g,opp:g.a,win:g.hp>g.ap});
+      played.get(g.a).push({g,opp:g.h,win:g.ap>g.hp});}
+    const pct=new Map();
+    for(const [t,gs] of played)pct.set(t,gs.length?gs.filter(x=>x.win).length/gs.length:0);
+    const prior=new Map(poll.rankings.map(r=>[r.team,r.rank]));
+    const score=new Map();
+    for(const t of teams){
+      const gs=played.get(t.team),recent=gs.filter(x=>day(x.g)>cutoff),q=o=>pct.get(o)??.5;
+      const wins=gs.filter(x=>x.win),losses=gs.filter(x=>!x.win);
+      const values={prior_rank:prior.get(t.team)??30,win_pct:gs.length?wins.length/gs.length:0,
+        sos:gs.length?mean(gs.map(x=>q(x.opp))):0,
+        quality_wins:wins.reduce((s,x)=>s+q(x.opp),0),bad_losses:losses.reduce((s,x)=>s+1-q(x.opp),0),
+        recent_win:recent.filter(x=>x.win).length,recent_loss:recent.filter(x=>!x.win).length,
+        recent_win_quality:recent.filter(x=>x.win).reduce((s,x)=>s+q(x.opp),0),
+        recent_loss_badness:recent.filter(x=>!x.win).reduce((s,x)=>s+1-q(x.opp),0),
+        title_win:0,title_loss:0,power:Number(DEFAULTS.p4.includes(t.conference)||t.team==='Notre Dame'),games:gs.length};
+      score.set(t.team,model.intercept+Object.entries(model.weights).reduce((s,[k,w])=>s+w*values[k],0));
+    }
+    const h2h=new Set(games.map(g=>(g.hp>g.ap?g.h:g.a)+'\r'+(g.hp>g.ap?g.a:g.h)));
+    return new Map(timelineOrder(score,h2h,model.pod_head_to_head_bonus).map((t,i)=>[t,31-(i+1)]));
+  }
+  function project({schedule,teams,poll,options={},model=null,now=new Date()}) {
     const o={...DEFAULTS,...options,weights:{...DEFAULTS.weights,...(options.weights||{})}};
     if(!poll?.rankings?.length||!poll.games_through)return {error:'No committee rankings have been released yet.'};
     const names=teams.map(t=>t.team),known=new Set(names);
@@ -84,8 +111,10 @@
     const intercept=mean(ranked.map(r=>proxy.get(r.team)+spacing*r.rank));
     const cfp=new Map(ranked.map(r=>[r.team,r.rank]));
     const anchor=new Map(names.map(t=>[t,cfp.has(t)?intercept-spacing*cfp.get(t):Math.min(proxy.get(t),intercept-spacing*26)]));
-    const rows=names.map(t=>({team:t,current:cfp.get(t)??null,anchor:anchor.get(t),
-      score:anchor.get(t)+o.weights.win_pct*(currentPct.get(t)-then.get(t)),pctThen:then.get(t),pctNow:currentPct.get(t),static:st.get(t).static}));
+    const timeline=model?.version===1&&status==='projection'&&schedule.some(g=>final(g)&&day(g)>cutoff&&day(g)<=through)
+      ?timelineScores(schedule,teams,poll,through,model):null;
+    const rows=names.map(t=>({team:t,current:cfp.get(t)??null,anchor:timeline?31-(cfp.get(t)??30):anchor.get(t),
+      score:timeline?timeline.get(t):anchor.get(t)+o.weights.win_pct*(currentPct.get(t)-then.get(t)),pctThen:then.get(t),pctNow:currentPct.get(t),static:st.get(t).static}));
     rows.sort((a,b)=>b.score-a.score||a.team.localeCompare(b.team));
     rows.forEach((r,i)=>{r.projected=i+1;r.change=r.current?r.current-r.projected:null;
       r.recordThen=record(schedule,r.team,cutoff);r.recordNow=record(schedule,r.team,through);
@@ -97,8 +126,8 @@
       newResults,dropped:ranked.filter(r=>rows.find(x=>x.team===r.team).projected>25).map(r=>r.team)};
   }
 
-  function mount({host,schedule,teams,poll,weights,esc,crestOf,wireTeamLinks}) {
-    const res=project({schedule,teams,poll,options:weights?{weights}:{}});
+  function mount({host,schedule,teams,poll,model,weights,esc,crestOf,wireTeamLinks}) {
+    const res=project({schedule,teams,poll,model,options:weights?{weights}:{}});
     if(res.error){host.innerHTML=`<p class="stock-empty">${esc(res.error)}</p>`;return;}
     const fmt=d=>{const [y,m,dd]=String(d).split('-').map(Number);return new Date(Date.UTC(y,m-1,dd)).toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'});};
     const crest=t=>{const c=crestOf(t);return `<span class="cw-crest" style="--plate:${c.plate}"><img src="${c.mark}" alt="" loading="lazy"></span>`;};
@@ -119,7 +148,7 @@
           <ol class="cw-list">${projected.map(r=>row(r,r.projected,'proj')).join('')}</ol>
           ${res.dropped.length?`<p class="cw-out">Projected to drop out: ${res.dropped.map(t=>`<b>${esc(t)}</b> <small>(${by.get(t).recordNow}, ${games(by.get(t)).replace(/<[^>]+>/g,' ').trim()})</small>`).join(', ')}</p>`:''}</section>
       </div>
-      <p class="board-note">The projection starts from the committee's own order and moves each team by what its new results change in our committee model: record first, then team strength, schedule strength and power-conference membership, weighted the way the committee has weighted them since 2014. It does not know who a team lost to, so a loss to a top-10 team and a loss to an unranked team move a team the same amount.</p></div>`;
+      <p class="board-note">The projection starts from the published order and uses a historical weekly transition model. It considers the timing and opponent quality of results, schedule, conference, and head-to-head among teams in the same committee comparison pool. The projected order is an estimate, not an official committee vote.</p></div>`;
     wireTeamLinks();
   }
   root.CommitteeWatch={project,mount,staticScores,winPct,weeklyWindow};

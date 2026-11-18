@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "source": "ESPN weekly CFP polls and completed games, 2014-2025",
+  "features": [
+    "prior_rank",
+    "win_pct",
+    "sos",
+    "quality_wins",
+    "bad_losses",
+    "recent_win",
+    "recent_loss",
+    "recent_win_quality",
+    "recent_loss_badness",
+    "title_win",
+    "title_loss",
+    "power",
+    "games"
+  ],
+  "intercept": 6.46371209397857,
+  "weights": {
+    "prior_rank": 0.7581193519554922,
+    "win_pct": -0.23654228529212198,
+    "sos": 0.05150868757360352,
+    "quality_wins": -1.1209105634937013,
+    "bad_losses": 0.7347030240757388,
+    "recent_win": -1.5811370690717446,
+    "recent_loss": 2.5107601047962587,
+    "recent_win_quality": -0.9570390797897198,
+    "recent_loss_badness": 0.8595750232690806,
+    "title_win": -0.31200869878234105,
+    "title_loss": 0.22394658678795398,
+    "power": -0.5769582021955268,
+    "games": 0.2178527762564388
+  },
+  "training_seasons": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "validation": [
+    {
+      "season": 2018,
+      "n": 137,
+      "mae": 1.959,
+      "prior_mae": 2.832,
+      "spearman": 0.9533
+    },
+    {
+      "season": 2019,
+      "n": 133,
+      "mae": 1.824,
+      "prior_mae": 2.09,
+      "spearman": 0.9667
+    },
+    {
+      "season": 2021,
+      "n": 134,
+      "mae": 1.885,
+      "prior_mae": 2.836,
+      "spearman": 0.9622
+    },
+    {
+      "season": 2022,
+      "n": 139,
+      "mae": 1.981,
+      "prior_mae": 3.338,
+      "spearman": 0.9656
+    },
+    {
+      "season": 2023,
+      "n": 132,
+      "mae": 1.543,
+      "prior_mae": 2.348,
+      "spearman": 0.9741
+    },
+    {
+      "season": 2024,
+      "n": 135,
+      "mae": 1.904,
+      "prior_mae": 3.111,
+      "spearman": 0.9628
+    },
+    {
+      "season": 2025,
+      "n": 139,
+      "mae": 1.732,
+      "prior_mae": 2.489,
+      "spearman": 0.9698
+    }
+  ],
+  "pod_head_to_head_bonus": 0.25,
+  "pod_validation_mae": {
+    "0": 1.6087,
+    "0.25": 1.5958,
+    "0.5": 1.604,
+    "1": 1.6186,
+    "2": 1.7027
+  },
+  "notes": "Rank 30 denotes teams outside a Top 25; scores are predicted rank (lower is better). Title win/loss terms replace ordinary recent win/loss terms. Opponent winning percentages are computed as of each poll."
+}
