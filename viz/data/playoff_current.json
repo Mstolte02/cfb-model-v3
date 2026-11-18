@@ -63,67 +63,78 @@
           "samples": 1004,
           "score": 30,
           "wins": 11.92828685,
-          "losses": 1.07171315
+          "losses": 1.07171315,
+          "conf_champ": 0.92828685
         },
         {
           "samples": 553,
           "score": 29,
           "wins": 11.59674503,
-          "losses": 1.40325497
+          "losses": 1.40325497,
+          "conf_champ": 0.59674503
         },
         {
           "samples": 155,
           "score": 28,
           "wins": 11.07741935,
-          "losses": 1.92258065
+          "losses": 1.92258065,
+          "conf_champ": 0.09032258
         },
         {
           "samples": 42,
           "score": 27,
           "wins": 10.92857143,
-          "losses": 2
+          "losses": 2,
+          "conf_champ": 0.07142857
         },
         {
           "samples": 32,
           "score": 26,
           "wins": 10.6875,
-          "losses": 2.09375
+          "losses": 2.09375,
+          "conf_champ": 0.65625
         },
         {
           "samples": 57,
           "score": 25,
           "wins": 10.63157895,
-          "losses": 2.10526316
+          "losses": 2.10526316,
+          "conf_champ": 0.63157895
         },
         {
           "samples": 78,
           "score": 24,
           "wins": 10.64102564,
-          "losses": 2.19230769
+          "losses": 2.19230769,
+          "conf_champ": 0.64102564
         },
         {
           "samples": 47,
           "score": 23,
           "wins": 10.55319149,
-          "losses": 2.25531915
+          "losses": 2.25531915,
+          "conf_champ": 0.55319149
         },
         {
           "samples": 25,
           "score": 22,
           "wins": 10.2,
-          "losses": 2.64
+          "losses": 2.64,
+          "conf_champ": 0.2
         },
         {
           "samples": 4,
           "score": 21,
           "wins": 10,
-          "losses": 3
+          "losses": 3,
+          "conf_champ": 0
         },
         {
           "samples": 2,
           "score": 18,
           "wins": 10,
-          "losses": 3
+          "losses": 3,
+          "conf_champ": 1
         },
         null
       ]
@@ -179,25 +190,29 @@
           "samples": 1,
           "score": 22,
           "wins": 11,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 1
         },
         {
           "samples": 6,
           "score": 20.16666667,
           "wins": 11,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 1
         },
         {
           "samples": 106,
           "score": 17.83962264,
           "wins": 10.80188679,
-          "losses": 1.19811321
+          "losses": 1.19811321,
+          "conf_champ": 0.80188679
         },
         {
           "samples": 1885,
           "score": 15.7469496,
           "wins": 10.55225464,
-          "losses": 1.44774536
+          "losses": 1.44774536,
+          "conf_champ": 0.65464191
         }
       ]
     },
@@ -243,67 +258,78 @@
           "samples": 26,
           "score": 30,
           "wins": 11,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 0
         },
         {
           "samples": 139,
           "score": 29,
           "wins": 11,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 0
         },
         {
           "samples": 362,
           "score": 28,
           "wins": 11,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 0
         },
         {
           "samples": 543,
           "score": 27,
           "wins": 11,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 0
         },
         {
           "samples": 391,
           "score": 26,
           "wins": 10.99744246,
-          "losses": 1.00255754
+          "losses": 1.00255754,
+          "conf_champ": 0
         },
         {
           "samples": 287,
           "score": 25,
           "wins": 11,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 0
         },
         {
           "samples": 96,
           "score": 24,
           "wins": 10.98958333,
-          "losses": 1.01041667
+          "losses": 1.01041667,
+          "conf_champ": 0
         },
         {
           "samples": 19,
           "score": 23,
           "wins": 10.42105263,
-          "losses": 1.57894737
+          "losses": 1.57894737,
+          "conf_champ": 0
         },
         {
           "samples": 19,
           "score": 22,
           "wins": 10,
-          "losses": 2
+          "losses": 2,
+          "conf_champ": 0
         },
         {
           "samples": 54,
           "score": 20.87037037,
           "wins": 10,
-          "losses": 2
+          "losses": 2,
+          "conf_champ": 0
         },
         {
           "samples": 59,
           "score": 19.66101695,
           "wins": 9.98305085,
-          "losses": 2.01694915
+          "losses": 2.01694915,
+          "conf_champ": 0
         },
         null
       ],
@@ -352,67 +378,78 @@
           "samples": 42,
           "score": 30,
           "wins": 11.88095238,
-          "losses": 1.11904762
+          "losses": 1.11904762,
+          "conf_champ": 0.88095238
         },
         {
           "samples": 206,
           "score": 29,
           "wins": 11.83495146,
-          "losses": 1.16504854
+          "losses": 1.16504854,
+          "conf_champ": 0.83495146
         },
         {
           "samples": 491,
           "score": 28,
           "wins": 11.75152749,
-          "losses": 1.24847251
+          "losses": 1.24847251,
+          "conf_champ": 0.75152749
         },
         {
           "samples": 499,
           "score": 27,
           "wins": 11.46492986,
-          "losses": 1.53507014
+          "losses": 1.53507014,
+          "conf_champ": 0.46693387
         },
         {
           "samples": 395,
           "score": 26,
           "wins": 11.21772152,
-          "losses": 1.78227848
+          "losses": 1.78227848,
+          "conf_champ": 0.22278481
         },
         {
           "samples": 187,
           "score": 25,
           "wins": 11.0855615,
-          "losses": 1.9144385
+          "losses": 1.9144385,
+          "conf_champ": 0.10695187
         },
         {
           "samples": 59,
           "score": 24,
           "wins": 10.98305085,
-          "losses": 2.01694915
+          "losses": 2.01694915,
+          "conf_champ": 0.27118644
         },
         {
           "samples": 31,
           "score": 23,
           "wins": 10.67741935,
-          "losses": 2.32258065
+          "losses": 2.32258065,
+          "conf_champ": 0.61290323
         },
         {
           "samples": 36,
           "score": 22,
           "wins": 10.5,
-          "losses": 2.5
+          "losses": 2.5,
+          "conf_champ": 0.5
         },
         {
           "samples": 27,
           "score": 21,
           "wins": 10.33333333,
-          "losses": 2.66666667
+          "losses": 2.66666667,
+          "conf_champ": 0.33333333
         },
         {
           "samples": 15,
           "score": 19.66666667,
           "wins": 10.33333333,
-          "losses": 2.66666667
+          "losses": 2.66666667,
+          "conf_champ": 0.46666667
         },
         null
       ]
@@ -460,67 +497,78 @@
           "samples": 677,
           "score": 30,
           "wins": 12.70753323,
-          "losses": 0.29246677
+          "losses": 0.29246677,
+          "conf_champ": 0.70753323
         },
         {
           "samples": 537,
           "score": 29,
           "wins": 12.38175047,
-          "losses": 0.61824953
+          "losses": 0.61824953,
+          "conf_champ": 0.38547486
         },
         {
           "samples": 56,
           "score": 28,
           "wins": 12,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 0.35714286
         },
         {
           "samples": 62,
           "score": 27,
           "wins": 11.90322581,
-          "losses": 1.09677419
+          "losses": 1.09677419,
+          "conf_champ": 0.87096774
         },
         {
           "samples": 151,
           "score": 26,
           "wins": 11.74172185,
-          "losses": 1.25827815
+          "losses": 1.25827815,
+          "conf_champ": 0.74172185
         },
         {
           "samples": 208,
           "score": 25,
           "wins": 11.60576923,
-          "losses": 1.39423077
+          "losses": 1.39423077,
+          "conf_champ": 0.60576923
         },
         {
           "samples": 185,
           "score": 24,
           "wins": 11.41081081,
-          "losses": 1.58918919
+          "losses": 1.58918919,
+          "conf_champ": 0.41621622
         },
         {
           "samples": 59,
           "score": 23,
           "wins": 11.22033898,
-          "losses": 1.77966102
+          "losses": 1.77966102,
+          "conf_champ": 0.22033898
         },
         {
           "samples": 20,
           "score": 22,
           "wins": 10.95,
-          "losses": 2.05
+          "losses": 2.05,
+          "conf_champ": 0.15
         },
         {
           "samples": 11,
           "score": 20.90909091,
           "wins": 10.54545455,
-          "losses": 2.27272727
+          "losses": 2.27272727,
+          "conf_champ": 0.54545455
         },
         {
           "samples": 14,
           "score": 19.57142857,
           "wins": 10.92857143,
-          "losses": 2.07142857
+          "losses": 2.07142857,
+          "conf_champ": 0.92857143
         },
         null
       ]
@@ -567,73 +615,85 @@
           "samples": 38,
           "score": 30,
           "wins": 10.94736842,
-          "losses": 2
+          "losses": 2,
+          "conf_champ": 0.94736842
         },
         {
           "samples": 116,
           "score": 29,
           "wins": 10.52586207,
-          "losses": 2.09482759
+          "losses": 2.09482759,
+          "conf_champ": 0.52586207
         },
         {
           "samples": 271,
           "score": 28,
           "wins": 10.2103321,
-          "losses": 2.2103321
+          "losses": 2.2103321,
+          "conf_champ": 0.2103321
         },
         {
           "samples": 422,
           "score": 27,
           "wins": 10.11374408,
-          "losses": 2.30805687
+          "losses": 2.30805687,
+          "conf_champ": 0.11374408
         },
         {
           "samples": 420,
           "score": 26,
           "wins": 10.05952381,
-          "losses": 2.3452381
+          "losses": 2.3452381,
+          "conf_champ": 0.05952381
         },
         {
           "samples": 268,
           "score": 25,
           "wins": 10.02985075,
-          "losses": 2.39179104
+          "losses": 2.39179104,
+          "conf_champ": 0.03731343
         },
         {
           "samples": 152,
           "score": 24,
           "wins": 9.97368421,
-          "losses": 2.30263158
+          "losses": 2.30263158,
+          "conf_champ": 0.03289474
         },
         {
           "samples": 38,
           "score": 23,
           "wins": 9.47368421,
-          "losses": 2.71052632
+          "losses": 2.71052632,
+          "conf_champ": 0.05263158
         },
         {
           "samples": 68,
           "score": 22,
           "wins": 9.04411765,
-          "losses": 3.11764706
+          "losses": 3.11764706,
+          "conf_champ": 0.04411765
         },
         {
           "samples": 77,
           "score": 21,
           "wins": 9.03896104,
-          "losses": 3.12987013
+          "losses": 3.12987013,
+          "conf_champ": 0.03896104
         },
         {
           "samples": 72,
           "score": 20,
           "wins": 9,
-          "losses": 3.11111111
+          "losses": 3.11111111,
+          "conf_champ": 0
         },
         {
           "samples": 1,
           "score": 19,
           "wins": 9,
-          "losses": 4
+          "losses": 4,
+          "conf_champ": 0
         }
       ],
       "wins_out": 9
@@ -681,73 +741,85 @@
           "samples": 119,
           "score": 30,
           "wins": 10.67226891,
-          "losses": 2.13445378
+          "losses": 2.13445378,
+          "conf_champ": 0.67226891
         },
         {
           "samples": 274,
           "score": 29,
           "wins": 10.27737226,
-          "losses": 2.37956204
+          "losses": 2.37956204,
+          "conf_champ": 0.27737226
         },
         {
           "samples": 394,
           "score": 28,
           "wins": 10.05583756,
-          "losses": 2.60152284
+          "losses": 2.60152284,
+          "conf_champ": 0.05583756
         },
         {
           "samples": 237,
           "score": 27,
           "wins": 10.00843882,
-          "losses": 2.72151899
+          "losses": 2.72151899,
+          "conf_champ": 0.01265823
         },
         {
           "samples": 92,
           "score": 26,
           "wins": 9.91304348,
-          "losses": 2.83695652
+          "losses": 2.83695652,
+          "conf_champ": 0.01086957
         },
         {
           "samples": 60,
           "score": 25,
           "wins": 9.21666667,
-          "losses": 3.01666667
+          "losses": 3.01666667,
+          "conf_champ": 0.06666667
         },
         {
           "samples": 148,
           "score": 24,
           "wins": 9.02702703,
-          "losses": 3.01351351
+          "losses": 3.01351351,
+          "conf_champ": 0.02702703
         },
         {
           "samples": 219,
           "score": 23,
           "wins": 9.00913242,
-          "losses": 3.01369863
+          "losses": 3.01369863,
+          "conf_champ": 0.00913242
         },
         {
           "samples": 212,
           "score": 22,
           "wins": 9,
-          "losses": 3.01886792
+          "losses": 3.01886792,
+          "conf_champ": 0
         },
         {
           "samples": 122,
           "score": 21,
           "wins": 8.99180328,
-          "losses": 3.01639344
+          "losses": 3.01639344,
+          "conf_champ": 0
         },
         {
           "samples": 31,
           "score": 20,
           "wins": 8.70967742,
-          "losses": 3.29032258
+          "losses": 3.29032258,
+          "conf_champ": 0
         },
         {
           "samples": 1,
           "score": 19,
           "wins": 8,
-          "losses": 4
+          "losses": 4,
+          "conf_champ": 0
         }
       ]
     },
@@ -795,61 +867,71 @@
           "samples": 6,
           "score": 29,
           "wins": 12,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 1
         },
         {
           "samples": 39,
           "score": 28,
           "wins": 12,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 1
         },
         {
           "samples": 136,
           "score": 27,
           "wins": 11.94852941,
-          "losses": 1.05147059
+          "losses": 1.05147059,
+          "conf_champ": 0.94852941
         },
         {
           "samples": 379,
           "score": 26,
           "wins": 11.90765172,
-          "losses": 1.09234828
+          "losses": 1.09234828,
+          "conf_champ": 0.90765172
         },
         {
           "samples": 475,
           "score": 25,
           "wins": 11.80210526,
-          "losses": 1.19789474
+          "losses": 1.19789474,
+          "conf_champ": 0.80210526
         },
         {
           "samples": 339,
           "score": 24,
           "wins": 11.56047198,
-          "losses": 1.43657817
+          "losses": 1.43657817,
+          "conf_champ": 0.57522124
         },
         {
           "samples": 176,
           "score": 23,
           "wins": 11.38636364,
-          "losses": 1.60227273
+          "losses": 1.60227273,
+          "conf_champ": 0.46590909
         },
         {
           "samples": 50,
           "score": 22,
           "wins": 10.72,
-          "losses": 2.06
+          "losses": 2.06,
+          "conf_champ": 0.48
         },
         {
           "samples": 79,
           "score": 20.98734177,
           "wins": 10.21518987,
-          "losses": 2.17721519
+          "losses": 2.17721519,
+          "conf_champ": 0.21518987
         },
         {
           "samples": 81,
           "score": 19.9382716,
           "wins": 10.16049383,
-          "losses": 2.09876543
+          "losses": 2.09876543,
+          "conf_champ": 0.16049383
         },
         null
       ]
@@ -900,55 +982,64 @@
           "samples": 1,
           "score": 27,
           "wins": 12,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 1
         },
         {
           "samples": 7,
           "score": 26,
           "wins": 12,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 1
         },
         {
           "samples": 27,
           "score": 25,
           "wins": 11.77777778,
-          "losses": 1.22222222
+          "losses": 1.22222222,
+          "conf_champ": 0.77777778
         },
         {
           "samples": 117,
           "score": 24,
           "wins": 11.74358974,
-          "losses": 1.25641026
+          "losses": 1.25641026,
+          "conf_champ": 0.74358974
         },
         {
           "samples": 254,
           "score": 23,
           "wins": 11.69685039,
-          "losses": 1.30314961
+          "losses": 1.30314961,
+          "conf_champ": 0.69685039
         },
         {
           "samples": 332,
           "score": 21.99698795,
           "wins": 11.60240964,
-          "losses": 1.39759036
+          "losses": 1.39759036,
+          "conf_champ": 0.60240964
         },
         {
           "samples": 470,
           "score": 20.95957447,
           "wins": 11.44680851,
-          "losses": 1.55319149
+          "losses": 1.55319149,
+          "conf_champ": 0.45531915
         },
         {
           "samples": 448,
           "score": 19.21875,
           "wins": 11.29910714,
-          "losses": 1.70089286
+          "losses": 1.70089286,
+          "conf_champ": 0.52678571
         },
         {
           "samples": 67,
           "score": 15.73134328,
           "wins": 11,
-          "losses": 2
+          "losses": 2,
+          "conf_champ": 1
         }
       ]
     },
@@ -995,67 +1086,78 @@
           "samples": 94,
           "score": 30,
           "wins": 12.41489362,
-          "losses": 0.58510638
+          "losses": 0.58510638,
+          "conf_champ": 0.41489362
         },
         {
           "samples": 169,
           "score": 29,
           "wins": 12.27218935,
-          "losses": 0.72781065
+          "losses": 0.72781065,
+          "conf_champ": 0.27218935
         },
         {
           "samples": 232,
           "score": 28,
           "wins": 12.13793103,
-          "losses": 0.86206897
+          "losses": 0.86206897,
+          "conf_champ": 0.13793103
         },
         {
           "samples": 46,
           "score": 27,
           "wins": 11.95652174,
-          "losses": 1.04347826
+          "losses": 1.04347826,
+          "conf_champ": 0.26086957
         },
         {
           "samples": 80,
           "score": 26,
           "wins": 11.725,
-          "losses": 1.275
+          "losses": 1.275,
+          "conf_champ": 0.7
         },
         {
           "samples": 195,
           "score": 25,
           "wins": 11.52307692,
-          "losses": 1.47692308
+          "losses": 1.47692308,
+          "conf_champ": 0.52307692
         },
         {
           "samples": 311,
           "score": 24,
           "wins": 11.26688103,
-          "losses": 1.73311897
+          "losses": 1.73311897,
+          "conf_champ": 0.26688103
         },
         {
           "samples": 259,
           "score": 23,
           "wins": 11.03474903,
-          "losses": 1.96525097
+          "losses": 1.96525097,
+          "conf_champ": 0.03861004
         },
         {
           "samples": 110,
           "score": 22,
           "wins": 10.99090909,
-          "losses": 2
+          "losses": 2,
+          "conf_champ": 0.04545455
         },
         {
           "samples": 53,
           "score": 20.96226415,
           "wins": 10.62264151,
-          "losses": 2.03773585
+          "losses": 2.03773585,
+          "conf_champ": 0.16981132
         },
         {
           "samples": 64,
           "score": 19.515625,
           "wins": 10.359375,
-          "losses": 2.21875
+          "losses": 2.21875,
+          "conf_champ": 0.359375
         },
         null
       ]
@@ -1106,55 +1208,64 @@
           "samples": 4,
           "score": 27,
           "wins": 12,
-          "losses": 1
+          "losses": 1,
+          "conf_champ": 1
         },
         {
           "samples": 16,
           "score": 26,
           "wins": 11.9375,
-          "losses": 1.0625
+          "losses": 1.0625,
+          "conf_champ": 0.9375
         },
         {
           "samples": 92,
           "score": 25,
           "wins": 11.7173913,
-          "losses": 1.2826087
+          "losses": 1.2826087,
+          "conf_champ": 0.7173913
         },
         {
           "samples": 159,
           "score": 24,
           "wins": 11.76100629,
-          "losses": 1.23899371
+          "losses": 1.23899371,
+          "conf_champ": 0.76100629
         },
         {
           "samples": 264,
           "score": 23,
           "wins": 11.60606061,
-          "losses": 1.39393939
+          "losses": 1.39393939,
+          "conf_champ": 0.60606061
         },
         {
           "samples": 248,
           "score": 22,
           "wins": 11.39112903,
-          "losses": 1.60887097
+          "losses": 1.60887097,
+          "conf_champ": 0.39112903
         },
         {
           "samples": 180,
           "score": 20.94444444,
           "wins": 11.14444444,
-          "losses": 1.83888889
+          "losses": 1.83888889,
+          "conf_champ": 0.23888889
         },
         {
           "samples": 200,
           "score": 19.025,
           "wins": 10.955,
-          "losses": 2.02
+          "losses": 2.02,
+          "conf_champ": 0.635
         },
         {
           "samples": 29,
           "score": 16.24137931,
           "wins": 10.89655172,
-          "losses": 2.10344828
+          "losses": 2.10344828,
+          "conf_champ": 0.96551724
         }
       ]
     },
@@ -1204,55 +1315,64 @@
           "samples": 6,
           "score": 27,
           "wins": 10.83333333,
-          "losses": 2
+          "losses": 2,
+          "conf_champ": 0.83333333
         },
         {
           "samples": 28,
           "score": 26,
           "wins": 10.5,
-          "losses": 2.10714286
+          "losses": 2.10714286,
+          "conf_champ": 0.5
         },
         {
           "samples": 95,
           "score": 25,
           "wins": 10.36842105,
-          "losses": 2.24210526
+          "losses": 2.24210526,
+          "conf_champ": 0.36842105
         },
         {
           "samples": 209,
           "score": 24,
           "wins": 10.26794258,
-          "losses": 2.24880383
+          "losses": 2.24880383,
+          "conf_champ": 0.26794258
         },
         {
           "samples": 303,
           "score": 23,
           "wins": 10.19471947,
-          "losses": 2.27062706
+          "losses": 2.27062706,
+          "conf_champ": 0.1980198
         },
         {
           "samples": 289,
           "score": 22,
           "wins": 10.10380623,
-          "losses": 2.32525952
+          "losses": 2.32525952,
+          "conf_champ": 0.11072664
         },
         {
           "samples": 148,
           "score": 20.99324324,
           "wins": 9.94594595,
-          "losses": 2.37162162
+          "losses": 2.37162162,
+          "conf_champ": 0.04054054
         },
         {
           "samples": 71,
           "score": 19.70422535,
           "wins": 9.61971831,
-          "losses": 2.83098592
+          "losses": 2.83098592,
+          "conf_champ": 0.25352113
         },
         {
           "samples": 5,
           "score": 19,
           "wins": 9,
-          "losses": 3
+          "losses": 3,
+          "conf_champ": 0
         }
       ]
     },
@@ -1304,43 +1424,50 @@
           "samples": 4,
           "score": 25,
           "wins": 10,
-          "losses": 3
+          "losses": 3,
+          "conf_champ": 1
         },
         {
           "samples": 23,
           "score": 24,
           "wins": 9.73913043,
-          "losses": 3.17391304
+          "losses": 3.17391304,
+          "conf_champ": 0.73913043
         },
         {
           "samples": 66,
           "score": 23,
           "wins": 9.48484848,
-          "losses": 3.21212121
+          "losses": 3.21212121,
+          "conf_champ": 0.48484848
         },
         {
           "samples": 202,
           "score": 22,
           "wins": 9.24752475,
-          "losses": 3.16336634
+          "losses": 3.16336634,
+          "conf_champ": 0.24752475
         },
         {
           "samples": 337,
           "score": 21,
           "wins": 9.13649852,
-          "losses": 3.17210682
+          "losses": 3.17210682,
+          "conf_champ": 0.14243323
         },
         {
           "samples": 347,
           "score": 19.98847262,
           "wins": 9.04322767,
-          "losses": 3.11239193
+          "losses": 3.11239193,
+          "conf_champ": 0.04899135
         },
         {
           "samples": 1,
           "score": 19,
           "wins": 8,
-          "losses": 4
+          "losses": 4,
+          "conf_champ": 0
         }
       ]
     },
@@ -1390,55 +1517,64 @@
           "samples": 2,
           "score": 27,
           "wins": 11,
-          "losses": 2
+          "losses": 2,
+          "conf_champ": 1
         },
         {
           "samples": 9,
           "score": 26,
           "wins": 10.44444444,
-          "losses": 2.33333333
+          "losses": 2.33333333,
+          "conf_champ": 0.44444444
         },
         {
           "samples": 45,
           "score": 25,
           "wins": 10.53333333,
-          "losses": 2.35555556
+          "losses": 2.35555556,
+          "conf_champ": 0.53333333
         },
         {
           "samples": 116,
           "score": 24,
           "wins": 10.31896552,
-          "losses": 2.35344828
+          "losses": 2.35344828,
+          "conf_champ": 0.31896552
         },
         {
           "samples": 240,
           "score": 23,
           "wins": 10.19583333,
-          "losses": 2.33333333
+          "losses": 2.33333333,
+          "conf_champ": 0.2
         },
         {
           "samples": 281,
           "score": 22,
           "wins": 10.03914591,
-          "losses": 2.34875445
+          "losses": 2.34875445,
+          "conf_champ": 0.05338078
         },
         {
           "samples": 179,
           "score": 21,
           "wins": 9.94413408,
-          "losses": 2.44134078
+          "losses": 2.44134078,
+          "conf_champ": 0.03351955
         },
         {
           "samples": 93,
           "score": 19.89247312,
           "wins": 9.50537634,
-          "losses": 2.76344086
+          "losses": 2.76344086,
+          "conf_champ": 0.03225806
         },
         {
           "samples": 6,
           "score": 19,
           "wins": 9,
-          "losses": 3
+          "losses": 3,
+          "conf_champ": 0
         }
       ]
     },
@@ -1491,31 +1627,36 @@
           "samples": 8,
           "score": 24,
           "wins": 9.625,
-          "losses": 3.125
+          "losses": 3.125,
+          "conf_champ": 0.625
         },
         {
           "samples": 23,
           "score": 23,
           "wins": 9.7826087,
-          "losses": 3.04347826
+          "losses": 3.04347826,
+          "conf_champ": 0.7826087
         },
         {
           "samples": 78,
           "score": 21.98717949,
           "wins": 9.5,
-          "losses": 3.16666667
+          "losses": 3.16666667,
+          "conf_champ": 0.5
         },
         {
           "samples": 148,
           "score": 20.99324324,
           "wins": 9.28378378,
-          "losses": 3.2027027
+          "losses": 3.2027027,
+          "conf_champ": 0.28378378
         },
         {
           "samples": 184,
           "score": 19.91847826,
           "wins": 9.1576087,
-          "losses": 3.17391304
+          "losses": 3.17391304,
+          "conf_champ": 0.16304348
         },
         null
       ]
@@ -1570,25 +1711,29 @@
           "samples": 2,
           "score": 23,
           "wins": 11,
-          "losses": 2
+          "losses": 2,
+          "conf_champ": 1
         },
         {
           "samples": 19,
           "score": 22,
           "wins": 10.26315789,
-          "losses": 2.05263158
+          "losses": 2.05263158,
+          "conf_champ": 0.26315789
         },
         {
           "samples": 55,
           "score": 21,
           "wins": 10.30909091,
-          "losses": 2.10909091
+          "losses": 2.10909091,
+          "conf_champ": 0.30909091
         },
         {
           "samples": 122,
           "score": 19.7704918,
           "wins": 10.22131148,
-          "losses": 2.13114754
+          "losses": 2.13114754,
+          "conf_champ": 0.22131148
         },
         null
       ]
@@ -1643,19 +1788,22 @@
           "samples": 10,
           "score": 22,
           "wins": 9,
-          "losses": 3
+          "losses": 3,
+          "conf_champ": 0
         },
         {
           "samples": 50,
           "score": 21,
           "wins": 9,
-          "losses": 3
+          "losses": 3,
+          "conf_champ": 0
         },
         {
           "samples": 81,
           "score": 20,
           "wins": 9,
-          "losses": 3
+          "losses": 3,
+          "conf_champ": 0
         },
         null
       ],
@@ -1714,7 +1862,8 @@
           "samples": 8,
           "score": 20,
           "wins": 9,
-          "losses": 3
+          "losses": 3,
+          "conf_champ": 0
         },
         null
       ]
@@ -1772,7 +1921,8 @@
           "samples": 2,
           "score": 16,
           "wins": 10,
-          "losses": 3
+          "losses": 3,
+          "conf_champ": 1
         },
         null
       ]
@@ -1829,7 +1979,8 @@
           "samples": 2,
           "score": 9.5,
           "wins": 9.5,
-          "losses": 3.5
+          "losses": 3.5,
+          "conf_champ": 1
         }
       ],
       "current_cfp_rank": 23,
@@ -1887,7 +2038,8 @@
           "samples": 2,
           "score": 11,
           "wins": 10.5,
-          "losses": 2.5
+          "losses": 2.5,
+          "conf_champ": 0.5
         }
       ],
       "wins_in": 10.5
@@ -1945,7 +2097,8 @@
           "samples": 1,
           "score": 12,
           "wins": 10,
-          "losses": 3
+          "losses": 3,
+          "conf_champ": 1
         }
       ],
       "wins_in": 10
@@ -10200,7 +10353,7 @@
     "rank_spacing": null
   },
   "record_odds": {
-    "generated_at": "2026-11-18T18:27:03Z",
+    "generated_at": "2026-11-18T20:51:14Z",
     "min_samples": 30,
     "checkpoints": [
       {
