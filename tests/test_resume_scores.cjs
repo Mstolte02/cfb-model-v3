@@ -7,15 +7,19 @@ for(const version of ['current','preseason']){
   const ctx={playoff,snapshots,ratings:version==='current'?ratings.teams:ratings.history.find(h=>h.week===0).teams,meta,schedule,committee};
   const ledger=rows(ctx);assert.equal(ledger.length,138);
   assert(ledger.every(t=>Number.isFinite(t.score)));
+  const timeline=playoff.committee_anchor?.method?.startsWith('Weekly');
   for(const t of ledger){
-    assert(Math.abs(t.score-(version==='current'?t.baseline+t.recordChange:t.record+t.staticScore))<2e-8);
+    if(timeline)assert(Math.abs(t.score-(31-t.projected_rank))<.011);
+    else assert(Math.abs(t.score-(version==='current'?t.baseline+t.recordChange:t.record+t.staticScore))<2e-8);
 
   }
   if(version==='current'){
     const ranked=ledger.filter(t=>t.current_cfp_rank).sort((a,b)=>a.current_cfp_rank-b.current_cfp_rank);
     assert.equal(ranked.length,25);
-    for(let i=1;i<25;i++)assert(Math.abs(ranked[i-1].baseline-ranked[i].baseline-playoff.committee_anchor.rank_spacing)<2e-8);
-    assert(ledger.filter(t=>!t.current_cfp_rank).every(t=>t.baseline<ranked[24].baseline));
+    if(!timeline){
+      for(let i=1;i<25;i++)assert(Math.abs(ranked[i-1].baseline-ranked[i].baseline-playoff.committee_anchor.rank_spacing)<2e-8);
+      assert(ledger.filter(t=>!t.current_cfp_rank).every(t=>t.baseline<ranked[24].baseline));
+    }
   }
   const page=html({...ctx,esc:s=>String(s),crestOf:()=>({mark:'logo.png'})});
   assert(page.includes('Average ranking points'));assert(page.includes('not probabilities'));assert(page.includes('Avg. simulated rank'));assert(!page.includes('NaN'));

@@ -10,6 +10,8 @@ on:
       - scripts/conference_titles.R
       - tests/test_conference_titles.R
       - scripts/committee_anchor.R
+      - scripts/committee_timeline.R
+      - viz/data/committee_timeline_model.json
       - scripts/playoff_record_odds.R
       - tests/test_committee_anchor.R
       - tests/test_projected_bracket.R
@@ -54,8 +56,10 @@ jobs:
       # ensemble and Power Ratings, the current one from today's.
       - name: Check conditional playoff probabilities
         run: |
+          node --test tests/test_committee_watch.cjs tests/test_committee_archive.cjs
           Rscript tests/test_playoff_record_odds.R
           Rscript tests/test_committee_anchor.R
+          Rscript tests/test_committee_timeline.R
           Rscript tests/test_projected_bracket.R
           Rscript tests/test_conference_titles.R
           Rscript tests/test_preseason_snapshot.R
@@ -64,6 +68,13 @@ jobs:
           # Rebuild once, then the simulator preserves the completed snapshot.
           Rscript scripts/simulate_playoff.R 2000 preseason
           Rscript scripts/simulate_playoff.R 2000 current
+      - name: Keep proposed projection for review
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playoff-projection-review
+          path: viz/data/playoff_current.json
+          retention-days: 2
       - name: Commit refreshed projections for Vercel
         if: github.ref_name == 'main'
         shell: bash

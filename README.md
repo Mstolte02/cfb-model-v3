@@ -186,8 +186,20 @@ with an injury feed prohibits automated access.
 
 ### Projected playoff bracket
 
-The current bracket starts from the published CFP committee rankings. Simulated
-remaining results produce a mean final committee score for every team. Projected
+The current bracket starts from the published CFP committee rankings. Each simulated
+week updates the ranking using a model fitted on the 2014-25 weekly CFP releases and
+only games known by each release. It uses prior rank, record, opponent win percentage,
+quality of wins and losses, the timing of new results, conference context, and a
+separate title-game effect. Six-team comparison pools place four teams at a time
+through No. 16 and three thereafter. Head-to-head applies within each pool.
+The historical weights and chronological validation are in
+`viz/data/committee_timeline_model.json`; the compact ESPN snapshots are in
+`data/committee_history.json`. `viz/data/committee_backtest.json` contains
+chronological held-out weekly rankings and is rendered in Committee Watch with
+season/release controls, rank errors, and top-12 agreement. The 2024-25 releases
+were not used to choose the head-to-head pool adjustment. The 2026 releases are
+retrospective replays excluded from all fitting. Simulated results produce a mean final rank score
+for every team. Projected
 automatic qualifiers are included, at-large places follow that score order, and
 all twelve seeds use the same score order. The Analysis table shows the same
 all-season scores and records. Individual seed probabilities remain available as
