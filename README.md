@@ -99,7 +99,7 @@ python -m unittest discover -s tests -v          # invariants
 ```
 
 ESPN quotes are mapped to the schedule by game ID and retain our team names. The
-quote ledger records the source and retrieval time; ESPN’s pregame `close` fields
+quote ledger records the source and retrieval time; ESPNâ€™s pregame `close` fields
 mean its latest displayed odds, not a verified closing quote. The public board
 remains DraftKings-only, and completed-game lines and results remain frozen.
 
@@ -194,16 +194,17 @@ separate title-game effect. Six-team comparison pools place four teams at a time
 through No. 16 and three thereafter. Head-to-head applies within each pool.
 The historical weights and chronological validation are in
 `viz/data/committee_timeline_model.json`; the compact ESPN snapshots are in
-`data/committee_history.json`. `viz/data/committee_backtest.json` contains
+`data/committee_history/<season>.json`. `viz/data/committee_backtest.json` contains
 chronological held-out weekly rankings and is rendered in Committee Watch with
 season/release controls, rank errors, and top-12 agreement. The 2024-25 releases
 were not used to choose the head-to-head pool adjustment. The 2026 releases are
 retrospective replays excluded from all fitting. Simulated results produce a mean final rank score
 for every team. Projected
 automatic qualifiers are included, at-large places follow that score order, and
-all twelve seeds use the same score order. The Analysis table shows the same
-all-season scores and records. Individual seed probabilities remain available as
-uncertainty estimates; their separate modes do not determine the displayed seeds.
+all twelve seeds use the same score order. Analysis shows every team's seed
+probabilities and, within each seed, the simulated record, committee rank points,
+and conference-title share. Individual seed probabilities describe uncertainty;
+their separate modes do not determine the displayed seeds.
 
 ### Path to playoff
 
