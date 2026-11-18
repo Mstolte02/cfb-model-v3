@@ -75,6 +75,11 @@ test('historical accuracy includes held-out rankings and cutoff misses',()=>{
   const final=backtest.weeks.find(w=>w.season===2025&&w.week===16);
   assert.equal(final.rows.find(r=>r.actual===1).team,'Indiana');
 });
+test('conference title weekend receives the separate title-game feature',()=>{
+  assert.equal(C.isTitle({d:'2026-12-05',v:'Neutral Site'}),true);
+  assert.equal(C.isTitle({d:'2026-11-28',v:'Campus'}),false);
+  assert.equal(C.isTitle({d:'2026-12-12',v:'Army-Navy'}),false);
+});
 test('Tuesday through Saturday hold the official order, regardless of new finals',()=>{
   for(let d=17;d<=21;d++){
     const res=runAt(`2026-11-${d}T12:00:00Z`);

@@ -9,6 +9,9 @@
   const sampleSd=a=>{const m=mean(a);return Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/Math.max(1,a.length-1));};
   const day=g=>String(g.d||'').slice(0,10);
   const final=g=>g.f&&Number.isFinite(g.hp)&&Number.isFinite(g.ap)&&g.st!=='postseason';
+  const title=g=>g.game_type==='CONF_CHAMP'||g.t==='CONF_CHAMP'||
+    /championship/i.test([g.v,g.name,g.notes].filter(Boolean).join(' '))||
+    (day(g)>='2026-12-04'&&day(g)<='2026-12-05');
 
   const shift=(date,n)=>{const d=new Date(date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10);};
   // Calendar boundaries always use Eastern Time, independent of the viewer's zone.
@@ -76,15 +79,16 @@
     const prior=new Map(poll.rankings.map(r=>[r.team,r.rank]));
     const score=new Map();
     for(const t of teams){
-      const gs=played.get(t.team),recent=gs.filter(x=>day(x.g)>cutoff),q=o=>pct.get(o)??.5;
+      const gs=played.get(t.team),recent=gs.filter(x=>day(x.g)>cutoff),ordinary=recent.filter(x=>!title(x.g)),championship=recent.filter(x=>title(x.g)),q=o=>pct.get(o)??.5;
       const wins=gs.filter(x=>x.win),losses=gs.filter(x=>!x.win);
       const values={prior_rank:prior.get(t.team)??30,win_pct:gs.length?wins.length/gs.length:0,
         sos:gs.length?mean(gs.map(x=>q(x.opp))):0,
         quality_wins:wins.reduce((s,x)=>s+q(x.opp),0),bad_losses:losses.reduce((s,x)=>s+1-q(x.opp),0),
-        recent_win:recent.filter(x=>x.win).length,recent_loss:recent.filter(x=>!x.win).length,
-        recent_win_quality:recent.filter(x=>x.win).reduce((s,x)=>s+q(x.opp),0),
-        recent_loss_badness:recent.filter(x=>!x.win).reduce((s,x)=>s+1-q(x.opp),0),
-        title_win:0,title_loss:0,power:Number(DEFAULTS.p4.includes(t.conference)||t.team==='Notre Dame'),games:gs.length};
+        recent_win:ordinary.filter(x=>x.win).length,recent_loss:ordinary.filter(x=>!x.win).length,
+        recent_win_quality:ordinary.filter(x=>x.win).reduce((s,x)=>s+q(x.opp),0),
+        recent_loss_badness:ordinary.filter(x=>!x.win).reduce((s,x)=>s+1-q(x.opp),0),
+        title_win:championship.filter(x=>x.win).length,title_loss:championship.filter(x=>!x.win).length,
+        power:Number(DEFAULTS.p4.includes(t.conference)||t.team==='Notre Dame'),games:gs.length};
       score.set(t.team,model.intercept+Object.entries(model.weights).reduce((s,[k,w])=>s+w*values[k],0));
     }
     const h2h=new Set(games.map(g=>(g.hp>g.ap?g.h:g.a)+'\r'+(g.hp>g.ap?g.a:g.h)));
@@ -182,6 +186,6 @@
     wireHistory(host,history,esc);
     wireTeamLinks();
   }
-  root.CommitteeWatch={project,mount,staticScores,winPct,weeklyWindow};
+  root.CommitteeWatch={project,mount,staticScores,winPct,weeklyWindow,isTitle:title};
   if(typeof module!=='undefined')module.exports=root.CommitteeWatch;
 })(typeof window!=='undefined'?window:globalThis);
