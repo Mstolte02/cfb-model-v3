@@ -25,16 +25,25 @@
       +`<h4 class="ccg-h">Who takes the Group of 6 bid</h4><div class="ccg-card wide">${pool(playoff.teams.filter(t=>(playoff.g6_confs||G6).includes(t.conference)),'g6_bid',8)}</div>`
       +`<details class="conference-method"><summary>Conference rules and tiebreaker assumptions</summary><p class="board-note">${esc(playoff.conference_method||'cfbseedR applies conference-specific standings and tiebreaker cascades. Model power ratings stand in for unavailable external analytics composites; future CFP ranking tiebreakers are unavailable. The Pac-12 uses the engine’s generic cascade.')} <a href="https://cfbseedr.sportsdataverse.org/reference/cfb_standings.html" target="_blank" rel="noopener">Standings methodology ↗</a></p></details>`;
   }
-  function table({playoff,esc,crestOf}){
-    const seeds=playoff.bracket?.seeds||[],auto=new Set(playoff.bracket?.auto_bids||[]),data=ordered(playoff.teams);
-    const num=x=>Number.isFinite(x)?x.toFixed(2):'—';
-    return `<p class="board-note">All ${data.length} teams, ordered by average projected committee score. Scores are model ranking points, not official CFP scores. Scores and records use all simulated seasons. The projected field includes the projected automatic qualifiers and fills at-large bids in this score order; all twelve seeds follow the same order.</p><div class="resume-score-scroll"><table class="resume-score-table projected-selection-table"><caption>How the projected field is selected</caption><thead><tr><th scope="col">Score order</th><th scope="col">Team</th><th scope="col">Bracket seed</th><th scope="col">Committee score</th><th scope="col">Projected record</th><th scope="col">Record / score basis</th><th scope="col">Qualification</th><th scope="col">Make CFP</th><th scope="col">Conference title</th><th scope="col">G6 bid</th></tr></thead><tbody>${data.map((t,i)=>{
-      const seed=seeds.indexOf(t.team)+1;
-      const score=t.predicted_resume_score,wins=t.avg_wins,losses=t.avg_losses;
-      const bid=auto.has(t.team)?P4.includes(t.conference)?`Automatic qualifier · ${t.conference} champion`:G6.includes(t.conference)?'Automatic qualifier · highest-ranked G6 team':'Notre Dame Top 12 protection':seed?'At-large':'Outside projected field';
-      return `<tr class="${seed?'in-field':''}"><td>${i+1}</td><th scope="row"><button class="team-link" data-team="${esc(t.team)}"><img src="${esc(crestOf(t.team).mark)}" alt="" loading="lazy">${esc(t.team)}</button><small>${esc(t.conference)}</small></th><td>${seed?'#'+seed:'—'}</td><td><b>${num(score)}</b></td><td>${Number.isFinite(wins)&&Number.isFinite(losses)?wins.toFixed(1)+'–'+losses.toFixed(1):'—'}</td><td>All season draws</td><td class="selection-route">${esc(bid)}</td><td>${(100*chance(t.playoff)).toFixed(1)}%</td><td>${(100*chance(t.conf_champ)).toFixed(1)}%</td><td>${G6.includes(t.conference)?(100*chance(t.g6_bid)).toFixed(1)+'%':'—'}</td></tr>`;
-    }).join('')}</tbody></table></div>`;
+  function seedMatrix({playoff,esc,crestOf}){
+    const data=[...playoff.teams].sort((a,b)=>chance(b.playoff)-chance(a.playoff)
+      ||(a.projected_rank??Infinity)-(b.projected_rank??Infinity)||a.team.localeCompare(b.team));
+    const bracket=playoff.bracket?.seeds||[];
+    const pct=x=>(100*chance(x)).toFixed(1)+'%';
+    const numeric=(x,digits=1)=>x!=null&&Number.isFinite(Number(x))?Number(x).toFixed(digits):'—';
+    const row=t=>{
+      const probabilities=Array.from({length:12},(_,i)=>chance(t.seeds?.[i]));
+      const detail=probabilities.map((prob,i)=>{
+        if(!prob)return '';
+        const o=t.seed_outlooks?.[i];
+        return `<div class="seed-route"><strong>Seed ${i+1} · ${pct(prob)}</strong><span>${o?`${numeric(o.wins)}–${numeric(o.losses)} average record · ${numeric(o.score,2)} committee points · ${Number(o.samples)||0} draws${o.conf_champ==null?'':` · ${pct(o.conf_champ)} won conference`}`:'Seed-conditioned record and score unavailable for this snapshot'}</span></div>`;
+      }).filter(Boolean).join('');
+      const current=bracket.indexOf(t.team)+1;
+      const outside=Math.max(0,1-probabilities.reduce((sum,p)=>sum+p,0));
+      return `<details class="seed-team"><summary class="seed-grid"><span class="seed-identity"><img src="${esc(crestOf(t.team).mark)}" alt="" loading="lazy"><span><b>${esc(t.team)}</b><small>${esc(t.conference)}${current?' · bracket #'+current:''}</small></span></span><span class="seed-cell seed-make">${pct(t.playoff)}</span>${probabilities.map((p,i)=>`<span class="seed-cell ${p?'has-chance':''}" aria-label="Seed ${i+1}: ${pct(p)}" style="--seed-strength:${p}">${pct(p)}</span>`).join('')}<span class="seed-cell seed-miss">${pct(outside)}</span></summary><div class="seed-team-detail"><div class="seed-overview"><span>Current CFP rank <b>${numeric(t.current_cfp_rank,0)}</b></span><span>Power rank <b>${numeric(t.power_rank,0)}</b></span><span>Average final rank <b>${numeric(t.projected_rank,2)}</b></span><span>All-draw record <b>${numeric(t.avg_wins)}–${numeric(t.avg_losses)}</b></span><span>Playoff <b>${pct(t.playoff)}</b></span><span>Bye <b>${pct(t.bye)}</b></span><span>Conference title <b>${pct(t.conf_champ)}</b></span>${G6.includes(t.conference)?`<span>G6 bid <b>${pct(t.g6_bid)}</b></span>`:''}</div><p>Each route below uses only simulations where ${esc(t.team)} earned that seed. The record and committee points are averages within those draws; title odds are the share of those draws where the team won its conference.</p><div class="seed-routes">${detail||'<p>No seeded draws in this simulation.</p>'}</div><p class="seed-model-note">Power ratings drive game outcomes. The committee score then updates week by week from prior rank, record, opponent record, quality wins, bad losses, recent results, conference context, and title-game results. Nearby head-to-head results affect ranking pools. Scores are model ranking points, not official CFP scores.</p></div></details>`;
+    };
+    return `<p class="board-note">Seed percentages use ${Number(playoff.n_sims||0).toLocaleString()} simulated seasons. Each row shows the chance of every seed and missing the field; values may differ by 0.1 percentage point from rounding. Sorted by playoff chance. Open a team to see the records and scores in the draws that produced each seed.</p><div class="seed-matrix-scroll"><div class="seed-matrix" role="region" aria-label="Playoff seed probabilities by team"><div class="seed-grid seed-grid-head"><span>Team</span><span>In</span>${Array.from({length:12},(_,i)=>`<span>#${i+1}</span>`).join('')}<span>Out</span></div>${data.map(row).join('')}</div></div>`;
   }
-  root.ProjectedAnalysis={ordered,outside,races,table};
+  root.ProjectedAnalysis={ordered,outside,races,seedMatrix};
   if(typeof module!=='undefined')module.exports=root.ProjectedAnalysis;
 })(typeof window!=='undefined'?window:globalThis);

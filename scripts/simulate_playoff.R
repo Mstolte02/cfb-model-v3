@@ -483,7 +483,8 @@ export_run <- function(mode) {
       at <- !is.na(st$seed) & st$seed == seed
       if (!any(at)) return(NULL)
       list(samples = sum(at), score = mean(st$selection_score[at]),
-           wins = mean(st$wins[at]), losses = mean(st$losses[at]))
+           wins = mean(st$wins[at]), losses = mean(st$losses[at]),
+           conf_champ = mean(st$conf_champ[at] %in% TRUE))
     })
     base$predicted_resume_score <- round(mean(st$selection_score), 8)
     static <- cm$static[match(team, cm$team)]

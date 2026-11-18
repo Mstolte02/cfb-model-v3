@@ -890,7 +890,7 @@
   }
 
   function renderResumes() {
-    document.getElementById("playoff-resumes").innerHTML = ProjectedAnalysis.table({playoff:cur().playoff,esc,crestOf});
+    document.getElementById("playoff-resumes").innerHTML = ProjectedAnalysis.seedMatrix({playoff:cur().playoff,esc,crestOf});
   }
 
   /* Winner-only scenario builder and unified playoff paths. */
