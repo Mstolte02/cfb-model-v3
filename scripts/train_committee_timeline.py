@@ -1,7 +1,7 @@
 """Fit weekly CFP rank movement from as-of poll and game snapshots, 2014-25.
 
 The training data are compact ESPN poll/scoreboard snapshots in
-data/committee_history.json. A poll in week W sees games through week W-1.
+data/committee_history/<season>.json. A poll in week W sees games through week W-1.
 No future games, final-season ratings, or outcomes enter an earlier row.
 """
 import json
@@ -17,6 +17,15 @@ FEATURES = ('prior_rank', 'win_pct', 'sos', 'quality_wins', 'bad_losses',
             'recent_win', 'recent_loss', 'recent_win_quality',
             'recent_loss_badness', 'title_win', 'title_loss', 'power', 'games')
 POWER_IDS = {'1', '4', '5', '8', '9'}  # ACC, Big 12, Big Ten, SEC, historic Pac-12
+
+
+def load_history():
+    seasons = {}
+    for path in sorted((ROOT/'data/committee_history').glob('[0-9][0-9][0-9][0-9].json')):
+        seasons[path.stem] = json.loads(path.read_text())
+    if not seasons:
+        raise ValueError('No historical committee seasons found')
+    return {'source': 'ESPN CFP polls and scoreboard', 'seasons': seasons}
 
 
 def snapshots(history, all_candidates=False):
@@ -126,7 +135,7 @@ def weekly_predictions(model, test, data, bonus):
 
 
 def main():
-    data = json.loads((ROOT/'data/committee_history.json').read_text())
+    data = load_history()
     frame = snapshots(data)
     candidates = snapshots(data, all_candidates=True)
     # 2020's unequal pandemic schedules are kept as a held-out stress test, not
