@@ -180,7 +180,7 @@ def main():
           'title loss',result['weights']['title_loss'])
     print('Pod head-to-head bonus',best_bonus, result['pod_validation_mae'])
     print('Backtest weeks',len(backtest),'2024-25 MAE',round(np.mean(
-        [x['mae'] for x in backtest if x['season'] >= 2024]), 3))
+        [x['mae'] for x in backtest if 2024 <= x['season'] <= 2025]), 3))
 
 
 if __name__ == '__main__':

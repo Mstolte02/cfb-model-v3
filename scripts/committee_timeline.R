@@ -1,6 +1,8 @@
 # Weekly CFP rank transition trained on dated polls and results from 2014-25.
 # Each simulation moves one week at a time. Rank points are 31 - projected rank.
 committee_pod_order <- function(score, wins, bonus) {
+  head_to_head <- new.env(hash = TRUE, parent = emptyenv())
+  for (result in unique(wins)) head_to_head[[result]] <- TRUE
   remaining <- names(score)
   carry <- character()
   placed <- character()
@@ -10,7 +12,7 @@ committee_pod_order <- function(score, wins, bonus) {
     pool <- c(carry, head(available, max(0L, 6L - length(carry))))
     adjusted <- vapply(pool, function(t) {
       score[[t]] - bonus * sum(vapply(setdiff(pool, t), function(other)
-        paste(t, other, sep = '\r') %in% wins, logical(1)))
+        exists(paste(t, other, sep = '\r'), envir = head_to_head, inherits = FALSE), logical(1)))
     }, numeric(1))
     ordered <- pool[order(adjusted, score[pool], pool)]
     take <- min(if (length(placed) < 16L) 4L else 3L, length(ordered))
@@ -56,10 +58,12 @@ committee_timeline_scores <- function(standings, games, poll, model, fbs, conf) 
       wins <- ifelse(played$result > 0, played$home_team, played$away_team)
       losses <- ifelse(played$result > 0, played$away_team, played$home_team)
       head_to_head <- paste(wins, losses, sep = '\r')
+      home_ix <- split(seq_len(nrow(played)), played$home_team)
+      away_ix <- split(seq_len(nrow(played)), played$away_team)
       predicted <- setNames(numeric(length(fbs)), fbs)
       for (team in fbs) {
-        home <- which(played$home_team == team)
-        away <- which(played$away_team == team)
+        home <- home_ix[[team]]; if (is.null(home)) home <- integer()
+        away <- away_ix[[team]]; if (is.null(away)) away <- integer()
         ix <- c(home, away)
         opp <- c(played$away_team[home], played$home_team[away])
         won <- c(played$result[home] > 0, played$result[away] < 0)
@@ -88,6 +92,8 @@ committee_timeline_scores <- function(standings, games, poll, model, fbs, conf) 
     ix <- standing_ix[[as.character(sim)]]
     final_rank <- if (length(weeks)) full_rank else rank
     scores[ix] <- 31 - unname(final_rank[standings$team[ix]])
+    if (length(ids) > 200L && sim %% 250L == 0L)
+      message('Weekly committee rankings: ', sim, '/', length(ids), ' draws')
   }
   list(score=scores, official=official,
        method='Weekly as-of CFP transitions fitted on 2014-25; six-team comparison pools, four then three placements')
