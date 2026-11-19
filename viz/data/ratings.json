@@ -824,7 +824,7 @@
    "rank": 40,
    "team": "Wisconsin",
    "conference": "Big Ten",
-   "power": 0.639247,
+   "power": 0.639248,
    "vs_average": 0.67703,
    "O": -0.862,
    "D": 0.524,
@@ -1328,7 +1328,7 @@
    "rank": 64,
    "team": "UTSA",
    "conference": "American Athletic",
-   "power": 0.515988,
+   "power": 0.515989,
    "vs_average": 0.515671,
    "O": 0.279,
    "D": 0.204,
@@ -1622,7 +1622,7 @@
    "rank": 78,
    "team": "Air Force",
    "conference": "Mountain West",
-   "power": 0.474334,
+   "power": 0.474335,
    "vs_average": 0.460058,
    "O": 0.47,
    "D": -1.86,
@@ -1665,7 +1665,7 @@
    "team": "Minnesota",
    "conference": "Big Ten",
    "power": 0.449542,
-   "vs_average": 0.427923,
+   "vs_average": 0.427924,
    "O": -0.134,
    "D": 0.306,
    "talent": 0.38,
@@ -1749,7 +1749,7 @@
    "team": "Mississippi State",
    "conference": "SEC",
    "power": 0.418925,
-   "vs_average": 0.38819,
+   "vs_average": 0.388191,
    "O": 0.011,
    "D": -0.402,
    "talent": 0.765,
@@ -1979,7 +1979,7 @@
    "rank": 95,
    "team": "Boston College",
    "conference": "ACC",
-   "power": 0.368422,
+   "power": 0.368423,
    "vs_average": 0.324278,
    "O": 0.008,
    "D": -0.989,
@@ -2189,8 +2189,8 @@
    "rank": 105,
    "team": "Buffalo",
    "conference": "Mid-American",
-   "power": 0.327079,
-   "vs_average": 0.274718,
+   "power": 0.327076,
+   "vs_average": 0.274714,
    "O": -1.349,
    "D": -0.634,
    "talent": -0.901,
@@ -2378,7 +2378,7 @@
    "rank": 114,
    "team": "Western Kentucky",
    "conference": "Conference USA",
-   "power": 0.285356,
+   "power": 0.285357,
    "vs_average": 0.227512,
    "O": 0.181,
    "D": 0.106,
@@ -2400,7 +2400,7 @@
    "team": "Hawai'i",
    "conference": "Mountain West",
    "power": 0.273009,
-   "vs_average": 0.214158,
+   "vs_average": 0.214159,
    "O": -0.49,
    "D": -0.622,
    "talent": -1.11,
@@ -2693,7 +2693,7 @@
    "rank": 129,
    "team": "Massachusetts",
    "conference": "Mid-American",
-   "power": 0.172494,
+   "power": 0.172495,
    "vs_average": 0.117187,
    "O": -2.809,
    "D": -2.81,
@@ -2756,7 +2756,7 @@
    "rank": 132,
    "team": "Charlotte",
    "conference": "American Athletic",
-   "power": 0.154353,
+   "power": 0.154354,
    "vs_average": 0.101639,
    "O": -2.338,
    "D": -1.729,
@@ -2778,7 +2778,7 @@
    "team": "Akron",
    "conference": "Mid-American",
    "power": 0.152112,
-   "vs_average": 0.099824,
+   "vs_average": 0.099825,
    "O": -1.515,
    "D": -0.419,
    "talent": -0.747,
@@ -13162,7 +13162,7 @@
     },
     {
      "team": "Wisconsin",
-     "power": 0.639247,
+     "power": 0.639248,
      "vs_average": 0.67703,
      "rank": 40
     },
@@ -13306,7 +13306,7 @@
     },
     {
      "team": "UTSA",
-     "power": 0.515988,
+     "power": 0.515989,
      "vs_average": 0.515671,
      "rank": 64
     },
@@ -13390,7 +13390,7 @@
     },
     {
      "team": "Air Force",
-     "power": 0.474334,
+     "power": 0.474335,
      "vs_average": 0.460058,
      "rank": 78
     },
@@ -13403,7 +13403,7 @@
     {
      "team": "Minnesota",
      "power": 0.449542,
-     "vs_average": 0.427923,
+     "vs_average": 0.427924,
      "rank": 80
     },
     {
@@ -13427,7 +13427,7 @@
     {
      "team": "Mississippi State",
      "power": 0.418925,
-     "vs_average": 0.38819,
+     "vs_average": 0.388191,
      "rank": 84
     },
     {
@@ -13492,7 +13492,7 @@
     },
     {
      "team": "Boston College",
-     "power": 0.368422,
+     "power": 0.368423,
      "vs_average": 0.324278,
      "rank": 95
     },
@@ -13552,8 +13552,8 @@
     },
     {
      "team": "Buffalo",
-     "power": 0.327079,
-     "vs_average": 0.274718,
+     "power": 0.327076,
+     "vs_average": 0.274714,
      "rank": 105
     },
     {
@@ -13606,14 +13606,14 @@
     },
     {
      "team": "Western Kentucky",
-     "power": 0.285356,
+     "power": 0.285357,
      "vs_average": 0.227512,
      "rank": 114
     },
     {
      "team": "Hawai'i",
      "power": 0.273009,
-     "vs_average": 0.214158,
+     "vs_average": 0.214159,
      "rank": 115
     },
     {
@@ -13696,7 +13696,7 @@
     },
     {
      "team": "Massachusetts",
-     "power": 0.172494,
+     "power": 0.172495,
      "vs_average": 0.117187,
      "rank": 129
     },
@@ -13714,14 +13714,14 @@
     },
     {
      "team": "Charlotte",
-     "power": 0.154353,
+     "power": 0.154354,
      "vs_average": 0.101639,
      "rank": 132
     },
     {
      "team": "Akron",
      "power": 0.152112,
-     "vs_average": 0.099824,
+     "vs_average": 0.099825,
      "rank": 133
     },
     {
