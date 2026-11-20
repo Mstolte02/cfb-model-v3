@@ -88,6 +88,9 @@
         recent_win_quality:ordinary.filter(x=>x.win).reduce((s,x)=>s+q(x.opp),0),
         recent_loss_badness:ordinary.filter(x=>!x.win).reduce((s,x)=>s+1-q(x.opp),0),
         title_win:championship.filter(x=>x.win).length,title_loss:championship.filter(x=>!x.win).length,
+        title_margin:championship.reduce((s,x)=>s+Math.max(-35,Math.min(35,(x.g.h===t.team?1:-1)*(x.g.hp-x.g.ap)))/7,0),
+        title_win_opponent:championship.filter(x=>x.win).reduce((s,x)=>s+(30-(prior.get(x.opp)??30))/10,0),
+        title_loss_opponent:championship.filter(x=>!x.win).reduce((s,x)=>s+(30-(prior.get(x.opp)??30))/10,0),
         power:Number(DEFAULTS.p4.includes(t.conference)||t.team==='Notre Dame'),games:gs.length};
       score.set(t.team,model.intercept+Object.entries(model.weights).reduce((s,[k,w])=>s+w*values[k],0));
     }

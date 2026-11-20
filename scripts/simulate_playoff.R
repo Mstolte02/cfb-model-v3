@@ -537,8 +537,10 @@ export_run <- function(mode) {
     if (startsWith(anchor$method, 'Weekly')) {
       out$committee_proxy <- paste('Weekly rank transitions from the current CFP order;',
         'as-of record and opponent quality, conference context, recent wins/losses,',
-        'title-game results and head-to-head in six-team comparison pools.')
+        'title-game results, capped victory margin and pregame committee opponent rank,',
+        'and head-to-head in six-team comparison pools.')
       out$selection_weights <- read_json(file.path(viz, 'committee_timeline_model.json'))$weights
+      out$committee_model_revision <- read_json(file.path(viz, 'committee_timeline_model.json'))$model_revision
       out$committee_weights <- NULL
       out$provisional_weights <- NULL
       out$h2h_within <- NULL

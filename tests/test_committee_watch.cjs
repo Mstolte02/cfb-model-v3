@@ -109,3 +109,17 @@ test('Sunday waits for unfinished games, then ignores future finals',()=>{
   const res=runAt('2026-11-15T12:00:00Z',{schedule:[...fixtureSchedule,future]});
   assert.deepEqual(res.rows.find(r=>r.team==='Notre Dame').results.map(g=>g.opponent),['Boston College']);
 });
+
+test('title margin changes ranking, caps at 35 and stays finite without titles',()=>{
+  const p={released:'2026-12-01',games_through:'2026-11-30',rankings:poll.rankings};
+  const ts=p.rankings.map(r=>({team:r.team,conference:'Big Ten',rating:1}));
+  const base=ts.map(t=>({h:t.team,a:'FCS '+t.team,d:'2026-11-28',hp:21,ap:7,f:1}));
+  const winner=p.rankings[7].team,loser=p.rankings[3].team;
+  const m={version:1,intercept:0,pod_head_to_head_bonus:0,weights:{prior_rank:1,title_margin:-1,title_win_opponent:0,title_loss_opponent:0}};
+  const run=margin=>C.project({schedule:[...base,{h:winner,a:loser,d:'2026-12-05',hp:margin+7,ap:7,f:1,game_type:'CONF_CHAMP'}],teams:ts,poll:p,model:m,now:'2026-12-06T18:00:00Z'});
+  const close=run(1),big=run(35),capped=run(70);
+  assert.ok(close.rows.every(r=>Number.isFinite(r.score)));
+  assert.ok(close.rows.find(r=>r.team===winner).projected>close.rows.find(r=>r.team===loser).projected);
+  assert.ok(big.rows.find(r=>r.team===winner).projected<big.rows.find(r=>r.team===loser).projected);
+  assert.deepEqual(big.rows.map(r=>r.team),capped.rows.map(r=>r.team));
+});

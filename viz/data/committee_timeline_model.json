@@ -14,23 +14,29 @@
     "title_win",
     "title_loss",
     "power",
-    "games"
+    "games",
+    "title_margin",
+    "title_win_opponent",
+    "title_loss_opponent"
   ],
-  "intercept": 6.463712093978582,
+  "intercept": 2.7321885847751073,
   "weights": {
-    "prior_rank": 0.7581193519554912,
-    "win_pct": -0.23654228529212099,
-    "sos": 0.05150868757360365,
-    "quality_wins": -1.1209105634937078,
-    "bad_losses": 0.7347030240757455,
-    "recent_win": -1.5811370690717426,
-    "recent_loss": 2.510760104796258,
-    "recent_win_quality": -0.9570390797897184,
-    "recent_loss_badness": 0.8595750232690802,
-    "title_win": -0.31200869878234033,
-    "title_loss": 0.22394658678795365,
-    "power": -0.5769582021955301,
-    "games": 0.21785277625644114
+    "prior_rank": 0.7893328855853057,
+    "win_pct": -0.20292337493256749,
+    "sos": 0.03318551015912067,
+    "quality_wins": -0.740631320719858,
+    "bad_losses": 0.5457646883328354,
+    "recent_win": -1.1031113423254986,
+    "recent_loss": 4.860879686805477,
+    "recent_win_quality": -1.8301783457837277,
+    "recent_loss_badness": 2.706467872995546,
+    "title_win": 0.11390849556083481,
+    "title_loss": 0.9193769341068094,
+    "power": -0.19618370325054085,
+    "games": 0.29782579302429324,
+    "title_margin": -0.43323023568679514,
+    "title_win_opponent": -0.6176542069396411,
+    "title_loss_opponent": -0.35711819012965096
   },
   "training_seasons": [
     2014,
@@ -49,60 +55,62 @@
     {
       "season": 2018,
       "n": 137,
-      "mae": 1.959,
+      "mae": 1.773,
       "prior_mae": 2.832,
-      "spearman": 0.9533
+      "spearman": 0.9683
     },
     {
       "season": 2019,
       "n": 133,
-      "mae": 1.824,
+      "mae": 1.893,
       "prior_mae": 2.09,
-      "spearman": 0.9667
+      "spearman": 0.9637
     },
     {
       "season": 2021,
       "n": 134,
-      "mae": 1.885,
+      "mae": 1.513,
       "prior_mae": 2.836,
-      "spearman": 0.9622
+      "spearman": 0.9749
     },
     {
       "season": 2022,
       "n": 139,
-      "mae": 1.981,
+      "mae": 1.626,
       "prior_mae": 3.338,
-      "spearman": 0.9656
+      "spearman": 0.9747
     },
     {
       "season": 2023,
       "n": 132,
-      "mae": 1.543,
+      "mae": 1.479,
       "prior_mae": 2.348,
-      "spearman": 0.9741
+      "spearman": 0.9781
     },
     {
       "season": 2024,
       "n": 135,
-      "mae": 1.904,
+      "mae": 1.639,
       "prior_mae": 3.111,
-      "spearman": 0.9628
+      "spearman": 0.9767
     },
     {
       "season": 2025,
       "n": 139,
-      "mae": 1.732,
+      "mae": 1.442,
       "prior_mae": 2.489,
-      "spearman": 0.9698
+      "spearman": 0.9796
     }
   ],
   "pod_head_to_head_bonus": 0.25,
   "pod_validation_mae": {
-    "0": 1.328,
-    "0.25": 1.3143,
-    "0.5": 1.3223,
-    "1": 1.3383,
-    "2": 1.4377
+    "0": 1.2629,
+    "0.25": 1.2457,
+    "0.5": 1.2686,
+    "1": 1.3097,
+    "2": 1.3931
   },
-  "notes": "Rank 30 denotes teams outside a Top 25; scores are predicted rank (lower is better). Title win/loss terms replace ordinary recent win/loss terms. Opponent winning percentages are computed as of each poll."
+  "notes": "Rank 30 denotes teams outside a Top 25; scores are predicted rank (lower is better). Title win/loss terms replace ordinary recent win/loss terms. Opponent winning percentages are computed as of each poll. Title margins are signed, capped at 35 points and divided by seven; opponent terms use the preceding committee rank. Ridge alpha=30. No environment, PPA, or cutoff-protection features.",
+  "model_revision": "championship-context-2026-11-20",
+  "ridge_alpha": 30
 }

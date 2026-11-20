@@ -80,6 +80,12 @@ committee_timeline_scores <- function(standings, games, poll, model, fbs, conf) 
                     title_win=sum(won & recent & title),
                     title_loss=sum(!won & recent & title),
                     power=as.numeric(power[[team]]), games=length(ix))
+        championship <- recent & title
+        margins <- played$result[ix] * ifelse(played$home_team[ix] == team, 1, -1)
+        values <- c(values,
+          title_margin = sum(pmax(-35, pmin(35, margins[championship]))) / 7,
+          title_win_opponent = sum((30 - rank[opp[championship & won]]) / 10),
+          title_loss_opponent = sum((30 - rank[opp[championship & !won]]) / 10))
         if (!length(ix)) values['win_pct'] <- 0
         predicted[[team]] <- model$intercept + sum(weights[names(values)] * values)
       }

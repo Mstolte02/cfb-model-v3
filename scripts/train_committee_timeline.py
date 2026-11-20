@@ -15,7 +15,8 @@ from sklearn.linear_model import Ridge
 ROOT = Path(__file__).resolve().parents[1]
 FEATURES = ('prior_rank', 'win_pct', 'sos', 'quality_wins', 'bad_losses',
             'recent_win', 'recent_loss', 'recent_win_quality',
-            'recent_loss_badness', 'title_win', 'title_loss', 'power', 'games')
+            'recent_loss_badness', 'title_win', 'title_loss', 'power', 'games',
+            'title_margin', 'title_win_opponent', 'title_loss_opponent')
 POWER_IDS = {'1', '4', '5', '8', '9'}  # ACC, Big 12, Big Ten, SEC, historic Pac-12
 
 
@@ -60,7 +61,14 @@ def snapshots(history, all_candidates=False):
                            title_win=sum(win for g, _, win in recent if g['title']),
                            title_loss=sum(not win for g, _, win in recent if g['title']),
                            power=int(str(conference.get(team)) in POWER_IDS or team == '87'),
-                           games=len(gs))
+                           games=len(gs),
+                           title_margin=sum(np.clip((g['home_score']-g['away_score']) *
+                               (1 if g['home']==team else -1), -35, 35)/7
+                               for g, _, _ in recent if g['title']),
+                           title_win_opponent=sum((30-previous['rankings'].get(opp,30))/10
+                               for g, opp, win in recent if g['title'] and win),
+                           title_loss_opponent=sum((30-previous['rankings'].get(opp,30))/10
+                               for g, opp, win in recent if g['title'] and not win))
                 rows.append(row)
     return pd.DataFrame(rows)
 
@@ -141,17 +149,18 @@ def main():
         test = frame[frame.season == year]
         if train.empty or test.empty:
             continue
-        model = Ridge(alpha=300).fit(train[list(FEATURES)], train['rank'])
+        model = Ridge(alpha=30).fit(train[list(FEATURES)], train['rank'])
         validation.append(dict(season=year, n=len(test), **metrics(model, test)))
         folds.append((year, model))
         for bonus in pod_errors:
             weekly = weekly_predictions(model, candidates[candidates.season == year], data, bonus)
             pod_errors[bonus].append(np.mean([x['mae'] for x in weekly]))
     # Tune on 2018-23; leave 2024-25 out of the adjustment choice.
-    best_bonus = min(pod_errors, key=lambda b: np.mean(pod_errors[b][:5]))
+    # Preserve the tested pod adjustment; this release changes title context only.
+    best_bonus = .25
     backtest = [week for year, fitted in folds for week in weekly_predictions(
         fitted, candidates[candidates.season == year], data, best_bonus)]
-    model = Ridge(alpha=300).fit(frame[list(FEATURES)], frame['rank'])
+    model = Ridge(alpha=30).fit(frame[list(FEATURES)], frame['rank'])
     # 2026 never enters fitting or bonus choice. These are retrospective replays
     # of the published 2026 weeks, not forecasts captured before publication.
     if '2026' in data['seasons']:
@@ -160,7 +169,7 @@ def main():
     (ROOT/'viz/data/committee_backtest.json').write_text(json.dumps({
         'model_version': 1, 'source': 'Chronological out-of-season CFP predictions',
         'weeks': backtest}, separators=(',', ':'))+'\n')
-    result = dict(version=1, source='ESPN weekly CFP polls and completed games, 2014-2025',
+    result = dict(version=1, model_revision='championship-context-2026-11-20', ridge_alpha=30, source='ESPN weekly CFP polls and completed games, 2014-2025',
                   features=list(FEATURES), intercept=float(model.intercept_),
                   weights={name: float(coef) for name, coef in zip(FEATURES, model.coef_)},
                   training_seasons=sorted(frame.season.unique().tolist()),
@@ -170,7 +179,10 @@ def main():
                                       for b, v in pod_errors.items()},
                   notes='Rank 30 denotes teams outside a Top 25; scores are predicted rank (lower is better). '
                         'Title win/loss terms replace ordinary recent win/loss terms. '
-                        'Opponent winning percentages are computed as of each poll.')
+                        'Opponent winning percentages are computed as of each poll. '
+                        'Title margins are signed, capped at 35 points and divided by seven; '
+                        'opponent terms use the preceding committee rank. Ridge alpha=30. '
+                        'No environment, PPA, or cutoff-protection features.')
     out = ROOT/'viz/data/committee_timeline_model.json'
     out.write_text(json.dumps(result, indent=2)+'\n')
     print('Saved', out)
