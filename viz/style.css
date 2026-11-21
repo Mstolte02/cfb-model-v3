@@ -844,7 +844,7 @@ main { max-width: 1320px; padding-top: 38px; }
 .leader-controls { justify-content: flex-start; }.leader-controls .seg { margin-right: auto; }
 
 /* ---- 20,000 simulations: ring, legend, ladder ----------------------------- */
-.sim-panel { margin-top: 30px; }
+.matchup-sim-panel { margin-top: 30px; }
 .sim-body { display: grid; grid-template-columns: minmax(210px, 280px) 1fr; gap: 26px;
   align-items: center; padding: 20px 22px; border: 1px solid var(--line2);
   border-radius: 14px; background: var(--panel); }
@@ -853,9 +853,9 @@ main { max-width: 1320px; padding-top: 38px; }
 /* stroke-width and stroke-opacity are presentation ATTRIBUTES on the arcs, so these
    rules win over them without any inline style to fight. */
 .sim-arc { cursor: pointer; transition: stroke-width .12s ease, opacity .12s ease; }
-.sim-panel.hovering .sim-arc:not(.is-on) { opacity: .3; }
+.matchup-sim-panel.hovering .sim-arc:not(.is-on) { opacity: .3; }
 .sim-arc.is-on { stroke-width: 7.2; }
-.sim-panel.hovering .sim-row:not(.is-on) { opacity: .45; }
+.matchup-sim-panel.hovering .sim-row:not(.is-on) { opacity: .45; }
 .sim-row { border-radius: 6px; transition: opacity .12s ease, background .12s ease; }
 .sim-row.is-on { background: var(--panel2); }
 .sim-tip { position: absolute; z-index: 5; max-width: 190px; padding: 8px 11px;

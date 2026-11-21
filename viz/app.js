@@ -2731,7 +2731,7 @@
       that actually met twice in a season. To bet a single meeting you want the wider
       ${liveSigma().toFixed(0)} the model is graded against, which also
       carries what it may have wrong about these two.</p>`;
-    return `<div class="sim-panel"><div class="section-intro"><div><span class="eyebrow">20,000 simulations</span><h3>If these two played 20,000 times</h3></div><p>The same matchup replayed, both teams held at the strength the model gives them today — not 20,000 fresh guesses about who they are. Margins come from the distribution of real results, so 3 and 7 stay lumpy where a normal curve would smooth them, narrowed to the spread teams actually produce when they meet twice in one season. How often each side wins is held to the win probability above.</p></div>
+    return `<div class="matchup-sim-panel"><div class="section-intro"><div><span class="eyebrow">20,000 simulations</span><h3>If these two played 20,000 times</h3></div><p>The same matchup replayed, both teams held at the strength the model gives them today — not 20,000 fresh guesses about who they are. Margins come from the distribution of real results, so 3 and 7 stay lumpy where a normal curve would smooth them, narrowed to the spread teams actually produce when they meet twice in one season. How often each side wins is held to the win probability above.</p></div>
       <div class="sim-body">
         <div class="sim-ring">
           <svg viewBox="0 0 42 42" role="img" aria-label="Simulated margins of victory">
@@ -2761,7 +2761,7 @@
      clamped to it - a slice on the left edge would otherwise push the tooltip off the
      side of a phone, where body{overflow-x:hidden} silently clips it. */
   function wireSimHover() {
-    const panel = document.querySelector(".sim-panel");
+    const panel = document.querySelector("#matchup-result .matchup-sim-panel");
     if (!panel) return;
     const ring = panel.querySelector(".sim-ring"), tip = panel.querySelector(".sim-tip");
     if (!ring || !tip) return;
