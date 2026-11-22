@@ -1,6 +1,6 @@
 source('scripts/committee_timeline.R')
 model <- jsonlite::fromJSON('viz/data/committee_timeline_model.json', simplifyVector=FALSE)
-stopifnot(model$version == 1L,
+stopifnot(model$version == 3L,
           model$weights$recent_loss > model$weights$title_loss,
           all(vapply(model$validation, function(x) x$mae < x$prior_mae, logical(1))))
 scores <- setNames(seq_len(8) + 0.1, LETTERS[1:8])
@@ -43,3 +43,18 @@ opponent <- run_margin(7)
 stopifnot(abs(opponent[winner]-(8+(30-4)/10))<1e-10)
 committee_pod_order <- saved_order
 cat('Simulation title margin, cap and as-of opponent rank passed\n')
+# Regular-season margin follows the same bounded opponent weighting as training/JS.
+probe$weights$title_win_opponent <- 0; probe$weights$recent_margin <- -1
+committee_pod_order <- function(score,wins,bonus) { captured <<- score; names(sort(score)) }
+p$games_through <- '2026-11-16'; schedule <- list(list(d='2026-11-14',w=11L))
+gs$week <- 11L
+run_regular <- function(m) {
+  game <- data.frame(sim=1L,game_type='REG',week=12L,
+                     home_team=winner,away_team=loser,result=m)
+  invisible(committee_timeline_scores(st,rbind(gs,game),p,probe,fbs,conf)); captured
+}
+small <- run_regular(1); large <- run_regular(35); capped <- run_regular(70)
+stopifnot(small[winner]>small[loser],large[winner]<large[loser],identical(large,capped),
+          abs(large[winner]-(8-5*(30-4)/30))<1e-10)
+committee_pod_order <- saved_order
+cat('Regular-season margin, opponent weighting and cap passed\n')

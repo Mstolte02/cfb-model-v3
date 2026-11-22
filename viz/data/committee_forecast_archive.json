@@ -1,4 +1,40 @@
 {
   "version": 1,
-  "entries": []
+  "entries": [
+    {
+      "target_release": "2026-11-24",
+      "captured_at": "2026-11-22T14:49:08.124Z",
+      "input_release": "2026-11-17",
+      "results_through": "2026-11-22",
+      "predicted": [
+        "Georgia",
+        "Utah",
+        "Alabama",
+        "Texas",
+        "Notre Dame",
+        "Miami",
+        "Tennessee",
+        "BYU",
+        "Wake Forest",
+        "Texas Tech",
+        "UCLA",
+        "Oregon",
+        "Iowa",
+        "Indiana",
+        "USC",
+        "Arizona",
+        "Houston",
+        "Oklahoma",
+        "Louisville",
+        "Florida",
+        "Ohio State",
+        "Ole Miss",
+        "Kentucky",
+        "Boise State",
+        "Missouri"
+      ],
+      "actual": null,
+      "metrics": null
+    }
+  ]
 }

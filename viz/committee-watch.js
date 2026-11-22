@@ -81,7 +81,9 @@
     for(const t of teams){
       const gs=played.get(t.team),recent=gs.filter(x=>day(x.g)>cutoff),ordinary=recent.filter(x=>!title(x.g)),championship=recent.filter(x=>title(x.g)),q=o=>pct.get(o)??.5;
       const wins=gs.filter(x=>x.win),losses=gs.filter(x=>!x.win);
-      const values={prior_rank:prior.get(t.team)??30,win_pct:gs.length?wins.length/gs.length:0,
+      const priorRank=prior.get(t.team)??30;
+      const values={prior_rank:priorRank,prior_sq:priorRank*priorRank/30,
+        recent_margin:ordinary.reduce((s,x)=>s+Math.max(-35,Math.min(35,(x.g.h===t.team?1:-1)*(x.g.hp-x.g.ap)))/7*(30-(prior.get(x.opp)??30))/30,0),win_pct:gs.length?wins.length/gs.length:0,
         sos:gs.length?mean(gs.map(x=>q(x.opp))):0,
         quality_wins:wins.reduce((s,x)=>s+q(x.opp),0),bad_losses:losses.reduce((s,x)=>s+1-q(x.opp),0),
         recent_win:ordinary.filter(x=>x.win).length,recent_loss:ordinary.filter(x=>!x.win).length,
@@ -118,7 +120,7 @@
     const intercept=mean(ranked.map(r=>proxy.get(r.team)+spacing*r.rank));
     const cfp=new Map(ranked.map(r=>[r.team,r.rank]));
     const anchor=new Map(names.map(t=>[t,cfp.has(t)?intercept-spacing*cfp.get(t):Math.min(proxy.get(t),intercept-spacing*26)]));
-    const timeline=model?.version===1&&status==='projection'&&schedule.some(g=>final(g)&&day(g)>cutoff&&day(g)<=through)
+    const timeline=[1,2,3].includes(model?.version)&&status==='projection'&&schedule.some(g=>final(g)&&day(g)>cutoff&&day(g)<=through)
       ?timelineScores(schedule,teams,poll,through,model):null;
     const rows=names.map(t=>({team:t,current:cfp.get(t)??null,anchor:timeline?31-(cfp.get(t)??30):anchor.get(t),
       score:timeline?timeline.get(t):anchor.get(t)+o.weights.win_pct*(currentPct.get(t)-then.get(t)),pctThen:then.get(t),pctNow:currentPct.get(t),static:st.get(t).static}));
@@ -185,7 +187,7 @@
           <ol class="cw-list">${projected.map(r=>row(r,r.projected,'proj')).join('')}</ol>
           ${res.dropped.length?`<p class="cw-out">Projected to drop out: ${res.dropped.map(t=>`<b>${esc(t)}</b> <small>(${by.get(t).recordNow}, ${games(by.get(t)).replace(/<[^>]+>/g,' ').trim()})</small>`).join(', ')}</p>`:''}</section>
       </div>
-      <p class="board-note">The projection starts from the published order and uses a historical weekly transition model. It considers the timing and opponent quality of results, schedule, conference, and head-to-head among teams in the same committee comparison pool. The projected order is an estimate, not an official committee vote.</p>${historicalHTML(history,archive,esc)}</div>`;
+      <p class="board-note">The projection starts from the published order and uses a historical weekly transition model. It considers nonlinear prior-rank spacing, opponent-weighted scoring margins, championship context, the timing and opponent quality of results, schedule, conference, and head-to-head among teams in the same committee comparison pool. The projected order is an estimate, not an official committee vote.</p>${historicalHTML(history,archive,esc)}</div>`;
     wireHistory(host,history,esc);
     wireTeamLinks();
   }

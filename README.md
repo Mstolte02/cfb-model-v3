@@ -255,3 +255,5 @@ in [`audit/ACCURACY_RECOVERY_REVIEW.md`](audit/ACCURACY_RECOVERY_REVIEW.md).
   note that used to sit in this README is there, as written.
 - [audit/](audit/) — the experiments, including the ones that failed.
 - [war_model/README.md](war_model/README.md) — how player WAR is built.
+
+Committee model revision (2026-11-21): nonlinear prior-rank spacing, opponent-weighted regular-season margin, head-to-head comparison pools, and championship context are unified. See [validation audit](docs/committee_unified_model_audit.md).

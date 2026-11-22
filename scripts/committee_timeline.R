@@ -24,7 +24,7 @@ committee_pod_order <- function(score, wins, bonus) {
 }
 
 committee_timeline_scores <- function(standings, games, poll, model, fbs, conf) {
-  stopifnot(identical(as.integer(model$version), 1L), length(poll$rankings) == 25L)
+  stopifnot(as.integer(model$version) %in% c(1L,2L,3L), length(poll$rankings) == 25L)
   weights <- unlist(model$weights)
   official <- setNames(vapply(poll$rankings, function(x) as.integer(x$rank), integer(1)),
                        vapply(poll$rankings, `[[`, character(1), 'team'))
@@ -71,7 +71,10 @@ committee_timeline_scores <- function(standings, games, poll, model, fbs, conf) 
         recent <- played$week[ix] > if (week == min(weeks)) first_week else prev_week
         title <- played$game_type[ix] == 'CONF_CHAMP'
         ordinary <- recent & !title
-        values <- c(prior_rank=rank[[team]], win_pct=mean(won),
+        ordinary_margins <- played$result[ix] * ifelse(played$home_team[ix] == team, 1, -1)
+        opponent_prior <- rank[opp]; opponent_prior[is.na(opponent_prior)] <- 30
+        values <- c(prior_rank=rank[[team]], prior_sq=rank[[team]]^2/30,
+                    recent_margin=sum(pmax(-35,pmin(35,ordinary_margins[ordinary]))/7 * (30-opponent_prior[ordinary])/30), win_pct=mean(won),
                     sos=if (length(quality)) mean(quality) else 0,
                     quality_wins=sum(quality[won]), bad_losses=sum(1-quality[!won]),
                     recent_win=sum(won & ordinary), recent_loss=sum(!won & ordinary),

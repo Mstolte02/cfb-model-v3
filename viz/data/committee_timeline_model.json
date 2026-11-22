@@ -1,5 +1,7 @@
 {
-  "version": 1,
+  "version": 3,
+  "model_revision": "unified-nonlinear-opponent-margin-2026-11-21",
+  "ridge_alpha": 30,
   "source": "ESPN weekly CFP polls and completed games, 2014-2025",
   "features": [
     "prior_rank",
@@ -17,26 +19,30 @@
     "games",
     "title_margin",
     "title_win_opponent",
-    "title_loss_opponent"
+    "title_loss_opponent",
+    "prior_sq",
+    "recent_margin"
   ],
-  "intercept": 2.7321885847751073,
+  "intercept": 0.6090850486214965,
   "weights": {
-    "prior_rank": 0.7893328855853057,
-    "win_pct": -0.20292337493256749,
-    "sos": 0.03318551015912067,
-    "quality_wins": -0.740631320719858,
-    "bad_losses": 0.5457646883328354,
-    "recent_win": -1.1031113423254986,
-    "recent_loss": 4.860879686805477,
-    "recent_win_quality": -1.8301783457837277,
-    "recent_loss_badness": 2.706467872995546,
-    "title_win": 0.11390849556083481,
-    "title_loss": 0.9193769341068094,
-    "power": -0.19618370325054085,
-    "games": 0.29782579302429324,
-    "title_margin": -0.43323023568679514,
-    "title_win_opponent": -0.6176542069396411,
-    "title_loss_opponent": -0.35711819012965096
+    "prior_rank": 1.08526385563023,
+    "win_pct": -0.005955715772034864,
+    "sos": -0.11046223359774832,
+    "quality_wins": -0.3539297234984563,
+    "bad_losses": 0.38316156423207015,
+    "recent_win": -0.9949861986575229,
+    "recent_loss": 4.7725220533079264,
+    "recent_win_quality": -1.582921454464739,
+    "recent_loss_badness": 2.8891171488064815,
+    "title_win": 0.04195827391991905,
+    "title_loss": 0.9823731528265335,
+    "power": -0.06100467491792345,
+    "games": 0.16283125311489724,
+    "title_margin": -0.35847869090168333,
+    "title_win_opponent": -0.5713504860661291,
+    "title_loss_opponent": -0.22803607636503628,
+    "prior_sq": -0.2612626254162323,
+    "recent_margin": -0.2535110956634821
   },
   "training_seasons": [
     2014,
@@ -55,62 +61,60 @@
     {
       "season": 2018,
       "n": 137,
-      "mae": 1.773,
+      "mae": 1.821,
       "prior_mae": 2.832,
-      "spearman": 0.9683
+      "spearman": 0.969
     },
     {
       "season": 2019,
       "n": 133,
-      "mae": 1.893,
+      "mae": 1.795,
       "prior_mae": 2.09,
-      "spearman": 0.9637
+      "spearman": 0.9691
     },
     {
       "season": 2021,
       "n": 134,
-      "mae": 1.513,
+      "mae": 1.489,
       "prior_mae": 2.836,
-      "spearman": 0.9749
+      "spearman": 0.9779
     },
     {
       "season": 2022,
       "n": 139,
-      "mae": 1.626,
+      "mae": 1.646,
       "prior_mae": 3.338,
-      "spearman": 0.9747
+      "spearman": 0.9789
     },
     {
       "season": 2023,
       "n": 132,
-      "mae": 1.479,
+      "mae": 1.521,
       "prior_mae": 2.348,
-      "spearman": 0.9781
+      "spearman": 0.9793
     },
     {
       "season": 2024,
       "n": 135,
-      "mae": 1.639,
+      "mae": 1.565,
       "prior_mae": 3.111,
-      "spearman": 0.9767
+      "spearman": 0.9803
     },
     {
       "season": 2025,
       "n": 139,
-      "mae": 1.442,
+      "mae": 1.361,
       "prior_mae": 2.489,
-      "spearman": 0.9796
+      "spearman": 0.9845
     }
   ],
   "pod_head_to_head_bonus": 0.25,
   "pod_validation_mae": {
-    "0": 1.2629,
-    "0.25": 1.2457,
-    "0.5": 1.2686,
-    "1": 1.3097,
-    "2": 1.3931
+    "0": 1.184,
+    "0.25": 1.1886,
+    "0.5": 1.2103,
+    "1": 1.2034,
+    "2": 1.3189
   },
-  "notes": "Rank 30 denotes teams outside a Top 25; scores are predicted rank (lower is better). Title win/loss terms replace ordinary recent win/loss terms. Opponent winning percentages are computed as of each poll. Title margins are signed, capped at 35 points and divided by seven; opponent terms use the preceding committee rank. Ridge alpha=30. No environment, PPA, or cutoff-protection features.",
-  "model_revision": "championship-context-2026-11-20",
-  "ridge_alpha": 30
+  "notes": "Rank 30 denotes teams outside a Top 25; scores are predicted rank (lower is better). Title win/loss terms replace ordinary recent win/loss terms. Opponent winning percentages are computed as of each poll. Title margins are signed, capped at 35 points and divided by seven; opponent terms use the preceding committee rank. Ridge alpha=30. Quadratic prior rank; recent regular-season margin capped at 35, divided by seven, weighted by (30 minus opponent prior rank)/30; unranked opponents receive zero margin weight. No environment, PPA, or cutoff-protection features."
 }

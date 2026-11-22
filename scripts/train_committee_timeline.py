@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FEATURES = ('prior_rank', 'win_pct', 'sos', 'quality_wins', 'bad_losses',
             'recent_win', 'recent_loss', 'recent_win_quality',
             'recent_loss_badness', 'title_win', 'title_loss', 'power', 'games',
-            'title_margin', 'title_win_opponent', 'title_loss_opponent')
+            'title_margin', 'title_win_opponent', 'title_loss_opponent', 'prior_sq', 'recent_margin')
 POWER_IDS = {'1', '4', '5', '8', '9'}  # ACC, Big 12, Big Ten, SEC, historic Pac-12
 
 
@@ -48,6 +48,8 @@ def snapshots(history, all_candidates=False):
                 row = dict(season=int(year), week=current['week'], team=team,
                            rank=current['rankings'].get(team, 30),
                            prior_rank=previous['rankings'].get(team, 30),
+                           prior_sq=previous['rankings'].get(team,30)**2/30,
+                           recent_margin=sum(np.clip((g['home_score']-g['away_score'])*(1 if g['home']==team else -1),-35,35)/7*(30-previous['rankings'].get(g['away'] if g['home']==team else g['home'],30))/30 for g,_,_ in recent if not g['title']),
                            win_pct=sum(win for _, _, win in gs) / max(1, len(gs)),
                            sos=np.mean([quality(opp) for _, opp, _ in gs]) if gs else 0,
                            quality_wins=sum(quality(opp) for _, opp, win in gs if win),
@@ -167,9 +169,9 @@ def main():
         backtest.extend(weekly_predictions(model, candidates[candidates.season == 2026],
                                            data, best_bonus))
     (ROOT/'viz/data/committee_backtest.json').write_text(json.dumps({
-        'model_version': 1, 'source': 'Chronological out-of-season CFP predictions',
+        'model_version': 3, 'source': 'Chronological out-of-season CFP predictions',
         'weeks': backtest}, separators=(',', ':'))+'\n')
-    result = dict(version=1, model_revision='championship-context-2026-11-20', ridge_alpha=30, source='ESPN weekly CFP polls and completed games, 2014-2025',
+    result = dict(version=3, model_revision='unified-nonlinear-opponent-margin-2026-11-21', ridge_alpha=30, source='ESPN weekly CFP polls and completed games, 2014-2025',
                   features=list(FEATURES), intercept=float(model.intercept_),
                   weights={name: float(coef) for name, coef in zip(FEATURES, model.coef_)},
                   training_seasons=sorted(frame.season.unique().tolist()),
@@ -182,7 +184,7 @@ def main():
                         'Opponent winning percentages are computed as of each poll. '
                         'Title margins are signed, capped at 35 points and divided by seven; '
                         'opponent terms use the preceding committee rank. Ridge alpha=30. '
-                        'No environment, PPA, or cutoff-protection features.')
+                        'Quadratic prior rank; recent regular-season margin capped at 35, divided by seven, weighted by (30 minus opponent prior rank)/30; unranked opponents receive zero margin weight. No environment, PPA, or cutoff-protection features.')
     out = ROOT/'viz/data/committee_timeline_model.json'
     out.write_text(json.dumps(result, indent=2)+'\n')
     print('Saved', out)

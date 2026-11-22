@@ -123,3 +123,19 @@ test('title margin changes ranking, caps at 35 and stays finite without titles',
   assert.ok(big.rows.find(r=>r.team===winner).projected<big.rows.find(r=>r.team===loser).projected);
   assert.deepEqual(big.rows.map(r=>r.team),capped.rows.map(r=>r.team));
 });
+
+test('unified model preserves nonlinear spacing, opponent-weighted regular margin and title context',()=>{
+  assert.equal(timeline.version,3);
+  for(const feature of ['prior_sq','recent_margin','title_margin','title_win_opponent','title_loss_opponent'])assert.ok(feature in timeline.weights);
+  const p={...poll,released:'2026-11-17',games_through:'2026-11-16'};
+  const ts=p.rankings.map(r=>({team:r.team,conference:'Big Ten',rating:1}));
+  const base=ts.map(t=>({h:t.team,a:'FCS '+t.team,d:'2026-11-14',hp:21,ap:7,f:1}));
+  const winner=p.rankings[7].team,loser=p.rankings[3].team;
+  const m={version:3,intercept:0,pod_head_to_head_bonus:0,weights:{prior_rank:1,prior_sq:0,recent_margin:-1}};
+  const run=(margin,title=false)=>C.project({schedule:[...base,{h:winner,a:loser,d:'2026-11-21',hp:margin+7,ap:7,f:1,...(title?{game_type:'CONF_CHAMP'}:{})}],teams:ts,poll:p,model:m,now:'2026-11-23T12:00:00Z'});
+  const rank=(res,t)=>res.rows.find(r=>r.team===t).projected;
+  assert.ok(rank(run(1),winner)>rank(run(1),loser));
+  assert.ok(rank(run(35),winner)<rank(run(35),loser));
+  assert.deepEqual(run(35).rows.map(r=>r.team),run(70).rows.map(r=>r.team));
+  assert.ok(rank(run(35,true),winner)>rank(run(35,true),loser),'title margins must not enter regular-season term');
+});
