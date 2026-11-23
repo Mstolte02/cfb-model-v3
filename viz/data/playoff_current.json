@@ -3468,7 +3468,7 @@
       "team": "Florida International",
       "conference": "Conference USA",
       "power_rank": 108,
-      "rating": 0.313,
+      "rating": 0.314,
       "avg_wins": 4.84,
       "avg_losses": 7.16,
       "conf_champ": 0,
@@ -10288,7 +10288,7 @@
     "rank_spacing": null
   },
   "record_odds": {
-    "generated_at": "2026-11-22T20:01:23Z",
+    "generated_at": "2026-11-23T08:01:42Z",
     "min_samples": 30,
     "checkpoints": [
       {
