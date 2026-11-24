@@ -33,7 +33,7 @@
       "qf": 1,
       "sf": 0.7725,
       "final": 0.51,
-      "champ": 0.358,
+      "champ": 0.3585,
       "g6_bid": 0,
       "seeds": [
         0.7615,
@@ -615,7 +615,7 @@
       "qf": 0.7885,
       "sf": 0.3395,
       "final": 0.145,
-      "champ": 0.056,
+      "champ": 0.0555,
       "g6_bid": 0,
       "seeds": [
         0.0615,
@@ -1348,7 +1348,7 @@
       "wins_out": 10.16,
       "projected_rank": 14.27,
       "current_cfp_rank": 4,
-      "predicted_resume_score": 16.73,
+      "predicted_resume_score": 16.7305,
       "resume_score_parts": {
         "priorRank": 4,
         "projectedRank": 14.27
@@ -1625,7 +1625,7 @@
       ],
       "wins_out": 9.72,
       "projected_rank": 55.63,
-      "predicted_resume_score": -24.6285,
+      "predicted_resume_score": -24.628,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 55.63
@@ -1818,7 +1818,7 @@
       ],
       "wins_out": 9.36,
       "projected_rank": 29.98,
-      "predicted_resume_score": 1.023,
+      "predicted_resume_score": 1.0225,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 29.98
@@ -1876,7 +1876,7 @@
       ],
       "wins_out": 10.09,
       "projected_rank": 33.52,
-      "predicted_resume_score": -2.52,
+      "predicted_resume_score": -2.5205,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 33.52
@@ -1993,7 +1993,7 @@
       ],
       "wins_out": 10.14,
       "projected_rank": 51.12,
-      "predicted_resume_score": -20.1155,
+      "predicted_resume_score": -20.115,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 51.12
@@ -2051,12 +2051,12 @@
       ],
       "wins_in": 9,
       "wins_out": 8.67,
-      "projected_rank": 17.8,
+      "projected_rank": 17.81,
       "current_cfp_rank": 20,
-      "predicted_resume_score": 13.196,
+      "predicted_resume_score": 13.1915,
       "resume_score_parts": {
         "priorRank": 20,
-        "projectedRank": 17.8
+        "projectedRank": 17.81
       },
       "seed_outlooks": [
         null,
@@ -2110,7 +2110,7 @@
       ],
       "wins_out": 8.42,
       "projected_rank": 49.16,
-      "predicted_resume_score": -18.16,
+      "predicted_resume_score": -18.1595,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 49.16
@@ -2219,7 +2219,7 @@
       ],
       "wins_out": 7.4,
       "projected_rank": 72.71,
-      "predicted_resume_score": -41.7105,
+      "predicted_resume_score": -41.711,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 72.71
@@ -2270,7 +2270,7 @@
       ],
       "wins_out": 6.26,
       "projected_rank": 68.74,
-      "predicted_resume_score": -37.744,
+      "predicted_resume_score": -37.7405,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 68.74
@@ -2423,7 +2423,7 @@
       ],
       "wins_out": 5.72,
       "projected_rank": 58.63,
-      "predicted_resume_score": -27.6295,
+      "predicted_resume_score": -27.6315,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 58.63
@@ -2549,7 +2549,7 @@
       "team": "Baylor",
       "conference": "Big 12",
       "power_rank": 38,
-      "rating": 0.642,
+      "rating": 0.643,
       "avg_wins": 6.33,
       "avg_losses": 5.67,
       "conf_champ": 0,
@@ -2575,11 +2575,11 @@
         0
       ],
       "wins_out": 6.33,
-      "projected_rank": 51.19,
-      "predicted_resume_score": -20.192,
+      "projected_rank": 51.17,
+      "predicted_resume_score": -20.1705,
       "resume_score_parts": {
         "priorRank": "NA",
-        "projectedRank": 51.19
+        "projectedRank": 51.17
       },
       "seed_outlooks": [
         null,
@@ -2678,7 +2678,7 @@
       ],
       "wins_out": 3.57,
       "projected_rank": 110.27,
-      "predicted_resume_score": -79.2725,
+      "predicted_resume_score": -79.272,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 110.27
@@ -2779,11 +2779,11 @@
         0
       ],
       "wins_out": 3.2,
-      "projected_rank": 113.15,
-      "predicted_resume_score": -82.154,
+      "projected_rank": 113.16,
+      "predicted_resume_score": -82.155,
       "resume_score_parts": {
         "priorRank": "NA",
-        "projectedRank": 113.15
+        "projectedRank": 113.16
       },
       "seed_outlooks": [
         null,
@@ -2933,7 +2933,7 @@
       ],
       "wins_out": 6.14,
       "projected_rank": 52.4,
-      "predicted_resume_score": -21.403,
+      "predicted_resume_score": -21.404,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 52.4
@@ -2983,11 +2983,11 @@
         0
       ],
       "wins_out": 7.43,
-      "projected_rank": 50.42,
-      "predicted_resume_score": -19.4185,
+      "projected_rank": 50.41,
+      "predicted_resume_score": -19.4145,
       "resume_score_parts": {
         "priorRank": "NA",
-        "projectedRank": 50.42
+        "projectedRank": 50.41
       },
       "seed_outlooks": [
         null,
@@ -3290,7 +3290,7 @@
       ],
       "wins_out": 7.59,
       "projected_rank": 59.33,
-      "predicted_resume_score": -28.33,
+      "predicted_resume_score": -28.3295,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 59.33
@@ -3392,7 +3392,7 @@
       ],
       "wins_out": 7.68,
       "projected_rank": 23.48,
-      "predicted_resume_score": 7.5225,
+      "predicted_resume_score": 7.523,
       "resume_score_parts": {
         "priorRank": 24,
         "projectedRank": 23.48
@@ -3444,7 +3444,7 @@
       ],
       "wins_out": 7.41,
       "projected_rank": 54.69,
-      "predicted_resume_score": -23.6855,
+      "predicted_resume_score": -23.685,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 54.69
@@ -3468,7 +3468,7 @@
       "team": "Florida International",
       "conference": "Conference USA",
       "power_rank": 108,
-      "rating": 0.314,
+      "rating": 0.313,
       "avg_wins": 4.84,
       "avg_losses": 7.16,
       "conf_champ": 0,
@@ -3495,7 +3495,7 @@
       ],
       "wins_out": 4.84,
       "projected_rank": 104.38,
-      "predicted_resume_score": -73.3785,
+      "predicted_resume_score": -73.379,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 104.38
@@ -3546,7 +3546,7 @@
       ],
       "wins_out": 5.32,
       "projected_rank": 75.17,
-      "predicted_resume_score": -44.175,
+      "predicted_resume_score": -44.174,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 75.17
@@ -3597,7 +3597,7 @@
       ],
       "wins_out": 6,
       "projected_rank": 70.94,
-      "predicted_resume_score": -39.9395,
+      "predicted_resume_score": -39.938,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 70.94
@@ -3648,7 +3648,7 @@
       ],
       "wins_out": 7.73,
       "projected_rank": 51.16,
-      "predicted_resume_score": -20.1615,
+      "predicted_resume_score": -20.163,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 51.16
@@ -3852,7 +3852,7 @@
       ],
       "wins_out": 6.25,
       "projected_rank": 62.85,
-      "predicted_resume_score": -31.8475,
+      "predicted_resume_score": -31.847,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 62.85
@@ -3903,7 +3903,7 @@
       ],
       "wins_out": 5.62,
       "projected_rank": 67.15,
-      "predicted_resume_score": -36.1495,
+      "predicted_resume_score": -36.15,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 67.15
@@ -3954,7 +3954,7 @@
       ],
       "wins_out": 8.74,
       "projected_rank": 106.61,
-      "predicted_resume_score": -75.6075,
+      "predicted_resume_score": -75.6085,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 106.61
@@ -4005,7 +4005,7 @@
       ],
       "wins_out": 8.98,
       "projected_rank": 61.33,
-      "predicted_resume_score": -30.3295,
+      "predicted_resume_score": -30.331,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 61.33
@@ -4056,7 +4056,7 @@
       ],
       "wins_out": 4.5,
       "projected_rank": 96.79,
-      "predicted_resume_score": -65.789,
+      "predicted_resume_score": -65.787,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 96.79
@@ -4106,11 +4106,11 @@
         0
       ],
       "wins_out": 4.38,
-      "projected_rank": 113.14,
-      "predicted_resume_score": -82.145,
+      "projected_rank": 113.15,
+      "predicted_resume_score": -82.1475,
       "resume_score_parts": {
         "priorRank": "NA",
-        "projectedRank": 113.14
+        "projectedRank": 113.15
       },
       "seed_outlooks": [
         null,
@@ -4261,7 +4261,7 @@
       "wins_out": 7.35,
       "projected_rank": 30.57,
       "current_cfp_rank": 16,
-      "predicted_resume_score": 0.435,
+      "predicted_resume_score": 0.434,
       "resume_score_parts": {
         "priorRank": 16,
         "projectedRank": 30.57
@@ -4311,11 +4311,11 @@
         0
       ],
       "wins_out": 11.69,
-      "projected_rank": 39.14,
-      "predicted_resume_score": -8.1445,
+      "projected_rank": 39.17,
+      "predicted_resume_score": -8.167,
       "resume_score_parts": {
         "priorRank": "NA",
-        "projectedRank": 39.14
+        "projectedRank": 39.17
       },
       "seed_outlooks": [
         null,
@@ -4363,7 +4363,7 @@
       ],
       "wins_out": 8.59,
       "projected_rank": 49.72,
-      "predicted_resume_score": -18.7195,
+      "predicted_resume_score": -18.719,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 49.72
@@ -4414,7 +4414,7 @@
       ],
       "wins_out": 8.65,
       "projected_rank": 22.1,
-      "predicted_resume_score": 8.9005,
+      "predicted_resume_score": 8.9015,
       "resume_score_parts": {
         "priorRank": 23,
         "projectedRank": 22.1
@@ -4517,7 +4517,7 @@
       ],
       "wins_out": 6.51,
       "projected_rank": 83.42,
-      "predicted_resume_score": -52.4185,
+      "predicted_resume_score": -52.418,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 83.42
@@ -4568,7 +4568,7 @@
       ],
       "wins_out": 4.38,
       "projected_rank": 100.47,
-      "predicted_resume_score": -69.4725,
+      "predicted_resume_score": -69.472,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 100.47
@@ -4721,7 +4721,7 @@
       ],
       "wins_out": 7.31,
       "projected_rank": 64.21,
-      "predicted_resume_score": -33.21,
+      "predicted_resume_score": -33.2095,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 64.21
@@ -4771,11 +4771,11 @@
         0
       ],
       "wins_out": 6.15,
-      "projected_rank": 45.49,
-      "predicted_resume_score": -14.4855,
+      "projected_rank": 45.48,
+      "predicted_resume_score": -14.485,
       "resume_score_parts": {
         "priorRank": "NA",
-        "projectedRank": 45.49
+        "projectedRank": 45.48
       },
       "seed_outlooks": [
         null,
@@ -4823,7 +4823,7 @@
       ],
       "wins_out": 3.41,
       "projected_rank": 97.42,
-      "predicted_resume_score": -66.416,
+      "predicted_resume_score": -66.4155,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 97.42
@@ -4874,7 +4874,7 @@
       ],
       "wins_out": 6.64,
       "projected_rank": 83.11,
-      "predicted_resume_score": -52.107,
+      "predicted_resume_score": -52.106,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 83.11
@@ -4925,7 +4925,7 @@
       ],
       "wins_out": 6.17,
       "projected_rank": 65.47,
-      "predicted_resume_score": -34.4725,
+      "predicted_resume_score": -34.472,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 65.47
@@ -5027,7 +5027,7 @@
       ],
       "wins_out": 7.5,
       "projected_rank": 33.92,
-      "predicted_resume_score": -2.9205,
+      "predicted_resume_score": -2.9195,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 33.92
@@ -5129,7 +5129,7 @@
       ],
       "wins_out": 4.87,
       "projected_rank": 73.4,
-      "predicted_resume_score": -42.4015,
+      "predicted_resume_score": -42.401,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 73.4
@@ -5180,7 +5180,7 @@
       ],
       "wins_out": 5.26,
       "projected_rank": 93.86,
-      "predicted_resume_score": -62.863,
+      "predicted_resume_score": -62.8635,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 93.86
@@ -5231,7 +5231,7 @@
       ],
       "wins_out": 7.32,
       "projected_rank": 40.13,
-      "predicted_resume_score": -9.13,
+      "predicted_resume_score": -9.131,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 40.13
@@ -5384,7 +5384,7 @@
       ],
       "wins_out": 5.74,
       "projected_rank": 63.7,
-      "predicted_resume_score": -32.7015,
+      "predicted_resume_score": -32.7005,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 63.7
@@ -5537,7 +5537,7 @@
       ],
       "wins_out": 7.8,
       "projected_rank": 44.62,
-      "predicted_resume_score": -13.616,
+      "predicted_resume_score": -13.6165,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 44.62
@@ -5588,7 +5588,7 @@
       ],
       "wins_out": 6.75,
       "projected_rank": 58.81,
-      "predicted_resume_score": -27.8105,
+      "predicted_resume_score": -27.808,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 58.81
@@ -5640,7 +5640,7 @@
       "wins_out": 7.85,
       "projected_rank": 20.83,
       "current_cfp_rank": 14,
-      "predicted_resume_score": 10.1675,
+      "predicted_resume_score": 10.168,
       "resume_score_parts": {
         "priorRank": 14,
         "projectedRank": 20.83
@@ -5691,7 +5691,7 @@
       ],
       "wins_out": 7.5,
       "projected_rank": 21.73,
-      "predicted_resume_score": 9.2685,
+      "predicted_resume_score": 9.268,
       "resume_score_parts": {
         "priorRank": 22,
         "projectedRank": 21.73
@@ -5743,7 +5743,7 @@
       ],
       "wins_out": 7.5,
       "projected_rank": 41.71,
-      "predicted_resume_score": -10.707,
+      "predicted_resume_score": -10.708,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 41.71
@@ -5846,7 +5846,7 @@
       "wins_out": 7.93,
       "projected_rank": 20.9,
       "current_cfp_rank": 25,
-      "predicted_resume_score": 10.1025,
+      "predicted_resume_score": 10.103,
       "resume_score_parts": {
         "priorRank": 25,
         "projectedRank": 20.9
@@ -5948,7 +5948,7 @@
       ],
       "wins_out": 6.62,
       "projected_rank": 61.32,
-      "predicted_resume_score": -30.3185,
+      "predicted_resume_score": -30.318,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 61.32
@@ -6050,7 +6050,7 @@
       ],
       "wins_out": 3.04,
       "projected_rank": 102.71,
-      "predicted_resume_score": -71.706,
+      "predicted_resume_score": -71.7055,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 102.71
@@ -6305,7 +6305,7 @@
       ],
       "wins_out": 6.18,
       "projected_rank": 112.28,
-      "predicted_resume_score": -81.281,
+      "predicted_resume_score": -81.28,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 112.28
@@ -6356,7 +6356,7 @@
       ],
       "wins_out": 5.32,
       "projected_rank": 110.36,
-      "predicted_resume_score": -79.357,
+      "predicted_resume_score": -79.3575,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 110.36
@@ -6407,7 +6407,7 @@
       ],
       "wins_out": 7.81,
       "projected_rank": 37.24,
-      "predicted_resume_score": -6.237,
+      "predicted_resume_score": -6.2375,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 37.24
@@ -6458,7 +6458,7 @@
       ],
       "wins_out": 6.6,
       "projected_rank": 58,
-      "predicted_resume_score": -26.9975,
+      "predicted_resume_score": -26.996,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 58
@@ -6510,7 +6510,7 @@
       "wins_out": 6.57,
       "projected_rank": 51.56,
       "current_cfp_rank": 21,
-      "predicted_resume_score": -20.556,
+      "predicted_resume_score": -20.557,
       "resume_score_parts": {
         "priorRank": 21,
         "projectedRank": 51.56
@@ -6612,7 +6612,7 @@
       ],
       "wins_out": 6.78,
       "projected_rank": 72.31,
-      "predicted_resume_score": -41.3075,
+      "predicted_resume_score": -41.3065,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 72.31
@@ -6765,7 +6765,7 @@
       ],
       "wins_out": 5.17,
       "projected_rank": 79.17,
-      "predicted_resume_score": -48.1675,
+      "predicted_resume_score": -48.1695,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 79.17
@@ -6867,7 +6867,7 @@
       ],
       "wins_out": 4.26,
       "projected_rank": 83.26,
-      "predicted_resume_score": -52.2585,
+      "predicted_resume_score": -52.261,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 83.26
@@ -6917,11 +6917,11 @@
         0
       ],
       "wins_out": 7,
-      "projected_rank": 36.89,
-      "predicted_resume_score": -5.8945,
+      "projected_rank": 36.9,
+      "predicted_resume_score": -5.8955,
       "resume_score_parts": {
         "priorRank": "NA",
-        "projectedRank": 36.89
+        "projectedRank": 36.9
       },
       "seed_outlooks": [
         null,
@@ -7071,7 +7071,7 @@
       ],
       "wins_out": 7.51,
       "projected_rank": 68.4,
-      "predicted_resume_score": -37.4025,
+      "predicted_resume_score": -37.402,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 68.4
@@ -7173,7 +7173,7 @@
       ],
       "wins_out": 6.54,
       "projected_rank": 65.08,
-      "predicted_resume_score": -34.078,
+      "predicted_resume_score": -34.079,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 65.08
@@ -7275,7 +7275,7 @@
       ],
       "wins_out": 2.49,
       "projected_rank": 125.77,
-      "predicted_resume_score": -94.7695,
+      "predicted_resume_score": -94.77,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 125.77
@@ -7376,11 +7376,11 @@
         0
       ],
       "wins_out": 4,
-      "projected_rank": 80.16,
-      "predicted_resume_score": -49.1555,
+      "projected_rank": 80.15,
+      "predicted_resume_score": -49.1545,
       "resume_score_parts": {
         "priorRank": "NA",
-        "projectedRank": 80.16
+        "projectedRank": 80.15
       },
       "seed_outlooks": [
         null,
@@ -7581,7 +7581,7 @@
       ],
       "wins_out": 6.56,
       "projected_rank": 76.25,
-      "predicted_resume_score": -45.255,
+      "predicted_resume_score": -45.2545,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 76.25
@@ -7632,7 +7632,7 @@
       ],
       "wins_out": 7.15,
       "projected_rank": 49.54,
-      "predicted_resume_score": -18.5375,
+      "predicted_resume_score": -18.5395,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 49.54
@@ -7836,7 +7836,7 @@
       ],
       "wins_out": 5.07,
       "projected_rank": 79.01,
-      "predicted_resume_score": -48.0065,
+      "predicted_resume_score": -48.007,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 79.01
@@ -7887,7 +7887,7 @@
       ],
       "wins_out": 7.83,
       "projected_rank": 38.08,
-      "predicted_resume_score": -7.079,
+      "predicted_resume_score": -7.08,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 38.08
@@ -7938,7 +7938,7 @@
       ],
       "wins_out": 7.41,
       "projected_rank": 69.04,
-      "predicted_resume_score": -38.0365,
+      "predicted_resume_score": -38.0355,
       "resume_score_parts": {
         "priorRank": "NA",
         "projectedRank": 69.04
@@ -8250,8 +8250,8 @@
       0,
       0,
       0,
-      1342,
-      658,
+      1341,
+      659,
       0,
       0,
       0,
@@ -8700,8 +8700,8 @@
       0,
       0,
       0,
-      658,
-      1342,
+      659,
+      1341,
       0,
       0,
       0,
@@ -10288,7 +10288,7 @@
     "rank_spacing": null
   },
   "record_odds": {
-    "generated_at": "2026-11-23T08:01:42Z",
+    "generated_at": "2026-11-24T00:12:58Z",
     "min_samples": 30,
     "checkpoints": [
       {
@@ -10582,18 +10582,18 @@
             {
               "wins": 7,
               "losses": 5,
-              "samples": 658,
+              "samples": 659,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.329
+              "record_probability": 0.3295
             },
             {
               "wins": 6,
               "losses": 6,
-              "samples": 1342,
+              "samples": 1341,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.671
+              "record_probability": 0.6705
             }
           ]
         }
@@ -11258,18 +11258,18 @@
             {
               "wins": 9,
               "losses": 3,
-              "samples": 1342,
+              "samples": 1341,
               "made": 1,
-              "playoff": 0.00074516,
-              "record_probability": 0.671
+              "playoff": 0.00074571,
+              "record_probability": 0.6705
             },
             {
               "wins": 8,
               "losses": 4,
-              "samples": 658,
+              "samples": 659,
               "made": 0,
               "playoff": 0,
-              "record_probability": 0.329
+              "record_probability": 0.3295
             }
           ]
         }
@@ -32383,17 +32383,17 @@
         "date": "2026-11-28",
         "home": "Houston",
         "away": "Baylor",
-        "samples_home": 1342,
-        "samples_away": 658,
-        "home_win_probability": 0.671,
+        "samples_home": 1341,
+        "samples_away": 659,
+        "home_win_probability": 0.6705,
         "supported": true,
-        "combined_swing": 0.00074516,
+        "combined_swing": 0.00074571,
         "effects": {
           "Air Force": {
-            "home_win": 0.02980626,
-            "away_win": 0.00911854,
-            "swing": 0.02068772,
-            "standard_error": 0.00593969
+            "home_win": 0.02982849,
+            "away_win": 0.0091047,
+            "swing": 0.02072378,
+            "standard_error": 0.00593887
           },
           "Akron": {
             "home_win": 0,
@@ -32402,10 +32402,10 @@
             "standard_error": 0
           },
           "Alabama": {
-            "home_win": 0.99105812,
-            "away_win": 0.99392097,
-            "swing": -0.00286285,
-            "standard_error": 0.00397316
+            "home_win": 0.99105145,
+            "away_win": 0.9939302,
+            "swing": -0.00287874,
+            "standard_error": 0.0039709
           },
           "App State": {
             "home_win": 0,
@@ -32414,10 +32414,10 @@
             "standard_error": 0
           },
           "Arizona": {
-            "home_win": 0.00447094,
-            "away_win": 0.00455927,
-            "swing": -0.00008833,
-            "standard_error": 0.00319594
+            "home_win": 0.00447427,
+            "away_win": 0.00455235,
+            "swing": -0.00007808,
+            "standard_error": 0.00319345
           },
           "Arizona State": {
             "home_win": 0,
@@ -32462,10 +32462,10 @@
             "standard_error": 0
           },
           "Boise State": {
-            "home_win": 0.69299553,
-            "away_win": 0.7006079,
-            "swing": -0.00761237,
-            "standard_error": 0.02184749
+            "home_win": 0.69276659,
+            "away_win": 0.70106222,
+            "swing": -0.00829562,
+            "standard_error": 0.02183429
           },
           "Boston College": {
             "home_win": 0,
@@ -32486,10 +32486,10 @@
             "standard_error": 0
           },
           "BYU": {
-            "home_win": 0.85245902,
-            "away_win": 0.88297872,
-            "swing": -0.03051971,
-            "standard_error": 0.01583517
+            "home_win": 0.85234899,
+            "away_win": 0.8831563,
+            "swing": -0.0308073,
+            "standard_error": 0.01582516
           },
           "California": {
             "home_win": 0,
@@ -32624,10 +32624,10 @@
             "standard_error": 0
           },
           "Houston": {
-            "home_win": 0.00074516,
+            "home_win": 0.00074571,
             "away_win": 0,
-            "swing": 0.00074516,
-            "standard_error": 0.00074488
+            "swing": 0.00074571,
+            "standard_error": 0.00074543
           },
           "Illinois": {
             "home_win": 0,
@@ -32636,16 +32636,16 @@
             "standard_error": 0
           },
           "Indiana": {
-            "home_win": 0.36736215,
-            "away_win": 0.31610942,
-            "swing": 0.05125272,
-            "standard_error": 0.02239927
+            "home_win": 0.36689038,
+            "away_win": 0.31714719,
+            "swing": 0.04974319,
+            "standard_error": 0.02240183
           },
           "Iowa": {
-            "home_win": 0.20864382,
-            "away_win": 0.18844985,
-            "swing": 0.02019397,
-            "standard_error": 0.01885365
+            "home_win": 0.2087994,
+            "away_win": 0.18816388,
+            "swing": 0.02063552,
+            "standard_error": 0.01884135
           },
           "Iowa State": {
             "home_win": 0,
@@ -32708,10 +32708,10 @@
             "standard_error": 0
           },
           "Louisiana Tech": {
-            "home_win": 0.00298063,
-            "away_win": 0.00303951,
-            "swing": -0.00005889,
-            "standard_error": 0.00261145
+            "home_win": 0.00298285,
+            "away_win": 0.0030349,
+            "swing": -0.00005205,
+            "standard_error": 0.00260942
           },
           "Louisville": {
             "home_win": 0,
@@ -32750,10 +32750,10 @@
             "standard_error": 0
           },
           "Miami": {
-            "home_win": 0.98882265,
-            "away_win": 0.98024316,
-            "swing": 0.00857949,
-            "standard_error": 0.00613744
+            "home_win": 0.98881432,
+            "away_win": 0.98027314,
+            "swing": 0.00854118,
+            "standard_error": 0.00613123
           },
           "Miami (OH)": {
             "home_win": 0,
@@ -32828,10 +32828,10 @@
             "standard_error": 0
           },
           "New Mexico": {
-            "home_win": 0.12146051,
-            "away_win": 0.13677812,
-            "swing": -0.01531761,
-            "standard_error": 0.01609197
+            "home_win": 0.12155108,
+            "away_win": 0.13657056,
+            "swing": -0.01501948,
+            "standard_error": 0.01607983
           },
           "New Mexico State": {
             "home_win": 0,
@@ -32870,16 +32870,16 @@
             "standard_error": 0
           },
           "Notre Dame": {
-            "home_win": 0.99701937,
-            "away_win": 0.99392097,
-            "swing": 0.0030984,
-            "standard_error": 0.00337593
+            "home_win": 0.99701715,
+            "away_win": 0.9939302,
+            "swing": 0.00308695,
+            "standard_error": 0.0033723
           },
           "Ohio": {
             "home_win": 0,
-            "away_win": 0.00151976,
-            "swing": -0.00151976,
-            "standard_error": 0.0015186
+            "away_win": 0.00151745,
+            "swing": -0.00151745,
+            "standard_error": 0.0015163
           },
           "Ohio State": {
             "home_win": 0,
@@ -32912,10 +32912,10 @@
             "standard_error": 0
           },
           "Oregon": {
-            "home_win": 0.56184799,
-            "away_win": 0.61094225,
-            "swing": -0.04909426,
-            "standard_error": 0.02333822
+            "home_win": 0.56226696,
+            "away_win": 0.61001517,
+            "swing": -0.04774821,
+            "standard_error": 0.02333524
           },
           "Oregon State": {
             "home_win": 0,
@@ -33032,16 +33032,16 @@
             "standard_error": 0
           },
           "Tennessee": {
-            "home_win": 0.88673621,
-            "away_win": 0.87082067,
-            "swing": 0.01591555,
-            "standard_error": 0.01567802
+            "home_win": 0.88665175,
+            "away_win": 0.87101669,
+            "swing": 0.01563506,
+            "standard_error": 0.01566604
           },
           "Texas": {
-            "home_win": 0.96274218,
-            "away_win": 0.94832827,
-            "swing": 0.01441391,
-            "standard_error": 0.01005979
+            "home_win": 0.96271439,
+            "away_win": 0.94840668,
+            "swing": 0.01430772,
+            "standard_error": 0.01005081
           },
           "Texas A&M": {
             "home_win": 0,
@@ -33056,16 +33056,16 @@
             "standard_error": 0
           },
           "Texas Tech": {
-            "home_win": 0.80700447,
-            "away_win": 0.77051672,
-            "swing": 0.03648775,
-            "standard_error": 0.01961584
+            "home_win": 0.80686055,
+            "away_win": 0.77086495,
+            "swing": 0.0359956,
+            "standard_error": 0.01960204
           },
           "Toledo": {
-            "home_win": 0.01117735,
-            "away_win": 0.00303951,
-            "swing": 0.00813783,
-            "standard_error": 0.00358344
+            "home_win": 0.01118568,
+            "away_win": 0.0030349,
+            "swing": 0.00815078,
+            "standard_error": 0.0035832
           },
           "Troy": {
             "home_win": 0,
@@ -33098,10 +33098,10 @@
             "standard_error": 0
           },
           "UCLA": {
-            "home_win": 0.3338301,
-            "away_win": 0.38601824,
-            "swing": -0.05218813,
-            "standard_error": 0.02293269
+            "home_win": 0.33407905,
+            "away_win": 0.38543247,
+            "swing": -0.05135343,
+            "standard_error": 0.02292038
           },
           "UConn": {
             "home_win": 0,
@@ -33122,16 +33122,16 @@
             "standard_error": 0
           },
           "USC": {
-            "home_win": 0.10134128,
-            "away_win": 0.10030395,
-            "swing": 0.00103733,
-            "standard_error": 0.01431816
+            "home_win": 0.10141685,
+            "away_win": 0.10015175,
+            "swing": 0.00126511,
+            "standard_error": 0.01430778
           },
           "Utah": {
-            "home_win": 0.99925484,
-            "away_win": 0.99848024,
-            "swing": 0.0007746,
-            "standard_error": 0.00169145
+            "home_win": 0.99925429,
+            "away_win": 0.99848255,
+            "swing": 0.00077174,
+            "standard_error": 0.00168963
           },
           "Utah State": {
             "home_win": 0,
@@ -33146,10 +33146,10 @@
             "standard_error": 0
           },
           "UTSA": {
-            "home_win": 0.14157973,
-            "away_win": 0.14589666,
-            "swing": -0.00431692,
-            "standard_error": 0.01673143
+            "home_win": 0.14168531,
+            "away_win": 0.14567527,
+            "swing": -0.00398996,
+            "standard_error": 0.01671943
           },
           "Vanderbilt": {
             "home_win": 0,
@@ -33170,10 +33170,10 @@
             "standard_error": 0
           },
           "Wake Forest": {
-            "home_win": 0.9366617,
-            "away_win": 0.95440729,
-            "swing": -0.0177456,
-            "standard_error": 0.0105042
+            "home_win": 0.93661447,
+            "away_win": 0.95447648,
+            "swing": -0.01786201,
+            "standard_error": 0.01049792
           },
           "Washington": {
             "home_win": 0,
@@ -69293,7 +69293,7 @@
             "away": "Baylor",
             "winner": "Houston",
             "own_game": false,
-            "swing": 0.03051971,
+            "swing": 0.0308073,
             "result_probability": 0.64745763,
             "before": 0.8440678,
             "playoff": 0.82198953,
@@ -69883,7 +69883,7 @@
             "away": "Baylor",
             "winner": "Houston",
             "own_game": false,
-            "swing": 0.05125272,
+            "swing": 0.04974319,
             "result_probability": 0.64556962,
             "before": 0.43037975,
             "playoff": 0.49019608,
@@ -71353,7 +71353,7 @@
             "away": "Baylor",
             "winner": "Baylor",
             "own_game": false,
-            "swing": 0.04909426,
+            "swing": 0.04774821,
             "result_probability": 1,
             "before": 1,
             "playoff": 1,
@@ -72411,7 +72411,7 @@
             "away": "Baylor",
             "winner": "Houston",
             "own_game": false,
-            "swing": 0.03648775,
+            "swing": 0.0359956,
             "result_probability": 0.67080745,
             "before": 0.91925466,
             "playoff": 0.91666667,
@@ -72889,7 +72889,7 @@
             "away": "Baylor",
             "winner": "Houston",
             "own_game": false,
-            "swing": 0.05218813,
+            "swing": 0.05135343,
             "result_probability": 0.70588235,
             "before": 0.2745098,
             "playoff": 0.25,
