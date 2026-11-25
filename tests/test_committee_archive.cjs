@@ -1,18 +1,21 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict');
 const {update}=require('../scripts/archive_committee_forecasts.cjs');
-const poll=require('../viz/data/cfp_rankings.json');
+const currentPoll=require('../viz/data/cfp_rankings.json');
 const model=require('../viz/data/committee_timeline_model.json');
 const playoff=require('../viz/data/playoff_current.json');
 const teams=playoff.teams.map(x=>({team:x.team,conference:x.conference,rating:x.rating}));
 const schedule=[{h:'Michigan',a:'UCLA',d:'2026-11-21',hp:17,ap:20,f:1}];
 test('freeze next poll prediction, update it on Monday, reconcile only on publication',()=>{
+  // The archive scenario begins with the Nov. 17 release, regardless of which
+  // newer poll is currently checked into the repository.
+  const poll={...currentPoll,released:'2026-11-17',games_through:'2026-11-16'};
   const first=update({archive:{version:1,entries:[]},schedule,teams,poll,model,now:'2026-11-22T15:00:00Z'});
   assert.equal(first.entries.length,1);assert.equal(first.entries[0].target_release,'2026-11-24');
   assert.equal(first.entries[0].predicted.length,25);assert.equal(first.entries[0].actual,null);
   const second=update({archive:first,schedule,teams,poll,model,now:'2026-11-23T15:00:00Z'});
   assert.equal(second.entries.length,1);
-  const published={...poll,released:'2026-11-24',rankings:poll.rankings};
+  const published=currentPoll;
   const final=update({archive:second,schedule,teams,poll:published,model,now:'2026-11-24T23:00:00Z'});
   assert.equal(final.entries.length,1);assert.equal(final.entries[0].actual.length,25);
   assert.ok(final.entries[0].metrics.rank_mae>=0);assert.ok(final.entries[0].metrics.top12_overlap<=12);
