@@ -14,6 +14,7 @@ on:
       - viz/data/committee_timeline_model.json
       - scripts/playoff_record_odds.R
       - tests/test_committee_anchor.R
+      - tests/test_committee_archive.cjs
       - tests/test_projected_bracket.R
       - tests/test_playoff_record_odds.R
       - viz/data/model_v4.json
