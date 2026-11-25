@@ -33,8 +33,38 @@
         "Boise State",
         "Missouri"
       ],
-      "actual": null,
-      "metrics": null
+      "actual": [
+        "Georgia",
+        "Utah",
+        "Texas",
+        "Notre Dame",
+        "Tennessee",
+        "Alabama",
+        "Miami",
+        "Wake Forest",
+        "UCLA",
+        "BYU",
+        "Texas Tech",
+        "Oregon",
+        "Iowa",
+        "Indiana",
+        "USC",
+        "Arizona",
+        "Oklahoma",
+        "Houston",
+        "Louisville",
+        "Florida",
+        "Ohio State",
+        "Ole Miss",
+        "Missouri",
+        "Washington",
+        "Nebraska"
+      ],
+      "metrics": {
+        "rank_mae": 1.16,
+        "top12_overlap": 12,
+        "top25_overlap": 23
+      }
     }
   ]
 }

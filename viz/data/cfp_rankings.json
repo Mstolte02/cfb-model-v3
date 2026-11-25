@@ -1,7 +1,7 @@
 {
   "season": 2026,
-  "released": "2026-11-17",
-  "games_through": "2026-11-16",
+  "released": "2026-11-24",
+  "games_through": "2026-11-23",
   "source": "CFP Selection Committee via ESPN",
   "source_url": "https://collegefootballplayoff.com/rankings",
   "provider_url": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings",
@@ -16,19 +16,19 @@
     },
     {
       "rank": 3,
-      "team": "Alabama"
-    },
-    {
-      "rank": 4,
-      "team": "UCLA"
-    },
-    {
-      "rank": 5,
       "team": "Texas"
     },
     {
-      "rank": 6,
+      "rank": 4,
       "team": "Notre Dame"
+    },
+    {
+      "rank": 5,
+      "team": "Tennessee"
+    },
+    {
+      "rank": 6,
+      "team": "Alabama"
     },
     {
       "rank": 7,
@@ -36,11 +36,11 @@
     },
     {
       "rank": 8,
-      "team": "Indiana"
+      "team": "Wake Forest"
     },
     {
       "rank": 9,
-      "team": "Tennessee"
+      "team": "UCLA"
     },
     {
       "rank": 10,
@@ -48,63 +48,63 @@
     },
     {
       "rank": 11,
-      "team": "Wake Forest"
-    },
-    {
-      "rank": 12,
       "team": "Texas Tech"
     },
     {
-      "rank": 13,
+      "rank": 12,
       "team": "Oregon"
     },
     {
-      "rank": 14,
-      "team": "Ohio State"
-    },
-    {
-      "rank": 15,
+      "rank": 13,
       "team": "Iowa"
     },
     {
-      "rank": 16,
-      "team": "Kentucky"
+      "rank": 14,
+      "team": "Indiana"
     },
     {
-      "rank": 17,
-      "team": "Boise State"
-    },
-    {
-      "rank": 18,
+      "rank": 15,
       "team": "USC"
     },
     {
-      "rank": 19,
+      "rank": 16,
       "team": "Arizona"
     },
     {
-      "rank": 20,
-      "team": "Houston"
-    },
-    {
-      "rank": 21,
-      "team": "South Carolina"
-    },
-    {
-      "rank": 22,
+      "rank": 17,
       "team": "Oklahoma"
     },
     {
-      "rank": 23,
+      "rank": 18,
+      "team": "Houston"
+    },
+    {
+      "rank": 19,
       "team": "Louisville"
     },
     {
-      "rank": 24,
+      "rank": 20,
       "team": "Florida"
     },
     {
-      "rank": 25,
+      "rank": 21,
+      "team": "Ohio State"
+    },
+    {
+      "rank": 22,
       "team": "Ole Miss"
+    },
+    {
+      "rank": 23,
+      "team": "Missouri"
+    },
+    {
+      "rank": 24,
+      "team": "Washington"
+    },
+    {
+      "rank": 25,
+      "team": "Nebraska"
     }
   ]
 }
